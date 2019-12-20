@@ -47,13 +47,11 @@ Available software
 ```
 from bioservices.pride import PRIDE
 client = PRIDE(verbose=True, cache=False)
-
 ```
 
 ### Imputation
 - imputation of data is done based on the standard variation: Random samples are drawn from a (standard?) normal distribution with mean mu=mean_protein - sd_protein
- 
-
+- there are some custom scripts floating around
 ## People
 - [Prof. Dr. Lennart Martens](https://www.compomics.be/people/lennart-martens/)
 
@@ -96,7 +94,17 @@ ColumnLength    | Length of mass/charge column
 - clustering on cell-lines not on meta-data
     1. Confirm that clustering using the original data is based on meta-data
 
-If it is possible to use deep learning to remove technical and experimental bias from proteomics data
+    - Relative abundances per sample (per run): Standardization per sample
+
+### Idea:
+> Is it possible to use deep learning to remove technical and experimental bias from proteomics data
+
+This raises the question 
+    - Are there any clusters (related to biases) in the data?
+        - Annelaura found so far only biological bias based on the Hela cellline change in April 2019
+    - 
+
 
 ## FDR  
+Spectral libray identification: Why are some proteins only identified in one single sample?
 - benjamini hochberg correction
