@@ -1,6 +1,13 @@
 # Variational Autoencoder for Proteomics 
 
 ## Setup
+Clone repository and install package in editable mode:
+
+```
+pip install -e /path/to/cloned/folder 
+```
+
+> Currently there are only notebooks and script under `bin`, but shared functionality will be added under `vaep` folder-package: This can then be imported using `import vaep`.
 
 ## PRIDE
 Using [bioservices](https://bioservices.readthedocs.io/en/master/) to access PRIDE dataset [RESTful API](https://www.ebi.ac.uk/pride/ws/archive/#!/project) from the command line.
