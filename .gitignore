@@ -1,3 +1,7 @@
-.ipynb_checkpoints
+#python files
+*.ipynb_checkpoints
 *egg-info
-data/*
+*.pyc
+
+#folders
+project/data/*
