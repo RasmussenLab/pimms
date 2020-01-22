@@ -18,9 +18,12 @@ Alternatives are Downloading project files using
 
 ## Standardising Proteomics data
 
+- [HUPO Proteomics Standardiation Initiative](http://www.psidev.info/)
+> The HUPO Proteomics Standards Initiative defines community standards for data representation in proteomics and interactomics to facilitate data comparison, exchange and verification.
+     - [MGF format](http://www.matrixscience.com/help/data_file_help.html) for spectra
 Available software
 - An overview is provided by Roestlab as [Python for Proteomics](https://github.com/Roestlab/PythonProteomics)
-- Pyteomics 4.0: [BitBucket](https://bitbucket.org/levitsky/pyteomics/src/default/), [Paper](https://pubs.acs.org/doi/10.1021/acs.jproteome.8b00717)
+- Pyteomics 4.0: [BitBucket](https://bitbucket.org/levitsky/pyteomics/src/default/), [Paper](https://pubs.acs.org/doi/10.1021/acs.jproteome.8b00717), [Tutorial](https://pyteomics.readthedocs.io/en/latest/)
     > `Pyteomics.mass`: A subpackage implementing mass and m/z calculations, including specific fragment ion types and modified peptides, isotope abundance calculation, and modification handling. The module offers two interfaces to the Unimod database: One (mass.Unimod) reads the Unimod archive file and stores it as a list of Python dictionaries, and the other (mass.unimod.Unimod) fully represents Unimod as a relational database using the SQLAlchemy engine. Both interfaces were added after the original publication. Additionally, the module now allows us to generate all (significant) isotopic compositions of a molecule.
 - [pyproteome](https://github.com/white-lab/pyproteome) by [White lab](http://white-lab.mit.edu/)
 - [colims](https://github.com/compomics/colims) by a Ghent based group. "System for end-to-end mass spectrometry based proteomics identification pipelines."
@@ -28,11 +31,17 @@ Available software
    - [Computational Methods for Mass Spectrometry Proteomics](https://www.wiley.com/en-us/Computational+Methods+for+Mass+Spectrometry+Proteomics-p-9780470512975)
    - [Handbook of Proteins: Structure, Function and Methods, 2 Volume Set, 2 Volume Set](https://www.wiley.com/en-us/Handbook+of+Proteins%3A+Structure%2C+Function+and+Methods%2C+2+Volume+Set%2C+2+Volume+Set-p-9780470060988)
 - [MaxQuant](http://coxdocs.org/doku.php?id=maxquant:start), [MaxQuant-Pipeline](https://github.com/FredHutch/maxquant-pipeline)
+    - [MaxLFQ]() for Label-free quantification
+        - assumes that 90% of the proteins do not vary and can be used for normalization
+- [spectrum_utils](https://github.com/bittremieux/spectrum_utils)  from [Wout Bittremieux](https://bittremieux.be/)
+
 - [Perseus Platform](https://maxquant.net/perseus/)
     - Analyze MaxQuant output
 
 - [Morpheus](https://cwenger.github.io/Morpheus/) (faster than MaxQuant)
 - [Cytoscape](https://cytoscape.org/) for network visualization and analysis
+- [Trans-Proteomic Pipeline](https://moritz.isbscience.org/resources/software/)
+- 
 ## Lili's data
 
 ### AFLD project
@@ -108,3 +117,4 @@ This raises the question
 ## FDR  
 Spectral libray identification: Why are some proteins only identified in one single sample?
 - benjamini hochberg correction
+- [Mann-Witney-U-Test for ranks](https://de.wikipedia.org/wiki/Wilcoxon-Mann-Whitney-Test), [Rank-Biseral-Correlation](https://www.statisticshowto.datasciencecentral.com/rank-biserial-correlation/)
