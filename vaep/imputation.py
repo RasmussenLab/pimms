@@ -5,10 +5,15 @@ Imputation can be down by column.
 
 
 """
+import scipy
 import numpy as np
 import pandas as pd
+import logging
+
+logger = logging.getLogger()
 
 from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import KNeighborsTransformer
 
 RANDOMSEED = 123
 
@@ -47,18 +52,41 @@ def imputation_KNN(data, alone=True, threshold=0.5):
     threshold: float
         Threshold of missing data by column in interval (0, 1)
     """
-    columns_selection = data.notnull().mean() > threshold
-    missDf = data.loc[:, columns_selection]
-    # prepare data type to fit imputation function
-    X = np.array(missDf.values, dtype=np.float64)
+    columns_to_impute = data.notnull().mean() >= threshold
+    data_selected = data.loc[:, columns_to_impute].copy()
+    
+    indices = np.nonzero(~np.isnan(data_selected.to_numpy()))
+    data_selected_sparse = data_selected.to_numpy()
+    data_selected_sparse = scipy.sparse.coo_matrix(
+                    (data_selected_sparse[indices], indices), 
+                    shape=data_selected_sparse.shape)
+     
     # impute
-    X_trans = NearestNeighbors(k=3).fit_transform(X)
-    # regenerate dataframe
-    missingdata_df = missDf.columns.tolist()
-    dfm = pd.DataFrame(X_trans, index=list(
-        missDf.index), columns=missingdata_df)
-    # replace nan values in original dataframe with imputed values
-    data.update(dfm)
+    knn_fitted = NearestNeighbors(n_neighbors=3, algorithm='brute').fit(
+                                   data_selected_sparse)
+    fit_distances, fit_neighbors = knn_fitted.kneighbors(data_selected_sparse)
+   
+    for i , (weights, ids) in enumerate(zip(fit_distances, fit_neighbors)):
+    
+        def get_weighted_mean(weights, data):
+            """Compute weighted mean ignoring
+            identical entries"""
+            weighted_sum = data.mul(weights, axis=0)
+            mask = weighted_sum.sum(axis=1) > 0.0
+            mean_imputed = weighted_sum.loc[mask].sum() / sum(mask)
+            return mean_imputed
+        mean_imputed = get_weighted_mean(weights, data_selected.loc[ids])
+        if all(weights == 0.0):
+            logger.warning(f"Did not find any neighbor for int-id: {i}")
+        else:
+            assert i == ids[weights == 0.0], (   
+            "None or more then one identical data points "
+            "for ids: {}".format(ids[weights == 0.0])
+            )
+        mask = data_selected.iloc[i].isna()
+        data_selected.loc[i, mask] = mean_imputed.loc[mask]
+
+    data.update(data_selected)
     return data
 
 
