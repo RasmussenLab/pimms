@@ -5,6 +5,7 @@ import numpy as np
 from vaep.utils import load_data
 from IPython.display import display
 
+# Create Index by Date with count: 190711_1
 
 FOLDER = 'data'
 FILE = 'Mann_Hepa_data.tsv'
@@ -25,15 +26,27 @@ NSAMPLES = len(meta_data)
 NPROTEINS= proteins.shape[-1]
 data_load_state.text(f'Loaded {NSAMPLES} samples.')
 info_na = proteins.isna().sum()
-info_na_percentiles = info_na.describe(
-    percentiles=[x/100 for x in range(0,100,1)]).to_frame(
-        name='freq NA'
-    ).iloc[4:]
 
+@st.cache
+def get_percentiles(series, step_size=1):
+    """
+    Calculate percentiles between 0 and 100
+    for an pandas.Series.
+
+    Parameters
+    -----------
+    series: pd.Series
+    
+    """
+    return series.describe(
+            percentiles=[x/100 for x in range(0,100,step_size)]
+            ).iloc[4:]
+
+info_na_percentiles = get_percentiles(info_na)
+info_na_percentiles = info_na_percentiles.to_frame('freq NA')
 info_notna = proteins.notna().sum()
-info_na_percentiles['freq not NA'] = info_notna.describe(
-    percentiles=[x/100 for x in range(0,100,1)]).iloc[4:]
-info_notna_proportion = info_notna / NSAMPLES
+info_na_percentiles['freq not NA'] = get_percentiles(info_notna)
+info_notna_proportion = info_notna.div(NSAMPLES)
 
 st.subheader('Raw meta data')
 st.write(meta_data)
@@ -52,3 +65,4 @@ mask = info_notna_proportion >= share
 n_proteins_shared = info_notna_proportion.loc[mask].notna().sum()
 st.write(f"Number of proteins being present in at least {share:.2f}: "
          f"{n_proteins_shared} of {NPROTEINS}")
+
