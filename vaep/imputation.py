@@ -14,6 +14,7 @@ logger = logging.getLogger()
 
 from sklearn.neighbors import NearestNeighbors
 from sklearn.neighbors import KNeighborsTransformer
+from sklearn.impute import KNNImputer
 
 RANDOMSEED = 123
 
@@ -39,6 +40,36 @@ def impute_missing(protein_values, mean=None, std=None):
     raise NotImplementedError('Will be the main function combining features')
     #clip by zero?
 
+def _select_data(data:pd.DataFrame, threshold:float): 
+    """Select (protein-) columns for imputation.
+
+    Based on the threshold representing the minimum proportion of available
+    data per protein, the columns of a `pandas.DataFrame` are selected.
+
+    """
+    columns_to_impute = data.notnull().mean() >= threshold
+    return data.loc[:, columns_to_impute].copy()
+
+def _sparse_coo_array(data:pd.DataFrame):
+    """Return a sparse scipy matrix from dense `pandas.DataFrame` with many 
+    missing values.
+    """
+    indices = np.nonzero(~np.isnan(data.to_numpy()))
+    data_selected_sparse = data.to_numpy()
+    data_selected_sparse = scipy.sparse.coo_matrix(
+                    (data_selected_sparse[indices], indices), 
+                    shape=data_selected_sparse.shape)
+    return data_selected_sparse
+
+def _get_weighted_mean(distances, data):
+    """Compute weighted mean ignoring
+    identical entries"""
+    mask = distances > 0.0
+    weights = distances[mask] / distances[mask].sum()
+    weighted_sum = data.loc[mask].mul(weights, axis=0)
+    mean_imputed = weighted_sum.sum() / sum(mask)
+    return mean_imputed
+
 
 # define imputation methods
 def imputation_KNN(data, alone=True, threshold=0.5):
@@ -52,36 +83,21 @@ def imputation_KNN(data, alone=True, threshold=0.5):
     threshold: float
         Threshold of missing data by column in interval (0, 1)
     """
-    columns_to_impute = data.notnull().mean() >= threshold
-    data_selected = data.loc[:, columns_to_impute].copy()
-    
-    indices = np.nonzero(~np.isnan(data_selected.to_numpy()))
-    data_selected_sparse = data_selected.to_numpy()
-    data_selected_sparse = scipy.sparse.coo_matrix(
-                    (data_selected_sparse[indices], indices), 
-                    shape=data_selected_sparse.shape)
-     
+    data_selected = _select_data(data=data, threshold=threshold)
+    data_selected_sparse  = _sparse_coo_array(data_selected)
     # impute
     knn_fitted = NearestNeighbors(n_neighbors=3, algorithm='brute').fit(
                                    data_selected_sparse)
     fit_distances, fit_neighbors = knn_fitted.kneighbors(data_selected_sparse)
    
-    for i , (weights, ids) in enumerate(zip(fit_distances, fit_neighbors)):
-    
-        def get_weighted_mean(weights, data):
-            """Compute weighted mean ignoring
-            identical entries"""
-            weighted_sum = data.mul(weights, axis=0)
-            mask = weighted_sum.sum(axis=1) > 0.0
-            mean_imputed = weighted_sum.loc[mask].sum() / sum(mask)
-            return mean_imputed
-        mean_imputed = get_weighted_mean(weights, data_selected.loc[ids])
-        if all(weights == 0.0):
+    for i , (distances, ids) in enumerate(zip(fit_distances, fit_neighbors)):
+        mean_imputed = _get_weighted_mean(distances, data_selected.loc[ids])
+        if all(distances == 0.0):
             logger.warning(f"Did not find any neighbor for int-id: {i}")
         else:
-            assert i == ids[weights == 0.0], (   
+            assert i == ids[distances == 0.0], (   
             "None or more then one identical data points "
-            "for ids: {}".format(ids[weights == 0.0])
+            "for ids: {}".format(ids[distances == 0.0])
             )
         mask = data_selected.iloc[i].isna()
         data_selected.loc[i, mask] = mean_imputed.loc[mask]

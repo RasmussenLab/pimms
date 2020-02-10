@@ -101,6 +101,7 @@ Valine          | Val | V    |  99.06841
 
 
 ## Techniques
+- TOF
 - ORBITRAP
 - PASEF
 - FAIMS
@@ -118,3 +119,4 @@ Valine          | Val | V    |  99.06841
 Term  | meaning
 ----  | ---
 elute | remove (an adsorbed substance) by washing with a solvent, especially in chromatography
+XIC   | Extracted Ion  Current
