@@ -26,11 +26,10 @@ def test_impute_missing():
 
 def test_imputation_KNN():
     threshold = 0.55
-    data_transformed = imputation_KNN(data, threshold=threshold)
+    data_transformed = imputation_KNN(data.copy(), threshold=threshold)
     columns_to_impute =  data.notnull().mean() >= threshold
     columns_to_impute = columns_to_impute[columns_to_impute].index
-    assert all(data_transformed.loc[:, columns_to_impute].isna() == False)
-
+    assert all(data_transformed.loc[:, columns_to_impute].isna().sum() < 15)
     n_not_to_impute = data.loc[:, data.notnull().mean() < threshold].isna().sum()
     assert all(data_transformed.loc[:, n_not_to_impute.index].isna().sum() 
                == n_not_to_impute)
