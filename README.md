@@ -7,10 +7,19 @@ Clone repository and install package in editable mode:
 pip install -e /path/to/cloned/folder 
 ```
 
-> Currently there are only notebooks and script under `bin`, but shared functionality will be added under `vaep` folder-package: This can then be imported using `import vaep`.
+> Currently there are only notebooks and script under `project/bin`, 
+> but shared functionality will be added under `vaep` folder-package: This can 
+> then be imported using `import vaep`.
+
+## Imputation
+- imputation of data is done based on the standard variation: Random samples are 
+  drawn from a (standard?) normal distribution with mean `\mu=mean_protein - c * sd_protein`
+- adapted scripts from Annelaura are under `vaep/imputation.py`
+
 
 ## PRIDE
-Using [bioservices](https://bioservices.readthedocs.io/en/master/) to access PRIDE dataset [RESTful API](https://www.ebi.ac.uk/pride/ws/archive/#!/project) from the command line.
+Using [bioservices](https://bioservices.readthedocs.io/en/master/) to access PRIDE 
+dataset [RESTful API](https://www.ebi.ac.uk/pride/ws/archive/#!/project) from the command line.
 
 Alternatives are Downloading project files using 
 - an [FTP server](ftp://ftp.pride.ebi.ac.uk/pride/data/archive). Submitted data is ordered by `<year>/<month>/<project-id>`, e.g. `ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2019/11/PXD012110/`. Accessible using [scp]() or python [`ftplib`](https://docs.python.org/3.7/library/ftplib.html) - module
@@ -41,35 +50,35 @@ Available software
 - [Morpheus](https://cwenger.github.io/Morpheus/) (faster than MaxQuant)
 - [Cytoscape](https://cytoscape.org/) for network visualization and analysis
 - [Trans-Proteomic Pipeline](https://moritz.isbscience.org/resources/software/)
-- 
-## Lili's data
-
-### AFLD project
-- roughly 500 AFLD patients (to varying degrees) and 200 controls
+- [Proline](http://www.profiproteomics.fr/proline/) from ProFi in Toulouse. 
 
 
-### PRIDE Archives from Lili's paper on NAFLD:
-
-- [PXD011839](https://www.ebi.ac.uk/pride/archive/projects/PXD011839) (human)
-- [PXD012056](https://www.ebi.ac.uk/pride/archive/projects/PXD012056) (mice)
-
-```
-from bioservices.pride import PRIDE
-client = PRIDE(verbose=True, cache=False)
-```
-
-### Imputation
-- imputation of data is done based on the standard variation: Random samples are drawn from a (standard?) normal distribution with mean mu=mean_protein - sd_protein
-- there are some custom scripts floating around
 ## People
 - [Prof. Dr. Lennart Martens](https://www.compomics.be/people/lennart-martens/)
 
-## Specialized Journals
-- [proteome](https://pubs.acs.org/journal/jprobs)
 
 ## Educational resources
 - Lennart Marten's [lecutre](https://www.youtube.com/playlist?list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl) and [tutorials](https://www.compomics.com/bioinformatics-for-proteomics/)
 - [FDR Tutorial](http://www.bioinfor.com/fdr-tutorial/)
+
+
+## Libraries
+- Prosit vs MS2PIP
+- [OpenSWATH](http://www.openswath.org/en/latest/): DIA workflow using OpenMS, PyProphet, etc.
+- 
+
+## Repositories
+- [MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp)
+- [Pride](https://www.ebi.ac.uk/pride/archive/)
+- [ProteomeXchange](http://www.proteomexchange.org/)
+
+MS-tech  | Software for processing
+-------- | -----------------------
+DIA      | OpenSWATH
+DDA      | 
+SWATH-MS | OpenSWATH
+
+
 
 
 ## Hela Cellline
@@ -118,3 +127,14 @@ This raises the question
 Spectral libray identification: Why are some proteins only identified in one single sample?
 - benjamini hochberg correction
 - [Mann-Witney-U-Test for ranks](https://de.wikipedia.org/wiki/Wilcoxon-Mann-Whitney-Test), [Rank-Biseral-Correlation](https://www.statisticshowto.datasciencecentral.com/rank-biserial-correlation/)
+
+
+## Relative vs Absolute Quantification
+- [Hamid Hamzeiy MQSS2018](https://www.youtube.com/watch?v=3bNaQxRL_10)
+    - Spectral Counting as good as MaxLFQ
+    - Performance is motivated by eyebowling rather than Metrics
+    - Relative LFQ: [MaxLFQ]()
+    - Absolute LFQ: [Proteomic Ruler]() (histone based)
+
+### Peptide vs Protein Level
+- razor peptide assignment: shared proteins are mapped to one protein 

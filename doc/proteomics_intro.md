@@ -1,3 +1,41 @@
+### Lennart Martens - [Introduction to Prteomics videos](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl)
+- Digitalizer: Transform an analog signal into a digital signal
+
+- Ionization Types
+  - MALDI: Analyte (peptide) is charged by matrix molecules by *one* ion only (mechanism is not so clear)
+    - three common matrix molecules in proteomics (CHCA, SA, DHB): Benzeme group taking up laser energy. 
+      Inherent bias to three amino-acids by MALDI due to three amino-acids sharing conformational similarity with benzeme group
+  - Electrospray ionization (ESI): Acid is added to the liquid in order to obtain charged peptides. 
+    - temperature of the needle
+    - peptides can take more than one ion
+
+- roughly 150.000 possible peptides if 5000 genes are expressed in a tissue (without any PTMs)
+
+- Detectors get worse over time. In the maintence sample one should see a spike when a new 
+  detector is replaced for the old one.
+
+- Fragmentation of peptides
+  - collision-induced dissociation (CID): b and y ions
+    - ergodic process, continously stronger vibration of peptide cleaves PSMs
+  - electron-capture dissociation (ECD): c and z ions 
+    - preserves PTMs as the fracturing is non- ergodic (vibration induced)
+
+## Intro (OpenMS from Tübingen) - [Video](https://www.youtube.com/watch?v=tnS-w8ggEAA&list=PL_6fafgzU1nHd13qqjm3uNvyHh62JpPcB&index=2&t=0s)
+- *Ion mobility* as a way to identify number of charges (ions), adding another dimension to the data
+- predict MS2 peptide itensities in order to better identify peptides ([MS2PIP](https://iomics.ugent.be/ms2pip/), [DeepMass: Prism](https://github.com/verilylifesciences/deepmass), Prosit)- 
+    - Question: Does this take amino-acid sequences and provides spectra?
+- number of mappings from peptides to protein (How many peptides per peptide?)
+- absoute quantification siscpa, aqua
+- feature-based label-free quantification
+    - does scale to (100?)
+    - quantification of isotopes (3D integral: intensity over retention time and m/z )
+- [SWATH-MS](https://imsb.ethz.ch/research/aebersold/research/swath-ms.html): DIA in DDA setting?
+- [pyOpenMS](https://pyopenms.readthedocs.io/en/latest/)
+- HUGO PSI Standards Formats: Machines do not provide all the same standardized dataset.
+- KNIME is popular for custom machines. `Nextflow` for cloud providers
+
+
+
 # Introduction to proteomics
 Given by Jeppe Madsen and Martin Rzkær
 
@@ -20,7 +58,10 @@ Given by Jeppe Madsen and Martin Rzkær
     - hydrophilic vs hydrophobic liquids (Acetonitrile)
 
 ### Column
-- reverse phase (chromatography), see [wikipedia](Reversed-phase chromatography (also called RPC, reverse-phase chromatography, or hydrophobic chromatography) includes any chromatographic method that uses a hydrophobic stationary phase.[1] RPC refers to liquid (rather than gas) chromatography.)
+- reverse phase (chromatography), see [wikipedia](Reversed-phase chromatography 
+  (also called RPC, reverse-phase chromatography, or hydrophobic chromatography) 
+  includes any chromatographic method that uses a hydrophobic stationary phase. 
+  RPC refers to liquid (rather than gas) chromatography.)
     > Reversed-phase chromatography (also called RPC, reverse-phase chromatography, or hydrophobic chromatography) includes any chromatographic method that uses a hydrophobic stationary phase. RPC refers to liquid (rather than gas) chromatography.
     > (...) Reversed-phase chromatography is a technique using alkyl chains covalently bonded to the stationary phase particles in order to create a hydrophobic stationary phase, which has a stronger affinity for hydrophobic or less polar compounds. The use of a hydrophobic stationary phase is essentially the reverse of normal phase chromatography, since the polarity of the mobile and stationary phases have been inverted – hence the term reversed-phase chromatography.
 
@@ -33,6 +74,7 @@ Given by Jeppe Madsen and Martin Rzkær
 > "One of the most significant differences between transcriptomics and proteomics is in the dynamic range of mRNA and protein concentrations inside the cell. While the protein abundances stretch over at least seven orders of magnitude, from one copy per cell to ten million copies per cell, the mRNA dynamic range covers only three or four orders of magnitude." (https://doi.org/10.1002/pmic.201200451)
 
 Claim: Around 5000 proteins should be identified for each sample.
+
 #### Data Dependent Acquistion (DDA)
 Orbitrap specific steps:
 1. MS1: mix of peptides to identify most candidates for MS2 scan
