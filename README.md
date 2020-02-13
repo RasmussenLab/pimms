@@ -7,78 +7,71 @@ Clone repository and install package in editable mode:
 pip install -e /path/to/cloned/folder 
 ```
 
-> Currently there are only notebooks and script under `project/bin`, 
+> Currently there are only notebooks and scripts under `project/bin`, 
 > but shared functionality will be added under `vaep` folder-package: This can 
 > then be imported using `import vaep`.
 
 ## Imputation
-- imputation of data is done based on the standard variation: Random samples are 
-  drawn from a (standard?) normal distribution with mean `\mu=mean_protein - c * sd_protein`
+- imputation of data is done based on the standard variation or KNN imputation
 - adapted scripts from Annelaura are under `vaep/imputation.py`
-
-
-## PRIDE
-Using [bioservices](https://bioservices.readthedocs.io/en/master/) to access PRIDE 
-dataset [RESTful API](https://www.ebi.ac.uk/pride/ws/archive/#!/project) from the command line.
-
-Alternatives are Downloading project files using 
-- an [FTP server](ftp://ftp.pride.ebi.ac.uk/pride/data/archive). Submitted data is ordered by `<year>/<month>/<project-id>`, e.g. `ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2019/11/PXD012110/`. Accessible using [scp]() or python [`ftplib`](https://docs.python.org/3.7/library/ftplib.html) - module
 
 
 ## Standardising Proteomics data
 
-- [HUPO Proteomics Standardiation Initiative](http://www.psidev.info/)
-> The HUPO Proteomics Standards Initiative defines community standards for data representation in proteomics and interactomics to facilitate data comparison, exchange and verification.
-     - [MGF format](http://www.matrixscience.com/help/data_file_help.html) for spectra
+- Common file formats and Identifier for Peptide intensity data: 
+  [HUPO Proteomics Standardiation Initiative](http://www.psidev.info/)
+> The HUPO Proteomics Standards Initiative defines community standards for data representation 
+  in proteomics and interactomics to facilitate data comparison, exchange and verification.
+    - [MGF format](http://www.matrixscience.com/help/data_file_help.html) for spectra
 Available software
 - An overview is provided by Roestlab as [Python for Proteomics](https://github.com/Roestlab/PythonProteomics)
-- Pyteomics 4.0: [BitBucket](https://bitbucket.org/levitsky/pyteomics/src/default/), [Paper](https://pubs.acs.org/doi/10.1021/acs.jproteome.8b00717), [Tutorial](https://pyteomics.readthedocs.io/en/latest/)
+- Pyteomics 4.0 developed by Moskau based group: [BitBucket](https://bitbucket.org/levitsky/pyteomics/src/default/), 
+    [Paper](https://pubs.acs.org/doi/10.1021/acs.jproteome.8b00717), 
+    [Tutorial](https://pyteomics.readthedocs.io/en/latest/)
     > `Pyteomics.mass`: A subpackage implementing mass and m/z calculations, including specific fragment ion types and modified peptides, isotope abundance calculation, and modification handling. The module offers two interfaces to the Unimod database: One (mass.Unimod) reads the Unimod archive file and stores it as a list of Python dictionaries, and the other (mass.unimod.Unimod) fully represents Unimod as a relational database using the SQLAlchemy engine. Both interfaces were added after the original publication. Additionally, the module now allows us to generate all (significant) isotopic compositions of a molecule.
 - [pyproteome](https://github.com/white-lab/pyproteome) by [White lab](http://white-lab.mit.edu/)
-- [colims](https://github.com/compomics/colims) by a Ghent based group. "System for end-to-end mass spectrometry based proteomics identification pipelines."
+- [colims](https://github.com/compomics/colims) by a [Lennart Martens'](https://www.compomics.be/people/lennart-martens/) group. "System for end-to-end mass spectrometry based proteomics identification pipelines."
    - [Computational and Statistical Methods for Protein Quantification by Mass Spectrometry](https://www.wiley.com/en-gb/Computational+and+Statistical+Methods+for+Protein+Quantification+by+Mass+Spectrometry-p-9781119964001)
    - [Computational Methods for Mass Spectrometry Proteomics](https://www.wiley.com/en-us/Computational+Methods+for+Mass+Spectrometry+Proteomics-p-9780470512975)
    - [Handbook of Proteins: Structure, Function and Methods, 2 Volume Set, 2 Volume Set](https://www.wiley.com/en-us/Handbook+of+Proteins%3A+Structure%2C+Function+and+Methods%2C+2+Volume+Set%2C+2+Volume+Set-p-9780470060988)
-- [MaxQuant](http://coxdocs.org/doku.php?id=maxquant:start), [MaxQuant-Pipeline](https://github.com/FredHutch/maxquant-pipeline)
+   - Lennart Marten's [lecutre](https://www.youtube.com/playlist?list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl) and [tutorials](https://www.compomics.com/bioinformatics-for-proteomics/) 
+- [MaxQuant](http://coxdocs.org/doku.php?id=maxquant:start), [MaxQuant-Pipeline](https://github.com/FredHutch/maxquant-pipeline) and ecosystem by Cox's group
     - [MaxLFQ]() for Label-free quantification
-        - assumes that 90% of the proteins do not vary and can be used for normalization
+        - assumes that 90% of the proteins do not vary and can be used for normalization between replicates
+    - [Perseus Platform](https://maxquant.net/perseus/)
+        - Analyze MaxQuant output
 - [spectrum_utils](https://github.com/bittremieux/spectrum_utils)  from [Wout Bittremieux](https://bittremieux.be/)
-
-- [Perseus Platform](https://maxquant.net/perseus/)
-    - Analyze MaxQuant output
-
+- [PyOpenMS](https://pyopenms.readthedocs.io/en/latest/getting_started.html): Python Client for OpenMS C++ library from [Kohlbacher group](https://kohlbacherlab.org/) in Tübingen, 
+    Aebersold group at ETH and [Reinert group](reinert-lab.de) at FU Berlin
 - [Morpheus](https://cwenger.github.io/Morpheus/) (faster than MaxQuant)
-- [Cytoscape](https://cytoscape.org/) for network visualization and analysis
 - [Trans-Proteomic Pipeline](https://moritz.isbscience.org/resources/software/)
 - [Proline](http://www.profiproteomics.fr/proline/) from ProFi in Toulouse. 
-
-
-## People
-- [Prof. Dr. Lennart Martens](https://www.compomics.be/people/lennart-martens/)
-
-
-## Educational resources
-- Lennart Marten's [lecutre](https://www.youtube.com/playlist?list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl) and [tutorials](https://www.compomics.com/bioinformatics-for-proteomics/)
-- [FDR Tutorial](http://www.bioinfor.com/fdr-tutorial/)
-
-
-## Libraries
-- Prosit vs MS2PIP
+- Prosit vs MS2PIP for peptide spectrum verification/prediction
 - [OpenSWATH](http://www.openswath.org/en/latest/): DIA workflow using OpenMS, PyProphet, etc.
-- 
 
-## Repositories
-- [MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp)
-- [Pride](https://www.ebi.ac.uk/pride/archive/)
-- [ProteomeXchange](http://www.proteomexchange.org/)
 
-MS-tech  | Software for processing
+MS-tech  | Pipelines for processing
 -------- | -----------------------
 DIA      | OpenSWATH
 DDA      | 
 SWATH-MS | OpenSWATH
 
+## Data Repositories
 
+- [MassIVE](https://massive.ucsd.edu/ProteoSAFe/static/massive.jsp)
+- [Pride](https://www.ebi.ac.uk/pride/archive/)
+- [ProteomeXchange](http://www.proteomexchange.org/)
+
+### PRIDE
+Using [bioservices](https://bioservices.readthedocs.io/en/master/) to access PRIDE 
+dataset [RESTful API](https://www.ebi.ac.uk/pride/ws/archive/#!/project) from the command line.
+
+Alternatives are Downloading project files using 
+- an [FTP server](ftp://ftp.pride.ebi.ac.uk/pride/data/archive). Submitted data is ordered 
+    by `<year>/<month>/<project-id>`, 
+    e.g. `ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2019/11/PXD012110/`. 
+    Accessible using [scp]() or 
+    python [`ftplib`](https://docs.python.org/3.7/library/ftplib.html) - module
 
 
 ## Hela Cellline
@@ -104,17 +97,16 @@ LC              |
 PID             | Person Identifier
 ColumnLength    | Length of mass/charge column
 
-- get tour trough the lab (Jeppe)
 
-
-## Start with VAE
+## NextUp - Ideas - Open Topics
 - [VAE in PyTorch](https://github.com/pytorch/examples/tree/master/vae)
-- clustering on cell-lines not on meta-data
-    1. Confirm that clustering using the original data is based on meta-data
-
+- Clustering on cell-lines not on meta-data
+    - Confirm that clustering using the original data is based on meta-data
     - Relative abundances per sample (per run): Standardization per sample
 
-### Idea:
+- use Wout Bettremieuxs [spetrum_utils](https://github.com/bittremieux/spectrum_utils) library,
+  [pyOpenMS-FileReader](https://pyopenms.readthedocs.io/en/latest/file_handling.html)
+
 > Is it possible to use deep learning to remove technical and experimental bias from proteomics data
 
 This raises the question 
@@ -122,14 +114,13 @@ This raises the question
         - Annelaura found so far only biological bias based on the Hela cellline change in April 2019
     - 
 
-
-## FDR  
+### FDR  
 Spectral libray identification: Why are some proteins only identified in one single sample?
-- benjamini hochberg correction
+- benjamini hochberg correction: [FDR Tutorial](http://www.bioinfor.com/fdr-tutorial/)
 - [Mann-Witney-U-Test for ranks](https://de.wikipedia.org/wiki/Wilcoxon-Mann-Whitney-Test), [Rank-Biseral-Correlation](https://www.statisticshowto.datasciencecentral.com/rank-biserial-correlation/)
 
 
-## Relative vs Absolute Quantification
+### Relative vs Absolute Quantification
 - [Hamid Hamzeiy MQSS2018](https://www.youtube.com/watch?v=3bNaQxRL_10)
     - Spectral Counting as good as MaxLFQ
     - Performance is motivated by eyebowling rather than Metrics
