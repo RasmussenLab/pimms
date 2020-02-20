@@ -48,7 +48,10 @@ Available software
 - [Proline](http://www.profiproteomics.fr/proline/) from ProFi in Toulouse. 
 - Prosit vs MS2PIP for peptide spectrum verification/prediction
 - [OpenSWATH](http://www.openswath.org/en/latest/): DIA workflow using OpenMS, PyProphet, etc.
-
+- [MASCOT](http://www.matrixscience.com/blog.html): Properitary software, 
+    buy who the `mgf` -fileformat (mascot general fileformat) was initially defined
+- [Comet](http://comet-ms.sourceforge.net/), former SEQUEST, is open-source 
+- [ProteinProspector](http://prospector.ucsf.edu/prospector/mshome.htm) - looks old-fashioned, but is updated
 
 MS-tech  | Pipelines for processing
 -------- | -----------------------
