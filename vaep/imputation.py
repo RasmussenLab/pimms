@@ -46,9 +46,14 @@ def _select_data(data:pd.DataFrame, threshold:float):
     Based on the threshold representing the minimum proportion of available
     data per protein, the columns of a `pandas.DataFrame` are selected.
 
+    Parameters
+    ----------
+    data: pandas.DataFrame
+    threshold: float
+        Threshold of percentage of non-missing values to select a column/feature.
     """
     columns_to_impute = data.notnull().mean() >= threshold
-    return data.loc[:, columns_to_impute].copy()
+    return columns_to_impute
 
 def _sparse_coo_array(data:pd.DataFrame):
     """Return a sparse scipy matrix from dense `pandas.DataFrame` with many 
@@ -106,23 +111,47 @@ def imputation_KNN(data, alone=True, threshold=0.5):
     return data
 
 
-def imputation_normal_distribution(data, shift=1.8, nstd=0.3):
-    np.random.seed(RANDOMSEED)
-    data_imputed = data.transpose().copy()
-    for i in data_imputed.loc[:, data_imputed.isnull().any()]:
-        missing = data_imputed[i].isnull()
-        std = data_imputed[i].std()
-        mean = data_imputed[i].mean()
-        sigma = std*nstd
-        mu = mean - (std*shift)
-        data_imputed.loc[missing, i] = np.random.normal(
-            mu, sigma, size=len(data_imputed[missing]))
-    return data_imputed.transpose()
+def imputation_normal_distribution(log_intensities:pd.Series, mean_shift=1.8, std_shrinkage=0.3):
+    """Impute missing log-transformed intensity values of DDA run.
 
+    Parameters
+    ----------
+    log_intensities: pd.Series
+        Series of normally distributed values. Here usually log-transformed
+        protein intensities.
+    mean_shift: integer, float
+        Shift the mean of the log_intensities by factors of their standard
+        deviation to the negative.
+    std_shrinkage: float
+        Value greater than zero by which to shrink (or inflate) the 
+        standard deviation of the log_intensities.
+    """
+    np.random.seed(RANDOMSEED)
+    if not isinstance(log_intensities, pd.Series):
+        try:
+            log_intensities.Series(log_intensities)
+            logger.warning("Series created of Iterable.")
+        except:
+            raise ValueError("Plese provided data which is a pandas.Series or an Iterable")
+    if mean_shift < 0:
+        raise ValueError("Please specify a positive float as the std.-dev. is non-negative.")
+    if std_shrinkage <= 0:
+        raise ValueError("Please specify a positive float as shrinkage factor for std.-dev.")
+    if std_shrinkage >= 1:
+        logger.warning("Standard Deviation will increase for imputed values.")
+    
+    mean = log_intensities.mean()
+    std  = log_intensities.std()
+
+    mean_shifted = mean - (std * mean_shift )
+    std_shrinked  = std * std_shrinkage
+
+    return log_intensities.where(log_intensities.notna(),
+                          np.random.normal(mean_shifted, std_shrinked))
 
 def imputation_mixed_norm_KNN(data):
     # impute columns with less than 50% missing values with KNN
     data = imputation_KNN(data, alone=False) # ToDo: Alone is not used.
     # impute remaining columns based on the distribution of the protein
-    data = imputation_normal_distribution(data, shift=1.8, nstd=0.3)
+    data = imputation_normal_distribution(data, mean_shift=1.8, std_shrinkage=0.3)
     return data

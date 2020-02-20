@@ -21,8 +21,8 @@ data.to_csv('test_data.csv')
 
 data = pd.read_csv('test_data.csv', index_col='id')
 
-def test_impute_missing():
-    pass
+# def test_impute_missing():
+#     pass
 
 def test_imputation_KNN():
     threshold = 0.55
@@ -35,9 +35,14 @@ def test_imputation_KNN():
                == n_not_to_impute)
 
 
-def test_imputation_normal_distribution():
-    pass
+def test_imputation_normal_dist():
+    log_intensities = pd.Series([26.0, np.nan, 24.0, 25.0, np.nan])
+    imputed = imputation_normal_distribution(log_intensities)
+    imputed = round(imputed, ndigits=5)
+    assert imputed.equals(
+        pd.Series([26.0, 22.87431, 24.0, 25.0, 22.87431])
+    )    
 
-def test_imputation_mixed_norm_KNN():
-    pass
+# def test_imputation_mixed_norm_KNN():
+#     pass
 
