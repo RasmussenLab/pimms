@@ -6,3 +6,4 @@
 #folders
 project/data/*
 !project/data/README.md
+project/Figures/
