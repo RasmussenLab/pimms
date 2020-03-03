@@ -1,5 +1,6 @@
 #python files
 *.ipynb_checkpoints
+*-checkpoint.ipynb
 *egg-info
 *.pyc
 

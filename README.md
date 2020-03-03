@@ -44,6 +44,7 @@ Available software
 - [PyOpenMS](https://pyopenms.readthedocs.io/en/latest/getting_started.html): Python Client for OpenMS C++ library from [Kohlbacher group](https://kohlbacherlab.org/) in Tübingen, 
     Aebersold group at ETH and [Reinert group](reinert-lab.de) at FU Berlin
 - [Morpheus](https://cwenger.github.io/Morpheus/) (faster than MaxQuant)
+- [Spectronaut](https://biognosys.com/shop/spectronaut), commercial, for DIA
 - [Trans-Proteomic Pipeline](https://moritz.isbscience.org/resources/software/)
 - [Proline](http://www.profiproteomics.fr/proline/) from ProFi in Toulouse. 
 - Prosit vs MS2PIP for peptide spectrum verification/prediction
@@ -52,10 +53,14 @@ Available software
     buy who the `mgf` -fileformat (mascot general fileformat) was initially defined
 - [Comet](http://comet-ms.sourceforge.net/), former SEQUEST, is open-source 
 - [ProteinProspector](http://prospector.ucsf.edu/prospector/mshome.htm) - looks old-fashioned, but is updated
+- [MSFragger](https://github.com/Nesvilab/MSFragger)
+- [ThermoRawFileParser](https://bigbionotes.blogspot.com/2020/02/thermorawfileparser-small-step-towards.html)
+- [AlphaPept](https://eugeniavoytik.github.io/), see [talk](https://www.youtube.com/watch?v=bMTNx_4nZlQ&list=PLxWLmFvQ1Jz9Ev_vp6WVuwtaz7qkPLM1x&index=12) by [Maximilian T. Strauss](https://straussmaximilian.github.io/), also [Eugenia Voytik](https://github.com/EugeniaVoytik)
+
 
 MS-tech  | Pipelines for processing
 -------- | -----------------------
-DIA      | OpenSWATH
+DIA      | OpenSWATH, Spectronaut
 DDA      | 
 SWATH-MS | OpenSWATH
 
@@ -102,6 +107,9 @@ ColumnLength    | Length of mass/charge column
 
 
 ## NextUp - Ideas - Open Topics
+- create matched peptides intensities and compare sparseness
+    - research available methods for matching
+
 - [VAE in PyTorch](https://github.com/pytorch/examples/tree/master/vae)
 - Clustering on cell-lines not on meta-data
     - Confirm that clustering using the original data is based on meta-data
@@ -116,6 +124,8 @@ This raises the question
     - Are there any clusters (related to biases) in the data?
         - Annelaura found so far only biological bias based on the Hela cellline change in April 2019
     - 
+
+-
 
 ### FDR  
 Spectral libray identification: Why are some proteins only identified in one single sample?
