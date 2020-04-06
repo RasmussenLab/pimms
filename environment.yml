@@ -1,0 +1,13 @@
+# Dev Environment
+name: vaep
+dependencies:
+  - python=3.8.*
+  - numpy=1.18.*
+  - pandas=1.*
+  - ipykernel=5.1.*
+  - ipywidgets
+  - matplotlib
+  - seaborn
+  - pip
+  - pip:
+    - xmltodict
