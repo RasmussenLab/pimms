@@ -1,5 +1,8 @@
 # Dev Environment
 name: vaep
+channel:
+  - base
+  - pytorch
 dependencies:
   - python=3.8.*
   - numpy=1.18.*
@@ -9,5 +12,10 @@ dependencies:
   - matplotlib
   - seaborn
   - pip
+  - pytorch
+  # - torchvision 
+  - cudatoolkit=10.1
+  - tqdm
   - pip:
     - xmltodict
+    - -e .
