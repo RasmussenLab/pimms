@@ -13,6 +13,7 @@ dependencies:
   - seaborn
   - pip
   - pytorch
+  - sklearn
   # - torchvision 
   - cudatoolkit=10.1
   - tqdm
