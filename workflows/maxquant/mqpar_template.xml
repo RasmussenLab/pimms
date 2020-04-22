@@ -3,7 +3,7 @@
    <name>Session1</name>
    <maxQuantVersion>1.5.6.8</maxQuantVersion>
    <tempFolder />
-   <numThreads>28</numThreads>
+   <numThreads>4</numThreads>
    <sendEmail>false</sendEmail>
    <fixedCombinedFolder />
    <ionCountIntensities>false</ionCountIntensities>

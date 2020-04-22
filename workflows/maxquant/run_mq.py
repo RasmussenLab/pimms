@@ -8,7 +8,9 @@ from subprocess import call
 # 'file' is the .raw file name e.g. 20191210_*.raw
 # 'name' is the .raw file name without '.raw' e.g. 20191210_*
 
-datadir = '/home/projects/cpr_man/people/s155016/denoms/data/'
+# from os.listdir()
+
+DATADIR = '/home/projects/cpr_man/people/s155016/denoms/data/'
 SCRIPTDIR = '/home/projects/cpr_man/people/s155016/denoms/script/'
 
 MQ_JOB_TEMPLATE = os.path.join(SCRIPTDIR, 'mq_job_template')
@@ -16,21 +18,21 @@ MQ_JOB_TEMPLATE = os.path.join(SCRIPTDIR, 'mq_job_template')
 MQ_PARAMETERS = 'mqpar_template.xml'
 MQ_PARAMETERS = os.path.join(SCRIPTDIR, MQ_PARAMETERS)
 
-df = pd.read_csv('my_df.tsv', sep ='\t', header = True)
+# df = pd.read_csv('my_df.tsv', sep ='\t', header = True)
 
 # loop over all runs
 for i in range(df.shape[0]):
     path, file, name = df.iloc[i] #replace by named parameters?
     # create new directory
     os.mkdir(DATADIR+name)
-    # copy file
+    # copy file  #ToDo: Why copy files?
     copyfile(path, DATADIR + name + '/' + file)
     print('rawfile copied')
     # create mqpar with the correct path and experiment
     mq_parameters_out_file = os.path.join(SCRIPTDIR, 'mqparfiles/mqpar_' + name + '.xml' )
     with open(MQ_PARAMETERS) as infile, open(mq_parameters_out_file, 'w') as outfile:
         for line in infile:
-            line = line.replace('PATH', os.path.join(DATADIR, name,file)
+            line = line.replace('PATH', os.path.join(DATADIR, name, file))
             line = line.replace('FILE', file)
             outfile.write(line)
         outfile.close()
@@ -49,5 +51,5 @@ for i in range(df.shape[0]):
     # run mqjob
     os.chdir(os.path.join(DATADIR, name))
     queue_command = 'qsub '+ SCRIPTDIR + 'mqjobs/mq_job_' + name
-    call(queue_command, shell=True)
+    return_code = call(queue_command, shell=True)
     print('job {} queued out of 528'.format(i+1))
