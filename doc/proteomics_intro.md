@@ -158,7 +158,9 @@ Valine          | Val | V    |  99.06841
 
 ## Glossar
 
-Term  | meaning
-----  | ---
-elute | remove (an adsorbed substance) by washing with a solvent, especially in chromatography
-XIC   | Extracted Ion  Current
+Term   | meaning
+----   | ---
+c-Trap | Meaning of c? collects one million particles before forwarding them
+elute  | remove (an adsorbed substance) by washing with a solvent, especially in chromatography
+HCD    | 
+XIC    | Extracted Ion  Current
