@@ -111,6 +111,7 @@ Alternatives are Downloading project files using
     e.g. `ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2019/11/PXD012110/`. 
     Accessible using [scp]() or 
     python [`ftplib`](https://docs.python.org/3.7/library/ftplib.html) - module
+-[`pride-py`](https://github.com/PRIDE-Archive/pride-py)
 
 
 ## Hela Cellline
