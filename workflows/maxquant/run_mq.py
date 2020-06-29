@@ -50,6 +50,6 @@ for i in range(df.shape[0]):
     print('mqjob created')
     # run mqjob
     os.chdir(os.path.join(DATADIR, name))
-    queue_command = 'qsub '+ SCRIPTDIR + 'mqjobs/mq_job_' + name
+    queue_command = 'qsub '+ mq_job_file
     return_code = call(queue_command, shell=True)
     print('job {} queued out of 528'.format(i+1))

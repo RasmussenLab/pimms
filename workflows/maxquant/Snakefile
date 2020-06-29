@@ -1,0 +1,51 @@
+"""
+Incremental development:
+
+1) run on local machine in dry-run (iteratively adding functionality)
+2) execute using `qsub` (or interactive shell on CR2)
+3) add queuing system `qsub`
+"""
+
+DATADIR = '/home/projects/cpr_man/people/s155016/denoms/data/'
+SCRIPTDIR = '/home/projects/cpr_man/people/s155016/denoms/script/'
+
+import pathlib
+
+
+#local
+FILES = []
+
+for filepath in pathlib.Path('.').glob('**/*'):
+    if filepath.suffix == '.raw':
+        FILES.append(filepath)
+
+#remote
+
+rule setup:
+    #something to create file-structure of run
+
+rule mqpar:
+    input:
+        temp=MQ_PAR_TEMP
+    output:
+        "mqpar.xml"
+    run:
+         mq_parameters_out_file = os.path.join(SCRIPTDIR, output[0] )
+        with open(MQ_PARAMETERS) as infile, open(mq_parameters_out_file, 'w') as outfile:
+            for line in infile:
+                line = line.replace('PATH', os.path.join(DATADIR, name, file))
+                line = line.replace('FILE', file)
+                outfile.write(line)
+            outfile.close()
+            infile.close()
+
+rule maxquant:
+    input:
+        "data/genome.fa",
+        "data/samples/A.fastq",
+        par='mqpar.xml'
+    output:
+        "mapped_reads/A.bam"
+    shell:
+        "mono MaxQuant/bin/MaxQuantCmd.exe {input.par}"
+
