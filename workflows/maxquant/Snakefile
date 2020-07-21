@@ -6,12 +6,21 @@ Incremental development:
 3) add queuing system `qsub`
 """
 
-#configfile='config.yaml' # access using config['key']
-USER = 'username' # to replace
-DATADIR = f'/mnt/c/Users/{USER}/documents/vaep/project/data/denoms/data/hela'
-SCRIPTDIR = f'/mnt/c/Users/{USER}/Documents/vaep/workflows/maxquant'
-MAXQUANTEXE = f'/mnt/c/Users/{USER}/Downloads/MaxQuant_1.6.12.0/'
-MQ_PAR_TEMP = 'mqpar_template.xml'
+
+# USER = 'name' # to replace
+# DATADIR = f'/mnt/c/Users/{USER}/documents/vaep/project/data/denoms/data/hela'
+# SCRIPTDIR = f'/mnt/c/Users/{USER}/Documents/vaep/workflows/maxquant'
+# MAXQUANTEXE = '/mnt/c/Users/{USER}/Downloads/MaxfQuant_1.6.12.0/'
+# MQ_PAR_TEMP = 'mqpar_template.xml'
+
+# wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
+# mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
+
+configfile: 'config.yaml' # access using config['key']
+
+SCRIPTDIR = config['SCRIPTDIR']
+MQ_PAR_TEMP = config['MQ_PAR_TEMP']
+MAXQUANTEXE = config['MAXQUANTEXE']
 
 wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
 mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
