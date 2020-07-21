@@ -1,5 +1,6 @@
 # MaxQuant Workflow
 
+## Python Template
 > Provided by Annelaura Bach
 
 
@@ -12,12 +13,24 @@ mq_job_template.sh   # sumbitted to the queue
 run_mq.py            # script executing MaxQuant
 ```
 
+## Snakemake
+Snakemake is a framework for execution of workflows on UNIX based systems.
+It is written in the line of thought of 
+[`GNU Makefiles`](https://www.opensourceforu.com/2012/06/gnu-make-in-detail-for-beginners/),
+but as an extension to Python rather than `C/C++`.
+
+### Setup
+```
+conda install -n snakemake snakemake pygraphviz
+```
 
 
+### Dry-RUN
 
-
-
-
+```
+snakemake -n
+snakemake -n --report
+```
 
 ## Typical directory structure
 Having a working directory called `dir`

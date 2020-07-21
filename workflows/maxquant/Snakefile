@@ -6,32 +6,47 @@ Incremental development:
 3) add queuing system `qsub`
 """
 
-DATADIR = '/home/projects/cpr_man/people/s155016/denoms/data/'
-SCRIPTDIR = '/home/projects/cpr_man/people/s155016/denoms/script/'
+#configfile='config.yaml' # access using config['key']
+USER = 'username' # to replace
+DATADIR = f'/mnt/c/Users/{USER}/documents/vaep/project/data/denoms/data/hela'
+SCRIPTDIR = f'/mnt/c/Users/{USER}/Documents/vaep/workflows/maxquant'
+MAXQUANTEXE = f'/mnt/c/Users/{USER}/Downloads/MaxQuant_1.6.12.0/'
+MQ_PAR_TEMP = 'mqpar_template.xml'
 
-import pathlib
+wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
+mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
 
+# import pathlib
 
 #local
-FILES = []
+FILES = ['20191028_QX4_StEb_MA_HeLa_500ng_191029155608',
+         '20191028_QX3_LiSc_MA_Hela_500ng_LC15_1']
 
-for filepath in pathlib.Path('.').glob('**/*'):
-    if filepath.suffix == '.raw':
-        FILES.append(filepath)
+# #Target Rule:
+rule target:
+    input:
+        file = expand("out/{file}.txt", file=FILES)
 
-#remote
+#remote file retrevial
+# #ToDo: Replace using SFTP class
+rule download_file:
+    output:
+        raw = "data/{file}.raw"
+    shell:
+        # #this assumes your runtime has the SSHPASS env set
+        # export SSHPASS=PW
+        "sshpass -e sftp -B 258048 hela << get {output.raw} data/{output.raw}; exit"
 
-rule setup:
-    #something to create file-structure of run
 
 rule mqpar:
-    input:
-        temp=MQ_PAR_TEMP
+    params:
+        mq_par_temp=mq_par_temp
     output:
-        "mqpar.xml"
+        mq_par = wildcard_mqpar
     run:
-         mq_parameters_out_file = os.path.join(SCRIPTDIR, output[0] )
-        with open(MQ_PARAMETERS) as infile, open(mq_parameters_out_file, 'w') as outfile:
+        #snakemake create folders itself if missing -> download job into folder
+        # with open({input.mq_par_temp}) as infile, open(output.mq_par, 'w') as outfile:
+        with open(params[0]) as infile, open(output[0], 'w') as outfile:
             for line in infile:
                 line = line.replace('PATH', os.path.join(DATADIR, name, file))
                 line = line.replace('FILE', file)
@@ -39,13 +54,17 @@ rule mqpar:
             outfile.close()
             infile.close()
 
+
 rule maxquant:
-    input:
-        "data/genome.fa",
-        "data/samples/A.fastq",
-        par='mqpar.xml'
+    input:           
+        raw = "data/{file}.raw",
+        mq_par = wildcard_mqpar,
+        exe = MAXQUANTEXE
     output:
-        "mapped_reads/A.bam"
+        out="out/{file}.txt"
     shell:
-        "mono MaxQuant/bin/MaxQuantCmd.exe {input.par}"
+        "mono {input.exe} {input.mq_par}"
+        "&& touch out/{output.out}.txt"
+
+
 
