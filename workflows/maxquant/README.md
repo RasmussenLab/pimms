@@ -11,6 +11,12 @@ conda create -c conda-forge -c bioconda -n snakemake snakemake=5.3
 conda activate snakemake
 ```
 
+Load MaxQuant
+
+```
+module load mono/6.8.0.105 maxquant/1.6.7.0
+
+```
 ## Python Template
 > Provided by Annelaura Bach
 

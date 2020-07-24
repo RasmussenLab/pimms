@@ -66,7 +66,7 @@ rule mqpar:
     run:
         #snakemake create folders itself if missing -> download job into folder
         # with open({input.mq_par_temp}) as infile, open(output.mq_par, 'w') as outfile:
-        with open(params[0]) as infile, open(output[0], 'w') as outfile:
+        with open(params[0], encoding='utf-8') as infile, open(output[0], 'w', encoding='utf-8') as outfile:
             for line in infile:
                 line = line.replace('PATH', input.rawfile)
                 line = line.replace('FILE', config['SCRIPTDIR'])
