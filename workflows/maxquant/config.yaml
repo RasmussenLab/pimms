@@ -2,3 +2,4 @@ DATADIR: path/to/specify
 SCRIPTDIR: path/to/specify
 MAXQUANTEXE: path/to/specify
 MQ_PAR_TEMP: path/to/specify
+THREATS_MQ: 8

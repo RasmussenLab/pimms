@@ -1,5 +1,16 @@
 # MaxQuant Workflow
 
+
+```
+module load tools
+module load anaconda3/2019.10
+conda init bash
+bash
+conda create -c conda-forge -c bioconda -n snakemake snakemake=5.3 
+#  ~/.conda/envs/snakemake
+conda activate snakemake
+```
+
 ## Python Template
 > Provided by Annelaura Bach
 
@@ -8,7 +19,8 @@ In the scripts folder is the `mqpar_template.xml` and the `mq_job_template.sh` a
 the `run_mq.py`:
 
 ```bash
-mqpar_template.xml   # MaxQuant Parameters
+mqpar_template.xml   # MaxQuant Paramete
+
 mq_job_template.sh   # sumbitted to the queue 
 run_mq.py            # script executing MaxQuant
 ```
@@ -30,6 +42,13 @@ conda install -n snakemake snakemake pygraphviz
 ```
 snakemake -n
 snakemake -n --report
+```
+
+### Run 
+
+Running snakemake with many repeated sample which might fail, you can type:
+```
+snakemake -k
 ```
 
 ## Typical directory structure

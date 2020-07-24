@@ -16,38 +16,49 @@ Incremental development:
 # wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
 # mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
 
+# envvars:
+    # #https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#environment-variables
+
 configfile: 'config.yaml' # access using config['key']
 
 SCRIPTDIR = config['SCRIPTDIR']
+DATADIR = config['DATADIR']
 MQ_PAR_TEMP = config['MQ_PAR_TEMP']
 MAXQUANTEXE = config['MAXQUANTEXE']
 
-wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
-mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
+
+wildcard_mqpar = os.path.join(SCRIPTDIR, 'mqpar_xmls', "mqpar_{file}.xml")
+mq_par_temp = os.path.join(SCRIPTDIR, MQ_PAR_TEMP)
 
 # import pathlib
 
 #local
 FILES = ['20191028_QX4_StEb_MA_HeLa_500ng_191029155608',
-         '20191028_QX3_LiSc_MA_Hela_500ng_LC15_1']
+         '20191028_QX3_LiSc_MA_Hela_500ng_LC15_1'
+         ]
 
 # #Target Rule:
 rule target:
     input:
+        # mockfile approach: https://stackoverflow.com/a/53751654/9684872
+        # replace? https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
         file = expand("out/{file}.txt", file=FILES)
 
 #remote file retrevial
 # #ToDo: Replace using SFTP class
 rule download_file:
     output:
-        raw = "data/{file}.raw"
+        raw = os.path.join(config['DATADIR'], "{file}.raw")
+    params:
+        file=temp("{file}.raw")
     shell:
         # #this assumes your runtime has the SSHPASS env set
-        # export SSHPASS=PW
-        "sshpass -e sftp -B 258048 hela << get {output.raw} data/{output.raw}; exit"
+        "sshpass -e sftp -B 258048 hela <<< \"get {params.file} {config[DATADIR]}/ \""
 
 
 rule mqpar:
+    input:
+        rawfile=os.path.join(config['DATADIR'], "{file}.raw")
     params:
         mq_par_temp=mq_par_temp
     output:
@@ -57,8 +68,8 @@ rule mqpar:
         # with open({input.mq_par_temp}) as infile, open(output.mq_par, 'w') as outfile:
         with open(params[0]) as infile, open(output[0], 'w') as outfile:
             for line in infile:
-                line = line.replace('PATH', os.path.join(DATADIR, name, file))
-                line = line.replace('FILE', file)
+                line = line.replace('PATH', input.rawfile)
+                line = line.replace('FILE', config['SCRIPTDIR'])
                 outfile.write(line)
             outfile.close()
             infile.close()
@@ -66,14 +77,18 @@ rule mqpar:
 
 rule maxquant:
     input:           
-        raw = "data/{file}.raw",
+        raw = os.path.join(config['DATADIR'], "{file}.raw"),
         mq_par = wildcard_mqpar,
         exe = MAXQUANTEXE
     output:
         out="out/{file}.txt"
+    threads:
+        config['THREATS_MQ']
+    # resources:
+    #     mem_mb=8192
+    params:
+        #set more cores as default: https://github.com/kentsisresearchgroup/UltraQuant/blob/master/UltraQuant.sm
     shell:
-        "mono {input.exe} {input.mq_par}"
-        "&& touch out/{output.out}.txt"
-
-
+        "mono {input.exe} {input.mq_par} &"
+        "touch {output.out}"
 
