@@ -1,26 +1,27 @@
 #!/bin/sh
 ### Note: No commands may be executed until after the #PBS lines
 ### Account information
-#PBS -W group_list=cpr_man -A cpr_man
+#PBS -W group_list=cpr_10006 -A cpr_10006
 ### Job name (comment out the next line to get the name of the script used as the job name)
-#PBS -N NAME 
+#PBS -N  
 ### Output files (comment out the next 2 lines to get the job name used instead)
-#PBS -e NAME.err
-#PBS -o NAME.log
-### Only send mail when job is aborted or terminates abnormally
-#PBS -M annelaura.bach@cpr.ku.dk
-#PBS -m n
+#PBS -e ${PBS_JOBNAME}.e${PBS_JOBID}
+#PBS -o ${PBS_JOBNAME}.o${PBS_JOBID}
+### Email notification: a=aborts, b=begins, e=ends, n=no notifications
+#PBS -m an -M henry.webel@cpr.ku.dk
 ### Number of nodes
-#PBS -l nodes=1:ppn=28,mem=100gb
-### Requesting time - 12 hours - overwrites **long** queue setting
-#PBS -l walltime=100:00:00
+#PBS -l nodes=1:ppn=20,mem=40gb
+### Requesting timeformat is <days>:<hours>:<minutes>:<seconds>
+#PBS -l walltime=12:00:00
 
 # Go to the directory from where the job was submitted (initial directory is $HOME)
 module load tools
-module load mono/6.0.0.327
+module load mono/6.8.0.105
+module load maxquant/1.6.7.0
+
 
 mono --version
-mono /home/projects/cpr_man/people/s155016/denoms/MaxQuant/bin/MaxQuantCmd.exe /home/projects/cpr_man/people/s155016/denoms/script/mqparfiles/mqpar_NAME.xml
+#mono /home/projects/cpr_man/people/s155016/denoms/MaxQuant/bin/MaxQuantCmd.exe /home/projects/cpr_man/people/s155016/denoms/script/mqparfiles/mqpar_NAME.xml
 
 rm /home/projects/cpr_man/people/s155016/denoms/data/NAME/RAWFILE
 echo "rawfile deleted"
