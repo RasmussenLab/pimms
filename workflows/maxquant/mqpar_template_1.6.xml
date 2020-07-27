@@ -2,7 +2,7 @@
 <MaxQuantParams xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <fastaFiles>
       <FastaFileInfo>
-         <fastaFilePath>/home/people/henweb/fasta/UP000005640_9606.fasta</fastaFilePath>
+         <fastaFilePath>/home/projects/cpr_10006/people/henweb/fasta/UP000005640_9606.fasta</fastaFilePath>
          <identifierParseRule>>.*\|(.*)\|</identifierParseRule>
          <descriptionParseRule>>.*\|(.*)\|</descriptionParseRule>
          <taxonomyParseRule></taxonomyParseRule>
@@ -11,7 +11,7 @@
          <taxonomyId>9606</taxonomyId>
       </FastaFileInfo>
       <FastaFileInfo>
-         <fastaFilePath>/home/people/henweb/fasta/UP000005640_9606_additional.fasta</fastaFilePath>
+         <fastaFilePath>/home/projects/cpr_10006/people/henweb/fasta/UP000005640_9606_additional.fasta</fastaFilePath>
          <identifierParseRule>>.*\|(.*)\|</identifierParseRule>
          <descriptionParseRule>>.*\|(.*)\|</descriptionParseRule>
          <taxonomyParseRule></taxonomyParseRule>
@@ -125,7 +125,7 @@
    <maxQuantVersion>1.6.12.0</maxQuantVersion>
    <tempFolder></tempFolder>
    <pluginFolder></pluginFolder>
-   <numThreads>6</numThreads>
+   <numThreads>NUM_THREADS</numThreads>
    <batchSize>1</batchSize>
    <emailAddress></emailAddress>
    <smtpHost></smtpHost>

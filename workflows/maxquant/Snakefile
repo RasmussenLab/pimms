@@ -6,29 +6,13 @@ Incremental development:
 3) add queuing system `qsub`
 """
 
-
-# USER = 'name' # to replace
-# DATADIR = f'/mnt/c/Users/{USER}/documents/vaep/project/data/denoms/data/hela'
-# SCRIPTDIR = f'/mnt/c/Users/{USER}/Documents/vaep/workflows/maxquant'
-# MAXQUANTEXE = '/mnt/c/Users/{USER}/Downloads/MaxfQuant_1.6.12.0/'
-# MQ_PAR_TEMP = 'mqpar_template.xml'
-
-# wildcard_mqpar = os.path.join(SCRIPTDIR, "mqpar_{file}.xml")
-# mq_par_temp = os.path.join(SCRIPTDIR, 'mqpar_xmls', MQ_PAR_TEMP)
-
 # envvars:
     # #https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#environment-variables
 
 configfile: 'config.yaml' # access using config['key']
 
-SCRIPTDIR = config['SCRIPTDIR']
-DATADIR = config['DATADIR']
-MQ_PAR_TEMP = config['MQ_PAR_TEMP']
-MAXQUANTEXE = config['MAXQUANTEXE']
-
-
-wildcard_mqpar = os.path.join(SCRIPTDIR, 'mqpar_xmls', "mqpar_{file}.xml")
-mq_par_temp = os.path.join(SCRIPTDIR, MQ_PAR_TEMP)
+# wildcard_mqpar = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
+# mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP'])
 
 # import pathlib
 
@@ -42,14 +26,14 @@ rule target:
     input:
         # mockfile approach: https://stackoverflow.com/a/53751654/9684872
         # replace? https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
-        file = expand(os.path.join(config['DATADIR'],"{file}", "{file}.txt"), file=FILES)
+        file = expand(os.path.join(config['DATADIR'], "{file}", "{file}.txt"), file=FILES)
 
 #remote file retrevial
 # #ToDo: Replace using SFTP class
 rule download_file:
     output:
         # raw = temp(os.path.join(config['DATADIR'],"{file}", "{file}.raw"))
-        raw = os.path.join(config['DATADIR'],"{file}", "{file}.raw")
+        raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw")
     params:
         file="{file}.raw"
     shell:
@@ -59,17 +43,19 @@ rule download_file:
 
 rule mqpar:
     input:
-        rawfile=os.path.join(config['DATADIR'], "{file}", "{file}.raw")
+        raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw")
     params:
-        mq_par_temp=mq_par_temp
+        mq_par_temp=os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP']),
+        threads=config['THREATS_MQ']
     output:
-        mq_par = wildcard_mqpar
+        mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
     run:
         #snakemake create folders itself if missing -> download job into folder
         # with open({input.mq_par_temp}) as infile, open(output.mq_par, 'w') as outfile:
         with open(params[0], encoding='utf-8') as infile, open(output[0], 'w', encoding='utf-8') as outfile:
             for line in infile:
-                line = line.replace('PATH', input.rawfile)
+                line = line.replace('PATH', input.raw)
+                line = line.replace('NUM_THREADS', params.threads)
                 outfile.write(line)
             outfile.close()
             infile.close()
@@ -78,8 +64,8 @@ rule mqpar:
 rule maxquant:
     input:           
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
-        mq_par = wildcard_mqpar,
-        exe = MAXQUANTEXE
+        mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml"),
+        exe = config['MAXQUANTEXE']
     output:
         out=os.path.join(config['DATADIR'], "{file}", "{file}.txt")
     threads:
