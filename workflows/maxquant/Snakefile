@@ -42,13 +42,14 @@ rule target:
     input:
         # mockfile approach: https://stackoverflow.com/a/53751654/9684872
         # replace? https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
-        file = expand("data/{file}/{file}.txt", file=FILES)
+        file = expand(os.path.join(config['DATADIR'],"{file}", "{file}.txt"), file=FILES)
 
 #remote file retrevial
 # #ToDo: Replace using SFTP class
 rule download_file:
     output:
-        raw = temp(os.path.join(config['DATADIR'],"{file}", "{file}.raw"))
+        # raw = temp(os.path.join(config['DATADIR'],"{file}", "{file}.raw"))
+        raw = os.path.join(config['DATADIR'],"{file}", "{file}.raw")
     params:
         file="{file}.raw"
     shell:
@@ -80,7 +81,7 @@ rule maxquant:
         mq_par = wildcard_mqpar,
         exe = MAXQUANTEXE
     output:
-        out="data/{file}/{file}.txt"
+        out=os.path.join(config['DATADIR'], "{file}", "{file}.txt")
     threads:
         config['THREATS_MQ']
     # resources:
