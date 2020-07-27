@@ -131,8 +131,8 @@
       <string>Carbamidomethyl (C)</string>
    </fixedModifications>
    <fastaFiles>
-      <string>/home/projects/cpr_man/people/s155016/denoms/data/fasta/UP000005640_9606.fasta</string>
-      <string>/home/projects/cpr_man/people/s155016/denoms/data/fasta/UP000005640_9606_additional.fasta</string>
+      <string>/home/projects/cpr_10006/people/henweb/fasta/UP000005640_9606.fasta</string>
+      <string>/home/projects/cpr_10006/people/henweb/fasta/UP000005640_9606_additional.fasta</string>
    </fastaFiles>
    <fastaFilesProteogenomics />
    <fastaFilesFirstSearch />
