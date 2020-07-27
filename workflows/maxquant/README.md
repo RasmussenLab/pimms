@@ -1,6 +1,4 @@
 # MaxQuant Workflow
-
-
 ```
 module load tools
 module load anaconda3/2019.10
@@ -9,13 +7,35 @@ bash
 conda create -c conda-forge -c bioconda -n snakemake snakemake=5.3 
 #  ~/.conda/envs/snakemake
 conda activate snakemake
+git update-index --assume-unchanged workflows/maxquant/config.yaml # untrack changes to config
 ```
 
-Load MaxQuant
-
+## Load MaxQuant
+You can either use a pre-exisiting MaxQuant installation or a  new one.
+Once you know the path, you do not need to load the module explicitly 
+into your set of environment variables.
 ```
 module load mono/6.8.0.105 maxquant/1.6.7.0
+export | grep MAXQUANT
 ```
+
+## Example `config.yaml` for Workflow
+Here the username is `henweb` and the group is Simon Rasmussen's group `cpr_10006`.
+
+```
+DATADIR: /home/projects/cpr_10006/people/henweb/hela/
+SCRIPTDIR: /home/projects/cpr_10006/people/henweb/vaep/workflows/maxquant/
+
+#Either your own or 
+MAXQUANTEXE: /home/projects/cpr_10006/people/henweb/MaxQuant_1.6.12.0/MaxQuant/bin/MaxQuantCmd.exe
+# MAXQUANTEXE: /services/tools/maxquant/1.6.7.0/MaxQuant.exe
+
+MQ_PAR_TEMP: /home/projects/cpr_10006/people/henweb/vaep/workflows/maxquant/mqpar_template_1.6.xml
+THREATS_MQ: 8
+```
+
+> You have to specify the fasta file paths manually in the parameter template file
+> referenced in MQ_PAR_TEMP, e.g. `/home/projects/cpr_10006/people/henweb/fasta/myfasta.fasta`
 
 ## Python Template
 > Provided by Annelaura Bach
