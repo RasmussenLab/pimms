@@ -1,0 +1,11 @@
+name: snakemake
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - snakemake=5.19.3
+  - pygraphviz
+  #- cookiecutter
+# #set individual environment location
+# prefix: /home/.conda/envs/snakemake

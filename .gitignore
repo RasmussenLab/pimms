@@ -11,3 +11,5 @@ project/Figures/
 
 #
 .pdf
+workflows/maxquant/.snakemake/
+workflows/maxquant/mqpar_xmls/

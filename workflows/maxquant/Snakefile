@@ -5,21 +5,25 @@ Incremental development:
 2) execute using `qsub` (or interactive shell on CR2)
 3) add queuing system `qsub`
 """
-
-# envvars:
-    # #https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#environment-variables
-
 configfile: 'config.yaml' # access using config['key']
+
+# move away from config into envvars
+envvars:
+    "SSHPASS"
 
 # wildcard_mqpar = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
 # mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP'])
 
-# import pathlib
-
 #local
-FILES = ['20191028_QX4_StEb_MA_HeLa_500ng_191029155608',
-         '20191028_QX3_LiSc_MA_Hela_500ng_LC15_1'
-         ]
+with open(config['FILES'], encoding='utf-8') as f:
+    FILES = [line.strip().split('.raw')[0] for line in f]
+
+FILES = FILES[:20]
+
+#MaxQuant Version REGEX -> log to parameter file
+#Session Name to file-name?
+
+localrules: target, download_file, mqpar
 
 # #Target Rule:
 rule target:
@@ -32,21 +36,34 @@ rule target:
 # #ToDo: Replace using SFTP class
 rule download_file:
     output:
-        # raw = temp(os.path.join(config['DATADIR'],"{file}", "{file}.raw"))
-        raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw")
+        raw = temp(os.path.join(config['DATADIR'], "{file}", "{file}.raw"))
+    benchmark:
+        os.path.join(config['DATADIR'], "{file}", "benchmark_download.tsv")
     params:
-        file="{file}.raw"
+        file="{file}.raw",
+        logdir = os.path.join(config['DATADIR'], "{file}"),
+        remote=config['REMOTE']
+    resources:
+        walltime="300", nodes=1, mem_mb=2048
+    threads:
+        1
     shell:
-        # #this assumes your runtime has the SSHPASS env set
-        "sshpass -e sftp -B 258048 hela <<< \"get {params.file} {output.raw} \""
+        "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \""
 
 
 rule mqpar:
     input:
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw")
+    benchmark:
+        os.path.join(config['DATADIR'], "{file}", "benchmark_mqpar.tsv")
     params:
         mq_par_temp=os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP']),
-        threads=config['THREATS_MQ']
+        threads_mq=config['THREATS_MQ'],
+        logdir = os.path.join(config['DATADIR'], "{file}")
+    resources:
+        walltime="240", nodes=1, mem_mb=1024
+    threads:
+        1
     output:
         mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
     run:
@@ -55,7 +72,7 @@ rule mqpar:
         with open(params[0], encoding='utf-8') as infile, open(output[0], 'w', encoding='utf-8') as outfile:
             for line in infile:
                 line = line.replace('PATH', input.raw)
-                line = line.replace('NUM_THREADS', params.threads)
+                line = line.replace('NUM_THREADS', str(params.threads_mq))
                 outfile.write(line)
             outfile.close()
             infile.close()
@@ -66,15 +83,21 @@ rule maxquant:
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
         mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml"),
         exe = config['MAXQUANTEXE']
+    benchmark:
+        os.path.join(config['DATADIR'], "{file}", "benchmark_MQ.tsv")
     output:
         out=os.path.join(config['DATADIR'], "{file}", "{file}.txt")
+    resources:
+        mem_mb=10240, walltime=43200, nodes=1
     threads:
         config['THREATS_MQ']
-    # resources:
-    #     mem_mb=8192
-    params:
-        #set more cores as default: https://github.com/kentsisresearchgroup/UltraQuant/blob/master/UltraQuant.sm
+    envmodules: 
+        "tools",
+        "mono/5.20.1.19"
+    params: 
+        logdir = os.path.join(config['DATADIR'], "{file}")
     shell:
-        "mono {input.exe} {input.mq_par} &&"
-        "touch {output.out}"
+        "mono --version && "
+        "mono {input.exe} {input.mq_par} && "
+        "echo \"Finished run with MaxQuant version {input.exe} at $(date +%F" "%T) \" >> {output.out}"
 

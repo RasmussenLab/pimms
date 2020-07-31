@@ -9,15 +9,18 @@ conda create -c conda-forge -c bioconda -n snakemake snakemake=5.3
 conda activate snakemake
 git update-index --assume-unchanged workflows/maxquant/config.yaml # untrack changes to config
 ```
+## Snakemake
 
-## Load MaxQuant
-You can either use a pre-exisiting MaxQuant installation or a  new one.
-Once you know the path, you do not need to load the module explicitly 
-into your set of environment variables.
-```
-module load mono/6.8.0.105 maxquant/1.6.7.0
-export | grep MAXQUANT
-```
+1. create conda environment for snakemake
+    ```
+    conda env create -f vaep/workflows/maxquant/environment.yml 
+    ```
+2. create cluster profile using [cookiecutter](https://github.com/Snakemake-Profiles/pbs-torque)
+    ```
+    mkdir -p ~/.config/snakemake
+    cd ~/.config/snakemake
+    cookiecutter https://github.com/Snakemake-Profiles/pbs-torque.git
+    ```
 
 ## Example `config.yaml` for Workflow
 Here the username is `henweb` and the group is Simon Rasmussen's group `cpr_10006`.
@@ -36,6 +39,74 @@ THREATS_MQ: 8
 
 > You have to specify the fasta file paths manually in the parameter template file
 > referenced in MQ_PAR_TEMP, e.g. `/home/projects/cpr_10006/people/henweb/fasta/myfasta.fasta`
+
+If you specify passwords in your config file you might want to restrict permissions to your user
+```
+chmod 600 config.yaml
+```
+
+### Load MaxQuant
+You can either use a pre-exisiting MaxQuant installation or a  new one.
+Once you know the path, you do not need to load the module explicitly 
+into your set of environment variables.
+```
+module load mono/5.20.1.19 maxquant/1.6.7.0
+export | grep MAXQUANT # find path to MaxQuant executable
+```
+
+> It seems that also on minor version updates the parameter file of MaxQuant is
+> not preserved. Make sure that your template parameter file is working together
+> with your MaxQuant version (by checking that locally?)
+
+## Test your Workflow - Dry-Run of Snakemake
+
+Make sure to be in the MaxQuant workflow folder `workflows/maxquant/` and 
+have a session which you can reconnect to (using e.g. `screen` or `tmux`).
+
+### Dry-RUN
+
+```
+snakemake -n
+snakemake -n --report
+```
+
+### Run locally
+
+Either on your computer or in an interactive shell (`iqsub`)
+
+Running snakemake with many repeated sample which might fail, you can type:
+```
+snakemake -k
+```
+
+### Run on cluster
+
+[qsub](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
+
+```bash
+#snakemake --jobs 2 --latency-wait 30 --cluster "qsub -W group_list=cpr_10006 -A cpr_10006 -m f"
+snakemake --jobs 2 -k --latency-wait 30 --use-envmodules \
+--cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
+" -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
+"-e log_qsub/snakejob.{rule}.{wildcards.file}.e$PBS_JOBID -o log_qsub/snakejob.{rule}.{wildcards.file}.o$PBS_JOBID"
+```
+
+```bash
+#snakemake --jobs 2 --latency-wait 30 --cluster "qsub -W group_list=cpr_10006 -A cpr_10006 -m f"
+snakemake --jobs 2 -k --latency-wait 30 --use-envmodules \
+--cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
+" -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
+"-e {params.logdir} -o {params.logdir}"
+```
+
+Alternatively invoked a profile defined from the template before. 
+
+Using the profile defined previously, the configuration 
+defined in `config.yaml` and in the `Snakefile` will be used.
+
+```
+snakemake --profile pbs-torque --jobs 10 --latency-wait 10 -k 
+```
 
 ## Python Template
 > Provided by Annelaura Bach
@@ -63,19 +134,6 @@ conda install -n snakemake snakemake pygraphviz
 ```
 
 
-### Dry-RUN
-
-```
-snakemake -n
-snakemake -n --report
-```
-
-### Run 
-
-Running snakemake with many repeated sample which might fail, you can type:
-```
-snakemake -k
-```
 
 ## Typical directory structure
 Having a working directory called `dir`
