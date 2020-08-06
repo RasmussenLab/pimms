@@ -23,7 +23,7 @@ FILES = FILES[:20]
 #MaxQuant Version REGEX -> log to parameter file
 #Session Name to file-name?
 
-localrules: target, download_file, mqpar
+localrules: target, mqpar
 
 # #Target Rule:
 rule target:
