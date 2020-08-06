@@ -51,7 +51,12 @@ rule download_file:
     threads:
         1
     shell:
-        "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \""
+        "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \" && ("
+        "FILESIZE=$(stat -c%s {output.raw}) && "
+        "[ $FILESIZE -le 100000000 ] && "
+        "echo '{output.raw}' >> excluded_files.txt && "
+        "echo \"File is too small: $FILESIZE\" && "
+        "exit 1 ||  exit 0)"
 
 
 rule mqpar:
@@ -101,6 +106,12 @@ rule maxquant:
         logdir = os.path.join(config['RESULTSDIR'], "{file}")
     shell:
         "mono --version && "
+        "FILESIZE=$(stat -c%s {input.raw}) && "
+        "[ $FILESIZE -ge 100000000 ] && "
         "mono {input.exe} {input.mq_par} && "
-        "echo \"Finished run with MaxQuant version {input.exe} at $(date +%F" "%T) \" >> {output.out}"
+        "echo \"Finished run with MaxQuant version {input.exe} at $(date +%F" "%T) \" >> {output.out} && "
+        "echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands && "
+        "echo 'put {params.datadir}/combined/txt mq_out/{wildcards.file}' >> sftp_commands && "
+        "echo \"{wildcards.file}\" >> completed.txt || "
+        "echo \"{wildcards.file}\" >> failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1"
 
