@@ -92,11 +92,11 @@ snakemake --jobs 2 -k --latency-wait 30 --use-envmodules \
 ```
 
 ```bash
-#snakemake --jobs 2 --latency-wait 30 --cluster "qsub -W group_list=cpr_10006 -A cpr_10006 -m f"
+#snakemake --jobs 2 --latency-wait 30 --cluster "qsub -W group_list=cpr_10006 -A cpr_10006 -m f" -n
 snakemake --jobs 2 -k --latency-wait 30 --use-envmodules \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
-"-e {params.logdir} -o {params.logdir}"
+"-e {params.logdir} -o {params.logdir}" -n
 ```
 
 Alternatively invoked a profile defined from the template before. 
@@ -133,6 +133,10 @@ but as an extension to Python rather than `C/C++`.
 conda install -n snakemake snakemake pygraphviz
 ```
 
+## Transfer results to erda
+
+find ./hela/  -name '*txt*' -type d -print
+find ./hela/  -path ./*/combined/txt -type d
 
 
 ## Typical directory structure
