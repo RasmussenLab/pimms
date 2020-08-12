@@ -16,9 +16,16 @@ envvars:
 
 #local
 with open(config['FILES'], encoding='utf-8') as f:
-    FILES = [line.strip().split('.raw')[0] for line in f]
+    FILES = set(line.strip().split('.raw')[0] for line in f)
 
-FILES = FILES[:20]
+with open('excluded_files.txt', encoding='utf-8') as f:
+    FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
+
+for _file_to_remove in FILES_EXCLUDED:
+    FILES.remove(_file_to_remove)
+
+FILES = list(FILES)
+FILES = FILES[33:42]
 
 #MaxQuant Version REGEX -> log to parameter file
 #Session Name to file-name?
