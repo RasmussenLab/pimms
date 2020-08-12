@@ -54,7 +54,7 @@ rule download_file:
         "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \" && ("
         "FILESIZE=$(stat -c%s {output.raw}) && "
         "[ $FILESIZE -le 100000000 ] && "
-        "echo '{output.raw}' >> excluded_files.txt && "
+        "echo '{params.file}' >> excluded_files.txt && "
         "echo \"File is too small: $FILESIZE\" && "
         "exit 1 ||  exit 0)"
 
@@ -105,13 +105,16 @@ rule maxquant:
         datadir = os.path.join(config['DATADIR'], "{file}"),
         logdir = os.path.join(config['RESULTSDIR'], "{file}")
     shell:
+        # write shell script?
+        # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#i-don-t-want-snakemake-to-detect-an-error-if-my-shell-command-exits-with-an-exitcode-1-what-can-i-do
         "mono --version && "
         "FILESIZE=$(stat -c%s {input.raw}) && "
         "[ $FILESIZE -ge 100000000 ] && "
         "mono {input.exe} {input.mq_par} && "
-        "echo \"Finished run with MaxQuant version {input.exe} at $(date +%F" "%T) \" >> {output.out} && "
+        "echo \"$(date +\"%F %T\"): Finished run with MaxQuant version {input.exe}\" >> {output.out} && "
         "echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands && "
-        "echo 'put {params.datadir}/combined/txt mq_out/{wildcards.file}' >> sftp_commands && "
+        "echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands && "
         "echo \"{wildcards.file}\" >> completed.txt || "
-        "echo \"{wildcards.file}\" >> failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1"
+        "( echo \"{wildcards.file}\" >> failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
+
 
