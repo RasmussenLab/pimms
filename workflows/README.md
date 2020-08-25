@@ -1,33 +1,33 @@
 # Workflows
 
-[Computerome](https://www.computerome.dk/display/CW/Batch+System)
- is based TORQUE `qsub` implementation.
+## Snakemake
+Snakemake is a framework for execution of workflows on UNIX based systems.
+It is written in the line of thought of 
+[`GNU Makefiles`](https://www.opensourceforu.com/2012/06/gnu-make-in-detail-for-beginners/),
+but as an extension to Python rather than `C/C++`.
 
-#### Snakemake
-- [qsub](https://snakemake.readthedocs.io/en/stable/executing/cluster-cloud.html#cluster-execution) execution
-#### Nextflow
-- [`PBS/TORQUE`](https://www.nextflow.io/docs/latest/executor.html#pbs-torque) execution
-
-## MaxQuant workflow
-> Currently single python script
-
+### Setup
+```
+conda install -n snakemake snakemake pygraphviz
+```
 
 ## Downloading from erda
 
 ### Manually
+In your `~/.ssh/config` define a target, here the `SharedFolderName` is called by `hela`:
 ```
-# .ssh/config
 Host hela
 Hostname io.erda.dk
 VerifyHostKeyDNS yes
 User SharedFolderName
 ```
 
-
+Then you can connect to `hela` using the `sftp`-command, and copy files to your
+local `data`-folder:
 ```
 sftp -B 258048 hela # pw is SharedFolderName
-get 20191028_QX4_StEb_MA_HeLa_500ng_191029155608.raw data/
-get 20191028_QX3_LiSc_MA_Hela_500ng_LC15_1.raw data/
+get file1.raw data/
+get file2.raw data/
 ```
 
 ### In Shell Script
