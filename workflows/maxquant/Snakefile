@@ -18,14 +18,16 @@ envvars:
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
-with open('excluded_files.txt', encoding='utf-8') as f:
+fname_excluded = 'log_excluded_files.txt'
+with open(fname_excluded, encoding='utf-8') as f:
     FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
 
 for _file_to_remove in FILES_EXCLUDED:
     FILES.remove(_file_to_remove)
 
+# #ToDo: Order Files (set gives an unordered)
 FILES = list(FILES)
-FILES = FILES[33:42]
+FILES.sort()  # otherwise set returns non consistent order of files?
 
 #MaxQuant Version REGEX -> log to parameter file
 #Session Name to file-name?
@@ -40,7 +42,7 @@ rule target:
     input:
         # mockfile approach: https://stackoverflow.com/a/53751654/9684872
         # replace? https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
-        file = expand(os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt"), file=FILES)
+        expand(os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt"), file=FILES)
 
 #remote file retrevial
 # #ToDo: Replace using SFTP class
@@ -61,7 +63,7 @@ rule download_file:
         "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \" && ("
         "FILESIZE=$(stat -c%s {output.raw}) && "
         "[ $FILESIZE -le 100000000 ] && "
-        "echo '{params.file}' >> excluded_files.txt && "
+        "echo '{params.file}' >> {fname_excluded} && "
         "echo \"File is too small: $FILESIZE\" && "
         "exit 1 ||  exit 0)"
 
@@ -121,7 +123,7 @@ rule maxquant:
         "echo \"$(date +\"%F %T\"): Finished run with MaxQuant version {input.exe}\" >> {output.out} && "
         "echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands && "
         "echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands && "
-        "echo \"{wildcards.file}\" >> completed.txt || "
-        "( echo \"{wildcards.file}\" >> failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
+        "echo \"{wildcards.file}\" >> log_completed.txt || "
+        "( echo \"{wildcards.file}\" >> log_failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
 
 
