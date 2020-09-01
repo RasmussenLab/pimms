@@ -139,6 +139,8 @@ erda root directory.
 sftp -B 258048 -b sftp_commands io.erda.dk
 ```
 
+> afterwards one should rename the sftp_commands file or move it to an archive folder.
+
 ## Find output files
 > Look up only for now
 Find MQ output files in `hela` folder and remove them by age:
