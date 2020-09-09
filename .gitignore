@@ -8,6 +8,12 @@
 project/data/*
 !project/data/README.md
 project/Figures/
-
+imputeLCMD_*
+workflows/maxquant/.snakemake/
+workflows/maxquant/mqpar_xmls/
+workflows/maxquant/out/
+*snakemake.log
 #
-.pdf
+*.pdf
+*.html
+
