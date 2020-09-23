@@ -1,8 +1,9 @@
+from pathlib import Path
+import numpy as np
 import pandas as pd
 import pytest
 
-from vaep.imputation import * # ToDo: Choose function
-
+from vaep.imputation import imputation_KNN, imputation_normal_distribution
 """
 # Test Data set was created from a sample by shuffling:
 
@@ -19,7 +20,14 @@ data.apply(numpy.random.shuffle, axis=1)
 data.to_csv('test_data.csv')
 """
 
-data = pd.read_csv('test_data.csv', index_col='id')
+
+@pytest.fixture
+def example_data():
+    """
+    Fixture to load example data from a csv file for testing.
+    """
+    example_data_path = Path(__file__).resolve().parent / 'test_data.csv'
+    return pd.read_csv(example_data_path, index_col='id')
 
 # def test_impute_missing():
 #     pass
@@ -48,4 +56,3 @@ def test_imputation_normal_dist():
 
 # def test_imputation_mixed_norm_KNN():
 #     pass
-
