@@ -24,14 +24,17 @@ data = pd.read_csv('test_data.csv', index_col='id')
 # def test_impute_missing():
 #     pass
 
-def test_imputation_KNN():
+
+def test_imputation_KNN(example_data):
     threshold = 0.55
+    data = example_data
     data_transformed = imputation_KNN(data.copy(), threshold=threshold)
-    columns_to_impute =  data.notnull().mean() >= threshold
+    columns_to_impute = data.notnull().mean() >= threshold
     columns_to_impute = columns_to_impute[columns_to_impute].index
     assert all(data_transformed.loc[:, columns_to_impute].isna().sum() < 15)
-    n_not_to_impute = data.loc[:, data.notnull().mean() < threshold].isna().sum()
-    assert all(data_transformed.loc[:, n_not_to_impute.index].isna().sum() 
+    n_not_to_impute = data.loc[:,
+                               data.notnull().mean() < threshold].isna().sum()
+    assert all(data_transformed.loc[:, n_not_to_impute.index].isna().sum()
                == n_not_to_impute)
 
 
@@ -41,7 +44,7 @@ def test_imputation_normal_dist():
     imputed = round(imputed, ndigits=5)
     assert imputed.equals(
         pd.Series([26.0, 22.87431, 24.0, 25.0, 22.87431])
-    )    
+    )
 
 # def test_imputation_mixed_norm_KNN():
 #     pass
