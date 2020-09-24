@@ -19,7 +19,7 @@ MQ_VERSION = '1.6.12.0'
 
 def check_for_key(iterable, key):
     """Check for key in items of Iterable
-    using `in`(`__contains__`). 
+    using `in`(`__contains__`).
 
     Parameters
     ----------
