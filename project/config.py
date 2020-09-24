@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 FILENAME = 'Mann_Hepa_data.tsv'
 
@@ -20,4 +21,8 @@ os.makedirs(PROCESSED_DATA, exist_ok=True)
 PREFIX_IMPUTED = 'hela_imputed_proteins'
 PREFIX_META = 'hela_metadata'
 
-FN_ID_MAP = 'data/fasta/id_map.json'
+FOLDER_FASTA = Path(FOLDER_DATA) / 'fasta'
+FN_FASTA_DB = FOLDER_FASTA / 'fasta_db.json'
+FN_ID_MAP = FOLDER_FASTA / 'id_map.json'
+FN_PROT_GENE_MAP = FOLDER_FASTA / 'uniprot_protein_gene_map.json'
+FN_PEP_TO_PROT = FOLDER_FASTA / 'peptided_to_prot_id.json'
