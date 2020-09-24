@@ -12,4 +12,6 @@ os.makedirs(PROCESSED_DATA, exist_ok=True)
 
 
 PREFIX_IMPUTED = 'hela_imputed_proteins'
-PREFIX_META    = 'hela_metadata'
+PREFIX_META = 'hela_metadata'
+
+FN_ID_MAP = 'data/fasta/id_map.json'
