@@ -1,14 +1,15 @@
 import os
+from collections import namedtuple
 from pathlib import Path
 import logging
 
-import xmltodict
-from numpy import dtype
-import ipywidgets as widgets
+from tqdm import tqdm
+
 import pandas as pd
 from pandas.errors import EmptyDataError
 
-from tqdm import tqdm
+import xmltodict
+from numpy import dtype
 
 logger = logging.getLogger('src.file_utils.py')
 
@@ -44,6 +45,9 @@ def check_for_key(iterable, key):
         return '_'.join(iterable)
 
 
+PathsList = namedtuple('PathsList', ['files', 'folder'])
+
+
 def search_files(path='.', query='.txt'):
     """Uses Pathlib to find relative to path files 
     with the query text in their file names. Returns 
@@ -66,33 +70,71 @@ def search_files(path='.', query='.txt'):
     for p in path.rglob("*"):
         if query in p.name:
             files.append(str(p.relative_to(path)))
-    return files
+    return PathsList(files=files, folder=path)
 
 
-def process_files(handler_fct, filepaths, key='QE'):
+def search_subfolders(path='.', depth: int = 1):
+    """Search subfolders relative to given path."""
+    if not isinstance(depth, int) and depth > 0:
+        raise ValueError(
+            f"Please provide an strictly positive integer, not {depth}")
+
+    path = Path(path)
+    directories = [path]
+
+    def get_subfolders(path):
+        return [x for x in path.iterdir() if x.is_dir()]
+
+    directories_previous = directories.copy()
+    while depth > 0:
+        directories_new = list()
+        for p in directories_previous:
+            directories_new.extend(
+                get_subfolders(p))
+        directories.extend(directories_new)
+        directories_previous = directories_new.copy()
+        depth -= 1
+    return directories
+
+# can file-loading be made concurrent?
+# check tf.data
+
+
+def process_files(handler_fct, filepaths, key=None, relative_to=None):
     """Process a list of filepaths using a `handler_fct`.
     `Handler_fct`s have to return a `pandas.DataFrame`.
 
     handle_fct: function
         Function returning a DataFrame for a filepath from `filepaths`
+    key_lookup: function, dict
     filepaths: Iterable
         List, tuple, etc. containing filepath to iteratore over.
     """
     names = []
     failed = []
-    for i, _file in enumerate(tqdm(filepaths)):
+    for i, _file in enumerate(tqdm(filepaths, position=0, leave=True)):
+        if relative_to:
+            _file = os.path.join(relative_to, _file)
+            logger.debug(f"New File path: {_file}")
         if i == 0:
-            # locals()
             # throws an error if the first file cannot be read-in
             df = handler_fct(_file)
-            names.append(check_for_key(iterable=_file.split(os.sep), key=key))
-        else:
-            try:
-                df = df.join(handler_fct(_file), how='outer', rsuffix=i)
+            if key:
                 names.append(check_for_key(
                     iterable=_file.split(os.sep), key=key))
+            else:
+                names.append(os.path.basename(os.path.dirname(_file)))
+        else:
+            try:
+                df = df.join(handler_fct(filepath=_file),
+                             how='outer', rsuffix=i)
+                if key:
+                    names.append(check_for_key(
+                        iterable=_file.split(os.sep), key=key))
+                else:
+                    names.append(os.path.basename(os.path.dirname(_file)))
             except EmptyDataError:
-                logger.warning('Empty DataFrame: {}'.format(_file))
+                logger.warning('\nEmpty DataFrame: {}'.format(_file))
                 failed.append(_file)
     return df, names, failed
 
