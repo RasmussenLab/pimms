@@ -93,6 +93,11 @@ snakemake -k
 
 ### Run on cluster
 
+```
+qsub -V run_sm_on_cluster.sh 
+```
+
+####
 [qsub](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
 
 ```bash
