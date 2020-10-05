@@ -17,6 +17,7 @@ FOLDER_DATA = 'data'
 PROCESSED_DATA = os.path.join(FOLDER_DATA, 'processed')
 os.makedirs(PROCESSED_DATA, exist_ok=True)
 
+FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'
 
 PREFIX_IMPUTED = 'hela_imputed_proteins'
 PREFIX_META = 'hela_metadata'
@@ -26,3 +27,10 @@ FN_FASTA_DB = FOLDER_FASTA / 'fasta_db.json'
 FN_ID_MAP = FOLDER_FASTA / 'id_map.json'
 FN_PROT_GENE_MAP = FOLDER_FASTA / 'uniprot_protein_gene_map.json'
 FN_PEP_TO_PROT = FOLDER_FASTA / 'peptided_to_prot_id.json'
+
+
+# DATA FASTA Config
+KEY_FASTA_HEADER = 'meta'
+KEY_FASTA_SEQ = 'seq'
+KEY_PEPTIDES = 'peptides'
+KEY_GENE_NAME = 'gene'
