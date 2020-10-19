@@ -27,7 +27,8 @@ FN_FASTA_DB = FOLDER_FASTA / 'fasta_db.json'
 FN_ID_MAP = FOLDER_FASTA / 'id_map.json'
 FN_PROT_GENE_MAP = FOLDER_FASTA / 'uniprot_protein_gene_map.json'
 FN_PEP_TO_PROT = FOLDER_FASTA / 'peptided_to_prot_id.json'
-
+FN_PROTEIN_SUPPORT_MAP = Path(FOLDER_DATA) / 'protein_support.pkl'
+FN_PROTEIN_SUPPORT_FREQ = Path(FOLDER_DATA) / 'dict_protein_support_freq.pkl'
 
 # DATA FASTA Config
 KEY_FASTA_HEADER = 'meta'
