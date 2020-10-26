@@ -41,8 +41,11 @@ For a detailed description of a setup using conda, see [docs]()
 - [MASCOT](http://www.matrixscience.com/blog.html): Properitary software, 
     buy who the `mgf` -fileformat (mascot general fileformat) was initially defined
 - [Morpheus](https://cwenger.github.io/Morpheus/) (faster than MaxQuant)
+    - web-based tool to visualize proteomics data including meta-data
+    - links datasets which are publicly available. deepmap proteomics?
 - [Proline](http://www.profiproteomics.fr/proline/) from ProFi in Toulouse. 
 - [AlphaPept](https://eugeniavoytik.github.io/), see [talk](https://www.youtube.com/watch?v=bMTNx_4nZlQ&list=PLxWLmFvQ1Jz9Ev_vp6WVuwtaz7qkPLM1x&index=12) by [Maximilian T. Strauss](https://straussmaximilian.github.io/), also [Eugenia Voytik](https://github.com/EugeniaVoytik)
+- [pFind 3.0]() identification tool for peptides. open search engine.
 
 
 ### Fileformat transformation
@@ -83,6 +86,7 @@ Available software
 
 - [Comet](http://comet-ms.sourceforge.net/), former SEQUEST, is open-source 
 - [ProteinProspector](http://prospector.ucsf.edu/prospector/mshome.htm) - looks old-fashioned, but is updated
+- [prostar](): Imputation by bayesian inference or random imputation of low abundant data. 
 
 
 

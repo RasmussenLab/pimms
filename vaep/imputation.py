@@ -92,7 +92,8 @@ def imputation_KNN(data, alone=True, threshold=0.5):
     threshold: float
         Threshold of missing data by column in interval (0, 1)
     """
-    data_selected = _select_data(data=data, threshold=threshold)
+    mask_selected = _select_data(data=data, threshold=threshold)
+    data_selected = data.loc[:, mask_selected]
     data_selected_sparse = _sparse_coo_array(data_selected)
     # impute
     knn_fitted = NearestNeighbors(n_neighbors=3, algorithm='brute').fit(
