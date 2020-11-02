@@ -10,7 +10,7 @@
 ### Email notification: a=aborts, b=begins, e=ends, n=no notifications
 #PBS -m ae -M henry.webel@cpr.ku.dk
 ### Number of nodes
-#PBS -l nodes=1:ppn=4,mem=4gb
+#PBS -l nodes=1:ppn=1,mem=2gb
 ### Requesting timeformat is <days>:<hours>:<minutes>:<seconds>
 #PBS -l walltime=7:00:00:00
 ### Forward all environment variables

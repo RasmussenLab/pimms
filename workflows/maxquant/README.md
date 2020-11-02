@@ -1,13 +1,13 @@
 # MaxQuant Workflow
 
-## Setup on CR2 
+## Setup on CR2
 If you already have a working version of snakemake, consider to skip this:
 ```
 module load tools
 module load anaconda3/2019.10
 conda init bash
 bash
-conda env create -f vaep/workflows/maxquant/environment.yml 
+conda env create -f vaep/workflows/maxquant/environment.yml
 #  ~/.conda/envs/snakemake
 conda activate snakemake
 git update-index --assume-unchanged workflows/maxquant/config.yaml # untrack changes to config
@@ -28,7 +28,7 @@ MQ_PAR_TEMP: /home/projects/cpr_10006/people/henweb/vaep/workflows/maxquant/mqpa
 THREATS_MQ: 8
 
 # Remote name for fetching files and list of all files
-REMOTE: hela  
+REMOTE: hela
 FILES: ../hela_files.txt
 ```
 
@@ -42,7 +42,7 @@ chmod 600 config.yaml
 
 ### Find MaxQuant exectuable
 You can either use a pre-exisiting MaxQuant installation or a  new one.
-Once you know the path, you do not need to load the module explicitly 
+Once you know the path, you do not need to load the module explicitly
 into your set of environment variables.
 ```
 module load mono/5.20.1.19 maxquant/1.6.7.0
@@ -55,24 +55,25 @@ export | grep MAXQUANT # find path to MaxQuant executable
 
 ## Test your Workflow - Dry-Run of Snakemake
 
-Make sure to be in the MaxQuant workflow folder `workflows/maxquant/` and 
+Make sure to be in the MaxQuant workflow folder `workflows/maxquant/` and
 have a session which you can reconnect to (using e.g. `screen` or `tmux`).
 
 ### Set `SSHPASS`
-This workflow uses in the current implementation a password protected sftp 
-connection. In order to login your local environment in which you run 
+This workflow uses in the current implementation a password protected sftp
+connection. In order to login your local environment in which you run
 snakemake has to have a password,  `<PASSWORD>` set.
 
 ```bash
 export SSHPASS=<PASSWORD>
 ```
-If you don't snakemake will remind you. 
-Howwever, snakemake cannot check if the password is correct 
+
+If you don't snakemake will remind you.
+Howwever, snakemake cannot check if the password is correct
 before execution, so best verify yourself that it works in the shell you execute.
 The `REMOTE` is the same you specified in the `config.yml`:
 
 ```bash
-sshpass -e sftp -B 258048 REMOTE <<< "pwd" 
+sshpass -e sftp -B 258048 REMOTE <<< "pwd"
 ```
 
 ### Dry-RUN
@@ -94,47 +95,55 @@ snakemake -k
 ### Run on cluster
 
 ```
-qsub -V run_sm_on_cluster.sh 
+qsub -V run_sm_on_cluster.sh
 ```
 
 ####
 [qsub](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
 
 ```bash
-snakemake --jobs 10 -k --latency-wait 30 --use-envmodules \
+snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
 "-e {params.logdir} -o {params.logdir}" -n
 ```
 > Once you are sure, remote the dryrun flag `-n`
 
-Alternatively invoked a profile defined from the template before. 
+Alternatively invoked a profile defined from the template before.
 
-Using the profile defined previously, the configuration 
+Using the profile defined previously, the configuration
 defined in `config.yaml` and in the `Snakefile` will be used.
 
 ```
-snakemake --profile pbs-torque --jobs 10 --latency-wait 10 -k 
+snakemake --profile pbs-torque --jobs 10 --latency-wait 10 -k
 ```
 
-## Transfer data to erda.dk
+## After running snakemaker
+
+> The file names can be changed in the `config.yaml`
 
 After snakemake execution of the files in `[hela_files.txt](../hela_files.txt)
 you should find three new files in the workflow folder [maxquant](vaep/workflows/maxquant):
 
 ```
-completed.txt
-excluded_files.txt
-failed.txt
+log_completed.txt
+log_excluded_files.txt
+log_failed.txt
 sftp_commands
 ```
 
-The `excluded_files.txt` will be discarded in further workflow runs 
-(due to being too small) and `failed.txt` holds 
-files which failed although their size is sufficient.
+The `log_excluded_files.txt` will be discarded in further workflow runs
+(due to being too small) and `log_failed.txt` holds
+files which failed although their size is sufficient. The ladder are not automatically
+excluded when you re-run snakemake, as the reason for the failure might be on the
+server side.
 
-The `sftp_commands` file is the set of commands for batch-mode execution for 
-transferring files to erda.dk. If you set up access to your erda folder appropriatly
+The `sftp_commands` file is the set of commands for batch-mode execution for
+transferring files to erda.dk. Assuming the server was reachable when executing the
+job, the files should have been transferred during the run. Otherwise you can re-run
+the transfer again:
+
+If you set up access to your erda folder appropriatly
 you should be able to connect to `erda <your-hostname>`. I named it `erda io.erda.dk`.
 If you can connect using this command, execute the sftp command in batch mode providing
 `sftp_commands` as an argument in order to store the files in a `hela` folder on your
@@ -153,9 +162,9 @@ Find MQ output files in `hela` folder and remove them by age:
 find ./hela/  -name '*txt*' -type d -print
 find ./hela/  -path ./*/combined/txt -type d
 ls ./hela/ -ltr # check for old files
-find ./hela/ -mtime +2 
+find ./hela/ -mtime +2
 #find ./hela/ -mtime +2 -exec rm {} \;
 #find ./hela/ -mtime +2 -exec rmdir {} \; -type d
 #find ./hela/ -type d -empty -delete
-#find ./hela/ -mtime +2 -exec rm -r {} \; 
+#find ./hela/ -mtime +2 -exec rm -r {} \;
 ```
