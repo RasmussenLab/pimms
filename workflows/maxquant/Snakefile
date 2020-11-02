@@ -19,7 +19,7 @@ envvars:
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
-fname_excluded = 'log_excluded_files.txt'
+fname_excluded = config['FILES_EXCLUDED']
 with open(fname_excluded, encoding='utf-8') as f:
     FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
 
@@ -113,10 +113,15 @@ rule maxquant:
     params:
         datadir = os.path.join(config['DATADIR'], "{file}"),
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
+        log_failed = config['FILES_FAILED'],
         remote = config['REMOTE_OUT']
     shell:
-        # write shell script?
         # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#i-don-t-want-snakemake-to-detect-an-error-if-my-shell-command-exits-with-an-exitcode-1-what-can-i-do
+        # write shell script?
+        # https: // stackoverflow.com/a/27301889/9684872
+        # changing in presence of here-documents (<< EOF EOF below)
+        # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#is-it-possible-to-pass-variable-values-to-the-workflow-via-the-command-line
+        # { have to be escaped as {{
         "mono --version && "
         "FILESIZE=$(stat -c%s {input.raw}) && "
         "[ $FILESIZE -ge 100000000 ] && "
@@ -127,4 +132,4 @@ rule maxquant:
         "echo \"{wildcards.file}\" >> log_completed.txt && "
         "sftp -B 258048 {params.remote} <<< $'-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' && "
         "rm -R {params.datadir} "
-        "|| ( echo \"{wildcards.file}\" >> log_failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
+        "|| ( echo \"{wildcards.file}\" >> {params.log_failed} && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 )"
