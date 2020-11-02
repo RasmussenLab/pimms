@@ -15,7 +15,7 @@ envvars:
 # wildcard_mqpar = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
 # mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP'])
 
-#local
+# local
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
@@ -26,24 +26,24 @@ with open(fname_excluded, encoding='utf-8') as f:
 for _file_to_remove in FILES_EXCLUDED:
     FILES.remove(_file_to_remove)
 
-# #ToDo: Order Files (set gives an unordered)
+# Order Files (set gives an unordered)
 FILES = list(FILES)
-FILES.sort()  # otherwise set returns non consistent order of files?
-
-#MaxQuant Version REGEX -> log to parameter file
-#Session Name to file-name?
+FILES.sort()  # otherwise execution order is not deterministic due to set
+# FILES = FILES[520:]
 
 localrules: target, mqpar
 
-## Thinnode resources sharing: 40 cores and 196 GB RAM
-job_ram_mb = int(200704 // config['THREATS_MQ'])
+
+# Thinnode resources sharing: 40 cores and 196 GB RAM (minus 2GB for snakemake)
+job_ram_mb = int(198_656 // config['THREATS_MQ'])
 
 # #Target Rule:
 rule target:
     input:
         # mockfile approach: https://stackoverflow.com/a/53751654/9684872
         # replace? https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
-        expand(os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt"), file=FILES)
+        expand(os.path.join(config['RESULTSDIR'],
+                            "{file}", "{file}.txt"), file=FILES)
 
 #remote file retrevial
 # #ToDo: Replace using SFTP class
@@ -53,11 +53,11 @@ rule download_file:
     benchmark:
         os.path.join(config['RESULTSDIR'], "{file}", "benchmark_download.tsv")
     params:
-        file="{file}.raw",
+        file = "{file}.raw",
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
-        remote=config['REMOTE']
+        remote = config['REMOTE_IN']
     resources:
-        walltime="300", nodes=1, mem_mb=2048
+        walltime = "300", nodes = 1, mem_mb = 2048
     threads:
         1
     shell:
@@ -78,14 +78,15 @@ rule mqpar:
         threads_mq = config['THREATS_MQ'],
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
     resources:
-        walltime="240", nodes=1, mem_mb=1024
+        walltime = "240", nodes = 1, mem_mb = 1024
     threads:
         1
     output:
-        mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
+        mq_par = os.path.join(config['SCRIPTDIR'],
+                              'mqpar_xmls', "mqpar_{file}.xml")
     run:
-        #snakemake create folders itself if missing -> download job into folder
-        with open(params.mq_par_temp, encoding='utf-8') as infile, open(output.mq_par, 'w', encoding='utf-8') as outfile:
+        # snakemake create folders itself if missing -> download job into folder
+        with open(file=params.mq_par_temp, encoding='utf-8') as infile, open(file=output.mq_par, mode='w', encoding='utf-8') as outfile:
             for line in infile:
                 line = line.replace('PATH', params.raw)
                 line = line.replace('NUM_THREADS', str(params.threads_mq))
@@ -97,17 +98,18 @@ rule mqpar:
 rule maxquant:
     input:           
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
-        mq_par = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml"),
+        mq_par = os.path.join(config['SCRIPTDIR'],
+                              'mqpar_xmls', "mqpar_{file}.xml"),
         exe = config['MAXQUANTEXE']
     benchmark:
         os.path.join(config['RESULTSDIR'], "{file}", "benchmark_MQ.tsv")
     output:
-        out=os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt")
+        out = os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt")
     resources:
-        mem_mb=job_ram_mb, walltime=43200, nodes=1
+        mem_mb = job_ram_mb, walltime = 43200, nodes = 1
     threads:
         config['THREATS_MQ']
-    envmodules: 
+    envmodules:
         "tools",
         "mono/5.20.1.19"
     params:
