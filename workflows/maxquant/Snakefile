@@ -5,7 +5,8 @@ Incremental development:
 2) execute using `qsub` (or interactive shell on CR2)
 3) add queuing system `qsub`
 """
-configfile: 'config.yaml' # access using config['key']
+import os
+configfile: 'config.yaml'  # access using config['key']
 
 # move away from config into envvars
 envvars:
@@ -69,13 +70,12 @@ rule download_file:
 
 
 rule mqpar:
-    input:
-        raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw")
     benchmark:
         os.path.join(config['RESULTSDIR'], "{file}", "benchmark_mqpar.tsv")
     params:
-        mq_par_temp=os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP']),
-        threads_mq=config['THREATS_MQ'],
+        raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
+        mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP']),
+        threads_mq = config['THREATS_MQ'],
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
     resources:
         walltime="240", nodes=1, mem_mb=1024
@@ -87,7 +87,7 @@ rule mqpar:
         #snakemake create folders itself if missing -> download job into folder
         with open(params.mq_par_temp, encoding='utf-8') as infile, open(output.mq_par, 'w', encoding='utf-8') as outfile:
             for line in infile:
-                line = line.replace('PATH', input.raw)
+                line = line.replace('PATH', params.raw)
                 line = line.replace('NUM_THREADS', str(params.threads_mq))
                 outfile.write(line)
             outfile.close()
@@ -110,9 +110,10 @@ rule maxquant:
     envmodules: 
         "tools",
         "mono/5.20.1.19"
-    params: 
+    params:
         datadir = os.path.join(config['DATADIR'], "{file}"),
-        logdir = os.path.join(config['RESULTSDIR'], "{file}")
+        logdir = os.path.join(config['RESULTSDIR'], "{file}"),
+        remote = config['REMOTE_OUT']
     shell:
         # write shell script?
         # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#i-don-t-want-snakemake-to-detect-an-error-if-my-shell-command-exits-with-an-exitcode-1-what-can-i-do
@@ -123,7 +124,7 @@ rule maxquant:
         "echo \"$(date +\"%F %T\"): Finished run with MaxQuant version {input.exe}\" >> {output.out} && "
         "echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands && "
         "echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands && "
-        "echo \"{wildcards.file}\" >> log_completed.txt || "
-        "( echo \"{wildcards.file}\" >> log_failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
-
-
+        "echo \"{wildcards.file}\" >> log_completed.txt && "
+        "sftp -B 258048 {params.remote} <<< $'-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' && "
+        "rm -R {params.datadir} "
+        "|| ( echo \"{wildcards.file}\" >> log_failed.txt && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 ) "
