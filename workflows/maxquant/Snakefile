@@ -61,12 +61,14 @@ rule download_file:
     threads:
         1
     shell:
-        "sshpass -e sftp -B 258048 {params.remote} <<< \"get {params.file} {output.raw} \" && ("
-        "FILESIZE=$(stat -c%s {output.raw}) && "
-        "[ $FILESIZE -le 100000000 ] && "
-        "echo '{params.file}' >> {fname_excluded} && "
-        "echo \"File is too small: $FILESIZE\" && "
-        "exit 1 ||  exit 0)"
+        """
+        sshpass -e sftp -B 258048 {params.remote} <<< 'get {params.file} {output.raw}' && (
+        FILESIZE=$(stat -c%s {output.raw}) &&
+        [ $FILESIZE -le 100000000 ] &&
+        echo '{params.file}' >> {fname_excluded} &&
+        echo "File is too small: $FILESIZE" &&
+        exit 1 ||  exit 0)
+        """
 
 
 rule mqpar:
@@ -124,14 +126,17 @@ rule maxquant:
         # changing in presence of here-documents (<< EOF EOF below)
         # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#is-it-possible-to-pass-variable-values-to-the-workflow-via-the-command-line
         # { have to be escaped as {{
-        "mono --version && "
-        "FILESIZE=$(stat -c%s {input.raw}) && "
-        "[ $FILESIZE -ge 100000000 ] && "
-        "mono {input.exe} {input.mq_par} && "
-        "echo \"$(date +\"%F %T\"): Finished run with MaxQuant version {input.exe}\" >> {output.out} && "
-        "echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands && "
-        "echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands && "
-        "echo \"{wildcards.file}\" >> log_completed.txt && "
-        "sftp -B 258048 {params.remote} <<< $'-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' && "
-        "rm -R {params.datadir} "
-        "|| ( echo \"{wildcards.file}\" >> {params.log_failed} && echo \"Size of {input.raw}: $FILESIZE\" && exit 1 )"
+        """
+        mono --version &&
+        FILESIZE=$(stat -c%s {input.raw}) &&
+        [ $FILESIZE -ge 100000000 ] &&
+        mono {input.exe} {input.mq_par} &&
+        echo "$(date +"%F %T"): Finished run with MaxQuant version {input.exe}" >> {output.out} &&
+        echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands &&
+        echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
+        cp {input.mq_par} {params.datadir}/combined/txt/mqpar.xml &&
+        echo '{wildcards.file}' >> log_completed.txt &&
+        sftp -B 258048 {params.remote} <<< '-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' &&
+        rm -R {params.datadir} && echo 'Done uploading to mq_out/{wildcards.file} on {params.remote}' ||
+        ( echo '{wildcards.file}' >> {params.log_failed} && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
+        """
