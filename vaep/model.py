@@ -35,8 +35,8 @@ class VAE(nn.Module):
         self._n_features = n_features
 
         self.fc1 = nn.Linear(n_features, n_neurons)
-        self.fc21 = nn.Linear(n_neurons, 50)
-        self.fc22 = nn.Linear(n_neurons, 50)
+        self.fc21 = nn.Linear(n_neurons, 50)  # mean
+        self.fc22 = nn.Linear(n_neurons, 50)  # stdev
         self.fc3 = nn.Linear(50, n_neurons)
         self.fc4 = nn.Linear(n_neurons, n_features)
 
