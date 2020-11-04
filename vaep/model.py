@@ -28,21 +28,46 @@ class PeptideDatasetInMemory(Dataset):
 
 # from IPython.core.debugger import set_trace # invoke debugging
 class VAE(nn.Module):
-    def __init__(self, n_features, n_neurons):
+    """Variational Autoencoder
+    
+    
+    Attributes
+    ----------
+    compression_factor: int
+        Compression factor for latent representation in comparison 
+        to input features, default 0.25
+    """
+
+    compression_factor = 0.25
+
+    def __init__(self, n_features: int, n_neurons: int):
+        """PyTorch model for Variational autoencoder
+
+        Parameters
+        ----------
+        n_features : int
+            number of input features. 
+        n_neurons : int
+            number of neurons in encoder and decoder layer
+        """
         super().__init__()
 
         self._n_neurons = n_neurons
         self._n_features = n_features
 
-        self.fc1 = nn.Linear(n_features, n_neurons)
-        self.fc21 = nn.Linear(n_neurons, 50)  # mean
-        self.fc22 = nn.Linear(n_neurons, 50)  # stdev
-        self.fc3 = nn.Linear(50, n_neurons)
-        self.fc4 = nn.Linear(n_neurons, n_features)
+        dim_vae_latent = int(n_features * self.compression_factor)
+
+        self.encoder = nn.Linear(n_features, n_neurons)
+        # latent representation:
+        self.mean = nn.Linear(n_neurons, dim_vae_latent)  # mean
+        self.std = nn.Linear(n_neurons, dim_vae_latent)   # stdev
+        
+        self.decoder = nn.Linear(dim_vae_latent, n_neurons)
+        self.out = nn.Linear(n_neurons, n_features)
 
     def encode(self, x):
-        h1 = F.relu(self.fc1(x))
-        return self.fc21(h1), self.fc22(h1)
+        h1 = F.relu(self.encoder(x))
+        return self.mean(h1), self.std(h1)
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5*logvar)
@@ -50,8 +75,8 @@ class VAE(nn.Module):
         return mu + eps*std
 
     def decode(self, z):
-        h3 = F.relu(self.fc3(z))
-        return self.fc4(h3)
+        h3 = F.relu(self.decoder(z))
+        return self.out(h3)
 
     def forward(self, x):
         mu, logvar = self.encode(x.view(-1, self._n_features))
@@ -112,7 +137,7 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
 def train(epoch, model, train_loader, optimizer, device):
     model.train()
     train_loss = 0
-    N_SAMPLES = len(train_loader.dataset)
+    n_samples = len(train_loader.dataset)
     for (data, mask) in train_loader:
         data = data.to(device)
         optimizer.zero_grad()
@@ -128,4 +153,4 @@ def train(epoch, model, train_loader, optimizer, device):
         #         100. * batch_idx / len(train_loader),
         #         loss.item() / len(data)))
     # logger.info('====> Epoch: {} Average loss: {:.4f}'.format(
-    #     epoch, train_loss / N_SAMPLES))
+    #     epoch, train_loss / n_samples))
