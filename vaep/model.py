@@ -60,8 +60,7 @@ class VAE(nn.Module):
 
 
 def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
-    """Loss function only considering the observed values in the
-    reconstruction loss.
+    """Loss function only considering the observed values in the reconstruction loss.
 
     Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
 
@@ -69,6 +68,30 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     MSE = F.mse_loss(input=recon_x, target=x, reduction='mean')
 
 
+    Parameters
+    ----------
+    recon_x : [type]
+        [description]
+    x : [type]
+        [description]
+    mask : [type]
+        [description]
+    mu : [type]
+        [description]
+    logvar : [type]
+        [description]
+    t : float, optional
+        [description], by default 0.9
+
+    Returns
+    -------
+    total: float
+        Total, weighted average loss for provided input and mask 
+    mse: float
+        unweighted mean-squared-error for non-masked inputs
+    kld: float
+        unweighted Kullback-Leibler divergence between prior and empirical
+        normal distribution (defined by encoded moments) on latent representation.
     """
     MSE = F.mse_loss(input=recon_x*mask,
                      target=x*mask,
@@ -82,7 +105,8 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
 
-    return t*MSE + (1-t)*KLD
+    total = t*MSE + (1-t)*KLD
+    return total, MSE, KLD
 
 
 def train(epoch, model, train_loader, optimizer, device):
