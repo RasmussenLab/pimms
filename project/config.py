@@ -17,6 +17,10 @@ FOLDER_DATA = 'data'
 PROCESSED_DATA = os.path.join(FOLDER_DATA, 'processed')
 os.makedirs(PROCESSED_DATA, exist_ok=True)
 
+PROTEIN_DUMPS = Path(PROCESSED_DATA / 'processed'
+os.makedirs(PROTEIN_DUMPS, exist_ok=True)
+
+
 FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'
 
 PREFIX_IMPUTED = 'hela_imputed_proteins'
