@@ -20,22 +20,29 @@ with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
 fname_excluded = config['FILES_EXCLUDED']
-with open(fname_excluded, encoding='utf-8') as f:
-    FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
+try:
+    with open(fname_excluded, encoding='utf-8') as f:
+        FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
 
-for _file_to_remove in FILES_EXCLUDED:
-    FILES.remove(_file_to_remove)
+    for _file_to_remove in FILES_EXCLUDED:
+        FILES.remove(_file_to_remove)
+except FileNotFoundError:
+    print(f"No such file: {fname_excluded}")
+    with open(fname_excluded, 'w'):
+        pass
+
 
 # Order Files (set gives an unordered)
 FILES = list(FILES)
 FILES.sort()  # otherwise execution order is not deterministic due to set
 # FILES = FILES[520:]
 
-localrules: target, mqpar
+localrules: target, mqpar, download_file
 
 
 # Thinnode resources sharing: 40 cores and 196 GB RAM (minus 2GB for snakemake)
-job_ram_mb = int(198_656 // config['THREATS_MQ'])
+# http://www.dewassoc.com/kbase/hard_drives/binary_v_decimal_measurement.htm
+job_ram_mb = int(204_800 / 40 * config['THREATS_MQ'])
 
 # #Target Rule:
 rule target:
@@ -62,11 +69,13 @@ rule download_file:
         1
     shell:
         """
-        sshpass -e sftp -B 258048 {params.remote} <<< 'get {params.file} {output.raw}' && (
+        sftp -B 258048 {params.remote} <<< 'get {params.file} {output.raw}' && (
         FILESIZE=$(stat -c%s {output.raw}) &&
         [ $FILESIZE -le 100000000 ] &&
+        touch {fname_excluded} &&
         echo '{params.file}' >> {fname_excluded} &&
         echo "File is too small: $FILESIZE" &&
+        echo "File is too small: $FILESIZE" > {params.logdir}/download_too_small.log &&
         exit 1 ||  exit 0)
         """
 
