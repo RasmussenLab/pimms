@@ -41,7 +41,7 @@ Checkout snakemake's [SFTP](https://snakemake.readthedocs.io/en/stable/snakefile
 functionality which uses [`pysftp`](https://pysftp.readthedocs.io/en/release_0.2.8/pysftp.html#pysftp.Connection).
 
 
-### Get file list from folder
+## Get file list from folder
 
 Once you have some files uploaded to erda, once in a while you could check which files
 you already did store there. Assuming you followed the previous setup step, using the
@@ -49,3 +49,16 @@ hostname `io.erda.dk`, you can query the files in a `directory` and store the to
 named `files_and_folders_in_dir.txt`:
 
 `sftp -q io.erda.dk:directory/ <<< "ls" | grep -v '^sftp>' > files_and_folders_in_dir.txt`
+
+### Examples and log
+
+```
+sftp -q hela <<<  "ls" | grep -v '^sftp>' > hela_files.txt
+sftp -q io.erda.dk:share_hela_raw/MNT_2019_Proteomics/MNT/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2019.txt
+```
+
+get a list of all files in the `mq_out` folder on erda (the default folder for storing results):
+
+```
+sftp -q io.erda.dk:mq_out/ <<< "ls" | grep -v '^sftp>' > hela_processed.txt
+```

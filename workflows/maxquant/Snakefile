@@ -37,7 +37,9 @@ FILES = list(FILES)
 FILES.sort()  # otherwise execution order is not deterministic due to set
 # FILES = FILES[520:]
 
-localrules: target, mqpar, download_file
+# local rules are excuted in the process (job) running snakemake
+# allows for ssh-multiplexing, see https://blog.scottlowe.org/2015/12/11/using-ssh-multiplexing/
+localrules: target, mqpar, download_file, upload_file
 
 
 # Thinnode resources sharing: 40 cores and 196 GB RAM (minus 2GB for snakemake)
@@ -52,8 +54,9 @@ rule target:
         expand(os.path.join(config['RESULTSDIR'],
                             "{file}", "{file}.txt"), file=FILES)
 
-#remote file retrevial
-# #ToDo: Replace using SFTP class
+
+# remote file retrevial
+# ToDo: Replace using SFTP class
 rule download_file:
     output:
         raw = temp(os.path.join(config['DATADIR'], "{file}", "{file}.raw"))
@@ -115,7 +118,8 @@ rule maxquant:
     benchmark:
         os.path.join(config['RESULTSDIR'], "{file}", "benchmark_MQ.tsv")
     output:
-        out = os.path.join(config['RESULTSDIR'], "{file}", "{file}.txt")
+        out = os.path.join(config['RESULTSDIR'],
+                           "{file}", "{file}_mq_done.txt")
     resources:
         mem_mb = job_ram_mb, walltime = 43200, nodes = 1
     threads:
@@ -144,8 +148,25 @@ rule maxquant:
         echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands &&
         echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
         cp {input.mq_par} {params.datadir}/combined/txt/mqpar.xml &&
-        echo '{wildcards.file}' >> log_completed.txt &&
-        sftp -B 258048 {params.remote} <<< '-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' &&
-        rm -R {params.datadir} && echo 'Done uploading to mq_out/{wildcards.file} on {params.remote}' ||
+        echo '{wildcards.file}' >> log_completed.txt ||
         ( echo '{wildcards.file}' >> {params.log_failed} && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
+        """
+
+rule upload_file:
+    input:
+        mq_done = os.path.join(
+            config['RESULTSDIR'], "{file}", "{file}_mq_done.txt")
+    output:
+        out = os.path.join(config['RESULTSDIR'],
+                           "{file}", "{file}.txt")
+    resources:
+        mem_mb = job_ram_mb, walltime = 43200, nodes = 1
+    params:
+        datadir = os.path.join(config['DATADIR'], "{file}"),
+        remote = config['REMOTE_OUT']
+    shell:
+        """
+        sftp -B 258048 {params.remote} <<< '-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' &&
+        rm -R {params.datadir} && echo 'Done uploading to mq_out/{wildcards.file} on {params.remote}' &&
+        echo "$(date +"%F %T"): Finished upload to erda." >> {output.out} || echo 'Failed upload for {wildcards.file}'
         """

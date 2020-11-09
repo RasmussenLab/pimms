@@ -94,12 +94,16 @@ snakemake -k
 
 ### Run on cluster
 
+#### Using a separate script
+
 ```
 qsub -V run_sm_on_cluster.sh
 ```
 
-####
-[qsub](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
+The `-V` options passes the current environment variables to the shell started by the
+run, see [here](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
+
+The script itself contains the cluster execution. Please change the number of parallel jobs.
 
 ```bash
 snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
@@ -107,7 +111,9 @@ snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
 " -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
 "-e {params.logdir} -o {params.logdir}" -n
 ```
-> Once you are sure, remote the dryrun flag `-n`
+
+> Once you are sure, remote the dryrun flag `-n`. Dry runs do not necessarily have to be
+> sent to the queue.
 
 Alternatively invoked a profile defined from the template before.
 
@@ -118,12 +124,19 @@ defined in `config.yaml` and in the `Snakefile` will be used.
 snakemake --profile pbs-torque --jobs 10 --latency-wait 10 -k
 ```
 
+#### Logs
+
+All files resulting from executions are stored under the `.snakemake`. See the last file
+in the `.snakemake/log` folder for inspecting the process of the currently executed
+snakemake job.
+
+
 ## After running snakemaker
 
 > The file names can be changed in the `config.yaml`
 
 After snakemake execution of the files in `[hela_files.txt](../hela_files.txt)
-you should find three new files in the workflow folder [maxquant](vaep/workflows/maxquant):
+you should find new files in the workflow folder [maxquant](vaep/workflows/maxquant):
 
 ```
 log_completed.txt
