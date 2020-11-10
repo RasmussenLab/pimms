@@ -146,7 +146,7 @@ rule maxquant:
         mono {input.exe} {input.mq_par} &&
         echo "$(date +"%F %T"): Finished run with MaxQuant version {input.exe}" >> {output.out} &&
         echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands &&
-        echo 'put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
+        echo '-put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
         cp {input.mq_par} {params.datadir}/combined/txt/mqpar.xml &&
         echo '{wildcards.file}' >> log_completed.txt ||
         ( echo '{wildcards.file}' >> {params.log_failed} && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
