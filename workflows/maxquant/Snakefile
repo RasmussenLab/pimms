@@ -8,6 +8,9 @@ Incremental development:
 import os
 configfile: 'config.yaml'  # access using config['key']
 
+
+results_foldername = os.path.basename(config["RESULTSDIR"])
+
 # move away from config into envvars
 envvars:
     "SSHPASS"
@@ -19,7 +22,11 @@ envvars:
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
-fname_excluded = config['FILES_EXCLUDED']
+# Order Files (set gives an unordered)
+FILES = list(FILES)
+FILES.sort()  # otherwise execution order is not deterministic due to set
+# local, excluded files previously identified as to small
+fname_excluded = f"{results_foldername}_excluded_files.txt"
 try:
     with open(fname_excluded, encoding='utf-8') as f:
         FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
@@ -27,7 +34,7 @@ try:
     for _file_to_remove in FILES_EXCLUDED:
         FILES.remove(_file_to_remove)
 except FileNotFoundError:
-    print(f"No such file: {fname_excluded}")
+    print(f"No such file: {fname_excluded} - Creating one.")
     with open(fname_excluded, 'w'):
         pass
 
@@ -76,7 +83,7 @@ rule download_file:
         FILESIZE=$(stat -c%s {output.raw}) &&
         [ $FILESIZE -le 100000000 ] &&
         echo '{params.file}' >> {fname_excluded} &&
-        echo "File is too small: $FILESIZE" &&
+        echo "{params.file} is too small: $FILESIZE" &&
         echo "File is too small: $FILESIZE" > {params.logdir}/download_too_small.log &&
         exit 1 ||  exit 0)
         """
@@ -129,7 +136,8 @@ rule maxquant:
     params:
         datadir = os.path.join(config['DATADIR'], "{file}"),
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
-        log_failed = config['FILES_FAILED'],
+        log_failed = f"{results_foldername}_failed.txt",
+        log_completed = f"{results_foldername}_completed.txt",
         remote = config['REMOTE_OUT']
     shell:
         # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#i-don-t-want-snakemake-to-detect-an-error-if-my-shell-command-exits-with-an-exitcode-1-what-can-i-do
@@ -147,8 +155,8 @@ rule maxquant:
         echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands &&
         echo '-put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
         cp {input.mq_par} {params.datadir}/combined/txt/mqpar.xml &&
-        echo '{wildcards.file}' >> log_completed.txt ||
-        ( echo '{wildcards.file}' >> {params.log_failed} && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
+        echo '{wildcards.file}' >> {params.log_completed} ||
+        ( echo '{wildcards.file}' >> {params.log_failed}  && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
         """
 
 rule upload_file:
