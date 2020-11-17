@@ -67,7 +67,7 @@ rule download_file:
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
         remote = config['REMOTE_IN']
     resources:
-        walltime = "300", nodes = 1, mem_mb = 2048
+        walltime = 300, nodes = 1, mem_mb = 2048
     threads:
         1
     shell:
@@ -75,7 +75,6 @@ rule download_file:
         sftp -B 258048 {params.remote} <<< 'get {params.file} {output.raw}' && (
         FILESIZE=$(stat -c%s {output.raw}) &&
         [ $FILESIZE -le 100000000 ] &&
-        touch {fname_excluded} &&
         echo '{params.file}' >> {fname_excluded} &&
         echo "File is too small: $FILESIZE" &&
         echo "File is too small: $FILESIZE" > {params.logdir}/download_too_small.log &&
@@ -92,7 +91,7 @@ rule mqpar:
         threads_mq = config['THREATS_MQ'],
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
     resources:
-        walltime = "240", nodes = 1, mem_mb = 1024
+        walltime = 240, nodes = 1, mem_mb = 1024
     threads:
         1
     output:
@@ -121,7 +120,7 @@ rule maxquant:
         out = os.path.join(config['RESULTSDIR'],
                            "{file}", "{file}_mq_done.txt")
     resources:
-        mem_mb = job_ram_mb, walltime = 43200, nodes = 1
+        mem_mb = job_ram_mb, nodes = 1, walltime = 14400
     threads:
         config['THREATS_MQ']
     envmodules:
@@ -160,7 +159,7 @@ rule upload_file:
         out = os.path.join(config['RESULTSDIR'],
                            "{file}", "{file}.txt")
     resources:
-        mem_mb = job_ram_mb, walltime = 43200, nodes = 1
+        mem_mb = job_ram_mb, nodes = 1, walltime = 900
     params:
         datadir = os.path.join(config['DATADIR'], "{file}"),
         remote = config['REMOTE_OUT']
