@@ -55,6 +55,7 @@ named `files_and_folders_in_dir.txt`:
 ```
 sftp -q hela <<<  "ls" | grep -v '^sftp>' > hela_files.txt
 sftp -q io.erda.dk:share_hela_raw/MNT_2019_Proteomics/MNT/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2019.txt
+sftp -q io.erda.dk:share_hela_raw/MNT_2020_MM/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2020.txt
 ```
 
 get a list of all files in the `mq_out` folder on erda (the default folder for storing results):

@@ -39,11 +39,6 @@ except FileNotFoundError:
         pass
 
 
-# Order Files (set gives an unordered)
-FILES = list(FILES)
-FILES.sort()  # otherwise execution order is not deterministic due to set
-# FILES = FILES[520:]
-
 # local rules are excuted in the process (job) running snakemake
 # allows for ssh-multiplexing, see https://blog.scottlowe.org/2015/12/11/using-ssh-multiplexing/
 localrules: target, mqpar, download_file, upload_file

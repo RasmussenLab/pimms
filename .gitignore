@@ -19,4 +19,5 @@ workflows/maxquant/mqpar_xmls/
 *.html
 
 workflows/maxquant/mqpar_xmls/
-workflows/maxquant/.out/
+workflows/maxquant/out/
+*.moab

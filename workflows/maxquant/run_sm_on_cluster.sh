@@ -5,8 +5,8 @@
 ### Job name (comment out the next line to get the name of the script used as the job name)
 #PBS -N  snakemake
 ### Output files (comment out the next 2 lines to get the job name used instead)
-#PBS -e ${PBS_JOBNAME}.e${PBS_JOBID}
-#PBS -o ${PBS_JOBNAME}.o${PBS_JOBID}
+#PBS -e ${PBS_JOBNAME}.${PBS_JOBID}.e
+#PBS -o ${PBS_JOBNAME}.${PBS_JOBID}.o
 ### Email notification: a=aborts, b=begins, e=ends, n=no notifications
 #PBS -m ae -M henry.webel@cpr.ku.dk
 ### Number of nodes
