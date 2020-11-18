@@ -2,22 +2,21 @@
 name: vaep
 channels:
   - pytorch
-  - conda-forge
-  - base
+  - defaults
 dependencies:
   - python=3.8.*
   - numpy=1.18.*
   - pandas=1.*
-  - ipykernel=5.1.*
+  - ipykernel=5.3.*
   - ipython
   - ipywidgets
   - matplotlib
   - seaborn
   - pip
-  # - pytorch
+  - pytorch
   - scikit-learn
-  # - torchvision 
-  # - cudatoolkit=10.1
+  - torchvision
+  - cudatoolkit=10.2
   - tqdm
   - xmltodict
   - openpyxl
