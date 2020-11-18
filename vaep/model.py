@@ -29,12 +29,12 @@ class PeptideDatasetInMemory(Dataset):
 # from IPython.core.debugger import set_trace # invoke debugging
 class VAE(nn.Module):
     """Variational Autoencoder
-    
-    
+
+
     Attributes
     ----------
     compression_factor: int
-        Compression factor for latent representation in comparison 
+        Compression factor for latent representation in comparison
         to input features, default 0.25
     """
 
@@ -46,7 +46,7 @@ class VAE(nn.Module):
         Parameters
         ----------
         n_features : int
-            number of input features. 
+            number of input features.
         n_neurons : int
             number of neurons in encoder and decoder layer
         """
@@ -61,7 +61,7 @@ class VAE(nn.Module):
         # latent representation:
         self.mean = nn.Linear(n_neurons, dim_vae_latent)  # mean
         self.std = nn.Linear(n_neurons, dim_vae_latent)   # stdev
-        
+
         self.decoder = nn.Linear(dim_vae_latent, n_neurons)
         self.out = nn.Linear(n_neurons, n_features)
 
@@ -111,7 +111,7 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     Returns
     -------
     total: float
-        Total, weighted average loss for provided input and mask 
+        Total, weighted average loss for provided input and mask
     mse: float
         unweighted mean-squared-error for non-masked inputs
     kld: float
@@ -134,23 +134,26 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     return total, MSE, KLD
 
 
-def train(epoch, model, train_loader, optimizer, device):
+def train(epoch, model, train_loader, optimizer, device, writer=None):
     model.train()
     train_loss = 0
     n_samples = len(train_loader.dataset)
-    for (data, mask) in train_loader:
+    for batch_idx, (data, mask) in enumerate(train_loader):
         data = data.to(device)
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss = loss_function(recon_batch, data, mask, mu, logvar)
+        loss, mse, kld = loss_function(recon_batch, data, mask, mu, logvar)
+        logger.debug("Epoch: {epoch:3}, Batch: {batch_idx:4}")
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
-        # print(batch_idx)
-        # if batch_idx % args.log_interval == 0:
-        #     print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-        #         epoch, batch_idx * len(data), len(train_loader.dataset),
-        #         100. * batch_idx / len(train_loader),
-        #         loss.item() / len(data)))
-    # logger.info('====> Epoch: {} Average loss: {:.4f}'.format(
-    #     epoch, train_loss / n_samples))
+
+    avg_loss_per_sample = train_loss / n_samples
+    if epoch % 25 == 0:
+        logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
+            epoch=epoch, avg_loss=avg_loss_per_sample))
+    if writer is not None:
+        writer.add_scalar('training loss',
+                          avg_loss_per_sample,
+                          epoch)
+    return
