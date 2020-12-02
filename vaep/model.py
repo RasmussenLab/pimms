@@ -9,23 +9,6 @@ from torch.nn import functional as F
 
 logger = logging.getLogger()
 
-
-class PeptideDatasetInMemory(Dataset):
-    """Peptide Dataset fully in memory."""
-
-    def __init__(self, data: pd.DataFrame, fill_na=0):
-        self.mask_obs = torch.from_numpy(data.notna().values)
-        data = data.fillna(fill_na)
-        self.peptides = torch.from_numpy(data.values)
-        self.length_ = len(data)
-
-    def __len__(self):
-        return self.length_
-
-    def __getitem__(self, idx):
-        return self.peptides[idx], self.mask_obs[idx]
-
-
 # from IPython.core.debugger import set_trace # invoke debugging
 class VAE(nn.Module):
     """Variational Autoencoder
