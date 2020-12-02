@@ -17,6 +17,7 @@ dependencies:
   - scikit-learn
   - torchvision
   - cudatoolkit=10.2
+  - tensorboard
   - tqdm
   - xmltodict
   - openpyxl

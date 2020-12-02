@@ -13,6 +13,7 @@ workflows/maxquant/.snakemake/
 workflows/maxquant/mqpar_xmls/
 workflows/maxquant/out/
 *snakemake.log
+*.tfevents.*
 #
 .pdf
 *.html
