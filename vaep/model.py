@@ -84,7 +84,7 @@ class VAE(nn.Module):
         return self.decode(z), mu, logvar
 
 
-def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
+def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
     """Loss function only considering the observed values in the reconstruction loss.
 
     Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
@@ -140,9 +140,17 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
     n_samples = len(train_loader.dataset)
     for batch_idx, (data, mask) in enumerate(train_loader):
         data = data.to(device)
+        mask = mask.to(device)
+        # assert data.is_cuda and mask.is_cuda
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss, mse, kld = loss_function(recon_batch, data, mask, mu, logvar)
+        loss, mse, kld = loss_function(
+                            recon_x=recon_batch,
+                            x=data,
+                            mask=mask,
+                            mu=mu,
+                            logvar=logvar,
+                            device=device)
         logger.debug("Epoch: {epoch:3}, Batch: {batch_idx:4}")
         loss.backward()
         train_loss += loss.item()
