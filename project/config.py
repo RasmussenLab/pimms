@@ -6,7 +6,7 @@ FILENAME = 'Mann_Hepa_data.tsv'
 FIGUREFOLDER = 'Figures'
 os.makedirs(FIGUREFOLDER, exist_ok=True)
 
-FOLDER_RAW_DATA = '/home/jovyan/work/mq_out/'
+FOLDER_RAW_DATA = Path('data') / 'mq_out/'
 FOLDER_KEY  = None
 
 # FOLDER_RAW_DATA = '/home/jovyan/work/Hela/'
@@ -22,6 +22,7 @@ os.makedirs(PROTEIN_DUMPS, exist_ok=True)
 
 
 #FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'mq_out' / 'peptide_intensities.pkl'
+FN_PEPTIDE_STUMP = 'peptide_intensities'
 FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'
 
 PREFIX_IMPUTED = 'hela_imputed_proteins'
@@ -41,3 +42,6 @@ KEY_FASTA_SEQ = 'seq'
 KEY_PEPTIDES = 'peptides'
 KEY_GENE_NAME = 'gene'
 KEY_GENE_NAME_FASTA = 'gene_fasta'
+
+
+FILEPATH_UTILS = 'src/file_utils.py'
