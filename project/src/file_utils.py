@@ -327,7 +327,19 @@ class MaxQuantOutput:
     paths : 
     files :
     """
-   
+    NAME_FILE_MAP = {'allPeptides': 'allPeptides.txt',
+             'evidence': 'evidence.txt',
+             'matchedFeatures': 'matchedFeatures.txt',
+             'modificationSpecificPeptides': 'modificationSpecificPeptides.txt',
+             'ms3Scans': 'ms3Scans.txt',
+             'msms': 'msms.txt',
+             'msmsScans': 'msmsScans.txt',
+             'mzRange': 'mzRange.txt',
+             'OxidationSites': 'Oxidation (M)Sites.txt',
+             'parameters': 'parameters.txt',
+             'peptides': 'peptides.txt',
+             'proteinGroups': 'proteinGroups.txt',
+             'summary': 'summary.txt'}
    
     #always the first one as index?
     INDEX_COLUMNS = {'evidence': None,
@@ -378,9 +390,13 @@ class MaxQuantOutput:
     def load(self, file):
         """Load a specified file into memory and return it.
         Can be used """
-        filepath = self.folder / f"{file}.txt"
+        filepath = self.folder / self.NAME_FILE_MAP[file]
+        if not Path(filepath).exists():
+            raise FileNotFoundError(f"No such file: {file}.txt: Choose one of the following {', '.join(self.files)}")
+        
         return pd.read_table(filepath, index_col=0)
 
 # register all properties
-for filename in MaxQuantOutput.INDEX_COLUMNS.keys():
+# Would be great to be able to do this at runtime based on the files actually present.
+for filename in MaxQuantOutput.NAME_FILE_MAP.keys():
     setattr(MaxQuantOutput, filename, MaxQuantOutput.register_file(filename))
