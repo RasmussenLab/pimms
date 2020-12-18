@@ -73,27 +73,34 @@ def search_files(path='.', query='.txt'):
     return PathsList(files=files, folder=path)
 
 
-def search_subfolders(path='.', depth: int = 1):
+def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     """Search subfolders relative to given path."""
     if not isinstance(depth, int) and depth > 0:
         raise ValueError(
             f"Please provide an strictly positive integer, not {depth}")
-
+    EXCLUDED = ["*ipynb_checkpoints*"]
+    
     path = Path(path)
     directories = [path]
 
     def get_subfolders(path):
-        return [x for x in path.iterdir() if x.is_dir()]
+        return [x for x in path.iterdir() 
+                if x.is_dir() and 
+                not any(x.match(excl) for excl in EXCLUDED)
+               ]
 
     directories_previous = directories.copy()
     while depth > 0:
         directories_new = list()
         for p in directories_previous:
             directories_new.extend(
-                get_subfolders(p))
+                   get_subfolders(p))
         directories.extend(directories_new)
         directories_previous = directories_new.copy()
         depth -= 1
+    
+    if exclude_root:
+        directories.pop(0)
     return directories
 
 # can file-loading be made concurrent?
