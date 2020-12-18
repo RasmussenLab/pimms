@@ -317,6 +317,7 @@ def load_protein_intensities(filepath):
 
 
 
+
 class MaxQuantOutput:
     """Class assisting with MaxQuant txt output folder.
     
@@ -326,10 +327,9 @@ class MaxQuantOutput:
     paths : 
     files :
     """
-    
-    OUTPUT_FILES = {'evidence': 'evidence.txt'}
-    
-    #always the first one?
+   
+   
+    #always the first one as index?
     INDEX_COLUMNS = {'evidence': None,
                      'peptides': 'Sequence',
                      'allPeptides': 'Raw file', 
@@ -348,6 +348,7 @@ class MaxQuantOutput:
         """
         self.folder = Path(folder)
         self.files = self.get_files()
+#         self._register()
     
     def get_files(self):
         """Get all txt files in output folder
@@ -359,20 +360,27 @@ class MaxQuantOutput:
         self.paths = search_files(path=self.folder, query='.txt')
         return self.paths.files
     
-    
-    @property
-    def evidence(self):
-        return self.find_attribute('_evidence')
+    def register_file(filename):
+        
+        @property
+        def fct(self):
+            return self.find_attribute(f'_{filename}')
+        
+        return fct
     
     def find_attribute(self, filename):
         """Look up or load attribute."""
         if not hasattr(self, filename):
-            df = self.load(self.OUTPUT_FILES[filename[1:]])
+            df = self.load(filename[1:])
             setattr(self, filename, df)
         return getattr(self, filename)
         
     def load(self, file):
         """Load a specified file into memory and return it.
         Can be used """
-        filepath = self.folder / file
+        filepath = self.folder / f"{file}.txt"
         return pd.read_table(filepath, index_col=0)
+
+# register all properties
+for filename in MaxQuantOutput.INDEX_COLUMNS.keys():
+    setattr(MaxQuantOutput, filename, MaxQuantOutput.register_file(filename))
