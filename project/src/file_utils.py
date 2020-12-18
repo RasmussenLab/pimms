@@ -314,3 +314,65 @@ def load_protein_intensities(filepath):
     df = pd.read_table(
         filepath, index_col='Majority protein IDs', dtype=dtypes_proteins)
     return df[['Intensity']]
+
+
+
+class MaxQuantOutput:
+    """Class assisting with MaxQuant txt output folder.
+    
+    
+    Attributes
+    ----------
+    paths : 
+    files :
+    """
+    
+    OUTPUT_FILES = {'evidence': 'evidence.txt'}
+    
+    #always the first one?
+    INDEX_COLUMNS = {'evidence': None,
+                     'peptides': 'Sequence',
+                     'allPeptides': 'Raw file', 
+                    }
+    
+    def __init__(self, folder, load_all=False):
+        """Create instance for of MaxQuant outputfolder.
+        
+        Parameters
+        ----------
+        folder: pathlib.Path, str
+            Path to Maxquant `txt` output folder.
+        load_all: bool
+            Load all files in folder automatically to memory
+            on instantiation.
+        """
+        self.folder = Path(folder)
+        self.files = self.get_files()
+    
+    def get_files(self):
+        """Get all txt files in output folder
+        
+        Attributes
+        ---------
+        paths: NamedTuple
+        """
+        self.paths = search_files(path=self.folder, query='.txt')
+        return self.paths.files
+    
+    
+    @property
+    def evidence(self):
+        return self.find_attribute('_evidence')
+    
+    def find_attribute(self, filename):
+        """Look up or load attribute."""
+        if not hasattr(self, filename):
+            df = self.load(self.OUTPUT_FILES[filename[1:]])
+            setattr(self, filename, df)
+        return getattr(self, filename)
+        
+    def load(self, file):
+        """Load a specified file into memory and return it.
+        Can be used """
+        filepath = self.folder / file
+        return pd.read_table(filepath, index_col=0)
