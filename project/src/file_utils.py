@@ -324,8 +324,10 @@ class MaxQuantOutput:
     
     Attributes
     ----------
-    paths : 
-    files :
+    _inital_attritubutes : list
+        Initial set of non-magic attributes 
+    NAME_FILE_MAP : dict
+        Keys for known MaxQuant output files.
     """
     NAME_FILE_MAP = {'allPeptides': 'allPeptides.txt',
              'evidence': 'evidence.txt',
@@ -357,10 +359,22 @@ class MaxQuantOutput:
         load_all: bool
             Load all files in folder automatically to memory
             on instantiation.
+
+        Attributes
+        ---------
+        self.files
         """
         self.folder = Path(folder)
         self.files = self.get_files()
-#         self._register()
+        
+        # # patch properties at instance creation?
+        # self.name_file_map = {}
+        # for filename in self.files:
+        #      file_key = Path(filename).stem
+        #      for symbol in " ()":
+        #          file_key = file_key.replace(symbol, '')
+        #      setattr(self.__class__, file_key, self.register_file(file_key))
+        #      self.name_file_map[file_key] = filename
     
     def get_files(self):
         """Get all txt files in output folder
@@ -372,11 +386,12 @@ class MaxQuantOutput:
         self.paths = search_files(path=self.folder, query='.txt')
         return self.paths.files
     
-    def register_file(filename):
+    @classmethod
+    def register_file(cls, filename):
         
         @property
-        def fct(self):
-            return self.find_attribute(f'_{filename}')
+        def fct(cls):
+            return cls.find_attribute(f'_{filename}')
         
         return fct
     
@@ -395,6 +410,13 @@ class MaxQuantOutput:
             raise FileNotFoundError(f"No such file: {file}.txt: Choose one of the following {', '.join(self.files)}")
         
         return pd.read_table(filepath, index_col=0)
+    
+    # needed to reset attributes on instance creation.
+    _inital_attritubutes = [x for x in dir() if not x.startswith('__')]
+
+    def get_list_of_attributes(self):
+        """Return current list on non-magic instance attributes."""
+        return [x for x in dir(self) if not x.startswith('__')]
 
 # register all properties
 # Would be great to be able to do this at runtime based on the files actually present.
