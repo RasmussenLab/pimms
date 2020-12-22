@@ -349,16 +349,13 @@ class MaxQuantOutput:
                      'allPeptides': 'Raw file', 
                     }
     
-    def __init__(self, folder, load_all=False):
+    def __init__(self, folder):
         """Create instance for of MaxQuant outputfolder.
         
         Parameters
         ----------
         folder: pathlib.Path, str
             Path to Maxquant `txt` output folder.
-        load_all: bool
-            Load all files in folder automatically to memory
-            on instantiation.
 
         Attributes
         ---------
@@ -409,7 +406,7 @@ class MaxQuantOutput:
         if not Path(filepath).exists():
             raise FileNotFoundError(f"No such file: {file}.txt: Choose one of the following {', '.join(self.files)}")
         
-        return pd.read_table(filepath, index_col=0)
+        return pd.read_table(filepath, index_col=0) 
     
     # needed to reset attributes on instance creation.
     _inital_attritubutes = [x for x in dir() if not x.startswith('__')]
@@ -417,6 +414,9 @@ class MaxQuantOutput:
     def get_list_of_attributes(self):
         """Return current list on non-magic instance attributes."""
         return [x for x in dir(self) if not x.startswith('__')]
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.folder!r})'
 
 # register all properties
 # Would be great to be able to do this at runtime based on the files actually present.
