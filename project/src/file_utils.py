@@ -320,10 +320,17 @@ def load_protein_intensities(filepath):
 
 class MaxQuantOutput:
     """Class assisting with MaxQuant txt output folder.
-    
-    
+
+    Parameters
+    ----------
+    folder: pathlib.Path, str
+        Path to Maxquant `txt` output folder.
+
+   
     Attributes
     ----------
+    self.files : list 
+        list of files in `folder`.
     _inital_attritubutes : list
         Initial set of non-magic attributes 
     NAME_FILE_MAP : dict
@@ -343,24 +350,7 @@ class MaxQuantOutput:
              'proteinGroups': 'proteinGroups.txt',
              'summary': 'summary.txt'}
    
-    #always the first one as index?
-    INDEX_COLUMNS = {'evidence': None,
-                     'peptides': 'Sequence',
-                     'allPeptides': 'Raw file', 
-                    }
-    
     def __init__(self, folder):
-        """Create instance for of MaxQuant outputfolder.
-        
-        Parameters
-        ----------
-        folder: pathlib.Path, str
-            Path to Maxquant `txt` output folder.
-
-        Attributes
-        ---------
-        self.files
-        """
         self.folder = Path(folder)
         self.files = self.get_files()
         
@@ -427,29 +417,26 @@ for filename in MaxQuantOutput.NAME_FILE_MAP.keys():
 class MaxQuantOutputDynamic:
     """Class assisting with MaxQuant txt output folder. Fetches only availabe txt files.
     
-    
+    Parameters
+    ----------
+    folder: pathlib.Path, str
+        Path to Maxquant `txt` output folder.
+
+    Attributes
+    ---------
+    files : list
+        file names on disk
+    file_keys : list
+        key for file name on disk to use for lookup
+    name_file_map : dict
+        Keys for known MaxQuant output files.
+
     Attributes
     ----------
     _inital_attritubutes : list
         Initial set of non-magic attributes 
     """  
     def __init__(self, folder):
-        """Create instance for of MaxQuant outputfolder.
-        
-        Parameters
-        ----------
-        folder: pathlib.Path, str
-            Path to Maxquant `txt` output folder.
-
-        Attributes
-        ---------
-        files : list
-            file names on disk
-        file_keys : list
-            key for file name on disk to use for lookup
-        name_file_map : dict
-            Keys for known MaxQuant output files.
-        """
         self.folder = Path(folder)
         self.files = self.get_files()
         
