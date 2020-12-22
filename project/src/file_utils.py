@@ -422,3 +422,81 @@ class MaxQuantOutput:
 # Would be great to be able to do this at runtime based on the files actually present.
 for filename in MaxQuantOutput.NAME_FILE_MAP.keys():
     setattr(MaxQuantOutput, filename, MaxQuantOutput.register_file(filename))
+
+# This version offers less inspection possibilities as the attributes are only set when they are looked up.
+class MaxQuantOutputDynamic:
+    """Class assisting with MaxQuant txt output folder. Fetches only availabe txt files.
+    
+    
+    Attributes
+    ----------
+    _inital_attritubutes : list
+        Initial set of non-magic attributes 
+    """  
+    def __init__(self, folder):
+        """Create instance for of MaxQuant outputfolder.
+        
+        Parameters
+        ----------
+        folder: pathlib.Path, str
+            Path to Maxquant `txt` output folder.
+
+        Attributes
+        ---------
+        files : list
+            file names on disk
+        file_keys : list
+            key for file name on disk to use for lookup
+        name_file_map : dict
+            Keys for known MaxQuant output files.
+        """
+        self.folder = Path(folder)
+        self.files = self.get_files()
+        
+        # patch properties at instance creation?
+        self.name_file_map = {}
+        for file in self.files:
+             file_key = Path(file).stem
+             for symbol in " ()":
+                 file_key = file_key.replace(symbol, '')
+             self.name_file_map[file_key] = file
+        self.file_keys = list(self.name_file_map)
+    
+    def get_files(self):
+        """Get all txt files in output folder
+        
+        Attributes
+        ---------
+        paths: NamedTuple
+        """
+        self.paths = search_files(path=self.folder, query='.txt')
+        return self.paths.files
+    
+        
+    def load(self, filename):
+        """Load a specified file into memory and return it.
+        Can be used """
+        filepath = self.folder / self.name_file_map[filename]
+        if not Path(filepath).exists():
+            raise FileNotFoundError(f"No such file: {filename}.txt: Choose one of the following:\n{', '.join(self.files)}")
+        
+        return pd.read_table(filepath, index_col=0) 
+    
+    # needed to reset attributes on instance creation.
+    _inital_attritubutes = [x for x in dir() if not x.startswith('__')]
+
+    def get_list_of_attributes(self):
+        """Return current list on non-magic instance attributes."""
+        return [x for x in dir(self) if not x.startswith('__')]
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.folder!r})'
+    
+    def __getattr__(self, filename):
+        if filename in self.name_file_map:
+            df = self.load(filename)
+            setattr(self, filename, df)
+        else:
+            msg = f"No such file: {filename}.txt: Choose one of the following:\n{', '.join(self.file_keys)}"
+            raise AttributeError(msg)
+        return df
