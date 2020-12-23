@@ -15,7 +15,7 @@ workflows/maxquant/out/
 *snakemake.log
 *.tfevents.*
 #
-.pdf
+*.pdf
 *.html
 
 workflows/maxquant/.snakemake/
