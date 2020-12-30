@@ -115,9 +115,9 @@ snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
 > Once you are sure, remote the dryrun flag `-n`. Dry runs do not necessarily have to be
 > sent to the queue.
 
-Alternatively invoked a profile defined from the template before.
+Alternatively invoked a profile defined from a [template](https://github.com/Snakemake-Profiles/pbs-torque).
 
-Using the profile defined previously, the configuration
+Using the profile, the configuration
 defined in `config.yaml` and in the `Snakefile` will be used.
 
 ```
