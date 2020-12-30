@@ -18,7 +18,6 @@ envvars:
 # wildcard_mqpar = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
 # mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP'])
 
-# local
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
@@ -57,8 +56,6 @@ rule target:
                             "{file}", "{file}.txt"), file=FILES)
 
 
-# remote file retrevial
-# ToDo: Replace using SFTP class
 rule download_file:
     output:
         raw = temp(os.path.join(config['DATADIR'], "{file}", "{file}.raw"))
@@ -67,7 +64,8 @@ rule download_file:
     params:
         file = "{file}.raw",
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
-        remote = config['REMOTE_IN']
+        remote = config['REMOTE_IN'],
+        datadir = os.path.join(config['DATADIR'], "{file}")
     resources:
         walltime = 300, nodes = 1, mem_mb = 2048
     threads:
@@ -80,6 +78,7 @@ rule download_file:
         echo '{params.file}' >> {fname_excluded} &&
         echo "{params.file} is too small: $FILESIZE" &&
         echo "File is too small: $FILESIZE" > {params.logdir}/download_too_small.log &&
+        rm -R {params.datadir} &&
         exit 1 ||  exit 0)
         """
 
@@ -111,7 +110,7 @@ rule mqpar:
 
 
 rule maxquant:
-    input:           
+    input:
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
         mq_par = os.path.join(config['SCRIPTDIR'],
                               'mqpar_xmls', "mqpar_{file}.xml"),
@@ -151,7 +150,10 @@ rule maxquant:
         echo '-put {params.datadir}/combined/txt/* mq_out/{wildcards.file}' >> sftp_commands &&
         cp {input.mq_par} {params.datadir}/combined/txt/mqpar.xml &&
         echo '{wildcards.file}' >> {params.log_completed} ||
-        ( echo '{wildcards.file}' >> {params.log_failed}  && echo "Size of {input.raw}: $FILESIZE" && exit 1 )
+        ( echo '{wildcards.file}' >> {params.log_failed} &&
+        echo "Size of {input.raw}: $FILESIZE" &&
+        rm -R {params.datadir} &&
+        exit 1 )
         """
 
 rule upload_file:
