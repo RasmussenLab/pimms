@@ -10,7 +10,8 @@ bash
 conda env create -f vaep/workflows/maxquant/environment.yml
 #  ~/.conda/envs/snakemake
 conda activate snakemake
-git update-index --assume-unchanged workflows/maxquant/config.yaml # untrack changes to config
+# untrack changes to config
+git update-index --assume-unchanged workflows/maxquant/config.yaml 
 ```
 
 ## Example `config.yaml` for Workflow
@@ -27,15 +28,21 @@ MAXQUANTEXE: /home/projects/cpr_10006/people/henweb/MaxQuant_1.6.12.0/MaxQuant/b
 MQ_PAR_TEMP: /home/projects/cpr_10006/people/henweb/vaep/workflows/maxquant/mqpar_template_1.6.xml
 THREATS_MQ: 8
 
+REMOTE_OUT: io.erda.dk
+REMOTE_FOLDER: mq_out
+
 # Remote name for fetching files and list of all files
-REMOTE: hela
+REMOTE_IN: hela
 FILES: ../hela_files.txt
+FILES_EXCLUDED: log_excluded_files.txt
+FILES_FAILED: log_failed.txt
 ```
 
 > You have to specify the fasta file paths manually in the parameter template file
 > referenced in MQ_PAR_TEMP, e.g. `/home/projects/cpr_10006/people/henweb/fasta/myfasta.fasta`
 
 If you specify passwords in your config file you might want to restrict permissions to your user
+
 ```
 chmod 600 config.yaml
 ```
@@ -51,7 +58,7 @@ export | grep MAXQUANT # find path to MaxQuant executable
 
 > It seems that also on minor version updates the parameter file of MaxQuant is
 > not preserved. Make sure that your template parameter file is working together
-> with your MaxQuant version (by checking that locally?)
+> with your MaxQuant version
 
 ## Test your Workflow - Dry-Run of Snakemake
 
@@ -67,7 +74,7 @@ snakemake has to have a password,  `<PASSWORD>` set.
 export SSHPASS=<PASSWORD>
 ```
 
-If you don't snakemake will remind you.
+If you don't, snakemake will remind you.
 Howwever, snakemake cannot check if the password is correct
 before execution, so best verify yourself that it works in the shell you execute.
 The `REMOTE` is the same you specified in the `config.yml`:
@@ -75,6 +82,9 @@ The `REMOTE` is the same you specified in the `config.yml`:
 ```bash
 sshpass -e sftp -B 258048 REMOTE <<< "pwd"
 ```
+
+If you set up a SSH connection for your `REMOTE_IN`, you can just set `SSHPASS` to 
+anything or comment the two line in the `Snakefile`.
 
 ### Dry-RUN
 
@@ -103,7 +113,8 @@ qsub -V run_sm_on_cluster.sh
 The `-V` options passes the current environment variables to the shell started by the
 run, see [here](http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm)
 
-The script itself contains the cluster execution. Please change the number of parallel jobs.
+The script itself contains the cluster execution. Please change the number of parallel jobs
+in `run_sm_on_cluster.sh`:
 
 ```bash
 snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
@@ -112,7 +123,7 @@ snakemake --jobs 6 -k --latency-wait 30 --use-envmodules \
 "-e {params.logdir} -o {params.logdir}" -n
 ```
 
-> Once you are sure, remote the dryrun flag `-n`. Dry runs do not necessarily have to be
+> Once you are sure, remove the dryrun flag `-n`. Dry runs do not necessarily have to be
 > sent to the queue.
 
 Alternatively invoked a profile defined from a [template](https://github.com/Snakemake-Profiles/pbs-torque).
@@ -131,7 +142,7 @@ in the `.snakemake/log` folder for inspecting the process of the currently execu
 snakemake job.
 
 
-## After running snakemaker
+## After running snakemake
 
 > The file names can be changed in the `config.yaml`
 
@@ -181,3 +192,27 @@ find ./hela/ -mtime +2
 #find ./hela/ -type d -empty -delete
 #find ./hela/ -mtime +2 -exec rm -r {} \;
 ```
+
+## Check files on server
+
+In order to see if a corresponding folder on exists on `erda.dk`, you can get a dump of the 
+files in the output folder. First get a list of all files in the `mq_out` folder on erda 
+(the default folder for storing results, but choose what is in `config.yaml`) :
+
+```
+sftp -q io.erda.dk:mq_out/ <<< "ls" | grep -v '^sftp>' > hela_processed.txt
+```
+
+> this could be integrated into snakemake _target_ rule.
+
+The `hela_processed.txt` is then the input of the small script `check_current_files.py`:
+
+```
+python check_current_files.py -f ../hela_processed.txt -v
+```
+
+which dumps the missing, not excluded or failed files into `current_files_to_do.txt`. 
+This comparison only checks it the folder for a file exists on the REMOTE if it should be 
+completed. `current_files_to_do.txt` can then itself be a new input file or used to remove
+some output files. If you are sure set the `forceall` option in snakemake, 
+e.g. in `run_sm_on_cluster.sh`.

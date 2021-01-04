@@ -36,6 +36,8 @@ except FileNotFoundError:
     print(f"No such file: {fname_excluded} - Creating one.")
     with open(fname_excluded, 'w'):
         pass
+except ValueError:
+    print(f"WARNING: Excluded files not in current set of files.")
 
 
 # local rules are excuted in the process (job) running snakemake
