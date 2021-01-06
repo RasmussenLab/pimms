@@ -354,14 +354,6 @@ class MaxQuantOutput:
         self.folder = Path(folder)
         self.files = self.get_files()
         
-        # # patch properties at instance creation?
-        # self.name_file_map = {}
-        # for filename in self.files:
-        #      file_key = Path(filename).stem
-        #      for symbol in " ()":
-        #          file_key = file_key.replace(symbol, '')
-        #      setattr(self.__class__, file_key, self.register_file(file_key))
-        #      self.name_file_map[file_key] = filename
     
     def get_files(self):
         """Get all txt files in output folder
@@ -427,12 +419,9 @@ class MaxQuantOutputDynamic:
     files : list
         file names on disk
     file_keys : list
-        key for file name on disk to use for lookup
+        keys for file name on disk to use for lookup
     name_file_map : dict
         Keys for known MaxQuant output files.
-
-    Attributes
-    ----------
     _inital_attritubutes : list
         Initial set of non-magic attributes 
     """  
