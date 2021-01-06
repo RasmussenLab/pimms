@@ -3,7 +3,7 @@ from pathlib import Path
 
 FILENAME = 'Mann_Hepa_data.tsv'
 
-FIGUREFOLDER = 'Figures'
+FIGUREFOLDER = Path('Figures')
 os.makedirs(FIGUREFOLDER, exist_ok=True)
 
 FOLDER_RAW_DATA = Path('data') / 'mq_out/'
@@ -11,10 +11,12 @@ FOLDER_KEY  = None
 
 # FOLDER_RAW_DATA = '/home/jovyan/work/Hela/'
 # FOLDER_KEY = 'txt'
-FOLDER_RAW_DATA = os.path.abspath(FOLDER_RAW_DATA)
+# FOLDER_RAW_DATA = os.path.abspath(FOLDER_RAW_DATA)
 FOLDER_DATA = 'data'
 
 PROCESSED_DATA = os.path.join(FOLDER_DATA, 'processed')
+FOLDER_PROCESSED = PROCESSED_DATA
+ 
 os.makedirs(PROCESSED_DATA, exist_ok=True)
 
 PROTEIN_DUMPS = Path(PROCESSED_DATA) / 'processed'
