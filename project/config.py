@@ -1,4 +1,5 @@
 import os
+from collections import namedtuple
 from pathlib import Path
 
 FILENAME = 'Mann_Hepa_data.tsv'
@@ -44,6 +45,11 @@ KEY_FASTA_SEQ = 'seq'
 KEY_PEPTIDES = 'peptides'
 KEY_GENE_NAME = 'gene'
 KEY_GENE_NAME_FASTA = 'gene_fasta'
+
+KEYS_FASTA_ENTRY = [KEY_FASTA_HEADER, KEY_FASTA_SEQ, KEY_PEPTIDES, KEY_GENE_NAME]
+
+FastaEntry = namedtuple('FastaEntry', KEYS_FASTA_ENTRY)
+fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 
 FILEPATH_UTILS = 'src/file_utils.py'
