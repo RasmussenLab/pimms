@@ -9,7 +9,7 @@ import pandas as pd
 import vaep.io
 
 logger = logging.getLogger(__name__)
-# logger.addHandler(logging.NullHandler())
+logger.addHandler(logging.NullHandler())
 
 
 mq_use_columns = ['Gene names',
@@ -400,14 +400,12 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
             
             # Enforce: proteins have to be share between all peptides
             protein_sets = [set.split(';') for set in protein_sets]
+            # ToDo: Check if ordering is relevant (if not all proteins are checked)
             proteins_shared_by_all = set(protein_sets.pop()).intersection(*protein_sets)
 
-            # protein_sets = {gene for set in protein_sets for gene in set.split(';')}
-            # Enforce: proteins have to be share between all peptides
-            # proteins_shared = set(proteins_sets.pop()).intersection(*protein_sets)
-            # protein_sets.remove(protein_id) # discard as an alternative if keyerror is a problem
-            # protein_ids = list(protein_sets)
-            import pdb; pdb.set_trace()
+            # ToDo: Some CON_ proteins are also present in the fasta and appear twice.
+            #       Remove all CON__ proteins from data globally, including their fasta
+            #       pendants (e.g. Keratin: Q04695;CON__Q04695)
             # exclude potential other contaminents
             protein_sets = [x for x in proteins_shared_by_all if not 'CON__' in x] #.sorted()
             if len(protein_sets) == 0:
@@ -472,13 +470,18 @@ class ExtractFromPeptidesTxt():
         # # ToDo: make this check work
         assert isinstance(mq_output_object, MaxQuantOutput)
         self._mq_output = mq_output_object
-        self.out_folder = Path(out_folder)
+        self.out_folder = Path(out_folder) / mq_output_object.folder.stem
         self.out_folder.mkdir(exist_ok=True)
         self.fname_template = '{gene}.json'
         self.fasta_db = fasta_db
 
     def __call__(self):
-        """Dump valid cases to file."""
+        """Dump valid cases to file.
+        
+        Returns:
+        collections.Counter
+            Counter with gene IDs as key and completeness as value.
+        """
         _counter = 0
         _genes = dict()
         peptides_with_single_gene = get_peptides_with_single_gene(
@@ -498,10 +501,11 @@ class ExtractFromPeptidesTxt():
                 with open(fname, 'w') as f:
                     data_gene.to_json(f)
                 _counter += 1
-        #     if _counter > 400:
-        #         break
         logger.info(
             f'Dumped {_counter} genes from {self._mq_output.folder.stem}')
+        fname = self.out_folder / '0_completeness_all_genes.json'
+        vaep.io.dump_json(_genes, fname)
+        logger.info(f'Dumped files to: {str(self.out_folder)}')
         return _genes
 
     def __repr__(self):
