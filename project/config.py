@@ -1,29 +1,43 @@
+"""
+Project config file.
+
+Different config for different settings.
+
+os to pathlib functionaly, see
+https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os-module
+
+"""
+
 import os
 from collections import namedtuple
 from pathlib import Path
 
-FILENAME = 'Mann_Hepa_data.tsv'
-
+# project folder specific
 FIGUREFOLDER = Path('Figures')
-os.makedirs(FIGUREFOLDER, exist_ok=True)
+FIGUREFOLDER.mkdir(exist_ok=True)
 
-FOLDER_RAW_DATA = Path('data') / 'mq_out/'
-FOLDER_KEY  = None
+FOLDER_DATA = Path('data')
+FOLDER_DATA.mkdir(exist_ok=True)
 
-# FOLDER_RAW_DATA = '/home/jovyan/work/Hela/'
-# FOLDER_KEY = 'txt'
-# FOLDER_RAW_DATA = os.path.abspath(FOLDER_RAW_DATA)
-FOLDER_DATA = 'data'
-
-PROCESSED_DATA = os.path.join(FOLDER_DATA, 'processed')
+PROCESSED_DATA = FOLDER_DATA / 'processed'
 FOLDER_PROCESSED = PROCESSED_DATA
- 
-os.makedirs(PROCESSED_DATA, exist_ok=True)
+FOLDER_PROCESSED.mkdir(exist_ok=True)
 
 PROTEIN_DUMPS = Path(PROCESSED_DATA) / 'processed'
-os.makedirs(PROTEIN_DUMPS, exist_ok=True)
+PROTEIN_DUMPS.mkdir(exist_ok=True)
 
+####
+####
 
+#local PC config
+# FOLDER_MQ_TXT_DATA = Path('data') / 'mq_out/'
+# FOLDER_KEY  = None
+
+# erda specific
+FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
+FOLDER_RAW_DATA = Path('/home/jovyan/work/Hela/')
+FOLDER_KEY = 'txt'
+ 
 #FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'mq_out' / 'peptide_intensities.pkl'
 FN_PEPTIDE_STUMP = 'peptide_intensities'
 FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'
