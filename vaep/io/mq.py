@@ -392,32 +392,40 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
                 f"- Gene: {gene_id:8}: "
                 f"Potential contaminent protein is leading razor protein: {protein_id}"
                 f" (Gene: {gene_data.columns.name})")
-            # assert len(gene_data[mq_col.PROTEINS].unique()) == 1, f"{gene_data[mq_col.PROTEINS].unique()}"
-            protein_sets = gene_data[mq_col.PROTEINS].unique()
-            if len(protein_sets) > 1:
-                logger.warning(f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
-                # ToDo: find intersection of proteins between all sequences.
-            
-            # Enforce: proteins have to be share between all peptides
-            protein_sets = [set.split(';') for set in protein_sets]
-            # ToDo: Check if ordering is relevant (if not all proteins are checked)
-            proteins_shared_by_all = set(protein_sets.pop()).intersection(*protein_sets)
-
-            # ToDo: Some CON_ proteins are also present in the fasta and appear twice.
-            #       Remove all CON__ proteins from data globally, including their fasta
-            #       pendants (e.g. Keratin: Q04695;CON__Q04695)
-            # exclude potential other contaminents
-            protein_sets = [x for x in proteins_shared_by_all if not 'CON__' in x] #.sorted()
-            if len(protein_sets) == 0:
-                raise KeyError("No other overall protein found for sequences.")
-            if len(protein_sets) > 1:
-                logger.warning(
-                    f"- Gene: {gene_id:8}: "
-                    "Non-unique other protein set found (select first): {}".format(
-                        ', '.join(protein_sets)
-                    ))
-            protein_id = protein_sets.pop()
-            peps_exact_cleaved = fasta_db[protein_id][KEY_PEPTIDES][0]
+        elif 'REV__' in protein_id:
+            logger.info(
+                f"- Gene: {gene_id:8}: "
+                f"Reversed protein is leading razor protein: {protein_id}"
+                f" (Gene: {gene_data.columns.name})")
+        else:
+            raise ValueError(f'Check case for {gene_id} on {protein_id}.')
+        # assert len(gene_data[mq_col.PROTEINS].unique()) == 1, f"{gene_data[mq_col.PROTEINS].unique()}"
+        protein_sets = gene_data[mq_col.PROTEINS].unique()
+        if len(protein_sets) > 1:
+            logger.warning(f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
+            # ToDo: find intersection of proteins between all sequences.
+        
+        # Enforce: proteins have to be share between all peptides
+        protein_sets = [set.split(';') for set in protein_sets]
+        # ToDo: Check if ordering is relevant (if not all proteins are checked)
+        proteins_shared_by_all = set(protein_sets.pop()).intersection(*protein_sets)
+        # ToDo: Some CON_ proteins are also present in the fasta and appear twice.
+        #       Remove all CON__ proteins from data globally, including their fasta
+        #       pendants (e.g. Keratin: Q04695;CON__Q04695)
+        # exclude potential other contaminents
+        protein_sets = [x for x in proteins_shared_by_all if not 'CON__' in x] #.sorted()
+        if len(protein_sets) == 0:
+            # raise KeyError("No other overall protein found for sequences.")
+            logger.warning(f'No good protein found for gene ({gene_id:8}). Return empty list.')
+            return []
+        if len(protein_sets) > 1:
+            logger.warning(
+                f"- Gene: {gene_id:8}: "
+                "Non-unique other protein set found (select first): {}".format(
+                    ', '.join(protein_sets)
+                ))
+        protein_id = protein_sets.pop()
+        peps_exact_cleaved = fasta_db[protein_id][KEY_PEPTIDES][0]
     return peps_exact_cleaved
 
 
@@ -440,6 +448,8 @@ def calculate_completness_for_sample(
         proportion of exact peptides for which some evidence was found.
     """    
     c = 0
+    if not peps_exact_cleaved:
+        return 0 # no exact peptides
     for i, _pep in enumerate(peps_exact_cleaved):
         logger.debug(f"Check if exact peptide matches: {_pep}")
         for _found_pep in peps_in_data:
