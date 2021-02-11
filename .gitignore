@@ -7,6 +7,8 @@
 #folders
 project/data/*
 project/tutorials/
+project/tex/
+
 !project/data/README.md
 project/Figures/
 imputeLCMD_*
@@ -22,3 +24,4 @@ workflows/maxquant/out/
 workflows/maxquant/.snakemake/
 workflows/maxquant/mqpar_xmls/
 workflows/maxquant/.out/
+
