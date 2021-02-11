@@ -6,6 +6,7 @@
 
 #folders
 project/data/*
+project/tutorials/
 !project/data/README.md
 project/Figures/
 imputeLCMD_*
