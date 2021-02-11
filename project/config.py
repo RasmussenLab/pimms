@@ -7,10 +7,13 @@ os to pathlib functionaly, see
 https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os-module
 
 """
-
 import os
 from collections import namedtuple
 from pathlib import Path
+
+def mkdir(path=Path): 
+    path.mkdir(exist_ok=True)
+    return path
 
 # project folder specific
 FIGUREFOLDER = Path('Figures')
@@ -19,12 +22,14 @@ FIGUREFOLDER.mkdir(exist_ok=True)
 FOLDER_DATA = Path('data')
 FOLDER_DATA.mkdir(exist_ok=True)
 
-PROCESSED_DATA = FOLDER_DATA / 'processed'
-FOLDER_PROCESSED = PROCESSED_DATA
+FOLDER_PROCESSED = FOLDER_DATA / 'processed'
 FOLDER_PROCESSED.mkdir(exist_ok=True)
 
-PROTEIN_DUMPS = Path(PROCESSED_DATA) / 'processed'
-PROTEIN_DUMPS.mkdir(exist_ok=True)
+FOLDER_TRAINING = mkdir(FOLDER_DATA / 'hela_qc_data')
+
+# (old) Synonyms 
+PROCESSED_DATA = FOLDER_PROCESSED
+PROTEIN_DUMPS = PROCESSED_DATA
 
 ####
 ####
