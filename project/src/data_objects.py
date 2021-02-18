@@ -1,3 +1,4 @@
+import os
 import logging
 from pathlib import Path
 import multiprocessing
@@ -13,8 +14,10 @@ from config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 DEFAULTS = SimpleNamespace()
 DEFAULTS.ALL_SUMMARIES =  Path(FOLDER_PROCESSED) / 'all_summaries.json'
 
-logger = logging.getLogger(__name__)
+N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 8 else 8 
 
+logger = logging.getLogger(__name__)
+logger.info(f"Calling from {__name__}")
 manager = multiprocessing.Manager()
 
 def _convert_dtypes(df):
@@ -60,7 +63,7 @@ class MqAllSummaries():
                 logger.error(f"{mq_output}, No summary and not empty.")
         return {}
     
-    def load_new_samples(self, folders, workers=4):
+    def load_new_samples(self, folders, workers=N_WORKERS_DEFAULT):
         if self.df is not None:
             d_summaries = self.df.to_dict(orient='index')
             samples = set(folder.stem for folder in folders) - set(d_summaries.keys())
