@@ -4,6 +4,7 @@ from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
 
+from tqdm.notebook import tqdm
 import pandas as pd
 
 from vaep.io.mq import MaxQuantOutputDynamic
@@ -82,7 +83,7 @@ class MqAllSummaries():
         
         if samples:
             with multiprocessing.Pool(workers) as p:
-                list_of_updates = p.map(self.load_summary, samples)
+                list_of_updates = list(tqdm(p.imap(self.load_summary, samples), total=len(samples), desc='Load summaries'))
                 
             print("Newly loaded samples:", len(list_of_updates))
 
