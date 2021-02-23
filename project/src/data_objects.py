@@ -29,6 +29,10 @@ def _convert_dtypes(df):
     return df
 
 
+class col_summary:
+    MS = 'MS'
+    MS2 = 'MS/MS Identified'
+
 class MqAllSummaries():
     
     def __init__(self, fp_summaries=DEFAULTS.ALL_SUMMARIES):
@@ -42,6 +46,7 @@ class MqAllSummaries():
                 raise FileNotFoundError(f'Folder of filename not found: {fp_summaries.parent}')
             self.df = None
             self.fp_summaries = DEFAULTS.ALL_SUMMARIES
+        self.usecolumns= col_summary()
     
     def __len__(self):
         if self.df is not None:
@@ -94,3 +99,10 @@ class MqAllSummaries():
         """Save summaries DataFrame as json and pickled object."""
         self.df.to_json(self.fp_summaries, orient='index')
         self.df.to_pickle(self.fp_summaries.parent / f"{self.fp_summaries.stem}.pkl")
+        
+    def get_files_w_min_MS2(self, threshold=10_000, relativ_to=FOLDER_MQ_TXT_DATA):
+        """Get a list of file ids with a minimum MS2 observations."""
+        threshold_ms2_identified = threshold
+        mask  = self.df[self.usecolumns.MS2] > threshold_ms2_identified
+        return [Path(FOLDER_MQ_TXT_DATA) / folder for folder in self.df.loc[mask].index]
+    
