@@ -23,7 +23,7 @@ echo Working directory is $PBS_O_WORKDIR
 cd $PBS_O_WORKDIR
 
 
-snakemake --jobs 29 -k -p --latency-wait 60 --use-envmodules \
+snakemake --jobs 59 -k -p --latency-wait 60 --use-envmodules --rerun-incomplete \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 -m f -V "\
 "-e {params.logdir} -o {params.logdir}" \
