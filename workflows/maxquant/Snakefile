@@ -7,10 +7,12 @@ Incremental development:
 """
 import os
 configfile: 'config.yaml'  # access using config['key']
+MIN_FILE_SIZE = 900_000_000
 
 
 results_foldername = os.path.basename(config["RESULTSDIR"])
 
+# only needed if login to remote is not set up using ssh keys
 # move away from config into envvars
 envvars:
     "SSHPASS"
@@ -57,7 +59,7 @@ rule target:
         expand(os.path.join(config['RESULTSDIR'],
                             "{file}", "{file}.txt"), file=FILES)
 
-
+# File size could be done on remote before downloading, only security check afterwards?s
 rule download_file:
     output:
         raw = temp(os.path.join(config['DATADIR'], "{file}", "{file}.raw"))
@@ -66,8 +68,9 @@ rule download_file:
     params:
         file = "{file}.raw",
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
-        remote = config['REMOTE_IN'],
-        datadir = os.path.join(config['DATADIR'], "{file}")
+        remote = config['REMOTE_IN'],  # SSHPASS migt be used here
+        datadir = os.path.join(config['DATADIR'], "{file}"),
+        min_file_size = MIN_FILE_SIZE
     resources:
         walltime = 300, nodes = 1, mem_mb = 2048
     threads:
@@ -76,12 +79,12 @@ rule download_file:
         """
         sftp -B 258048 {params.remote} <<< 'get {params.file} {output.raw}' && (
         FILESIZE=$(stat -c%s {output.raw}) &&
-        [ $FILESIZE -le 100000000 ] &&
+        [ $FILESIZE -le {params.min_file_size} ] &&
         echo '{params.file}' >> {fname_excluded} &&
         echo "{params.file} is too small: $FILESIZE" &&
         echo "File is too small: $FILESIZE" > {params.logdir}/download_too_small.log &&
         rm -R {params.datadir} &&
-        exit 1 ||  exit 0)
+        exit 1 ||  exit 0 )
         """
 
 
@@ -102,6 +105,9 @@ rule mqpar:
                               'mqpar_xmls', "mqpar_{file}.xml")
     run:
         # snakemake create folders itself if missing -> download job into folder
+        #
+        # multi-line with statements natively supported from Python 3.9:
+        # https://stackoverflow.com/questions/31039022/python-multi-line-with-statement
         with open(file=params.mq_par_temp, encoding='utf-8') as infile, open(file=output.mq_par, mode='w', encoding='utf-8') as outfile:
             for line in infile:
                 line = line.replace('PATH', params.raw)
@@ -123,7 +129,7 @@ rule maxquant:
         out = os.path.join(config['RESULTSDIR'],
                            "{file}", "{file}_mq_done.txt")
     resources:
-        mem_mb = job_ram_mb, nodes = 1, walltime = 14400
+        mem_mb = job_ram_mb, nodes = 1, walltime = '05:00:00'
     threads:
         config['THREATS_MQ']
     envmodules:
@@ -134,7 +140,8 @@ rule maxquant:
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
         log_failed = f"{results_foldername}_failed.txt",
         log_completed = f"{results_foldername}_completed.txt",
-        remote = config['REMOTE_OUT']
+        remote = config['REMOTE_OUT'],
+        min_file_size = MIN_FILE_SIZE
     shell:
         # https://snakemake.readthedocs.io/en/stable/project_info/faq.html#i-don-t-want-snakemake-to-detect-an-error-if-my-shell-command-exits-with-an-exitcode-1-what-can-i-do
         # write shell script?
@@ -145,7 +152,7 @@ rule maxquant:
         """
         mono --version &&
         FILESIZE=$(stat -c%s {input.raw}) &&
-        [ $FILESIZE -ge 100000000 ] &&
+        [ $FILESIZE -ge {params.min_file_size} ] &&
         mono {input.exe} {input.mq_par} &&
         echo "$(date +"%F %T"): Finished run with MaxQuant version {input.exe}" >> {output.out} &&
         echo '-mkdir mq_out/{wildcards.file}' >> sftp_commands &&
@@ -173,6 +180,8 @@ rule upload_file:
     shell:
         """
         sftp -B 258048 {params.remote} <<< '-mkdir mq_out/{wildcards.file}\nput {params.datadir}/combined/txt/* mq_out/{wildcards.file}' &&
-        rm -R {params.datadir} && echo 'Done uploading to mq_out/{wildcards.file} on {params.remote}' &&
-        echo "$(date +"%F %T"): Finished upload to erda." >> {output.out} || echo 'Failed upload for {wildcards.file}'
+        rm -R {params.datadir} &&
+        echo 'Done uploading to mq_out/{wildcards.file} on {params.remote}' &&
+        echo "$(date +"%F %T"): Finished upload to erda." >> {output.out} ||
+        echo 'Failed upload for {wildcards.file}'
         """
