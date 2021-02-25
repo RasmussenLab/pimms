@@ -60,6 +60,8 @@ sftp -q io.erda.dk:share_hela_raw/MNT_2019_Clinical_Proteomics/MNT/ <<< "ls" | g
 sftp -q io.erda.dk:share_hela_raw/MNT_2017_Proteomics/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2017_proteomics.txt
 sftp -q io.erda.dk:share_hela_raw/MNT_2017_Clinical_Proteomics/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2017_clinical_proteomics.txt
 sftp -q io.erda.dk:share_hela_raw/MNT_2013_Proteomics/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2013_proteomics.txt
+sftp -q io.erda.dk:share_hela_raw/MNT_2018_Proteomics/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2018_proteomics.txt
+sftp -q io.erda.dk:share_hela_raw/MNT_2018_Clinical_Proteomics/ <<< "ls" | grep -v '^sftp>' > hela_mnt_2018_clinical_proteomics.txt
 ```
 
 get a list of all files in the `mq_out` folder on erda (the default folder for storing results):
