@@ -1,3 +1,4 @@
+from collections import Counter
 import os
 import logging
 from pathlib import Path
@@ -5,8 +6,11 @@ import multiprocessing
 from types import SimpleNamespace
 
 from tqdm.notebook import tqdm
+import numpy as np
 import pandas as pd
 
+from vaep.io import dump_json
+import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
 from config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 
@@ -14,6 +18,7 @@ from config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 # from vaep.cfg import DEFAULTS
 DEFAULTS = SimpleNamespace()
 DEFAULTS.ALL_SUMMARIES =  Path(FOLDER_PROCESSED) / 'all_summaries.json'
+DEFAULTS.COUNT_ALL_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json'
 
 N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 8 else 8 
 
@@ -115,5 +120,39 @@ class MqAllSummaries():
         """Get a list of file ids with a minimum MS2 observations."""
         threshold_ms2_identified = threshold
         mask  = self.df[self.usecolumns.MS2] > threshold_ms2_identified
+        print(f"Selected  {mask.sum()} of {len(mask)} folders.")
         return [Path(FOLDER_MQ_TXT_DATA) / folder for folder in self.df.loc[mask].index]
     
+class PeptideCounter():
+    def __init__(self, fp_count_all_peptides=DEFAULTS.COUNT_ALL_PEPTIDES):
+        self.fp = fp_count_all_peptides
+        
+    # # add directly dumping of folder? unique peptides?    
+    # # reduce storage for potential download? which columns to retain
+    # # check df for redundant information (same feature value for all entries)
+    def count_peptides(self, folders):
+        c = Counter()
+        for folder in folders:
+            peptides = pd.read_table(folder / 'peptides.txt',
+                                     usecols=[mq.mq_col.SEQUENCE, mq.mq_col.INTENSITY, "Potential contaminant"],
+                                     index_col=0)
+            mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
+            c.update(peptides.loc[~mask, mq.mq_col.INTENSITY].index)
+
+        return c
+
+    # combine multiprocessing into base class?
+    def sum_over_files(self, folders, n_workers=N_WORKERS_DEFAULT):
+        with multiprocessing.Pool(n_workers) as p:
+            list_of_sample_dicts = list(tqdm(p.imap(self.count_peptides, np.array_split(folders, 100)), 
+                                             total=100, desc='Count peptides in 100 chunks'))
+
+        c = Counter()
+        for d in tqdm(list_of_sample_dicts, desc='combine counters from chunks'):
+            c += d
+        self.counter = c
+        return self.counter
+
+    def save(self):
+        print(f"Save to: {self.fp}")
+        dump_json(self.counter, filename=self.fp)
