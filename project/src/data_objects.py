@@ -29,6 +29,15 @@ def _convert_dtypes(df):
         df[l_string_columns] = df[l_string_columns].astype('category')
     return df
 
+def calc_chunksize(n_workers, len_iterable, factor=4):
+    """Calculate chunksize argument for Pool-methods.
+
+    Source and reference: https://stackoverflow.com/a/54813527/9684872
+    """
+    chunksize, extra = divmod(len_iterable, n_workers * factor)
+    if extra:
+        chunksize += 1
+    return chunksize
 
 class col_summary:
     MS = 'MS'
@@ -40,13 +49,12 @@ class MqAllSummaries():
         fp_summaries = Path(fp_summaries)
         if fp_summaries.exists():
             self.df = _convert_dtypes(pd.read_json(fp_summaries, orient='index'))
-            print(f"Use {len(self.df)} previously loaded files.")
-            self.fp_summaries=fp_summaries
+            print(f"{self.__class__.__name__}: Load summaries of {len(self.df)} folders.")
         else:
-            if not fp_summaries.parent.exits():
+            if not fp_summaries.parent.exists():
                 raise FileNotFoundError(f'Folder of filename not found: {fp_summaries.parent}')
             self.df = None
-            self.fp_summaries = DEFAULTS.ALL_SUMMARIES
+        self.fp_summaries = fp_summaries
         self.usecolumns= col_summary()
     
     def __len__(self):
@@ -83,7 +91,9 @@ class MqAllSummaries():
         
         if samples:
             with multiprocessing.Pool(workers) as p:
-                list_of_updates = list(tqdm(p.imap(self.load_summary, samples), total=len(samples), desc='Load summaries'))
+                # set chunksize: https://stackoverflow.com/a/49533645/9684872
+                chunksize = calc_chunksize(workers, len(samples), factor=2)
+                list_of_updates = list(tqdm(p.imap(self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
                 
             print("Newly loaded samples:", len(list_of_updates))
 
