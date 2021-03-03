@@ -1,6 +1,7 @@
 from collections import Counter
 import os
 import logging
+import json
 from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
@@ -20,7 +21,7 @@ DEFAULTS = SimpleNamespace()
 DEFAULTS.ALL_SUMMARIES =  Path(FOLDER_PROCESSED) / 'all_summaries.json'
 DEFAULTS.COUNT_ALL_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json'
 
-N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 8 else 8 
+N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 16 else 16
 
 logger = logging.getLogger(__name__)
 logger.info(f"Calling from {__name__}")
@@ -125,8 +126,22 @@ class MqAllSummaries():
     
 class PeptideCounter():
     def __init__(self, fp_count_all_peptides=DEFAULTS.COUNT_ALL_PEPTIDES):
-        self.fp = fp_count_all_peptides
-        
+        self.fp = Path(fp_count_all_peptides)
+        if self.fp.exists():
+            d = self.load(self.fp)
+            self.counter = d['counter']
+            self.loaded = set(folder for folder in d['based_on'])
+        else:
+            self.loaded = None
+            self.counter = None
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(fp_count_all_peptides={str(self.fp)})"
+            
+    def get_new_folders(self, folders : Path):
+        ret = set(folder.stem for folder in folders) - self.loaded
+        return ret
+    
     # # add directly dumping of folder? unique peptides?    
     # # reduce storage for potential download? which columns to retain
     # # check df for redundant information (same feature value for all entries)
@@ -142,17 +157,45 @@ class PeptideCounter():
         return c
 
     # combine multiprocessing into base class?
-    def sum_over_files(self, folders, n_workers=N_WORKERS_DEFAULT):
-        with multiprocessing.Pool(n_workers) as p:
-            list_of_sample_dicts = list(tqdm(p.imap(self.count_peptides, np.array_split(folders, 100)), 
+    def sum_over_files(self, folders, n_workers=N_WORKERS_DEFAULT, save=True):
+        if self.loaded:
+            new_folder_names = self.get_new_folders(folders)
+            print(f'{len(new_folder_names)} new folders to process.')
+            if new_folder_names:
+                folders = [folder for folder in folders if folder.stem in new_folder_names]
+            else:
+                folders = []
+        
+        if folders:
+            with multiprocessing.Pool(n_workers) as p:
+                list_of_sample_dicts = list(tqdm(p.imap(self.count_peptides, np.array_split(folders, 100)), 
                                              total=100, desc='Count peptides in 100 chunks'))
-
-        c = Counter()
-        for d in tqdm(list_of_sample_dicts, desc='combine counters from chunks'):
-            c += d
-        self.counter = c
+            if not self.counter:
+                self.counter = Counter()
+            for d in tqdm(list_of_sample_dicts, desc='combine counters from chunks'):
+                self.counter += d
+            
+            self.loaded |= new_folder_names
+            if save:
+                self.save()
+        else:
+            print('Nothing to process.')
         return self.counter
 
     def save(self):
+        """Save state
+        
+        {
+         'counter': Counter,
+         'based_on': list
+         }
+        """
+        d = {'counter': self.counter, 'based_on': list(self.loaded)}
         print(f"Save to: {self.fp}")
-        dump_json(self.counter, filename=self.fp)
+        dump_json(d, filename=self.fp)
+
+    def load(self, fp):
+        with open(self.fp) as f:
+            d = json.load(f)
+        d['counter'] = Counter(d['counter'])
+        return d
