@@ -15,21 +15,6 @@ def mkdir(path=Path):
     path.mkdir(exist_ok=True)
     return path
 
-###############################################################################
-###############################################################################
-# Adapt this part
-
-#local PC config
-FOLDER_MQ_TXT_DATA = Path('data') / 'mq_out/'
-# FOLDER_KEY  = None
-
-# erda specific
-#FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
-#FOLDER_RAW_DATA = Path('/home/jovyan/work/Hela/')
-FOLDER_KEY = 'txt'
-
-###############################################################################
-###############################################################################
 # project folder specific
 FIGUREFOLDER = Path('Figures')
 FIGUREFOLDER.mkdir(exist_ok=True)
@@ -46,12 +31,18 @@ FOLDER_TRAINING = mkdir(FOLDER_DATA / 'hela_qc_data')
 PROCESSED_DATA = FOLDER_PROCESSED
 PROTEIN_DUMPS = PROCESSED_DATA
 
-###############################################################################
-###############################################################################
-# Files
+####
+####
 
-FN_ALL_SUMMARIES = FOLDER_PROCESSED / 'all_summaries.json'
+#local PC config
+# FOLDER_MQ_TXT_DATA = Path('data') / 'mq_out/'
+# FOLDER_KEY  = None
 
+# erda specific
+FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
+FOLDER_RAW_DATA = Path('/home/jovyan/work/Hela/')
+FOLDER_KEY = 'txt'
+ 
 #FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'mq_out' / 'peptide_intensities.pkl'
 FN_PEPTIDE_STUMP = 'peptide_intensities'
 FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'

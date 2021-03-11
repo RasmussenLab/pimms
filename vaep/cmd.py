@@ -1,5 +1,6 @@
 # io module?
 import argparse
+import torch
 
 
 def create_argparser():
@@ -26,4 +27,17 @@ def create_argparser():
 
 parser = create_argparser()
 
+def get_args(batch_size=600, epochs=600, no_cuda=False):
+    """Helper function to create arg."""
+    BATCH_SIZE = 16
+    EPOCHS = 600
+    args = ['--batch-size', str(BATCH_SIZE), 
+            '--seed', '43', 
+            '--epochs', str(EPOCHS), 
+            '--log-interval', str(BATCH_SIZE)]
+    if no_cuda:
+        args.append('--no-cuda')
+    args = parser.parse_args(args)
+    args.cuda = torch.cuda.is_available() and not args.no_cuda
+    return args
 

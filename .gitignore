@@ -6,19 +6,22 @@
 
 #folders
 project/data/*
+project/tutorials/
+project/tex/
+
 !project/data/README.md
 project/Figures/
 imputeLCMD_*
 *.snakemake/
-workflows/maxquant/mqpar_xmls/
-*snakemake.log
-
 
 #
-.pdf
+*snakemake.log
+*.tfevents.*
+*.pdf
 *.html
 
 workflows/maxquant/mqpar_xmls/
+workflows/maxquant/template_scripts/
 workflows/maxquant/out/
 *.moab
 *.moab.e
@@ -26,4 +29,5 @@ workflows/maxquant/out/
 *.e
 *.o
 
-workflows/maxquant/template_scripts/
+
+

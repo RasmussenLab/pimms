@@ -9,40 +9,48 @@ from torch.nn import functional as F
 
 logger = logging.getLogger()
 
-
-class PeptideDatasetInMemory(Dataset):
-    """Peptide Dataset fully in memory."""
-
-    def __init__(self, data: pd.DataFrame, fill_na=0):
-        self.mask_obs = torch.from_numpy(data.notna().values)
-        data = data.fillna(fill_na)
-        self.peptides = torch.from_numpy(data.values)
-        self.length_ = len(data)
-
-    def __len__(self):
-        return self.length_
-
-    def __getitem__(self, idx):
-        return self.peptides[idx], self.mask_obs[idx]
-
-
 # from IPython.core.debugger import set_trace # invoke debugging
 class VAE(nn.Module):
-    def __init__(self, n_features, n_neurons):
+    """Variational Autoencoder
+
+
+    Attributes
+    ----------
+    compression_factor: int
+        Compression factor for latent representation in comparison
+        to input features, default 0.25
+    """
+
+    compression_factor = 0.25
+
+    def __init__(self, n_features: int, n_neurons: int):
+        """PyTorch model for Variational autoencoder
+
+        Parameters
+        ----------
+        n_features : int
+            number of input features.
+        n_neurons : int
+            number of neurons in encoder and decoder layer
+        """
         super().__init__()
 
         self._n_neurons = n_neurons
         self._n_features = n_features
 
-        self.fc1 = nn.Linear(n_features, n_neurons)
-        self.fc21 = nn.Linear(n_neurons, 50)
-        self.fc22 = nn.Linear(n_neurons, 50)
-        self.fc3 = nn.Linear(50, n_neurons)
-        self.fc4 = nn.Linear(n_neurons, n_features)
+        dim_vae_latent = int(n_features * self.compression_factor)
+
+        self.encoder = nn.Linear(n_features, n_neurons)
+        # latent representation:
+        self.mean = nn.Linear(n_neurons, dim_vae_latent)  # mean
+        self.std = nn.Linear(n_neurons, dim_vae_latent)   # stdev
+
+        self.decoder = nn.Linear(dim_vae_latent, n_neurons)
+        self.out = nn.Linear(n_neurons, n_features)
 
     def encode(self, x):
-        h1 = F.relu(self.fc1(x))
-        return self.fc21(h1), self.fc22(h1)
+        h1 = F.relu(self.encoder(x))
+        return self.mean(h1), self.std(h1)
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5*logvar)
@@ -50,8 +58,8 @@ class VAE(nn.Module):
         return mu + eps*std
 
     def decode(self, z):
-        h3 = F.relu(self.fc3(z))
-        return self.fc4(h3)
+        h3 = F.relu(self.decoder(z))
+        return self.out(h3)
 
     def forward(self, x):
         mu, logvar = self.encode(x.view(-1, self._n_features))
@@ -59,9 +67,8 @@ class VAE(nn.Module):
         return self.decode(z), mu, logvar
 
 
-def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
-    """Loss function only considering the observed values in the
-    reconstruction loss.
+def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
+    """Loss function only considering the observed values in the reconstruction loss.
 
     Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
 
@@ -69,6 +76,30 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     MSE = F.mse_loss(input=recon_x, target=x, reduction='mean')
 
 
+    Parameters
+    ----------
+    recon_x : [type]
+        [description]
+    x : [type]
+        [description]
+    mask : [type]
+        [description]
+    mu : [type]
+        [description]
+    logvar : [type]
+        [description]
+    t : float, optional
+        [description], by default 0.9
+
+    Returns
+    -------
+    total: float
+        Total, weighted average loss for provided input and mask
+    mse: float
+        unweighted mean-squared-error for non-masked inputs
+    kld: float
+        unweighted Kullback-Leibler divergence between prior and empirical
+        normal distribution (defined by encoded moments) on latent representation.
     """
     MSE = F.mse_loss(input=recon_x*mask,
                      target=x*mask,
@@ -82,26 +113,38 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9):
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
 
-    return t*MSE + (1-t)*KLD
+    total = t*MSE + (1-t)*KLD
+    return total, MSE, KLD
 
 
-def train(epoch, model, train_loader, optimizer, device):
+def train(epoch, model, train_loader, optimizer, device, writer=None):
     model.train()
     train_loss = 0
-    N_SAMPLES = len(train_loader.dataset)
-    for (data, mask) in train_loader:
+    n_samples = len(train_loader.dataset)
+    for batch_idx, (data, mask) in enumerate(train_loader):
         data = data.to(device)
+        mask = mask.to(device)
+        # assert data.is_cuda and mask.is_cuda
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss = loss_function(recon_batch, data, mask, mu, logvar)
+        loss, mse, kld = loss_function(
+                            recon_x=recon_batch,
+                            x=data,
+                            mask=mask,
+                            mu=mu,
+                            logvar=logvar,
+                            device=device)
+        logger.debug("Epoch: {epoch:3}, Batch: {batch_idx:4}")
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
-        # print(batch_idx)
-        # if batch_idx % args.log_interval == 0:
-        #     print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-        #         epoch, batch_idx * len(data), len(train_loader.dataset),
-        #         100. * batch_idx / len(train_loader),
-        #         loss.item() / len(data)))
-    # logger.info('====> Epoch: {} Average loss: {:.4f}'.format(
-    #     epoch, train_loss / N_SAMPLES))
+
+    avg_loss_per_sample = train_loss / n_samples
+    if epoch % 25 == 0:
+        logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
+            epoch=epoch, avg_loss=avg_loss_per_sample))
+    if writer is not None:
+        writer.add_scalar('training loss',
+                          avg_loss_per_sample,
+                          epoch)
+    return

@@ -45,57 +45,6 @@ def check_for_key(iterable, key):
         return '_'.join(iterable)
 
 
-PathsList = namedtuple('PathsList', ['files', 'folder'])
-
-
-def search_files(path='.', query='.txt'):
-    """Uses Pathlib to find relative to path files 
-    with the query text in their file names. Returns 
-    the path relative to the specified path.
-
-    Parameters
-    ----------
-    path : str, optional
-        Path to search, by default '.'
-    query : str, optional
-        query string for for filenames, by default '.txt'
-
-    Returns
-    -------
-    list
-        list with files as string containig query key. 
-    """
-    path = Path(path)
-    files = []
-    for p in path.rglob("*"):
-        if query in p.name:
-            files.append(str(p.relative_to(path)))
-    return PathsList(files=files, folder=path)
-
-
-def search_subfolders(path='.', depth: int = 1):
-    """Search subfolders relative to given path."""
-    if not isinstance(depth, int) and depth > 0:
-        raise ValueError(
-            f"Please provide an strictly positive integer, not {depth}")
-
-    path = Path(path)
-    directories = [path]
-
-    def get_subfolders(path):
-        return [x for x in path.iterdir() if x.is_dir()]
-
-    directories_previous = directories.copy()
-    while depth > 0:
-        directories_new = list()
-        for p in directories_previous:
-            directories_new.extend(
-                get_subfolders(p))
-        directories.extend(directories_new)
-        directories_previous = directories_new.copy()
-        depth -= 1
-    return directories
-
 # can file-loading be made concurrent?
 # check tf.data
 
@@ -235,22 +184,22 @@ types_peptides = {'N-term cleavage window': dtype('O'),
                   'MS/MS Count': dtype('int64')}
 
 
-def load_peptide_intensities(filepath):
-    f"""Load Intensities from `peptides.txt`.
-    Data types of columns as of in MaxQuant {MQ_VERSION}
+# def load_peptide_intensities(filepath):
+#     f"""Load Intensities from `peptides.txt`.
+#     Data types of columns as of in MaxQuant {MQ_VERSION}
 
-    Parameters
-    ----------
-    filepath : str
-        filepath (rel or absolute) to MQ peptides.txt
+#     Parameters
+#     ----------
+#     filepath : str
+#         filepath (rel or absolute) to MQ peptides.txt
 
-    Returns
-    -------
-    pandas.DataFrame
-        Return text file as DataFrame.
-    """
-    df = pd.read_table(filepath, index_col='Sequence', dtype=types_peptides)
-    return df[['Intensity']]
+#     Returns
+#     -------
+#     pandas.DataFrame
+#         Return text file as DataFrame.
+#     """
+#     df = pd.read_table(filepath, index_col='Sequence', dtype=types_peptides)
+#     return df[['Intensity']]
 
 
 dtypes_proteins = {'Protein IDs': dtype('O'),
@@ -307,3 +256,6 @@ def load_protein_intensities(filepath):
     df = pd.read_table(
         filepath, index_col='Majority protein IDs', dtype=dtypes_proteins)
     return df[['Intensity']]
+
+
+
