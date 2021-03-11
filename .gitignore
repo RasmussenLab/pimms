@@ -21,3 +21,9 @@ workflows/maxquant/mqpar_xmls/
 workflows/maxquant/mqpar_xmls/
 workflows/maxquant/out/
 *.moab
+*.moab.e
+*.moab.o
+*.e
+*.o
+
+workflows/maxquant/template_scripts/
