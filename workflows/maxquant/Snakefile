@@ -6,20 +6,22 @@ Incremental development:
 3) add queuing system `qsub`
 """
 import os
+from pathlib import Path
 configfile: 'config.yaml'  # access using config['key']
 MIN_FILE_SIZE = 900_000_000
 
-
+folder_logs = Path(config['LOGDIR'])
 results_foldername = os.path.basename(config["RESULTSDIR"])
 
 # only needed if login to remote is not set up using ssh keys
 # move away from config into envvars
-envvars:
-    "SSHPASS"
+# envvars:
+#     "SSHPASS"
 
 # wildcard_mqpar = os.path.join(config['SCRIPTDIR'], 'mqpar_xmls', "mqpar_{file}.xml")
 # mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP'])
 
+print(f"Use files from: {config['FILES']}")
 with open(config['FILES'], encoding='utf-8') as f:
     FILES = set(line.strip().split('.raw')[0] for line in f)
 
@@ -27,19 +29,22 @@ with open(config['FILES'], encoding='utf-8') as f:
 FILES = list(FILES)
 FILES.sort()  # otherwise execution order is not deterministic due to set
 # local, excluded files previously identified as to small
-fname_excluded = f"{results_foldername}_excluded_files.txt"
+fname_excluded = folder_logs / \
+    f"{results_foldername}_excluded_files.txt"
+print(f"Exclude files from: {fname_excluded}")
 try:
     with open(fname_excluded, encoding='utf-8') as f:
         FILES_EXCLUDED = set(line.strip().split('.raw')[0] for line in f)
-
-    for _file_to_remove in FILES_EXCLUDED:
-        FILES.remove(_file_to_remove)
 except FileNotFoundError:
     print(f"No such file: {fname_excluded} - Creating one.")
     with open(fname_excluded, 'w'):
         pass
-except ValueError:
-    print(f"WARNING: Excluded files not in current set of files.")
+    FILES_EXCLUDED = []
+for _file_to_remove in FILES_EXCLUDED:
+    try:
+        FILES.remove(_file_to_remove)
+    except ValueError as e:
+        print(f"WARNING: File to exclude not in inputs: {_file_to_remove}")
 
 
 # local rules are excuted in the process (job) running snakemake
@@ -87,10 +92,13 @@ rule download_file:
         exit 1 ||  exit 0 )
         """
 
-
+# Is it possible to have relative paths for the Output?
+# Path('mqpar_xmls') / 'mq_par_{file}.xml'
+#
+# should it be a temporary file, otherwise THREADS_MQ is fixed?
 rule mqpar:
     benchmark:
-        os.path.join(config['RESULTSDIR'], "{file}", "benchmark_mqpar.tsv")
+        Path(config['RESULTSDIR']) / "{file}" / "benchmark_mqpar.tsv"
     params:
         raw = os.path.join(config['DATADIR'], "{file}", "{file}.raw"),
         mq_par_temp = os.path.join(config['SCRIPTDIR'], config['MQ_PAR_TEMP']),
@@ -101,8 +109,7 @@ rule mqpar:
     threads:
         1
     output:
-        mq_par = os.path.join(config['SCRIPTDIR'],
-                              'mqpar_xmls', "mqpar_{file}.xml")
+        mq_par = Path(config['SCRIPTDIR']) / 'mqpar_xmls' / "mqpar_{file}.xml"
     run:
         # snakemake create folders itself if missing -> download job into folder
         #
@@ -129,7 +136,7 @@ rule maxquant:
         out = os.path.join(config['RESULTSDIR'],
                            "{file}", "{file}_mq_done.txt")
     resources:
-        mem_mb = job_ram_mb, nodes = 1, walltime = '05:00:00'
+        mem_mb = job_ram_mb, nodes = 1, walltime = '5:00:00'
     threads:
         config['THREATS_MQ']
     envmodules:
@@ -139,7 +146,7 @@ rule maxquant:
         datadir = os.path.join(config['DATADIR'], "{file}"),
         logdir = os.path.join(config['RESULTSDIR'], "{file}"),
         log_failed = f"{results_foldername}_failed.txt",
-        log_completed = f"{results_foldername}_completed.txt",
+        log_completed = folder_logs / f"{results_foldername}_completed.txt",
         remote = config['REMOTE_OUT'],
         min_file_size = MIN_FILE_SIZE
     shell:
