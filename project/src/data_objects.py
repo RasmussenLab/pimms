@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
+from typing import Iterable
 
 from tqdm.notebook import tqdm
 import numpy as np
@@ -123,7 +124,25 @@ class MqAllSummaries():
         mask  = self.df[self.usecolumns.MS2] > threshold_ms2_identified
         print(f"Selected  {mask.sum()} of {len(mask)} folders.")
         return [Path(FOLDER_MQ_TXT_DATA) / folder for folder in self.df.loc[mask].index]
-    
+
+# # check df for redundant information (same feature value for all entries)
+usecols = mq.COLS_  + ['Potential contaminant', mq.mq_col.SEQUENCE]
+
+def count_peptides(folders):
+    c = Counter()
+    for folder in folders:
+        peptides = pd.read_table(folder / 'peptides.txt',
+                                 usecols=usecols,
+                                 index_col=0)
+        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
+        peptides = peptides.loc[~mask]
+        c.update(peptides.index)
+        peptides.drop('Potential contaminant', axis=1).to_csv(FOLDER_PROCESSED / f"{folder.stem}.csv")
+    return c
+
+def get_folder_names(folders: Iterable):
+    return set(folder.stem for folder in folders)
+
 class PeptideCounter():
     def __init__(self, fp_count_all_peptides=DEFAULTS.COUNT_ALL_PEPTIDES):
         self.fp = Path(fp_count_all_peptides)
@@ -139,25 +158,11 @@ class PeptideCounter():
         return f"{self.__class__.__name__}(fp_count_all_peptides={str(self.fp)})"
             
     def get_new_folders(self, folders : Path):
-        ret = set(folder.stem for folder in folders) - self.loaded
+        ret = get_folder_names(folders) - self.loaded
         return ret
-    
-    # # add directly dumping of folder? unique peptides?    
-    # # reduce storage for potential download? which columns to retain
-    # # check df for redundant information (same feature value for all entries)
-    def count_peptides(self, folders):
-        c = Counter()
-        for folder in folders:
-            peptides = pd.read_table(folder / 'peptides.txt',
-                                     usecols=[mq.mq_col.SEQUENCE, mq.mq_col.INTENSITY, "Potential contaminant"],
-                                     index_col=0)
-            mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
-            c.update(peptides.loc[~mask, mq.mq_col.INTENSITY].index)
-
-        return c
-
+       
     # combine multiprocessing into base class?
-    def sum_over_files(self, folders, n_workers=N_WORKERS_DEFAULT, save=True):
+    def sum_over_files(self, folders: list, n_workers=N_WORKERS_DEFAULT, save=True):
         if self.loaded:
             new_folder_names = self.get_new_folders(folders)
             print(f'{len(new_folder_names)} new folders to process.')
@@ -168,14 +173,17 @@ class PeptideCounter():
         
         if folders:
             with multiprocessing.Pool(n_workers) as p:
-                list_of_sample_dicts = list(tqdm(p.imap(self.count_peptides, np.array_split(folders, 100)), 
+                list_of_sample_dicts = list(tqdm(p.imap(count_peptides, np.array_split(folders, 100)), 
                                              total=100, desc='Count peptides in 100 chunks'))
             if not self.counter:
                 self.counter = Counter()
             for d in tqdm(list_of_sample_dicts, desc='combine counters from chunks'):
                 self.counter += d
             
-            self.loaded |= new_folder_names
+            if self.loaded:
+                self.loaded |= new_folder_names
+            else:
+                self.loaded = get_folder_names(folders)
             if save:
                 self.save()
         else:
