@@ -27,7 +27,7 @@ except:
     try:
         # erda
         FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
-        FOLDER_RAW_DATA = Path('/home/jovyan/work/Hela/')
+        FOLDER_RAW_DATA = Path('/home/jovyan/work/share_hela_raw/')
         assert FOLDER_MQ_TXT_DATA.exists()
         assert FOLDER_RAW_DATA.exists()
     except:
