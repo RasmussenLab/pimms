@@ -17,29 +17,6 @@ def mkdir(path=Path):
 
 ###############################################################################
 ###############################################################################
-# Adapt this part
-
-#local PC config
-try:
-    FOLDER_MQ_TXT_DATA = Path('Y:/') / 'mq_out'
-    assert FOLDER_MQ_TXT_DATA.exists()
-except:
-    try:
-        # erda
-        FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
-        FOLDER_RAW_DATA = Path('/home/jovyan/work/share_hela_raw/')
-        assert FOLDER_MQ_TXT_DATA.exists()
-        assert FOLDER_RAW_DATA.exists()
-    except:
-        raise FileNotFoundError(f"Check config for {FOLDER_MQ_TXT_DATA} and {FOLDER_RAW_DATA}"
-                                ", paths seem wrong")
-        
-# FOLDER_KEY  = None
-
-FOLDER_KEY = 'txt'
-
-###############################################################################
-###############################################################################
 # project folder specific
 FIGUREFOLDER = Path('Figures')
 FIGUREFOLDER.mkdir(exist_ok=True)
@@ -55,6 +32,42 @@ FOLDER_TRAINING = mkdir(FOLDER_DATA / 'hela_qc_data')
 # (old) Synonyms 
 PROCESSED_DATA = FOLDER_PROCESSED
 PROTEIN_DUMPS = PROCESSED_DATA
+
+###############################################################################
+###############################################################################
+# Adapt this part
+ON_ERDA = True
+#local PC config
+FOLDER_MQ_TXT_DATA = [
+    Path('Y:/') / 'mq_out',
+    FOLDER_DATA / 'mq_out',
+    Path('/home/jovyan/work/mq_out/'),
+]
+for folder in FOLDER_MQ_TXT_DATA:
+    if folder.exists():
+        print(f'FOLDER_MQ_TXT_DATA = {folder}')
+        FOLDER_MQ_TXT_DATA = folder
+        ON_ERDA = False
+        break
+
+assert FOLDER_MQ_TXT_DATA.exists(), f'Not found. Check FOLDER_MQ_TXT_DATA entries above: {", ".join(FOLDER_MQ_TXT_DATA)}'
+
+if ON_ERDA:    
+    FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
+    if FOLDER_MQ_TXT_DATA.exists():
+        print(f'FOLDER_MQ_TXT_DATA = {FOLDER_MQ_TXT_DATA}')
+    else:
+        raise FileNotFoundError(f"Check config for FOLDER_MQ_TXT_DATA")
+    
+    FOLDER_RAW_DATA = Path('/home/jovyan/work/share_hela_raw/')
+    if FOLDER_RAW_DATA.exists():
+        print(f'FOLDER_RAW_DATA = {FOLDER_RAW_DATA}')
+    else:
+        raise FileNotFoundError(f"Check config for FOLDER_RAW_DATA: {FOLDER_RAW_DATA}")
+        
+# FOLDER_KEY  = None
+
+FOLDER_KEY = 'txt'
 
 ###############################################################################
 ###############################################################################
@@ -76,6 +89,8 @@ FN_PROT_GENE_MAP = FOLDER_FASTA / 'uniprot_protein_gene_map.json'
 FN_PEP_TO_PROT = FOLDER_FASTA / 'peptided_to_prot_id.json'
 FN_PROTEIN_SUPPORT_MAP = Path(FOLDER_DATA) / 'protein_support.pkl'
 FN_PROTEIN_SUPPORT_FREQ = Path(FOLDER_DATA) / 'dict_protein_support_freq.pkl'
+
+FN_ALL_RAW_FILES = 'all_raw_files_dump.txt'
 
 # DATA FASTA Config
 KEY_FASTA_HEADER = 'meta'
