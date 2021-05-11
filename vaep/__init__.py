@@ -16,6 +16,6 @@ class IntArrayFormatter(pf.GenericArrayFormatter):
         fmt_values = [formatter(x) for x in self.values]
         return fmt_values
 
-pd.options.display.float_format = '{:,.1f}'.format
+pd.options.display.float_format = '{:,.3f}'.format
 pf.IntArrayFormatter = IntArrayFormatter
 
