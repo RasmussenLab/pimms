@@ -5,13 +5,38 @@ import logging
 LOG_FOLDER = Path('logs')
 LOG_FOLDER.mkdir(exist_ok=True)
 
-def setup_logger_w_file(logger, level=logging.INFO, fname_base='log'):
-    """Setup logging in project"""
+
+def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
+    """Setup logging in project. Takes a logger an creates
+
+    Parameters
+    ----------
+    logger : logging.Logger
+        logger instance to configre
+    level : int, optional
+        logging level, by default logging.INFO
+    fname_base : str, optional
+        filename for logging, by default None
+
+    Returns
+    -------
+    logging.Logger
+        Configured logger instance for logging
+
+    Examples
+    --------
+    >>> import logging
+    >>> logger = logging.getLogger('vaep')
+    >>> _ = setup_logger_w_file(logger) # no logging to file
+    >>> logger.handlers = [] # reset logger
+    >>> _ = setup_logger_w_file() # 
+
+    """
     logger.setLevel(logging.INFO)
-    logger.handlers = []  #remove any handler in case you reexecute the cell
+    logger.handlers = []  # remove any handler in case you reexecute the cell
 
     c_format = logging.Formatter(f'%(name)s - %(levelname)-8s %(message)s')
-    
+
     c_handler = logging.StreamHandler()
     c_handler.setLevel(logging.INFO)
     c_handler.setFormatter(c_format)
@@ -19,9 +44,13 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base='log'):
 
     if fname_base:
         date_log_file = "{:%y%m%d_%H%M}".format(datetime.now())
-        f_handler = logging.FileHandler(LOG_FOLDER / f"{fname_base}_{date_log_file}.txt")
-        f_handler.setLevel(logging.INFO) 
+        f_handler = logging.FileHandler(
+            LOG_FOLDER / f"{fname_base}_{date_log_file}.txt")
+        f_handler.setLevel(logging.INFO)
         f_handler.setFormatter(c_format)
         logger.addHandler(f_handler)
-    
+
     return logger
+
+
+setup_logger = setup_logger_w_file

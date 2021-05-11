@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 from torch import nn
 from torch.nn import functional as F
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 # from IPython.core.debugger import set_trace # invoke debugging
 class VAE(nn.Module):
