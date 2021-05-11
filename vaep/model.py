@@ -118,6 +118,29 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
 
 
 def train(epoch, model, train_loader, optimizer, device, writer=None):
+    """Train one epoch.
+
+    Parameters
+    ----------
+    epoch : [type]
+        [description]
+    model : [type]
+        [description]
+    train_loader : [type]
+        [description]
+    optimizer : [type]
+        [description]
+    device : [type]
+        [description]
+    writer : [type], optional
+        [description], by default None
+
+    Returns
+    ------_
+    loss : float
+        Total loss for each epoch.
+
+    """    
     model.train()
     train_loss = 0
     n_samples = len(train_loader.dataset)
