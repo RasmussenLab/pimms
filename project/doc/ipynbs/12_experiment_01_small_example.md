@@ -1821,10 +1821,8 @@ _ = fig.legend(('linear', 'log'), loc=5)
 
 
     
-![png](doc/ipynbs/12_experiment_01_small_example_files/doc/ipynbs/12_experiment_01_small_example_26_0.png)
+![png](./12_experiment_01_small_example_files/doc/ipynbs/12_experiment_01_small_example_26_0.png)
     
-
-
 
 ```python
 caption = (f"Frequencies are capped at {subplot_kw['ylim'][1]} and "
