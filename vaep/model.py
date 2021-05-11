@@ -144,7 +144,10 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
         logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
             epoch=epoch, avg_loss=avg_loss_per_sample))
     if writer is not None:
-        writer.add_scalar('training loss',
+        writer.add_scalar('avg training loss',
                           avg_loss_per_sample,
                           epoch)
-    return
+    return loss
+
+
+# namedtuple("EpochAverages", 'loss mse kld')
