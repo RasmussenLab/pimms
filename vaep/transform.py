@@ -33,6 +33,18 @@ class StandardScaler(preprocessing.StandardScaler):
             return pd.DataFrame(res, columns=X.columns, index=X.index)
         return res
 
+msg_return_docstring  =  """
+
+        Returns
+        -------
+        Y: array-like
+            If X is a pandas DataFrame, Y will be a DataFrame with the initial 
+            Indix and column Index objects.
+"""
+
+StandardScaler.transform.__doc__ = preprocessing.StandardScaler.transform.__doc__ + msg_return_docstring
+StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_transform.__doc__ + msg_return_docstring
+
 
 def get_df_fitted_mean_std(self, index):
     return pd.DataFrame({'mean': self.mean_, 'stddev': self.scale_}, index=index)
