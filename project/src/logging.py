@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import datetime
 import logging
+import sys
 
 LOG_FOLDER = Path('logs')
 LOG_FOLDER.mkdir(exist_ok=True)
@@ -37,7 +38,7 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
 
     c_format = logging.Formatter(f'%(name)s - %(levelname)-8s %(message)s')
 
-    c_handler = logging.StreamHandler()
+    c_handler = logging.StreamHandler(sys.stdout)
     c_handler.setLevel(logging.INFO)
     c_handler.setFormatter(c_format)
     logger.addHandler(c_handler)
