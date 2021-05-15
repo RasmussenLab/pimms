@@ -40,13 +40,13 @@ class VAE(nn.Module):
 
         dim_vae_latent = int(n_features * self.compression_factor)
 
-        self.encoder = nn.Linear(n_features, n_neurons)
+        self.encoder = nn.Linear(n_features, n_neurons).double()
         # latent representation:
-        self.mean = nn.Linear(n_neurons, dim_vae_latent)  # mean
-        self.std = nn.Linear(n_neurons, dim_vae_latent)   # stdev
+        self.mean = nn.Linear(n_neurons, dim_vae_latent).double()  # mean
+        self.std = nn.Linear(n_neurons, dim_vae_latent).double()   # stdev
 
-        self.decoder = nn.Linear(dim_vae_latent, n_neurons)
-        self.out = nn.Linear(n_neurons, n_features)
+        self.decoder = nn.Linear(dim_vae_latent, n_neurons).double()
+        self.out = nn.Linear(n_neurons, n_features).double()
 
     def encode(self, x):
         h1 = F.relu(self.encoder(x))
