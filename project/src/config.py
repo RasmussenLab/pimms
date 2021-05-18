@@ -52,7 +52,10 @@ for folder in FOLDER_MQ_TXT_DATA:
 
 assert FOLDER_MQ_TXT_DATA.exists(), f'Not found. Check FOLDER_MQ_TXT_DATA entries above: {", ".join(FOLDER_MQ_TXT_DATA)}'
 
-if ON_ERDA:    
+if ON_ERDA:
+    import sys
+    sys.path.append('/home/jovyan/work/vaep/')
+    
     FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
     if FOLDER_MQ_TXT_DATA.exists():
         print(f'FOLDER_MQ_TXT_DATA = {FOLDER_MQ_TXT_DATA}')
