@@ -173,4 +173,35 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
     return loss
 
 
+def eval(model, data_loader, device):
+    """Evaluate all batches in data_loader
+
+    Parameters
+    ----------
+    model : [type]
+        [description]
+    data_loader : [type]
+        [description]
+    device : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
+    model.eval()
+    metrics = {'loss': 0, 'mse': 0,  'kld': 0}
+
+    for batch, mask in data_loader:
+        batch = batch.to(device)
+        mask = mask.to(device)
+        batch_recon, mu, logvar = model(batch)
+        loss, mse, kld = loss_function(
+            recon_x=batch_recon, x=batch, mask=mask, mu=mu, logvar=logvar)
+        metrics['loss'] += loss.item()
+        metrics['mse'] += mse.item()
+        metrics['kld'] += kld.item()
+    return metrics
+
 # namedtuple("EpochAverages", 'loss mse kld')
