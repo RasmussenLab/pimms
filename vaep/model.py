@@ -143,7 +143,7 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
     """    
     model.train()
     train_loss = 0
-    n_samples = len(train_loader.dataset)
+ 
     for batch_idx, (data, mask) in enumerate(train_loader):
         data = data.to(device)
         mask = mask.to(device)
@@ -162,13 +162,13 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
         train_loss += loss.item()
         optimizer.step()
 
-    avg_loss_per_sample = train_loss / n_samples
+    avg_loss = train_loss / len(train_loader) 
     if epoch % 25 == 0:
         logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
-            epoch=epoch, avg_loss=avg_loss_per_sample))
+            epoch=epoch, avg_loss=avg_loss))
     if writer is not None:
         writer.add_scalar('avg training loss',
-                          avg_loss_per_sample,
+                          avg_loss,
                           epoch)
     return loss
 
