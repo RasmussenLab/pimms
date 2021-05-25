@@ -170,7 +170,7 @@ def train(epoch, model, train_loader, optimizer, device, writer=None):
         writer.add_scalar('avg training loss',
                           avg_loss,
                           epoch)
-    return loss
+    return avg_loss
 
 
 def eval(model, data_loader, device):
