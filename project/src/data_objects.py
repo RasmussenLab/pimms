@@ -140,6 +140,10 @@ def count_peptides(folders):
         peptides.drop('Potential contaminant', axis=1).to_csv(FOLDER_PROCESSED / f"{folder.stem}.csv")
     return c
 
+def get_fname(N, M):
+    """Helper function to get file for intensities"""
+    return f'df_intensities_N_{N:05d}_M{M:05d}'
+
 def get_folder_names(folders: Iterable):
     return set(folder.stem for folder in folders)
 
