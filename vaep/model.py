@@ -85,24 +85,19 @@ class VAE(nn.Module):
         return self.decode(z), mu, logvar
 
 
-def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
+def loss_function(recon_batch: torch.tensor, batch, mu: torch.tensor, logvar: torch.tensor, t: float = 0.9):
     """Loss function only considering the observed values in the reconstruction loss.
 
     Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
 
-    Default MSE loss would have a too big nominator (Would this matter?)
-    MSE = F.mse_loss(input=recon_x, target=x, reduction='mean')
-
 
     Parameters
     ----------
-    recon_x : [type]
-        [description]
-    x : [type]
-        [description]
-    mask : [type]
-        [description]
-    mu : [type]
+    recon_batch : torch.tensor
+        Model output
+    batch : Union[tuple, torch.tensor]
+        Batch from dataloader. Either only data or tuple of (data, mask)
+    mu : torch.tensor
         [description]
     logvar : [type]
         [description]
@@ -119,10 +114,20 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
         unweighted Kullback-Leibler divergence between prior and empirical
         normal distribution (defined by encoded moments) on latent representation.
     """
-    MSE = F.mse_loss(input=recon_x*mask,
-                     target=x*mask,
-                     reduction='sum')  # MSE of observed values
-    MSE /= mask.sum()  # only consider observed number of values
+    try:
+        if isinstance(batch, torch.Tensor):
+            raise ValueError
+        X, mask = batch
+        MSE = F.mse_loss(input=recon_batch*mask.float(),  # recon_x.mask_select(mask)
+                         target=X*mask.float(),  # x.mask_select(mask)
+                         reduction='sum')  # MSE of observed values
+        # MSE per feature: try to use mean of summed sse per sample?
+        # MSE /= mask.sum()  # only consider observed number of values
+    except ValueError:
+        X = batch
+        MSE = F.mse_loss(input=recon_batch, target=X, reduction='sum')
+        # MSE loss for each measurement
+        # MSE = (x - recon_x).pow(2).mean(axis=0).sum()
 
     # KL-divergence
     # see Appendix B from VAE paper:
@@ -130,75 +135,68 @@ def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
     # https://arxiv.org/abs/1312.6114
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
+    # KLD /= 100
     total = t*MSE + (1-t)*KLD
-    return total, MSE, KLD
+    return {'loss': total, 'MSE': MSE, 'KLD': KLD}
 
 
-def train(epoch, model, train_loader, optimizer, device, writer=None):
+def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, optimizer: torch.optim,
+          device, return_pred=False):
     """Train one epoch.
 
     Parameters
     ----------
-    epoch : [type]
+    model : torch.nn.Module
         [description]
-    model : [type]
+    train_loader : torch.utils.data.DataLoader
         [description]
-    train_loader : [type]
-        [description]
-    optimizer : [type]
+    optimizer : torch.optim
         [description]
     device : [type]
         [description]
-    writer : [type], optional
-        [description], by default None
-
-    Returns
-    ------_
-    loss : float
-        Total loss for each epoch.
-
-    """    
+    """
     model.train()
-    train_loss = 0
- 
-    for batch_idx, (data, mask) in enumerate(train_loader):
-        data = data.to(device)
-        mask = mask.to(device)
-        # assert data.is_cuda and mask.is_cuda
-        optimizer.zero_grad()
+    batch_metrics = {}
+
+    for batch_idx, batch in enumerate(train_loader):
+        try:
+            data, mask = batch
+            batch = batch.to(device)
+            mask = mask.to(device)
+            batch = (data, mask)
+        except:
+            batch = batch.to(device)
+            data = batch
+
         recon_batch, mu, logvar = model(data)
-        loss, mse, kld = loss_function(
-                            recon_x=recon_batch,
-                            x=data,
-                            mask=mask,
-                            mu=mu,
-                            logvar=logvar,
-                            device=device)
-        logger.debug("Epoch: {epoch:3}, Batch: {batch_idx:4}")
+        _batch_metric = loss_function(
+            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
+            recon_batch=recon_batch,
+            batch=data,
+            mu=mu,
+            logvar=logvar)
+        batch_metrics[batch_idx] = {
+            key: value.item() / len(data) for key, value in _batch_metric.items()}
+
+        # train specific
+        optimizer.zero_grad()
+        loss = _batch_metric['loss']
         loss.backward()
-        train_loss += loss.item()
         optimizer.step()
 
-    avg_loss = train_loss / len(train_loader) 
-    if epoch % 25 == 0:
-        logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
-            epoch=epoch, avg_loss=avg_loss))
-    if writer is not None:
-        writer.add_scalar('avg training loss',
-                          avg_loss,
-                          epoch)
-    return avg_loss
+    return batch_metrics
 
 
-def eval(model, data_loader, device):
+def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
+             device,
+             return_pred=False):
     """Evaluate all batches in data_loader
 
     Parameters
     ----------
-    model : [type]
+    model : torch.nn.Module
         [description]
-    data_loader : [type]
+    data_loader : torch.utils.data.DataLoader
         [description]
     device : [type]
         [description]
@@ -209,17 +207,31 @@ def eval(model, data_loader, device):
         [description]
     """
     model.eval()
-    metrics = {'loss': 0, 'mse': 0,  'kld': 0}
+    batch_metrics = {}
+    if return_pred:
+        pred = []
+    for batch_idx, batch in enumerate(data_loader):
+        try:
+            if not isinstance(batch, torch.Tensor):
+                data, mask = batch
+            else:
+                raise ValueError
+            batch = batch.to(device)
+            mask = mask.to(device)
+            batch = (data, mask)
+        except ValueError:
+            batch = batch.to(device)
+            data = batch
 
-    for batch, mask in data_loader:
-        batch = batch.to(device)
-        mask = mask.to(device)
-        batch_recon, mu, logvar = model(batch)
-        loss, mse, kld = loss_function(
-            recon_x=batch_recon, x=batch, mask=mask, mu=mu, logvar=logvar)
-        metrics['loss'] += loss.item()
-        metrics['mse'] += mse.item()
-        metrics['kld'] += kld.item()
-    return metrics
-
-# namedtuple("EpochAverages", 'loss mse kld')
+        recon_batch, mu, logvar = model(data)
+        _batch_metric = loss_function(
+            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
+            recon_batch=recon_batch,
+            batch=data,
+            mu=mu,
+            logvar=logvar)
+        batch_metrics[batch_idx] = {
+            key: value.item() / len(data) for key, value in _batch_metric.items()}
+        if return_pred:
+            pred.append(recon_batch.detach().numpy())
+    return batch_metrics if not return_pred else (batch_metrics, pred)
