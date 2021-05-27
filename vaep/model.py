@@ -10,6 +10,16 @@ from torch.nn import functional as F
 logger = logging.getLogger(__name__)
 
 # from IPython.core.debugger import set_trace # invoke debugging
+
+
+class Autoencoder(nn.Module):
+    pass
+
+
+class CollabFiltering(nn.Module):
+    pass
+
+
 class VAE(nn.Module):
     """Variational Autoencoder
 
@@ -23,7 +33,7 @@ class VAE(nn.Module):
 
     compression_factor = 0.25
 
-    def __init__(self, n_features: int, n_neurons: int):
+    def __init__(self, n_features: int, n_neurons: int, dim_vae_latent: int = 10):
         """PyTorch model for Variational autoencoder
 
         Parameters
@@ -38,31 +48,39 @@ class VAE(nn.Module):
         self._n_neurons = n_neurons
         self._n_features = n_features
 
-        dim_vae_latent = int(n_features * self.compression_factor)
+        self.dim_vae_latent = dim_vae_latent
 
+        # ToDo: Create Encoder Module for creating encoders
         self.encoder = nn.Linear(n_features, n_neurons).double()
         # latent representation:
         self.mean = nn.Linear(n_neurons, dim_vae_latent).double()  # mean
         self.std = nn.Linear(n_neurons, dim_vae_latent).double()   # stdev
 
         self.decoder = nn.Linear(dim_vae_latent, n_neurons).double()
+
         self.out = nn.Linear(n_neurons, n_features).double()
 
     def encode(self, x):
-        h1 = F.relu(self.encoder(x))
-        return self.mean(h1), self.std(h1)
+        h1 = self.encoder(x)
+        mu = self.mean(h1)
+        # https://github.com/RasmussenLab/vamb/blob/734b741b85296377937de54166b7db274bc7ba9c/vamb/encode.py#L212-L221
+        # Jacob retrains his to positive values. This should be garantued by exp-fct in reparameterize
+        std = self.std(h1)
+        return mu, std
 
     def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5*logvar)
+        std = torch.exp(0.5*logvar)  # will always be positive
         eps = torch.randn_like(std)
         return mu + eps*std
 
     def decode(self, z):
+        # SigmoidRange to smooth gradients?
+        # def sigmoid_range(x, lo, hi): return torch.sigmoid(x) * (hi-lo) + lo
         h3 = F.relu(self.decoder(z))
         return self.out(h3)
 
     def forward(self, x):
-        mu, logvar = self.encode(x.view(-1, self._n_features))
+        mu, logvar = self.encode(x)
         z = self.reparameterize(mu, logvar)
         return self.decode(z), mu, logvar
 
