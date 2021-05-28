@@ -38,25 +38,27 @@ class PeptideDatasetInMemoryNoMissings(Dataset):
     
     Dataset: torch.utils.data.Dataset
     """
-    def __init__(self, data: pd.DataFrame):
-        f"""Create {self.__class__.__name__} instance.
+    def __init__(self, data: pd.DataFrame, transform=None):
+        """Create {} instance.
 
         Parameters
         ----------
         data : pandas.DataFrame
             Features. Each row contains a set of intensity values.
             No missings expected.
-        """
-        assert np.isnan(data).sum() == 0, f"There are {int(np.isnan(data).sum())} missing values."
+        transform : Callable
+            Series of transform to be performed on the training data
+        """.format(self.__class__.__name__)
+        assert np.isnan(data).sum().sum() == 0, f"There are {int(np.isnan(data).sum())} missing values."
         self.peptides = np.array(data)
-        # try:
-        #     self.peptides = torch.from_numpy(data.values)
-        # except AttributeError:
-        #     self.peptides = torch.from_numpy(data)
+        self.transform = transform
         self.length_ = len(data)
 
     def __len__(self):
         return self.length_
 
     def __getitem__(self, idx):
-        return self.peptides[idx]
+        _peptide_intensities = self.peptides[idx]
+        if self.transform:
+            _peptide_intensities = self.transform(_peptide_intensities)
+        return _peptide_intensities
