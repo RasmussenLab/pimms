@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 import pandas as pd
 
 import torch
@@ -235,3 +236,10 @@ def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
         if return_pred:
             pred.append(recon_batch.detach().numpy())
     return batch_metrics if not return_pred else (batch_metrics, pred)
+
+
+def build_df_from_pred_batches(pred, scaler, index=None, columns=None):
+    pred = np.vstack(pred)
+    pred = scaler.inverse_transform(pred)
+    pred= pd.DataFrame(pred, index=index, columns=columns)
+    return pred
