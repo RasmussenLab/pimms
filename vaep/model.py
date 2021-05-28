@@ -14,7 +14,28 @@ logger = logging.getLogger(__name__)
 
 
 class Autoencoder(nn.Module):
-    pass
+    def __init__(self, n_features: int, n_neurons: int,
+                 activation=nn.Tanh, last_activation=None, dim_latent: int = 10):
+        super().__init__()
+        self.n_features = n_features
+
+        self.encoder = nn.Sequential(
+            nn.Linear(n_features, n_neurons),
+            activation(),
+            nn.Linear(n_neurons, dim_latent),
+            activation()
+        )
+        self.decoder = [nn.Linear(dim_latent, n_neurons),
+                        activation(),
+                        nn.Linear(n_neurons, n_features)]
+        if last_activation:
+            self.decoder += last_activation
+        self.decoder = nn.Sequential(*self.decoder)
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
 
 
 class CollabFiltering(nn.Module):
