@@ -82,8 +82,11 @@ indices_selected = get_consecutive_data_indices(analysis.df.index)
 analysis.samples = indices_selected
 analysis.df = analysis.df.loc[indices_selected]
 
-FRACTION = 0.8
+LOG_TRANSFORM = None
+if LOG_TRANSFORM:
+    analysis.df = LOG_TRANSFORM(analysis.df)
 
+FRACTION = 0.8
 
 class Indices(SimpleNamespace):
     pass
@@ -121,7 +124,7 @@ print(msg)
 
 
 ```python
-detection_limit = np.log10(analysis.df).min().min()  # all zeros become nan.
+detection_limit = analysis.df.min().min() if LOG_TRANSFORM else np.log10(analysis.df).min().min() # all zeros become nan.
 "Detection limit: {:6.3f}, corresponding to intensity value of {:,d}".format(
     detection_limit,
     int(10 ** detection_limit)
@@ -131,7 +134,7 @@ detection_limit = np.log10(analysis.df).min().min()  # all zeros become nan.
 
 
 
-    'Detection limit:  7.681, corresponding to intensity value of 47,926,999'
+    'Detection limit:  6.885, corresponding to intensity value of 7,669,899'
 
 
 
@@ -327,7 +330,7 @@ analysis.df_meta.loc[indices.train].describe(datetime_is_numeric=False)
     <tr>
       <th>top</th>
       <td>20180601</td>
-      <td>QE6</td>
+      <td>QE4</td>
       <td>MR</td>
       <td>nLC1</td>
       <td>QC_MNT_HeLa_01</td>
@@ -415,7 +418,7 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
     <tr>
       <th>top</th>
       <td>20180601</td>
-      <td>QE6</td>
+      <td>QE4</td>
     </tr>
     <tr>
       <th>freq</th>
@@ -466,7 +469,7 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
     </tr>
     <tr>
       <th>top</th>
-      <td>20191128</td>
+      <td>20190527</td>
       <td>QE5</td>
     </tr>
     <tr>
@@ -505,8 +508,7 @@ analysis
 
 
 ```python
-analysis.df_log10 = np.log10(analysis.df)
-corr_lower_triangle(analysis.df_log10)
+corr_lower_triangle(analysis.df)
 ```
 
 
@@ -530,21 +532,21 @@ corr_lower_triangle(analysis.df_log10)
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>DDDIAALVVDNGSGMCK</th>
+      <th>ALPFWNEEIVPQIK</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -557,8 +559,8 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>EAAENSLVAYK</th>
-      <td>0.660</td>
+      <th>AQQEQELAADAFK</th>
+      <td>0.609</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -570,9 +572,9 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>IEWLESHQDADIEDFK</th>
-      <td>0.694</td>
-      <td>0.825</td>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <td>0.745</td>
+      <td>0.772</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -583,10 +585,10 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <td>0.850</td>
-      <td>0.553</td>
-      <td>0.588</td>
+      <th>FGYVDFESAEDLEK</th>
+      <td>0.728</td>
+      <td>0.757</td>
+      <td>0.737</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -596,11 +598,11 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>LFDQAFGLPR</th>
-      <td>0.695</td>
-      <td>0.743</td>
-      <td>0.794</td>
-      <td>0.691</td>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <td>0.739</td>
+      <td>0.854</td>
+      <td>0.873</td>
+      <td>0.792</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -609,12 +611,12 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <td>0.520</td>
-      <td>0.775</td>
-      <td>0.780</td>
-      <td>0.453</td>
-      <td>0.687</td>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <td>0.457</td>
+      <td>0.643</td>
+      <td>0.656</td>
+      <td>0.547</td>
+      <td>0.642</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -622,55 +624,55 @@ corr_lower_triangle(analysis.df_log10)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>TVFAEHISDECK</th>
-      <td>0.650</td>
-      <td>0.863</td>
-      <td>0.747</td>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <td>0.515</td>
+      <td>0.491</td>
+      <td>0.638</td>
+      <td>0.481</td>
+      <td>0.635</td>
+      <td>0.615</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>REDLVVAPAGITLK</th>
       <td>0.537</td>
-      <td>0.763</td>
-      <td>0.799</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>VNFAMNVGK</th>
-      <td>0.369</td>
-      <td>0.326</td>
-      <td>0.355</td>
-      <td>0.340</td>
-      <td>0.508</td>
-      <td>0.228</td>
-      <td>0.409</td>
+      <td>0.619</td>
+      <td>0.568</td>
+      <td>0.692</td>
+      <td>0.688</td>
+      <td>0.302</td>
+      <td>0.249</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>VNIIPLIAK</th>
-      <td>0.558</td>
-      <td>0.722</td>
-      <td>0.686</td>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <td>0.347</td>
+      <td>0.600</td>
+      <td>0.453</td>
+      <td>0.520</td>
+      <td>0.600</td>
       <td>0.549</td>
-      <td>0.693</td>
-      <td>0.804</td>
-      <td>0.731</td>
-      <td>0.299</td>
+      <td>0.464</td>
+      <td>0.451</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>VSFELFADK</th>
-      <td>0.093</td>
-      <td>0.548</td>
-      <td>0.485</td>
-      <td>0.175</td>
-      <td>0.498</td>
-      <td>0.637</td>
+      <th>VDFNVPMK</th>
       <td>0.502</td>
-      <td>0.333</td>
-      <td>0.579</td>
+      <td>0.632</td>
+      <td>0.625</td>
+      <td>0.666</td>
+      <td>0.693</td>
+      <td>0.547</td>
+      <td>0.470</td>
+      <td>0.772</td>
+      <td>0.406</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -706,19 +708,17 @@ for i in range(M):
     test_column = peptides[test_column]
     logger.debug(
         f"Train columns: {', '.join(train_columns)}\nTest column: {test_column}")
-    _df_train_log10, _y_train_log10 = np.log10(
-        analysis.df_train[train_columns]), np.log10(analysis.df_train[test_column])
-    _df_valid_log10, _y_valid_log10 = np.log10(
-        analysis.df_valid[train_columns]), np.log10(analysis.df_valid[test_column])
+    _df_train, _y_train = analysis.df_train[train_columns], analysis.df_train[test_column]
+    _df_valid, _y_valid = analysis.df_valid[train_columns], analysis.df_valid[test_column]
     rf_reg = RandomForestRegressor()
-    rf_reg.fit(X=_df_train_log10, y=_y_train_log10)
+    rf_reg.fit(X=_df_train, y=_y_train)
     # metrics
     _metrics = {}
     _metrics[('MSE', 'train')] = mean_squared_error(
-        y_true=_y_train_log10, y_pred=rf_reg.predict(_df_train_log10))
-    y_pred_valid = rf_reg.predict(_df_valid_log10)
+        y_true=_y_train, y_pred=rf_reg.predict(_df_train))
+    y_pred_valid = rf_reg.predict(_df_valid)
     _metrics[('MSE', 'valid')] = mean_squared_error(
-        y_true=_y_valid_log10, y_pred=y_pred_valid)
+        y_true=_y_valid, y_pred=y_pred_valid)
     metrics[test_column] = _metrics
     # predictions
     pred_valid[test_column] = y_pred_valid
@@ -747,45 +747,45 @@ pd.DataFrame(metrics)
     <tr style="text-align: right;">
       <th></th>
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th rowspan="2" valign="top">MSE</th>
       <th>train</th>
-      <td>0.003</td>
-      <td>0.002</td>
-      <td>0.003</td>
-      <td>0.004</td>
-      <td>0.001</td>
-      <td>0.002</td>
-      <td>0.003</td>
-      <td>0.007</td>
-      <td>0.002</td>
-      <td>0.004</td>
+      <td>38,418,782,581,427,544.000</td>
+      <td>2,303,440,965,277,442.500</td>
+      <td>5,201,716,585,788,333.000</td>
+      <td>3,644,639,772,961,388.500</td>
+      <td>9,009,243,230,418,888.000</td>
+      <td>435,645,117,706,502,848.000</td>
+      <td>16,459,622,986,202,218.000</td>
+      <td>4,081,732,123,308,953.000</td>
+      <td>71,112,304,857,963,152.000</td>
+      <td>19,989,604,626,531,948.000</td>
     </tr>
     <tr>
       <th>valid</th>
-      <td>0.029</td>
-      <td>0.017</td>
-      <td>0.046</td>
-      <td>0.032</td>
-      <td>0.029</td>
-      <td>0.049</td>
-      <td>0.013</td>
-      <td>0.156</td>
-      <td>0.021</td>
-      <td>0.039</td>
+      <td>1,038,526,868,311,069,568.000</td>
+      <td>43,397,875,691,010,320.000</td>
+      <td>38,997,795,651,662,776.000</td>
+      <td>140,355,193,831,291,104.000</td>
+      <td>97,977,154,853,686,672.000</td>
+      <td>4,253,580,917,322,822,144.000</td>
+      <td>276,763,320,450,499,424.000</td>
+      <td>41,663,032,395,379,480.000</td>
+      <td>3,220,450,830,247,168,000.000</td>
+      <td>515,988,016,863,178,304.000</td>
     </tr>
   </tbody>
 </table>
@@ -819,16 +819,16 @@ pd.DataFrame(pred_valid, index=analysis.df_valid.index)
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -847,237 +847,237 @@ pd.DataFrame(pred_valid, index=analysis.df_valid.index)
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>9.293</td>
-      <td>8.828</td>
-      <td>8.678</td>
-      <td>8.489</td>
-      <td>8.902</td>
-      <td>8.580</td>
-      <td>8.815</td>
-      <td>9.197</td>
-      <td>8.127</td>
-      <td>9.271</td>
+      <td>601,308,150.000</td>
+      <td>215,796,026.000</td>
+      <td>339,470,900.000</td>
+      <td>251,550,000.000</td>
+      <td>452,953,500.000</td>
+      <td>1,195,350,900.000</td>
+      <td>183,615,100.000</td>
+      <td>221,513,400.000</td>
+      <td>749,443,860.000</td>
+      <td>638,110,100.000</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>9.807</td>
-      <td>9.152</td>
-      <td>9.101</td>
-      <td>9.067</td>
-      <td>9.184</td>
-      <td>8.951</td>
-      <td>9.186</td>
-      <td>9.604</td>
-      <td>8.612</td>
-      <td>9.755</td>
+      <td>1,946,136,260.000</td>
+      <td>661,329,610.000</td>
+      <td>1,226,277,500.000</td>
+      <td>1,035,203,100.000</td>
+      <td>1,462,723,000.000</td>
+      <td>4,173,797,000.000</td>
+      <td>833,900,500.000</td>
+      <td>689,091,700.000</td>
+      <td>2,909,592,000.000</td>
+      <td>1,826,352,000.000</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>9.747</td>
-      <td>9.108</td>
-      <td>8.944</td>
-      <td>8.879</td>
-      <td>9.303</td>
-      <td>8.875</td>
-      <td>9.136</td>
-      <td>9.375</td>
-      <td>8.525</td>
-      <td>9.638</td>
+      <td>1,418,144,440.000</td>
+      <td>449,690,799.000</td>
+      <td>574,146,900.000</td>
+      <td>859,254,700.000</td>
+      <td>748,167,300.000</td>
+      <td>3,698,524,700.000</td>
+      <td>682,767,700.000</td>
+      <td>579,038,100.000</td>
+      <td>2,509,452,400.000</td>
+      <td>1,009,826,200.000</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>9.197</td>
-      <td>8.711</td>
-      <td>8.498</td>
-      <td>8.350</td>
-      <td>8.893</td>
-      <td>8.401</td>
-      <td>8.735</td>
-      <td>9.006</td>
-      <td>8.117</td>
-      <td>9.327</td>
+      <td>414,779,480.000</td>
+      <td>159,629,995.000</td>
+      <td>192,798,400.000</td>
+      <td>227,282,800.000</td>
+      <td>351,377,700.000</td>
+      <td>869,154,900.000</td>
+      <td>141,404,800.000</td>
+      <td>212,204,500.000</td>
+      <td>785,834,060.000</td>
+      <td>625,968,900.000</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>9.741</td>
-      <td>9.228</td>
-      <td>9.166</td>
-      <td>9.028</td>
-      <td>9.395</td>
-      <td>8.941</td>
-      <td>9.227</td>
-      <td>9.603</td>
-      <td>8.524</td>
-      <td>9.794</td>
+      <td>1,906,048,840.000</td>
+      <td>391,469,490.000</td>
+      <td>819,897,700.000</td>
+      <td>1,000,803,800.000</td>
+      <td>1,458,499,100.000</td>
+      <td>4,581,040,700.000</td>
+      <td>652,981,900.000</td>
+      <td>582,971,900.000</td>
+      <td>1,573,350,300.000</td>
+      <td>1,554,654,500.000</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>9.593</td>
-      <td>9.075</td>
-      <td>8.883</td>
-      <td>8.834</td>
-      <td>9.309</td>
-      <td>8.721</td>
-      <td>9.061</td>
-      <td>9.495</td>
-      <td>8.391</td>
-      <td>9.585</td>
+      <td>1,030,712,320.000</td>
+      <td>448,517,500.000</td>
+      <td>634,092,000.000</td>
+      <td>862,025,800.000</td>
+      <td>734,767,800.000</td>
+      <td>2,875,044,000.000</td>
+      <td>426,489,400.000</td>
+      <td>519,117,300.000</td>
+      <td>1,677,255,800.000</td>
+      <td>1,124,855,600.000</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>9.657</td>
-      <td>9.065</td>
-      <td>8.896</td>
-      <td>8.465</td>
-      <td>9.188</td>
-      <td>8.863</td>
-      <td>9.114</td>
-      <td>9.374</td>
-      <td>8.437</td>
-      <td>9.635</td>
+      <td>989,279,930.000</td>
+      <td>442,629,210.000</td>
+      <td>512,833,300.000</td>
+      <td>679,553,600.000</td>
+      <td>783,403,000.000</td>
+      <td>2,610,950,600.000</td>
+      <td>428,075,900.000</td>
+      <td>550,811,400.000</td>
+      <td>1,649,239,200.000</td>
+      <td>1,182,987,600.000</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>9.436</td>
-      <td>9.042</td>
-      <td>8.837</td>
-      <td>8.587</td>
-      <td>9.103</td>
-      <td>8.746</td>
-      <td>9.046</td>
-      <td>9.297</td>
-      <td>8.395</td>
-      <td>9.560</td>
+      <td>920,461,400.000</td>
+      <td>338,160,696.000</td>
+      <td>487,124,200.000</td>
+      <td>574,205,800.000</td>
+      <td>655,411,300.000</td>
+      <td>1,735,030,300.000</td>
+      <td>365,562,600.000</td>
+      <td>341,875,390.000</td>
+      <td>1,676,324,700.000</td>
+      <td>1,202,346,500.000</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>9.189</td>
-      <td>8.608</td>
-      <td>8.409</td>
-      <td>8.337</td>
-      <td>8.881</td>
-      <td>8.255</td>
-      <td>8.684</td>
-      <td>8.879</td>
-      <td>8.102</td>
-      <td>8.932</td>
+      <td>418,162,080.000</td>
+      <td>131,045,134.000</td>
+      <td>236,648,300.000</td>
+      <td>225,709,900.000</td>
+      <td>342,240,200.000</td>
+      <td>1,154,731,200.000</td>
+      <td>147,828,600.000</td>
+      <td>201,123,500.000</td>
+      <td>628,968,800.000</td>
+      <td>496,456,400.000</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>9.521</td>
-      <td>9.035</td>
-      <td>8.917</td>
-      <td>8.862</td>
-      <td>9.188</td>
-      <td>8.868</td>
-      <td>9.138</td>
-      <td>9.302</td>
-      <td>8.498</td>
-      <td>9.623</td>
+      <td>1,132,361,500.000</td>
+      <td>399,321,893.000</td>
+      <td>805,963,900.000</td>
+      <td>895,371,500.000</td>
+      <td>1,024,762,600.000</td>
+      <td>2,739,054,200.000</td>
+      <td>600,720,000.000</td>
+      <td>571,166,000.000</td>
+      <td>1,899,356,100.000</td>
+      <td>1,282,469,400.000</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>9.336</td>
-      <td>9.005</td>
-      <td>8.698</td>
-      <td>8.460</td>
-      <td>9.000</td>
-      <td>8.660</td>
-      <td>8.959</td>
-      <td>9.239</td>
-      <td>8.198</td>
-      <td>9.424</td>
+      <td>674,394,840.000</td>
+      <td>228,698,999.000</td>
+      <td>354,668,500.000</td>
+      <td>389,548,500.000</td>
+      <td>628,626,100.000</td>
+      <td>1,218,672,000.000</td>
+      <td>198,370,700.000</td>
+      <td>334,749,400.000</td>
+      <td>1,196,511,400.000</td>
+      <td>711,325,600.000</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>9.741</td>
-      <td>9.043</td>
-      <td>8.839</td>
-      <td>9.026</td>
-      <td>9.157</td>
-      <td>8.631</td>
-      <td>8.962</td>
-      <td>9.294</td>
-      <td>8.393</td>
-      <td>9.653</td>
+      <td>1,221,480,140.000</td>
+      <td>382,460,097.000</td>
+      <td>1,032,855,900.000</td>
+      <td>845,769,700.000</td>
+      <td>1,015,963,400.000</td>
+      <td>3,286,852,100.000</td>
+      <td>744,740,800.000</td>
+      <td>472,358,480.000</td>
+      <td>1,653,540,900.000</td>
+      <td>1,038,331,500.000</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>9.993</td>
-      <td>9.166</td>
-      <td>9.042</td>
-      <td>9.123</td>
-      <td>9.173</td>
-      <td>8.725</td>
-      <td>9.242</td>
-      <td>9.604</td>
-      <td>8.547</td>
-      <td>9.627</td>
+      <td>1,851,377,340.000</td>
+      <td>503,727,650.000</td>
+      <td>1,238,981,300.000</td>
+      <td>1,010,027,700.000</td>
+      <td>1,677,454,600.000</td>
+      <td>4,488,957,600.000</td>
+      <td>1,274,299,000.000</td>
+      <td>773,436,600.000</td>
+      <td>2,193,371,600.000</td>
+      <td>2,790,491,000.000</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>9.998</td>
-      <td>9.171</td>
-      <td>9.007</td>
-      <td>9.190</td>
-      <td>9.174</td>
-      <td>8.773</td>
-      <td>9.240</td>
-      <td>9.482</td>
-      <td>8.542</td>
-      <td>9.631</td>
+      <td>1,999,479,000.000</td>
+      <td>461,637,040.000</td>
+      <td>1,248,003,700.000</td>
+      <td>1,047,670,100.000</td>
+      <td>1,979,002,500.000</td>
+      <td>4,248,021,600.000</td>
+      <td>1,334,294,000.000</td>
+      <td>780,138,500.000</td>
+      <td>2,278,664,800.000</td>
+      <td>2,714,324,000.000</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>9.987</td>
-      <td>9.172</td>
-      <td>8.927</td>
-      <td>9.079</td>
-      <td>9.172</td>
-      <td>8.758</td>
-      <td>9.297</td>
-      <td>9.478</td>
-      <td>8.522</td>
-      <td>9.603</td>
+      <td>1,349,078,100.000</td>
+      <td>599,004,699.000</td>
+      <td>1,230,517,600.000</td>
+      <td>928,145,600.000</td>
+      <td>1,255,336,600.000</td>
+      <td>3,954,111,700.000</td>
+      <td>944,144,100.000</td>
+      <td>718,038,600.000</td>
+      <td>2,955,754,200.000</td>
+      <td>1,679,702,000.000</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>9.999</td>
-      <td>9.169</td>
-      <td>9.006</td>
-      <td>8.935</td>
-      <td>9.176</td>
-      <td>8.887</td>
-      <td>9.477</td>
-      <td>9.486</td>
-      <td>8.543</td>
-      <td>9.603</td>
+      <td>1,853,244,740.000</td>
+      <td>730,059,720.000</td>
+      <td>1,335,812,000.000</td>
+      <td>1,163,292,600.000</td>
+      <td>2,288,244,000.000</td>
+      <td>7,701,120,500.000</td>
+      <td>1,689,271,600.000</td>
+      <td>788,230,100.000</td>
+      <td>3,991,924,800.000</td>
+      <td>2,431,169,000.000</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>9.865</td>
-      <td>9.239</td>
-      <td>9.065</td>
-      <td>8.693</td>
-      <td>9.197</td>
-      <td>8.960</td>
-      <td>9.320</td>
-      <td>9.667</td>
-      <td>8.625</td>
-      <td>9.721</td>
+      <td>1,952,486,400.000</td>
+      <td>692,647,820.000</td>
+      <td>1,275,459,300.000</td>
+      <td>1,062,693,200.000</td>
+      <td>1,775,764,200.000</td>
+      <td>7,899,082,000.000</td>
+      <td>1,551,545,800.000</td>
+      <td>411,787,490.000</td>
+      <td>2,863,629,400.000</td>
+      <td>2,477,203,000.000</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>9.838</td>
-      <td>9.239</td>
-      <td>9.061</td>
-      <td>8.735</td>
-      <td>9.203</td>
-      <td>8.943</td>
-      <td>9.304</td>
-      <td>9.662</td>
-      <td>8.655</td>
-      <td>9.681</td>
+      <td>1,757,651,520.000</td>
+      <td>607,593,340.000</td>
+      <td>1,258,195,300.000</td>
+      <td>1,105,461,400.000</td>
+      <td>1,539,285,100.000</td>
+      <td>7,129,705,000.000</td>
+      <td>1,012,717,600.000</td>
+      <td>411,127,590.000</td>
+      <td>2,448,907,600.000</td>
+      <td>2,712,902,000.000</td>
     </tr>
   </tbody>
 </table>
@@ -1089,7 +1089,7 @@ Overfits to training data as it should.
 
 
 ```python
-np.log10(analysis.df_valid)
+analysis.df_valid
 ```
 
 
@@ -1113,16 +1113,16 @@ np.log10(analysis.df_valid)
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1141,237 +1141,237 @@ np.log10(analysis.df_valid)
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>9.256</td>
-      <td>8.740</td>
-      <td>8.626</td>
-      <td>8.583</td>
-      <td>8.972</td>
-      <td>8.579</td>
-      <td>8.838</td>
-      <td>9.001</td>
-      <td>8.002</td>
-      <td>9.426</td>
+      <td>503,280,000.000</td>
+      <td>149,610,000.000</td>
+      <td>259,450,000.000</td>
+      <td>406,200,000.000</td>
+      <td>460,070,000.000</td>
+      <td>395,380,000.000</td>
+      <td>213,690,000.000</td>
+      <td>203,750,000.000</td>
+      <td>684,680,000.000</td>
+      <td>713,600,000.000</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>9.705</td>
-      <td>9.172</td>
-      <td>8.891</td>
-      <td>9.081</td>
-      <td>9.324</td>
-      <td>9.045</td>
-      <td>9.357</td>
-      <td>9.402</td>
-      <td>8.752</td>
-      <td>9.858</td>
+      <td>2,325,100,000.000</td>
+      <td>449,130,000.000</td>
+      <td>1,074,200,000.000</td>
+      <td>986,900,000.000</td>
+      <td>1,869,300,000.000</td>
+      <td>7,284,500,000.000</td>
+      <td>580,400,000.000</td>
+      <td>855,690,000.000</td>
+      <td>2,155,700,000.000</td>
+      <td>1,888,300,000.000</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>9.677</td>
-      <td>9.028</td>
-      <td>9.098</td>
-      <td>9.016</td>
-      <td>9.235</td>
-      <td>8.811</td>
-      <td>9.164</td>
-      <td>9.483</td>
-      <td>8.549</td>
-      <td>9.689</td>
+      <td>1,306,500,000.000</td>
+      <td>403,620,000.000</td>
+      <td>839,710,000.000</td>
+      <td>843,310,000.000</td>
+      <td>990,820,000.000</td>
+      <td>5,777,300,000.000</td>
+      <td>292,090,000.000</td>
+      <td>81,292,000.000</td>
+      <td>2,098,700,000.000</td>
+      <td>1,859,100,000.000</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>9.144</td>
-      <td>8.795</td>
-      <td>8.485</td>
-      <td>8.450</td>
-      <td>8.763</td>
-      <td>8.455</td>
-      <td>8.659</td>
-      <td>8.862</td>
-      <td>8.190</td>
-      <td>9.307</td>
+      <td>372,230,000.000</td>
+      <td>117,240,000.000</td>
+      <td>199,240,000.000</td>
+      <td>267,750,000.000</td>
+      <td>356,680,000.000</td>
+      <td>1,184,400,000.000</td>
+      <td>141,570,000.000</td>
+      <td>220,500,000.000</td>
+      <td>709,410,000.000</td>
+      <td>645,040,000.000</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>9.751</td>
-      <td>9.316</td>
-      <td>9.013</td>
-      <td>8.995</td>
-      <td>9.378</td>
-      <td>8.949</td>
-      <td>9.270</td>
-      <td>9.677</td>
-      <td>8.678</td>
-      <td>9.712</td>
+      <td>87,196,000.000</td>
+      <td>717,710,000.000</td>
+      <td>1,108,500,000.000</td>
+      <td>13,692,000.000</td>
+      <td>1,360,300,000.000</td>
+      <td>3,521,400,000.000</td>
+      <td>571,180,000.000</td>
+      <td>461,960,000.000</td>
+      <td>2,410,100,000.000</td>
+      <td>1,612,800,000.000</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>9.523</td>
-      <td>8.906</td>
-      <td>8.868</td>
-      <td>8.870</td>
-      <td>9.278</td>
-      <td>8.732</td>
-      <td>8.947</td>
-      <td>9.553</td>
-      <td>8.225</td>
-      <td>9.690</td>
+      <td>1,050,400,000.000</td>
+      <td>495,380,000.000</td>
+      <td>642,980,000.000</td>
+      <td>602,610,000.000</td>
+      <td>885,590,000.000</td>
+      <td>4,186,100,000.000</td>
+      <td>258,160,000.000</td>
+      <td>456,020,000.000</td>
+      <td>1,482,900,000.000</td>
+      <td>1,756,400,000.000</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>9.322</td>
-      <td>9.090</td>
-      <td>8.945</td>
-      <td>8.923</td>
-      <td>9.202</td>
-      <td>8.918</td>
-      <td>9.199</td>
-      <td>9.286</td>
-      <td>8.532</td>
-      <td>9.703</td>
+      <td>1,100,100,000.000</td>
+      <td>412,480,000.000</td>
+      <td>526,570,000.000</td>
+      <td>657,620,000.000</td>
+      <td>810,150,000.000</td>
+      <td>3,362,500,000.000</td>
+      <td>306,100,000.000</td>
+      <td>390,410,000.000</td>
+      <td>1,549,500,000.000</td>
+      <td>2,154,500,000.000</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>9.408</td>
-      <td>8.919</td>
-      <td>8.913</td>
-      <td>8.674</td>
-      <td>9.134</td>
-      <td>8.776</td>
-      <td>8.976</td>
-      <td>9.331</td>
-      <td>8.430</td>
-      <td>9.587</td>
+      <td>850,850,000.000</td>
+      <td>238,150,000.000</td>
+      <td>407,220,000.000</td>
+      <td>590,710,000.000</td>
+      <td>801,160,000.000</td>
+      <td>2,337,100,000.000</td>
+      <td>335,380,000.000</td>
+      <td>459,420,000.000</td>
+      <td>1,390,400,000.000</td>
+      <td>1,159,100,000.000</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>9.118</td>
-      <td>8.742</td>
-      <td>8.275</td>
-      <td>8.472</td>
-      <td>8.657</td>
-      <td>8.121</td>
-      <td>8.752</td>
-      <td>9.186</td>
-      <td>7.874</td>
-      <td>9.047</td>
+      <td>399,770,000.000</td>
+      <td>181,700,000.000</td>
+      <td>283,340,000.000</td>
+      <td>305,990,000.000</td>
+      <td>188,640,000.000</td>
+      <td>1,657,100,000.000</td>
+      <td>143,700,000.000</td>
+      <td>63,812,000.000</td>
+      <td>684,800,000.000</td>
+      <td>572,660,000.000</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>9.568</td>
-      <td>9.057</td>
-      <td>9.127</td>
-      <td>8.770</td>
-      <td>9.233</td>
-      <td>8.953</td>
-      <td>8.960</td>
-      <td>9.435</td>
-      <td>8.572</td>
-      <td>9.533</td>
+      <td>1,403,600,000.000</td>
+      <td>425,940,000.000</td>
+      <td>622,250,000.000</td>
+      <td>782,080,000.000</td>
+      <td>1,132,900,000.000</td>
+      <td>2,990,000,000.000</td>
+      <td>425,900,000.000</td>
+      <td>566,700,000.000</td>
+      <td>1,600,900,000.000</td>
+      <td>1,680,800,000.000</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>9.229</td>
-      <td>8.788</td>
-      <td>8.851</td>
-      <td>8.594</td>
-      <td>9.003</td>
-      <td>8.663</td>
-      <td>8.913</td>
-      <td>9.288</td>
-      <td>8.383</td>
-      <td>9.554</td>
+      <td>560,860,000.000</td>
+      <td>271,530,000.000</td>
+      <td>256,160,000.000</td>
+      <td>355,150,000.000</td>
+      <td>515,890,000.000</td>
+      <td>1,968,400,000.000</td>
+      <td>198,630,000.000</td>
+      <td>258,250,000.000</td>
+      <td>835,950,000.000</td>
+      <td>1,135,700,000.000</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>9.865</td>
-      <td>9.138</td>
-      <td>8.824</td>
-      <td>8.901</td>
-      <td>8.942</td>
-      <td>8.993</td>
-      <td>9.197</td>
-      <td>8.906</td>
-      <td>8.616</td>
-      <td>9.103</td>
+      <td>1,937,100,000.000</td>
+      <td>498,750,000.000</td>
+      <td>747,470,000.000</td>
+      <td>647,160,000.000</td>
+      <td>1,241,400,000.000</td>
+      <td>4,555,600,000.000</td>
+      <td>436,220,000.000</td>
+      <td>448,110,000.000</td>
+      <td>1,057,700,000.000</td>
+      <td>1,402,700,000.000</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>10.115</td>
-      <td>9.315</td>
-      <td>9.295</td>
-      <td>9.172</td>
-      <td>9.268</td>
-      <td>9.136</td>
-      <td>9.392</td>
-      <td>9.028</td>
-      <td>8.554</td>
-      <td>9.344</td>
+      <td>3,160,600,000.000</td>
+      <td>706,220,000.000</td>
+      <td>1,281,000,000.000</td>
+      <td>1,519,900,000.000</td>
+      <td>2,110,900,000.000</td>
+      <td>1,239,800,000.000</td>
+      <td>379,710,000.000</td>
+      <td>865,550,000.000</td>
+      <td>312,310,000.000</td>
+      <td>1,788,800,000.000</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>10.145</td>
-      <td>9.334</td>
-      <td>9.323</td>
-      <td>9.144</td>
-      <td>9.247</td>
-      <td>9.136</td>
-      <td>9.335</td>
-      <td>8.946</td>
-      <td>8.783</td>
-      <td>9.321</td>
+      <td>3,469,700,000.000</td>
+      <td>817,360,000.000</td>
+      <td>1,316,100,000.000</td>
+      <td>1,584,000,000.000</td>
+      <td>1,920,500,000.000</td>
+      <td>1,374,800,000.000</td>
+      <td>766,310,000.000</td>
+      <td>848,340,000.000</td>
+      <td>324,920,000.000</td>
+      <td>1,662,300,000.000</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>10.046</td>
-      <td>9.289</td>
-      <td>9.186</td>
-      <td>9.069</td>
-      <td>9.209</td>
-      <td>9.151</td>
-      <td>9.445</td>
-      <td>9.041</td>
-      <td>8.773</td>
-      <td>9.337</td>
+      <td>2,771,900,000.000</td>
+      <td>478,060,000.000</td>
+      <td>726,540,000.000</td>
+      <td>956,810,000.000</td>
+      <td>1,663,200,000.000</td>
+      <td>7,003,300,000.000</td>
+      <td>461,900,000.000</td>
+      <td>688,650,000.000</td>
+      <td>1,298,100,000.000</td>
+      <td>1,959,000,000.000</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>10.261</td>
-      <td>9.456</td>
-      <td>9.432</td>
-      <td>9.246</td>
-      <td>9.235</td>
-      <td>9.232</td>
-      <td>9.387</td>
-      <td>9.118</td>
-      <td>8.601</td>
-      <td>9.384</td>
+      <td>4,407,700,000.000</td>
+      <td>1,096,700,000.000</td>
+      <td>1,580,100,000.000</td>
+      <td>1,881,000,000.000</td>
+      <td>2,267,400,000.000</td>
+      <td>8,900,100,000.000</td>
+      <td>486,050,000.000</td>
+      <td>678,860,000.000</td>
+      <td>1,133,100,000.000</td>
+      <td>2,561,500,000.000</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>9.507</td>
-      <td>9.316</td>
-      <td>9.352</td>
-      <td>9.030</td>
-      <td>9.628</td>
-      <td>9.183</td>
-      <td>9.372</td>
-      <td>8.493</td>
-      <td>8.588</td>
-      <td>9.756</td>
+      <td>3,422,600,000.000</td>
+      <td>944,780,000.000</td>
+      <td>1,148,900,000.000</td>
+      <td>1,562,200,000.000</td>
+      <td>2,574,000,000.000</td>
+      <td>4,035,400,000.000</td>
+      <td>389,500,000.000</td>
+      <td>790,300,000.000</td>
+      <td>7,475,800,000.000</td>
+      <td>1,076,700,000.000</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>9.510</td>
-      <td>9.247</td>
-      <td>9.445</td>
-      <td>8.955</td>
-      <td>9.612</td>
-      <td>9.214</td>
-      <td>9.367</td>
-      <td>9.363</td>
-      <td>8.579</td>
-      <td>9.716</td>
+      <td>1,635,900,000.000</td>
+      <td>1,065,300,000.000</td>
+      <td>1,037,400,000.000</td>
+      <td>1,393,300,000.000</td>
+      <td>2,164,500,000.000</td>
+      <td>3,798,700,000.000</td>
+      <td>354,070,000.000</td>
+      <td>881,580,000.000</td>
+      <td>6,482,000,000.000</td>
+      <td>1,111,400,000.000</td>
     </tr>
   </tbody>
 </table>
@@ -1379,28 +1379,7 @@ np.log10(analysis.df_valid)
 
 
 
-## Plain AE
-- should also heavily overfit the training data
-
-
-```python
-
-```
-
-## Collaborative Filtering setup
-
-- each sample has an embedding
-- each peptide has an embedding
-- scalar product of embeddings should yield predictions
-
-
-```python
-
-```
-
-## VAE
-
-### Setup
+## DL Setup
 
 
 ```python
@@ -1420,6 +1399,628 @@ print(args, device)
     Namespace(batch_size=8, cuda=False, epochs=30, log_interval=10, no_cuda=True, seed=43) cpu
     
 
+## Plain AE
+- should also heavily overfit the training data
+
+
+```python
+scaler = StandardScaler().fit(analysis.df_train)
+# # five examples from validation dataset
+scaler.transform(analysis.df_valid.iloc[:5])
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
+      <td>-1.057</td>
+      <td>-1.127</td>
+      <td>-1.109</td>
+      <td>-0.939</td>
+      <td>-0.971</td>
+      <td>-1.050</td>
+      <td>-0.764</td>
+      <td>-0.919</td>
+      <td>-1.057</td>
+      <td>-0.852</td>
+    </tr>
+    <tr>
+      <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
+      <td>1.470</td>
+      <td>0.323</td>
+      <td>1.055</td>
+      <td>0.876</td>
+      <td>1.573</td>
+      <td>1.669</td>
+      <td>0.034</td>
+      <td>1.817</td>
+      <td>0.392</td>
+      <td>0.885</td>
+    </tr>
+    <tr>
+      <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
+      <td>0.057</td>
+      <td>0.103</td>
+      <td>0.432</td>
+      <td>0.427</td>
+      <td>-0.013</td>
+      <td>1.074</td>
+      <td>-0.593</td>
+      <td>-1.433</td>
+      <td>0.336</td>
+      <td>0.841</td>
+    </tr>
+    <tr>
+      <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
+      <td>-1.239</td>
+      <td>-1.284</td>
+      <td>-1.269</td>
+      <td>-1.371</td>
+      <td>-1.158</td>
+      <td>-0.739</td>
+      <td>-0.921</td>
+      <td>-0.849</td>
+      <td>-1.033</td>
+      <td>-0.954</td>
+    </tr>
+    <tr>
+      <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
+      <td>-1.634</td>
+      <td>1.623</td>
+      <td>1.147</td>
+      <td>-2.165</td>
+      <td>0.654</td>
+      <td>0.184</td>
+      <td>0.014</td>
+      <td>0.164</td>
+      <td>0.643</td>
+      <td>0.477</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+from torchvision import transforms
+from torch.utils.data import DataLoader
+from vaep.io.datasets import PeptideDatasetInMemoryNoMissings
+
+tf_norm = None # replace with Normalizer
+
+dataset_train = PeptideDatasetInMemoryNoMissings(data=scaler.transform(analysis.df_train), transform=tf_norm)
+dataset_valid = PeptideDatasetInMemoryNoMissings(data=scaler.transform(analysis.df_valid), transform=tf_norm)
+dl_train = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True)
+dl_valid = DataLoader(dataset_valid, batch_size=args.batch_size, shuffle=False)
+```
+
+
+```python
+from vaep.model import Autoencoder
+
+model = Autoencoder(n_features=M, n_neurons=int(M/2), last_activation=None, dim_latent=3).double()
+criterion = torch.nn.MSELoss(reduction='sum')
+
+learning_rate = 1e-3
+
+optimizer = torch.optim.Adam(
+    model.parameters(),
+    lr=learning_rate,
+)
+```
+
+
+```python
+# Train standard or denoising autoencoder (AE)
+
+train_losses, valid_losses = [], []
+num_epochs = 100
+# do = nn.Dropout()  # comment out for standard AE
+for epoch in range(num_epochs):
+    # ===================train==========================
+    total_loss = 0
+    for data in dl_train:
+        model.train()
+        data = data.to(device)
+        # noise = do(torch.ones(img.shape)).to(device)
+        # img_bad = (img * noise).to(device)  # comment out for standard AE
+        # ===================forward=====================
+        output = model(data)  # feed <img> (for std AE) or <img_bad> (for denoising AE)
+        loss = criterion(output, data)
+        # ===================backward====================
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+    train_losses.append(total_loss/ len(dl_train))
+    # ===================validate========================
+    total_loss = 0
+    for data in dl_valid:
+        model.eval()
+        data = data.to(device)
+        output = model(data)
+        loss = criterion(output, data)
+        total_loss += loss.item()
+    valid_losses.append(total_loss/len(dl_valid))
+    
+    # ===================log=============================
+    print(f'epoch [{epoch + 1}/{num_epochs}], train-loss:{train_losses[-1]:.4f}, valid-loss{valid_losses[-1]:.4f}')
+        
+```
+
+    epoch [1/100], train-loss:90.0026, valid-loss111.9819
+    epoch [2/100], train-loss:88.0704, valid-loss111.0008
+    epoch [3/100], train-loss:86.5540, valid-loss110.0642
+    epoch [4/100], train-loss:84.9955, valid-loss109.2204
+    epoch [5/100], train-loss:83.6179, valid-loss108.3850
+    epoch [6/100], train-loss:82.3551, valid-loss107.6115
+    epoch [7/100], train-loss:81.1570, valid-loss106.7826
+    epoch [8/100], train-loss:79.9104, valid-loss105.9457
+    epoch [9/100], train-loss:78.7746, valid-loss105.0846
+    epoch [10/100], train-loss:77.5161, valid-loss104.2313
+    epoch [11/100], train-loss:76.3487, valid-loss103.2058
+    epoch [12/100], train-loss:75.0609, valid-loss102.1425
+    epoch [13/100], train-loss:73.6693, valid-loss101.0499
+    epoch [14/100], train-loss:72.3241, valid-loss99.8589
+    epoch [15/100], train-loss:70.9596, valid-loss98.5667
+    epoch [16/100], train-loss:69.4884, valid-loss97.2752
+    epoch [17/100], train-loss:67.9886, valid-loss95.8582
+    epoch [18/100], train-loss:66.4687, valid-loss94.4214
+    epoch [19/100], train-loss:64.9235, valid-loss92.9171
+    epoch [20/100], train-loss:63.4557, valid-loss91.3547
+    epoch [21/100], train-loss:61.8465, valid-loss89.8610
+    epoch [22/100], train-loss:60.3254, valid-loss88.2731
+    epoch [23/100], train-loss:58.7503, valid-loss86.6849
+    epoch [24/100], train-loss:57.4058, valid-loss85.0389
+    epoch [25/100], train-loss:55.9878, valid-loss83.3728
+    epoch [26/100], train-loss:54.3728, valid-loss81.9722
+    epoch [27/100], train-loss:53.1742, valid-loss80.3742
+    epoch [28/100], train-loss:51.8634, valid-loss78.9125
+    epoch [29/100], train-loss:50.6092, valid-loss77.5249
+    epoch [30/100], train-loss:49.5319, valid-loss76.1329
+    epoch [31/100], train-loss:48.4268, valid-loss74.7505
+    epoch [32/100], train-loss:47.2796, valid-loss73.5536
+    epoch [33/100], train-loss:46.3844, valid-loss72.3985
+    epoch [34/100], train-loss:45.3818, valid-loss71.3124
+    epoch [35/100], train-loss:44.5575, valid-loss70.3212
+    epoch [36/100], train-loss:43.7061, valid-loss69.3455
+    epoch [37/100], train-loss:42.9891, valid-loss68.4012
+    epoch [38/100], train-loss:42.2478, valid-loss67.6268
+    epoch [39/100], train-loss:41.5009, valid-loss66.8048
+    epoch [40/100], train-loss:40.8716, valid-loss66.0503
+    epoch [41/100], train-loss:40.2339, valid-loss65.3735
+    epoch [42/100], train-loss:39.6464, valid-loss64.6690
+    epoch [43/100], train-loss:39.0617, valid-loss64.1187
+    epoch [44/100], train-loss:38.5054, valid-loss63.5401
+    epoch [45/100], train-loss:38.0126, valid-loss63.0431
+    epoch [46/100], train-loss:37.5226, valid-loss62.4685
+    epoch [47/100], train-loss:37.0734, valid-loss61.9393
+    epoch [48/100], train-loss:36.5691, valid-loss61.4976
+    epoch [49/100], train-loss:36.1818, valid-loss61.1060
+    epoch [50/100], train-loss:35.6864, valid-loss60.6701
+    epoch [51/100], train-loss:35.2868, valid-loss60.2540
+    epoch [52/100], train-loss:34.9106, valid-loss59.8618
+    epoch [53/100], train-loss:34.5428, valid-loss59.4647
+    epoch [54/100], train-loss:34.1621, valid-loss59.1843
+    epoch [55/100], train-loss:33.7835, valid-loss58.9109
+    epoch [56/100], train-loss:33.5279, valid-loss58.4458
+    epoch [57/100], train-loss:33.1363, valid-loss58.3297
+    epoch [58/100], train-loss:32.7872, valid-loss58.0220
+    epoch [59/100], train-loss:32.4782, valid-loss57.8456
+    epoch [60/100], train-loss:32.1628, valid-loss57.5311
+    epoch [61/100], train-loss:31.8812, valid-loss57.2490
+    epoch [62/100], train-loss:31.6126, valid-loss57.1105
+    epoch [63/100], train-loss:31.2940, valid-loss56.9010
+    epoch [64/100], train-loss:31.0707, valid-loss56.7139
+    epoch [65/100], train-loss:30.7965, valid-loss56.6615
+    epoch [66/100], train-loss:30.5375, valid-loss56.2943
+    epoch [67/100], train-loss:30.3134, valid-loss56.0840
+    epoch [68/100], train-loss:30.0630, valid-loss55.8777
+    epoch [69/100], train-loss:29.8732, valid-loss55.7113
+    epoch [70/100], train-loss:29.6264, valid-loss55.7189
+    epoch [71/100], train-loss:29.4233, valid-loss55.3638
+    epoch [72/100], train-loss:29.2326, valid-loss55.2449
+    epoch [73/100], train-loss:29.0394, valid-loss54.9074
+    epoch [74/100], train-loss:28.9029, valid-loss54.7673
+    epoch [75/100], train-loss:28.6741, valid-loss54.8008
+    epoch [76/100], train-loss:28.5125, valid-loss54.5941
+    epoch [77/100], train-loss:28.3542, valid-loss54.4277
+    epoch [78/100], train-loss:28.2116, valid-loss54.0702
+    epoch [79/100], train-loss:28.0574, valid-loss54.0432
+    epoch [80/100], train-loss:27.9052, valid-loss54.1073
+    epoch [81/100], train-loss:27.7297, valid-loss53.7725
+    epoch [82/100], train-loss:27.6253, valid-loss53.6108
+    epoch [83/100], train-loss:27.4896, valid-loss53.5269
+    epoch [84/100], train-loss:27.3956, valid-loss53.2273
+    epoch [85/100], train-loss:27.2206, valid-loss53.4004
+    epoch [86/100], train-loss:27.0935, valid-loss53.4245
+    epoch [87/100], train-loss:26.9872, valid-loss53.0536
+    epoch [88/100], train-loss:26.8855, valid-loss52.8967
+    epoch [89/100], train-loss:26.7752, valid-loss52.9422
+    epoch [90/100], train-loss:26.6520, valid-loss52.8119
+    epoch [91/100], train-loss:26.5387, valid-loss52.6001
+    epoch [92/100], train-loss:26.4491, valid-loss52.5637
+    epoch [93/100], train-loss:26.3404, valid-loss52.4731
+    epoch [94/100], train-loss:26.2306, valid-loss52.3562
+    epoch [95/100], train-loss:26.1541, valid-loss52.1877
+    epoch [96/100], train-loss:26.0641, valid-loss52.2095
+    epoch [97/100], train-loss:25.9477, valid-loss52.2140
+    epoch [98/100], train-loss:25.8633, valid-loss51.9994
+    epoch [99/100], train-loss:25.8199, valid-loss52.1052
+    epoch [100/100], train-loss:25.6684, valid-loss51.7805
+    
+
+
+```python
+_ = pd.DataFrame({'MSE train': train_losses, 'MSE valid': valid_losses}).plot(figsize=(15,8))
+```
+
+
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_31_0.png)
+
+
+
+```python
+from vaep.model import build_df_from_pred_batches
+
+
+pred = []
+
+model.eval()
+for data in dl_valid:
+    data = data.to(device)
+    output = model(data)
+    pred.append(output.detach().numpy())
+build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
+      <td>495,689,428.859</td>
+      <td>174,648,026.448</td>
+      <td>244,438,695.366</td>
+      <td>331,601,743.637</td>
+      <td>412,010,550.333</td>
+      <td>728,731,877.671</td>
+      <td>100,493,069.020</td>
+      <td>228,488,125.928</td>
+      <td>815,485,355.195</td>
+      <td>642,556,804.222</td>
+    </tr>
+    <tr>
+      <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
+      <td>1,987,471,723.267</td>
+      <td>631,702,214.597</td>
+      <td>1,117,784,955.196</td>
+      <td>1,145,323,021.013</td>
+      <td>1,770,494,646.439</td>
+      <td>5,668,765,527.469</td>
+      <td>1,011,586,140.024</td>
+      <td>662,534,897.888</td>
+      <td>2,669,100,762.701</td>
+      <td>2,109,337,563.324</td>
+    </tr>
+    <tr>
+      <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
+      <td>1,496,465,524.430</td>
+      <td>466,505,357.023</td>
+      <td>840,084,674.309</td>
+      <td>858,131,756.504</td>
+      <td>1,218,733,403.088</td>
+      <td>3,846,414,094.870</td>
+      <td>681,512,489.637</td>
+      <td>480,976,426.067</td>
+      <td>1,961,512,307.091</td>
+      <td>1,516,892,162.959</td>
+    </tr>
+    <tr>
+      <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
+      <td>471,324,033.377</td>
+      <td>161,447,231.515</td>
+      <td>225,367,929.908</td>
+      <td>311,156,468.547</td>
+      <td>383,027,241.596</td>
+      <td>623,433,878.115</td>
+      <td>88,166,996.228</td>
+      <td>221,136,126.279</td>
+      <td>806,944,445.875</td>
+      <td>616,385,853.156</td>
+    </tr>
+    <tr>
+      <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
+      <td>1,519,464,424.611</td>
+      <td>482,681,481.089</td>
+      <td>860,009,263.881</td>
+      <td>884,733,935.641</td>
+      <td>1,266,804,701.877</td>
+      <td>3,980,595,418.058</td>
+      <td>696,622,785.509</td>
+      <td>494,335,210.989</td>
+      <td>1,980,362,502.576</td>
+      <td>1,566,343,282.566</td>
+    </tr>
+    <tr>
+      <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
+      <td>1,197,500,004.402</td>
+      <td>470,553,253.946</td>
+      <td>723,081,592.022</td>
+      <td>818,686,773.127</td>
+      <td>1,181,302,503.903</td>
+      <td>3,500,920,410.122</td>
+      <td>542,365,045.067</td>
+      <td>456,257,122.460</td>
+      <td>1,498,824,537.544</td>
+      <td>1,424,881,013.779</td>
+    </tr>
+    <tr>
+      <th>20181120_QE5_nLC7_AP_HeLa_2</th>
+      <td>1,191,526,753.174</td>
+      <td>448,227,324.956</td>
+      <td>704,752,774.581</td>
+      <td>785,273,440.580</td>
+      <td>1,120,301,034.579</td>
+      <td>3,349,644,769.690</td>
+      <td>533,595,828.799</td>
+      <td>440,764,579.649</td>
+      <td>1,513,778,265.156</td>
+      <td>1,365,518,438.913</td>
+    </tr>
+    <tr>
+      <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
+      <td>824,720,515.343</td>
+      <td>279,496,898.392</td>
+      <td>444,815,372.310</td>
+      <td>507,384,531.079</td>
+      <td>666,940,033.305</td>
+      <td>1,796,326,388.849</td>
+      <td>295,282,822.831</td>
+      <td>307,396,056.897</td>
+      <td>1,152,607,101.079</td>
+      <td>900,410,198.590</td>
+    </tr>
+    <tr>
+      <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
+      <td>472,906,916.160</td>
+      <td>161,457,475.773</td>
+      <td>226,604,519.001</td>
+      <td>312,183,542.439</td>
+      <td>383,989,017.044</td>
+      <td>623,138,051.058</td>
+      <td>87,667,450.881</td>
+      <td>221,158,472.303</td>
+      <td>807,705,057.185</td>
+      <td>618,531,421.525</td>
+    </tr>
+    <tr>
+      <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
+      <td>1,282,651,131.272</td>
+      <td>472,765,005.142</td>
+      <td>758,870,972.016</td>
+      <td>834,641,102.949</td>
+      <td>1,200,828,207.865</td>
+      <td>3,623,610,727.977</td>
+      <td>584,564,217.167</td>
+      <td>465,791,752.916</td>
+      <td>1,629,645,568.233</td>
+      <td>1,459,909,542.992</td>
+    </tr>
+    <tr>
+      <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
+      <td>617,487,419.408</td>
+      <td>240,696,260.255</td>
+      <td>335,040,428.779</td>
+      <td>428,621,578.503</td>
+      <td>557,028,361.014</td>
+      <td>1,284,084,942.962</td>
+      <td>176,263,000.205</td>
+      <td>268,779,333.940</td>
+      <td>883,746,816.191</td>
+      <td>769,718,394.177</td>
+    </tr>
+    <tr>
+      <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
+      <td>1,353,264,203.602</td>
+      <td>501,631,611.567</td>
+      <td>809,183,463.825</td>
+      <td>890,149,383.520</td>
+      <td>1,294,570,670.204</td>
+      <td>3,891,125,168.826</td>
+      <td>620,975,533.948</td>
+      <td>491,977,673.169</td>
+      <td>1,703,252,401.022</td>
+      <td>1,566,141,787.188</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
+      <td>1,573,554,844.359</td>
+      <td>624,662,432.927</td>
+      <td>975,802,208.748</td>
+      <td>1,103,386,428.516</td>
+      <td>1,702,215,246.495</td>
+      <td>5,026,947,138.924</td>
+      <td>779,017,766.421</td>
+      <td>613,175,936.713</td>
+      <td>1,988,010,577.078</td>
+      <td>2,008,914,681.325</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
+      <td>1,593,093,014.496</td>
+      <td>626,960,799.564</td>
+      <td>984,186,953.975</td>
+      <td>1,108,997,689.662</td>
+      <td>1,712,588,990.649</td>
+      <td>5,069,483,932.018</td>
+      <td>789,823,286.310</td>
+      <td>617,220,583.176</td>
+      <td>2,018,553,161.171</td>
+      <td>2,021,683,901.292</td>
+    </tr>
+    <tr>
+      <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
+      <td>1,648,801,505.045</td>
+      <td>599,292,374.190</td>
+      <td>982,029,935.847</td>
+      <td>1,067,140,615.481</td>
+      <td>1,626,297,806.011</td>
+      <td>4,969,064,949.486</td>
+      <td>817,648,715.667</td>
+      <td>599,874,690.619</td>
+      <td>2,130,687,013.947</td>
+      <td>1,934,268,824.957</td>
+    </tr>
+    <tr>
+      <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
+      <td>1,653,485,437.059</td>
+      <td>643,032,929.891</td>
+      <td>1,016,218,266.403</td>
+      <td>1,140,538,170.856</td>
+      <td>1,774,507,039.179</td>
+      <td>5,263,764,568.634</td>
+      <td>826,541,619.732</td>
+      <td>637,734,787.642</td>
+      <td>2,110,466,993.002</td>
+      <td>2,092,375,687.131</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
+      <td>2,370,855,942.538</td>
+      <td>627,507,354.825</td>
+      <td>1,242,031,380.029</td>
+      <td>1,169,014,633.297</td>
+      <td>1,798,991,840.944</td>
+      <td>6,165,165,532.021</td>
+      <td>1,208,914,116.114</td>
+      <td>696,330,846.027</td>
+      <td>3,279,539,314.387</td>
+      <td>2,163,401,448.291</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
+      <td>2,308,297,291.278</td>
+      <td>679,519,196.213</td>
+      <td>1,248,646,870.238</td>
+      <td>1,235,918,791.116</td>
+      <td>1,957,307,218.716</td>
+      <td>6,480,666,019.190</td>
+      <td>1,215,421,759.161</td>
+      <td>739,374,035.272</td>
+      <td>3,194,241,298.717</td>
+      <td>2,314,356,246.410</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Collaborative Filtering setup
+
+- each sample has an embedding
+- each peptide has an embedding
+- scalar product of embeddings should yield predictions
+
+
+```python
+
+```
+
+## VAE
+
 ### Transform: Non-log transformed data (Single run)
 
 Scale samples according to training data
@@ -1436,16 +2037,16 @@ scaler.transform(analysis.df_valid.iloc[:5])
 
 
 
-    array([[0.0718489 , 0.12797246, 0.11449968, 0.07686394, 0.11738642,
-            0.15037337, 0.07789715, 0.16225749, 0.05943207, 0.25528669],
-           [0.31329885, 0.49036421, 0.25354364, 0.34021438, 0.40911442,
-            0.5532809 , 0.3094837 , 0.42087116, 0.87956465, 0.82798402],
-           [0.29001045, 0.32836052, 0.43789081, 0.28671651, 0.31102303,
-            0.29834218, 0.19049807, 0.50793075, 0.50685415, 0.53525552],
-           [0.04145055, 0.15667844, 0.06901714, 0.04467552, 0.0284925 ,
-            0.09851535, 0.04405984, 0.11537442, 0.15513421, 0.17490834],
-           [0.35538944, 0.71751019, 0.35200923, 0.27076326, 0.47776595,
-            0.43166852, 0.24891874, 0.79887113, 0.72325645, 0.56933594]])
+    array([[ 0.14049548,  0.1307324 ,  0.08228755,  0.18666352,  0.1123346 ,
+             0.0181262 ,  0.04769316,  0.1073988 ,  0.11092301,  0.13571915],
+           [ 0.66195948,  0.40660206,  0.61315923,  0.60249773,  0.65853507,
+             0.50209489,  0.2066747 ,  0.55556579,  0.35680016,  0.45932172],
+           [ 0.37040311,  0.36468557,  0.46037114,  0.49967418,  0.31804687,
+             0.39621234,  0.08168229,  0.02321677,  0.34727276,  0.4512778 ],
+           [ 0.10298472,  0.10091836,  0.04305615,  0.08752068,  0.07226189,
+             0.07355578,  0.01642663,  0.11891336,  0.11505657,  0.11683246],
+           [ 0.02139874,  0.65397478,  0.63550829, -0.09440804,  0.46125284,
+             0.23773274,  0.20267751,  0.28490164,  0.39932245,  0.38342787]])
 
 
 
@@ -1637,57 +2238,57 @@ pd.DataFrame.from_dict(batch_metrics, orient='index')
   <tbody>
     <tr>
       <th>0</th>
-      <td>2.235</td>
-      <td>2.472</td>
-      <td>0.109</td>
+      <td>2.568</td>
+      <td>2.820</td>
+      <td>0.299</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>2.424</td>
-      <td>2.682</td>
-      <td>0.100</td>
+      <td>3.210</td>
+      <td>3.530</td>
+      <td>0.335</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.543</td>
-      <td>1.701</td>
-      <td>0.113</td>
+      <td>4.155</td>
+      <td>4.580</td>
+      <td>0.325</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2.677</td>
-      <td>2.962</td>
-      <td>0.115</td>
+      <td>2.136</td>
+      <td>2.341</td>
+      <td>0.291</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2.809</td>
-      <td>3.108</td>
-      <td>0.110</td>
+      <td>2.874</td>
+      <td>3.159</td>
+      <td>0.309</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>2.120</td>
-      <td>2.345</td>
-      <td>0.100</td>
+      <td>3.373</td>
+      <td>3.712</td>
+      <td>0.325</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>1.524</td>
-      <td>1.681</td>
-      <td>0.111</td>
+      <td>3.374</td>
+      <td>3.712</td>
+      <td>0.331</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>2.416</td>
-      <td>2.672</td>
-      <td>0.109</td>
+      <td>2.343</td>
+      <td>2.573</td>
+      <td>0.279</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>2.504</td>
-      <td>2.770</td>
-      <td>0.112</td>
+      <td>3.157</td>
+      <td>3.471</td>
+      <td>0.333</td>
     </tr>
   </tbody>
 </table>
@@ -1707,7 +2308,7 @@ _ = metrics.plot(
 ```
 
 
-![png](12_experiment_01_small_example_files/12_experiment_01_small_example_50_0.png)
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_54_0.png)
 
 
 
@@ -1752,273 +2353,273 @@ metrics
   <tbody>
     <tr>
       <th>1</th>
-      <td>2.240</td>
-      <td>2.476</td>
-      <td>0.108</td>
-      <td>3.323</td>
-      <td>3.680</td>
-      <td>0.118</td>
+      <td>2.887</td>
+      <td>3.172</td>
+      <td>0.315</td>
+      <td>4.141</td>
+      <td>4.560</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2.010</td>
-      <td>2.221</td>
-      <td>0.108</td>
-      <td>2.817</td>
-      <td>3.116</td>
-      <td>0.118</td>
+      <td>2.917</td>
+      <td>3.206</td>
+      <td>0.315</td>
+      <td>4.117</td>
+      <td>4.534</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2.088</td>
-      <td>2.308</td>
-      <td>0.108</td>
-      <td>2.786</td>
-      <td>3.082</td>
-      <td>0.118</td>
+      <td>2.933</td>
+      <td>3.224</td>
+      <td>0.315</td>
+      <td>4.245</td>
+      <td>4.676</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2.378</td>
-      <td>2.630</td>
-      <td>0.108</td>
-      <td>3.591</td>
-      <td>3.977</td>
-      <td>0.118</td>
+      <td>3.029</td>
+      <td>3.330</td>
+      <td>0.315</td>
+      <td>4.451</td>
+      <td>4.905</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>2.113</td>
-      <td>2.336</td>
-      <td>0.108</td>
-      <td>2.644</td>
-      <td>2.924</td>
-      <td>0.118</td>
+      <td>2.942</td>
+      <td>3.234</td>
+      <td>0.315</td>
+      <td>4.399</td>
+      <td>4.847</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>2.097</td>
-      <td>2.318</td>
-      <td>0.108</td>
-      <td>2.495</td>
-      <td>2.759</td>
-      <td>0.118</td>
+      <td>3.064</td>
+      <td>3.369</td>
+      <td>0.315</td>
+      <td>4.014</td>
+      <td>4.419</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>2.084</td>
-      <td>2.304</td>
-      <td>0.108</td>
-      <td>3.274</td>
-      <td>3.625</td>
-      <td>0.118</td>
+      <td>3.172</td>
+      <td>3.490</td>
+      <td>0.315</td>
+      <td>4.469</td>
+      <td>4.925</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>2.102</td>
-      <td>2.324</td>
-      <td>0.108</td>
-      <td>3.196</td>
-      <td>3.539</td>
-      <td>0.118</td>
+      <td>2.885</td>
+      <td>3.171</td>
+      <td>0.315</td>
+      <td>5.092</td>
+      <td>5.617</td>
+      <td>0.367</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>2.131</td>
-      <td>2.355</td>
-      <td>0.108</td>
-      <td>3.581</td>
-      <td>3.966</td>
-      <td>0.118</td>
+      <td>3.006</td>
+      <td>3.305</td>
+      <td>0.315</td>
+      <td>4.447</td>
+      <td>4.900</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>2.276</td>
-      <td>2.517</td>
-      <td>0.108</td>
-      <td>3.055</td>
-      <td>3.382</td>
-      <td>0.118</td>
+      <td>2.904</td>
+      <td>3.192</td>
+      <td>0.314</td>
+      <td>4.493</td>
+      <td>4.952</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>1.996</td>
-      <td>2.205</td>
-      <td>0.108</td>
-      <td>2.793</td>
-      <td>3.091</td>
-      <td>0.118</td>
+      <td>2.710</td>
+      <td>2.976</td>
+      <td>0.314</td>
+      <td>4.117</td>
+      <td>4.533</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>1.982</td>
-      <td>2.190</td>
-      <td>0.108</td>
-      <td>2.938</td>
-      <td>3.251</td>
-      <td>0.118</td>
+      <td>2.923</td>
+      <td>3.213</td>
+      <td>0.314</td>
+      <td>5.032</td>
+      <td>5.550</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>2.370</td>
-      <td>2.622</td>
-      <td>0.108</td>
-      <td>2.960</td>
-      <td>3.276</td>
-      <td>0.118</td>
+      <td>3.089</td>
+      <td>3.398</td>
+      <td>0.314</td>
+      <td>4.362</td>
+      <td>4.806</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>2.180</td>
-      <td>2.410</td>
-      <td>0.108</td>
-      <td>2.710</td>
-      <td>2.997</td>
-      <td>0.118</td>
+      <td>3.110</td>
+      <td>3.420</td>
+      <td>0.314</td>
+      <td>4.431</td>
+      <td>4.883</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>2.106</td>
-      <td>2.328</td>
-      <td>0.108</td>
-      <td>3.518</td>
-      <td>3.896</td>
-      <td>0.118</td>
+      <td>2.772</td>
+      <td>3.045</td>
+      <td>0.314</td>
+      <td>4.160</td>
+      <td>4.582</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>2.038</td>
-      <td>2.252</td>
-      <td>0.108</td>
-      <td>2.937</td>
-      <td>3.250</td>
-      <td>0.118</td>
+      <td>2.966</td>
+      <td>3.261</td>
+      <td>0.314</td>
+      <td>4.340</td>
+      <td>4.782</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>2.225</td>
-      <td>2.460</td>
-      <td>0.109</td>
-      <td>2.608</td>
-      <td>2.885</td>
-      <td>0.118</td>
+      <td>3.055</td>
+      <td>3.360</td>
+      <td>0.314</td>
+      <td>4.447</td>
+      <td>4.901</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>2.124</td>
-      <td>2.348</td>
-      <td>0.109</td>
-      <td>3.602</td>
-      <td>3.989</td>
-      <td>0.118</td>
+      <td>2.881</td>
+      <td>3.166</td>
+      <td>0.314</td>
+      <td>4.104</td>
+      <td>4.519</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>2.099</td>
-      <td>2.321</td>
-      <td>0.109</td>
-      <td>3.009</td>
-      <td>3.330</td>
-      <td>0.118</td>
+      <td>2.972</td>
+      <td>3.267</td>
+      <td>0.314</td>
+      <td>4.388</td>
+      <td>4.835</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>2.245</td>
-      <td>2.482</td>
-      <td>0.109</td>
-      <td>3.278</td>
-      <td>3.629</td>
-      <td>0.118</td>
+      <td>3.024</td>
+      <td>3.325</td>
+      <td>0.314</td>
+      <td>4.920</td>
+      <td>5.426</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>2.369</td>
-      <td>2.620</td>
-      <td>0.109</td>
-      <td>3.012</td>
-      <td>3.334</td>
-      <td>0.118</td>
+      <td>2.915</td>
+      <td>3.204</td>
+      <td>0.314</td>
+      <td>4.296</td>
+      <td>4.733</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>2.326</td>
-      <td>2.573</td>
-      <td>0.109</td>
-      <td>2.820</td>
-      <td>3.121</td>
-      <td>0.118</td>
+      <td>2.873</td>
+      <td>3.157</td>
+      <td>0.314</td>
+      <td>4.467</td>
+      <td>4.923</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>2.139</td>
-      <td>2.365</td>
-      <td>0.109</td>
-      <td>3.483</td>
-      <td>3.856</td>
-      <td>0.118</td>
+      <td>3.062</td>
+      <td>3.367</td>
+      <td>0.314</td>
+      <td>4.147</td>
+      <td>4.567</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>2.302</td>
-      <td>2.546</td>
-      <td>0.109</td>
-      <td>2.792</td>
-      <td>3.090</td>
-      <td>0.118</td>
+      <td>2.790</td>
+      <td>3.065</td>
+      <td>0.314</td>
+      <td>4.200</td>
+      <td>4.626</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>2.384</td>
-      <td>2.637</td>
-      <td>0.109</td>
-      <td>2.791</td>
-      <td>3.088</td>
-      <td>0.118</td>
+      <td>2.947</td>
+      <td>3.239</td>
+      <td>0.314</td>
+      <td>4.756</td>
+      <td>5.244</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>2.339</td>
-      <td>2.587</td>
-      <td>0.109</td>
-      <td>3.002</td>
-      <td>3.323</td>
-      <td>0.118</td>
+      <td>3.008</td>
+      <td>3.308</td>
+      <td>0.314</td>
+      <td>4.095</td>
+      <td>4.510</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>2.311</td>
-      <td>2.556</td>
-      <td>0.109</td>
-      <td>2.608</td>
-      <td>2.885</td>
-      <td>0.118</td>
+      <td>3.077</td>
+      <td>3.384</td>
+      <td>0.314</td>
+      <td>4.334</td>
+      <td>4.775</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>2.237</td>
-      <td>2.473</td>
-      <td>0.109</td>
-      <td>3.398</td>
-      <td>3.763</td>
-      <td>0.118</td>
+      <td>2.938</td>
+      <td>3.230</td>
+      <td>0.314</td>
+      <td>4.731</td>
+      <td>5.216</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>2.071</td>
-      <td>2.289</td>
-      <td>0.109</td>
-      <td>3.110</td>
-      <td>3.442</td>
-      <td>0.118</td>
+      <td>2.921</td>
+      <td>3.210</td>
+      <td>0.314</td>
+      <td>3.991</td>
+      <td>4.394</td>
+      <td>0.366</td>
     </tr>
     <tr>
       <th>30</th>
-      <td>2.007</td>
-      <td>2.218</td>
-      <td>0.109</td>
-      <td>3.384</td>
-      <td>3.747</td>
-      <td>0.118</td>
+      <td>2.859</td>
+      <td>3.142</td>
+      <td>0.314</td>
+      <td>4.502</td>
+      <td>4.961</td>
+      <td>0.366</td>
     </tr>
   </tbody>
 </table>
@@ -2037,7 +2638,7 @@ _ = metrics[selected].plot(
 ```
 
 
-![png](12_experiment_01_small_example_files/12_experiment_01_small_example_52_0.png)
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_56_0.png)
 
 
 ## Predictions validation set
@@ -2046,12 +2647,7 @@ _ = metrics[selected].plot(
 ```python
 # integrate label in dataloader
 _epoch_metric_valid, pred = evaluate(model=model, data_loader=dl_valid, device=device, return_pred=True)
-def build_df_from_pred_batches(pred, index=None, columns=None):
-    pred = np.vstack(pred)
-    pred = scaler.inverse_transform(pred)
-    pred= pd.DataFrame(pred, index=index, columns=columns)
-    return pred
-build_df_from_pred_batches(pred, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
 ```
 
 
@@ -2075,16 +2671,16 @@ build_df_from_pred_batches(pred, index=analysis.df_valid.index, columns=analysis
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -2103,237 +2699,237 @@ build_df_from_pred_batches(pred, index=analysis.df_valid.index, columns=analysis
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>3,323,492,070.266</td>
-      <td>297,062,950.009</td>
-      <td>-576,366,258.112</td>
-      <td>301,931,387.984</td>
-      <td>533,172,590.299</td>
-      <td>714,865,966.963</td>
-      <td>3,563,901,073.311</td>
-      <td>1,435,252,208.153</td>
-      <td>408,258,018.594</td>
-      <td>-585,893,801.366</td>
+      <td>-1,373,843,918.051</td>
+      <td>450,539,584.676</td>
+      <td>-10,667,998.567</td>
+      <td>-276,517,711.302</td>
+      <td>1,156,243,525.421</td>
+      <td>465,250,199.630</td>
+      <td>-886,316,330.190</td>
+      <td>-330,762,325.204</td>
+      <td>-1,636,199,154.347</td>
+      <td>2,495,574,815.816</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>3,720,510,283.729</td>
-      <td>-1,351,207,052.090</td>
-      <td>630,333,446.728</td>
-      <td>-1,007,409,812.560</td>
-      <td>-2,729,441,398.749</td>
-      <td>1,854,437,850.425</td>
-      <td>2,717,619,669.437</td>
-      <td>-2,053,172,739.892</td>
-      <td>-3,614,057.600</td>
-      <td>-5,228,298,498.975</td>
+      <td>-1,508,935,405.952</td>
+      <td>527,142,841.783</td>
+      <td>-70,378,895.524</td>
+      <td>-324,604,282.682</td>
+      <td>1,206,330,033.576</td>
+      <td>-163,221,288.765</td>
+      <td>-1,050,597,257.779</td>
+      <td>-453,192,394.022</td>
+      <td>-1,820,545,947.592</td>
+      <td>2,640,869,307.299</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>4,410,939,414.650</td>
-      <td>-313,331,022.921</td>
-      <td>-217,821,020.823</td>
-      <td>214,703,773.821</td>
-      <td>-149,456,855.446</td>
-      <td>911,705,852.332</td>
-      <td>3,228,271,192.601</td>
-      <td>347,936,325.723</td>
-      <td>289,515,160.299</td>
-      <td>-2,945,680,523.842</td>
+      <td>-1,497,265,453.105</td>
+      <td>489,993,415.561</td>
+      <td>-38,215,883.062</td>
+      <td>-451,172,463.219</td>
+      <td>1,579,876,140.449</td>
+      <td>579,342,198.949</td>
+      <td>-1,103,111,519.210</td>
+      <td>-439,886,070.739</td>
+      <td>-1,847,859,139.277</td>
+      <td>2,849,303,729.840</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>3,979,046,425.458</td>
-      <td>-951,368,353.610</td>
-      <td>-666,949,019.652</td>
-      <td>-272,866,577.508</td>
-      <td>-1,912,205,508.516</td>
-      <td>1,120,389,461.309</td>
-      <td>1,622,086,383.556</td>
-      <td>-1,699,597,991.344</td>
-      <td>45,273,146.580</td>
-      <td>-2,111,259,557.145</td>
+      <td>-957,427,380.378</td>
+      <td>276,958,650.852</td>
+      <td>432,413,967.120</td>
+      <td>-441,879,848.637</td>
+      <td>1,590,707,508.783</td>
+      <td>10,132,875,753.257</td>
+      <td>784,964,848.368</td>
+      <td>845,651,067.303</td>
+      <td>-89,335,706.031</td>
+      <td>1,938,124,776.064</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>3,600,717,706.795</td>
-      <td>-129,902,328.069</td>
-      <td>-995,699,604.037</td>
-      <td>228,651,847.671</td>
-      <td>-245,850,530.278</td>
-      <td>627,952,544.285</td>
-      <td>2,224,523,828.521</td>
-      <td>-121,377,526.086</td>
-      <td>237,694,717.378</td>
-      <td>-800,709,585.505</td>
+      <td>-1,361,473,847.731</td>
+      <td>339,150,286.735</td>
+      <td>-51,845,393.891</td>
+      <td>-253,131,275.732</td>
+      <td>1,160,076,545.146</td>
+      <td>534,219,242.033</td>
+      <td>-886,310,326.023</td>
+      <td>-396,656,127.673</td>
+      <td>-794,849,095.249</td>
+      <td>2,896,591,040.133</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>3,746,461,998.458</td>
-      <td>-345,531,243.845</td>
-      <td>-427,477,454.097</td>
-      <td>-17,311,062.147</td>
-      <td>-563,848,048.481</td>
-      <td>927,817,889.165</td>
-      <td>2,700,305,412.517</td>
-      <td>-260,259,335.135</td>
-      <td>219,074,395.972</td>
-      <td>-2,333,934,329.342</td>
+      <td>-1,445,363,399.584</td>
+      <td>428,449,432.861</td>
+      <td>2,507,298.318</td>
+      <td>-514,098,037.794</td>
+      <td>1,794,028,299.730</td>
+      <td>1,247,791,630.797</td>
+      <td>-1,064,856,818.315</td>
+      <td>-374,460,040.418</td>
+      <td>-1,772,829,345.181</td>
+      <td>2,948,434,001.657</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>2,700,830,529.960</td>
-      <td>732,391,115.997</td>
-      <td>-613,249,817.000</td>
-      <td>373,444,190.691</td>
-      <td>959,656,576.572</td>
-      <td>756,015,030.839</td>
-      <td>4,430,328,655.909</td>
-      <td>2,910,845,655.306</td>
-      <td>559,017,860.382</td>
-      <td>1,509,331,159.681</td>
+      <td>-1,255,135,119.886</td>
+      <td>361,144,886.208</td>
+      <td>157,582,653.748</td>
+      <td>-492,670,878.952</td>
+      <td>1,757,042,106.002</td>
+      <td>4,318,613,504.051</td>
+      <td>-444,293,240.018</td>
+      <td>41,739,200.659</td>
+      <td>-1,201,997,084.065</td>
+      <td>2,607,209,284.480</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>3,608,175,776.650</td>
-      <td>-228,584,867.001</td>
-      <td>-806,933,435.832</td>
-      <td>112,068,852.510</td>
-      <td>-436,350,261.273</td>
-      <td>748,654,617.278</td>
-      <td>2,338,340,404.305</td>
-      <td>-247,980,414.369</td>
-      <td>221,565,886.642</td>
-      <td>-1,295,466,174.605</td>
+      <td>-1,671,516,754.492</td>
+      <td>330,701,095.678</td>
+      <td>252,178,714.050</td>
+      <td>-1,162,136,541.775</td>
+      <td>3,132,402,872.251</td>
+      <td>9,865,579,949.366</td>
+      <td>142,912,843.646</td>
+      <td>617,280,628.750</td>
+      <td>-496,105,371.881</td>
+      <td>3,767,048,996.967</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>3,746,417,696.278</td>
-      <td>388,774,982.469</td>
-      <td>-532,512,297.436</td>
-      <td>526,703,802.380</td>
-      <td>867,616,211.679</td>
-      <td>688,022,867.205</td>
-      <td>4,014,162,370.069</td>
-      <td>2,163,850,963.768</td>
-      <td>486,920,549.701</td>
-      <td>-290,863,830.004</td>
+      <td>-1,560,773,211.117</td>
+      <td>335,686,548.969</td>
+      <td>237,658,057.676</td>
+      <td>-997,321,847.529</td>
+      <td>2,791,823,164.062</td>
+      <td>8,694,529,774.792</td>
+      <td>37,945,573.388</td>
+      <td>501,856,257.946</td>
+      <td>-633,829,824.470</td>
+      <td>3,463,186,485.514</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>3,891,082,188.062</td>
-      <td>-201,759,374.328</td>
-      <td>-340,281,972.553</td>
-      <td>115,663,561.629</td>
-      <td>-152,182,467.232</td>
-      <td>872,862,227.870</td>
-      <td>3,065,973,289.030</td>
-      <td>234,894,172.734</td>
-      <td>277,666,738.470</td>
-      <td>-2,474,413,168.064</td>
+      <td>-1,482,119,689.935</td>
+      <td>463,978,927.005</td>
+      <td>-22,741,844.251</td>
+      <td>-485,358,553.857</td>
+      <td>1,687,475,170.036</td>
+      <td>857,187,925.129</td>
+      <td>-1,094,474,010.904</td>
+      <td>-414,910,316.127</td>
+      <td>-1,820,840,406.199</td>
+      <td>2,910,752,480.175</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>3,715,762,009.339</td>
-      <td>-82,737,395.899</td>
-      <td>-582,654,060.676</td>
-      <td>194,783,493.094</td>
-      <td>-31,622,739.489</td>
-      <td>762,935,873.257</td>
-      <td>2,910,862,947.099</td>
-      <td>364,371,685.421</td>
-      <td>291,779,633.421</td>
-      <td>-1,633,646,434.237</td>
+      <td>-1,527,946,302.348</td>
+      <td>536,673,919.839</td>
+      <td>-66,879,653.161</td>
+      <td>-393,741,759.960</td>
+      <td>1,395,606,904.972</td>
+      <td>78,347,697.088</td>
+      <td>-1,122,495,319.558</td>
+      <td>-486,084,580.276</td>
+      <td>-1,898,763,498.728</td>
+      <td>2,749,120,112.362</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>3,493,759,208.772</td>
-      <td>-81,965,174.757</td>
-      <td>-1,211,731,740.614</td>
-      <td>278,275,733.805</td>
-      <td>-231,749,381.313</td>
-      <td>540,483,425.333</td>
-      <td>1,987,958,734.521</td>
-      <td>-169,844,655.501</td>
-      <td>232,260,308.661</td>
-      <td>-199,433,892.091</td>
+      <td>-1,163,526,310.623</td>
+      <td>383,233,759.104</td>
+      <td>94,145,559.950</td>
+      <td>-284,489,336.493</td>
+      <td>1,328,083,951.576</td>
+      <td>1,888,508,275.567</td>
+      <td>-763,582,082.882</td>
+      <td>-229,253,725.091</td>
+      <td>-1,546,012,566.681</td>
+      <td>2,315,005,531.342</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>3,214,996,933.374</td>
-      <td>313,716,852.226</td>
-      <td>-1,001,876,359.129</td>
-      <td>385,989,980.367</td>
-      <td>459,594,173.044</td>
-      <td>547,453,442.805</td>
-      <td>2,965,627,132.263</td>
-      <td>1,123,037,258.694</td>
-      <td>374,350,671.489</td>
-      <td>352,983,500.610</td>
+      <td>-1,934,997,361.241</td>
+      <td>710,586,275.916</td>
+      <td>-248,634,395.142</td>
+      <td>-506,764,189.096</td>
+      <td>1,445,042,801.392</td>
+      <td>-1,990,963,450.658</td>
+      <td>-1,519,329,025.840</td>
+      <td>-773,680,607.539</td>
+      <td>-2,290,792,413.641</td>
+      <td>3,218,233,285.134</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>1,814,870,416.246</td>
-      <td>152,984,186.585</td>
-      <td>-1,039,290,482.410</td>
-      <td>486,228,965.169</td>
-      <td>325,289,671.124</td>
-      <td>573,435,216.973</td>
-      <td>2,804,903,779.348</td>
-      <td>644,045,792.178</td>
-      <td>399,854,807.441</td>
-      <td>764,271,557.412</td>
+      <td>-1,690,575,094.957</td>
+      <td>428,358,740.943</td>
+      <td>-60,245,012.737</td>
+      <td>-788,167,094.678</td>
+      <td>2,410,983,042.130</td>
+      <td>1,078,843,764.279</td>
+      <td>-1,336,792,693.074</td>
+      <td>-471,122,071.205</td>
+      <td>-1,942,290,121.860</td>
+      <td>3,654,377,627.647</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>2,730,194,449.174</td>
-      <td>118,253,588.011</td>
-      <td>-1,198,441,757.893</td>
-      <td>434,135,148.033</td>
-      <td>195,304,454.303</td>
-      <td>493,629,553.014</td>
-      <td>2,399,815,660.137</td>
-      <td>385,444,563.661</td>
-      <td>328,286,713.784</td>
-      <td>473,823,905.388</td>
+      <td>-1,559,077,513.546</td>
+      <td>473,717,623.791</td>
+      <td>-78,373,769.974</td>
+      <td>-385,385,966.057</td>
+      <td>1,338,580,051.546</td>
+      <td>-179,184,902.246</td>
+      <td>-1,042,051,447.625</td>
+      <td>-406,237,474.003</td>
+      <td>-1,732,498,863.207</td>
+      <td>2,862,477,728.445</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>3,362,379,800.557</td>
-      <td>-982,548,681.866</td>
-      <td>98,621,484.883</td>
-      <td>-751,672,456.177</td>
-      <td>-2,155,700,643.090</td>
-      <td>1,522,586,444.178</td>
-      <td>2,453,279,667.701</td>
-      <td>-1,628,894,145.638</td>
-      <td>48,968,268.097</td>
-      <td>-3,602,493,144.415</td>
+      <td>-1,144,568,789.710</td>
+      <td>359,214,600.255</td>
+      <td>166,703,429.088</td>
+      <td>-357,514,587.123</td>
+      <td>1,472,996,587.661</td>
+      <td>3,824,893,983.128</td>
+      <td>-435,405,560.135</td>
+      <td>10,084,108.968</td>
+      <td>-1,228,457,742.624</td>
+      <td>2,314,080,493.299</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>4,269,989,186.378</td>
-      <td>-326,827,032.261</td>
-      <td>-237,049,894.726</td>
-      <td>153,116,216.196</td>
-      <td>-229,750,283.575</td>
-      <td>915,427,479.113</td>
-      <td>3,108,807,623.705</td>
-      <td>165,062,668.116</td>
-      <td>269,798,856.930</td>
-      <td>-2,981,845,332.676</td>
+      <td>-1,719,472,232.435</td>
+      <td>514,729,201.454</td>
+      <td>-106,143,235.860</td>
+      <td>-650,776,510.586</td>
+      <td>1,999,975,986.534</td>
+      <td>171,188,247.567</td>
+      <td>-1,341,753,344.079</td>
+      <td>-545,606,883.207</td>
+      <td>-2,017,208,807.790</td>
+      <td>3,388,819,421.250</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>3,688,033,799.853</td>
-      <td>-85,159,093.322</td>
-      <td>-723,680,335.184</td>
-      <td>220,378,056.681</td>
-      <td>-67,787,730.687</td>
-      <td>708,506,692.133</td>
-      <td>2,699,116,913.605</td>
-      <td>238,614,447.245</td>
-      <td>278,118,354.182</td>
-      <td>-1,344,658,786.813</td>
+      <td>-1,535,069,793.968</td>
+      <td>527,882,831.652</td>
+      <td>-64,785,306.539</td>
+      <td>-418,967,740.115</td>
+      <td>1,462,742,780.440</td>
+      <td>163,759,315.245</td>
+      <td>-1,133,150,880.604</td>
+      <td>-482,473,478.661</td>
+      <td>-1,898,095,918.190</td>
+      <td>2,805,110,069.593</td>
     </tr>
   </tbody>
 </table>
@@ -2368,16 +2964,16 @@ pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -2396,237 +2992,237 @@ pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>0.184</td>
-      <td>0.030</td>
-      <td>-0.275</td>
-      <td>0.051</td>
-      <td>0.017</td>
-      <td>0.336</td>
-      <td>0.497</td>
-      <td>0.236</td>
-      <td>0.603</td>
-      <td>-0.155</td>
+      <td>-0.397</td>
+      <td>0.408</td>
+      <td>-0.094</td>
+      <td>-0.302</td>
+      <td>0.382</td>
+      <td>0.023</td>
+      <td>-0.429</td>
+      <td>-0.260</td>
+      <td>-0.277</td>
+      <td>0.627</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>0.214</td>
-      <td>-0.608</td>
-      <td>0.196</td>
-      <td>-0.368</td>
-      <td>-0.794</td>
-      <td>0.964</td>
-      <td>0.374</td>
-      <td>-0.357</td>
-      <td>-0.124</td>
-      <td>-0.740</td>
+      <td>-0.435</td>
+      <td>0.478</td>
+      <td>-0.133</td>
+      <td>-0.337</td>
+      <td>0.402</td>
+      <td>-0.021</td>
+      <td>-0.500</td>
+      <td>-0.344</td>
+      <td>-0.308</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>0.265</td>
-      <td>-0.206</td>
-      <td>-0.135</td>
-      <td>0.023</td>
-      <td>-0.153</td>
+      <td>-0.432</td>
       <td>0.444</td>
-      <td>0.448</td>
-      <td>0.051</td>
-      <td>0.393</td>
-      <td>-0.452</td>
+      <td>-0.112</td>
+      <td>-0.427</td>
+      <td>0.546</td>
+      <td>0.031</td>
+      <td>-0.523</td>
+      <td>-0.335</td>
+      <td>-0.312</td>
+      <td>0.724</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>0.233</td>
-      <td>-0.453</td>
-      <td>-0.310</td>
-      <td>-0.133</td>
-      <td>-0.591</td>
-      <td>0.559</td>
-      <td>0.214</td>
-      <td>-0.297</td>
-      <td>-0.038</td>
-      <td>-0.347</td>
+      <td>-0.278</td>
+      <td>0.248</td>
+      <td>0.195</td>
+      <td>-0.421</td>
+      <td>0.551</td>
+      <td>0.702</td>
+      <td>0.295</td>
+      <td>0.549</td>
+      <td>-0.018</td>
+      <td>0.473</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>0.205</td>
-      <td>-0.135</td>
-      <td>-0.438</td>
+      <td>-0.393</td>
+      <td>0.305</td>
+      <td>-0.121</td>
+      <td>-0.285</td>
+      <td>0.384</td>
       <td>0.028</td>
-      <td>-0.177</td>
-      <td>0.288</td>
-      <td>0.302</td>
-      <td>-0.029</td>
-      <td>0.302</td>
-      <td>-0.182</td>
+      <td>-0.429</td>
+      <td>-0.305</td>
+      <td>-0.136</td>
+      <td>0.737</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>0.215</td>
-      <td>-0.218</td>
-      <td>-0.217</td>
-      <td>-0.051</td>
-      <td>-0.256</td>
-      <td>0.453</td>
-      <td>0.371</td>
-      <td>-0.052</td>
-      <td>0.269</td>
-      <td>-0.375</td>
+      <td>-0.417</td>
+      <td>0.388</td>
+      <td>-0.085</td>
+      <td>-0.472</td>
+      <td>0.629</td>
+      <td>0.078</td>
+      <td>-0.507</td>
+      <td>-0.290</td>
+      <td>-0.300</td>
+      <td>0.751</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>0.138</td>
-      <td>0.199</td>
-      <td>-0.289</td>
-      <td>0.074</td>
-      <td>0.123</td>
-      <td>0.358</td>
-      <td>0.624</td>
-      <td>0.486</td>
-      <td>0.869</td>
-      <td>0.109</td>
+      <td>-0.363</td>
+      <td>0.326</td>
+      <td>0.016</td>
+      <td>-0.457</td>
+      <td>0.615</td>
+      <td>0.294</td>
+      <td>-0.238</td>
+      <td>-0.004</td>
+      <td>-0.204</td>
+      <td>0.657</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>0.205</td>
-      <td>-0.173</td>
-      <td>-0.365</td>
-      <td>-0.010</td>
-      <td>-0.224</td>
-      <td>0.354</td>
-      <td>0.319</td>
-      <td>-0.050</td>
-      <td>0.273</td>
-      <td>-0.244</td>
+      <td>-0.482</td>
+      <td>0.298</td>
+      <td>0.078</td>
+      <td>-0.936</td>
+      <td>1.148</td>
+      <td>0.683</td>
+      <td>0.017</td>
+      <td>0.392</td>
+      <td>-0.086</td>
+      <td>0.977</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>0.215</td>
-      <td>0.066</td>
-      <td>-0.258</td>
-      <td>0.123</td>
-      <td>0.100</td>
-      <td>0.321</td>
-      <td>0.563</td>
-      <td>0.359</td>
-      <td>0.742</td>
-      <td>-0.118</td>
+      <td>-0.450</td>
+      <td>0.302</td>
+      <td>0.068</td>
+      <td>-0.818</td>
+      <td>1.016</td>
+      <td>0.601</td>
+      <td>-0.028</td>
+      <td>0.312</td>
+      <td>-0.109</td>
+      <td>0.893</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>0.226</td>
-      <td>-0.163</td>
-      <td>-0.183</td>
-      <td>-0.009</td>
-      <td>-0.154</td>
-      <td>0.423</td>
-      <td>0.425</td>
-      <td>0.032</td>
-      <td>0.372</td>
-      <td>-0.393</td>
+      <td>-0.428</td>
+      <td>0.420</td>
+      <td>-0.102</td>
+      <td>-0.452</td>
+      <td>0.588</td>
+      <td>0.051</td>
+      <td>-0.519</td>
+      <td>-0.318</td>
+      <td>-0.308</td>
+      <td>0.741</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>0.213</td>
-      <td>-0.117</td>
-      <td>-0.277</td>
-      <td>0.017</td>
-      <td>-0.124</td>
-      <td>0.362</td>
-      <td>0.402</td>
-      <td>0.054</td>
-      <td>0.397</td>
-      <td>-0.287</td>
+      <td>-0.441</td>
+      <td>0.487</td>
+      <td>-0.130</td>
+      <td>-0.386</td>
+      <td>0.475</td>
+      <td>-0.004</td>
+      <td>-0.532</td>
+      <td>-0.367</td>
+      <td>-0.321</td>
+      <td>0.696</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>0.197</td>
-      <td>-0.116</td>
-      <td>-0.522</td>
-      <td>0.043</td>
-      <td>-0.173</td>
-      <td>0.239</td>
-      <td>0.268</td>
-      <td>-0.037</td>
-      <td>0.292</td>
-      <td>-0.106</td>
+      <td>-0.337</td>
+      <td>0.346</td>
+      <td>-0.025</td>
+      <td>-0.308</td>
+      <td>0.449</td>
+      <td>0.123</td>
+      <td>-0.376</td>
+      <td>-0.190</td>
+      <td>-0.262</td>
+      <td>0.577</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>0.176</td>
-      <td>0.037</td>
-      <td>-0.441</td>
-      <td>0.078</td>
-      <td>-0.001</td>
-      <td>0.243</td>
-      <td>0.410</td>
-      <td>0.183</td>
-      <td>0.543</td>
-      <td>-0.037</td>
+      <td>-0.557</td>
+      <td>0.647</td>
+      <td>-0.249</td>
+      <td>-0.467</td>
+      <td>0.494</td>
+      <td>-0.150</td>
+      <td>-0.704</td>
+      <td>-0.565</td>
+      <td>-0.386</td>
+      <td>0.826</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>0.073</td>
-      <td>-0.025</td>
-      <td>-0.455</td>
-      <td>0.110</td>
-      <td>-0.035</td>
-      <td>0.258</td>
+      <td>-0.487</td>
       <td>0.387</td>
-      <td>0.101</td>
-      <td>0.588</td>
-      <td>0.015</td>
+      <td>-0.126</td>
+      <td>-0.669</td>
+      <td>0.868</td>
+      <td>0.066</td>
+      <td>-0.624</td>
+      <td>-0.357</td>
+      <td>-0.328</td>
+      <td>0.946</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>0.140</td>
-      <td>-0.039</td>
-      <td>-0.517</td>
-      <td>0.093</td>
-      <td>-0.067</td>
-      <td>0.214</td>
-      <td>0.328</td>
-      <td>0.057</td>
-      <td>0.461</td>
-      <td>-0.021</td>
+      <td>-0.450</td>
+      <td>0.429</td>
+      <td>-0.138</td>
+      <td>-0.380</td>
+      <td>0.453</td>
+      <td>-0.022</td>
+      <td>-0.497</td>
+      <td>-0.312</td>
+      <td>-0.293</td>
+      <td>0.728</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>0.187</td>
-      <td>-0.465</td>
-      <td>-0.012</td>
-      <td>-0.286</td>
-      <td>-0.652</td>
-      <td>0.781</td>
-      <td>0.335</td>
-      <td>-0.285</td>
-      <td>-0.032</td>
-      <td>-0.535</td>
+      <td>-0.331</td>
+      <td>0.324</td>
+      <td>0.022</td>
+      <td>-0.360</td>
+      <td>0.505</td>
+      <td>0.259</td>
+      <td>-0.234</td>
+      <td>-0.026</td>
+      <td>-0.209</td>
+      <td>0.577</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>0.254</td>
-      <td>-0.211</td>
-      <td>-0.143</td>
-      <td>0.003</td>
-      <td>-0.173</td>
-      <td>0.446</td>
-      <td>0.431</td>
-      <td>0.020</td>
-      <td>0.358</td>
-      <td>-0.457</td>
+      <td>-0.496</td>
+      <td>0.467</td>
+      <td>-0.156</td>
+      <td>-0.570</td>
+      <td>0.709</td>
+      <td>0.002</td>
+      <td>-0.627</td>
+      <td>-0.408</td>
+      <td>-0.341</td>
+      <td>0.873</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>0.211</td>
-      <td>-0.118</td>
-      <td>-0.332</td>
-      <td>0.025</td>
-      <td>-0.133</td>
-      <td>0.332</td>
-      <td>0.371</td>
-      <td>0.032</td>
-      <td>0.373</td>
-      <td>-0.251</td>
+      <td>-0.443</td>
+      <td>0.479</td>
+      <td>-0.129</td>
+      <td>-0.404</td>
+      <td>0.501</td>
+      <td>0.002</td>
+      <td>-0.536</td>
+      <td>-0.364</td>
+      <td>-0.321</td>
+      <td>0.712</td>
     </tr>
   </tbody>
 </table>
@@ -2751,22 +3347,22 @@ batch_recon
 
 
 
-    tensor([[ 0.1899, -0.1955, -0.4948, -0.0195, -0.3011,  0.3218,  0.2384, -0.1181,
-              0.1882, -0.1300],
-            [ 0.2180, -0.7273,  0.2979, -0.4513, -0.9535,  1.1017,  0.3650, -0.4509,
-             -0.2449, -0.8384],
-            [ 0.2027, -0.5334,  0.0105, -0.3029, -0.7242,  0.8244,  0.3177, -0.3340,
-             -0.0931, -0.5763],
-            [ 0.2216, -0.1973, -0.2166, -0.0287, -0.2132,  0.4296,  0.3846, -0.0247,
-              0.3042, -0.3792],
-            [ 0.2076, -0.1017, -0.3416,  0.0301, -0.1187,  0.3238,  0.3763,  0.0486,
-              0.3912, -0.2297],
-            [ 0.1852, -0.3260, -0.2410, -0.1589, -0.4740,  0.5586,  0.2938, -0.1974,
-              0.0829, -0.3384],
-            [ 0.2694, -0.1631, -0.1434,  0.0586, -0.0963,  0.4250,  0.4834,  0.1275,
-              0.4791, -0.4018],
-            [ 0.1441, -0.1133, -0.5605,  0.0973, -0.1200,  0.1817,  0.2507, -0.0655,
-              0.3466, -0.0836]], dtype=torch.float64, grad_fn=<AddmmBackward>)
+    tensor([[-0.4768,  0.5639, -0.1754, -0.3694,  0.4165, -0.0703, -0.5805, -0.4426,
+             -0.3442,  0.7033],
+            [-0.4451,  0.4761, -0.1399, -0.3534,  0.4181, -0.0281, -0.5102, -0.3484,
+             -0.3086,  0.6889],
+            [-0.4241,  0.3608, -0.0725, -0.5393,  0.7198,  0.1237, -0.4914, -0.2490,
+             -0.2886,  0.7997],
+            [-0.3799,  0.3140, -0.0751, -0.3052,  0.4028,  0.0524, -0.3793, -0.1895,
+             -0.2266,  0.6557],
+            [-0.4194,  0.4851, -0.1196, -0.3148,  0.3838, -0.0063, -0.4887, -0.3414,
+             -0.3090,  0.6318],
+            [-0.3228,  0.3088,  0.0586, -0.3829,  0.5256,  0.3585, -0.1199,  0.1000,
+             -0.1675,  0.5618],
+            [-0.3275,  0.2768,  0.1358, -0.5039,  0.6519,  0.6041,  0.1293,  0.3945,
+             -0.0728,  0.5881],
+            [-0.4923,  0.5799, -0.1895, -0.3881,  0.4314, -0.0855, -0.6042, -0.4660,
+             -0.3523,  0.7268]], dtype=torch.float64, grad_fn=<AddmmBackward>)
 
 
 
@@ -2779,9 +3375,9 @@ _batch_metrics
 
 
 
-    {'loss': tensor(26.9232, dtype=torch.float64, grad_fn=<AddBackward0>),
-     'MSE': tensor(29.8123, dtype=torch.float64, grad_fn=<MseLossBackward>),
-     'KLD': tensor(0.9215, dtype=torch.float64, grad_fn=<MulBackward0>)}
+    {'loss': tensor(20.7168, dtype=torch.float64, grad_fn=<AddBackward0>),
+     'MSE': tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>),
+     'KLD': tensor(2.4820, dtype=torch.float64, grad_fn=<MulBackward0>)}
 
 
 
@@ -2797,7 +3393,7 @@ _mse
 
 
 
-    tensor(29.8123, dtype=torch.float64, grad_fn=<SumBackward0>)
+    tensor(22.7429, dtype=torch.float64, grad_fn=<SumBackward0>)
 
 
 
@@ -2816,7 +3412,7 @@ _mse
 
 
 
-    tensor(29.8123, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -2835,7 +3431,7 @@ batch_sse
 
 
 
-    tensor(29.8123, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -2869,22 +3465,22 @@ batch_recon
 
 
 
-    tensor([[ 0.1518,  0.1175, -0.3791,  0.0699,  0.0443,  0.3072,  0.5124,  0.3343,
-              0.7021,  0.0659],
-            [ 0.2226, -0.0377, -0.2210,  0.0669, -0.0117,  0.3674,  0.5039,  0.2164,
-              0.5802, -0.2433],
-            [ 0.1233,  0.2457, -0.2666,  0.0715,  0.1380,  0.4022,  0.6849,  0.5868,
-              0.9710,  0.2035],
-            [ 0.2381, -0.2040, -0.1561, -0.0175, -0.1866,  0.4457,  0.4169, -0.0013,
-              0.3341, -0.4438],
-            [ 0.1574,  0.0853, -0.4205,  0.0702,  0.0110,  0.2867,  0.4676,  0.2770,
-              0.6383,  0.0586],
-            [ 0.2017,  0.1358, -0.2902,  0.1470,  0.1635,  0.2890,  0.5910,  0.4362,
-              0.8282, -0.0315],
-            [ 0.1816,  0.0725, -0.2890,  0.0743,  0.0628,  0.3168,  0.5221,  0.2947,
-              0.6692, -0.1042],
-            [ 0.2792, -0.2280, -0.1159,  0.0317, -0.1592,  0.4544,  0.4534,  0.0495,
-              0.3911, -0.4813]], dtype=torch.float64, grad_fn=<AddmmBackward>)
+    tensor([[-0.4021,  0.4397, -0.0927, -0.3503,  0.4548,  0.0398, -0.4734, -0.3041,
+             -0.2997,  0.6463],
+            [-0.0748, -0.2448,  0.0143,  0.2383, -0.0224,  0.3048, -0.0488, -0.2159,
+              0.5569,  0.6266],
+            [-0.4809,  0.3079,  0.0524, -0.8983,  1.1085,  0.6040, -0.0641,  0.2962,
+             -0.1172,  0.9694],
+            [-0.2451,  0.0759, -0.0270, -0.0736,  0.2219,  0.1664, -0.2266, -0.1780,
+              0.0927,  0.6249],
+            [-0.4710,  0.2612,  0.1660, -1.0209,  1.2316,  0.9378,  0.2951,  0.7067,
+              0.0162,  0.9646],
+            [-0.4586,  0.4803, -0.1509, -0.3737,  0.4367, -0.0393, -0.5268, -0.3605,
+             -0.3122,  0.7153],
+            [-0.5304,  0.6038, -0.2223, -0.4407,  0.4772, -0.1198, -0.6561, -0.5105,
+             -0.3669,  0.7942],
+            [-0.5146,  0.6031, -0.2098, -0.4152,  0.4529, -0.1075, -0.6383, -0.4998,
+             -0.3640,  0.7607]], dtype=torch.float64, grad_fn=<AddmmBackward>)
 
 
 
@@ -2897,9 +3493,9 @@ _batch_metrics
 
 
 
-    {'loss': tensor(10.0934, dtype=torch.float64, grad_fn=<AddBackward0>),
-     'MSE': tensor(11.1149, dtype=torch.float64, grad_fn=<MseLossBackward>),
-     'KLD': tensor(0.8990, dtype=torch.float64, grad_fn=<MulBackward0>)}
+    {'loss': tensor(19.6367, dtype=torch.float64, grad_fn=<AddBackward0>),
+     'MSE': tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>),
+     'KLD': tensor(2.3638, dtype=torch.float64, grad_fn=<MulBackward0>)}
 
 
 
@@ -2915,7 +3511,7 @@ _mse
 
 
 
-    tensor(11.1149, dtype=torch.float64, grad_fn=<SumBackward0>)
+    tensor(21.5559, dtype=torch.float64, grad_fn=<SumBackward0>)
 
 
 
@@ -2934,7 +3530,7 @@ _mse
 
 
 
-    tensor(11.1149, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -2953,7 +3549,7 @@ batch_sse
 
 
 
-    tensor(11.1149, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -3036,16 +3632,16 @@ pd.DataFrame(
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
-      <th>LQFHDVAGDIFHQQCK</th>
-      <th>TVFAEHISDECK</th>
-      <th>VNFAMNVGK</th>
-      <th>VNIIPLIAK</th>
-      <th>VSFELFADK</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>IGEHTPSALAIMENANVLAR</th>
+      <th>LSGSNPYTTVTPQIINSK</th>
+      <th>REDLVVAPAGITLK</th>
+      <th>TTHFVEGGDAGNREDQINR</th>
+      <th>VDFNVPMK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -3064,237 +3660,237 @@ pd.DataFrame(
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>4,281,335,155.551</td>
-      <td>-343,682,406.676</td>
-      <td>-230,252,722.177</td>
-      <td>143,960,021.729</td>
-      <td>-255,987,512.664</td>
-      <td>920,780,085.441</td>
-      <td>3,086,813,233.796</td>
-      <td>117,033,607.282</td>
-      <td>264,582,592.642</td>
-      <td>-3,045,133,644.754</td>
+      <td>-1,462,124,079.848</td>
+      <td>483,362,522.099</td>
+      <td>-46,704,888.106</td>
+      <td>-316,981,585.183</td>
+      <td>1,212,906,423.166</td>
+      <td>100,310,231.740</td>
+      <td>-979,032,709.554</td>
+      <td>-391,313,202.420</td>
+      <td>-1,723,720,214.819</td>
+      <td>2,625,829,086.514</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>3,423,193,770.181</td>
-      <td>-771,479,885.503</td>
-      <td>-333,803,984.832</td>
-      <td>-463,736,885.702</td>
-      <td>-1,713,887,870.635</td>
-      <td>1,241,053,526.934</td>
-      <td>2,187,550,115.632</td>
-      <td>-1,340,616,089.923</td>
-      <td>85,957,377.068</td>
-      <td>-2,520,622,669.323</td>
+      <td>-1,441,596,147.861</td>
+      <td>499,783,554.663</td>
+      <td>-28,324,142.963</td>
+      <td>-369,760,349.782</td>
+      <td>1,385,104,689.298</td>
+      <td>517,295,252.868</td>
+      <td>-1,038,311,787.915</td>
+      <td>-425,077,097.628</td>
+      <td>-1,815,601,794.423</td>
+      <td>2,649,593,476.980</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>4,087,839,398.188</td>
-      <td>-97,244,025.430</td>
-      <td>-334,172,510.476</td>
-      <td>267,846,436.122</td>
-      <td>116,711,149.496</td>
-      <td>842,417,095.320</td>
-      <td>3,389,645,217.824</td>
-      <td>792,679,686.298</td>
-      <td>337,988,766.852</td>
-      <td>-2,117,140,372.600</td>
+      <td>-1,562,434,065.714</td>
+      <td>531,814,505.478</td>
+      <td>-89,583,424.946</td>
+      <td>-357,108,111.696</td>
+      <td>1,261,800,268.159</td>
+      <td>-343,976,039.762</td>
+      <td>-1,093,858,491.028</td>
+      <td>-472,707,960.165</td>
+      <td>-1,844,492,866.507</td>
+      <td>2,750,980,225.953</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>4,189,980,925.202</td>
-      <td>-293,363,684.416</td>
-      <td>-259,996,798.670</td>
-      <td>150,507,021.099</td>
-      <td>-200,374,950.628</td>
-      <td>904,584,678.264</td>
-      <td>3,113,450,723.978</td>
-      <td>205,085,332.224</td>
-      <td>274,201,109.695</td>
-      <td>-2,850,638,503.916</td>
+      <td>-1,650,306,975.642</td>
+      <td>345,729,370.611</td>
+      <td>201,279,419.886</td>
+      <td>-1,070,684,070.235</td>
+      <td>2,953,105,537.081</td>
+      <td>8,265,164,120.152</td>
+      <td>-108,809,592.491</td>
+      <td>424,884,240.276</td>
+      <td>-748,715,657.452</td>
+      <td>3,687,975,183.793</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>3,694,687,947.645</td>
-      <td>-3,552,583.903</td>
-      <td>-426,233,112.873</td>
-      <td>199,375,135.122</td>
-      <td>132,121,192.312</td>
-      <td>811,423,147.855</td>
-      <td>3,287,820,889.358</td>
-      <td>741,926,848.775</td>
-      <td>332,795,579.468</td>
-      <td>-1,733,426,814.625</td>
+      <td>-1,330,172,912.359</td>
+      <td>466,890,448.165</td>
+      <td>10,546,871.339</td>
+      <td>-287,088,640.408</td>
+      <td>1,222,410,305.285</td>
+      <td>811,667,346.528</td>
+      <td>-906,633,031.268</td>
+      <td>-350,782,354.240</td>
+      <td>-1,697,426,217.263</td>
+      <td>2,430,244,871.822</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>3,343,350,380.043</td>
-      <td>-422,365,219.180</td>
-      <td>-772,521,460.074</td>
-      <td>-135,817,421.908</td>
-      <td>-1,022,565,336.611</td>
-      <td>907,688,662.552</td>
-      <td>2,071,578,245.027</td>
-      <td>-793,993,005.818</td>
-      <td>154,007,266.535</td>
-      <td>-1,290,854,134.349</td>
+      <td>-1,528,064,715.274</td>
+      <td>344,384,732.175</td>
+      <td>208,664,036.403</td>
+      <td>-917,895,604.792</td>
+      <td>2,632,665,485.686</td>
+      <td>7,642,109,321.744</td>
+      <td>-111,976,646.052</td>
+      <td>380,333,455.543</td>
+      <td>-790,661,740.109</td>
+      <td>3,362,720,475.164</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>3,430,934,108.632</td>
-      <td>-912,000,542.821</td>
-      <td>-101,601,861.745</td>
-      <td>-620,808,338.484</td>
-      <td>-1,993,883,331.876</td>
-      <td>1,399,867,232.969</td>
-      <td>2,301,610,779.197</td>
-      <td>-1,541,530,463.548</td>
-      <td>60,604,678.587</td>
-      <td>-3,135,220,846.241</td>
+      <td>-1,262,134,811.746</td>
+      <td>348,199,678.627</td>
+      <td>201,683,769.603</td>
+      <td>-556,833,176.024</td>
+      <td>1,880,939,080.106</td>
+      <td>5,627,630,912.056</td>
+      <td>-229,794,286.038</td>
+      <td>201,860,115.308</td>
+      <td>-990,261,159.573</td>
+      <td>2,645,151,717.696</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>3,349,463,055.113</td>
-      <td>201,194,908.734</td>
-      <td>-918,624,171.125</td>
-      <td>338,381,496.541</td>
-      <td>311,923,608.407</td>
-      <td>594,739,514.281</td>
-      <td>2,897,473,923.943</td>
-      <td>877,570,624.107</td>
-      <td>347,641,186.896</td>
-      <td>-135,928,562.651</td>
+      <td>-1,366,560,082.186</td>
+      <td>427,443,027.938</td>
+      <td>-4,165,812.581</td>
+      <td>-283,872,503.641</td>
+      <td>1,179,877,479.836</td>
+      <td>549,485,363.638</td>
+      <td>-861,350,588.606</td>
+      <td>-302,752,963.312</td>
+      <td>-1,590,005,661.751</td>
+      <td>2,526,591,608.858</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>268,918,680.192</td>
-      <td>110,641,277.841</td>
-      <td>-853,461,811.832</td>
-      <td>594,762,679.554</td>
-      <td>447,982,234.483</td>
-      <td>659,631,997.546</td>
-      <td>3,166,823,562.662</td>
-      <td>660,505,408.575</td>
-      <td>484,800,406.547</td>
-      <td>1,003,746,472.808</td>
+      <td>-1,425,636,292.212</td>
+      <td>451,771,258.133</td>
+      <td>-28,690,410.129</td>
+      <td>-309,710,937.298</td>
+      <td>1,214,514,106.662</td>
+      <td>298,996,963.859</td>
+      <td>-925,402,747.739</td>
+      <td>-345,940,751.831</td>
+      <td>-1,653,091,599.765</td>
+      <td>2,608,915,166.503</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>4,125,009,992.443</td>
-      <td>-1,422,927,449.715</td>
-      <td>-26,275,860.770</td>
-      <td>-713,824,111.580</td>
-      <td>-2,816,622,458.146</td>
-      <td>1,582,133,513.847</td>
-      <td>1,848,480,820.553</td>
-      <td>-2,396,195,666.508</td>
-      <td>-41,613,957.796</td>
-      <td>-3,910,836,569.768</td>
+      <td>-1,735,554,374.926</td>
+      <td>470,539,607.512</td>
+      <td>-90,564,614.508</td>
+      <td>-755,546,279.100</td>
+      <td>2,287,855,997.671</td>
+      <td>614,186,594.653</td>
+      <td>-1,373,442,481.574</td>
+      <td>-519,674,282.236</td>
+      <td>-2,000,216,904.270</td>
+      <td>3,613,503,221.706</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>3,440,758,314.686</td>
-      <td>-443,363,657.961</td>
-      <td>-617,061,110.914</td>
-      <td>-154,125,746.940</td>
-      <td>-990,367,259.736</td>
-      <td>960,111,158.028</td>
-      <td>2,263,890,749.776</td>
-      <td>-718,962,252.082</td>
-      <td>162,879,626.709</td>
-      <td>-1,730,821,806.319</td>
+      <td>-1,320,808,098.519</td>
+      <td>464,919,299.612</td>
+      <td>15,489,735.109</td>
+      <td>-289,299,921.909</td>
+      <td>1,235,640,084.114</td>
+      <td>884,992,271.526</td>
+      <td>-903,972,858.029</td>
+      <td>-348,082,694.896</td>
+      <td>-1,697,491,959.274</td>
+      <td>2,423,410,667.339</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>3,596,342,637.055</td>
-      <td>56,618,126.322</td>
-      <td>-466,028,568.564</td>
-      <td>212,790,690.706</td>
-      <td>202,014,976.058</td>
-      <td>789,680,497.215</td>
-      <td>3,318,791,853.128</td>
-      <td>853,730,252.460</td>
-      <td>344,992,641.858</td>
-      <td>-1,488,949,451.888</td>
+      <td>-1,451,434,199.895</td>
+      <td>374,090,787.858</td>
+      <td>108,843,844.174</td>
+      <td>-692,121,115.785</td>
+      <td>2,184,182,567.565</td>
+      <td>4,264,383,694.279</td>
+      <td>-616,732,780.910</td>
+      <td>-17,239,802.848</td>
+      <td>-1,308,036,467.820</td>
+      <td>3,113,508,129.244</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>3,767,046,988.607</td>
-      <td>-149,335,890.269</td>
-      <td>-665,374,775.962</td>
-      <td>191,207,396.362</td>
-      <td>-149,511,774.545</td>
-      <td>739,678,024.868</td>
-      <td>2,676,180,738.113</td>
-      <td>107,742,292.993</td>
-      <td>263,876,311.432</td>
-      <td>-1,646,206,229.482</td>
+      <td>-1,613,863,178.971</td>
+      <td>316,678,623.960</td>
+      <td>301,437,212.236</td>
+      <td>-1,147,047,685.110</td>
+      <td>3,089,788,115.663</td>
+      <td>10,880,864,390.051</td>
+      <td>361,761,854.432</td>
+      <td>758,268,625.775</td>
+      <td>-300,669,510.501</td>
+      <td>3,633,509,069.612</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>3,448,169,283.525</td>
-      <td>131,453,438.550</td>
-      <td>-795,369,905.720</td>
-      <td>295,518,290.101</td>
-      <td>236,946,970.589</td>
-      <td>651,866,235.631</td>
-      <td>2,960,733,089.302</td>
-      <td>785,873,649.374</td>
-      <td>337,652,253.732</td>
-      <td>-589,227,242.350</td>
+      <td>-1,452,610,305.027</td>
+      <td>366,971,889.637</td>
+      <td>133,157,117.605</td>
+      <td>-723,939,275.749</td>
+      <td>2,245,070,918.503</td>
+      <td>4,967,745,327.632</td>
+      <td>-499,327,556.875</td>
+      <td>69,484,713.149</td>
+      <td>-1,192,987,473.549</td>
+      <td>3,127,217,320.500</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>3,897,939,766.035</td>
-      <td>-553,997,944.564</td>
-      <td>-57,075,135.591</td>
-      <td>-201,541,923.688</td>
-      <td>-901,117,974.717</td>
-      <td>1,149,753,472.366</td>
-      <td>2,930,300,070.331</td>
-      <td>-484,933,894.885</td>
-      <td>190,767,037.230</td>
-      <td>-3,391,141,644.563</td>
+      <td>-1,296,727,158.649</td>
+      <td>368,405,686.723</td>
+      <td>131,809,068.353</td>
+      <td>-515,705,905.906</td>
+      <td>1,810,927,020.441</td>
+      <td>3,865,361,402.833</td>
+      <td>-555,183,393.050</td>
+      <td>-25,423,265.909</td>
+      <td>-1,297,089,358.451</td>
+      <td>2,707,782,324.531</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>3,674,948,402.415</td>
-      <td>-72,234,044.894</td>
-      <td>-722,235,064.297</td>
-      <td>223,794,930.029</td>
-      <td>-48,282,695.127</td>
-      <td>707,348,846.195</td>
-      <td>2,723,153,461.077</td>
-      <td>276,096,415.274</td>
-      <td>282,195,072.641</td>
-      <td>-1,311,584,735.604</td>
+      <td>-1,073,889,358.494</td>
+      <td>299,396,160.666</td>
+      <td>145,630,355.325</td>
+      <td>-256,489,259.312</td>
+      <td>1,287,122,127.789</td>
+      <td>2,580,116,809.080</td>
+      <td>-551,994,571.902</td>
+      <td>-65,975,370.567</td>
+      <td>-1,288,947,834.057</td>
+      <td>2,248,130,324.822</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>3,295,135,598.050</td>
-      <td>-925,061,571.882</td>
-      <td>77,617,711.745</td>
-      <td>-733,417,293.595</td>
-      <td>-2,059,947,677.265</td>
-      <td>1,495,640,169.976</td>
-      <td>2,490,123,942.117</td>
-      <td>-1,534,753,962.561</td>
-      <td>60,305,894.262</td>
-      <td>-3,491,452,542.059</td>
+      <td>-1,418,070,700.853</td>
+      <td>399,057,206.866</td>
+      <td>24,242,342.288</td>
+      <td>-542,619,156.407</td>
+      <td>1,891,391,246.404</td>
+      <td>1,617,174,925.964</td>
+      <td>-1,034,530,916.233</td>
+      <td>-335,935,710.987</td>
+      <td>-1,726,723,536.143</td>
+      <td>2,987,155,154.261</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>3,593,490,259.044</td>
-      <td>293,082,776.039</td>
-      <td>-529,662,067.144</td>
-      <td>396,125,890.269</td>
-      <td>632,779,670.905</td>
-      <td>717,593,691.952</td>
-      <td>3,741,750,184.316</td>
-      <td>1,681,974,564.110</td>
-      <td>434,795,654.563</td>
-      <td>-629,148,531.298</td>
+      <td>-1,818,204,143.088</td>
+      <td>609,690,510.500</td>
+      <td>-173,753,686.678</td>
+      <td>-574,512,366.656</td>
+      <td>1,716,422,618.973</td>
+      <td>-873,136,832.251</td>
+      <td>-1,421,457,789.675</td>
+      <td>-653,914,145.940</td>
+      <td>-2,145,870,083.814</td>
+      <td>3,289,521,081.195</td>
     </tr>
   </tbody>
 </table>
@@ -3310,12 +3906,12 @@ metrics.iloc[-1]  # mse loss get's most weight in combined loss
 
 
 
-    train  loss   2.007
-           mse    2.218
-           KLD    0.109
-    valid  loss   3.384
-           mse    3.747
-           KLD    0.118
+    train  loss   2.859
+           mse    3.142
+           KLD    0.314
+    valid  loss   4.502
+           mse    4.961
+           KLD    0.366
     Name: 30, dtype: float64
 
 
@@ -3328,7 +3924,7 @@ metrics.iloc[-1].loc[('valid', 'mse')]
 
 
 
-    3.7471043686227254
+    4.961486679850494
 
 
 
@@ -3345,7 +3941,7 @@ Average prediction error per peptides:
 
 
 
-    0.28869383217954414
+    0.39791914151663516
 
 
 
@@ -3375,11 +3971,11 @@ Average prediction error per peptides:
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -3393,83 +3989,83 @@ Average prediction error per peptides:
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>0.183</td>
-      <td>-0.346</td>
-      <td>-0.254</td>
-      <td>-0.076</td>
-      <td>-0.297</td>
+      <td>-0.563</td>
+      <td>0.307</td>
+      <td>-0.199</td>
+      <td>-0.518</td>
+      <td>0.292</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>-0.122</td>
-      <td>-0.874</td>
-      <td>-0.434</td>
-      <td>-0.534</td>
-      <td>-0.951</td>
+      <td>-1.078</td>
+      <td>0.047</td>
+      <td>-0.718</td>
+      <td>-0.971</td>
+      <td>-0.188</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>-0.049</td>
-      <td>-0.451</td>
-      <td>-0.618</td>
-      <td>-0.247</td>
-      <td>-0.398</td>
+      <td>-0.821</td>
+      <td>0.118</td>
+      <td>-0.606</td>
+      <td>-0.860</td>
+      <td>0.105</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>0.207</td>
-      <td>-0.355</td>
-      <td>-0.220</td>
-      <td>-0.042</td>
-      <td>-0.194</td>
+      <td>-0.579</td>
+      <td>0.210</td>
+      <td>0.001</td>
+      <td>-0.958</td>
+      <td>1.006</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-0.144</td>
-      <td>-0.804</td>
-      <td>-0.568</td>
-      <td>-0.253</td>
-      <td>-0.561</td>
+      <td>-0.406</td>
+      <td>-0.231</td>
+      <td>-0.715</td>
+      <td>-0.215</td>
+      <td>-0.053</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>0.000</td>
-      <td>-0.475</td>
-      <td>-0.589</td>
-      <td>-0.281</td>
-      <td>-0.726</td>
+      <td>-0.738</td>
+      <td>-0.139</td>
+      <td>-0.283</td>
+      <td>-1.089</td>
+      <td>0.677</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>0.098</td>
-      <td>-0.830</td>
-      <td>-0.383</td>
-      <td>-0.467</td>
-      <td>-0.891</td>
+      <td>-0.676</td>
+      <td>-0.059</td>
+      <td>-0.212</td>
+      <td>-0.870</td>
+      <td>0.415</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>0.059</td>
-      <td>-0.243</td>
-      <td>-0.677</td>
-      <td>-0.043</td>
-      <td>-0.261</td>
+      <td>-0.635</td>
+      <td>0.174</td>
+      <td>-0.268</td>
+      <td>-0.626</td>
+      <td>0.147</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>-0.077</td>
-      <td>-0.171</td>
-      <td>-0.406</td>
-      <td>0.096</td>
-      <td>-0.001</td>
+      <td>-0.522</td>
+      <td>0.249</td>
+      <td>-0.203</td>
+      <td>-0.441</td>
+      <td>0.398</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>0.032</td>
-      <td>-0.992</td>
-      <td>-0.532</td>
-      <td>-0.417</td>
-      <td>-1.126</td>
+      <td>-0.899</td>
+      <td>0.041</td>
+      <td>-0.464</td>
+      <td>-1.101</td>
+      <td>0.448</td>
     </tr>
   </tbody>
 </table>
@@ -3503,11 +4099,11 @@ Average prediction error per peptides:
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>DDDIAALVVDNGSGMCK</th>
-      <th>EAAENSLVAYK</th>
-      <th>IEWLESHQDADIEDFK</th>
-      <th>LAALNPESNTAGLDIFAK</th>
-      <th>LFDQAFGLPR</th>
+      <th>ALPFWNEEIVPQIK</th>
+      <th>AQQEQELAADAFK</th>
+      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
+      <th>FGYVDFESAEDLEK</th>
+      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -3521,83 +4117,83 @@ Average prediction error per peptides:
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>0.034</td>
-      <td>0.120</td>
-      <td>0.065</td>
-      <td>0.006</td>
-      <td>0.088</td>
+      <td>0.316</td>
+      <td>0.094</td>
+      <td>0.040</td>
+      <td>0.268</td>
+      <td>0.085</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>0.015</td>
-      <td>0.764</td>
-      <td>0.188</td>
-      <td>0.286</td>
-      <td>0.904</td>
+      <td>1.162</td>
+      <td>0.002</td>
+      <td>0.516</td>
+      <td>0.944</td>
+      <td>0.035</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>0.002</td>
-      <td>0.203</td>
-      <td>0.382</td>
-      <td>0.061</td>
-      <td>0.158</td>
+      <td>0.674</td>
+      <td>0.014</td>
+      <td>0.367</td>
+      <td>0.739</td>
+      <td>0.011</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>0.043</td>
-      <td>0.126</td>
-      <td>0.049</td>
-      <td>0.002</td>
-      <td>0.038</td>
+      <td>0.335</td>
+      <td>0.044</td>
+      <td>0.000</td>
+      <td>0.919</td>
+      <td>1.013</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>0.021</td>
-      <td>0.646</td>
-      <td>0.323</td>
-      <td>0.064</td>
-      <td>0.314</td>
+      <td>0.165</td>
+      <td>0.053</td>
+      <td>0.512</td>
+      <td>0.046</td>
+      <td>0.003</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>0.000</td>
-      <td>0.226</td>
-      <td>0.347</td>
-      <td>0.079</td>
-      <td>0.527</td>
+      <td>0.545</td>
+      <td>0.019</td>
+      <td>0.080</td>
+      <td>1.186</td>
+      <td>0.459</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>0.010</td>
-      <td>0.688</td>
-      <td>0.147</td>
-      <td>0.218</td>
-      <td>0.794</td>
+      <td>0.457</td>
+      <td>0.004</td>
+      <td>0.045</td>
+      <td>0.756</td>
+      <td>0.172</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>0.003</td>
-      <td>0.059</td>
-      <td>0.459</td>
-      <td>0.002</td>
-      <td>0.068</td>
+      <td>0.403</td>
+      <td>0.030</td>
+      <td>0.072</td>
+      <td>0.392</td>
+      <td>0.022</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>0.006</td>
-      <td>0.029</td>
-      <td>0.165</td>
-      <td>0.009</td>
-      <td>0.000</td>
+      <td>0.273</td>
+      <td>0.062</td>
+      <td>0.041</td>
+      <td>0.194</td>
+      <td>0.158</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>0.001</td>
-      <td>0.985</td>
-      <td>0.283</td>
-      <td>0.174</td>
-      <td>1.267</td>
+      <td>0.807</td>
+      <td>0.002</td>
+      <td>0.216</td>
+      <td>1.212</td>
+      <td>0.200</td>
     </tr>
   </tbody>
 </table>
@@ -3629,6 +4225,11 @@ data.isna().sum().sum() / (N*M)  # only few missings
     0.0
 
 
+
+
+```python
+
+```
 
 
 ```python
