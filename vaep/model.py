@@ -262,5 +262,30 @@ def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
 def build_df_from_pred_batches(pred, scaler, index=None, columns=None):
     pred = np.vstack(pred)
     pred = scaler.inverse_transform(pred)
-    pred= pd.DataFrame(pred, index=index, columns=columns)
+    pred = pd.DataFrame(pred, index=index, columns=columns)
     return pred
+
+
+def process_train_loss(d: dict, alpha=0.1):
+    """Process training loss to DataFrame.
+
+    Parameters
+    ----------
+    d: dict
+        Dictionary of {'key': Iterable}
+    alpha: float
+        Smooting factor, default 0.1
+
+    Returns
+    -------
+    df: pandas.DataFrame
+        Pandas DataFrame including the loss and smoothed loss.
+    """
+    assert len(
+        d) == 1, "Not supported here. Only one list-like loss with key {key: Iterable}."
+    df = pd.DataFrame(d)
+    key = next(iter(d.keys()))
+    df = df.reset_index(drop=False).rename(columns={'index': 'steps'})
+    key_new = f'{key} smoothed'
+    df[key_new] = df[key].ewm(alpha=alpha).mean()
+    return df
