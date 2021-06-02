@@ -43,17 +43,7 @@ class CollabFiltering(nn.Module):
 
 
 class VAE(nn.Module):
-    """Variational Autoencoder
-
-
-    Attributes
-    ----------
-    compression_factor: int
-        Compression factor for latent representation in comparison
-        to input features, default 0.25
-    """
-
-    compression_factor = 0.25
+    """Variational Autoencoder"""
 
     def __init__(self, n_features: int, n_neurons: int, dim_vae_latent: int = 10):
         """PyTorch model for Variational autoencoder
@@ -83,7 +73,7 @@ class VAE(nn.Module):
         self.out = nn.Linear(n_neurons, n_features).double()
 
     def encode(self, x):
-        h1 = self.encoder(x)
+        h1 = F.relu(self.encoder(x))
         mu = self.mean(h1)
         # https://github.com/RasmussenLab/vamb/blob/734b741b85296377937de54166b7db274bc7ba9c/vamb/encode.py#L212-L221
         # Jacob retrains his to positive values. This should be garantued by exp-fct in reparameterize
@@ -99,7 +89,7 @@ class VAE(nn.Module):
         # SigmoidRange to smooth gradients?
         # def sigmoid_range(x, lo, hi): return torch.sigmoid(x) * (hi-lo) + lo
         h3 = F.relu(self.decoder(z))
-        return self.out(h3)
+        return torch.sigmoid(self.out(h3))
 
     def forward(self, x):
         mu, logvar = self.encode(x)
