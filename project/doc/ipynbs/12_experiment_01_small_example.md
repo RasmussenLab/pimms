@@ -82,7 +82,8 @@ indices_selected = get_consecutive_data_indices(analysis.df.index)
 analysis.samples = indices_selected
 analysis.df = analysis.df.loc[indices_selected]
 
-LOG_TRANSFORM = None
+from numpy import log2
+LOG_TRANSFORM = log2 # None
 if LOG_TRANSFORM:
     analysis.df = LOG_TRANSFORM(analysis.df)
 
@@ -134,7 +135,7 @@ detection_limit = analysis.df.min().min() if LOG_TRANSFORM else np.log10(analysi
 
 
 
-    'Detection limit:  6.885, corresponding to intensity value of 7,669,899'
+    'Detection limit: 23.835, corresponding to intensity value of 683,899,892,098,778,800,324,608'
 
 
 
@@ -155,19 +156,7 @@ analysis.df_meta
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -286,19 +275,7 @@ analysis.df_meta.loc[indices.train].describe(datetime_is_numeric=False)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -330,7 +307,7 @@ analysis.df_meta.loc[indices.train].describe(datetime_is_numeric=False)
     <tr>
       <th>top</th>
       <td>20180601</td>
-      <td>QE4</td>
+      <td>QE7</td>
       <td>MR</td>
       <td>nLC1</td>
       <td>QC_MNT_HeLa_01</td>
@@ -383,19 +360,7 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -418,7 +383,7 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
     <tr>
       <th>top</th>
       <td>20180601</td>
-      <td>QE4</td>
+      <td>QE7</td>
     </tr>
     <tr>
       <th>freq</th>
@@ -435,19 +400,7 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -483,11 +436,15 @@ compare_meta_data_for_splits(analysis.df_meta.iloc[:, :2], indices)
 
 
 
+    
 ![png](12_experiment_01_small_example_files/12_experiment_01_small_example_14_4.png)
+    
 
 
 
+    
 ![png](12_experiment_01_small_example_files/12_experiment_01_small_example_14_5.png)
+    
 
 
 ### Analysis state so far
@@ -515,38 +472,26 @@ corr_lower_triangle(analysis.df)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>ALPFWNEEIVPQIK</th>
+      <th>AAHSEGNTTAGLDMR</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -559,120 +504,120 @@ corr_lower_triangle(analysis.df)
       <td>NaN</td>
     </tr>
     <tr>
-      <th>AQQEQELAADAFK</th>
+      <th>AQIFANTVDNAR</th>
+      <td>0.362</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>EFHLNESGDPSSK</th>
+      <td>0.517</td>
+      <td>0.725</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>FNADEFEDMVAEK</th>
+      <td>0.454</td>
+      <td>0.768</td>
+      <td>0.825</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>GFGFGLVK</th>
+      <td>0.286</td>
+      <td>0.636</td>
+      <td>0.770</td>
+      <td>0.718</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>GHFGPINSVAFHPDGK</th>
+      <td>0.319</td>
+      <td>0.662</td>
+      <td>0.659</td>
+      <td>0.704</td>
+      <td>0.626</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>IITLTGPTNAIFK</th>
+      <td>0.517</td>
+      <td>0.511</td>
+      <td>0.660</td>
+      <td>0.669</td>
+      <td>0.539</td>
+      <td>0.472</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <td>0.266</td>
+      <td>0.400</td>
       <td>0.609</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <td>0.745</td>
-      <td>0.772</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>FGYVDFESAEDLEK</th>
-      <td>0.728</td>
-      <td>0.757</td>
-      <td>0.737</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <td>0.739</td>
-      <td>0.854</td>
-      <td>0.873</td>
-      <td>0.792</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <td>0.457</td>
-      <td>0.643</td>
-      <td>0.656</td>
-      <td>0.547</td>
-      <td>0.642</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <td>0.515</td>
-      <td>0.491</td>
-      <td>0.638</td>
-      <td>0.481</td>
-      <td>0.635</td>
-      <td>0.615</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>REDLVVAPAGITLK</th>
-      <td>0.537</td>
-      <td>0.619</td>
-      <td>0.568</td>
-      <td>0.692</td>
-      <td>0.688</td>
-      <td>0.302</td>
-      <td>0.249</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <td>0.347</td>
-      <td>0.600</td>
-      <td>0.453</td>
+      <td>0.552</td>
+      <td>0.599</td>
+      <td>0.422</td>
       <td>0.520</td>
-      <td>0.600</td>
-      <td>0.549</td>
-      <td>0.464</td>
-      <td>0.451</td>
+      <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
     </tr>
     <tr>
-      <th>VDFNVPMK</th>
-      <td>0.502</td>
-      <td>0.632</td>
-      <td>0.625</td>
-      <td>0.666</td>
-      <td>0.693</td>
-      <td>0.547</td>
-      <td>0.470</td>
-      <td>0.772</td>
-      <td>0.406</td>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <td>0.194</td>
+      <td>0.563</td>
+      <td>0.598</td>
+      <td>0.607</td>
+      <td>0.610</td>
+      <td>0.512</td>
+      <td>0.415</td>
+      <td>0.357</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>VVVAENFDEIVNNENK</th>
+      <td>0.463</td>
+      <td>0.799</td>
+      <td>0.794</td>
+      <td>0.865</td>
+      <td>0.695</td>
+      <td>0.630</td>
+      <td>0.687</td>
+      <td>0.645</td>
+      <td>0.524</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -680,6 +625,18 @@ corr_lower_triangle(analysis.df)
 </div>
 
 
+
+### Results
+
+Helper function and results dictionary
+
+
+```python
+analysis.results = {}
+def describe_abs_diff(y_true: pd.DataFrame, y_pred: pd.DataFrame):
+    _abs_diff = y_true - y_pred
+    return _abs_diff.abs().describe().to_dict()
+```
 
 ## Baseline supervised RF models
 
@@ -729,63 +686,51 @@ pd.DataFrame(metrics)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th rowspan="2" valign="top">MSE</th>
       <th>train</th>
-      <td>38,418,782,581,427,544.000</td>
-      <td>2,303,440,965,277,442.500</td>
-      <td>5,201,716,585,788,333.000</td>
-      <td>3,644,639,772,961,388.500</td>
-      <td>9,009,243,230,418,888.000</td>
-      <td>435,645,117,706,502,848.000</td>
-      <td>16,459,622,986,202,218.000</td>
-      <td>4,081,732,123,308,953.000</td>
-      <td>71,112,304,857,963,152.000</td>
-      <td>19,989,604,626,531,948.000</td>
+      <td>0.125</td>
+      <td>0.027</td>
+      <td>0.021</td>
+      <td>0.025</td>
+      <td>0.037</td>
+      <td>0.055</td>
+      <td>0.017</td>
+      <td>0.096</td>
+      <td>0.178</td>
+      <td>0.015</td>
     </tr>
     <tr>
       <th>valid</th>
-      <td>1,038,526,868,311,069,568.000</td>
-      <td>43,397,875,691,010,320.000</td>
-      <td>38,997,795,651,662,776.000</td>
-      <td>140,355,193,831,291,104.000</td>
-      <td>97,977,154,853,686,672.000</td>
-      <td>4,253,580,917,322,822,144.000</td>
-      <td>276,763,320,450,499,424.000</td>
-      <td>41,663,032,395,379,480.000</td>
-      <td>3,220,450,830,247,168,000.000</td>
-      <td>515,988,016,863,178,304.000</td>
+      <td>3.182</td>
+      <td>0.255</td>
+      <td>0.191</td>
+      <td>0.101</td>
+      <td>0.230</td>
+      <td>0.668</td>
+      <td>1.213</td>
+      <td>0.489</td>
+      <td>2.053</td>
+      <td>0.067</td>
     </tr>
   </tbody>
 </table>
@@ -795,40 +740,29 @@ pd.DataFrame(metrics)
 
 
 ```python
-pd.DataFrame(pred_valid, index=analysis.df_valid.index)
+analysis.pred_rf = pd.DataFrame(pred_valid, index=analysis.df_valid.index)
+analysis.pred_rf
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -847,237 +781,237 @@ pd.DataFrame(pred_valid, index=analysis.df_valid.index)
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>601,308,150.000</td>
-      <td>215,796,026.000</td>
-      <td>339,470,900.000</td>
-      <td>251,550,000.000</td>
-      <td>452,953,500.000</td>
-      <td>1,195,350,900.000</td>
-      <td>183,615,100.000</td>
-      <td>221,513,400.000</td>
-      <td>749,443,860.000</td>
-      <td>638,110,100.000</td>
+      <td>26.915</td>
+      <td>29.705</td>
+      <td>29.098</td>
+      <td>28.012</td>
+      <td>27.274</td>
+      <td>27.085</td>
+      <td>28.207</td>
+      <td>30.311</td>
+      <td>30.942</td>
+      <td>28.311</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>1,946,136,260.000</td>
-      <td>661,329,610.000</td>
-      <td>1,226,277,500.000</td>
-      <td>1,035,203,100.000</td>
-      <td>1,462,723,000.000</td>
-      <td>4,173,797,000.000</td>
-      <td>833,900,500.000</td>
-      <td>689,091,700.000</td>
-      <td>2,909,592,000.000</td>
-      <td>1,826,352,000.000</td>
+      <td>27.241</td>
+      <td>30.733</td>
+      <td>30.551</td>
+      <td>29.433</td>
+      <td>27.991</td>
+      <td>28.510</td>
+      <td>29.523</td>
+      <td>29.322</td>
+      <td>34.613</td>
+      <td>29.685</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>1,418,144,440.000</td>
-      <td>449,690,799.000</td>
-      <td>574,146,900.000</td>
-      <td>859,254,700.000</td>
-      <td>748,167,300.000</td>
-      <td>3,698,524,700.000</td>
-      <td>682,767,700.000</td>
-      <td>579,038,100.000</td>
-      <td>2,509,452,400.000</td>
-      <td>1,009,826,200.000</td>
+      <td>28.418</td>
+      <td>30.700</td>
+      <td>30.721</td>
+      <td>29.313</td>
+      <td>28.393</td>
+      <td>28.453</td>
+      <td>29.378</td>
+      <td>31.374</td>
+      <td>34.353</td>
+      <td>29.597</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>414,779,480.000</td>
-      <td>159,629,995.000</td>
-      <td>192,798,400.000</td>
-      <td>227,282,800.000</td>
-      <td>351,377,700.000</td>
-      <td>869,154,900.000</td>
-      <td>141,404,800.000</td>
-      <td>212,204,500.000</td>
-      <td>785,834,060.000</td>
-      <td>625,968,900.000</td>
+      <td>26.593</td>
+      <td>29.625</td>
+      <td>28.869</td>
+      <td>27.712</td>
+      <td>26.849</td>
+      <td>27.073</td>
+      <td>28.105</td>
+      <td>30.147</td>
+      <td>31.463</td>
+      <td>28.193</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>1,906,048,840.000</td>
-      <td>391,469,490.000</td>
-      <td>819,897,700.000</td>
-      <td>1,000,803,800.000</td>
-      <td>1,458,499,100.000</td>
-      <td>4,581,040,700.000</td>
-      <td>652,981,900.000</td>
-      <td>582,971,900.000</td>
-      <td>1,573,350,300.000</td>
-      <td>1,554,654,500.000</td>
+      <td>28.061</td>
+      <td>30.790</td>
+      <td>30.793</td>
+      <td>29.787</td>
+      <td>28.509</td>
+      <td>28.612</td>
+      <td>29.608</td>
+      <td>31.981</td>
+      <td>34.670</td>
+      <td>29.476</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>1,030,712,320.000</td>
-      <td>448,517,500.000</td>
-      <td>634,092,000.000</td>
-      <td>862,025,800.000</td>
-      <td>734,767,800.000</td>
-      <td>2,875,044,000.000</td>
-      <td>426,489,400.000</td>
-      <td>519,117,300.000</td>
-      <td>1,677,255,800.000</td>
-      <td>1,124,855,600.000</td>
+      <td>27.747</td>
+      <td>30.879</td>
+      <td>30.538</td>
+      <td>29.320</td>
+      <td>28.192</td>
+      <td>28.258</td>
+      <td>29.366</td>
+      <td>31.062</td>
+      <td>34.198</td>
+      <td>29.216</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>989,279,930.000</td>
-      <td>442,629,210.000</td>
-      <td>512,833,300.000</td>
-      <td>679,553,600.000</td>
-      <td>783,403,000.000</td>
-      <td>2,610,950,600.000</td>
-      <td>428,075,900.000</td>
-      <td>550,811,400.000</td>
-      <td>1,649,239,200.000</td>
-      <td>1,182,987,600.000</td>
+      <td>28.305</td>
+      <td>30.344</td>
+      <td>30.076</td>
+      <td>29.039</td>
+      <td>28.221</td>
+      <td>28.239</td>
+      <td>29.324</td>
+      <td>31.123</td>
+      <td>33.471</td>
+      <td>28.921</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>920,461,400.000</td>
-      <td>338,160,696.000</td>
-      <td>487,124,200.000</td>
-      <td>574,205,800.000</td>
-      <td>655,411,300.000</td>
-      <td>1,735,030,300.000</td>
-      <td>365,562,600.000</td>
-      <td>341,875,390.000</td>
-      <td>1,676,324,700.000</td>
-      <td>1,202,346,500.000</td>
+      <td>28.482</td>
+      <td>30.821</td>
+      <td>30.347</td>
+      <td>29.080</td>
+      <td>28.037</td>
+      <td>28.020</td>
+      <td>29.180</td>
+      <td>30.990</td>
+      <td>34.282</td>
+      <td>29.127</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>418,162,080.000</td>
-      <td>131,045,134.000</td>
-      <td>236,648,300.000</td>
-      <td>225,709,900.000</td>
-      <td>342,240,200.000</td>
-      <td>1,154,731,200.000</td>
-      <td>147,828,600.000</td>
-      <td>201,123,500.000</td>
-      <td>628,968,800.000</td>
-      <td>496,456,400.000</td>
+      <td>27.412</td>
+      <td>29.433</td>
+      <td>28.939</td>
+      <td>27.620</td>
+      <td>27.120</td>
+      <td>27.064</td>
+      <td>28.031</td>
+      <td>30.096</td>
+      <td>31.551</td>
+      <td>27.871</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>1,132,361,500.000</td>
-      <td>399,321,893.000</td>
-      <td>805,963,900.000</td>
-      <td>895,371,500.000</td>
-      <td>1,024,762,600.000</td>
-      <td>2,739,054,200.000</td>
-      <td>600,720,000.000</td>
-      <td>571,166,000.000</td>
-      <td>1,899,356,100.000</td>
-      <td>1,282,469,400.000</td>
+      <td>27.863</td>
+      <td>31.524</td>
+      <td>30.548</td>
+      <td>29.232</td>
+      <td>28.462</td>
+      <td>28.326</td>
+      <td>29.323</td>
+      <td>31.432</td>
+      <td>33.323</td>
+      <td>29.288</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>674,394,840.000</td>
-      <td>228,698,999.000</td>
-      <td>354,668,500.000</td>
-      <td>389,548,500.000</td>
-      <td>628,626,100.000</td>
-      <td>1,218,672,000.000</td>
-      <td>198,370,700.000</td>
-      <td>334,749,400.000</td>
-      <td>1,196,511,400.000</td>
-      <td>711,325,600.000</td>
+      <td>28.039</td>
+      <td>30.527</td>
+      <td>29.953</td>
+      <td>28.437</td>
+      <td>27.508</td>
+      <td>27.610</td>
+      <td>29.006</td>
+      <td>30.509</td>
+      <td>33.337</td>
+      <td>28.799</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>1,221,480,140.000</td>
-      <td>382,460,097.000</td>
-      <td>1,032,855,900.000</td>
-      <td>845,769,700.000</td>
-      <td>1,015,963,400.000</td>
-      <td>3,286,852,100.000</td>
-      <td>744,740,800.000</td>
-      <td>472,358,480.000</td>
-      <td>1,653,540,900.000</td>
-      <td>1,038,331,500.000</td>
+      <td>28.314</td>
+      <td>30.632</td>
+      <td>30.445</td>
+      <td>29.517</td>
+      <td>28.317</td>
+      <td>27.951</td>
+      <td>29.680</td>
+      <td>31.643</td>
+      <td>34.337</td>
+      <td>29.212</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>1,851,377,340.000</td>
-      <td>503,727,650.000</td>
-      <td>1,238,981,300.000</td>
-      <td>1,010,027,700.000</td>
-      <td>1,677,454,600.000</td>
-      <td>4,488,957,600.000</td>
-      <td>1,274,299,000.000</td>
-      <td>773,436,600.000</td>
-      <td>2,193,371,600.000</td>
-      <td>2,790,491,000.000</td>
+      <td>27.910</td>
+      <td>31.592</td>
+      <td>30.974</td>
+      <td>30.097</td>
+      <td>28.597</td>
+      <td>28.327</td>
+      <td>29.912</td>
+      <td>31.739</td>
+      <td>34.154</td>
+      <td>29.534</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>1,999,479,000.000</td>
-      <td>461,637,040.000</td>
-      <td>1,248,003,700.000</td>
-      <td>1,047,670,100.000</td>
-      <td>1,979,002,500.000</td>
-      <td>4,248,021,600.000</td>
-      <td>1,334,294,000.000</td>
-      <td>780,138,500.000</td>
-      <td>2,278,664,800.000</td>
-      <td>2,714,324,000.000</td>
+      <td>27.931</td>
+      <td>31.539</td>
+      <td>31.055</td>
+      <td>30.099</td>
+      <td>28.628</td>
+      <td>28.606</td>
+      <td>29.925</td>
+      <td>31.891</td>
+      <td>34.460</td>
+      <td>29.605</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>1,349,078,100.000</td>
-      <td>599,004,699.000</td>
-      <td>1,230,517,600.000</td>
-      <td>928,145,600.000</td>
-      <td>1,255,336,600.000</td>
-      <td>3,954,111,700.000</td>
-      <td>944,144,100.000</td>
-      <td>718,038,600.000</td>
-      <td>2,955,754,200.000</td>
-      <td>1,679,702,000.000</td>
+      <td>27.683</td>
+      <td>31.340</td>
+      <td>30.804</td>
+      <td>29.993</td>
+      <td>28.673</td>
+      <td>28.424</td>
+      <td>29.964</td>
+      <td>31.884</td>
+      <td>34.106</td>
+      <td>29.758</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>1,853,244,740.000</td>
-      <td>730,059,720.000</td>
-      <td>1,335,812,000.000</td>
-      <td>1,163,292,600.000</td>
-      <td>2,288,244,000.000</td>
-      <td>7,701,120,500.000</td>
-      <td>1,689,271,600.000</td>
-      <td>788,230,100.000</td>
-      <td>3,991,924,800.000</td>
-      <td>2,431,169,000.000</td>
+      <td>29.778</td>
+      <td>31.631</td>
+      <td>31.071</td>
+      <td>30.287</td>
+      <td>28.797</td>
+      <td>28.917</td>
+      <td>30.201</td>
+      <td>31.955</td>
+      <td>35.153</td>
+      <td>30.243</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>1,952,486,400.000</td>
-      <td>692,647,820.000</td>
-      <td>1,275,459,300.000</td>
-      <td>1,062,693,200.000</td>
-      <td>1,775,764,200.000</td>
-      <td>7,899,082,000.000</td>
-      <td>1,551,545,800.000</td>
-      <td>411,787,490.000</td>
-      <td>2,863,629,400.000</td>
-      <td>2,477,203,000.000</td>
+      <td>29.078</td>
+      <td>31.707</td>
+      <td>31.268</td>
+      <td>30.424</td>
+      <td>28.664</td>
+      <td>28.545</td>
+      <td>30.391</td>
+      <td>31.818</td>
+      <td>34.575</td>
+      <td>30.213</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>1,757,651,520.000</td>
-      <td>607,593,340.000</td>
-      <td>1,258,195,300.000</td>
-      <td>1,105,461,400.000</td>
-      <td>1,539,285,100.000</td>
-      <td>7,129,705,000.000</td>
-      <td>1,012,717,600.000</td>
-      <td>411,127,590.000</td>
-      <td>2,448,907,600.000</td>
-      <td>2,712,902,000.000</td>
+      <td>29.027</td>
+      <td>31.614</td>
+      <td>31.244</td>
+      <td>30.412</td>
+      <td>28.524</td>
+      <td>28.221</td>
+      <td>30.246</td>
+      <td>31.800</td>
+      <td>34.691</td>
+      <td>30.259</td>
     </tr>
   </tbody>
 </table>
@@ -1096,33 +1030,21 @@ analysis.df_valid
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1141,243 +1063,383 @@ analysis.df_valid
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>503,280,000.000</td>
-      <td>149,610,000.000</td>
-      <td>259,450,000.000</td>
-      <td>406,200,000.000</td>
-      <td>460,070,000.000</td>
-      <td>395,380,000.000</td>
-      <td>213,690,000.000</td>
-      <td>203,750,000.000</td>
-      <td>684,680,000.000</td>
-      <td>713,600,000.000</td>
+      <td>27.956</td>
+      <td>29.817</td>
+      <td>29.456</td>
+      <td>27.656</td>
+      <td>27.132</td>
+      <td>27.241</td>
+      <td>28.236</td>
+      <td>30.481</td>
+      <td>33.591</td>
+      <td>28.224</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>2,325,100,000.000</td>
-      <td>449,130,000.000</td>
-      <td>1,074,200,000.000</td>
-      <td>986,900,000.000</td>
-      <td>1,869,300,000.000</td>
-      <td>7,284,500,000.000</td>
-      <td>580,400,000.000</td>
-      <td>855,690,000.000</td>
-      <td>2,155,700,000.000</td>
-      <td>1,888,300,000.000</td>
+      <td>25.400</td>
+      <td>31.561</td>
+      <td>30.700</td>
+      <td>29.704</td>
+      <td>29.378</td>
+      <td>28.823</td>
+      <td>25.014</td>
+      <td>31.743</td>
+      <td>34.523</td>
+      <td>29.635</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>1,306,500,000.000</td>
-      <td>403,620,000.000</td>
-      <td>839,710,000.000</td>
-      <td>843,310,000.000</td>
-      <td>990,820,000.000</td>
-      <td>5,777,300,000.000</td>
-      <td>292,090,000.000</td>
-      <td>81,292,000.000</td>
-      <td>2,098,700,000.000</td>
-      <td>1,859,100,000.000</td>
+      <td>24.494</td>
+      <td>31.351</td>
+      <td>30.458</td>
+      <td>29.707</td>
+      <td>28.484</td>
+      <td>28.636</td>
+      <td>29.766</td>
+      <td>31.257</td>
+      <td>35.195</td>
+      <td>29.434</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>372,230,000.000</td>
-      <td>117,240,000.000</td>
-      <td>199,240,000.000</td>
-      <td>267,750,000.000</td>
-      <td>356,680,000.000</td>
-      <td>1,184,400,000.000</td>
-      <td>141,570,000.000</td>
-      <td>220,500,000.000</td>
-      <td>709,410,000.000</td>
-      <td>645,040,000.000</td>
+      <td>26.772</td>
+      <td>29.680</td>
+      <td>29.020</td>
+      <td>27.594</td>
+      <td>27.499</td>
+      <td>26.780</td>
+      <td>28.326</td>
+      <td>29.906</td>
+      <td>33.474</td>
+      <td>27.585</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>87,196,000.000</td>
-      <td>717,710,000.000</td>
-      <td>1,108,500,000.000</td>
-      <td>13,692,000.000</td>
-      <td>1,360,300,000.000</td>
-      <td>3,521,400,000.000</td>
-      <td>571,180,000.000</td>
-      <td>461,960,000.000</td>
-      <td>2,410,100,000.000</td>
-      <td>1,612,800,000.000</td>
+      <td>28.447</td>
+      <td>31.510</td>
+      <td>30.794</td>
+      <td>29.653</td>
+      <td>29.150</td>
+      <td>28.478</td>
+      <td>29.747</td>
+      <td>32.064</td>
+      <td>34.095</td>
+      <td>29.635</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>1,050,400,000.000</td>
-      <td>495,380,000.000</td>
-      <td>642,980,000.000</td>
-      <td>602,610,000.000</td>
-      <td>885,590,000.000</td>
-      <td>4,186,100,000.000</td>
-      <td>258,160,000.000</td>
-      <td>456,020,000.000</td>
-      <td>1,482,900,000.000</td>
-      <td>1,756,400,000.000</td>
+      <td>24.904</td>
+      <td>30.993</td>
+      <td>30.107</td>
+      <td>29.459</td>
+      <td>28.101</td>
+      <td>28.707</td>
+      <td>29.228</td>
+      <td>31.348</td>
+      <td>33.712</td>
+      <td>29.428</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>1,100,100,000.000</td>
-      <td>412,480,000.000</td>
-      <td>526,570,000.000</td>
-      <td>657,620,000.000</td>
-      <td>810,150,000.000</td>
-      <td>3,362,500,000.000</td>
-      <td>306,100,000.000</td>
-      <td>390,410,000.000</td>
-      <td>1,549,500,000.000</td>
-      <td>2,154,500,000.000</td>
+      <td>28.346</td>
+      <td>30.528</td>
+      <td>30.361</td>
+      <td>29.028</td>
+      <td>28.730</td>
+      <td>27.195</td>
+      <td>29.827</td>
+      <td>30.812</td>
+      <td>34.918</td>
+      <td>29.011</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>850,850,000.000</td>
-      <td>238,150,000.000</td>
-      <td>407,220,000.000</td>
-      <td>590,710,000.000</td>
-      <td>801,160,000.000</td>
-      <td>2,337,100,000.000</td>
-      <td>335,380,000.000</td>
-      <td>459,420,000.000</td>
-      <td>1,390,400,000.000</td>
-      <td>1,159,100,000.000</td>
+      <td>26.306</td>
+      <td>30.465</td>
+      <td>29.782</td>
+      <td>29.125</td>
+      <td>28.164</td>
+      <td>28.206</td>
+      <td>29.117</td>
+      <td>31.243</td>
+      <td>33.639</td>
+      <td>29.216</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>399,770,000.000</td>
-      <td>181,700,000.000</td>
-      <td>283,340,000.000</td>
-      <td>305,990,000.000</td>
-      <td>188,640,000.000</td>
-      <td>1,657,100,000.000</td>
-      <td>143,700,000.000</td>
-      <td>63,812,000.000</td>
-      <td>684,800,000.000</td>
-      <td>572,660,000.000</td>
+      <td>27.179</td>
+      <td>29.451</td>
+      <td>29.358</td>
+      <td>27.915</td>
+      <td>26.798</td>
+      <td>26.028</td>
+      <td>28.032</td>
+      <td>29.596</td>
+      <td>33.680</td>
+      <td>27.838</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>1,403,600,000.000</td>
-      <td>425,940,000.000</td>
-      <td>622,250,000.000</td>
-      <td>782,080,000.000</td>
-      <td>1,132,900,000.000</td>
-      <td>2,990,000,000.000</td>
-      <td>425,900,000.000</td>
-      <td>566,700,000.000</td>
-      <td>1,600,900,000.000</td>
-      <td>1,680,800,000.000</td>
+      <td>28.494</td>
+      <td>30.809</td>
+      <td>30.328</td>
+      <td>29.676</td>
+      <td>27.857</td>
+      <td>27.121</td>
+      <td>29.708</td>
+      <td>31.590</td>
+      <td>34.334</td>
+      <td>29.797</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>560,860,000.000</td>
-      <td>271,530,000.000</td>
-      <td>256,160,000.000</td>
-      <td>355,150,000.000</td>
-      <td>515,890,000.000</td>
-      <td>1,968,400,000.000</td>
-      <td>198,630,000.000</td>
-      <td>258,250,000.000</td>
-      <td>835,950,000.000</td>
-      <td>1,135,700,000.000</td>
+      <td>27.464</td>
+      <td>29.905</td>
+      <td>29.728</td>
+      <td>28.934</td>
+      <td>28.086</td>
+      <td>27.706</td>
+      <td>28.678</td>
+      <td>30.378</td>
+      <td>32.684</td>
+      <td>28.532</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>1,937,100,000.000</td>
-      <td>498,750,000.000</td>
-      <td>747,470,000.000</td>
-      <td>647,160,000.000</td>
-      <td>1,241,400,000.000</td>
-      <td>4,555,600,000.000</td>
-      <td>436,220,000.000</td>
-      <td>448,110,000.000</td>
-      <td>1,057,700,000.000</td>
-      <td>1,402,700,000.000</td>
+      <td>28.212</td>
+      <td>30.430</td>
+      <td>31.207</td>
+      <td>29.135</td>
+      <td>28.272</td>
+      <td>28.608</td>
+      <td>28.994</td>
+      <td>31.456</td>
+      <td>34.572</td>
+      <td>29.358</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>3,160,600,000.000</td>
-      <td>706,220,000.000</td>
-      <td>1,281,000,000.000</td>
-      <td>1,519,900,000.000</td>
-      <td>2,110,900,000.000</td>
-      <td>1,239,800,000.000</td>
-      <td>379,710,000.000</td>
-      <td>865,550,000.000</td>
-      <td>312,310,000.000</td>
-      <td>1,788,800,000.000</td>
+      <td>29.119</td>
+      <td>30.834</td>
+      <td>31.474</td>
+      <td>29.512</td>
+      <td>28.716</td>
+      <td>28.425</td>
+      <td>30.139</td>
+      <td>32.092</td>
+      <td>35.631</td>
+      <td>29.874</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>3,469,700,000.000</td>
-      <td>817,360,000.000</td>
-      <td>1,316,100,000.000</td>
-      <td>1,584,000,000.000</td>
-      <td>1,920,500,000.000</td>
-      <td>1,374,800,000.000</td>
-      <td>766,310,000.000</td>
-      <td>848,340,000.000</td>
-      <td>324,920,000.000</td>
-      <td>1,662,300,000.000</td>
+      <td>28.943</td>
+      <td>30.723</td>
+      <td>31.434</td>
+      <td>29.677</td>
+      <td>28.734</td>
+      <td>28.442</td>
+      <td>30.203</td>
+      <td>32.164</td>
+      <td>35.590</td>
+      <td>29.924</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>2,771,900,000.000</td>
-      <td>478,060,000.000</td>
-      <td>726,540,000.000</td>
-      <td>956,810,000.000</td>
-      <td>1,663,200,000.000</td>
-      <td>7,003,300,000.000</td>
-      <td>461,900,000.000</td>
-      <td>688,650,000.000</td>
-      <td>1,298,100,000.000</td>
-      <td>1,959,000,000.000</td>
+      <td>28.880</td>
+      <td>31.047</td>
+      <td>31.376</td>
+      <td>29.957</td>
+      <td>29.013</td>
+      <td>26.288</td>
+      <td>29.736</td>
+      <td>32.056</td>
+      <td>34.686</td>
+      <td>29.746</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>4,407,700,000.000</td>
-      <td>1,096,700,000.000</td>
-      <td>1,580,100,000.000</td>
-      <td>1,881,000,000.000</td>
-      <td>2,267,400,000.000</td>
-      <td>8,900,100,000.000</td>
-      <td>486,050,000.000</td>
-      <td>678,860,000.000</td>
-      <td>1,133,100,000.000</td>
-      <td>2,561,500,000.000</td>
+      <td>26.021</td>
+      <td>31.040</td>
+      <td>31.480</td>
+      <td>30.707</td>
+      <td>29.119</td>
+      <td>29.521</td>
+      <td>29.988</td>
+      <td>32.563</td>
+      <td>35.320</td>
+      <td>29.909</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>3,422,600,000.000</td>
-      <td>944,780,000.000</td>
-      <td>1,148,900,000.000</td>
-      <td>1,562,200,000.000</td>
-      <td>2,574,000,000.000</td>
-      <td>4,035,400,000.000</td>
-      <td>389,500,000.000</td>
-      <td>790,300,000.000</td>
-      <td>7,475,800,000.000</td>
-      <td>1,076,700,000.000</td>
+      <td>30.657</td>
+      <td>31.328</td>
+      <td>31.653</td>
+      <td>30.269</td>
+      <td>28.629</td>
+      <td>29.571</td>
+      <td>30.154</td>
+      <td>32.489</td>
+      <td>33.541</td>
+      <td>30.359</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>1,635,900,000.000</td>
-      <td>1,065,300,000.000</td>
-      <td>1,037,400,000.000</td>
-      <td>1,393,300,000.000</td>
-      <td>2,164,500,000.000</td>
-      <td>3,798,700,000.000</td>
-      <td>354,070,000.000</td>
-      <td>881,580,000.000</td>
-      <td>6,482,000,000.000</td>
-      <td>1,111,400,000.000</td>
+      <td>30.785</td>
+      <td>31.465</td>
+      <td>32.088</td>
+      <td>30.373</td>
+      <td>28.640</td>
+      <td>29.429</td>
+      <td>30.350</td>
+      <td>32.901</td>
+      <td>31.347</td>
+      <td>30.213</td>
     </tr>
   </tbody>
 </table>
 </div>
 
 
+
+
+```python
+analysis.results['RF baseline'] = describe_abs_diff(y_true=analysis.df_valid, y_pred=analysis.pred_rf)
+pd.DataFrame(analysis.results['RF baseline'])
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.360</td>
+      <td>0.420</td>
+      <td>0.384</td>
+      <td>0.264</td>
+      <td>0.346</td>
+      <td>0.610</td>
+      <td>0.482</td>
+      <td>0.446</td>
+      <td>1.139</td>
+      <td>0.201</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.188</td>
+      <td>0.289</td>
+      <td>0.213</td>
+      <td>0.182</td>
+      <td>0.341</td>
+      <td>0.559</td>
+      <td>1.019</td>
+      <td>0.554</td>
+      <td>0.895</td>
+      <td>0.167</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.041</td>
+      <td>0.018</td>
+      <td>0.001</td>
+      <td>0.011</td>
+      <td>0.035</td>
+      <td>0.096</td>
+      <td>0.001</td>
+      <td>0.083</td>
+      <td>0.090</td>
+      <td>0.012</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.434</td>
+      <td>0.157</td>
+      <td>0.235</td>
+      <td>0.122</td>
+      <td>0.109</td>
+      <td>0.169</td>
+      <td>0.138</td>
+      <td>0.171</td>
+      <td>0.577</td>
+      <td>0.087</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.119</td>
+      <td>0.367</td>
+      <td>0.382</td>
+      <td>0.283</td>
+      <td>0.232</td>
+      <td>0.380</td>
+      <td>0.227</td>
+      <td>0.263</td>
+      <td>0.926</td>
+      <td>0.152</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.820</td>
+      <td>0.699</td>
+      <td>0.482</td>
+      <td>0.414</td>
+      <td>0.560</td>
+      <td>1.033</td>
+      <td>0.370</td>
+      <td>0.463</td>
+      <td>1.469</td>
+      <td>0.306</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>3.924</td>
+      <td>0.828</td>
+      <td>0.844</td>
+      <td>0.586</td>
+      <td>1.387</td>
+      <td>2.136</td>
+      <td>4.509</td>
+      <td>2.421</td>
+      <td>3.344</td>
+      <td>0.608</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+Could a model help in identifying extraordinar differences in samples? Something to focus on?
 
 ## DL Setup
 
@@ -1399,7 +1461,7 @@ print(args, device)
     Namespace(batch_size=8, cuda=False, epochs=30, log_interval=10, no_cuda=True, seed=43) cpu
     
 
-## Plain AE
+## Simple AE
 - should also heavily overfit the training data
 
 
@@ -1413,33 +1475,21 @@ scaler.transform(analysis.df_valid.iloc[:5])
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1458,68 +1508,68 @@ scaler.transform(analysis.df_valid.iloc[:5])
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>-1.057</td>
-      <td>-1.127</td>
-      <td>-1.109</td>
-      <td>-0.939</td>
-      <td>-0.971</td>
-      <td>-1.050</td>
-      <td>-0.764</td>
-      <td>-0.919</td>
-      <td>-1.057</td>
-      <td>-0.852</td>
+      <td>-0.253</td>
+      <td>-1.136</td>
+      <td>-0.890</td>
+      <td>-1.662</td>
+      <td>-1.166</td>
+      <td>-0.979</td>
+      <td>-1.332</td>
+      <td>-0.447</td>
+      <td>-0.019</td>
+      <td>-1.310</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>1.470</td>
-      <td>0.323</td>
-      <td>1.055</td>
-      <td>0.876</td>
-      <td>1.573</td>
-      <td>1.669</td>
-      <td>0.034</td>
-      <td>1.817</td>
-      <td>0.392</td>
-      <td>0.885</td>
+      <td>-2.537</td>
+      <td>1.216</td>
+      <td>0.723</td>
+      <td>0.677</td>
+      <td>1.833</td>
+      <td>1.003</td>
+      <td>-5.866</td>
+      <td>0.796</td>
+      <td>0.617</td>
+      <td>0.695</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>0.057</td>
-      <td>0.103</td>
-      <td>0.432</td>
-      <td>0.427</td>
-      <td>-0.013</td>
-      <td>1.074</td>
-      <td>-0.593</td>
-      <td>-1.433</td>
-      <td>0.336</td>
-      <td>0.841</td>
+      <td>-3.346</td>
+      <td>0.932</td>
+      <td>0.410</td>
+      <td>0.681</td>
+      <td>0.640</td>
+      <td>0.769</td>
+      <td>0.822</td>
+      <td>0.318</td>
+      <td>1.075</td>
+      <td>0.409</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>-1.239</td>
-      <td>-1.284</td>
-      <td>-1.269</td>
-      <td>-1.371</td>
-      <td>-1.158</td>
-      <td>-0.739</td>
-      <td>-0.921</td>
-      <td>-0.849</td>
-      <td>-1.033</td>
-      <td>-0.954</td>
+      <td>-1.311</td>
+      <td>-1.321</td>
+      <td>-1.455</td>
+      <td>-1.733</td>
+      <td>-0.676</td>
+      <td>-1.557</td>
+      <td>-1.206</td>
+      <td>-1.013</td>
+      <td>-0.100</td>
+      <td>-2.217</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-1.634</td>
-      <td>1.623</td>
+      <td>0.186</td>
       <td>1.147</td>
-      <td>-2.165</td>
-      <td>0.654</td>
-      <td>0.184</td>
-      <td>0.014</td>
-      <td>0.164</td>
-      <td>0.643</td>
-      <td>0.477</td>
+      <td>0.844</td>
+      <td>0.620</td>
+      <td>1.529</td>
+      <td>0.571</td>
+      <td>0.795</td>
+      <td>1.112</td>
+      <td>0.324</td>
+      <td>0.694</td>
     </tr>
   </tbody>
 </table>
@@ -1541,217 +1591,190 @@ dl_train = DataLoader(dataset_train, batch_size=args.batch_size, shuffle=True)
 dl_valid = DataLoader(dataset_valid, batch_size=args.batch_size, shuffle=False)
 ```
 
+### Without Noise
+
 
 ```python
-from vaep.model import Autoencoder
+import vaep.model as vaep_model
 
-model = Autoencoder(n_features=M, n_neurons=int(M/2), last_activation=None, dim_latent=3).double()
+model = vaep_model.Autoencoder(n_features=M, n_neurons=int(M/2), last_activation=None, dim_latent=3).double()
 criterion = torch.nn.MSELoss(reduction='sum')
 
-learning_rate = 1e-3
+learning_rate = 1e-2
 
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=learning_rate,
 )
-```
 
-
-```python
-# Train standard or denoising autoencoder (AE)
+# Train standard autoencoder (AE)
 
 train_losses, valid_losses = [], []
-num_epochs = 100
-# do = nn.Dropout()  # comment out for standard AE
-for epoch in range(num_epochs):
+
+# do = nn.Dropout()  # for denoising AE
+for epoch in range(args.epochs):
     # ===================train==========================
-    total_loss = 0
     for data in dl_train:
         model.train()
         data = data.to(device)
-        # noise = do(torch.ones(img.shape)).to(device)
-        # img_bad = (img * noise).to(device)  # comment out for standard AE
+        # noise = do(torch.ones(data.shape)).to(device) # for denoising AE
+        # data_corrupted = (data * noise).to(device)    # for denoising AE
         # ===================forward=====================
-        output = model(data)  # feed <img> (for std AE) or <img_bad> (for denoising AE)
+        output = model(data) 
         loss = criterion(output, data)
         # ===================backward====================
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        total_loss += loss.item()
-    train_losses.append(total_loss/ len(dl_train))
+        train_losses.append(loss.item())
     # ===================validate========================
-    total_loss = 0
     for data in dl_valid:
         model.eval()
         data = data.to(device)
         output = model(data)
         loss = criterion(output, data)
-        total_loss += loss.item()
-    valid_losses.append(total_loss/len(dl_valid))
+        valid_losses.append(loss.item())
     
     # ===================log=============================
-    print(f'epoch [{epoch + 1}/{num_epochs}], train-loss:{train_losses[-1]:.4f}, valid-loss{valid_losses[-1]:.4f}')
+    print(f'epoch [{epoch + 1:03d}/{args.epochs}], '
+          f'train-loss: {np.mean(train_losses[-len(dl_train):]):.4f},'
+          f'valid-loss: {np.mean(valid_losses[-len(dl_valid):]):.4f}')
         
 ```
 
-    epoch [1/100], train-loss:90.0026, valid-loss111.9819
-    epoch [2/100], train-loss:88.0704, valid-loss111.0008
-    epoch [3/100], train-loss:86.5540, valid-loss110.0642
-    epoch [4/100], train-loss:84.9955, valid-loss109.2204
-    epoch [5/100], train-loss:83.6179, valid-loss108.3850
-    epoch [6/100], train-loss:82.3551, valid-loss107.6115
-    epoch [7/100], train-loss:81.1570, valid-loss106.7826
-    epoch [8/100], train-loss:79.9104, valid-loss105.9457
-    epoch [9/100], train-loss:78.7746, valid-loss105.0846
-    epoch [10/100], train-loss:77.5161, valid-loss104.2313
-    epoch [11/100], train-loss:76.3487, valid-loss103.2058
-    epoch [12/100], train-loss:75.0609, valid-loss102.1425
-    epoch [13/100], train-loss:73.6693, valid-loss101.0499
-    epoch [14/100], train-loss:72.3241, valid-loss99.8589
-    epoch [15/100], train-loss:70.9596, valid-loss98.5667
-    epoch [16/100], train-loss:69.4884, valid-loss97.2752
-    epoch [17/100], train-loss:67.9886, valid-loss95.8582
-    epoch [18/100], train-loss:66.4687, valid-loss94.4214
-    epoch [19/100], train-loss:64.9235, valid-loss92.9171
-    epoch [20/100], train-loss:63.4557, valid-loss91.3547
-    epoch [21/100], train-loss:61.8465, valid-loss89.8610
-    epoch [22/100], train-loss:60.3254, valid-loss88.2731
-    epoch [23/100], train-loss:58.7503, valid-loss86.6849
-    epoch [24/100], train-loss:57.4058, valid-loss85.0389
-    epoch [25/100], train-loss:55.9878, valid-loss83.3728
-    epoch [26/100], train-loss:54.3728, valid-loss81.9722
-    epoch [27/100], train-loss:53.1742, valid-loss80.3742
-    epoch [28/100], train-loss:51.8634, valid-loss78.9125
-    epoch [29/100], train-loss:50.6092, valid-loss77.5249
-    epoch [30/100], train-loss:49.5319, valid-loss76.1329
-    epoch [31/100], train-loss:48.4268, valid-loss74.7505
-    epoch [32/100], train-loss:47.2796, valid-loss73.5536
-    epoch [33/100], train-loss:46.3844, valid-loss72.3985
-    epoch [34/100], train-loss:45.3818, valid-loss71.3124
-    epoch [35/100], train-loss:44.5575, valid-loss70.3212
-    epoch [36/100], train-loss:43.7061, valid-loss69.3455
-    epoch [37/100], train-loss:42.9891, valid-loss68.4012
-    epoch [38/100], train-loss:42.2478, valid-loss67.6268
-    epoch [39/100], train-loss:41.5009, valid-loss66.8048
-    epoch [40/100], train-loss:40.8716, valid-loss66.0503
-    epoch [41/100], train-loss:40.2339, valid-loss65.3735
-    epoch [42/100], train-loss:39.6464, valid-loss64.6690
-    epoch [43/100], train-loss:39.0617, valid-loss64.1187
-    epoch [44/100], train-loss:38.5054, valid-loss63.5401
-    epoch [45/100], train-loss:38.0126, valid-loss63.0431
-    epoch [46/100], train-loss:37.5226, valid-loss62.4685
-    epoch [47/100], train-loss:37.0734, valid-loss61.9393
-    epoch [48/100], train-loss:36.5691, valid-loss61.4976
-    epoch [49/100], train-loss:36.1818, valid-loss61.1060
-    epoch [50/100], train-loss:35.6864, valid-loss60.6701
-    epoch [51/100], train-loss:35.2868, valid-loss60.2540
-    epoch [52/100], train-loss:34.9106, valid-loss59.8618
-    epoch [53/100], train-loss:34.5428, valid-loss59.4647
-    epoch [54/100], train-loss:34.1621, valid-loss59.1843
-    epoch [55/100], train-loss:33.7835, valid-loss58.9109
-    epoch [56/100], train-loss:33.5279, valid-loss58.4458
-    epoch [57/100], train-loss:33.1363, valid-loss58.3297
-    epoch [58/100], train-loss:32.7872, valid-loss58.0220
-    epoch [59/100], train-loss:32.4782, valid-loss57.8456
-    epoch [60/100], train-loss:32.1628, valid-loss57.5311
-    epoch [61/100], train-loss:31.8812, valid-loss57.2490
-    epoch [62/100], train-loss:31.6126, valid-loss57.1105
-    epoch [63/100], train-loss:31.2940, valid-loss56.9010
-    epoch [64/100], train-loss:31.0707, valid-loss56.7139
-    epoch [65/100], train-loss:30.7965, valid-loss56.6615
-    epoch [66/100], train-loss:30.5375, valid-loss56.2943
-    epoch [67/100], train-loss:30.3134, valid-loss56.0840
-    epoch [68/100], train-loss:30.0630, valid-loss55.8777
-    epoch [69/100], train-loss:29.8732, valid-loss55.7113
-    epoch [70/100], train-loss:29.6264, valid-loss55.7189
-    epoch [71/100], train-loss:29.4233, valid-loss55.3638
-    epoch [72/100], train-loss:29.2326, valid-loss55.2449
-    epoch [73/100], train-loss:29.0394, valid-loss54.9074
-    epoch [74/100], train-loss:28.9029, valid-loss54.7673
-    epoch [75/100], train-loss:28.6741, valid-loss54.8008
-    epoch [76/100], train-loss:28.5125, valid-loss54.5941
-    epoch [77/100], train-loss:28.3542, valid-loss54.4277
-    epoch [78/100], train-loss:28.2116, valid-loss54.0702
-    epoch [79/100], train-loss:28.0574, valid-loss54.0432
-    epoch [80/100], train-loss:27.9052, valid-loss54.1073
-    epoch [81/100], train-loss:27.7297, valid-loss53.7725
-    epoch [82/100], train-loss:27.6253, valid-loss53.6108
-    epoch [83/100], train-loss:27.4896, valid-loss53.5269
-    epoch [84/100], train-loss:27.3956, valid-loss53.2273
-    epoch [85/100], train-loss:27.2206, valid-loss53.4004
-    epoch [86/100], train-loss:27.0935, valid-loss53.4245
-    epoch [87/100], train-loss:26.9872, valid-loss53.0536
-    epoch [88/100], train-loss:26.8855, valid-loss52.8967
-    epoch [89/100], train-loss:26.7752, valid-loss52.9422
-    epoch [90/100], train-loss:26.6520, valid-loss52.8119
-    epoch [91/100], train-loss:26.5387, valid-loss52.6001
-    epoch [92/100], train-loss:26.4491, valid-loss52.5637
-    epoch [93/100], train-loss:26.3404, valid-loss52.4731
-    epoch [94/100], train-loss:26.2306, valid-loss52.3562
-    epoch [95/100], train-loss:26.1541, valid-loss52.1877
-    epoch [96/100], train-loss:26.0641, valid-loss52.2095
-    epoch [97/100], train-loss:25.9477, valid-loss52.2140
-    epoch [98/100], train-loss:25.8633, valid-loss51.9994
-    epoch [99/100], train-loss:25.8199, valid-loss52.1052
-    epoch [100/100], train-loss:25.6684, valid-loss51.7805
+    epoch [001/30], train-loss: 78.5058,valid-loss: 82.5542
+    epoch [002/30], train-loss: 67.6384,valid-loss: 71.3391
+    epoch [003/30], train-loss: 53.8778,valid-loss: 59.2136
+    epoch [004/30], train-loss: 43.2942,valid-loss: 52.2529
+    epoch [005/30], train-loss: 37.4082,valid-loss: 47.6269
+    epoch [006/30], train-loss: 32.7489,valid-loss: 45.5247
+    epoch [007/30], train-loss: 30.1827,valid-loss: 44.7830
+    epoch [008/30], train-loss: 28.6132,valid-loss: 44.4244
+    epoch [009/30], train-loss: 27.4272,valid-loss: 43.8531
+    epoch [010/30], train-loss: 26.3073,valid-loss: 43.0869
+    epoch [011/30], train-loss: 25.6836,valid-loss: 42.5099
+    epoch [012/30], train-loss: 25.3607,valid-loss: 43.3594
+    epoch [013/30], train-loss: 24.9995,valid-loss: 42.8146
+    epoch [014/30], train-loss: 24.8996,valid-loss: 42.7076
+    epoch [015/30], train-loss: 24.6478,valid-loss: 41.9275
+    epoch [016/30], train-loss: 24.2502,valid-loss: 41.8516
+    epoch [017/30], train-loss: 24.0901,valid-loss: 42.5185
+    epoch [018/30], train-loss: 24.2147,valid-loss: 40.4843
+    epoch [019/30], train-loss: 23.3791,valid-loss: 40.2340
+    epoch [020/30], train-loss: 23.3408,valid-loss: 39.6740
+    epoch [021/30], train-loss: 22.7550,valid-loss: 39.7555
+    epoch [022/30], train-loss: 22.4188,valid-loss: 39.2352
+    epoch [023/30], train-loss: 22.6385,valid-loss: 40.6576
+    epoch [024/30], train-loss: 22.7274,valid-loss: 39.5189
+    epoch [025/30], train-loss: 22.2081,valid-loss: 40.4234
+    epoch [026/30], train-loss: 21.9349,valid-loss: 38.8588
+    epoch [027/30], train-loss: 21.3045,valid-loss: 38.7876
+    epoch [028/30], train-loss: 21.0173,valid-loss: 39.4267
+    epoch [029/30], train-loss: 20.7649,valid-loss: 39.1706
+    epoch [030/30], train-loss: 20.5270,valid-loss: 39.2550
     
 
 
 ```python
-_ = pd.DataFrame({'MSE train': train_losses, 'MSE valid': valid_losses}).plot(figsize=(15,8))
-```
+df_train_losses = vaep_model.process_train_loss({'MSE train': train_losses})
 
-
-![png](12_experiment_01_small_example_files/12_experiment_01_small_example_31_0.png)
-
-
-
-```python
-from vaep.model import build_df_from_pred_batches
-
-
-pred = []
-
-model.eval()
-for data in dl_valid:
-    data = data.to(device)
-    output = model(data)
-    pred.append(output.detach().numpy())
-build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+# Plotting is boilerplate code:
+_ = df_train_losses.plot(kind='scatter', x='steps', y='MSE train smoothed', figsize=(15,8),  title='Exponential smoothed training loss', ylim=(0,None))
+df_train_losses.tail()
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>steps</th>
+      <th>MSE train</th>
+      <th>MSE train smoothed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>265</th>
+      <td>265</td>
+      <td>19.336</td>
+      <td>20.488</td>
+    </tr>
+    <tr>
+      <th>266</th>
+      <td>266</td>
+      <td>28.133</td>
+      <td>21.252</td>
+    </tr>
+    <tr>
+      <th>267</th>
+      <td>267</td>
+      <td>19.110</td>
+      <td>21.038</td>
+    </tr>
+    <tr>
+      <th>268</th>
+      <td>268</td>
+      <td>17.984</td>
+      <td>20.733</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>269</td>
+      <td>23.119</td>
+      <td>20.971</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+    
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_35_1.png)
+    
+
+
+
+```python
+def get_pred(model, dataloader):
+    pred = []
+    model.eval()
+    for data in dataloader:
+        data = data.to(device)
+        output = model(data)
+        pred.append(output.detach().numpy())
+    return pred
+
+pred = get_pred(model, dl_valid)
+analysis.pred_aa_simple = vaep_model.build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+analysis.pred_aa_simple
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1770,237 +1793,942 @@ build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>495,689,428.859</td>
-      <td>174,648,026.448</td>
-      <td>244,438,695.366</td>
-      <td>331,601,743.637</td>
-      <td>412,010,550.333</td>
-      <td>728,731,877.671</td>
-      <td>100,493,069.020</td>
-      <td>228,488,125.928</td>
-      <td>815,485,355.195</td>
-      <td>642,556,804.222</td>
+      <td>27.520</td>
+      <td>30.036</td>
+      <td>29.472</td>
+      <td>28.294</td>
+      <td>27.373</td>
+      <td>27.410</td>
+      <td>28.514</td>
+      <td>30.168</td>
+      <td>32.614</td>
+      <td>28.386</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>1,987,471,723.267</td>
-      <td>631,702,214.597</td>
-      <td>1,117,784,955.196</td>
-      <td>1,145,323,021.013</td>
-      <td>1,770,494,646.439</td>
-      <td>5,668,765,527.469</td>
-      <td>1,011,586,140.024</td>
-      <td>662,534,897.888</td>
-      <td>2,669,100,762.701</td>
-      <td>2,109,337,563.324</td>
+      <td>26.965</td>
+      <td>30.105</td>
+      <td>29.714</td>
+      <td>28.566</td>
+      <td>27.978</td>
+      <td>27.512</td>
+      <td>28.846</td>
+      <td>31.157</td>
+      <td>33.634</td>
+      <td>28.686</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>1,496,465,524.430</td>
-      <td>466,505,357.023</td>
-      <td>840,084,674.309</td>
-      <td>858,131,756.504</td>
-      <td>1,218,733,403.088</td>
-      <td>3,846,414,094.870</td>
-      <td>681,512,489.637</td>
-      <td>480,976,426.067</td>
-      <td>1,961,512,307.091</td>
-      <td>1,516,892,162.959</td>
+      <td>27.442</td>
+      <td>30.613</td>
+      <td>30.300</td>
+      <td>29.288</td>
+      <td>28.634</td>
+      <td>28.065</td>
+      <td>29.524</td>
+      <td>32.171</td>
+      <td>34.649</td>
+      <td>29.454</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>471,324,033.377</td>
-      <td>161,447,231.515</td>
-      <td>225,367,929.908</td>
-      <td>311,156,468.547</td>
-      <td>383,027,241.596</td>
-      <td>623,433,878.115</td>
-      <td>88,166,996.228</td>
-      <td>221,136,126.279</td>
-      <td>806,944,445.875</td>
-      <td>616,385,853.156</td>
+      <td>27.004</td>
+      <td>29.819</td>
+      <td>29.307</td>
+      <td>28.089</td>
+      <td>27.378</td>
+      <td>27.209</td>
+      <td>28.398</td>
+      <td>30.299</td>
+      <td>32.611</td>
+      <td>28.230</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>1,519,464,424.611</td>
-      <td>482,681,481.089</td>
-      <td>860,009,263.881</td>
-      <td>884,733,935.641</td>
-      <td>1,266,804,701.877</td>
-      <td>3,980,595,418.058</td>
-      <td>696,622,785.509</td>
-      <td>494,335,210.989</td>
-      <td>1,980,362,502.576</td>
-      <td>1,566,343,282.566</td>
+      <td>28.583</td>
+      <td>31.218</td>
+      <td>30.845</td>
+      <td>29.938</td>
+      <td>28.881</td>
+      <td>28.656</td>
+      <td>29.929</td>
+      <td>32.104</td>
+      <td>35.096</td>
+      <td>29.929</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>1,197,500,004.402</td>
-      <td>470,553,253.946</td>
-      <td>723,081,592.022</td>
-      <td>818,686,773.127</td>
-      <td>1,181,302,503.903</td>
-      <td>3,500,920,410.122</td>
-      <td>542,365,045.067</td>
-      <td>456,257,122.460</td>
-      <td>1,498,824,537.544</td>
-      <td>1,424,881,013.779</td>
+      <td>27.173</td>
+      <td>30.394</td>
+      <td>30.033</td>
+      <td>28.996</td>
+      <td>28.414</td>
+      <td>27.823</td>
+      <td>29.304</td>
+      <td>32.008</td>
+      <td>34.242</td>
+      <td>29.279</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>1,191,526,753.174</td>
-      <td>448,227,324.956</td>
-      <td>704,752,774.581</td>
-      <td>785,273,440.580</td>
-      <td>1,120,301,034.579</td>
-      <td>3,349,644,769.690</td>
-      <td>533,595,828.799</td>
-      <td>440,764,579.649</td>
-      <td>1,513,778,265.156</td>
-      <td>1,365,518,438.913</td>
+      <td>28.016</td>
+      <td>30.751</td>
+      <td>30.358</td>
+      <td>29.331</td>
+      <td>28.400</td>
+      <td>28.173</td>
+      <td>29.410</td>
+      <td>31.464</td>
+      <td>34.354</td>
+      <td>29.302</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>824,720,515.343</td>
-      <td>279,496,898.392</td>
-      <td>444,815,372.310</td>
-      <td>507,384,531.079</td>
-      <td>666,940,033.305</td>
-      <td>1,796,326,388.849</td>
-      <td>295,282,822.831</td>
-      <td>307,396,056.897</td>
-      <td>1,152,607,101.079</td>
-      <td>900,410,198.590</td>
+      <td>27.077</td>
+      <td>30.267</td>
+      <td>29.879</td>
+      <td>28.807</td>
+      <td>28.231</td>
+      <td>27.684</td>
+      <td>29.122</td>
+      <td>31.716</td>
+      <td>33.955</td>
+      <td>29.079</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>472,906,916.160</td>
-      <td>161,457,475.773</td>
-      <td>226,604,519.001</td>
-      <td>312,183,542.439</td>
-      <td>383,989,017.044</td>
-      <td>623,138,051.058</td>
-      <td>87,667,450.881</td>
-      <td>221,158,472.303</td>
-      <td>807,705,057.185</td>
-      <td>618,531,421.525</td>
+      <td>27.318</td>
+      <td>29.780</td>
+      <td>29.161</td>
+      <td>27.934</td>
+      <td>27.046</td>
+      <td>27.155</td>
+      <td>28.219</td>
+      <td>29.782</td>
+      <td>32.014</td>
+      <td>28.100</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>1,282,651,131.272</td>
-      <td>472,765,005.142</td>
-      <td>758,870,972.016</td>
-      <td>834,641,102.949</td>
-      <td>1,200,828,207.865</td>
-      <td>3,623,610,727.977</td>
-      <td>584,564,217.167</td>
-      <td>465,791,752.916</td>
-      <td>1,629,645,568.233</td>
-      <td>1,459,909,542.992</td>
+      <td>28.337</td>
+      <td>30.904</td>
+      <td>30.416</td>
+      <td>29.477</td>
+      <td>28.429</td>
+      <td>28.282</td>
+      <td>29.566</td>
+      <td>31.715</td>
+      <td>34.304</td>
+      <td>29.655</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>617,487,419.408</td>
-      <td>240,696,260.255</td>
-      <td>335,040,428.779</td>
-      <td>428,621,578.503</td>
-      <td>557,028,361.014</td>
-      <td>1,284,084,942.962</td>
-      <td>176,263,000.205</td>
-      <td>268,779,333.940</td>
-      <td>883,746,816.191</td>
-      <td>769,718,394.177</td>
+      <td>27.679</td>
+      <td>30.213</td>
+      <td>29.684</td>
+      <td>28.538</td>
+      <td>27.588</td>
+      <td>27.591</td>
+      <td>28.710</td>
+      <td>30.405</td>
+      <td>33.002</td>
+      <td>28.578</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>1,353,264,203.602</td>
-      <td>501,631,611.567</td>
-      <td>809,183,463.825</td>
-      <td>890,149,383.520</td>
-      <td>1,294,570,670.204</td>
-      <td>3,891,125,168.826</td>
-      <td>620,975,533.948</td>
-      <td>491,977,673.169</td>
-      <td>1,703,252,401.022</td>
-      <td>1,566,141,787.188</td>
+      <td>28.282</td>
+      <td>30.861</td>
+      <td>30.449</td>
+      <td>29.434</td>
+      <td>28.395</td>
+      <td>28.280</td>
+      <td>29.453</td>
+      <td>31.338</td>
+      <td>34.367</td>
+      <td>29.343</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>1,573,554,844.359</td>
-      <td>624,662,432.927</td>
-      <td>975,802,208.748</td>
-      <td>1,103,386,428.516</td>
-      <td>1,702,215,246.495</td>
-      <td>5,026,947,138.924</td>
-      <td>779,017,766.421</td>
-      <td>613,175,936.713</td>
-      <td>1,988,010,577.078</td>
-      <td>2,008,914,681.325</td>
+      <td>28.882</td>
+      <td>31.370</td>
+      <td>30.986</td>
+      <td>30.099</td>
+      <td>28.935</td>
+      <td>28.811</td>
+      <td>30.019</td>
+      <td>32.036</td>
+      <td>35.201</td>
+      <td>30.020</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>1,593,093,014.496</td>
-      <td>626,960,799.564</td>
-      <td>984,186,953.975</td>
-      <td>1,108,997,689.662</td>
-      <td>1,712,588,990.649</td>
-      <td>5,069,483,932.018</td>
-      <td>789,823,286.310</td>
-      <td>617,220,583.176</td>
-      <td>2,018,553,161.171</td>
-      <td>2,021,683,901.292</td>
+      <td>28.828</td>
+      <td>31.358</td>
+      <td>30.982</td>
+      <td>30.097</td>
+      <td>28.960</td>
+      <td>28.802</td>
+      <td>30.032</td>
+      <td>32.107</td>
+      <td>35.234</td>
+      <td>30.037</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>1,648,801,505.045</td>
-      <td>599,292,374.190</td>
-      <td>982,029,935.847</td>
-      <td>1,067,140,615.481</td>
-      <td>1,626,297,806.011</td>
-      <td>4,969,064,949.486</td>
-      <td>817,648,715.667</td>
-      <td>599,874,690.619</td>
-      <td>2,130,687,013.947</td>
-      <td>1,934,268,824.957</td>
+      <td>28.308</td>
+      <td>31.024</td>
+      <td>30.607</td>
+      <td>29.692</td>
+      <td>28.708</td>
+      <td>28.430</td>
+      <td>29.774</td>
+      <td>32.102</td>
+      <td>34.768</td>
+      <td>29.842</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>1,653,485,437.059</td>
-      <td>643,032,929.891</td>
-      <td>1,016,218,266.403</td>
-      <td>1,140,538,170.856</td>
-      <td>1,774,507,039.179</td>
-      <td>5,263,764,568.634</td>
-      <td>826,541,619.732</td>
-      <td>637,734,787.642</td>
-      <td>2,110,466,993.002</td>
-      <td>2,092,375,687.131</td>
+      <td>28.141</td>
+      <td>31.051</td>
+      <td>30.747</td>
+      <td>29.812</td>
+      <td>28.940</td>
+      <td>28.524</td>
+      <td>29.901</td>
+      <td>32.354</td>
+      <td>35.169</td>
+      <td>29.850</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>2,370,855,942.538</td>
-      <td>627,507,354.825</td>
-      <td>1,242,031,380.029</td>
-      <td>1,169,014,633.297</td>
-      <td>1,798,991,840.944</td>
-      <td>6,165,165,532.021</td>
-      <td>1,208,914,116.114</td>
-      <td>696,330,846.027</td>
-      <td>3,279,539,314.387</td>
-      <td>2,163,401,448.291</td>
+      <td>29.727</td>
+      <td>31.648</td>
+      <td>31.122</td>
+      <td>30.295</td>
+      <td>28.751</td>
+      <td>29.029</td>
+      <td>30.079</td>
+      <td>31.621</td>
+      <td>34.914</td>
+      <td>30.191</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>2,308,297,291.278</td>
-      <td>679,519,196.213</td>
-      <td>1,248,646,870.238</td>
-      <td>1,235,918,791.116</td>
-      <td>1,957,307,218.716</td>
-      <td>6,480,666,019.190</td>
-      <td>1,215,421,759.161</td>
-      <td>739,374,035.272</td>
-      <td>3,194,241,298.717</td>
-      <td>2,314,356,246.410</td>
+      <td>29.677</td>
+      <td>31.481</td>
+      <td>30.871</td>
+      <td>30.030</td>
+      <td>28.440</td>
+      <td>28.823</td>
+      <td>29.866</td>
+      <td>31.337</td>
+      <td>34.373</td>
+      <td>30.035</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+display(analysis.df_valid) # true values
+```
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
+      <td>27.956</td>
+      <td>29.817</td>
+      <td>29.456</td>
+      <td>27.656</td>
+      <td>27.132</td>
+      <td>27.241</td>
+      <td>28.236</td>
+      <td>30.481</td>
+      <td>33.591</td>
+      <td>28.224</td>
+    </tr>
+    <tr>
+      <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
+      <td>25.400</td>
+      <td>31.561</td>
+      <td>30.700</td>
+      <td>29.704</td>
+      <td>29.378</td>
+      <td>28.823</td>
+      <td>25.014</td>
+      <td>31.743</td>
+      <td>34.523</td>
+      <td>29.635</td>
+    </tr>
+    <tr>
+      <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
+      <td>24.494</td>
+      <td>31.351</td>
+      <td>30.458</td>
+      <td>29.707</td>
+      <td>28.484</td>
+      <td>28.636</td>
+      <td>29.766</td>
+      <td>31.257</td>
+      <td>35.195</td>
+      <td>29.434</td>
+    </tr>
+    <tr>
+      <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
+      <td>26.772</td>
+      <td>29.680</td>
+      <td>29.020</td>
+      <td>27.594</td>
+      <td>27.499</td>
+      <td>26.780</td>
+      <td>28.326</td>
+      <td>29.906</td>
+      <td>33.474</td>
+      <td>27.585</td>
+    </tr>
+    <tr>
+      <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
+      <td>28.447</td>
+      <td>31.510</td>
+      <td>30.794</td>
+      <td>29.653</td>
+      <td>29.150</td>
+      <td>28.478</td>
+      <td>29.747</td>
+      <td>32.064</td>
+      <td>34.095</td>
+      <td>29.635</td>
+    </tr>
+    <tr>
+      <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
+      <td>24.904</td>
+      <td>30.993</td>
+      <td>30.107</td>
+      <td>29.459</td>
+      <td>28.101</td>
+      <td>28.707</td>
+      <td>29.228</td>
+      <td>31.348</td>
+      <td>33.712</td>
+      <td>29.428</td>
+    </tr>
+    <tr>
+      <th>20181120_QE5_nLC7_AP_HeLa_2</th>
+      <td>28.346</td>
+      <td>30.528</td>
+      <td>30.361</td>
+      <td>29.028</td>
+      <td>28.730</td>
+      <td>27.195</td>
+      <td>29.827</td>
+      <td>30.812</td>
+      <td>34.918</td>
+      <td>29.011</td>
+    </tr>
+    <tr>
+      <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
+      <td>26.306</td>
+      <td>30.465</td>
+      <td>29.782</td>
+      <td>29.125</td>
+      <td>28.164</td>
+      <td>28.206</td>
+      <td>29.117</td>
+      <td>31.243</td>
+      <td>33.639</td>
+      <td>29.216</td>
+    </tr>
+    <tr>
+      <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
+      <td>27.179</td>
+      <td>29.451</td>
+      <td>29.358</td>
+      <td>27.915</td>
+      <td>26.798</td>
+      <td>26.028</td>
+      <td>28.032</td>
+      <td>29.596</td>
+      <td>33.680</td>
+      <td>27.838</td>
+    </tr>
+    <tr>
+      <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
+      <td>28.494</td>
+      <td>30.809</td>
+      <td>30.328</td>
+      <td>29.676</td>
+      <td>27.857</td>
+      <td>27.121</td>
+      <td>29.708</td>
+      <td>31.590</td>
+      <td>34.334</td>
+      <td>29.797</td>
+    </tr>
+    <tr>
+      <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
+      <td>27.464</td>
+      <td>29.905</td>
+      <td>29.728</td>
+      <td>28.934</td>
+      <td>28.086</td>
+      <td>27.706</td>
+      <td>28.678</td>
+      <td>30.378</td>
+      <td>32.684</td>
+      <td>28.532</td>
+    </tr>
+    <tr>
+      <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
+      <td>28.212</td>
+      <td>30.430</td>
+      <td>31.207</td>
+      <td>29.135</td>
+      <td>28.272</td>
+      <td>28.608</td>
+      <td>28.994</td>
+      <td>31.456</td>
+      <td>34.572</td>
+      <td>29.358</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
+      <td>29.119</td>
+      <td>30.834</td>
+      <td>31.474</td>
+      <td>29.512</td>
+      <td>28.716</td>
+      <td>28.425</td>
+      <td>30.139</td>
+      <td>32.092</td>
+      <td>35.631</td>
+      <td>29.874</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
+      <td>28.943</td>
+      <td>30.723</td>
+      <td>31.434</td>
+      <td>29.677</td>
+      <td>28.734</td>
+      <td>28.442</td>
+      <td>30.203</td>
+      <td>32.164</td>
+      <td>35.590</td>
+      <td>29.924</td>
+    </tr>
+    <tr>
+      <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
+      <td>28.880</td>
+      <td>31.047</td>
+      <td>31.376</td>
+      <td>29.957</td>
+      <td>29.013</td>
+      <td>26.288</td>
+      <td>29.736</td>
+      <td>32.056</td>
+      <td>34.686</td>
+      <td>29.746</td>
+    </tr>
+    <tr>
+      <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
+      <td>26.021</td>
+      <td>31.040</td>
+      <td>31.480</td>
+      <td>30.707</td>
+      <td>29.119</td>
+      <td>29.521</td>
+      <td>29.988</td>
+      <td>32.563</td>
+      <td>35.320</td>
+      <td>29.909</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
+      <td>30.657</td>
+      <td>31.328</td>
+      <td>31.653</td>
+      <td>30.269</td>
+      <td>28.629</td>
+      <td>29.571</td>
+      <td>30.154</td>
+      <td>32.489</td>
+      <td>33.541</td>
+      <td>30.359</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
+      <td>30.785</td>
+      <td>31.465</td>
+      <td>32.088</td>
+      <td>30.373</td>
+      <td>28.640</td>
+      <td>29.429</td>
+      <td>30.350</td>
+      <td>32.901</td>
+      <td>31.347</td>
+      <td>30.213</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+```python
+analysis.results['Simple AA'] = describe_abs_diff(y_true=analysis.df_valid, y_pred=analysis.pred_aa_simple)
+pd.DataFrame(analysis.results['Simple AA'])
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.797</td>
+      <td>0.365</td>
+      <td>0.386</td>
+      <td>0.417</td>
+      <td>0.310</td>
+      <td>0.711</td>
+      <td>0.383</td>
+      <td>0.405</td>
+      <td>0.740</td>
+      <td>0.215</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.871</td>
+      <td>0.348</td>
+      <td>0.373</td>
+      <td>0.274</td>
+      <td>0.301</td>
+      <td>0.512</td>
+      <td>0.873</td>
+      <td>0.412</td>
+      <td>0.725</td>
+      <td>0.233</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.070</td>
+      <td>0.011</td>
+      <td>0.004</td>
+      <td>0.020</td>
+      <td>0.067</td>
+      <td>0.115</td>
+      <td>0.005</td>
+      <td>0.027</td>
+      <td>0.030</td>
+      <td>0.015</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.172</td>
+      <td>0.154</td>
+      <td>0.078</td>
+      <td>0.288</td>
+      <td>0.157</td>
+      <td>0.366</td>
+      <td>0.076</td>
+      <td>0.072</td>
+      <td>0.316</td>
+      <td>0.101</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.383</td>
+      <td>0.300</td>
+      <td>0.243</td>
+      <td>0.370</td>
+      <td>0.233</td>
+      <td>0.556</td>
+      <td>0.157</td>
+      <td>0.261</td>
+      <td>0.538</td>
+      <td>0.148</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.064</td>
+      <td>0.509</td>
+      <td>0.683</td>
+      <td>0.487</td>
+      <td>0.311</td>
+      <td>0.993</td>
+      <td>0.269</td>
+      <td>0.635</td>
+      <td>0.956</td>
+      <td>0.240</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.948</td>
+      <td>1.456</td>
+      <td>1.217</td>
+      <td>1.138</td>
+      <td>1.400</td>
+      <td>2.143</td>
+      <td>3.832</td>
+      <td>1.564</td>
+      <td>3.026</td>
+      <td>0.949</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+### With noise: Denoising AE
+
+- noise is added during training: some values are set to zero (which is the center for standard normalized intensities)
+- noise model could be adapted to reflect the observed noise in the training data - > extrapolation to near future should hold
+
+
+```python
+model = vaep_model.Autoencoder(n_features=M, n_neurons=int(M/2), last_activation=None, dim_latent=3).double()
+criterion = torch.nn.MSELoss(reduction='sum')
+
+learning_rate = 1e-3
+
+optimizer = torch.optim.Adam(
+    model.parameters(),
+    lr=learning_rate,
+)
+
+# Train denoising autoencoder (AE)
+
+train_losses, valid_losses = [], []
+
+do = torch.nn.Dropout()  # for denoising AE
+for epoch in range(args.epochs):
+    # ===================train==========================
+    for data in dl_train:
+        model.train()
+        data = data.to(device)
+        noise = do(torch.ones(data.shape)).to(device) # for denoising AE
+        data_corrupted = (data * noise).to(device)    # for denoising AE
+        # ===================forward=====================
+        output = model(data) 
+        loss = criterion(output, data)
+        # ===================backward====================
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        train_losses.append(loss.item())
+    # ===================validate========================
+    for data in dl_valid:
+        model.eval()
+        data = data.to(device)
+        output = model(data)
+        loss = criterion(output, data)
+        valid_losses.append(loss.item())
+    
+    # ===================log=============================
+    print(f'epoch [{epoch + 1:03d}/{args.epochs}], '
+          f'train-loss: {np.mean(train_losses[-len(dl_train):]):.4f},'
+          f'valid-loss: {np.mean(valid_losses[-len(dl_valid):]):.4f}')
+        
+```
+
+    epoch [001/30], train-loss: 89.8043,valid-loss: 95.5491
+    epoch [002/30], train-loss: 88.5946,valid-loss: 94.6490
+    epoch [003/30], train-loss: 87.5243,valid-loss: 93.8161
+    epoch [004/30], train-loss: 86.5398,valid-loss: 93.0442
+    epoch [005/30], train-loss: 85.5000,valid-loss: 92.3734
+    epoch [006/30], train-loss: 84.6924,valid-loss: 91.6571
+    epoch [007/30], train-loss: 83.7070,valid-loss: 90.9480
+    epoch [008/30], train-loss: 82.7581,valid-loss: 90.3131
+    epoch [009/30], train-loss: 81.8574,valid-loss: 89.5823
+    epoch [010/30], train-loss: 80.8722,valid-loss: 88.7709
+    epoch [011/30], train-loss: 79.8039,valid-loss: 87.9265
+    epoch [012/30], train-loss: 78.7059,valid-loss: 86.9786
+    epoch [013/30], train-loss: 77.5274,valid-loss: 85.9934
+    epoch [014/30], train-loss: 76.1957,valid-loss: 84.8848
+    epoch [015/30], train-loss: 74.7322,valid-loss: 83.7327
+    epoch [016/30], train-loss: 73.3444,valid-loss: 82.3355
+    epoch [017/30], train-loss: 71.6939,valid-loss: 80.8277
+    epoch [018/30], train-loss: 69.9137,valid-loss: 79.3060
+    epoch [019/30], train-loss: 68.1237,valid-loss: 77.6209
+    epoch [020/30], train-loss: 66.2098,valid-loss: 75.8276
+    epoch [021/30], train-loss: 64.3099,valid-loss: 73.9922
+    epoch [022/30], train-loss: 62.3770,valid-loss: 72.1223
+    epoch [023/30], train-loss: 60.5114,valid-loss: 70.2331
+    epoch [024/30], train-loss: 58.5319,valid-loss: 68.4391
+    epoch [025/30], train-loss: 56.7203,valid-loss: 66.7242
+    epoch [026/30], train-loss: 54.9797,valid-loss: 65.1043
+    epoch [027/30], train-loss: 53.3721,valid-loss: 63.5570
+    epoch [028/30], train-loss: 51.9604,valid-loss: 62.1090
+    epoch [029/30], train-loss: 50.5277,valid-loss: 60.7503
+    epoch [030/30], train-loss: 49.2118,valid-loss: 59.5472
+    
+
+
+```python
+df_train_losses = vaep_model.process_train_loss({'MSE train': train_losses})
+
+# Plotting is boilerplate code:
+_ = df_train_losses.plot(kind='scatter', x='steps', y='MSE train smoothed', figsize=(15,8),  title='Exponential smoothed training loss', ylim=(0,None))
+df_train_losses.tail()
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>steps</th>
+      <th>MSE train</th>
+      <th>MSE train smoothed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>265</th>
+      <td>265</td>
+      <td>46.791</td>
+      <td>50.565</td>
+    </tr>
+    <tr>
+      <th>266</th>
+      <td>266</td>
+      <td>50.418</td>
+      <td>50.550</td>
+    </tr>
+    <tr>
+      <th>267</th>
+      <td>267</td>
+      <td>35.912</td>
+      <td>49.087</td>
+    </tr>
+    <tr>
+      <th>268</th>
+      <td>268</td>
+      <td>65.076</td>
+      <td>50.686</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>269</td>
+      <td>43.808</td>
+      <td>49.998</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+    
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_41_1.png)
+    
+
+
+
+```python
+pred = get_pred(model, dl_valid)
+analysis.pred_aa_denoised = vaep_model.build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+analysis.results['denoising AA'] = describe_abs_diff(y_true=analysis.df_valid, y_pred=analysis.pred_aa_denoised)
+pd.DataFrame(analysis.results['denoising AA'])
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.196</td>
+      <td>0.374</td>
+      <td>0.684</td>
+      <td>0.601</td>
+      <td>0.532</td>
+      <td>0.787</td>
+      <td>0.393</td>
+      <td>0.524</td>
+      <td>0.783</td>
+      <td>0.487</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.284</td>
+      <td>0.281</td>
+      <td>0.519</td>
+      <td>0.383</td>
+      <td>0.373</td>
+      <td>0.547</td>
+      <td>0.827</td>
+      <td>0.378</td>
+      <td>0.720</td>
+      <td>0.285</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.024</td>
+      <td>0.045</td>
+      <td>0.016</td>
+      <td>0.062</td>
+      <td>0.085</td>
+      <td>0.057</td>
+      <td>0.019</td>
+      <td>0.053</td>
+      <td>0.002</td>
+      <td>0.063</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.226</td>
+      <td>0.248</td>
+      <td>0.229</td>
+      <td>0.301</td>
+      <td>0.351</td>
+      <td>0.359</td>
+      <td>0.149</td>
+      <td>0.276</td>
+      <td>0.147</td>
+      <td>0.279</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.571</td>
+      <td>0.345</td>
+      <td>0.634</td>
+      <td>0.496</td>
+      <td>0.457</td>
+      <td>0.771</td>
+      <td>0.173</td>
+      <td>0.491</td>
+      <td>0.690</td>
+      <td>0.456</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.706</td>
+      <td>0.425</td>
+      <td>1.112</td>
+      <td>0.968</td>
+      <td>0.720</td>
+      <td>1.134</td>
+      <td>0.232</td>
+      <td>0.581</td>
+      <td>1.238</td>
+      <td>0.653</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>4.228</td>
+      <td>1.300</td>
+      <td>1.773</td>
+      <td>1.393</td>
+      <td>1.674</td>
+      <td>1.979</td>
+      <td>3.648</td>
+      <td>1.302</td>
+      <td>2.641</td>
+      <td>0.968</td>
     </tr>
   </tbody>
 </table>
@@ -2037,16 +2765,16 @@ scaler.transform(analysis.df_valid.iloc[:5])
 
 
 
-    array([[ 0.14049548,  0.1307324 ,  0.08228755,  0.18666352,  0.1123346 ,
-             0.0181262 ,  0.04769316,  0.1073988 ,  0.11092301,  0.13571915],
-           [ 0.66195948,  0.40660206,  0.61315923,  0.60249773,  0.65853507,
-             0.50209489,  0.2066747 ,  0.55556579,  0.35680016,  0.45932172],
-           [ 0.37040311,  0.36468557,  0.46037114,  0.49967418,  0.31804687,
-             0.39621234,  0.08168229,  0.02321677,  0.34727276,  0.4512778 ],
-           [ 0.10298472,  0.10091836,  0.04305615,  0.08752068,  0.07226189,
-             0.07355578,  0.01642663,  0.11891336,  0.11505657,  0.11683246],
-           [ 0.02139874,  0.65397478,  0.63550829, -0.09440804,  0.46125284,
-             0.23773274,  0.20267751,  0.28490164,  0.39932245,  0.38342787]])
+    array([[ 0.5925961 ,  0.369967  ,  0.52245834,  0.20926498,  0.38421256,
+             0.4002751 ,  0.22785938,  0.57891581,  0.68262995,  0.24748365],
+           [ 0.22513514,  0.80182328,  0.81051902,  0.6441257 ,  0.91388469,
+             0.78218994, -0.77102995,  0.85918971,  0.80219574,  0.70865655],
+           [ 0.09484438,  0.74968027,  0.75454218,  0.64489935,  0.7031302 ,
+             0.737137  ,  0.70233881,  0.75136518,  0.88845529,  0.64286254],
+           [ 0.42237141,  0.33598028,  0.4215099 ,  0.19597205,  0.47075274,
+             0.2888424 ,  0.2557095 ,  0.45125992,  0.66748685,  0.03867875],
+           [ 0.66334156,  0.78921203,  0.83214507,  0.63345113,  0.86019715,
+             0.69895842,  0.69643227,  0.93047198,  0.74726077,  0.70845291]])
 
 
 
@@ -2084,7 +2812,7 @@ from vaep.model import VAE
 n_neurons = 5
 logger.info(f'Latent layer neurons: {n_neurons}')
 
-model = VAE(n_features=n_features, n_neurons=n_neurons, dim_vae_latent=2)
+model = vaep_model.VAE(n_features=n_features, n_neurons=n_neurons, dim_vae_latent=2)
 model = model.to(device)
 
 logger.info(model)
@@ -2106,7 +2834,8 @@ logger.info(model)
 
 ```python
 from torch import optim
-optimizer = optim.Adam(model.parameters(), lr=1e-6)
+optimizer = optim.Adam(params=model.parameters(),
+                       lr=1e-3)
 ```
 
 ### Tensorboard
@@ -2117,16 +2846,16 @@ optimizer = optim.Adam(model.parameters(), lr=1e-6)
 # writer = tensorboard_model_namer.get_writer(1, [n_neurons], 'scaler')
 # logger.info(f"Logging to: {writer.get_logdir()}")
 
-# data, mask = next(iter(dl_train))
-# data = next(iter(dl_train))
+# # data, mask = next(iter(dl_train))
+# # writer.add_image(
+# #     f'{len(mask)} mask for this batch of samples', mask, dataformats='HW')
 
+# data = next(iter(dl_train))
 # writer.add_image(
 #     f'{len(data)} batch of sampled data (as heatmap)', data, dataformats='HW')
-# writer.add_image(
-#     f'{len(mask)} mask for this batch of samples', mask, dataformats='HW')
 
 
-# ToDo: compiler warning: error or tracer error?
+# # ToDo: compiler warning: error or tracer error?
 # writer.add_graph(model, input_to_model=data.to(device))  # try to add after training?
 # writer.flush()
 ```
@@ -2136,30 +2865,46 @@ optimizer = optim.Adam(model.parameters(), lr=1e-6)
 
 ```python
 from collections import defaultdict
+from functools import partial
+
 import torch
 
-import vaep; import importlib; importlib.reload(vaep.model)
-from vaep.model import train, evaluate
-from vaep.model import VAE
-from vaep.model import loss_function
-from vaep.tf_board import TensorboardModelNamer
 
 def run_experiment(model, dls, writer, args):
     metrics = defaultdict(dict)
+    metrics_per_batch = defaultdict(list)
     dl_train, dl_valid = dls
     msg_eval_epoch = "Validation Set - Epoch: {:3d} - loss: {:7.3f} - mse: {:5.3f} - KLD: {:5.3f}"
+
+    
+    def _append_batch_metrics(batch_metrics_epoch, d_metrics=metrics_per_batch, dataset_name='train'):
+        """Append single batch metrics to global dictionary."""
+        for d in batch_metrics_epoch.values():
+            for key, value in d.items():
+                d_metrics[(dataset_name, key)].append(d[key])
+        return None  # Signal in-place operation
+    
+    def _agg_metric_per_epoch(batch_metrics_epoch, epoch, d_metrics=metrics, dataset_name='train'):
+        keys = next(iter(batch_metrics_epoch.values())).keys()
+        for key in keys:
+            d_metrics[(dataset_name, key)][epoch] = np.mean([d[key]
+                                             for d in batch_metrics_epoch.values()])
+        return None # Signal in-place operation
     
     for epoch in range(1, args.epochs+1):
-        _batch_metrics = train(model=model, train_loader=dl_train,
+        _epoch_metrics = vaep_model.train(model=model, train_loader=dl_train,
                                                                  optimizer=optimizer, device=device)
         n_batches = len(dl_train)
         
-        metrics[('train', 'loss')][epoch] = np.mean([d['loss']
-                                             for d in _batch_metrics.values()])
-        metrics[('train', 'mse')][epoch] = np.mean([d['MSE']
-                                             for d in _batch_metrics.values()])
-        metrics[('train', 'KLD')][epoch] = np.mean([d['KLD']
-                                             for d in _batch_metrics.values()])
+        _append_batch_metrics(_epoch_metrics)
+        
+        _agg_metric_per_epoch(_epoch_metrics, epoch)
+#         metrics[('train', 'loss')][epoch] = np.mean([d['loss']
+#                                              for d in _epoch_metrics.values()])
+#         metrics[('train', 'mse')][epoch] = np.mean([d['MSE']
+#                                              for d in _epoch_metrics.values()])
+#         metrics[('train', 'KLD')][epoch] = np.mean([d['KLD']
+#                                              for d in _epoch_metrics.values()])
         # if epoch % 25 == 0:
         #     logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
         #         epoch=epoch, avg_loss=avg_loss))
@@ -2168,127 +2913,231 @@ def run_experiment(model, dls, writer, args):
         #                       avg_loss,
         #                       epoch)
 
-        _epoch_metric_valid = evaluate(
+        _epoch_metrics_valid = vaep_model.evaluate(
             model=model, data_loader=dl_valid, device=device)
         n_batches = len(dl_valid)
+        _append_batch_metrics(_epoch_metrics_valid, dataset_name='valid')
+        _agg_metric_per_epoch(_epoch_metrics_valid, epoch, dataset_name='valid')
+        
         if writer:
             writer.add_scalar('avg validation loss',
-                          _epoch_metric_valid['loss'] / n_batches,
+                          _epoch_metric_valid['loss'] / n_batchnes,
                           epoch)
-        metrics[('valid', 'loss')][epoch] = np.mean([d['loss']
-                                             for d in _epoch_metric_valid.values()])
-        metrics[('valid', 'mse')][epoch] = np.mean([d['MSE']
-                                             for d in _epoch_metric_valid.values()])
-        metrics[('valid', 'KLD')][epoch] = np.mean([d['KLD']
-                                             for d in _epoch_metric_valid.values()])
+
+            
+#         metrics[('valid', 'loss')][epoch] = np.mean([d['loss']
+#                                              for d in _epoch_metrics_valid.values()])
+#         metrics[('valid', 'mse')][epoch] = np.mean([d['MSE']
+#                                              for d in _epoch_metrics_valid.values()])
+#         metrics[('valid', 'KLD')][epoch] = np.mean([d['KLD']
+#                                              for d in _epoch_metrics_valid.values()])
 #         if not epoch % 10:
 #             logger.info(msg_eval_epoch.format(
 #                 epoch, *_epoch_metric_valid.values()))
 #     writer.flush()
 #     writer.close()  # closes all internal writers of SummaryWriter
-    return metrics
+    return dict(metrics), dict(metrics_per_batch)
 ```
 
 
 ```python
-metrics = run_experiment(model=model, dls=(
+metrics, metrics_per_batch = run_experiment(model=model, dls=(
     dl_train, dl_valid), writer=None, args=args)  # decide about format
 ```
 
-### One epoch
-
 
 ```python
-logger.setLevel(logging.DEBUG)
-batch_metrics = train(model=model, train_loader=dl_train,
-                      optimizer=optimizer, device=device)
-```
+df_train_losses = vaep_model.process_train_loss({'training loss': metrics_per_batch[('train', 'loss')]})
 
-
-```python
-pd.DataFrame.from_dict(batch_metrics, orient='index')
+# Plotting is boilerplate code:
+_ = df_train_losses.plot(kind='scatter', x='steps', y='training loss smoothed', figsize=(15,8),  title='Exponential smoothed training loss', ylim=(0,None))
+df_train_losses
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>steps</th>
+      <th>training loss</th>
+      <th>training loss smoothed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.539</td>
+      <td>0.539</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.694</td>
+      <td>0.621</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.524</td>
+      <td>0.585</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0.653</td>
+      <td>0.605</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0.904</td>
+      <td>0.678</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>265</th>
+      <td>265</td>
+      <td>0.386</td>
+      <td>0.418</td>
+    </tr>
+    <tr>
+      <th>266</th>
+      <td>266</td>
+      <td>0.215</td>
+      <td>0.397</td>
+    </tr>
+    <tr>
+      <th>267</th>
+      <td>267</td>
+      <td>0.528</td>
+      <td>0.410</td>
+    </tr>
+    <tr>
+      <th>268</th>
+      <td>268</td>
+      <td>0.529</td>
+      <td>0.422</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>269</td>
+      <td>0.398</td>
+      <td>0.420</td>
+    </tr>
+  </tbody>
+</table>
+<p>270 rows × 3 columns</p>
+</div>
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
+
+
+
+    
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_59_1.png)
+    
+
+
+
+```python
+metrics_per_batch.keys()
+```
+
+
+
+
+    dict_keys([('train', 'loss'), ('train', 'recon_loss'), ('train', 'KLD'), ('valid', 'loss'), ('valid', 'recon_loss'), ('valid', 'KLD')])
+
+
+
+### One epoch
+
+
+```python
+logger.setLevel(logging.DEBUG)
+batch_metrics_last_epoch = vaep_model.train(model=model, train_loader=dl_train,
+                      optimizer=optimizer, device=device)
+pd.DataFrame.from_dict(batch_metrics_last_epoch, orient='index')
+```
+
+
+
+
+<div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
       <th>loss</th>
-      <th>MSE</th>
+      <th>recon_loss</th>
       <th>KLD</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>2.568</td>
-      <td>2.820</td>
-      <td>0.299</td>
+      <td>0.398</td>
+      <td>0.396</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>3.210</td>
-      <td>3.530</td>
-      <td>0.335</td>
+      <td>0.223</td>
+      <td>0.221</td>
+      <td>0.001</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>4.155</td>
-      <td>4.580</td>
-      <td>0.325</td>
+      <td>0.360</td>
+      <td>0.358</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2.136</td>
-      <td>2.341</td>
-      <td>0.291</td>
+      <td>0.401</td>
+      <td>0.399</td>
+      <td>0.003</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2.874</td>
-      <td>3.159</td>
-      <td>0.309</td>
+      <td>0.887</td>
+      <td>0.885</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>3.373</td>
-      <td>3.712</td>
-      <td>0.325</td>
+      <td>0.298</td>
+      <td>0.296</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>3.374</td>
-      <td>3.712</td>
-      <td>0.331</td>
+      <td>0.174</td>
+      <td>0.172</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>2.343</td>
-      <td>2.573</td>
-      <td>0.279</td>
+      <td>0.429</td>
+      <td>0.427</td>
+      <td>0.002</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>3.157</td>
-      <td>3.471</td>
-      <td>0.333</td>
+      <td>0.526</td>
+      <td>0.523</td>
+      <td>0.003</td>
     </tr>
   </tbody>
 </table>
@@ -2308,7 +3157,9 @@ _ = metrics.plot(
 ```
 
 
-![png](12_experiment_01_small_example_files/12_experiment_01_small_example_54_0.png)
+    
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_65_0.png)
+    
 
 
 
@@ -2320,19 +3171,7 @@ metrics
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead tr th {
-        text-align: left;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr>
@@ -2343,283 +3182,283 @@ metrics
     <tr>
       <th></th>
       <th>loss</th>
-      <th>mse</th>
+      <th>recon_loss</th>
       <th>KLD</th>
       <th>loss</th>
-      <th>mse</th>
+      <th>recon_loss</th>
       <th>KLD</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>1</th>
-      <td>2.887</td>
-      <td>3.172</td>
-      <td>0.315</td>
-      <td>4.141</td>
-      <td>4.560</td>
-      <td>0.367</td>
+      <td>0.657</td>
+      <td>0.624</td>
+      <td>0.037</td>
+      <td>1.096</td>
+      <td>1.063</td>
+      <td>0.036</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2.917</td>
-      <td>3.206</td>
-      <td>0.315</td>
-      <td>4.117</td>
-      <td>4.534</td>
-      <td>0.367</td>
+      <td>0.640</td>
+      <td>0.616</td>
+      <td>0.026</td>
+      <td>1.064</td>
+      <td>1.038</td>
+      <td>0.029</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>2.933</td>
-      <td>3.224</td>
-      <td>0.315</td>
-      <td>4.245</td>
-      <td>4.676</td>
-      <td>0.367</td>
+      <td>0.620</td>
+      <td>0.602</td>
+      <td>0.020</td>
+      <td>1.106</td>
+      <td>1.086</td>
+      <td>0.023</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>3.029</td>
-      <td>3.330</td>
-      <td>0.315</td>
-      <td>4.451</td>
-      <td>4.905</td>
-      <td>0.367</td>
+      <td>0.608</td>
+      <td>0.594</td>
+      <td>0.015</td>
+      <td>1.044</td>
+      <td>1.028</td>
+      <td>0.018</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>2.942</td>
-      <td>3.234</td>
-      <td>0.315</td>
-      <td>4.399</td>
-      <td>4.847</td>
-      <td>0.367</td>
+      <td>0.595</td>
+      <td>0.585</td>
+      <td>0.011</td>
+      <td>1.042</td>
+      <td>1.030</td>
+      <td>0.014</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>3.064</td>
-      <td>3.369</td>
-      <td>0.315</td>
-      <td>4.014</td>
-      <td>4.419</td>
-      <td>0.367</td>
+      <td>0.584</td>
+      <td>0.577</td>
+      <td>0.008</td>
+      <td>1.002</td>
+      <td>0.992</td>
+      <td>0.011</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>3.172</td>
-      <td>3.490</td>
-      <td>0.315</td>
-      <td>4.469</td>
-      <td>4.925</td>
-      <td>0.367</td>
+      <td>0.568</td>
+      <td>0.563</td>
+      <td>0.006</td>
+      <td>0.958</td>
+      <td>0.950</td>
+      <td>0.009</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>2.885</td>
-      <td>3.171</td>
-      <td>0.315</td>
-      <td>5.092</td>
-      <td>5.617</td>
-      <td>0.367</td>
+      <td>0.557</td>
+      <td>0.553</td>
+      <td>0.004</td>
+      <td>0.946</td>
+      <td>0.939</td>
+      <td>0.008</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>3.006</td>
-      <td>3.305</td>
-      <td>0.315</td>
-      <td>4.447</td>
-      <td>4.900</td>
-      <td>0.366</td>
+      <td>0.539</td>
+      <td>0.536</td>
+      <td>0.003</td>
+      <td>0.947</td>
+      <td>0.941</td>
+      <td>0.007</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>2.904</td>
-      <td>3.192</td>
-      <td>0.314</td>
-      <td>4.493</td>
-      <td>4.952</td>
-      <td>0.366</td>
+      <td>0.519</td>
+      <td>0.517</td>
+      <td>0.003</td>
+      <td>0.928</td>
+      <td>0.923</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>2.710</td>
-      <td>2.976</td>
-      <td>0.314</td>
-      <td>4.117</td>
-      <td>4.533</td>
-      <td>0.366</td>
+      <td>0.513</td>
+      <td>0.511</td>
+      <td>0.002</td>
+      <td>0.948</td>
+      <td>0.943</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>2.923</td>
-      <td>3.213</td>
-      <td>0.314</td>
-      <td>5.032</td>
-      <td>5.550</td>
-      <td>0.366</td>
+      <td>0.501</td>
+      <td>0.499</td>
+      <td>0.002</td>
+      <td>0.937</td>
+      <td>0.932</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>3.089</td>
-      <td>3.398</td>
-      <td>0.314</td>
-      <td>4.362</td>
-      <td>4.806</td>
-      <td>0.366</td>
+      <td>0.497</td>
+      <td>0.495</td>
+      <td>0.002</td>
+      <td>0.916</td>
+      <td>0.912</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>3.110</td>
-      <td>3.420</td>
-      <td>0.314</td>
-      <td>4.431</td>
-      <td>4.883</td>
-      <td>0.366</td>
+      <td>0.506</td>
+      <td>0.504</td>
+      <td>0.002</td>
+      <td>0.869</td>
+      <td>0.864</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>2.772</td>
-      <td>3.045</td>
-      <td>0.314</td>
-      <td>4.160</td>
-      <td>4.582</td>
-      <td>0.366</td>
+      <td>0.493</td>
+      <td>0.491</td>
+      <td>0.002</td>
+      <td>0.929</td>
+      <td>0.924</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>2.966</td>
-      <td>3.261</td>
-      <td>0.314</td>
-      <td>4.340</td>
-      <td>4.782</td>
-      <td>0.366</td>
+      <td>0.493</td>
+      <td>0.491</td>
+      <td>0.002</td>
+      <td>0.851</td>
+      <td>0.846</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>3.055</td>
-      <td>3.360</td>
-      <td>0.314</td>
-      <td>4.447</td>
-      <td>4.901</td>
-      <td>0.366</td>
+      <td>0.466</td>
+      <td>0.464</td>
+      <td>0.002</td>
+      <td>0.863</td>
+      <td>0.857</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>2.881</td>
-      <td>3.166</td>
-      <td>0.314</td>
-      <td>4.104</td>
-      <td>4.519</td>
-      <td>0.366</td>
+      <td>0.468</td>
+      <td>0.466</td>
+      <td>0.002</td>
+      <td>0.858</td>
+      <td>0.853</td>
+      <td>0.006</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>2.972</td>
-      <td>3.267</td>
-      <td>0.314</td>
-      <td>4.388</td>
-      <td>4.835</td>
-      <td>0.366</td>
+      <td>0.457</td>
+      <td>0.455</td>
+      <td>0.002</td>
+      <td>0.854</td>
+      <td>0.849</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>3.024</td>
-      <td>3.325</td>
-      <td>0.314</td>
-      <td>4.920</td>
-      <td>5.426</td>
-      <td>0.366</td>
+      <td>0.440</td>
+      <td>0.438</td>
+      <td>0.002</td>
+      <td>0.853</td>
+      <td>0.849</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>2.915</td>
-      <td>3.204</td>
-      <td>0.314</td>
-      <td>4.296</td>
-      <td>4.733</td>
-      <td>0.366</td>
+      <td>0.444</td>
+      <td>0.442</td>
+      <td>0.002</td>
+      <td>0.789</td>
+      <td>0.784</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>2.873</td>
-      <td>3.157</td>
-      <td>0.314</td>
-      <td>4.467</td>
-      <td>4.923</td>
-      <td>0.366</td>
+      <td>0.446</td>
+      <td>0.445</td>
+      <td>0.002</td>
+      <td>0.834</td>
+      <td>0.830</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>3.062</td>
-      <td>3.367</td>
-      <td>0.314</td>
-      <td>4.147</td>
-      <td>4.567</td>
-      <td>0.366</td>
+      <td>0.430</td>
+      <td>0.428</td>
+      <td>0.002</td>
+      <td>0.834</td>
+      <td>0.830</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>2.790</td>
-      <td>3.065</td>
-      <td>0.314</td>
-      <td>4.200</td>
-      <td>4.626</td>
-      <td>0.366</td>
+      <td>0.459</td>
+      <td>0.457</td>
+      <td>0.002</td>
+      <td>0.821</td>
+      <td>0.816</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>2.947</td>
-      <td>3.239</td>
-      <td>0.314</td>
-      <td>4.756</td>
-      <td>5.244</td>
-      <td>0.366</td>
+      <td>0.425</td>
+      <td>0.423</td>
+      <td>0.002</td>
+      <td>0.826</td>
+      <td>0.821</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>3.008</td>
-      <td>3.308</td>
-      <td>0.314</td>
-      <td>4.095</td>
-      <td>4.510</td>
-      <td>0.366</td>
+      <td>0.430</td>
+      <td>0.428</td>
+      <td>0.002</td>
+      <td>0.786</td>
+      <td>0.781</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>3.077</td>
-      <td>3.384</td>
-      <td>0.314</td>
-      <td>4.334</td>
-      <td>4.775</td>
-      <td>0.366</td>
+      <td>0.427</td>
+      <td>0.426</td>
+      <td>0.002</td>
+      <td>0.795</td>
+      <td>0.791</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>2.938</td>
-      <td>3.230</td>
-      <td>0.314</td>
-      <td>4.731</td>
-      <td>5.216</td>
-      <td>0.366</td>
+      <td>0.429</td>
+      <td>0.428</td>
+      <td>0.002</td>
+      <td>0.760</td>
+      <td>0.755</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>2.921</td>
-      <td>3.210</td>
-      <td>0.314</td>
-      <td>3.991</td>
-      <td>4.394</td>
-      <td>0.366</td>
+      <td>0.421</td>
+      <td>0.419</td>
+      <td>0.002</td>
+      <td>0.739</td>
+      <td>0.734</td>
+      <td>0.005</td>
     </tr>
     <tr>
       <th>30</th>
-      <td>2.859</td>
-      <td>3.142</td>
-      <td>0.314</td>
-      <td>4.502</td>
-      <td>4.961</td>
-      <td>0.366</td>
+      <td>0.419</td>
+      <td>0.417</td>
+      <td>0.002</td>
+      <td>0.725</td>
+      <td>0.721</td>
+      <td>0.005</td>
     </tr>
   </tbody>
 </table>
@@ -2638,49 +3477,39 @@ _ = metrics[selected].plot(
 ```
 
 
-![png](12_experiment_01_small_example_files/12_experiment_01_small_example_56_0.png)
+    
+![png](12_experiment_01_small_example_files/12_experiment_01_small_example_67_0.png)
+    
 
 
 ## Predictions validation set
 
 
 ```python
-# integrate label in dataloader
-_epoch_metric_valid, pred = evaluate(model=model, data_loader=dl_valid, device=device, return_pred=True)
-build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+_epoch_metric_valid, pred = vaep_model.evaluate(model=model, data_loader=dl_valid, device=device, return_pred=True)
+# raw predictions
+pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df_valid.columns)
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -2699,237 +3528,237 @@ build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>-1,373,843,918.051</td>
-      <td>450,539,584.676</td>
-      <td>-10,667,998.567</td>
-      <td>-276,517,711.302</td>
-      <td>1,156,243,525.421</td>
-      <td>465,250,199.630</td>
-      <td>-886,316,330.190</td>
-      <td>-330,762,325.204</td>
-      <td>-1,636,199,154.347</td>
-      <td>2,495,574,815.816</td>
+      <td>0.550</td>
+      <td>0.569</td>
+      <td>0.678</td>
+      <td>0.536</td>
+      <td>0.542</td>
+      <td>0.531</td>
+      <td>0.518</td>
+      <td>0.573</td>
+      <td>0.602</td>
+      <td>0.544</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>-1,508,935,405.952</td>
-      <td>527,142,841.783</td>
-      <td>-70,378,895.524</td>
-      <td>-324,604,282.682</td>
-      <td>1,206,330,033.576</td>
-      <td>-163,221,288.765</td>
-      <td>-1,050,597,257.779</td>
-      <td>-453,192,394.022</td>
-      <td>-1,820,545,947.592</td>
-      <td>2,640,869,307.299</td>
+      <td>0.538</td>
+      <td>0.636</td>
+      <td>0.639</td>
+      <td>0.549</td>
+      <td>0.560</td>
+      <td>0.507</td>
+      <td>0.559</td>
+      <td>0.648</td>
+      <td>0.626</td>
+      <td>0.549</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>-1,497,265,453.105</td>
-      <td>489,993,415.561</td>
-      <td>-38,215,883.062</td>
-      <td>-451,172,463.219</td>
-      <td>1,579,876,140.449</td>
-      <td>579,342,198.949</td>
-      <td>-1,103,111,519.210</td>
-      <td>-439,886,070.739</td>
-      <td>-1,847,859,139.277</td>
-      <td>2,849,303,729.840</td>
+      <td>0.600</td>
+      <td>0.580</td>
+      <td>0.701</td>
+      <td>0.536</td>
+      <td>0.518</td>
+      <td>0.560</td>
+      <td>0.526</td>
+      <td>0.581</td>
+      <td>0.659</td>
+      <td>0.539</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>-957,427,380.378</td>
-      <td>276,958,650.852</td>
-      <td>432,413,967.120</td>
-      <td>-441,879,848.637</td>
-      <td>1,590,707,508.783</td>
-      <td>10,132,875,753.257</td>
-      <td>784,964,848.368</td>
-      <td>845,651,067.303</td>
-      <td>-89,335,706.031</td>
-      <td>1,938,124,776.064</td>
+      <td>0.606</td>
+      <td>0.616</td>
+      <td>0.688</td>
+      <td>0.542</td>
+      <td>0.523</td>
+      <td>0.555</td>
+      <td>0.548</td>
+      <td>0.618</td>
+      <td>0.680</td>
+      <td>0.540</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-1,361,473,847.731</td>
-      <td>339,150,286.735</td>
-      <td>-51,845,393.891</td>
-      <td>-253,131,275.732</td>
-      <td>1,160,076,545.146</td>
-      <td>534,219,242.033</td>
-      <td>-886,310,326.023</td>
-      <td>-396,656,127.673</td>
-      <td>-794,849,095.249</td>
-      <td>2,896,591,040.133</td>
+      <td>0.604</td>
+      <td>0.529</td>
+      <td>0.701</td>
+      <td>0.519</td>
+      <td>0.503</td>
+      <td>0.553</td>
+      <td>0.490</td>
+      <td>0.589</td>
+      <td>0.681</td>
+      <td>0.549</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>-1,445,363,399.584</td>
-      <td>428,449,432.861</td>
-      <td>2,507,298.318</td>
-      <td>-514,098,037.794</td>
-      <td>1,794,028,299.730</td>
-      <td>1,247,791,630.797</td>
-      <td>-1,064,856,818.315</td>
-      <td>-374,460,040.418</td>
-      <td>-1,772,829,345.181</td>
-      <td>2,948,434,001.657</td>
+      <td>0.605</td>
+      <td>0.582</td>
+      <td>0.702</td>
+      <td>0.536</td>
+      <td>0.516</td>
+      <td>0.562</td>
+      <td>0.527</td>
+      <td>0.584</td>
+      <td>0.665</td>
+      <td>0.539</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>-1,255,135,119.886</td>
-      <td>361,144,886.208</td>
-      <td>157,582,653.748</td>
-      <td>-492,670,878.952</td>
-      <td>1,757,042,106.002</td>
-      <td>4,318,613,504.051</td>
-      <td>-444,293,240.018</td>
-      <td>41,739,200.659</td>
-      <td>-1,201,997,084.065</td>
-      <td>2,607,209,284.480</td>
+      <td>0.631</td>
+      <td>0.572</td>
+      <td>0.707</td>
+      <td>0.528</td>
+      <td>0.496</td>
+      <td>0.571</td>
+      <td>0.519</td>
+      <td>0.606</td>
+      <td>0.709</td>
+      <td>0.542</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>-1,671,516,754.492</td>
-      <td>330,701,095.678</td>
-      <td>252,178,714.050</td>
-      <td>-1,162,136,541.775</td>
-      <td>3,132,402,872.251</td>
-      <td>9,865,579,949.366</td>
-      <td>142,912,843.646</td>
-      <td>617,280,628.750</td>
-      <td>-496,105,371.881</td>
-      <td>3,767,048,996.967</td>
+      <td>0.537</td>
+      <td>0.632</td>
+      <td>0.640</td>
+      <td>0.547</td>
+      <td>0.563</td>
+      <td>0.505</td>
+      <td>0.555</td>
+      <td>0.644</td>
+      <td>0.623</td>
+      <td>0.548</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>-1,560,773,211.117</td>
-      <td>335,686,548.969</td>
-      <td>237,658,057.676</td>
-      <td>-997,321,847.529</td>
-      <td>2,791,823,164.062</td>
-      <td>8,694,529,774.792</td>
-      <td>37,945,573.388</td>
-      <td>501,856,257.946</td>
-      <td>-633,829,824.470</td>
-      <td>3,463,186,485.514</td>
+      <td>0.529</td>
+      <td>0.559</td>
+      <td>0.671</td>
+      <td>0.531</td>
+      <td>0.575</td>
+      <td>0.505</td>
+      <td>0.500</td>
+      <td>0.565</td>
+      <td>0.586</td>
+      <td>0.533</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>-1,482,119,689.935</td>
-      <td>463,978,927.005</td>
-      <td>-22,741,844.251</td>
-      <td>-485,358,553.857</td>
-      <td>1,687,475,170.036</td>
-      <td>857,187,925.129</td>
-      <td>-1,094,474,010.904</td>
-      <td>-414,910,316.127</td>
-      <td>-1,820,840,406.199</td>
-      <td>2,910,752,480.175</td>
+      <td>0.535</td>
+      <td>0.557</td>
+      <td>0.675</td>
+      <td>0.535</td>
+      <td>0.547</td>
+      <td>0.525</td>
+      <td>0.511</td>
+      <td>0.562</td>
+      <td>0.581</td>
+      <td>0.546</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>-1,527,946,302.348</td>
-      <td>536,673,919.839</td>
-      <td>-66,879,653.161</td>
-      <td>-393,741,759.960</td>
-      <td>1,395,606,904.972</td>
-      <td>78,347,697.088</td>
-      <td>-1,122,495,319.558</td>
-      <td>-486,084,580.276</td>
-      <td>-1,898,763,498.728</td>
-      <td>2,749,120,112.362</td>
+      <td>0.564</td>
+      <td>0.494</td>
+      <td>0.732</td>
+      <td>0.512</td>
+      <td>0.636</td>
+      <td>0.470</td>
+      <td>0.419</td>
+      <td>0.480</td>
+      <td>0.568</td>
+      <td>0.535</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>-1,163,526,310.623</td>
-      <td>383,233,759.104</td>
-      <td>94,145,559.950</td>
-      <td>-284,489,336.493</td>
-      <td>1,328,083,951.576</td>
-      <td>1,888,508,275.567</td>
-      <td>-763,582,082.882</td>
-      <td>-229,253,725.091</td>
-      <td>-1,546,012,566.681</td>
-      <td>2,315,005,531.342</td>
+      <td>0.612</td>
+      <td>0.558</td>
+      <td>0.703</td>
+      <td>0.527</td>
+      <td>0.504</td>
+      <td>0.562</td>
+      <td>0.511</td>
+      <td>0.591</td>
+      <td>0.683</td>
+      <td>0.543</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>-1,934,997,361.241</td>
-      <td>710,586,275.916</td>
-      <td>-248,634,395.142</td>
-      <td>-506,764,189.096</td>
-      <td>1,445,042,801.392</td>
-      <td>-1,990,963,450.658</td>
-      <td>-1,519,329,025.840</td>
-      <td>-773,680,607.539</td>
-      <td>-2,290,792,413.641</td>
-      <td>3,218,233,285.134</td>
+      <td>0.538</td>
+      <td>0.507</td>
+      <td>0.686</td>
+      <td>0.519</td>
+      <td>0.557</td>
+      <td>0.505</td>
+      <td>0.467</td>
+      <td>0.549</td>
+      <td>0.585</td>
+      <td>0.553</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>-1,690,575,094.957</td>
-      <td>428,358,740.943</td>
-      <td>-60,245,012.737</td>
-      <td>-788,167,094.678</td>
-      <td>2,410,983,042.130</td>
-      <td>1,078,843,764.279</td>
-      <td>-1,336,792,693.074</td>
-      <td>-471,122,071.205</td>
-      <td>-1,942,290,121.860</td>
-      <td>3,654,377,627.647</td>
+      <td>0.624</td>
+      <td>0.561</td>
+      <td>0.706</td>
+      <td>0.526</td>
+      <td>0.497</td>
+      <td>0.567</td>
+      <td>0.512</td>
+      <td>0.601</td>
+      <td>0.702</td>
+      <td>0.544</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>-1,559,077,513.546</td>
-      <td>473,717,623.791</td>
-      <td>-78,373,769.974</td>
-      <td>-385,385,966.057</td>
-      <td>1,338,580,051.546</td>
-      <td>-179,184,902.246</td>
-      <td>-1,042,051,447.625</td>
-      <td>-406,237,474.003</td>
-      <td>-1,732,498,863.207</td>
-      <td>2,862,477,728.445</td>
+      <td>0.536</td>
+      <td>0.567</td>
+      <td>0.672</td>
+      <td>0.530</td>
+      <td>0.589</td>
+      <td>0.497</td>
+      <td>0.497</td>
+      <td>0.572</td>
+      <td>0.600</td>
+      <td>0.528</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>-1,144,568,789.710</td>
-      <td>359,214,600.255</td>
-      <td>166,703,429.088</td>
-      <td>-357,514,587.123</td>
-      <td>1,472,996,587.661</td>
-      <td>3,824,893,983.128</td>
-      <td>-435,405,560.135</td>
-      <td>10,084,108.968</td>
-      <td>-1,228,457,742.624</td>
-      <td>2,314,080,493.299</td>
+      <td>0.575</td>
+      <td>0.595</td>
+      <td>0.681</td>
+      <td>0.540</td>
+      <td>0.534</td>
+      <td>0.541</td>
+      <td>0.534</td>
+      <td>0.598</td>
+      <td>0.640</td>
+      <td>0.542</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>-1,719,472,232.435</td>
-      <td>514,729,201.454</td>
-      <td>-106,143,235.860</td>
-      <td>-650,776,510.586</td>
-      <td>1,999,975,986.534</td>
-      <td>171,188,247.567</td>
-      <td>-1,341,753,344.079</td>
-      <td>-545,606,883.207</td>
-      <td>-2,017,208,807.790</td>
-      <td>3,388,819,421.250</td>
+      <td>0.606</td>
+      <td>0.521</td>
+      <td>0.701</td>
+      <td>0.514</td>
+      <td>0.510</td>
+      <td>0.542</td>
+      <td>0.479</td>
+      <td>0.597</td>
+      <td>0.690</td>
+      <td>0.552</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>-1,535,069,793.968</td>
-      <td>527,882,831.652</td>
-      <td>-64,785,306.539</td>
-      <td>-418,967,740.115</td>
-      <td>1,462,742,780.440</td>
-      <td>163,759,315.245</td>
-      <td>-1,133,150,880.604</td>
-      <td>-482,473,478.661</td>
-      <td>-1,898,095,918.190</td>
-      <td>2,805,110,069.593</td>
+      <td>0.647</td>
+      <td>0.533</td>
+      <td>0.710</td>
+      <td>0.513</td>
+      <td>0.477</td>
+      <td>0.570</td>
+      <td>0.491</td>
+      <td>0.624</td>
+      <td>0.745</td>
+      <td>0.551</td>
     </tr>
   </tbody>
 </table>
@@ -2939,41 +3768,30 @@ build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=
 
 
 ```python
-# still need to to bound prediction between 0 and 1 using sigmoid -> change objective
-pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+# integrate label in dataloader
+analysis.pred_vae = vaep_model.build_df_from_pred_batches(pred, scaler, index=analysis.df_valid.index, columns=analysis.df_valid.columns)
+analysis.pred_vae
 ```
 
 
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -2992,237 +3810,655 @@ pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>-0.397</td>
-      <td>0.408</td>
-      <td>-0.094</td>
-      <td>-0.302</td>
-      <td>0.382</td>
-      <td>0.023</td>
-      <td>-0.429</td>
-      <td>-0.260</td>
-      <td>-0.277</td>
-      <td>0.627</td>
+      <td>27.661</td>
+      <td>30.622</td>
+      <td>30.130</td>
+      <td>29.196</td>
+      <td>27.799</td>
+      <td>27.784</td>
+      <td>29.173</td>
+      <td>30.454</td>
+      <td>32.964</td>
+      <td>29.132</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>-0.435</td>
-      <td>0.478</td>
-      <td>-0.133</td>
-      <td>-0.337</td>
-      <td>0.402</td>
-      <td>-0.021</td>
-      <td>-0.500</td>
-      <td>-0.344</td>
-      <td>-0.308</td>
-      <td>0.667</td>
+      <td>27.578</td>
+      <td>30.893</td>
+      <td>29.959</td>
+      <td>29.254</td>
+      <td>27.879</td>
+      <td>27.682</td>
+      <td>29.303</td>
+      <td>30.792</td>
+      <td>33.150</td>
+      <td>29.147</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>-0.432</td>
-      <td>0.444</td>
-      <td>-0.112</td>
-      <td>-0.427</td>
-      <td>0.546</td>
-      <td>0.031</td>
-      <td>-0.523</td>
-      <td>-0.335</td>
-      <td>-0.312</td>
-      <td>0.724</td>
+      <td>28.010</td>
+      <td>30.667</td>
+      <td>30.227</td>
+      <td>29.195</td>
+      <td>27.701</td>
+      <td>27.904</td>
+      <td>29.198</td>
+      <td>30.489</td>
+      <td>33.405</td>
+      <td>29.116</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>-0.278</td>
-      <td>0.248</td>
-      <td>0.195</td>
-      <td>-0.421</td>
-      <td>0.551</td>
-      <td>0.702</td>
-      <td>0.295</td>
-      <td>0.549</td>
-      <td>-0.018</td>
-      <td>0.473</td>
+      <td>28.046</td>
+      <td>30.812</td>
+      <td>30.171</td>
+      <td>29.224</td>
+      <td>27.720</td>
+      <td>27.883</td>
+      <td>29.268</td>
+      <td>30.657</td>
+      <td>33.573</td>
+      <td>29.118</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-0.393</td>
-      <td>0.305</td>
-      <td>-0.121</td>
-      <td>-0.285</td>
-      <td>0.384</td>
-      <td>0.028</td>
-      <td>-0.429</td>
-      <td>-0.305</td>
-      <td>-0.136</td>
-      <td>0.737</td>
+      <td>28.032</td>
+      <td>30.460</td>
+      <td>30.227</td>
+      <td>29.113</td>
+      <td>27.637</td>
+      <td>27.873</td>
+      <td>29.082</td>
+      <td>30.526</td>
+      <td>33.576</td>
+      <td>29.146</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>-0.417</td>
-      <td>0.388</td>
-      <td>-0.085</td>
-      <td>-0.472</td>
-      <td>0.629</td>
-      <td>0.078</td>
-      <td>-0.507</td>
-      <td>-0.290</td>
-      <td>-0.300</td>
-      <td>0.751</td>
+      <td>28.040</td>
+      <td>30.674</td>
+      <td>30.230</td>
+      <td>29.194</td>
+      <td>27.692</td>
+      <td>27.912</td>
+      <td>29.201</td>
+      <td>30.504</td>
+      <td>33.455</td>
+      <td>29.115</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>-0.363</td>
-      <td>0.326</td>
-      <td>0.016</td>
-      <td>-0.457</td>
-      <td>0.615</td>
-      <td>0.294</td>
-      <td>-0.238</td>
-      <td>-0.004</td>
-      <td>-0.204</td>
-      <td>0.657</td>
+      <td>28.222</td>
+      <td>30.632</td>
+      <td>30.253</td>
+      <td>29.159</td>
+      <td>27.607</td>
+      <td>27.949</td>
+      <td>29.175</td>
+      <td>30.603</td>
+      <td>33.800</td>
+      <td>29.126</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>-0.482</td>
-      <td>0.298</td>
-      <td>0.078</td>
-      <td>-0.936</td>
-      <td>1.148</td>
-      <td>0.683</td>
-      <td>0.017</td>
-      <td>0.392</td>
-      <td>-0.086</td>
-      <td>0.977</td>
+      <td>27.566</td>
+      <td>30.876</td>
+      <td>29.964</td>
+      <td>29.248</td>
+      <td>27.891</td>
+      <td>27.675</td>
+      <td>29.290</td>
+      <td>30.772</td>
+      <td>33.128</td>
+      <td>29.142</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>-0.450</td>
-      <td>0.302</td>
-      <td>0.068</td>
-      <td>-0.818</td>
-      <td>1.016</td>
-      <td>0.601</td>
-      <td>-0.028</td>
-      <td>0.312</td>
-      <td>-0.109</td>
-      <td>0.893</td>
+      <td>27.514</td>
+      <td>30.581</td>
+      <td>30.097</td>
+      <td>29.172</td>
+      <td>27.943</td>
+      <td>27.676</td>
+      <td>29.114</td>
+      <td>30.417</td>
+      <td>32.837</td>
+      <td>29.099</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>-0.428</td>
-      <td>0.420</td>
-      <td>-0.102</td>
-      <td>-0.452</td>
-      <td>0.588</td>
-      <td>0.051</td>
-      <td>-0.519</td>
-      <td>-0.318</td>
-      <td>-0.308</td>
-      <td>0.741</td>
+      <td>27.557</td>
+      <td>30.574</td>
+      <td>30.116</td>
+      <td>29.189</td>
+      <td>27.821</td>
+      <td>27.756</td>
+      <td>29.150</td>
+      <td>30.404</td>
+      <td>32.797</td>
+      <td>29.136</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>-0.441</td>
-      <td>0.487</td>
-      <td>-0.130</td>
-      <td>-0.386</td>
-      <td>0.475</td>
-      <td>-0.004</td>
-      <td>-0.532</td>
-      <td>-0.367</td>
-      <td>-0.321</td>
-      <td>0.696</td>
+      <td>27.756</td>
+      <td>30.316</td>
+      <td>30.362</td>
+      <td>29.079</td>
+      <td>28.200</td>
+      <td>27.529</td>
+      <td>28.852</td>
+      <td>30.036</td>
+      <td>32.699</td>
+      <td>29.105</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>-0.337</td>
-      <td>0.346</td>
-      <td>-0.025</td>
-      <td>-0.308</td>
-      <td>0.449</td>
-      <td>0.123</td>
-      <td>-0.376</td>
-      <td>-0.190</td>
-      <td>-0.262</td>
-      <td>0.577</td>
+      <td>28.087</td>
+      <td>30.577</td>
+      <td>30.236</td>
+      <td>29.153</td>
+      <td>27.640</td>
+      <td>27.913</td>
+      <td>29.149</td>
+      <td>30.537</td>
+      <td>33.597</td>
+      <td>29.130</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>-0.557</td>
-      <td>0.647</td>
-      <td>-0.249</td>
-      <td>-0.467</td>
-      <td>0.494</td>
-      <td>-0.150</td>
-      <td>-0.704</td>
-      <td>-0.565</td>
-      <td>-0.386</td>
-      <td>0.826</td>
+      <td>27.573</td>
+      <td>30.372</td>
+      <td>30.161</td>
+      <td>29.113</td>
+      <td>27.866</td>
+      <td>27.675</td>
+      <td>29.007</td>
+      <td>30.345</td>
+      <td>32.833</td>
+      <td>29.158</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>-0.487</td>
-      <td>0.387</td>
-      <td>-0.126</td>
-      <td>-0.669</td>
-      <td>0.868</td>
-      <td>0.066</td>
-      <td>-0.624</td>
-      <td>-0.357</td>
-      <td>-0.328</td>
-      <td>0.946</td>
+      <td>28.174</td>
+      <td>30.588</td>
+      <td>30.247</td>
+      <td>29.148</td>
+      <td>27.610</td>
+      <td>27.934</td>
+      <td>29.153</td>
+      <td>30.581</td>
+      <td>33.742</td>
+      <td>29.131</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>-0.450</td>
-      <td>0.429</td>
-      <td>-0.138</td>
-      <td>-0.380</td>
-      <td>0.453</td>
-      <td>-0.022</td>
-      <td>-0.497</td>
-      <td>-0.312</td>
-      <td>-0.293</td>
-      <td>0.728</td>
+      <td>27.564</td>
+      <td>30.614</td>
+      <td>30.101</td>
+      <td>29.167</td>
+      <td>27.999</td>
+      <td>27.644</td>
+      <td>29.106</td>
+      <td>30.452</td>
+      <td>32.951</td>
+      <td>29.083</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>-0.331</td>
-      <td>0.324</td>
-      <td>0.022</td>
-      <td>-0.360</td>
-      <td>0.505</td>
-      <td>0.259</td>
-      <td>-0.234</td>
-      <td>-0.026</td>
-      <td>-0.209</td>
-      <td>0.577</td>
+      <td>27.833</td>
+      <td>30.725</td>
+      <td>30.139</td>
+      <td>29.212</td>
+      <td>27.768</td>
+      <td>27.823</td>
+      <td>29.224</td>
+      <td>30.567</td>
+      <td>33.259</td>
+      <td>29.127</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>-0.496</td>
-      <td>0.467</td>
-      <td>-0.156</td>
-      <td>-0.570</td>
-      <td>0.709</td>
-      <td>0.002</td>
-      <td>-0.627</td>
-      <td>-0.408</td>
-      <td>-0.341</td>
-      <td>0.873</td>
+      <td>28.051</td>
+      <td>30.427</td>
+      <td>30.225</td>
+      <td>29.091</td>
+      <td>27.664</td>
+      <td>27.829</td>
+      <td>29.045</td>
+      <td>30.564</td>
+      <td>33.650</td>
+      <td>29.157</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>-0.443</td>
-      <td>0.479</td>
-      <td>-0.129</td>
-      <td>-0.404</td>
-      <td>0.501</td>
-      <td>0.002</td>
-      <td>-0.536</td>
-      <td>-0.364</td>
-      <td>-0.321</td>
-      <td>0.712</td>
+      <td>28.334</td>
+      <td>30.476</td>
+      <td>30.265</td>
+      <td>29.086</td>
+      <td>27.524</td>
+      <td>27.945</td>
+      <td>29.084</td>
+      <td>30.684</td>
+      <td>34.078</td>
+      <td>29.152</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+analysis.df_valid
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
+      <td>27.956</td>
+      <td>29.817</td>
+      <td>29.456</td>
+      <td>27.656</td>
+      <td>27.132</td>
+      <td>27.241</td>
+      <td>28.236</td>
+      <td>30.481</td>
+      <td>33.591</td>
+      <td>28.224</td>
+    </tr>
+    <tr>
+      <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
+      <td>25.400</td>
+      <td>31.561</td>
+      <td>30.700</td>
+      <td>29.704</td>
+      <td>29.378</td>
+      <td>28.823</td>
+      <td>25.014</td>
+      <td>31.743</td>
+      <td>34.523</td>
+      <td>29.635</td>
+    </tr>
+    <tr>
+      <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
+      <td>24.494</td>
+      <td>31.351</td>
+      <td>30.458</td>
+      <td>29.707</td>
+      <td>28.484</td>
+      <td>28.636</td>
+      <td>29.766</td>
+      <td>31.257</td>
+      <td>35.195</td>
+      <td>29.434</td>
+    </tr>
+    <tr>
+      <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
+      <td>26.772</td>
+      <td>29.680</td>
+      <td>29.020</td>
+      <td>27.594</td>
+      <td>27.499</td>
+      <td>26.780</td>
+      <td>28.326</td>
+      <td>29.906</td>
+      <td>33.474</td>
+      <td>27.585</td>
+    </tr>
+    <tr>
+      <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
+      <td>28.447</td>
+      <td>31.510</td>
+      <td>30.794</td>
+      <td>29.653</td>
+      <td>29.150</td>
+      <td>28.478</td>
+      <td>29.747</td>
+      <td>32.064</td>
+      <td>34.095</td>
+      <td>29.635</td>
+    </tr>
+    <tr>
+      <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
+      <td>24.904</td>
+      <td>30.993</td>
+      <td>30.107</td>
+      <td>29.459</td>
+      <td>28.101</td>
+      <td>28.707</td>
+      <td>29.228</td>
+      <td>31.348</td>
+      <td>33.712</td>
+      <td>29.428</td>
+    </tr>
+    <tr>
+      <th>20181120_QE5_nLC7_AP_HeLa_2</th>
+      <td>28.346</td>
+      <td>30.528</td>
+      <td>30.361</td>
+      <td>29.028</td>
+      <td>28.730</td>
+      <td>27.195</td>
+      <td>29.827</td>
+      <td>30.812</td>
+      <td>34.918</td>
+      <td>29.011</td>
+    </tr>
+    <tr>
+      <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
+      <td>26.306</td>
+      <td>30.465</td>
+      <td>29.782</td>
+      <td>29.125</td>
+      <td>28.164</td>
+      <td>28.206</td>
+      <td>29.117</td>
+      <td>31.243</td>
+      <td>33.639</td>
+      <td>29.216</td>
+    </tr>
+    <tr>
+      <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
+      <td>27.179</td>
+      <td>29.451</td>
+      <td>29.358</td>
+      <td>27.915</td>
+      <td>26.798</td>
+      <td>26.028</td>
+      <td>28.032</td>
+      <td>29.596</td>
+      <td>33.680</td>
+      <td>27.838</td>
+    </tr>
+    <tr>
+      <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
+      <td>28.494</td>
+      <td>30.809</td>
+      <td>30.328</td>
+      <td>29.676</td>
+      <td>27.857</td>
+      <td>27.121</td>
+      <td>29.708</td>
+      <td>31.590</td>
+      <td>34.334</td>
+      <td>29.797</td>
+    </tr>
+    <tr>
+      <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
+      <td>27.464</td>
+      <td>29.905</td>
+      <td>29.728</td>
+      <td>28.934</td>
+      <td>28.086</td>
+      <td>27.706</td>
+      <td>28.678</td>
+      <td>30.378</td>
+      <td>32.684</td>
+      <td>28.532</td>
+    </tr>
+    <tr>
+      <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
+      <td>28.212</td>
+      <td>30.430</td>
+      <td>31.207</td>
+      <td>29.135</td>
+      <td>28.272</td>
+      <td>28.608</td>
+      <td>28.994</td>
+      <td>31.456</td>
+      <td>34.572</td>
+      <td>29.358</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
+      <td>29.119</td>
+      <td>30.834</td>
+      <td>31.474</td>
+      <td>29.512</td>
+      <td>28.716</td>
+      <td>28.425</td>
+      <td>30.139</td>
+      <td>32.092</td>
+      <td>35.631</td>
+      <td>29.874</td>
+    </tr>
+    <tr>
+      <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
+      <td>28.943</td>
+      <td>30.723</td>
+      <td>31.434</td>
+      <td>29.677</td>
+      <td>28.734</td>
+      <td>28.442</td>
+      <td>30.203</td>
+      <td>32.164</td>
+      <td>35.590</td>
+      <td>29.924</td>
+    </tr>
+    <tr>
+      <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
+      <td>28.880</td>
+      <td>31.047</td>
+      <td>31.376</td>
+      <td>29.957</td>
+      <td>29.013</td>
+      <td>26.288</td>
+      <td>29.736</td>
+      <td>32.056</td>
+      <td>34.686</td>
+      <td>29.746</td>
+    </tr>
+    <tr>
+      <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
+      <td>26.021</td>
+      <td>31.040</td>
+      <td>31.480</td>
+      <td>30.707</td>
+      <td>29.119</td>
+      <td>29.521</td>
+      <td>29.988</td>
+      <td>32.563</td>
+      <td>35.320</td>
+      <td>29.909</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
+      <td>30.657</td>
+      <td>31.328</td>
+      <td>31.653</td>
+      <td>30.269</td>
+      <td>28.629</td>
+      <td>29.571</td>
+      <td>30.154</td>
+      <td>32.489</td>
+      <td>33.541</td>
+      <td>30.359</td>
+    </tr>
+    <tr>
+      <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
+      <td>30.785</td>
+      <td>31.465</td>
+      <td>32.088</td>
+      <td>30.373</td>
+      <td>28.640</td>
+      <td>29.429</td>
+      <td>30.350</td>
+      <td>32.901</td>
+      <td>31.347</td>
+      <td>30.213</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+analysis.results['VAE'] = describe_abs_diff(y_true=analysis.df_valid, y_pred=analysis.pred_vae)
+pd.DataFrame(analysis.results['VAE'])
+```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+      <td>18.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.355</td>
+      <td>0.574</td>
+      <td>0.817</td>
+      <td>0.710</td>
+      <td>0.824</td>
+      <td>0.939</td>
+      <td>0.899</td>
+      <td>1.106</td>
+      <td>1.164</td>
+      <td>0.677</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>1.065</td>
+      <td>0.354</td>
+      <td>0.521</td>
+      <td>0.542</td>
+      <td>0.464</td>
+      <td>0.470</td>
+      <td>0.926</td>
+      <td>0.650</td>
+      <td>0.873</td>
+      <td>0.406</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.125</td>
+      <td>0.104</td>
+      <td>0.108</td>
+      <td>0.018</td>
+      <td>0.035</td>
+      <td>0.177</td>
+      <td>0.028</td>
+      <td>0.027</td>
+      <td>0.015</td>
+      <td>0.074</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.355</td>
+      <td>0.317</td>
+      <td>0.315</td>
+      <td>0.298</td>
+      <td>0.465</td>
+      <td>0.612</td>
+      <td>0.561</td>
+      <td>0.755</td>
+      <td>0.513</td>
+      <td>0.361</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.267</td>
+      <td>0.447</td>
+      <td>0.740</td>
+      <td>0.521</td>
+      <td>0.907</td>
+      <td>0.752</td>
+      <td>0.715</td>
+      <td>0.935</td>
+      <td>1.047</td>
+      <td>0.662</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>2.086</td>
+      <td>0.876</td>
+      <td>1.253</td>
+      <td>1.238</td>
+      <td>1.124</td>
+      <td>1.302</td>
+      <td>1.074</td>
+      <td>1.599</td>
+      <td>1.776</td>
+      <td>0.879</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>3.516</td>
+      <td>1.131</td>
+      <td>1.823</td>
+      <td>1.630</td>
+      <td>1.514</td>
+      <td>1.742</td>
+      <td>4.289</td>
+      <td>2.218</td>
+      <td>2.798</td>
+      <td>1.533</td>
     </tr>
   </tbody>
 </table>
@@ -3240,6 +4476,139 @@ pd.DataFrame(np.vstack(pred), index=analysis.df_valid.index, columns=analysis.df
 # print(
 #     f"Run to see updates: \n\n\ttensorboard --logdir {tensorboard_model_namer.folder.absolute()}")
 ```
+
+## Compare metrics
+
+
+```python
+analysis.results.keys()
+```
+
+
+
+
+    dict_keys(['RF baseline', 'Simple AA', 'denoising AA', 'VAE'])
+
+
+
+
+```python
+print("Choose from list of keys: ",
+", ".join(list(next(iter(next(iter(analysis.results.values())).values())).keys()))
+)
+_selected_metric = "50%" # median
+print("Currently selected:", _selected_metric)
+```
+
+    Choose from list of keys:  count, mean, std, min, 25%, 50%, 75%, max
+    Currently selected: 50%
+    
+
+
+```python
+# comparison = {(peptide, model_name): stats[_selected_metric] for model_name, description in analysis.results.items() for peptide, stats in description.items()}
+# pd.Series(comparison).sort_index()
+```
+
+
+```python
+comparison = {}
+for model_name, description in analysis.results.items():    
+    comparison[model_name] = {peptide : stats[_selected_metric] for peptide, stats in description.items()}
+    
+
+def highlight_min(s):
+    '''
+    highlight the min in a Series yellow.
+    '''
+    to_highlight = s == s.min()
+    return ['background-color: yellow' if v else '' for v in to_highlight]    
+    
+pd.DataFrame(comparison).style.apply(highlight_min, axis=1)
+```
+
+
+
+
+<style  type="text/css" >
+#T_81e0e_row0_col1,#T_81e0e_row1_col1,#T_81e0e_row2_col1,#T_81e0e_row3_col0,#T_81e0e_row4_col0,#T_81e0e_row5_col0,#T_81e0e_row6_col1,#T_81e0e_row7_col1,#T_81e0e_row8_col1,#T_81e0e_row9_col1{
+            background-color:  yellow;
+        }
+</style>
+<table id="T_81e0e_" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >RF baseline</th>        <th class="col_heading level0 col1" >Simple AA</th>        <th class="col_heading level0 col2" >denoising AA</th>        <th class="col_heading level0 col3" >VAE</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_81e0e_level0_row0" class="row_heading level0 row0" >AAHSEGNTTAGLDMR</th>
+                        <td id="T_81e0e_row0_col0" class="data row0 col0" >1.118711</td>
+                        <td id="T_81e0e_row0_col1" class="data row0 col1" >0.383031</td>
+                        <td id="T_81e0e_row0_col2" class="data row0 col2" >0.570810</td>
+                        <td id="T_81e0e_row0_col3" class="data row0 col3" >1.266843</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row1" class="row_heading level0 row1" >AQIFANTVDNAR</th>
+                        <td id="T_81e0e_row1_col0" class="data row1 col0" >0.367432</td>
+                        <td id="T_81e0e_row1_col1" class="data row1 col1" >0.300325</td>
+                        <td id="T_81e0e_row1_col2" class="data row1 col2" >0.345486</td>
+                        <td id="T_81e0e_row1_col3" class="data row1 col3" >0.447178</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row2" class="row_heading level0 row2" >EFHLNESGDPSSK</th>
+                        <td id="T_81e0e_row2_col0" class="data row2 col0" >0.382069</td>
+                        <td id="T_81e0e_row2_col1" class="data row2 col1" >0.242537</td>
+                        <td id="T_81e0e_row2_col2" class="data row2 col2" >0.633909</td>
+                        <td id="T_81e0e_row2_col3" class="data row2 col3" >0.739775</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row3" class="row_heading level0 row3" >FNADEFEDMVAEK</th>
+                        <td id="T_81e0e_row3_col0" class="data row3 col0" >0.282505</td>
+                        <td id="T_81e0e_row3_col1" class="data row3 col1" >0.369723</td>
+                        <td id="T_81e0e_row3_col2" class="data row3 col2" >0.496450</td>
+                        <td id="T_81e0e_row3_col3" class="data row3 col3" >0.520635</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row4" class="row_heading level0 row4" >GFGFGLVK</th>
+                        <td id="T_81e0e_row4_col0" class="data row4 col0" >0.231780</td>
+                        <td id="T_81e0e_row4_col1" class="data row4 col1" >0.233379</td>
+                        <td id="T_81e0e_row4_col2" class="data row4 col2" >0.457317</td>
+                        <td id="T_81e0e_row4_col3" class="data row4 col3" >0.907318</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row5" class="row_heading level0 row5" >GHFGPINSVAFHPDGK</th>
+                        <td id="T_81e0e_row5_col0" class="data row5 col0" >0.380451</td>
+                        <td id="T_81e0e_row5_col1" class="data row5 col1" >0.556251</td>
+                        <td id="T_81e0e_row5_col2" class="data row5 col2" >0.771040</td>
+                        <td id="T_81e0e_row5_col3" class="data row5 col3" >0.751779</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row6" class="row_heading level0 row6" >IITLTGPTNAIFK</th>
+                        <td id="T_81e0e_row6_col0" class="data row6 col0" >0.227499</td>
+                        <td id="T_81e0e_row6_col1" class="data row6 col1" >0.156963</td>
+                        <td id="T_81e0e_row6_col2" class="data row6 col2" >0.173207</td>
+                        <td id="T_81e0e_row6_col3" class="data row6 col3" >0.715137</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row7" class="row_heading level0 row7" >LVQDVANNTNEEAGDGTTTATVLAR</th>
+                        <td id="T_81e0e_row7_col0" class="data row7 col0" >0.262761</td>
+                        <td id="T_81e0e_row7_col1" class="data row7 col1" >0.260878</td>
+                        <td id="T_81e0e_row7_col2" class="data row7 col2" >0.490701</td>
+                        <td id="T_81e0e_row7_col3" class="data row7 col3" >0.934846</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row8" class="row_heading level0 row8" >VIHDNFGIVEGLMTTVHAITATQK</th>
+                        <td id="T_81e0e_row8_col0" class="data row8 col0" >0.926145</td>
+                        <td id="T_81e0e_row8_col1" class="data row8 col1" >0.537861</td>
+                        <td id="T_81e0e_row8_col2" class="data row8 col2" >0.690129</td>
+                        <td id="T_81e0e_row8_col3" class="data row8 col3" >1.046782</td>
+            </tr>
+            <tr>
+                        <th id="T_81e0e_level0_row9" class="row_heading level0 row9" >VVVAENFDEIVNNENK</th>
+                        <td id="T_81e0e_row9_col0" class="data row9 col0" >0.152291</td>
+                        <td id="T_81e0e_row9_col1" class="data row9 col1" >0.147598</td>
+                        <td id="T_81e0e_row9_col2" class="data row9 col2" >0.455994</td>
+                        <td id="T_81e0e_row9_col3" class="data row9 col3" >0.661972</td>
+            </tr>
+    </tbody></table>
+
+
 
 ## Hyperparameter comparison
 
@@ -3347,37 +4716,37 @@ batch_recon
 
 
 
-    tensor([[-0.4768,  0.5639, -0.1754, -0.3694,  0.4165, -0.0703, -0.5805, -0.4426,
-             -0.3442,  0.7033],
-            [-0.4451,  0.4761, -0.1399, -0.3534,  0.4181, -0.0281, -0.5102, -0.3484,
-             -0.3086,  0.6889],
-            [-0.4241,  0.3608, -0.0725, -0.5393,  0.7198,  0.1237, -0.4914, -0.2490,
-             -0.2886,  0.7997],
-            [-0.3799,  0.3140, -0.0751, -0.3052,  0.4028,  0.0524, -0.3793, -0.1895,
-             -0.2266,  0.6557],
-            [-0.4194,  0.4851, -0.1196, -0.3148,  0.3838, -0.0063, -0.4887, -0.3414,
-             -0.3090,  0.6318],
-            [-0.3228,  0.3088,  0.0586, -0.3829,  0.5256,  0.3585, -0.1199,  0.1000,
-             -0.1675,  0.5618],
-            [-0.3275,  0.2768,  0.1358, -0.5039,  0.6519,  0.6041,  0.1293,  0.3945,
-             -0.0728,  0.5881],
-            [-0.4923,  0.5799, -0.1895, -0.3881,  0.4314, -0.0855, -0.6042, -0.4660,
-             -0.3523,  0.7268]], dtype=torch.float64, grad_fn=<AddmmBackward>)
+    tensor([[0.5250, 0.5603, 0.6681, 0.5340, 0.5631, 0.5110, 0.5076, 0.5664, 0.5762,
+             0.5414],
+            [0.5298, 0.5138, 0.6851, 0.5234, 0.5548, 0.5121, 0.4765, 0.5372, 0.5672,
+             0.5496],
+            [0.6071, 0.5323, 0.7020, 0.5198, 0.4984, 0.5582, 0.4939, 0.5896, 0.6843,
+             0.5479],
+            [0.5275, 0.4767, 0.6992, 0.5054, 0.6263, 0.4521, 0.4148, 0.5174, 0.5629,
+             0.5460],
+            [0.5434, 0.5106, 0.6873, 0.5194, 0.5513, 0.5110, 0.4707, 0.5513, 0.5932,
+             0.5519],
+            [0.5263, 0.5438, 0.6763, 0.5286, 0.5743, 0.5069, 0.4907, 0.5482, 0.5749,
+             0.5327],
+            [0.5222, 0.5602, 0.6667, 0.5357, 0.5549, 0.5149, 0.5121, 0.5666, 0.5693,
+             0.5466],
+            [0.5232, 0.5467, 0.6733, 0.5313, 0.5639, 0.5116, 0.4984, 0.5516, 0.5681,
+             0.5397]], dtype=torch.float64, grad_fn=<SigmoidBackward>)
 
 
 
 
 ```python
-_batch_metrics = loss_function(batch_recon, batch, mu, logvar)
+_batch_metrics = vaep_model.loss_function(batch_recon, batch, mu, logvar)
 _batch_metrics
 ```
 
 
 
 
-    {'loss': tensor(20.7168, dtype=torch.float64, grad_fn=<AddBackward0>),
-     'MSE': tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>),
-     'KLD': tensor(2.4820, dtype=torch.float64, grad_fn=<MulBackward0>)}
+    {'loss': tensor(4.7276, dtype=torch.float64, grad_fn=<AddBackward0>),
+     'recon_loss': tensor(4.7163, dtype=torch.float64, grad_fn=<MseLossBackward>),
+     'KLD': tensor(0.0126, dtype=torch.float64, grad_fn=<MulBackward0>)}
 
 
 
@@ -3393,7 +4762,7 @@ _mse
 
 
 
-    tensor(22.7429, dtype=torch.float64, grad_fn=<SumBackward0>)
+    tensor(4.7163, dtype=torch.float64, grad_fn=<SumBackward0>)
 
 
 
@@ -3412,7 +4781,7 @@ _mse
 
 
 
-    tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(4.7163, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -3431,7 +4800,7 @@ batch_sse
 
 
 
-    tensor(22.7429, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(4.7163, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -3465,37 +4834,37 @@ batch_recon
 
 
 
-    tensor([[-0.4021,  0.4397, -0.0927, -0.3503,  0.4548,  0.0398, -0.4734, -0.3041,
-             -0.2997,  0.6463],
-            [-0.0748, -0.2448,  0.0143,  0.2383, -0.0224,  0.3048, -0.0488, -0.2159,
-              0.5569,  0.6266],
-            [-0.4809,  0.3079,  0.0524, -0.8983,  1.1085,  0.6040, -0.0641,  0.2962,
-             -0.1172,  0.9694],
-            [-0.2451,  0.0759, -0.0270, -0.0736,  0.2219,  0.1664, -0.2266, -0.1780,
-              0.0927,  0.6249],
-            [-0.4710,  0.2612,  0.1660, -1.0209,  1.2316,  0.9378,  0.2951,  0.7067,
-              0.0162,  0.9646],
-            [-0.4586,  0.4803, -0.1509, -0.3737,  0.4367, -0.0393, -0.5268, -0.3605,
-             -0.3122,  0.7153],
-            [-0.5304,  0.6038, -0.2223, -0.4407,  0.4772, -0.1198, -0.6561, -0.5105,
-             -0.3669,  0.7942],
-            [-0.5146,  0.6031, -0.2098, -0.4152,  0.4529, -0.1075, -0.6383, -0.4998,
-             -0.3640,  0.7607]], dtype=torch.float64, grad_fn=<AddmmBackward>)
+    tensor([[0.5153, 0.5120, 0.6821, 0.5249, 0.5636, 0.5057, 0.4753, 0.5262, 0.5432,
+             0.5492],
+            [0.5303, 0.5406, 0.6807, 0.5264, 0.5836, 0.5021, 0.4832, 0.5438, 0.5791,
+             0.5290],
+            [0.5957, 0.6147, 0.6831, 0.5425, 0.5276, 0.5491, 0.5466, 0.6177, 0.6702,
+             0.5408],
+            [0.5411, 0.5429, 0.6852, 0.5322, 0.5412, 0.5318, 0.5028, 0.5451, 0.5790,
+             0.5441],
+            [0.5316, 0.5866, 0.6595, 0.5373, 0.5702, 0.5054, 0.5206, 0.5945, 0.5991,
+             0.5390],
+            [0.5290, 0.5901, 0.6565, 0.5407, 0.5560, 0.5125, 0.5304, 0.5985, 0.5918,
+             0.5478],
+            [0.5823, 0.6717, 0.6495, 0.5522, 0.5619, 0.5125, 0.5743, 0.6804, 0.6835,
+             0.5476],
+            [0.6155, 0.5751, 0.7039, 0.5320, 0.5071, 0.5656, 0.5219, 0.5932, 0.6845,
+             0.5406]], dtype=torch.float64, grad_fn=<SigmoidBackward>)
 
 
 
 
 ```python
-_batch_metrics = loss_function(batch_recon, batch, mu, logvar)
+_batch_metrics = vaep_model.loss_function(batch_recon, batch, mu, logvar)
 _batch_metrics
 ```
 
 
 
 
-    {'loss': tensor(19.6367, dtype=torch.float64, grad_fn=<AddBackward0>),
-     'MSE': tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>),
-     'KLD': tensor(2.3638, dtype=torch.float64, grad_fn=<MulBackward0>)}
+    {'loss': tensor(4.5463, dtype=torch.float64, grad_fn=<AddBackward0>),
+     'recon_loss': tensor(4.5279, dtype=torch.float64, grad_fn=<MseLossBackward>),
+     'KLD': tensor(0.0204, dtype=torch.float64, grad_fn=<MulBackward0>)}
 
 
 
@@ -3511,7 +4880,7 @@ _mse
 
 
 
-    tensor(21.5559, dtype=torch.float64, grad_fn=<SumBackward0>)
+    tensor(4.5279, dtype=torch.float64, grad_fn=<SumBackward0>)
 
 
 
@@ -3530,7 +4899,7 @@ _mse
 
 
 
-    tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(4.5279, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -3549,7 +4918,7 @@ batch_sse
 
 
 
-    tensor(21.5559, dtype=torch.float64, grad_fn=<MseLossBackward>)
+    tensor(4.5279, dtype=torch.float64, grad_fn=<MseLossBackward>)
 
 
 
@@ -3615,33 +4984,21 @@ pd.DataFrame(
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
-      <th>IGEHTPSALAIMENANVLAR</th>
-      <th>LSGSNPYTTVTPQIINSK</th>
-      <th>REDLVVAPAGITLK</th>
-      <th>TTHFVEGGDAGNREDQINR</th>
-      <th>VDFNVPMK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
+      <th>GHFGPINSVAFHPDGK</th>
+      <th>IITLTGPTNAIFK</th>
+      <th>LVQDVANNTNEEAGDGTTTATVLAR</th>
+      <th>VIHDNFGIVEGLMTTVHAITATQK</th>
+      <th>VVVAENFDEIVNNENK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -3660,237 +5017,237 @@ pd.DataFrame(
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>-1,462,124,079.848</td>
-      <td>483,362,522.099</td>
-      <td>-46,704,888.106</td>
-      <td>-316,981,585.183</td>
-      <td>1,212,906,423.166</td>
-      <td>100,310,231.740</td>
-      <td>-979,032,709.554</td>
-      <td>-391,313,202.420</td>
-      <td>-1,723,720,214.819</td>
-      <td>2,625,829,086.514</td>
+      <td>28.270</td>
+      <td>30.861</td>
+      <td>30.226</td>
+      <td>29.228</td>
+      <td>27.659</td>
+      <td>27.958</td>
+      <td>29.294</td>
+      <td>30.701</td>
+      <td>33.854</td>
+      <td>29.107</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>-1,441,596,147.861</td>
-      <td>499,783,554.663</td>
-      <td>-28,324,142.963</td>
-      <td>-369,760,349.782</td>
-      <td>1,385,104,689.298</td>
-      <td>517,295,252.868</td>
-      <td>-1,038,311,787.915</td>
-      <td>-425,077,097.628</td>
-      <td>-1,815,601,794.423</td>
-      <td>2,649,593,476.980</td>
+      <td>28.058</td>
+      <td>30.715</td>
+      <td>30.222</td>
+      <td>29.204</td>
+      <td>27.696</td>
+      <td>27.912</td>
+      <td>29.221</td>
+      <td>30.538</td>
+      <td>33.494</td>
+      <td>29.114</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>-1,562,434,065.714</td>
-      <td>531,814,505.478</td>
-      <td>-89,583,424.946</td>
-      <td>-357,108,111.696</td>
-      <td>1,261,800,268.159</td>
-      <td>-343,976,039.762</td>
-      <td>-1,093,858,491.028</td>
-      <td>-472,707,960.165</td>
-      <td>-1,844,492,866.507</td>
-      <td>2,750,980,225.953</td>
+      <td>27.796</td>
+      <td>30.736</td>
+      <td>30.120</td>
+      <td>29.216</td>
+      <td>27.782</td>
+      <td>27.806</td>
+      <td>29.229</td>
+      <td>30.584</td>
+      <td>33.229</td>
+      <td>29.129</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>-1,650,306,975.642</td>
-      <td>345,729,370.611</td>
-      <td>201,279,419.886</td>
-      <td>-1,070,684,070.235</td>
-      <td>2,953,105,537.081</td>
-      <td>8,265,164,120.152</td>
-      <td>-108,809,592.491</td>
-      <td>424,884,240.276</td>
-      <td>-748,715,657.452</td>
-      <td>3,687,975,183.793</td>
+      <td>27.445</td>
+      <td>30.410</td>
+      <td>30.160</td>
+      <td>29.152</td>
+      <td>27.883</td>
+      <td>27.707</td>
+      <td>29.049</td>
+      <td>30.217</td>
+      <td>32.508</td>
+      <td>29.135</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-1,330,172,912.359</td>
-      <td>466,890,448.165</td>
-      <td>10,546,871.339</td>
-      <td>-287,088,640.408</td>
-      <td>1,222,410,305.285</td>
-      <td>811,667,346.528</td>
-      <td>-906,633,031.268</td>
-      <td>-350,782,354.240</td>
-      <td>-1,697,426,217.263</td>
-      <td>2,430,244,871.822</td>
+      <td>27.566</td>
+      <td>30.367</td>
+      <td>30.160</td>
+      <td>29.110</td>
+      <td>27.873</td>
+      <td>27.666</td>
+      <td>29.001</td>
+      <td>30.346</td>
+      <td>32.827</td>
+      <td>29.160</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>-1,528,064,715.274</td>
-      <td>344,384,732.175</td>
-      <td>208,664,036.403</td>
-      <td>-917,895,604.792</td>
-      <td>2,632,665,485.686</td>
-      <td>7,642,109,321.744</td>
-      <td>-111,976,646.052</td>
-      <td>380,333,455.543</td>
-      <td>-790,661,740.109</td>
-      <td>3,362,720,475.164</td>
+      <td>28.665</td>
+      <td>30.929</td>
+      <td>30.318</td>
+      <td>29.222</td>
+      <td>27.543</td>
+      <td>28.079</td>
+      <td>29.325</td>
+      <td>30.809</td>
+      <td>34.358</td>
+      <td>29.095</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>-1,262,134,811.746</td>
-      <td>348,199,678.627</td>
-      <td>201,683,769.603</td>
-      <td>-556,833,176.024</td>
-      <td>1,880,939,080.106</td>
-      <td>5,627,630,912.056</td>
-      <td>-229,794,286.038</td>
-      <td>201,860,115.308</td>
-      <td>-990,261,159.573</td>
-      <td>2,645,151,717.696</td>
+      <td>27.674</td>
+      <td>30.880</td>
+      <td>30.005</td>
+      <td>29.212</td>
+      <td>28.056</td>
+      <td>27.593</td>
+      <td>29.221</td>
+      <td>30.769</td>
+      <td>33.359</td>
+      <td>29.076</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>-1,366,560,082.186</td>
-      <td>427,443,027.938</td>
-      <td>-4,165,812.581</td>
-      <td>-283,872,503.641</td>
-      <td>1,179,877,479.836</td>
-      <td>549,485,363.638</td>
-      <td>-861,350,588.606</td>
-      <td>-302,752,963.312</td>
-      <td>-1,590,005,661.751</td>
-      <td>2,526,591,608.858</td>
+      <td>27.491</td>
+      <td>30.545</td>
+      <td>30.107</td>
+      <td>29.170</td>
+      <td>27.920</td>
+      <td>27.690</td>
+      <td>29.105</td>
+      <td>30.374</td>
+      <td>32.756</td>
+      <td>29.107</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>-1,425,636,292.212</td>
-      <td>451,771,258.133</td>
-      <td>-28,690,410.129</td>
-      <td>-309,710,937.298</td>
-      <td>1,214,514,106.662</td>
-      <td>298,996,963.859</td>
-      <td>-925,402,747.739</td>
-      <td>-345,940,751.831</td>
-      <td>-1,653,091,599.765</td>
-      <td>2,608,915,166.503</td>
+      <td>28.159</td>
+      <td>31.025</td>
+      <td>30.112</td>
+      <td>29.261</td>
+      <td>27.796</td>
+      <td>27.818</td>
+      <td>29.351</td>
+      <td>30.905</td>
+      <td>33.869</td>
+      <td>29.126</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>-1,735,554,374.926</td>
-      <td>470,539,607.512</td>
-      <td>-90,564,614.508</td>
-      <td>-755,546,279.100</td>
-      <td>2,287,855,997.671</td>
-      <td>614,186,594.653</td>
-      <td>-1,373,442,481.574</td>
-      <td>-519,674,282.236</td>
-      <td>-2,000,216,904.270</td>
-      <td>3,613,503,221.706</td>
+      <td>27.573</td>
+      <td>30.737</td>
+      <td>30.039</td>
+      <td>29.198</td>
+      <td>27.972</td>
+      <td>27.649</td>
+      <td>29.182</td>
+      <td>30.603</td>
+      <td>33.073</td>
+      <td>29.095</td>
     </tr>
     <tr>
       <th>20181219_QE1_nLC2_GP_QC_MNT_HELA_01</th>
-      <td>-1,320,808,098.519</td>
-      <td>464,919,299.612</td>
-      <td>15,489,735.109</td>
-      <td>-289,299,921.909</td>
-      <td>1,235,640,084.114</td>
-      <td>884,992,271.526</td>
-      <td>-903,972,858.029</td>
-      <td>-348,082,694.896</td>
-      <td>-1,697,491,959.274</td>
-      <td>2,423,410,667.339</td>
+      <td>27.488</td>
+      <td>30.423</td>
+      <td>30.167</td>
+      <td>29.136</td>
+      <td>27.959</td>
+      <td>27.679</td>
+      <td>29.025</td>
+      <td>30.223</td>
+      <td>32.655</td>
+      <td>29.087</td>
     </tr>
     <tr>
       <th>20190107_QE5_nLC5_DS_QC_MNT_HeLa_FlashPack_02</th>
-      <td>-1,451,434,199.895</td>
-      <td>374,090,787.858</td>
-      <td>108,843,844.174</td>
-      <td>-692,121,115.785</td>
-      <td>2,184,182,567.565</td>
-      <td>4,264,383,694.279</td>
-      <td>-616,732,780.910</td>
-      <td>-17,239,802.848</td>
-      <td>-1,308,036,467.820</td>
-      <td>3,113,508,129.244</td>
+      <td>27.636</td>
+      <td>30.807</td>
+      <td>30.028</td>
+      <td>29.200</td>
+      <td>28.034</td>
+      <td>27.612</td>
+      <td>29.192</td>
+      <td>30.683</td>
+      <td>33.242</td>
+      <td>29.078</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_01</th>
-      <td>-1,613,863,178.971</td>
-      <td>316,678,623.960</td>
-      <td>301,437,212.236</td>
-      <td>-1,147,047,685.110</td>
-      <td>3,089,788,115.663</td>
-      <td>10,880,864,390.051</td>
-      <td>361,761,854.432</td>
-      <td>758,268,625.775</td>
-      <td>-300,669,510.501</td>
-      <td>3,633,509,069.612</td>
+      <td>27.522</td>
+      <td>30.758</td>
+      <td>30.011</td>
+      <td>29.227</td>
+      <td>27.871</td>
+      <td>27.694</td>
+      <td>29.235</td>
+      <td>30.632</td>
+      <td>32.949</td>
+      <td>29.144</td>
     </tr>
     <tr>
       <th>20190527_QE4_LC12_AS_QC_MNT_HeLa_02</th>
-      <td>-1,452,610,305.027</td>
-      <td>366,971,889.637</td>
-      <td>133,157,117.605</td>
-      <td>-723,939,275.749</td>
-      <td>2,245,070,918.503</td>
-      <td>4,967,745,327.632</td>
-      <td>-499,327,556.875</td>
-      <td>69,484,713.149</td>
-      <td>-1,192,987,473.549</td>
-      <td>3,127,217,320.500</td>
+      <td>27.776</td>
+      <td>30.747</td>
+      <td>30.108</td>
+      <td>29.218</td>
+      <td>27.790</td>
+      <td>27.796</td>
+      <td>29.234</td>
+      <td>30.599</td>
+      <td>33.218</td>
+      <td>29.131</td>
     </tr>
     <tr>
       <th>20190701_QE4_LC12_IAH_QC_MNT_HeLa_03</th>
-      <td>-1,296,727,158.649</td>
-      <td>368,405,686.723</td>
-      <td>131,809,068.353</td>
-      <td>-515,705,905.906</td>
-      <td>1,810,927,020.441</td>
-      <td>3,865,361,402.833</td>
-      <td>-555,183,393.050</td>
-      <td>-25,423,265.909</td>
-      <td>-1,297,089,358.451</td>
-      <td>2,707,782,324.531</td>
+      <td>27.626</td>
+      <td>30.780</td>
+      <td>30.037</td>
+      <td>29.229</td>
+      <td>27.842</td>
+      <td>27.730</td>
+      <td>29.248</td>
+      <td>30.651</td>
+      <td>33.086</td>
+      <td>29.140</td>
     </tr>
     <tr>
       <th>20190708_QE6_nLC4_JE_QC_MNT_HeLa_01</th>
-      <td>-1,073,889,358.494</td>
-      <td>299,396,160.666</td>
-      <td>145,630,355.325</td>
-      <td>-256,489,259.312</td>
-      <td>1,287,122,127.789</td>
-      <td>2,580,116,809.080</td>
-      <td>-551,994,571.902</td>
-      <td>-65,975,370.567</td>
-      <td>-1,288,947,834.057</td>
-      <td>2,248,130,324.822</td>
+      <td>28.092</td>
+      <td>30.448</td>
+      <td>30.232</td>
+      <td>29.098</td>
+      <td>27.631</td>
+      <td>27.865</td>
+      <td>29.065</td>
+      <td>30.570</td>
+      <td>33.698</td>
+      <td>29.152</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1</th>
-      <td>-1,418,070,700.853</td>
-      <td>399,057,206.866</td>
-      <td>24,242,342.288</td>
-      <td>-542,619,156.407</td>
-      <td>1,891,391,246.404</td>
-      <td>1,617,174,925.964</td>
-      <td>-1,034,530,916.233</td>
-      <td>-335,935,710.987</td>
-      <td>-1,726,723,536.143</td>
-      <td>2,987,155,154.261</td>
+      <td>27.582</td>
+      <td>30.842</td>
+      <td>29.988</td>
+      <td>29.243</td>
+      <td>27.868</td>
+      <td>27.697</td>
+      <td>29.278</td>
+      <td>30.730</td>
+      <td>33.102</td>
+      <td>29.145</td>
     </tr>
     <tr>
       <th>20191128_QE8_nLC9_ASD_QC_HeLa_1_20191128165313</th>
-      <td>-1,818,204,143.088</td>
-      <td>609,690,510.500</td>
-      <td>-173,753,686.678</td>
-      <td>-574,512,366.656</td>
-      <td>1,716,422,618.973</td>
-      <td>-873,136,832.251</td>
-      <td>-1,421,457,789.675</td>
-      <td>-653,914,145.940</td>
-      <td>-2,145,870,083.814</td>
-      <td>3,289,521,081.195</td>
+      <td>27.590</td>
+      <td>30.884</td>
+      <td>29.968</td>
+      <td>29.241</td>
+      <td>27.929</td>
+      <td>27.657</td>
+      <td>29.279</td>
+      <td>30.781</td>
+      <td>33.194</td>
+      <td>29.125</td>
     </tr>
   </tbody>
 </table>
@@ -3906,25 +5263,25 @@ metrics.iloc[-1]  # mse loss get's most weight in combined loss
 
 
 
-    train  loss   2.859
-           mse    3.142
-           KLD    0.314
-    valid  loss   4.502
-           mse    4.961
-           KLD    0.366
+    train  loss         0.419
+           recon_loss   0.417
+           KLD          0.002
+    valid  loss         0.725
+           recon_loss   0.721
+           KLD          0.005
     Name: 30, dtype: float64
 
 
 
 
 ```python
-metrics.iloc[-1].loc[('valid', 'mse')]
+metrics.iloc[-1].loc[('valid', 'recon_loss')]
 ```
 
 
 
 
-    4.961486679850494
+    0.7208266132706461
 
 
 
@@ -3941,7 +5298,7 @@ Average prediction error per peptides:
 
 
 
-    0.39791914151663516
+    0.0629551172007101
 
 
 
@@ -3954,28 +5311,16 @@ Average prediction error per peptides:
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -3989,83 +5334,83 @@ Average prediction error per peptides:
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>-0.563</td>
-      <td>0.307</td>
-      <td>-0.199</td>
-      <td>-0.518</td>
-      <td>0.292</td>
+      <td>0.045</td>
+      <td>0.259</td>
+      <td>0.178</td>
+      <td>0.334</td>
+      <td>0.124</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>-1.078</td>
-      <td>0.047</td>
-      <td>-0.718</td>
-      <td>-0.971</td>
-      <td>-0.188</td>
+      <td>0.382</td>
+      <td>-0.210</td>
+      <td>-0.111</td>
+      <td>-0.106</td>
+      <td>-0.397</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>-0.821</td>
-      <td>0.118</td>
-      <td>-0.606</td>
-      <td>-0.860</td>
-      <td>0.105</td>
+      <td>0.475</td>
+      <td>-0.152</td>
+      <td>-0.078</td>
+      <td>-0.104</td>
+      <td>-0.166</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>-0.579</td>
-      <td>0.210</td>
-      <td>0.001</td>
-      <td>-0.958</td>
-      <td>1.006</td>
+      <td>0.097</td>
+      <td>0.181</td>
+      <td>0.264</td>
+      <td>0.331</td>
+      <td>0.091</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>-0.406</td>
-      <td>-0.231</td>
-      <td>-0.715</td>
-      <td>-0.215</td>
-      <td>-0.053</td>
+      <td>-0.127</td>
+      <td>-0.283</td>
+      <td>-0.147</td>
+      <td>-0.115</td>
+      <td>-0.301</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>-0.738</td>
-      <td>-0.139</td>
-      <td>-0.283</td>
-      <td>-1.089</td>
-      <td>0.677</td>
+      <td>0.541</td>
+      <td>-0.016</td>
+      <td>0.049</td>
+      <td>-0.050</td>
+      <td>-0.131</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>-0.676</td>
-      <td>-0.059</td>
-      <td>-0.212</td>
-      <td>-0.870</td>
-      <td>0.415</td>
+      <td>-0.097</td>
+      <td>0.087</td>
+      <td>-0.083</td>
+      <td>0.039</td>
+      <td>-0.159</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>-0.635</td>
-      <td>0.174</td>
-      <td>-0.268</td>
-      <td>-0.626</td>
-      <td>0.147</td>
+      <td>0.170</td>
+      <td>0.020</td>
+      <td>0.075</td>
+      <td>0.009</td>
+      <td>-0.058</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>-0.522</td>
-      <td>0.249</td>
-      <td>-0.203</td>
-      <td>-0.441</td>
-      <td>0.398</td>
+      <td>0.141</td>
+      <td>0.390</td>
+      <td>0.175</td>
+      <td>0.286</td>
+      <td>0.235</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>-0.899</td>
-      <td>0.041</td>
-      <td>-0.464</td>
-      <td>-1.101</td>
-      <td>0.448</td>
+      <td>-0.132</td>
+      <td>-0.018</td>
+      <td>-0.067</td>
+      <td>-0.102</td>
+      <td>0.027</td>
     </tr>
   </tbody>
 </table>
@@ -4082,28 +5427,16 @@ Average prediction error per peptides:
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ALPFWNEEIVPQIK</th>
-      <th>AQQEQELAADAFK</th>
-      <th>EGPYDVVVLPGGNLGAQNLSESAAVK</th>
-      <th>FGYVDFESAEDLEK</th>
-      <th>GGPGSAVSPYPTFNPSSDVAALHK</th>
+      <th>AAHSEGNTTAGLDMR</th>
+      <th>AQIFANTVDNAR</th>
+      <th>EFHLNESGDPSSK</th>
+      <th>FNADEFEDMVAEK</th>
+      <th>GFGFGLVK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -4117,83 +5450,83 @@ Average prediction error per peptides:
   <tbody>
     <tr>
       <th>20181029_QE3_nLC3_KBE_QC_MNT_HELA_02</th>
-      <td>0.316</td>
-      <td>0.094</td>
-      <td>0.040</td>
-      <td>0.268</td>
-      <td>0.085</td>
+      <td>0.002</td>
+      <td>0.067</td>
+      <td>0.032</td>
+      <td>0.112</td>
+      <td>0.015</td>
     </tr>
     <tr>
       <th>20181102_QE2_NLC10_MR_QC_MNT_HELA_01</th>
-      <td>1.162</td>
-      <td>0.002</td>
-      <td>0.516</td>
-      <td>0.944</td>
-      <td>0.035</td>
+      <td>0.146</td>
+      <td>0.044</td>
+      <td>0.012</td>
+      <td>0.011</td>
+      <td>0.157</td>
     </tr>
     <tr>
       <th>20181107_QE6_nLC12_MR_QC_MNT_HELA_New_01</th>
-      <td>0.674</td>
-      <td>0.014</td>
-      <td>0.367</td>
-      <td>0.739</td>
+      <td>0.225</td>
+      <td>0.023</td>
+      <td>0.006</td>
       <td>0.011</td>
+      <td>0.027</td>
     </tr>
     <tr>
       <th>20181110_QE5_nLC5_OOE_QC_MNT_HELA_15cm_250ng_RO-003</th>
-      <td>0.335</td>
-      <td>0.044</td>
-      <td>0.000</td>
-      <td>0.919</td>
-      <td>1.013</td>
+      <td>0.009</td>
+      <td>0.033</td>
+      <td>0.070</td>
+      <td>0.110</td>
+      <td>0.008</td>
     </tr>
     <tr>
       <th>20181112_QE7_nLC11_MEM_QC_HeLa_02</th>
-      <td>0.165</td>
-      <td>0.053</td>
-      <td>0.512</td>
-      <td>0.046</td>
-      <td>0.003</td>
+      <td>0.016</td>
+      <td>0.080</td>
+      <td>0.022</td>
+      <td>0.013</td>
+      <td>0.091</td>
     </tr>
     <tr>
       <th>20181119_QE1_nLC2_TW_QC_HeLa_1</th>
-      <td>0.545</td>
-      <td>0.019</td>
-      <td>0.080</td>
-      <td>1.186</td>
-      <td>0.459</td>
+      <td>0.293</td>
+      <td>0.000</td>
+      <td>0.002</td>
+      <td>0.003</td>
+      <td>0.017</td>
     </tr>
     <tr>
       <th>20181120_QE5_nLC7_AP_HeLa_2</th>
-      <td>0.457</td>
-      <td>0.004</td>
-      <td>0.045</td>
-      <td>0.756</td>
-      <td>0.172</td>
+      <td>0.009</td>
+      <td>0.008</td>
+      <td>0.007</td>
+      <td>0.002</td>
+      <td>0.025</td>
     </tr>
     <tr>
       <th>20181126_QE2_NLC10_MN_QC_HELA_02</th>
-      <td>0.403</td>
-      <td>0.030</td>
-      <td>0.072</td>
-      <td>0.392</td>
-      <td>0.022</td>
+      <td>0.029</td>
+      <td>0.000</td>
+      <td>0.006</td>
+      <td>0.000</td>
+      <td>0.003</td>
     </tr>
     <tr>
       <th>20181205_QE5_nLC7_RJC_QC_MNT_HeLa_2</th>
-      <td>0.273</td>
-      <td>0.062</td>
-      <td>0.041</td>
-      <td>0.194</td>
-      <td>0.158</td>
+      <td>0.020</td>
+      <td>0.152</td>
+      <td>0.030</td>
+      <td>0.082</td>
+      <td>0.055</td>
     </tr>
     <tr>
       <th>20181215_QE2_NLC10_ANHO_QC_MNT_HELA_04</th>
-      <td>0.807</td>
-      <td>0.002</td>
-      <td>0.216</td>
-      <td>1.212</td>
-      <td>0.200</td>
+      <td>0.018</td>
+      <td>0.000</td>
+      <td>0.004</td>
+      <td>0.010</td>
+      <td>0.001</td>
     </tr>
   </tbody>
 </table>
@@ -4225,11 +5558,6 @@ data.isna().sum().sum() / (N*M)  # only few missings
     0.0
 
 
-
-
-```python
-
-```
 
 
 ```python
