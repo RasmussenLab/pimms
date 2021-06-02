@@ -107,7 +107,12 @@ class VAE(nn.Module):
         return self.decode(z), mu, logvar
 
 
-def loss_function(recon_batch: torch.tensor, batch, mu: torch.tensor, logvar: torch.tensor, t: float = 0.9):
+def loss_function(recon_batch: torch.tensor,
+                  batch: torch.tensor,
+                  mu: torch.tensor,
+                  logvar: torch.tensor,
+                  reconstruction_loss=F.mse_loss,
+                  t: float = 0.9):
     """Loss function only considering the observed values in the reconstruction loss.
 
     Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
@@ -128,26 +133,29 @@ def loss_function(recon_batch: torch.tensor, batch, mu: torch.tensor, logvar: to
 
     Returns
     -------
-    total: float
-        Total, weighted average loss for provided input and mask
-    mse: float
-        unweighted mean-squared-error for non-masked inputs
-    kld: float
-        unweighted Kullback-Leibler divergence between prior and empirical
-        normal distribution (defined by encoded moments) on latent representation.
+    dict
+        Containing: {total: loss, recon: loss, kld: loss}
+
+        total: float
+            Total, weighted average loss for provided input and mask
+        reconstruction_loss: float
+            reconstruction loss for non-masked inputs
+        kld: float
+            unweighted Kullback-Leibler divergence between prior and empirical
+            normal distribution (defined by encoded moments) on latent representation.
     """
     try:
         if isinstance(batch, torch.Tensor):
             raise ValueError
         X, mask = batch
-        MSE = F.mse_loss(input=recon_batch*mask.float(),  # recon_x.mask_select(mask)
-                         target=X*mask.float(),  # x.mask_select(mask)
-                         reduction='sum')  # MSE of observed values
+        MSE = reconstruction_loss(input=recon_batch*mask.float(),  # recon_x.mask_select(mask)
+                                  target=X*mask.float(),  # x.mask_select(mask)
+                                  reduction='sum')  # MSE of observed values
         # MSE per feature: try to use mean of summed sse per sample?
         # MSE /= mask.sum()  # only consider observed number of values
     except ValueError:
         X = batch
-        MSE = F.mse_loss(input=recon_batch, target=X, reduction='sum')
+        MSE = reconstruction_loss(input=recon_batch, target=X, reduction='sum')
         # MSE loss for each measurement
         # MSE = (x - recon_x).pow(2).mean(axis=0).sum()
 
@@ -157,9 +165,8 @@ def loss_function(recon_batch: torch.tensor, batch, mu: torch.tensor, logvar: to
     # https://arxiv.org/abs/1312.6114
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    # KLD /= 100
-    total = t*MSE + (1-t)*KLD
-    return {'loss': total, 'MSE': MSE, 'KLD': KLD}
+    total = MSE + t*KLD
+    return {'loss': total, 'recon_loss': MSE, 'KLD': KLD}
 
 
 def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, optimizer: torch.optim,
