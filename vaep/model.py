@@ -159,6 +159,15 @@ def loss_function(recon_batch: torch.tensor,
     return {'loss': total, 'recon_loss': MSE, 'KLD': KLD}
 
 
+# Reconstruction + β * KL divergence losses summed over all elements and batch
+# def loss_function(recon_batch, batch, mu, logvar, beta=1):
+#     BCE = nn.functional.binary_cross_entropy(
+#         recon_batch, batch, reduction='sum'
+#     )
+#     KLD = 0.5 * torch.sum(logvar.exp() - logvar - 1 + mu.pow(2))
+
+#     return {'loss':  BCE + beta * KLD, 'BCE': BCE, 'KLD': KLD}
+
 def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, optimizer: torch.optim,
           device, return_pred=False):
     """Train one epoch.
@@ -194,14 +203,15 @@ def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, opt
             batch=data,
             mu=mu,
             logvar=logvar)
-        batch_metrics[batch_idx] = {
-            key: value.item() / len(data) for key, value in _batch_metric.items()}
 
         # train specific
         optimizer.zero_grad()
         loss = _batch_metric['loss']
         loss.backward()
         optimizer.step()
+
+        batch_metrics[batch_idx] = {
+            key: value.item() / len(data) for key, value in _batch_metric.items()}
 
     return batch_metrics
 
@@ -286,3 +296,99 @@ def process_train_loss(d: dict, alpha=0.1):
     key_new = f'{key} smoothed'
     df[key_new] = df[key].ewm(alpha=alpha).mean()
     return df
+
+
+# # Defining the model manuelly
+
+# import torch.nn as nn
+# d = 3
+
+# n_features= 10
+
+# class VAE(nn.Module):
+#     def __init__(self, d_input=n_features, d=d):
+#         super().__init__()
+
+#         self.d_input = d_input
+#         self.d_hidden = d
+
+#         self.encoder = nn.Sequential(
+#             nn.Linear(d_input, d ** 2),
+#             nn.ReLU(),
+#             nn.Linear(d ** 2, d * 2)
+#         )
+
+#         self.decoder = nn.Sequential(
+#             nn.Linear(d, d ** 2),
+#             nn.ReLU(),
+#             nn.Linear(d ** 2, self.d_input),
+#             nn.Sigmoid(),
+#         )
+
+#     def reparameterise(self, mu, logvar):
+#         if self.training:
+#             std = logvar.mul(0.5).exp_()
+#             eps = std.data.new(std.size()).normal_()
+#             return eps.mul(std).add_(mu)
+#         else:
+#             return mu
+
+#     def forward(self, x):
+#         mu_logvar = self.encoder(x.view(-1, self.d_input)).view(-1, 2, d)
+#         mu = mu_logvar[:, 0, :]
+#         logvar = mu_logvar[:, 1, :]
+#         z = self.reparameterise(mu, logvar)
+#         return self.decoder(z), mu, logvar
+
+# model = VAE().double().to(device)
+# model
+
+# # Training and testing the VAE
+
+# def loss_function(recon_batch, batch, mu, logvar, beta=1):
+#     BCE = nn.functional.binary_cross_entropy(
+#         recon_batch, batch, reduction='sum'
+#     )
+#     KLD = 0.5 * torch.sum(logvar.exp() - logvar - 1 + mu.pow(2))
+
+#     return BCE + beta * KLD
+
+# epochs = 10
+# codes = dict(μ=list(), logσ2=list())
+# for epoch in range(0, epochs + 1):
+#     # Training
+#     if epoch > 0:  # test untrained net first
+#         model.train()
+#         train_loss = 0
+#         for x in dl_train:
+#             x = x.to(device)
+#             # ===================forward=====================
+#             x_hat, mu, logvar = model(x)
+#             loss = loss_function(x_hat, x, mu, logvar)
+#             train_loss += loss.item()
+#             # ===================backward====================
+#             optimizer.zero_grad()
+#             loss.backward()
+#             optimizer.step()
+#         # ===================log========================
+#         print(f'====> Epoch: {epoch} Average loss: {train_loss / len(dl_train.dataset):.4f}')
+
+#     # Testing
+
+#     means, logvars = list(), list()
+#     with torch.no_grad():
+#         model.eval()
+#         test_loss = 0
+#         for x in dl_valid:
+#             x = x.to(device)
+#             # ===================forward=====================
+#             x_hat, mu, logvar = model(x)
+#             test_loss += loss_function(x_hat, x, mu, logvar).item()
+#             # =====================log=======================
+#             means.append(mu.detach())
+#             logvars.append(logvar.detach())
+#     # ===================log========================
+#     codes['μ'].append(torch.cat(means))
+#     codes['logσ2'].append(torch.cat(logvars))
+#     test_loss /= len(dl_valid.dataset)
+#     print(f'====> Test set loss: {test_loss:.4f}')
