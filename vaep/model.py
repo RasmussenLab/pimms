@@ -8,6 +8,9 @@ from torch.utils.data import Dataset
 from torch import nn
 from torch.nn import functional as F
 
+import fastai.collab as _fastai
+# from fastai.collab import sigmoid_range, Module, Embedding
+
 logger = logging.getLogger(__name__)
 
 # from IPython.core.debugger import set_trace # invoke debugging
@@ -38,8 +41,25 @@ class Autoencoder(nn.Module):
         return x
 
 
-class CollabFiltering(nn.Module):
-    pass
+# from fastai.losses import MSELossFlat
+# from fastai.learner import Learner
+
+
+class DotProductBias(_fastai.Module):
+    def __init__(self, n_samples, n_peptides, dim_latent_factors, y_range=(14, 30)):
+        self.sample_factors = _fastai.Embedding(n_samples, dim_latent_factors)
+        self.sample_bias = _fastai.Embedding(n_samples, 1)
+        self.peptide_factors = _fastai.Embedding(n_peptides, dim_latent_factors)
+        self.peptide_bias = _fastai.Embedding(n_peptides, 1)
+        self.y_range = y_range
+
+    def forward(self, x):
+        samples = self.sample_factors(x[:, 0])
+        peptides = self.peptide_factors(x[:, 1])
+        res = (samples * peptides).sum(dim=1, keepdim=True)
+        res += self.sample_bias(x[:, 0]) + self.peptide_bias(x[:, 1])
+        return _fastai.sigmoid_range(res, *self.y_range)
+
 
 
 class VAE(nn.Module):

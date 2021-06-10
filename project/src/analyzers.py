@@ -5,6 +5,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+class Analysis(SimpleNamespace):
+    
+    def __repr__(self):
+        ret = super().__repr__()
+        return ret
+
+
 class AnalyzePeptides(SimpleNamespace):
     """Namespace for current analysis
 
