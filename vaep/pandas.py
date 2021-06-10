@@ -67,3 +67,23 @@ def get_unique_non_unique_columns(df: pd.DataFrame):
     columns.unique = df.columns[mask_unique_columns]
     columns.non_unique = df.columns[~mask_unique_columns]
     return columns
+
+
+def get_columns_namedtuple(df: pd.DataFrame):
+    """Create namedtuple instance of column names.
+    Spaces in column names are replaced with underscores in the look-up.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        A pandas DataFrame
+
+    Returns
+    -------
+    namedtuple
+        NamedTuple instance with columns as attributes.
+    """
+    columns = df.columns.to_list()
+    column_keys = [x.replace(' ', '_') for x in columns]
+    ColumnsNamedTuple = namedtuple('Columns', column_keys)
+    return ColumnsNamedTuple(**{k: v for k, v in zip(column_keys, columns)})
