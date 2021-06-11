@@ -87,3 +87,21 @@ def get_columns_namedtuple(df: pd.DataFrame):
     column_keys = [x.replace(' ', '_') for x in columns]
     ColumnsNamedTuple = namedtuple('Columns', column_keys)
     return ColumnsNamedTuple(**{k: v for k, v in zip(column_keys, columns)})
+
+
+def highlight_min(s):
+    """Highlight the min in a Series yellow for using in pandas.DataFrame.style
+
+    Parameters
+    ----------
+    s : pd.Series
+        Pandas Series
+
+    Returns
+    -------
+    list
+        list of strings containing the background color for the values speciefied.
+        To be used as `pandas.DataFrame.style.apply(highlight_min)`
+    """
+    to_highlight = s == s.min()
+    return ['background-color: yellow' if v else '' for v in to_highlight]

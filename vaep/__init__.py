@@ -10,6 +10,8 @@ Variatonal autoencoder for proteomics
 import pandas as pd
 import pandas.io.formats.format as pf
 
+import vaep.pandas
+
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
         formatter = self.formatter or '{:,d}'.format
