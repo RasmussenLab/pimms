@@ -7,8 +7,12 @@ parser = argparse.ArgumentParser(description='Postprocess markdown files from ip
 
 parser.add_argument('--file', '-i', type=str,
                     help='path to markdown input file.', required=True)
+parser.add_argument('--overwrite',
+                    help='Overwrite input file?', required=False, default=False, action='store_true')
 
 args = parser.parse_args()
+print("Arguments provided: ", args)
+
 
 file = Path(args.file)
 
@@ -32,18 +36,27 @@ regex = """<style scoped>
     }
 </style>"""
 # # short alternative
-# regex = '<style scoped>\n(.*\n)*?</style>'
+print('Remove style scope(s), similar to:', regex, sep='\n')
+
+
+regex = '<style scoped>\n(.*\n)*?</style>'
 
 res, n = re.subn(regex, '', file_str)
 
-print('Remove string:', regex, sep='\n')
+
 print(f'Removed {n = } times.')
+
+
 
 regex2 = '</style><table'  # check if this needs to be replaced by
 # '</style>\n<table'
 
-with open(file.parent / f"{file.stem}_replaced{file.suffix}", 'w') as f:
+if not args.overwrite:
+    file = file.parent / f"{file.stem}_replaced{file.suffix}"
+    
+with open(file, 'w') as f:
     f.write(res)
+print(f"write results to new file {file.absolute()}")
 
 # # does match between first <style scoped> and last </style>
 # regex = '<style scoped>.*</style>'
