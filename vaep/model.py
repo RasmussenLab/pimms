@@ -16,40 +16,12 @@ logger = logging.getLogger(__name__)
 # from IPython.core.debugger import set_trace # invoke debugging
 
 
-class Autoencoder(nn.Module):
-    def __init__(self, n_features: int, n_neurons: int,
-                 activation=nn.Tanh, last_activation=None, dim_latent: int = 10):
-        super().__init__()
-        self.n_features = n_features
-
-        self.encoder = nn.Sequential(
-            nn.Linear(n_features, n_neurons),
-            activation(),
-            nn.Linear(n_neurons, dim_latent),
-            activation()
-        )
-        self.decoder = [nn.Linear(dim_latent, n_neurons),
-                        activation(),
-                        nn.Linear(n_neurons, n_features)]
-        if last_activation:
-            self.decoder += last_activation
-        self.decoder = nn.Sequential(*self.decoder)
-
-    def forward(self, x):
-        x = self.encoder(x)
-        x = self.decoder(x)
-        return x
-
-
-# from fastai.losses import MSELossFlat
-# from fastai.learner import Learner
-
-
 class DotProductBias(_fastai.Module):
     def __init__(self, n_samples, n_peptides, dim_latent_factors, y_range=(14, 30)):
         self.sample_factors = _fastai.Embedding(n_samples, dim_latent_factors)
         self.sample_bias = _fastai.Embedding(n_samples, 1)
-        self.peptide_factors = _fastai.Embedding(n_peptides, dim_latent_factors)
+        self.peptide_factors = _fastai.Embedding(
+            n_peptides, dim_latent_factors)
         self.peptide_bias = _fastai.Embedding(n_peptides, 1)
         self.y_range = y_range
 
@@ -62,59 +34,112 @@ class DotProductBias(_fastai.Module):
 
 
 
-class VAE(nn.Module):
-    """Variational Autoencoder"""
-
-    def __init__(self, n_features: int, n_neurons: int, dim_vae_latent: int = 10):
-        """PyTorch model for Variational autoencoder
+class Autoencoder(nn.Module):
+    def __init__(self,
+                 n_features: int,
+                 n_neurons: int,
+                 activation=nn.Tanh,
+                 last_encoder_activation=nn.Tanh,
+                 last_decoder_activation=None,
+                 dim_latent: int = 10):
+        """Initialize an Autoencoder
 
         Parameters
         ----------
         n_features : int
-            number of input features.
+            Input dimension
         n_neurons : int
-            number of neurons in encoder and decoder layer
+            Hidden layer dimension in Encoder and Decoder
+        activation : [type], optional
+            Activatoin for hidden layers, by default nn.Tanh
+        last_encoder_activation : [type], optional
+            Optional last encoder activation, by default nn.Tanh
+        last_decoder_activation : [type], optional
+            Optional last decoder activation, by default None
+        dim_latent : int, optional
+            Hidden space dimension, by default 10
         """
         super().__init__()
+        self.n_features, self.n_neurons = n_features, n_neurons
+        self.dim_latent = dim_latent
 
-        self._n_neurons = n_neurons
-        self._n_features = n_features
+        # Encoder
+        self.encoder = [
+            nn.Linear(n_features, n_neurons),
+            activation(),
+            nn.Linear(n_neurons, dim_latent)]
+        if last_encoder_activation:
+            self.encoder.append(last_encoder_activation())
+        self.encoder = nn.Sequential(*self.encoder)
 
-        self.dim_vae_latent = dim_vae_latent
-
-        # ToDo: Create Encoder Module for creating encoders
-        self.encoder = nn.Linear(n_features, n_neurons).double()
-        # latent representation:
-        self.mean = nn.Linear(n_neurons, dim_vae_latent).double()  # mean
-        self.std = nn.Linear(n_neurons, dim_vae_latent).double()   # stdev
-
-        self.decoder = nn.Linear(dim_vae_latent, n_neurons).double()
-
-        self.out = nn.Linear(n_neurons, n_features).double()
-
-    def encode(self, x):
-        h1 = F.relu(self.encoder(x))
-        mu = self.mean(h1)
-        # https://github.com/RasmussenLab/vamb/blob/734b741b85296377937de54166b7db274bc7ba9c/vamb/encode.py#L212-L221
-        # Jacob retrains his to positive values. This should be garantued by exp-fct in reparameterize
-        std = self.std(h1)
-        return mu, std
-
-    def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5*logvar)  # will always be positive
-        eps = torch.randn_like(std)
-        return mu + eps*std
-
-    def decode(self, z):
-        # SigmoidRange to smooth gradients?
-        # def sigmoid_range(x, lo, hi): return torch.sigmoid(x) * (hi-lo) + lo
-        h3 = F.relu(self.decoder(z))
-        return torch.sigmoid(self.out(h3))
+        # Decoder
+        self.decoder = [nn.Linear(dim_latent, n_neurons),
+                        activation(),
+                        nn.Linear(n_neurons, n_features)]
+        if last_decoder_activation:
+            self.decoder.append(last_decoder_activation())
+        self.decoder = nn.Sequential(*self.decoder)
 
     def forward(self, x):
-        mu, logvar = self.encode(x)
-        z = self.reparameterize(mu, logvar)
-        return self.decode(z), mu, logvar
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
+
+
+# from fastai.losses import MSELossFlat
+# from fastai.learner import Learner
+
+
+class VAE(Autoencoder):
+    """Variational Autoencoder. Latent dimension is composed of mean and log variance,
+    so effecively the number of neurons are duplicated.
+    """
+
+    def __init__(self,
+                 n_features: int,
+                 n_neurons: int,
+                 activation=nn.Tanh,
+                 last_encoder_activation=nn.Tanh,
+                 last_decoder_activation=None,
+                 dim_latent: int = 10):
+
+        # locals() need to be cleand, otherwise one runs into
+        # ModuleAttributeError: 'VAE' object has no attribute '_modules'
+        _locals = locals()
+        args = {k: _locals[k] for k in _locals.keys() if k not in [
+            'self', '__class__', '_locals']}
+
+        super().__init__(**args)
+
+        del self.encoder
+        # this could also become a seperate encoder class
+        self.encoder = [
+            nn.Linear(n_features, n_neurons),
+            activation(),
+            nn.Linear(n_neurons, dim_latent*2)]
+        if last_encoder_activation:
+            self.encoder.append(last_encoder_activation())
+        self.encoder = nn.Sequential(*self.encoder)
+
+    def reparameterize(self, mu, logvar):
+        if self.training:
+            std = logvar.mul(0.5).exp_()
+            eps = std.data.new(std.size()).normal_()
+            return eps.mul(std).add_(mu)
+            # std = torch.exp(0.5*logvar)  # will always be positive
+            # eps = torch.randn_like(std)
+            # return mu + eps*std
+        else:
+            return mu
+
+    def forward(self, x):
+        mu_logvar = self.encoder(x)
+        mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
+        mu = mu_logvar[:, 0, :]
+        logvar = mu_logvar[:, 1, :]
+        z = self.reparameterize(mu=mu, logvar=logvar)
+        recon = self.decoder(z)
+        return recon, mu, logvar
 
 
 def loss_function(recon_batch: torch.tensor,
@@ -158,25 +183,22 @@ def loss_function(recon_batch: torch.tensor,
         if isinstance(batch, torch.Tensor):
             raise ValueError
         X, mask = batch
-        MSE = reconstruction_loss(input=recon_batch*mask.float(),  # recon_x.mask_select(mask)
-                                  target=X*mask.float(),  # x.mask_select(mask)
-                                  reduction='sum')  # MSE of observed values
-        # MSE per feature: try to use mean of summed sse per sample?
-        # MSE /= mask.sum()  # only consider observed number of values
+        recon_batch = recon_batch*mask.float()  # recon_x.mask_select(mask)
+        X = X*mask.float()  # x.mask_select(mask)
     except ValueError:
         X = batch
-        MSE = reconstruction_loss(input=recon_batch, target=X, reduction='sum')
-        # MSE loss for each measurement
-        # MSE = (x - recon_x).pow(2).mean(axis=0).sum()
+    recon_loss = reconstruction_loss(
+        input=recon_batch, target=X, reduction='sum')
 
     # KL-divergence
     # see Appendix B from VAE paper:
     # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
     # https://arxiv.org/abs/1312.6114
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
+    # there might be an error in the paper log(sigma^2) -> log(sigma)
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    total = MSE + t*KLD
-    return {'loss': total, 'recon_loss': MSE, 'KLD': KLD}
+    total = recon_loss + t*KLD
+    return {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
 
 
 # Reconstruction + β * KL divergence losses summed over all elements and batch
@@ -222,6 +244,7 @@ def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, opt
             recon_batch=recon_batch,
             batch=data,
             mu=mu,
+            reconstruction_loss=F.binary_cross_entropy,
             logvar=logvar)
 
         # train specific
@@ -256,6 +279,7 @@ def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
         [description]
     """
     model.eval()
+    assert model.training == False
     batch_metrics = {}
     if return_pred:
         pred = []
