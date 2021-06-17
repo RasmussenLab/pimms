@@ -133,13 +133,18 @@ class VAE(Autoencoder):
             return mu
 
     def forward(self, x):
+        mu, logvar = self.get_mu_and_logvar(x)
+        z = self.reparameterize(mu=mu, logvar=logvar)
+        recon = self.decoder(z)
+        return recon, mu, logvar
+
+    def get_mu_and_logvar(self, x):
+        """Helper function to return mu and logvar"""
         mu_logvar = self.encoder(x)
         mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
         mu = mu_logvar[:, 0, :]
         logvar = mu_logvar[:, 1, :]
-        z = self.reparameterize(mu=mu, logvar=logvar)
-        recon = self.decoder(z)
-        return recon, mu, logvar
+        return mu, logvar
 
 
 def loss_function(recon_batch: torch.tensor,
@@ -310,8 +315,9 @@ def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
     return batch_metrics if not return_pred else (batch_metrics, pred)
 
 
-def build_df_from_pred_batches(pred, scaler, index=None, columns=None):
+def build_df_from_pred_batches(pred, scaler=None, index=None, columns=None):
     pred = np.vstack(pred)
+    if scaler:
     pred = scaler.inverse_transform(pred)
     pred = pd.DataFrame(pred, index=index, columns=columns)
     return pred
