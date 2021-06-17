@@ -318,7 +318,7 @@ def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
 def build_df_from_pred_batches(pred, scaler=None, index=None, columns=None):
     pred = np.vstack(pred)
     if scaler:
-    pred = scaler.inverse_transform(pred)
+        pred = scaler.inverse_transform(pred)
     pred = pd.DataFrame(pred, index=index, columns=columns)
     return pred
 
