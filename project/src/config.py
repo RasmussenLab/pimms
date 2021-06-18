@@ -109,3 +109,10 @@ fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 
 FILEPATH_UTILS = 'src/file_utils.py'
+
+###############################################################################
+###############################################################################
+# configure plotting
+import matplotlib as mpl
+# https://matplotlib.org/stable/users/dflt_style_changes.html
+mpl.rcParams['figure.figsize'] = [10.0, 8.0]
