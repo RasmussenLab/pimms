@@ -41,21 +41,25 @@ print('Remove style scope(s), similar to:', regex, sep='\n')
 
 regex = '<style scoped>\n(.*\n)*?</style>'
 
-res, n = re.subn(regex, '', file_str)
+file_str, n = re.subn(regex, '', file_str)
 
 
 print(f'Removed {n = } times.')
 
 
+# put into list of regexes
+regex = '</style><table'  # check if this needs to be replaced by
+print('Remove style scope(s), similar to:', regex, sep='\n')
+file_str, n = re.subn(regex, '</style>\n<table', file_str)
+print(f'Removed {n = } times.')
 
-regex2 = '</style><table'  # check if this needs to be replaced by
-# '</style>\n<table'
+
 
 if not args.overwrite:
     file = file.parent / f"{file.stem}_replaced{file.suffix}"
     
 with open(file, 'w') as f:
-    f.write(res)
+    f.write(file_str)
 print(f"write results to new file {file.absolute()}")
 
 # # does match between first <style scoped> and last </style>
