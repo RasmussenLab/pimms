@@ -105,3 +105,11 @@ def highlight_min(s):
     """
     to_highlight = s == s.min()
     return ['background-color: yellow' if v else '' for v in to_highlight]
+
+
+def _add_indices(array, original_df, index_only=False):
+    index = original_df.index
+    columns = None
+    if not index_only:
+        columns = original_df.columns
+    return pd.DataFrame(array, index=index, columns=columns)

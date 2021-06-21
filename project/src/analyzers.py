@@ -2,8 +2,13 @@ from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+from sklearn.decomposition import PCA
+
+from vaep.pandas import _add_indices
 
 class Analysis(SimpleNamespace):
 
@@ -96,7 +101,7 @@ def corr_lower_triangle(df):
 
 def plot_corr_histogram(corr_lower_triangle, bins=10):
     fig, axes = plt.subplots(ncols=2, gridspec_kw={"width_ratios": [
-                             5, 1], "wspace": 0.2}, figsize=(10, 4))
+        5, 1], "wspace": 0.2}, figsize=(10, 4))
     values = pd.Series(corr_lower_triangle.to_numpy().flatten()).dropna()
     ax = axes[0]
     values.hist(ax=ax, bins=bins)
@@ -106,3 +111,41 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
     data.name = ''
     _ = pd.plotting.table(ax=ax, data=data, loc="best", edges="open")
     return fig, axes
+
+
+def run_pca(df, n_components=2):
+    """Run PCA on DataFrame.
+
+    Returns
+    -------
+    pandas.DataFrame
+        with same indices as in original DataFrame
+    """
+    pca = PCA(n_components=n_components).fit_transform(df)
+    cols = [f'pc{i}' for i in range(n_components)]
+    pca = pd.DataFrame(pca, index=df.index, columns=cols)
+    return pca
+
+
+def scatter_plot_w_dates(ax, df, dates=None):
+    """plot first vs. second column in DataFrame.
+    Use dates to color data."""
+
+    cols = df.columns
+
+    if isinstance(dates, str):
+        dates = df['dates']
+
+    ax = ax.scatter(
+        x=df[cols[0]],
+        y=df[cols[1]],
+        c=[mdates.date2num(t) for t in pd.to_datetime(dates)
+           ] if dates is not None else None
+    )
+    return ax
+
+def add_date_colorbar(ax, fig):
+    loc = mdates.AutoDateLocator()
+    _ = fig.colorbar(ax, ticks=loc,
+                 format=mdates.AutoDateFormatter(loc))
+    return ax
