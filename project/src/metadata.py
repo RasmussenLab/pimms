@@ -35,6 +35,7 @@ def get_metadata_from_filenames(selected: Iterable):
         _entry = {}
         _entry['date'], _entry['ms_instrument'], _rest_filename = filename.split(
             '_', maxsplit=2)
+        _entry['ms_instrument'] = _entry['ms_instrument'].upper()
         try:
             _entry['researcher'] = re.search(
                 regex_researcher, _rest_filename).group()
