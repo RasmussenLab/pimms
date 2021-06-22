@@ -127,22 +127,31 @@ def run_pca(df, n_components=2):
     return pca
 
 
-def scatter_plot_w_dates(ax, df, dates=None):
+def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
     """plot first vs. second column in DataFrame.
-    Use dates to color data."""
-
+    Use dates to color data.
+    
+    
+    
+    errors : {'ignore', 'raise', 'coerce'}, default 'raise'
+        Passed on to pandas.to_datetime
+        - If 'raise', then invalid parsing will raise an exception.
+        - If 'coerce', then invalid parsing will be set as NaT.
+        - If 'ignore', then invalid parsing will return the input.
+    """
+    # Inspiration:  https://stackoverflow.com/a/59685599/9684872
     cols = df.columns
 
     if isinstance(dates, str):
         dates = df['dates']
 
-    ax = ax.scatter(
+    path_collection = ax.scatter(
         x=df[cols[0]],
         y=df[cols[1]],
-        c=[mdates.date2num(t) for t in pd.to_datetime(dates)
+        c=[mdates.date2num(t) for t in pd.to_datetime(dates, errors=errors)
            ] if dates is not None else None
     )
-    return ax
+    return path_collection
 
 def add_date_colorbar(ax, fig):
     loc = mdates.AutoDateLocator()
