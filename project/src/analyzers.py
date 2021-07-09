@@ -89,6 +89,10 @@ class AnalyzePeptides(SimpleNamespace):
         items = ("{}".format(k, self.__dict__[k]) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
 
+    @property
+    def fname_stub(self):
+        assert hasattr(self, 'df'), f'Attribute df is missing: {self}'
+        return 'N{:05d}_M{:04d}'.format(*self.df.shape)
 
 def corr_lower_triangle(df):
     """Compute the correlation matrix, returning only unique values."""
