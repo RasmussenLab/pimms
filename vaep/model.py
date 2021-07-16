@@ -174,7 +174,8 @@ def loss_function(recon_batch: torch.tensor,
     Returns
     -------
     dict
-        Containing: {total: loss, recon: loss, kld: loss}
+        Containing: {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
+                    # {total: loss, recon: loss, kld: loss}
 
         total: float
             Total, weighted average loss for provided input and mask

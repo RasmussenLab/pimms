@@ -35,12 +35,13 @@ class StandardScaler(preprocessing.StandardScaler):
             return pd.DataFrame(res, columns=X.columns, index=X.index)
         return res
 
+
 msg_return_docstring = """
 
         Returns
         -------
         Y: array-like
-            If X is a pandas DataFrame, Y will be a DataFrame with the initial 
+            If X is a pandas DataFrame, Y will be a DataFrame with the initial
             Indix and column Index objects.
 """
 
@@ -59,7 +60,7 @@ StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_
 class ShiftedStandardScaler(StandardScaler):
 
     def __init__(self, shift_mu=0.5, scale_var=2.0, **kwargs):
-        """Augmented StandardScaler, shift the standard normalized data 
+        """Augmented StandardScaler, shift the standard normalized data
         by mu and scales the variance by a scale factor.
 
         Parameters
