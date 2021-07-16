@@ -55,6 +55,40 @@ StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_
 # class MinMaxScaler(preprocessing.MinMaxScaler):
 #     pass
 
+# # look at fastcore to see if **kwargs could be replaced with original
+# # arguments, see https://fastcore.fast.ai/meta.html#Metaprogramming
+
+
+def transform(self, X, **kwargs):
+    res = super(self.__class__, self).transform(X, **kwargs)
+    if isinstance(X, pd.DataFrame):
+        return pd.DataFrame(res, columns=X.columns, index=X.index)
+    return res
+
+
+def inverse_transform(self, X, **kwargs):
+    res = super(self.__class__, self).inverse_transform(X, **kwargs)
+    if isinstance(X, pd.DataFrame):
+        return pd.DataFrame(res, columns=X.columns, index=X.index)
+    return res
+# could become factory function, build args dictionary
+
+
+def make_pandas_compatible(cls):
+    """Patch transform and inverse_transform."""
+    _fcts = ['transform', 'inverse_transform']
+    for _fct in _fcts:
+        if not hasattr(cls, _fct):
+            raise ValueError(f"no {_fct} method for {cls.__name__}")
+    new_class = type(cls.__name__, (cls,), dict(
+        transform=transform, inverse_transform=inverse_transform))
+
+    new_class.transform.__doc__ = cls.transform.__doc__ + msg_return_docstring
+    new_class.inverse_transform.__doc__ = cls.inverse_transform.__doc__ + msg_return_docstring
+    return new_class
+
+
+MinMaxScaler = make_pandas_compatible(preprocessing.MinMaxScaler)
 
 
 class ShiftedStandardScaler(StandardScaler):
