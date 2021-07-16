@@ -4,6 +4,49 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
+
+class PeptideDatasetInMemory(Dataset):
+    """Peptide Dataset fully in memory."""
+
+    nan = torch.tensor(float('NaN'))
+
+    def __init__(self, data: np.array, mask: np.array = None, fill_na=0.0):
+        """Build torch.Tensors for DataLoader.
+
+        Parameters
+        ----------
+        data : np.array
+            Peptide data for training, potentially with missings.
+        mask : [type], optional
+            Mask selecting values for evaluation from data(y), by default None
+            If no mask is provided, all non-missing values from `data`-array 
+            will be used.
+        fill_na : int, optional
+            value to replace missing values with, by default 0
+        """
+        self.peptides = torch.FloatTensor(data)
+        if mask is None:
+            self.mask = torch.from_numpy(np.isfinite(data))
+        else:
+            self.mask = torch.from_numpy(mask)
+        self.y = torch.where(self.mask, self.peptides, self.nan)
+
+        if mask is not None:
+            self.peptides = torch.where(
+                self.mask, self.nan, self.peptides)
+
+        self.peptides = torch.where(self.peptides.isnan(),
+                            torch.FloatTensor([fill_na]), self.peptides)
+        
+        self.length_ = len(self.peptides)
+
+    def __len__(self):
+        return self.length_
+
+    def __getitem__(self, idx):
+        return self.peptides[idx], self.mask[idx], self.y[idx]
+
+
 class PeptideDatasetInMemoryMasked(Dataset):
     """Peptide Dataset fully in memory.
     
