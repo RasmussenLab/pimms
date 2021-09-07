@@ -25,3 +25,12 @@ _ | VAEP_01_MaxQuantOutput.ipynb      | Show MaxQuantOutput class behaviour
 _ | VAEP_POC.ipynb                    | Presentation for POC
 
 > exectued notebook versions are stored under [`doc/ipynbs`](doc/ipynbs) exported as markdown docs
+
+
+## Notebook descriptions
+
+
+### `1_data_exploration_peptides.ipynb` 
+
+
+### 
