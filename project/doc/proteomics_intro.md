@@ -161,6 +161,9 @@ Valine          | Val | V    |  99.06841
 Term   | meaning
 ----   | ---
 c-Trap | Meaning of c? collects one million particles before forwarding them
+cv     | compensation voltage (in FAIMS)
 elute  | remove (an adsorbed substance) by washing with a solvent, especially in chromatography
+FAIMS  | high-field asymmetric waveform ion mobility spectrometry
 HCD    | 
+gcf    | gas phase fractionation
 XIC    | Extracted Ion  Current
