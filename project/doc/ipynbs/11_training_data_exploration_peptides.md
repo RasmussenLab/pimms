@@ -35,7 +35,7 @@ pd.options.display.min_rows = 30
 
 
 ```python
-FNAME = 'df_intensities_N_07813_M01000'
+FNAME = 'df_intensities_N07813_M01000'
 FN_PEPTIDE_INTENSITIES = config.FOLDER_DATA / FNAME
 FIGUREFOLDER = config.FIGUREFOLDER / FNAME
 FIGUREFOLDER.mkdir(exist_ok=True)
