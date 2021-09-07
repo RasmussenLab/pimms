@@ -129,7 +129,7 @@ def run_pca(df, n_components=2):
         with same indices as in original DataFrame
     """
     pca = PCA(n_components=n_components).fit_transform(df)
-    cols = [f'pc{i}' for i in range(n_components)]
+    cols = [f'principal component {i+1}' for i in range(n_components)]
     pca = pd.DataFrame(pca, index=df.index, columns=cols)
     return pca
 
@@ -160,8 +160,8 @@ def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
     )
     return path_collection
 
-def add_date_colorbar(ax, fig):
+def add_date_colorbar(mappable, ax, fig):
     loc = mdates.AutoDateLocator()
-    _ = fig.colorbar(ax, ticks=loc,
+    _ = fig.colorbar(mappable, ax=ax, ticks=loc,
                  format=mdates.AutoDateFormatter(loc))
     return ax
