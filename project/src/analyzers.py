@@ -75,17 +75,24 @@ class AnalyzePeptides(SimpleNamespace):
         print(f'Added proportion of not NA values based on `df` intensities.')
         return self.df_meta
 
+    def get_PCA(self, n_components=2, imputer=SimpleImputer):
+        X = imputer().fit_transform(self.df)
+        X = _add_indices(X, self.df)
+        assert X.isna().sum().sum() == 0
+
+        pca = run_pca(X, n_components=n_components)
+        if not hasattr(self, 'df_meta'):
+            _ = self.add_metadata()
+        pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
+        return pca
+        
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
 
-        X = SimpleImputer().fit_transform(self.df)
-        X = _add_indices(X, self.df)
-        assert X.isna().sum().sum() == 0
-
-        pca = run_pca(X)
+        pca = self.get_PCA()
         cols = list(pca.columns)
 
         fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(
@@ -99,7 +106,6 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by instrument
         ax = axes[0]
-        pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
         # for name, group in pca.groupby('ms_instrument'):
         #     ax.scatter(x=group[cols[0]], y=group[cols[1]], label=name)
         seaborn.scatterplot(x=pca[cols[0]], y=pca[cols[1]],
@@ -120,6 +126,8 @@ class AnalyzePeptides(SimpleNamespace):
         # by dates
         ax = axes[2]
         ax.set_title('by date', fontsize=18)
+        ax.set_xlabel(cols[0])
+        ax.set_ylabel(cols[1])
         path_collection = scatter_plot_w_dates(
             ax, pca, dates=self.df_meta.date, errors='raise')
         path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
