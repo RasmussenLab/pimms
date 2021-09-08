@@ -18,6 +18,7 @@ from vaep.pandas import _add_indices
 
 from . import metadata
 
+ALPHA = 0.5
 
 class Analysis(SimpleNamespace):
 
@@ -113,7 +114,7 @@ class AnalyzePeptides(SimpleNamespace):
         ax.set_xlabel(cols[0])
         ax.set_ylabel(cols[1])
         path_collection = ax.scatter(
-            x=cols[0], y=cols[1], c=self.df_meta['prop_not_na'], data=pca)
+            x=cols[0], y=cols[1], c=self.df_meta['prop_not_na'], data=pca, alpha=ALPHA)
         _ = fig.colorbar(path_collection, ax=ax)
 
         # by dates
@@ -229,7 +230,8 @@ def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
         x=df[cols[0]],
         y=df[cols[1]],
         c=[mdates.date2num(t) for t in pd.to_datetime(dates, errors=errors)
-           ] if dates is not None else None
+           ] if dates is not None else None,
+        alpha=ALPHA
     )
     return path_collection
 
