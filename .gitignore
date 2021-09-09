@@ -5,9 +5,15 @@
 *.pyc
 
 #folders
+project/_archiv
 project/data/*
+!project\data\all_raw_files_dump.txt
 project/tutorials/
 project/tex/
+
+# exclude builds
+docs/_* 
+
 
 !project/data/README.md
 project/Figures/

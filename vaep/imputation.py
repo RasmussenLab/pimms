@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 RANDOMSEED = 123
@@ -81,6 +81,7 @@ def _get_weighted_mean(distances, data):
 
 
 # define imputation methods
+# could be done in PCA transformed space
 def imputation_KNN(data, alone=True, threshold=0.5):
     """
     
