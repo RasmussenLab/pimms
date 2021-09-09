@@ -1,6 +1,6 @@
 import os
 import logging
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 def _savefig(fig, name, folder='.', pdf=True):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""

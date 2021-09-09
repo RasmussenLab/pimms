@@ -27,14 +27,16 @@ def create_argparser():
 
 parser = create_argparser()
 
-def get_args(batch_size=600, epochs=600, no_cuda=False):
+BATCH_SIZE = 16
+EPOCHS = 600
+
+def get_args(batch_size=BATCH_SIZE, epochs=EPOCHS, log_interval=10, no_cuda=False):
     """Helper function to create arg."""
-    BATCH_SIZE = 16
-    EPOCHS = 600
-    args = ['--batch-size', str(BATCH_SIZE), 
+
+    args = ['--batch-size', str(batch_size), 
             '--seed', '43', 
-            '--epochs', str(EPOCHS), 
-            '--log-interval', str(BATCH_SIZE)]
+            '--epochs', str(epochs), 
+            '--log-interval', str(log_interval)]
     if no_cuda:
         args.append('--no-cuda')
     args = parser.parse_args(args)

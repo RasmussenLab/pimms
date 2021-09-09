@@ -4,7 +4,7 @@ import pandas as pd
 
 def combine_value_counts(X: pd.DataFrame, dropna=True):
     """Pass a selection of columns to combine it's value counts.
-    
+
     This performs no checks. Make sure the scale of the variables
     you pass is comparable.
 
@@ -19,7 +19,7 @@ def combine_value_counts(X: pd.DataFrame, dropna=True):
     -------
     pandas.DataFrame
         DataFrame of combined value counts.
-    """    
+    """
     """
     """
     _df = pd.DataFrame()
@@ -31,7 +31,7 @@ def combine_value_counts(X: pd.DataFrame, dropna=True):
 
 def unique_cols(s: pd.Series):
     """Check all entries are equal in pandas.Series
-    
+
     Ref: https://stackoverflow.com/a/54405767/968487
 
     Parameters
@@ -43,7 +43,7 @@ def unique_cols(s: pd.Series):
     -------
     bool
         Boolean on if all values are equal.
-    """    
+    """
     return (s.iloc[0] == s).all()
 
 
@@ -54,16 +54,62 @@ def get_unique_non_unique_columns(df: pd.DataFrame):
     Parameters
     ----------
     df : pd.DataFrame
-    
+
     Returns
     -------
     types.SimpleNamespace
         SimpleNamespace with `unique` and `non_unique` column names indices.
-    """    
+    """
 
     mask_unique_columns = df.apply(unique_cols)
-    
+
     columns = SimpleNamespace()
     columns.unique = df.columns[mask_unique_columns]
     columns.non_unique = df.columns[~mask_unique_columns]
     return columns
+
+
+def get_columns_namedtuple(df: pd.DataFrame):
+    """Create namedtuple instance of column names.
+    Spaces in column names are replaced with underscores in the look-up.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        A pandas DataFrame
+
+    Returns
+    -------
+    namedtuple
+        NamedTuple instance with columns as attributes.
+    """
+    columns = df.columns.to_list()
+    column_keys = [x.replace(' ', '_') for x in columns]
+    ColumnsNamedTuple = namedtuple('Columns', column_keys)
+    return ColumnsNamedTuple(**{k: v for k, v in zip(column_keys, columns)})
+
+
+def highlight_min(s):
+    """Highlight the min in a Series yellow for using in pandas.DataFrame.style
+
+    Parameters
+    ----------
+    s : pd.Series
+        Pandas Series
+
+    Returns
+    -------
+    list
+        list of strings containing the background color for the values speciefied.
+        To be used as `pandas.DataFrame.style.apply(highlight_min)`
+    """
+    to_highlight = s == s.min()
+    return ['background-color: yellow' if v else '' for v in to_highlight]
+
+
+def _add_indices(array, original_df, index_only=False):
+    index = original_df.index
+    columns = None
+    if not index_only:
+        columns = original_df.columns
+    return pd.DataFrame(array, index=index, columns=columns)
