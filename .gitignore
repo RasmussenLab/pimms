@@ -31,3 +31,6 @@ workflows/maxquant/out/
 
 
 
+# builds
+docs/_*
+docs/source
