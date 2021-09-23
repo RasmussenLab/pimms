@@ -78,7 +78,7 @@ class AnalyzePeptides(SimpleNamespace):
     def get_PCA(self, n_components=2, imputer=SimpleImputer):
         X = imputer().fit_transform(self.df)
         X = _add_indices(X, self.df)
-        assert X.isna().sum().sum() == 0
+        assert all(X.notna())
 
         pca = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
@@ -210,9 +210,10 @@ def run_pca(df, n_components=2):
     pandas.DataFrame
         with same indices as in original DataFrame
     """
-    pca = PCA(n_components=n_components).fit_transform(df)
-    cols = [f'principal component {i+1}' for i in range(n_components)]
-    pca = pd.DataFrame(pca, index=df.index, columns=cols)
+    pca = PCA(n_components=n_components)
+    PCs = pca.fit_transform(df)
+    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i, var_explained in enumerate(pca.explained_variance_ratio_)]
+    pca = pd.DataFrame(PCs, index=df.index, columns=cols)
     return pca
 
 
