@@ -71,6 +71,10 @@ def get_metadata_from_filenames(selected: Iterable):
             except AttributeError:
                 _entry['lc_instrument'] = None
                 logger.error(f'Could not find LC instrument in {filename}')
+        if _entry['lc_instrument']:
+            _entry['lc_instrument'] = _entry['lc_instrument'].upper()
+            if _entry['lc_instrument'][0]=='N':
+                _entry['lc_instrument'] = f"n{_entry['lc_instrument'][1:]}"
         _entry['rest'] = _rest_filename
         data_meta[filename] = _entry
     return data_meta
