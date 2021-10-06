@@ -39,8 +39,9 @@ assert re.search(regex_not_researcher, 'MA_OFF').group() == 'MA'
 assert re.search(regex_not_researcher, '_LiNi_') == None
 
 
-assert re.search(regex_lc_instrument, 'nlc1_').group() == 'nlc1'
-assert re.search(regex_lc_instrument, 'Evo_').group() == 'Evo'
+type_run = {'MA': 'MNT',
+            'MNT': 'MNT',
+            'QC': 'QC'}
 
 # based on hints from core facility
 ms_instrument_mapping = {
@@ -89,6 +90,7 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
                 if apply_cleaning and _entry['lc_instrument'] in lc_instrument_mapping:
                     _entry['lc_instrument'] = lc_instrument_mapping[_entry['lc_instrument']]
             else:
+                # try rare cases: "20191216_QE4_nL4_MM_QC_MNT_HELA_01
                 logger.error(f'Could not find LC instrument in {filename}')
         # researcher after LC instrument
         try:
