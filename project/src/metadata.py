@@ -8,14 +8,15 @@ logger = logging.getLogger('vaep')
 # columns = 'date ms_instrument lc_instrument researcher rest'.split()
 # RunMetaData = namedtuple('RunMetaData', columns)
 
-regex_researcher = '[_]*[A-Z][a-z]*[-]*[A-Z][a-zA-Z]*[_]*'
+#Vyt, ss, pcp, lvs, teph
+regex_researcher = '[_]*[A-Z]*[a-z]*[-]*[A-Z]*[a-zA-Z]*[_]*'
 
 assert re.search(regex_researcher, 'HeWe_').group() == 'HeWe_'
 assert re.search(regex_researcher, '_HeWe_').group() == '_HeWe_'
 assert re.search(regex_researcher, 'HeWE_').group() == 'HeWE_'
 assert re.search(regex_researcher, '_HeWE_').group() == '_HeWE_'
 
-regex_lc_instrument = '[_]*([nN]|UP)*((lc)|(LC)|(CL)|([eE][vV][oO]))[a-zA-Z0-9]*[_]*'
+regex_lc_instrument = '[_]*([nN]|(UP|up))*((lc)|(LC)|(CL)|([eE][vV][oO]))[a-zA-Z0-9]*[_]*'
 
 assert re.search(regex_lc_instrument, '_nlc1_').group() == '_nlc1_'
 assert re.search(regex_lc_instrument, '_LC6_').group() == '_LC6_'
@@ -27,7 +28,7 @@ assert re.search(regex_lc_instrument, '_EvO_').group() == '_EvO_'
 
 
 # check not HeLa, HeLA, ON, OFF MNT, MA, QC, ALL
-regex_not_researcher = '[Hh][eE][Ll][aA]|ON|OFF|MNT|MA|QC|ALL'
+regex_not_researcher = '[Hh][eE][Ll][aA]|ON|OFF|MNT|MA|QC|ALL|method|Test'
 
 assert re.search(regex_not_researcher, 'HeLa').group() == 'HeLa'
 assert re.search(regex_not_researcher, 'Hela').group() == 'Hela'
@@ -91,7 +92,12 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
                     _entry['lc_instrument'] = lc_instrument_mapping[_entry['lc_instrument']]
             else:
                 # try rare cases: "20191216_QE4_nL4_MM_QC_MNT_HELA_01
-                logger.error(f'Could not find LC instrument in {filename}')
+                # lc_rare_cases = {'nL4': 'nLC4}
+                if 'nL4_' in _rest_filename:
+                    _entry['lc_instrument'] = 'nLC4'
+                    _rest_filename = _rest_filename.replace('nL4_', '')
+                else:
+                    logger.error(f'Could not find LC instrument in {filename}')
         # researcher after LC instrument
         try:
             _entry['researcher'] = re.search(
@@ -107,8 +113,11 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
                     raise AttributeError
                 _cleaned_filename = _cleaned_filename.replace(
                     _entry['researcher'], '').replace('__', '_')
-            _rest_filename = _rest_filename.replace(
+            if _entry['researcher']:
+                _rest_filename = _rest_filename.replace(
                 _entry['researcher'], '').replace('__', '_')
+            else:
+                _entry['researcher'] = None
         except AttributeError:
             logger.critical(f'Found no researcher ID: {filename}')
             _entry['researcher'] = None
@@ -118,12 +127,27 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
     return data_meta
 
 
-test_cases = ['20131014_QE5_UPLC9_ALL_MNT_HELA_01']
+test_cases = ['20131014_QE5_UPLC9_ALL_MNT_HELA_01',
+              '20150830_qe3_uplc9_LVS_MNT_HELA_07',
+              '20191216_QE4_nL4_MM_QC_MNT_HELA_01_20191217122319']
+# 20150622_QE5_UPLC8_ALL_QC_Hela_method_Test
+
+# get_metadata_from_filenames(test_cases)
 
 assert get_metadata_from_filenames(test_cases) == {
     '20131014_QE5_UPLC9_ALL_MNT_HELA_01': {'date': '20131014',
-                                           'ms_instrument': 'QE5',
-                                           'lc_instrument': 'UPLC9',
-                                           'researcher': None,
-                                           'rest': '_ALL_MNT_HELA_01'},
+                                        'ms_instrument': 'QE5',
+                                        'lc_instrument': 'UPLC9',
+                                        'researcher': None,
+                                        'rest': '_ALL_MNT_HELA_01'},
+    '20150830_qe3_uplc9_LVS_MNT_HELA_07': {'date': '20150830',
+                                        'ms_instrument': 'QE3',
+                                        'lc_instrument': 'UPLC9',
+                                        'researcher': 'LVS',
+                                        'rest': '_MNT_HELA_07'},
+    '20191216_QE4_nL4_MM_QC_MNT_HELA_01_20191217122319': {'date': '20191216',
+                                        'ms_instrument': 'QE4',
+                                        'lc_instrument': 'nLC4',
+                                        'researcher': 'MM',
+                                        'rest': '_QC_MNT_HELA_01_20191217122319'}
 }
