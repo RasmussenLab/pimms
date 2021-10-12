@@ -62,8 +62,16 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
     for filename in selected:
         # The first two fields are in order, the rest needs matching.
         _entry = {}
-        _entry['date'], _entry['ms_instrument'], _rest_filename = filename.split(
+        try:
+            _entry['date'], _entry['ms_instrument'], _rest_filename = filename.split(
             '_', maxsplit=2)
+        except ValueError:
+            logger.error(f'Unexpected filenaming format: {filename}')
+            _entry['rest'] = filename
+            data_meta[filename] = _entry
+            print('catched')
+            continue
+            print('oh no')
 
         _entry['ms_instrument'] = _entry['ms_instrument'].upper()
         if apply_cleaning and _entry['ms_instrument'] in ms_instrument_mapping:
