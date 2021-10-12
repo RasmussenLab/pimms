@@ -10,6 +10,7 @@ https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os
 import os
 from collections import namedtuple
 from pathlib import Path
+from pprint import pformat
 
 def mkdir(path=Path): 
     path.mkdir(exist_ok=True)
@@ -116,3 +117,35 @@ FILEPATH_UTILS = 'src/file_utils.py'
 import matplotlib as mpl
 # https://matplotlib.org/stable/users/dflt_style_changes.html
 mpl.rcParams['figure.figsize'] = [10.0, 8.0]
+
+# cfg.keys.gene_name
+# cfg.paths.processed
+# cfg.
+
+
+class Config():
+    """Config class with a setter enforcing that config entries cannot 
+    be overwritten.
+
+
+    Can contain configs, which are itself configs:
+    keys, paths,
+    
+    """
+
+    def __setattr__(self, entry, value):
+        """Set if attribute not in instance."""
+        if hasattr(self, entry):
+            raise AttributeError(
+                f'{entry} already set to {getattr(self, entry)}')
+        super().__setattr__(entry, value)
+
+    def __repr__(self):
+        return pformat(vars(self))  # does not work in Jupyter?
+
+
+if __name__ == '__main__':
+    cfg = Config()
+    cfg.test = 'test'
+    print(cfg.test)
+    cfg.test = 'raise ValueError'
