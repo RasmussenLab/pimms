@@ -64,7 +64,7 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
         _entry = {}
         try:
             _entry['date'], _entry['ms_instrument'], _rest_filename = filename.split(
-            '_', maxsplit=2)
+                '_', maxsplit=2)
         except ValueError:
             logger.error(f'Unexpected filenaming format: {filename}')
             _entry['rest'] = filename
@@ -123,7 +123,7 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
                     _entry['researcher'], '').replace('__', '_')
             if _entry['researcher']:
                 _rest_filename = _rest_filename.replace(
-                _entry['researcher'], '').replace('__', '_')
+                    _entry['researcher'], '').replace('__', '_')
             else:
                 _entry['researcher'] = None
         except AttributeError:
@@ -144,18 +144,18 @@ test_cases = ['20131014_QE5_UPLC9_ALL_MNT_HELA_01',
 
 assert get_metadata_from_filenames(test_cases) == {
     '20131014_QE5_UPLC9_ALL_MNT_HELA_01': {'date': '20131014',
-                                        'ms_instrument': 'QE5',
-                                        'lc_instrument': 'UPLC9',
-                                        'researcher': None,
-                                        'rest': '_ALL_MNT_HELA_01'},
+                                           'ms_instrument': 'QE5',
+                                           'lc_instrument': 'UPLC9',
+                                           'researcher': None,
+                                           'rest': '_ALL_MNT_HELA_01'},
     '20150830_qe3_uplc9_LVS_MNT_HELA_07': {'date': '20150830',
-                                        'ms_instrument': 'QE3',
-                                        'lc_instrument': 'UPLC9',
-                                        'researcher': 'LVS',
-                                        'rest': '_MNT_HELA_07'},
+                                           'ms_instrument': 'QE3',
+                                           'lc_instrument': 'UPLC9',
+                                           'researcher': 'LVS',
+                                           'rest': '_MNT_HELA_07'},
     '20191216_QE4_nL4_MM_QC_MNT_HELA_01_20191217122319': {'date': '20191216',
-                                        'ms_instrument': 'QE4',
-                                        'lc_instrument': 'nLC4',
-                                        'researcher': 'MM',
-                                        'rest': '_QC_MNT_HELA_01_20191217122319'}
+                                                          'ms_instrument': 'QE4',
+                                                          'lc_instrument': 'nLC4',
+                                                          'researcher': 'MM',
+                                                          'rest': '_QC_MNT_HELA_01_20191217122319'}
 }

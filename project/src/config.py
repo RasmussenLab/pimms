@@ -13,9 +13,12 @@ from pathlib import Path
 from pprint import pformat
 
 import pandas
-def mkdir(path=Path): 
+import matplotlib as mpl
+
+def mkdir(path=Path):
     path.mkdir(exist_ok=True)
     return path
+
 
 ###############################################################################
 ###############################################################################
@@ -31,7 +34,7 @@ FOLDER_PROCESSED.mkdir(exist_ok=True)
 
 FOLDER_TRAINING = mkdir(FOLDER_DATA / 'hela_qc_data')
 
-# (old) Synonyms 
+# (old) Synonyms
 PROCESSED_DATA = FOLDER_PROCESSED
 PROTEIN_DUMPS = PROCESSED_DATA
 
@@ -52,24 +55,26 @@ for folder in FOLDER_MQ_TXT_DATA:
         ON_ERDA = False
         break
 
-assert FOLDER_MQ_TXT_DATA.exists(), f'Not found. Check FOLDER_MQ_TXT_DATA entries above: {", ".join(FOLDER_MQ_TXT_DATA)}'
+assert FOLDER_MQ_TXT_DATA.exists(
+), f'Not found. Check FOLDER_MQ_TXT_DATA entries above: {", ".join(FOLDER_MQ_TXT_DATA)}'
 
 if ON_ERDA:
     import sys
     sys.path.append('/home/jovyan/work/vaep/')
-    
+
     FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
     if FOLDER_MQ_TXT_DATA.exists():
         print(f'FOLDER_MQ_TXT_DATA = {FOLDER_MQ_TXT_DATA}')
     else:
         raise FileNotFoundError(f"Check config for FOLDER_MQ_TXT_DATA")
-    
+
     FOLDER_RAW_DATA = Path('/home/jovyan/work/share_hela_raw/')
     if FOLDER_RAW_DATA.exists():
         print(f'FOLDER_RAW_DATA = {FOLDER_RAW_DATA}')
     else:
-        raise FileNotFoundError(f"Check config for FOLDER_RAW_DATA: {FOLDER_RAW_DATA}")
-        
+        raise FileNotFoundError(
+            f"Check config for FOLDER_RAW_DATA: {FOLDER_RAW_DATA}")
+
 # FOLDER_KEY  = None
 
 FOLDER_KEY = 'txt'
@@ -104,7 +109,8 @@ KEY_PEPTIDES = 'peptides'
 KEY_GENE_NAME = 'gene'
 KEY_GENE_NAME_FASTA = 'gene_fasta'
 
-KEYS_FASTA_ENTRY = [KEY_FASTA_HEADER, KEY_FASTA_SEQ, KEY_PEPTIDES, KEY_GENE_NAME]
+KEYS_FASTA_ENTRY = [KEY_FASTA_HEADER,
+                    KEY_FASTA_SEQ, KEY_PEPTIDES, KEY_GENE_NAME]
 
 FastaEntry = namedtuple('FastaEntry', KEYS_FASTA_ENTRY)
 fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
@@ -126,7 +132,6 @@ def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
 ###############################################################################
 ###############################################################################
 # configure plotting
-import matplotlib as mpl
 # https://matplotlib.org/stable/users/dflt_style_changes.html
 mpl.rcParams['figure.figsize'] = [10.0, 8.0]
 

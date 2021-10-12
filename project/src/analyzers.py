@@ -20,6 +20,7 @@ from . import metadata
 
 ALPHA = 0.5
 
+
 class Analysis(SimpleNamespace):
 
     def __repr__(self):
@@ -86,7 +87,7 @@ class AnalyzePeptides(SimpleNamespace):
             _ = self.add_metadata()
         pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
         return pca
-        
+
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
@@ -213,7 +214,8 @@ def run_pca(df, n_components=2):
     """
     pca = PCA(n_components=n_components)
     PCs = pca.fit_transform(df)
-    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i, var_explained in enumerate(pca.explained_variance_ratio_)]
+    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
+            var_explained in enumerate(pca.explained_variance_ratio_)]
     pca = pd.DataFrame(PCs, index=df.index, columns=cols)
     return pca
 
