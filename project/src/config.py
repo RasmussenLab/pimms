@@ -12,6 +12,7 @@ from collections import namedtuple
 from pathlib import Path
 from pprint import pformat
 
+import pandas
 def mkdir(path=Path): 
     path.mkdir(exist_ok=True)
     return path
@@ -110,6 +111,17 @@ fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 
 FILEPATH_UTILS = 'src/file_utils.py'
+
+
+def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
+    N, M = df.shape
+    return f'{stub}_N{N:05d}_M{M:05d}'
+
+# put to testing
+# df_test = pd.DataFrame(np.random.randint(low=-4, high=10, size=(1729, 146)))
+# N, M = df_test.shape
+# assert build_fname(df=df_test, stub='df_intensities') == f'df_intensities_N{N:05d}_M{M:05d}'
+
 
 ###############################################################################
 ###############################################################################
