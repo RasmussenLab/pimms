@@ -69,9 +69,7 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
             logger.error(f'Unexpected filenaming format: {filename}')
             _entry['rest'] = filename
             data_meta[filename] = _entry
-            print('catched')
             continue
-            print('oh no')
 
         _entry['ms_instrument'] = _entry['ms_instrument'].upper()
         if apply_cleaning and _entry['ms_instrument'] in ms_instrument_mapping:
