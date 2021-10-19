@@ -2,6 +2,7 @@
 name: vaep
 channels:
   - pytorch
+  - fastai
   - defaults
 dependencies:
   - python=3.8.*
@@ -14,6 +15,7 @@ dependencies:
   - seaborn
   - pip
   - pytorch
+  - fastai
   - scikit-learn
   - torchvision
   - cudatoolkit=10.2
