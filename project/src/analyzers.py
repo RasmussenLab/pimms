@@ -1,6 +1,7 @@
 from collections import namedtuple
 from types import SimpleNamespace
 import itertools
+import random
 
 import numpy as np
 import pandas as pd
@@ -47,9 +48,26 @@ class AnalyzePeptides(SimpleNamespace):
             f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
         self.is_log_transformed = False
+        
+    def get_consecutive_dates(self, n_samples, seed=42):
+        """Select n consecutive samples using a seed.
+        
+        Updated the original DataFrame attribute: df
+        """
+        self.df.sort_index(inplace=True)
+        n_samples = min(len(self.df), n_samples) if n_samples else len(self.df)
+        print(f"Get {n_samples} samples.")
 
-    def read_csv(self, fname, nrows):
-        return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+        if seed:
+            random.seed(42)
+
+        _attr_name = f'df_{n_samples}'
+        setattr(self, _attr_name, get_consecutive_data_indices(self.df, n_samples))
+        print("Training data referenced unter:", _attr_name)
+        self.df = getattr(self, _attr_name)
+        print("Updated attribute: df")
+        return  self.df
+
 
     def describe_peptides(self, sample_n: int = None):
         if sample_n:
@@ -181,6 +199,14 @@ class AnalyzePeptides(SimpleNamespace):
 
 def read_csv(fname, nrows):
     return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+
+
+def get_consecutive_data_indices(df, n_samples):
+    index = df.sort_index().index
+    start_sample = len(index) - n_samples
+    start_sample = random.randint(0, start_sample)
+    return df.loc[index[start_sample:start_sample+n_samples]]
+
 
 def corr_lower_triangle(df):
     """Compute the correlation matrix, returning only unique values."""
