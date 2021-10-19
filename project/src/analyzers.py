@@ -41,7 +41,7 @@ class AnalyzePeptides(SimpleNamespace):
     """
 
     def __init__(self, fname, nrows=None):
-        self.df = self.read_csv(fname, nrows=nrows)
+        self.df = read_csv(fname, nrows=nrows)
         self.N, self.M = self.df.shape
         assert f'N{self.N:05d}' in str(fname) and f'M{self.M:05d}' in str(fname), \
             f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
@@ -178,6 +178,9 @@ class AnalyzePeptides(SimpleNamespace):
         assert hasattr(self, 'df'), f'Attribute df is missing: {self}'
         return 'N{:05d}_M{:05d}'.format(*self.df.shape)
 
+
+def read_csv(fname, nrows):
+    return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
 
 def corr_lower_triangle(df):
     """Compute the correlation matrix, returning only unique values."""
