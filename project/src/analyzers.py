@@ -21,6 +21,7 @@ from . import metadata
 
 ALPHA = 0.5
 
+
 class Analysis(SimpleNamespace):
 
     def __repr__(self):
@@ -48,7 +49,8 @@ class AnalyzePeptides(SimpleNamespace):
             f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
         self.is_log_transformed = False
-        
+        self.is_wide_format = True
+
     def get_consecutive_dates(self, n_samples, seed=42):
         """Select n consecutive samples using a seed.
         
@@ -66,8 +68,91 @@ class AnalyzePeptides(SimpleNamespace):
         print("Training data referenced unter:", _attr_name)
         self.df = getattr(self, _attr_name)
         print("Updated attribute: df")
-        return  self.df
+        return self.df
 
+    @property
+    def df_long(self):
+        return self.to_long_format()
+
+    def to_long_format(self, colname_values: str = 'intensity', index_name: str = 'Sample ID', inplace: str = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        colname_values : str, optional
+            New column name for values in matrix, by default 'intensity'
+        index_name : str, optional
+            Name of column to assign as index (based on long-data format), by default 'Sample ID'
+        inplace : bool, optional
+            Assign result to df_long (False), or to df (True) attribute, by default False
+        Returns
+        -------
+        pd.DataFrame
+            Data in long-format as DataFrame
+        """
+
+        """Build long data view."""
+        if not self.is_wide_format:
+            return self.df
+        if hasattr(self, '_df_long'):
+            return self._df_long  # rm attribute to overwrite
+
+        df_long = long_format(
+            self.df, colname_values=colname_values, index_name=index_name)
+
+        if inplace:
+            self.df = df_long
+            self.is_wide_format = False
+            return self.df
+        self._df_long = df_long
+        return df_long
+
+    @property
+    def df_wide(self):
+        return self.to_wide_format()
+
+    def to_wide_format(self, columns: str = 'Sample ID', name_values: str = 'intensity', inplace: bool = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        columns : str, optional
+            Index level to be shown as columns, by default 'Sample ID'
+        name_values : str, optional
+            Column in long-data format to be used as values, by default 'intensity'
+        inplace : bool, optional
+            Assign result to df_wide (False), or to df (True) attribute, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            [description]
+        """
+
+        """Build wide data view.
+        
+        Return df attribute in case this is in wide-format. If df attribute is in long-format
+        this is used. If df is wide, but long-format exist, then the wide format is build.
+        
+        
+        """
+        if self.is_wide_format:
+            return self.df
+
+        if hasattr(self, '_df_long'):
+            df = self._df_long
+        else:
+            df = self.df
+
+        df_wide = wide_format(df, columns=columns, name_values=name_values)
+
+        if inplace:
+            self.df = df_wide
+            self.is_wide_format = True
+            return self.df
+        self._df_wide = df_wide
+        print(f"Set attribute: df_wide")
+        return df_wide
 
     def describe_peptides(self, sample_n: int = None):
         if sample_n:
@@ -103,7 +188,7 @@ class AnalyzePeptides(SimpleNamespace):
             _ = self.add_metadata()
         pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
         return pca
-        
+
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
@@ -208,6 +293,24 @@ def get_consecutive_data_indices(df, n_samples):
     return df.loc[index[start_sample:start_sample+n_samples]]
 
 
+def long_format(df: pd.DataFrame,
+                colname_values: str = 'intensity',
+                index_name: str = 'Sample ID') -> pd.DataFrame:
+    # ToDo: Docstring as in class when finalized
+    df_long = df.unstack().dropna().to_frame(colname_values)
+    df_long = df_long.reset_index('Sample ID')
+    return df_long
+
+
+def wide_format(df: pd.DataFrame,
+                columns: str = 'Sample ID',
+                name_values: str = 'intensity') -> pd.DataFrame:
+    # ToDo: Docstring as in class when finalized
+    df_wide = df.pivot(columns=columns, values=name_values)
+    df_wide = df_wide.T
+    return df_wide
+
+
 def corr_lower_triangle(df):
     """Compute the correlation matrix, returning only unique values."""
     corr_df = df.corr()
@@ -241,7 +344,8 @@ def run_pca(df, n_components=2):
     """
     pca = PCA(n_components=n_components)
     PCs = pca.fit_transform(df)
-    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i, var_explained in enumerate(pca.explained_variance_ratio_)]
+    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
+            var_explained in enumerate(pca.explained_variance_ratio_)]
     pca = pd.DataFrame(PCs, index=df.index, columns=cols)
     return pca
 
