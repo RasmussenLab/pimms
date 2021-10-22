@@ -98,11 +98,17 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
                     _entry['lc_instrument'] = lc_instrument_mapping[_entry['lc_instrument']]
             else:
                 # try rare cases: "20191216_QE4_nL4_MM_QC_MNT_HELA_01
-                # lc_rare_cases = {'nL4': 'nLC4}
-                if 'nL4_' in _rest_filename:
-                    _entry['lc_instrument'] = 'nLC4'
-                    _rest_filename = _rest_filename.replace('nL4_', '')
-                else:
+                lc_rare_cases = {
+                    'nL4': 'nLC4',
+                    'nL0': 'nLC0',
+                    'nL2': 'nLC2',
+                }
+                for typo_key, replacement_key in lc_rare_cases.items():
+                    if typo_key in _rest_filename:
+                        _entry['lc_instrument'] = replacement_key
+                        _rest_filename = _rest_filename.replace(
+                            f'{typo_key}_', '')
+                if not _entry['lc_instrument']:
                     logger.error(f'Could not find LC instrument in {filename}')
         # researcher after LC instrument
         try:
@@ -135,10 +141,13 @@ def get_metadata_from_filenames(selected: Iterable, apply_cleaning=False):
 
 test_cases = ['20131014_QE5_UPLC9_ALL_MNT_HELA_01',
               '20150830_qe3_uplc9_LVS_MNT_HELA_07',
-              '20191216_QE4_nL4_MM_QC_MNT_HELA_01_20191217122319']
+              '20191216_QE4_nL4_MM_QC_MNT_HELA_01_20191217122319',
+              '20191012_QE1_nL0_GP_SA_HELA_L-CTR_M-VLX+THL_H-VLX+THL+MLN_GGIP_EXP4_F01',
+              '20181027_QE8_nL2_QC_AGF_MNT_BSA_01'
+              ]
 # 20150622_QE5_UPLC8_ALL_QC_Hela_method_Test
 
-# get_metadata_from_filenames(test_cases)
+# print(get_metadata_from_filenames(test_cases))
 
 assert get_metadata_from_filenames(test_cases) == {
     '20131014_QE5_UPLC9_ALL_MNT_HELA_01': {'date': '20131014',
@@ -155,5 +164,16 @@ assert get_metadata_from_filenames(test_cases) == {
                                                           'ms_instrument': 'QE4',
                                                           'lc_instrument': 'nLC4',
                                                           'researcher': 'MM',
-                                                          'rest': '_QC_MNT_HELA_01_20191217122319'}
+                                                          'rest': '_QC_MNT_HELA_01_20191217122319'},
+    '20191012_QE1_nL0_GP_SA_HELA_L-CTR_M-VLX+THL_H-VLX+THL+MLN_GGIP_EXP4_F01':
+    {'date': '20191012',
+     'ms_instrument': 'QE1',
+     'lc_instrument': 'nLC0',
+     'researcher': 'GP',
+     'rest': '_SA_HELA_L-CTR_M-VLX+THL_H-VLX+THL+MLN_GGIP_EXP4_F01'},
+    '20181027_QE8_nL2_QC_AGF_MNT_BSA_01': {'date': '20181027',
+                                           'ms_instrument': 'QE8',
+                                           'lc_instrument': 'nLC2',
+                                           'researcher': 'AGF',
+                                           'rest': 'QC_MNT_BSA_01'},
 }
