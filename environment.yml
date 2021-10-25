@@ -23,5 +23,6 @@ dependencies:
   - tqdm
   - xmltodict
   - openpyxl
+  - papermill
   - pip:
     - -e .
