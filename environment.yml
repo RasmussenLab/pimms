@@ -4,6 +4,7 @@ channels:
   - pytorch
   - fastai
   - defaults
+  - conda-forge
 dependencies:
   - python=3.8.*
   - numpy=1.18.*
