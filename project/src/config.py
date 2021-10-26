@@ -152,7 +152,7 @@ class Config():
 
     def __setattr__(self, entry, value):
         """Set if attribute not in instance."""
-        if hasattr(self, entry):
+        if hasattr(self, entry) and getattr(self, entry) != value:
             raise AttributeError(
                 f'{entry} already set to {getattr(self, entry)}')
         super().__setattr__(entry, value)
