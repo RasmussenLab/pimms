@@ -38,19 +38,35 @@ PROTEIN_DUMPS = PROCESSED_DATA
 # Adapt this part
 ON_ERDA = True
 #local PC config
-FOLDER_MQ_TXT_DATA = [
+FOLDER_MQ_TXT_DATA = None
+
+FOLDERS_MQ_TXT_DATA = [
     Path('Y:/') / 'mq_out',
     FOLDER_DATA / 'mq_out',
     Path('/home/jovyan/work/mq_out/'),
 ]
-for folder in FOLDER_MQ_TXT_DATA:
+for folder in FOLDERS_MQ_TXT_DATA[:-1]:
     if folder.exists():
         print(f'FOLDER_MQ_TXT_DATA = {folder}')
         FOLDER_MQ_TXT_DATA = folder
         ON_ERDA = False
         break
 
-assert FOLDER_MQ_TXT_DATA.exists(), f'Not found. Check FOLDER_MQ_TXT_DATA entries above: {", ".join(FOLDER_MQ_TXT_DATA)}'
+if FOLDERS_MQ_TXT_DATA[-1].exists():
+    print(f'FOLDER_MQ_TXT_DATA = {folder}')
+    FOLDER_MQ_TXT_DATA = folder
+
+
+if not FOLDER_MQ_TXT_DATA:
+    print(
+        'Not found. Check FOLDER_MQ_TXT_DATA entries above: {}'.format(
+            ", ".join([str(fname) for fname in FOLDERS_MQ_TXT_DATA])
+        )
+    )
+    FOLDER_MQ_TXT_DATA = FOLDERS_MQ_TXT_DATA[1]
+    FOLDER_MQ_TXT_DATA.mkdir()
+    ON_ERDA = False
+    print(f"Created local folder: {FOLDER_MQ_TXT_DATA}")
 
 if ON_ERDA:
     import sys
