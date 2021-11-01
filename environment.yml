@@ -5,16 +5,17 @@ channels:
   - defaults
 dependencies:
   - python=3.8.*
-  - numpy=1.18.*
-  - pandas=1.*
+  - numpy=1.20*
+  - pandas=1.2
   - ipykernel=5.3.*
-  - ipython
-  - ipywidgets
-  - matplotlib
+  - ipython=7.22.*
+  - ipywidgets=7.6.*
+  - matplotlib=3.3.*
+  - scipy=1.6.*
   - seaborn
   - pip
-  - pytorch
-  - scikit-learn
+  - pytorch=1.10.*
+  - scikit-learn=1.0.*
   - torchvision
   - cudatoolkit=10.2
   - tensorboard
