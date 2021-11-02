@@ -168,13 +168,14 @@ class AnalyzePeptides(SimpleNamespace):
         """Get prop. of not NA values for each sample."""
         return self.df.notna().sum(axis=1) / self.df.shape[-1]
 
-    def add_metadata(self):
+    def add_metadata(self, add_prop_not_na=True):
         d_meta = metadata.get_metadata_from_filenames(self.df.index)
         self.df_meta = pd.DataFrame.from_dict(
             d_meta, orient='index')
         print(f'Created metadata DataFrame attribute `df_meta`.')
         # add proportion on not NA to meta data
-        self.df_meta['prop_not_na'] = self.get_prop_not_na()
+        if add_prop_not_na:
+            self.df_meta['prop_not_na'] = self.get_prop_not_na()
         print(f'Added proportion of not NA values based on `df` intensities.')
         return self.df_meta
 
