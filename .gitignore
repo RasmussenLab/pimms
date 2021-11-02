@@ -10,6 +10,7 @@ project/data/*
 !project\data\all_raw_files_dump.txt
 project/tutorials/
 project/tex/
+project/logs/
 
 # exclude builds
 docs/_* 
@@ -35,7 +36,8 @@ workflows/maxquant/out/
 *.e
 *.o
 
-
+# remove temp/hidden folders
+.*/
 
 # builds
 docs/_*
