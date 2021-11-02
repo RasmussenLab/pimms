@@ -2,7 +2,9 @@
 name: vaep
 channels:
   - pytorch
+  - fastai
   - defaults
+  - conda-forge
 dependencies:
   - python=3.8.*
   - numpy=1.20*
@@ -16,6 +18,7 @@ dependencies:
   - pip
   - pytorch=1.10.*
   - scikit-learn=1.0.*
+  - fastai
   - torchvision
   - cudatoolkit=10.2
   - tensorboard
@@ -23,5 +26,6 @@ dependencies:
   - xmltodict
   - openpyxl
   - pandas-profiling
+  - papermill
   - pip:
     - -e .

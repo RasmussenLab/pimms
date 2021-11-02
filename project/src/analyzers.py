@@ -1,6 +1,7 @@
 from collections import namedtuple
 from types import SimpleNamespace
 import itertools
+import random
 
 import numpy as np
 import pandas as pd
@@ -42,15 +43,116 @@ class AnalyzePeptides(SimpleNamespace):
     """
 
     def __init__(self, fname, nrows=None):
-        self.df = self.read_csv(fname, nrows=nrows)
+        self.df = read_csv(fname, nrows=nrows)
         self.N, self.M = self.df.shape
         assert f'N{self.N:05d}' in str(fname) and f'M{self.M:05d}' in str(fname), \
             f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
         self.is_log_transformed = False
+        self.is_wide_format = True
 
-    def read_csv(self, fname, nrows):
-        return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+    def get_consecutive_dates(self, n_samples, seed=42):
+        """Select n consecutive samples using a seed.
+        
+        Updated the original DataFrame attribute: df
+        """
+        self.df.sort_index(inplace=True)
+        n_samples = min(len(self.df), n_samples) if n_samples else len(self.df)
+        print(f"Get {n_samples} samples.")
+
+        if seed:
+            random.seed(42)
+
+        _attr_name = f'df_{n_samples}'
+        setattr(self, _attr_name, get_consecutive_data_indices(self.df, n_samples))
+        print("Training data referenced unter:", _attr_name)
+        self.df = getattr(self, _attr_name)
+        print("Updated attribute: df")
+        return self.df
+
+    @property
+    def df_long(self):
+        return self.to_long_format()
+
+    def to_long_format(self, colname_values: str = 'intensity', index_name: str = 'Sample ID', inplace: str = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        colname_values : str, optional
+            New column name for values in matrix, by default 'intensity'
+        index_name : str, optional
+            Name of column to assign as index (based on long-data format), by default 'Sample ID'
+        inplace : bool, optional
+            Assign result to df_long (False), or to df (True) attribute, by default False
+        Returns
+        -------
+        pd.DataFrame
+            Data in long-format as DataFrame
+        """
+
+        """Build long data view."""
+        if not self.is_wide_format:
+            return self.df
+        if hasattr(self, '_df_long'):
+            return self._df_long  # rm attribute to overwrite
+
+        df_long = long_format(
+            self.df, colname_values=colname_values, index_name=index_name)
+
+        if inplace:
+            self.df = df_long
+            self.is_wide_format = False
+            return self.df
+        self._df_long = df_long
+        return df_long
+
+    @property
+    def df_wide(self):
+        return self.to_wide_format()
+
+    def to_wide_format(self, columns: str = 'Sample ID', name_values: str = 'intensity', inplace: bool = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        columns : str, optional
+            Index level to be shown as columns, by default 'Sample ID'
+        name_values : str, optional
+            Column in long-data format to be used as values, by default 'intensity'
+        inplace : bool, optional
+            Assign result to df_wide (False), or to df (True) attribute, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            [description]
+        """
+
+        """Build wide data view.
+        
+        Return df attribute in case this is in wide-format. If df attribute is in long-format
+        this is used. If df is wide, but long-format exist, then the wide format is build.
+        
+        
+        """
+        if self.is_wide_format:
+            return self.df
+
+        if hasattr(self, '_df_long'):
+            df = self._df_long
+        else:
+            df = self.df
+
+        df_wide = wide_format(df, columns=columns, name_values=name_values)
+
+        if inplace:
+            self.df = df_wide
+            self.is_wide_format = True
+            return self.df
+        self._df_wide = df_wide
+        print(f"Set attribute: df_wide")
+        return df_wide
 
     def describe_peptides(self, sample_n: int = None):
         if sample_n:
@@ -179,6 +281,35 @@ class AnalyzePeptides(SimpleNamespace):
     def fname_stub(self):
         assert hasattr(self, 'df'), f'Attribute df is missing: {self}'
         return 'N{:05d}_M{:05d}'.format(*self.df.shape)
+
+
+def read_csv(fname, nrows):
+    return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+
+
+def get_consecutive_data_indices(df, n_samples):
+    index = df.sort_index().index
+    start_sample = len(index) - n_samples
+    start_sample = random.randint(0, start_sample)
+    return df.loc[index[start_sample:start_sample+n_samples]]
+
+
+def long_format(df: pd.DataFrame,
+                colname_values: str = 'intensity',
+                index_name: str = 'Sample ID') -> pd.DataFrame:
+    # ToDo: Docstring as in class when finalized
+    df_long = df.unstack().dropna().to_frame(colname_values)
+    df_long = df_long.reset_index('Sample ID')
+    return df_long
+
+
+def wide_format(df: pd.DataFrame,
+                columns: str = 'Sample ID',
+                name_values: str = 'intensity') -> pd.DataFrame:
+    # ToDo: Docstring as in class when finalized
+    df_wide = df.pivot(columns=columns, values=name_values)
+    df_wide = df_wide.T
+    return df_wide
 
 
 def corr_lower_triangle(df):
