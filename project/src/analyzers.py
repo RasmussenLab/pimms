@@ -384,3 +384,21 @@ def add_date_colorbar(mappable, ax, fig):
     _ = fig.colorbar(mappable, ax=ax, ticks=loc,
                      format=mdates.AutoDateFormatter(loc))
     return ax
+
+
+def cast_object_to_category(df: pd.DataFrame) -> pd.DataFrame:
+    """Cast object columns to category dtype.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with category columns instead of object columns.
+    """
+    _columns = df.select_dtypes(include='object').columns
+    return df.astype({col: 'category' for col in _columns})
+
