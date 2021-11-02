@@ -10,10 +10,15 @@ https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os
 import os
 from collections import namedtuple
 from pathlib import Path
+from pprint import pformat
 
-def mkdir(path=Path): 
+import pandas
+import matplotlib as mpl
+
+def mkdir(path=Path):
     path.mkdir(exist_ok=True)
     return path
+
 
 ###############################################################################
 ###############################################################################
@@ -29,7 +34,7 @@ FOLDER_PROCESSED.mkdir(exist_ok=True)
 
 FOLDER_TRAINING = mkdir(FOLDER_DATA / 'hela_qc_data')
 
-# (old) Synonyms 
+# (old) Synonyms
 PROCESSED_DATA = FOLDER_PROCESSED
 PROTEIN_DUMPS = PROCESSED_DATA
 
@@ -56,7 +61,6 @@ if FOLDERS_MQ_TXT_DATA[-1].exists():
     print(f'FOLDER_MQ_TXT_DATA = {folder}')
     FOLDER_MQ_TXT_DATA = folder
 
-
 if not FOLDER_MQ_TXT_DATA:
     print(
         'Not found. Check FOLDER_MQ_TXT_DATA entries above: {}'.format(
@@ -71,19 +75,20 @@ if not FOLDER_MQ_TXT_DATA:
 if ON_ERDA:
     import sys
     sys.path.append('/home/jovyan/work/vaep/')
-    
+
     FOLDER_MQ_TXT_DATA = Path('/home/jovyan/work/mq_out/')
     if FOLDER_MQ_TXT_DATA.exists():
         print(f'FOLDER_MQ_TXT_DATA = {FOLDER_MQ_TXT_DATA}')
     else:
         raise FileNotFoundError(f"Check config for FOLDER_MQ_TXT_DATA")
-    
+
     FOLDER_RAW_DATA = Path('/home/jovyan/work/share_hela_raw/')
     if FOLDER_RAW_DATA.exists():
         print(f'FOLDER_RAW_DATA = {FOLDER_RAW_DATA}')
     else:
-        raise FileNotFoundError(f"Check config for FOLDER_RAW_DATA: {FOLDER_RAW_DATA}")
-        
+        raise FileNotFoundError(
+            f"Check config for FOLDER_RAW_DATA: {FOLDER_RAW_DATA}")
+
 # FOLDER_KEY  = None
 
 FOLDER_KEY = 'txt'
@@ -118,7 +123,8 @@ KEY_PEPTIDES = 'peptides'
 KEY_GENE_NAME = 'gene'
 KEY_GENE_NAME_FASTA = 'gene_fasta'
 
-KEYS_FASTA_ENTRY = [KEY_FASTA_HEADER, KEY_FASTA_SEQ, KEY_PEPTIDES, KEY_GENE_NAME]
+KEYS_FASTA_ENTRY = [KEY_FASTA_HEADER,
+                    KEY_FASTA_SEQ, KEY_PEPTIDES, KEY_GENE_NAME]
 
 FastaEntry = namedtuple('FastaEntry', KEYS_FASTA_ENTRY)
 fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
@@ -126,9 +132,52 @@ fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 FILEPATH_UTILS = 'src/file_utils.py'
 
+
+def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
+    N, M = df.shape
+    return f'{stub}_N{N:05d}_M{M:05d}'
+
+# put to testing
+# df_test = pd.DataFrame(np.random.randint(low=-4, high=10, size=(1729, 146)))
+# N, M = df_test.shape
+# assert build_fname(df=df_test, stub='df_intensities') == f'df_intensities_N{N:05d}_M{M:05d}'
+
+
 ###############################################################################
 ###############################################################################
 # configure plotting
-import matplotlib as mpl
 # https://matplotlib.org/stable/users/dflt_style_changes.html
 mpl.rcParams['figure.figsize'] = [10.0, 8.0]
+
+# cfg.keys.gene_name
+# cfg.paths.processed
+# cfg.
+
+
+class Config():
+    """Config class with a setter enforcing that config entries cannot 
+    be overwritten.
+
+
+    Can contain configs, which are itself configs:
+    keys, paths,
+    
+    """
+
+    def __setattr__(self, entry, value):
+        """Set if attribute not in instance."""
+        if hasattr(self, entry) and getattr(self, entry) != value:
+            raise AttributeError(
+                f'{entry} already set to {getattr(self, entry)}')
+        super().__setattr__(entry, value)
+
+    def __repr__(self):
+        return pformat(vars(self))  # does not work in Jupyter?
+
+
+if __name__ == '__main__':
+    cfg = Config()
+    cfg.test = 'test'
+    print(cfg.test)
+    cfg.test = 'raise ValueError'
+
