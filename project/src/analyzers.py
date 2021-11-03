@@ -1,4 +1,5 @@
 from collections import namedtuple
+from operator import index
 from types import SimpleNamespace
 import itertools
 import random
@@ -42,14 +43,15 @@ class AnalyzePeptides(SimpleNamespace):
     Many more attributes are set dynamically depending on the concrete analysis.
     """
 
-    def __init__(self, fname, nrows=None):
-        self.df = read_csv(fname, nrows=nrows)
+    def __init__(self, fname, nrows=None, index_col='Sample ID'):
+        self.df = read_csv(fname, nrows=nrows, index_col=index_col)
         self.N, self.M = self.df.shape
         assert f'N{self.N:05d}' in str(fname) and f'M{self.M:05d}' in str(fname), \
             f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
         self.is_log_transformed = False
         self.is_wide_format = True
+        self.index_col = index_col
 
     def get_consecutive_dates(self, n_samples, seed=42):
         """Select n consecutive samples using a seed.
@@ -72,7 +74,9 @@ class AnalyzePeptides(SimpleNamespace):
 
     @property
     def df_long(self):
-        return self.to_long_format()
+        if hasattr(self, '_df_long'):
+            return self._df_long
+        return self.to_long_format(colname_values='intensity', index_name=self.index_col)
 
     def to_long_format(self, colname_values: str = 'intensity', index_name: str = 'Sample ID', inplace: str = False) -> pd.DataFrame:
         """[summary]
@@ -172,6 +176,7 @@ class AnalyzePeptides(SimpleNamespace):
         d_meta = metadata.get_metadata_from_filenames(self.df.index)
         self.df_meta = pd.DataFrame.from_dict(
             d_meta, orient='index')
+        self.df_meta.index.name = self.df.index.name
         print(f'Created metadata DataFrame attribute `df_meta`.')
         # add proportion on not NA to meta data
         if add_prop_not_na:
@@ -283,8 +288,8 @@ class AnalyzePeptides(SimpleNamespace):
         return 'N{:05d}_M{:05d}'.format(*self.df.shape)
 
 
-def read_csv(fname, nrows):
-    return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+def read_csv(fname, nrows, index_col=None):
+    return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
 
 def get_consecutive_data_indices(df, n_samples):
