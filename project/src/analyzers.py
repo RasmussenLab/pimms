@@ -102,7 +102,10 @@ class AnalyzePeptides(SimpleNamespace):
             return self._df_long  # rm attribute to overwrite
 
         df_long = long_format(
-            self.df, colname_values=colname_values, index_name=index_name)
+            self.df,
+            colname_values=colname_values,
+            # index_name=index_name
+            )
 
         if inplace:
             self.df = df_long
@@ -301,10 +304,10 @@ def get_consecutive_data_indices(df, n_samples):
 
 def long_format(df: pd.DataFrame,
                 colname_values: str = 'intensity',
-                index_name: str = 'Sample ID') -> pd.DataFrame:
+                # index_name: str = 'Sample ID'
+                ) -> pd.DataFrame:
     # ToDo: Docstring as in class when finalized
-    df_long = df.unstack().dropna().to_frame(colname_values)
-    df_long = df_long.reset_index('Sample ID')
+    df_long = df.stack().to_frame(colname_values)
     return df_long
 
 
