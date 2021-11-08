@@ -284,6 +284,9 @@ class AnalyzePeptides(SimpleNamespace):
         keys = sorted(self.__dict__)
         items = ("{}".format(k, self.__dict__[k]) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
+    
+    def __dir__(self):
+        return sorted(self.__dict__)
 
     @property
     def fname_stub(self):
