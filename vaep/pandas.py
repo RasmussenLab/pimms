@@ -1,3 +1,4 @@
+from collections import namedtuple
 from types import SimpleNamespace
 import pandas as pd
 
@@ -113,3 +114,41 @@ def _add_indices(array, original_df, index_only=False):
     if not index_only:
         columns = original_df.columns
     return pd.DataFrame(array, index=index, columns=columns)
+
+
+
+def interpolate(wide_df: pd.DataFrame, name='replicates'):
+    """Interpolate NA values with the values before and after.
+    Uses n=3 replicates.
+    First rows replicates are the two following. 
+    Last rows replicates are the two preceding.
+
+    Parameters
+    ----------
+    wide_df : pd.DataFrame
+        rows are sample, columns are measurements
+    name : str, optional
+        name for measurement in columns, by default 'replicates'
+
+    Returns
+    -------
+    pd.DataFrame
+        pd.DataFrame in long-format
+    """
+    mask = wide_df.isna()
+    first_row = wide_df.iloc[0].copy()
+    last_row = wide_df.iloc[-1].copy()
+    
+    m = first_row.isna()
+    first_row.loc[m] = wide_df.iloc[1:3, m.to_list()].mean()
+    
+    m = last_row.isna()
+    last_row.loc[m] = wide_df.iloc[-3:-1, m.to_list()].mean()
+    
+    ret = wide_df.interpolate(method='linear', limit_direction='both', axis=0)
+    ret.iloc[0] = first_row
+    ret.iloc[-1] = last_row
+    
+    ret = ret[mask].stack().dropna()
+    ret.rename(name, inplace=True)
+    return ret
