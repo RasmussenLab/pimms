@@ -218,31 +218,17 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by instrument
         ax = axes[0]
-        # for name, group in pca.groupby('ms_instrument'):
-        #     ax.scatter(x=group[cols[0]], y=group[cols[1]], label=name)
-        seaborn.scatterplot(x=pca[cols[0]], y=pca[cols[1]],
-                            hue=pca['ms_instrument'], ax=ax, palette='deep')
-        ax.set_title('by category', fontsize=18)
-        ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
+        seaborn_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax, meta=pca['ms_instrument'], title='by MS instrument')
 
         # by complettness/missingness
         # continues colormap will be a bit trickier using seaborn: https://stackoverflow.com/a/44642014/9684872
         ax = axes[1]
-        ax.set_title('by number on na', fontsize=18)
-        ax.set_xlabel(cols[0])
-        ax.set_ylabel(cols[1])
-        path_collection = ax.scatter(
-            x=cols[0], y=cols[1], c=self.df_meta['prop_not_na'], data=pca, alpha=ALPHA)
-        _ = fig.colorbar(path_collection, ax=ax)
-
+        plot_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax, meta=self.df_meta['prop_not_na'], title='by number on na')
+        
         # by dates
         ax = axes[2]
-        ax.set_title('by date', fontsize=18)
-        ax.set_xlabel(cols[0])
-        ax.set_ylabel(cols[1])
-        path_collection = scatter_plot_w_dates(
-            ax, pca, dates=self.df_meta.date, errors='raise')
-        path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
+        plot_date_map(df=pca.iloc[:, :2], fig=fig, ax=ax, dates=self.df_meta.date)
+
         return fig
 
     def log_transform(self, log_fct: np.ufunc):
@@ -361,6 +347,34 @@ def run_pca(df, n_components=2):
     pca = pd.DataFrame(PCs, index=df.index, columns=cols)
     return pca
 
+def plot_date_map(df, fig, ax, dates: pd.Series):
+    cols = list(df.columns)    
+    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+    ax.set_title('by date', fontsize=18)
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    path_collection = scatter_plot_w_dates(
+        ax, df, dates=dates, errors='raise')
+    path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
+
+def plot_scatter(df, fig, ax, meta: pd.Series, title: str='by some metadata', alpha=ALPHA):
+    cols = list(df.columns)    
+    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+    ax.set_title(title, fontsize=18)
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    path_collection = ax.scatter(
+        x=cols[0], y=cols[1], c=meta, data=df, alpha=alpha)
+    _ = fig.colorbar(path_collection, ax=ax)
+    
+    
+def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str='by some metadata', alpha=ALPHA):
+    cols = list(df.columns)    
+    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+    seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
+                        hue=meta, ax=ax, palette='deep')
+    ax.set_title(title, fontsize=18)
+    ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
 
 def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
     """plot first vs. second column in DataFrame.
