@@ -145,7 +145,7 @@ def interpolate(wide_df: pd.DataFrame, name='replicates'):
     m = last_row.isna()
     last_row.loc[m] = wide_df.iloc[-3:-1, m.to_list()].mean()
     
-    ret = wide_df.interpolate(method='linear', limit_direction='both', axis=0)
+    ret = wide_df.interpolate(method='linear', limit_direction='both', limit=1, axis=0)
     ret.iloc[0] = first_row
     ret.iloc[-1] = last_row
     
