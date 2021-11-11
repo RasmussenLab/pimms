@@ -147,10 +147,12 @@ class VAE(Autoencoder):
         recon = self.decoder(z)
         return recon, mu, logvar
 
-    def get_mu_and_logvar(self, x):
+    def get_mu_and_logvar(self, x, detach=False):
         """Helper function to return mu and logvar"""
         mu_logvar = self.encoder(x)
         mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
+        if detach:
+            mu_logvar = mu_logvar.detach().numpy()
         mu = mu_logvar[:, 0, :]
         logvar = mu_logvar[:, 1, :]
         return mu, logvar
