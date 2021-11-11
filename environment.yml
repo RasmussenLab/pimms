@@ -1,9 +1,10 @@
 # Dev Environment
 name: vaep
 channels:
+  - defaults
   - pytorch
   - fastai
-  - defaults
+  - plotly
   - conda-forge
 dependencies:
   - python=3.8.*
@@ -14,6 +15,7 @@ dependencies:
   - ipywidgets=7.6.*
   - matplotlib=3.3.*
   - scipy=1.6.*
+  - plotly
   - seaborn
   - pip
   - pytorch=1.10.*
