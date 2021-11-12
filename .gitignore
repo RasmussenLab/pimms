@@ -11,6 +11,7 @@ project/data/*
 project/tutorials/
 project/tex/
 project/logs/
+project/runs/
 
 # exclude builds
 docs/_* 
