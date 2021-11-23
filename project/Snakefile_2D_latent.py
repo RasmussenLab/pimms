@@ -6,7 +6,7 @@ GRID = {
 }
 
 FOLDER = 'runs/2D'
-# Path(FOLDER).mkdir(parents=True, exist_ok=True)
+# pathlib.Path(FOLDER).mkdir(parents=True, exist_ok=True)
 
 # import itertools 
 # itertools.product(*GRID.values())
@@ -14,8 +14,8 @@ FOLDER = 'runs/2D'
 
 rule all:
     input:
-        expand("{folder}/latent_2D_{feat}_{epochs}.ipynb", folder=FOLDER, feat= GRID['feat'], epochs= GRID["epochs"])
-        
+        expand("{folder}/latent_2D_{feat}_{epochs}.md", folder=FOLDER, feat= GRID['feat'], epochs= GRID["epochs"])
+                     
 
 rule execute_nb:
     input:
@@ -23,4 +23,15 @@ rule execute_nb:
     output:
         "{folder}/latent_2D_{feat}_{epochs}.ipynb"
     shell:
-        "papermill {input.notebook} {output} -p n_feat {wildcards.feat} -p n_epochs {wildcards.epochs}" 
+        "papermill {input.notebook} {output} -p n_feat {wildcards.feat} -p n_epochs {wildcards.epochs} -p out_folder {wildcards.folder}"
+        
+rule covert_to_md:
+    input:
+        notebook = "{folder}/latent_2D_{feat}_{epochs}.ipynb"
+    output:
+        converted = "{folder}/latent_2D_{feat}_{epochs}.md"
+    shell:
+        """
+        jupyter nbconvert --to markdown {input.notebook}
+        nbconvert_md_processing -v -i {output.converted} --overwrite
+        """
