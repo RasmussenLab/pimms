@@ -17,6 +17,7 @@ from sklearn.impute import SimpleImputer
 
 
 from vaep.pandas import _add_indices
+from vaep.io.datasplits import long_format, wide_format
 
 from . import metadata
 
@@ -291,22 +292,22 @@ def get_consecutive_data_indices(df, n_samples):
     return df.loc[index[start_sample:start_sample+n_samples]]
 
 
-def long_format(df: pd.DataFrame,
-                colname_values: str = 'intensity',
-                # index_name: str = 'Sample ID'
-                ) -> pd.DataFrame:
-    # ToDo: Docstring as in class when finalized
-    df_long = df.stack().to_frame(colname_values)
-    return df_long
+# def long_format(df: pd.DataFrame,
+#                 colname_values: str = 'intensity',
+#                 # index_name: str = 'Sample ID'
+#                 ) -> pd.DataFrame:
+#     # ToDo: Docstring as in class when finalized
+#     df_long = df.stack().to_frame(colname_values)
+#     return df_long
 
 
-def wide_format(df: pd.DataFrame,
-                columns: str = 'Sample ID',
-                name_values: str = 'intensity') -> pd.DataFrame:
-    # ToDo: Docstring as in class when finalized
-    df_wide = df.pivot(columns=columns, values=name_values)
-    df_wide = df_wide.T
-    return df_wide
+# def wide_format(df: pd.DataFrame,
+#                 columns: str = 'Sample ID',
+#                 name_values: str = 'intensity') -> pd.DataFrame:
+#     # ToDo: Docstring as in class when finalized
+#     df_wide = df.pivot(columns=columns, values=name_values)
+#     df_wide = df_wide.T
+#     return df_wide
 
 
 def corr_lower_triangle(df):
