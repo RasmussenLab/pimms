@@ -30,7 +30,7 @@ dependencies:
   - openpyxl
   - pandas-profiling
   - papermill
-  - snakemake
+  - snakemake-minimal
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
