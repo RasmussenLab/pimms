@@ -31,7 +31,4 @@ rule covert_to_md:
     output:
         converted = "{folder}/latent_2D_{feat}_{epochs}.md"
     shell:
-        """
-        jupyter nbconvert --to markdown {input.notebook}
-        nbconvert_md_processing -v -i {output.converted} --overwrite
-        """
+        "jupyter nbconvert --to markdown {input.notebook} && nbconvert_md_processing -v -i {output.converted} --overwrite"
