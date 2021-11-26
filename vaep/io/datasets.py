@@ -1,4 +1,3 @@
-from attr import Attribute
 import numpy as np
 import pandas as pd
 import torch
@@ -36,8 +35,8 @@ class PeptideDatasetInMemory(Dataset):
                 self.mask, self.nan, self.peptides)
 
         self.peptides = torch.where(self.peptides.isnan(),
-                            torch.FloatTensor([fill_na]), self.peptides)
-        
+                                    torch.FloatTensor([fill_na]), self.peptides)
+
         self.length_ = len(self.peptides)
 
     def __len__(self):
@@ -73,6 +72,7 @@ class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     
     Dataset: torch.utils.data.Dataset
     """
+
     def __init__(self, data: pd.DataFrame, fill_na=0, device=None):
         """[summary]
 
@@ -83,7 +83,8 @@ class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
         fill_na : int, optional
             value to fill missing values, by default 0
         """
-        assert np.isnan(data).sum() > 0, "There a no missing values in the data."
+        assert np.isnan(data).sum(
+        ) > 0, "There a no missing values in the data."
         # ensure copy? https://stackoverflow.com/a/52103839/9684872
         # https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation
         self.mask_obs = torch.from_numpy(np.isfinite(data))
@@ -97,6 +98,7 @@ class PeptideDatasetInMemoryNoMissings(Dataset):
     
     Dataset: torch.utils.data.Dataset
     """
+
     def __init__(self, data: pd.DataFrame, transform=None):
         """Create {} instance.
 
@@ -108,7 +110,8 @@ class PeptideDatasetInMemoryNoMissings(Dataset):
         transform : Callable
             Series of transform to be performed on the training data
         """.format(self.__class__.__name__)
-        assert np.isnan(data).sum().sum() == 0, f"There are {int(np.isnan(data).sum())} missing values."
+        assert np.isnan(data).sum().sum(
+        ) == 0, f"There are {int(np.isnan(data).sum())} missing values."
         self.peptides = np.array(data)
         self.transform = transform
         self.length_ = len(data)
