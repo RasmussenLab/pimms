@@ -1,5 +1,13 @@
 # Paper project
 
+## Workflows
+
+```
+# cwd: project folder
+snakemake --snakefile Snakefile_2D_latent.smk -p --jobs 1 -n
+```
+
+
 ## Notebooks
 for | notebook  | Description
 --- | ---  |  --- 

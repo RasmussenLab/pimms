@@ -30,5 +30,12 @@ rule covert_to_md:
         notebook = "{folder}/latent_2D_{feat}_{epochs}.ipynb"
     output:
         converted = "{folder}/latent_2D_{feat}_{epochs}.md"
-    shell:
-        "jupyter nbconvert --to markdown {input.notebook} && nbconvert_md_processing -v -i {output.converted} --overwrite"
+    # shell:
+    #     "jupyter nbconvert --to markdown {input.notebook} && nbconvert_md_processing -v -i {output.converted} --overwrite"
+    run:
+        commands = [
+            'jupyter nbconvert --to markdown {input.notebook}',
+            'nbconvert_md_processing -v -i {output.converted} --overwrite'
+        ]
+        for c in commands:
+            shell(c)
