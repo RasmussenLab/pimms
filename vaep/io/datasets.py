@@ -47,7 +47,28 @@ class PeptideDatasetInMemory(Dataset):
         return self.peptides[idx], self.mask[idx], self.y[idx]
 
 
-class PeptideDatasetInMemoryMasked(Dataset):
+class DatasetWithMaskAndNoTarget(Dataset):
+
+    def __init__(self, data: pd.DataFrame, device=None):
+        # ensure copy? https://stackoverflow.com/a/52103839/9684872
+        # https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation
+        if not issubclass(type(data), np.ndarray):
+            data = np.array(data)
+        self.mask_obs = torch.from_numpy(np.isfinite(data))
+        # data = data.fillna(fill_na)
+        self.peptides = torch.from_numpy(data)
+        self.length_ = len(data)
+
+    def __len__(self):
+        return self.length_
+
+    def __getitem__(self, idx):
+        return self.peptides[idx], self.mask_obs[idx]
+
+# DatasetWithMaskAndNoTargetAndNanReplaced
+
+
+class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
     
     Dataset: torch.utils.data.Dataset
@@ -70,11 +91,6 @@ class PeptideDatasetInMemoryMasked(Dataset):
         self.peptides = torch.from_numpy(np.nan_to_num(data, nan=fill_na))
         self.length_ = len(data)
 
-    def __len__(self):
-        return self.length_
-
-    def __getitem__(self, idx):
-        return self.peptides[idx], self.mask_obs[idx]
 
 class PeptideDatasetInMemoryNoMissings(Dataset):
     """Peptide Dataset fully in memory.
