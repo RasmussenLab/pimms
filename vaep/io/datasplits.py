@@ -50,6 +50,7 @@ class DataSplits():
         return self._items
 
     def dump(self, folder='data'):
+        """dump in long format."""
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
         n_dumped = 0
@@ -75,19 +76,21 @@ class DataSplits():
             raise ValueError(f'Nothing to dump, all None: {self}')
             # _df.to_json(fname) # does not work easily for series
 
-    def load(self, folder: str) -> None:
-        args = load_items(folder=folder, items=self.__annotations__)
+    def load(self, folder: str, use_wide_format=False) -> None:
+        """Load data in place from folder"""
+        args = load_items(folder=folder, items=self.__annotations__, use_wide_format=use_wide_format)
         for _attr, _df in args.items():
             setattr(self, _attr, _df)
         return None  # could also be self
 
     @classmethod
-    def from_folder(cls, folder: str) -> DataSplits:
-        args = load_items(folder=folder, items=cls.__annotations__)
+    def from_folder(cls, folder: str, use_wide_format=False) -> DataSplits:
+        """Build DataSplits instance from folder."""
+        args = load_items(folder=folder, items=cls.__annotations__, use_wide_format=use_wide_format)
         return cls(**args)
 
 
-def load_items(folder: str, items: dict) -> dict:
+def load_items(folder: str, items: dict, use_wide_format=False) -> dict:
     folder = Path(folder)
     assert folder.exists(), 'Could not find folder: {folder}'
     args = {}
@@ -98,7 +101,12 @@ def load_items(folder: str, items: dict) -> dict:
         if not fname.exists():
             raise FileNotFoundError(f"Missing file requested for attr '{_attr}', missing {fname}")
         _df = pd.read_csv(fname)
-        _df.set_index(list(_df.columns[:-1]), inplace=True)
+        cols = list(_df.columns)
+        if use_wide_format:
+            # ToDo: Add warning for case of more than 3 columns
+            _df = wide_format(_df.set_index(cols[1]), columns=cols[0], name_values=cols[-1])
+        else:
+            _df.set_index(cols[:-1], inplace=True)
         logger.info(f"Loaded '{_attr}' from file: {fname}")
         args[_attr] = _df.squeeze()
     return args
