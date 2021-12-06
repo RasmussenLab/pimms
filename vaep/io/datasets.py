@@ -5,6 +5,7 @@ import sklearn.pipeline
 
 import torch
 from torch.utils.data import Dataset
+from typing import Tuple
 
 
 class PeptideDatasetInMemory(Dataset):
@@ -74,7 +75,7 @@ class DatasetWithMaskAndNoTarget(Dataset):
     def __len__(self):
         return self.length_
 
-    def __getitem__(self, idx) -> (torch.Tensor, torch.Tensor):
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
         mask = self.mask_obs.iloc[idx]
         data = self.data.iloc[idx]
         return to_tensor(mask), to_tensor(data)
