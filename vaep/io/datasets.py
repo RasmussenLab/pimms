@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+
+import sklearn.pipeline
+
 import torch
 from torch.utils.data import Dataset
 
@@ -46,23 +49,35 @@ class PeptideDatasetInMemory(Dataset):
         return self.peptides[idx], self.mask[idx], self.y[idx]
 
 
+def to_tensor(s: pd.Series) -> torch.Tensor:
+    return torch.from_numpy(s.values)
+
+
 class DatasetWithMaskAndNoTarget(Dataset):
 
-    def __init__(self, data: pd.DataFrame, device=None):
-        # ensure copy? https://stackoverflow.com/a/52103839/9684872
-        # https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation
-        if not issubclass(type(data), np.ndarray):
-            data = np.array(data)
-        self.mask_obs = torch.from_numpy(np.isfinite(data))
-        # data = data.fillna(fill_na)
-        self.peptides = torch.from_numpy(data)
-        self.length_ = len(data)
+    def __init__(self, df: pd.DataFrame, transformer: sklearn.pipeline.Pipeline = None):
+        if not issubclass(type(df), pd.DataFrame):
+            raise ValueError(
+                f'please pass a pandas DataFrame, not: {type(df) = }')
+        self.mask_obs = df.isna()  # .astype('uint8') # in case 0,1 is preferred
+        self.columns = df.columns
+        self.transformer = transformer
+        if transformer:
+            if hasattr(transformer, 'transform'):
+                df = transformer.transform(df)
+            else:
+                raise AttributeError(
+                    f'{type(transformer)} is not sklearn compatible, has no inverse_transform.')
+        self.data = df
+        self.length_ = len(self.data)
 
     def __len__(self):
         return self.length_
 
-    def __getitem__(self, idx):
-        return self.peptides[idx], self.mask_obs[idx]
+    def __getitem__(self, idx) -> (torch.Tensor, torch.Tensor):
+        mask = self.mask_obs.iloc[idx]
+        data = self.data.iloc[idx]
+        return to_tensor(mask), to_tensor(data)
 
 # DatasetWithMaskAndNoTargetAndNanReplaced
 
