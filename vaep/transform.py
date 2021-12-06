@@ -1,6 +1,17 @@
 import pandas as pd
 import numpy as np
+
+import sklearn
 from sklearn import preprocessing
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+
+import torch
+
+from vaep.io.datasets import to_tensor
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def log(row: pd.Series):
@@ -57,7 +68,7 @@ StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_
 
 # # look at fastcore to see if **kwargs could be replaced with original
 # # arguments, see https://fastcore.fast.ai/meta.html#Metaprogramming
-
+# # decorate()
 
 def transform(self, X, **kwargs):
     res = super(self.__class__, self).transform(X, **kwargs)
@@ -122,3 +133,39 @@ class ShiftedStandardScaler(StandardScaler):
 
 def get_df_fitted_mean_std(self, index):
     return pd.DataFrame({'mean': self.mean_, 'stddev': self.scale_}, index=index)
+
+
+class VaepPipeline():
+    """Custom Pipeline combining a pandas.DataFrame and a sklearn.pipeline.Pipleine."""
+    def __init__(self, df_train:pd.DataFrame, pipeline:sklearn.pipeline.Pipeline = None):
+        self.columns = df_train.columns
+        self.M = len(df_train.columns)
+        self.pipeline = pipeline
+        self.pipeline.fit(df_train)
+        
+    
+    def transform(self, X):
+        res = self.pipeline.transform(X)
+        if isinstance(X, pd.DataFrame):
+            return pd.DataFrame(res, columns=X.columns, index=X.index)
+        return res
+    
+    # Option: single-dispatch based on type of X
+    def inverse_transform(self, X, index=None):
+        columns = self.columns
+        if isinstance(X, pd.DataFrame):
+            columns = X.columns
+            index = X.index
+            X = X.values
+        if isinstance(X, pd.Series):
+            columns = X.index
+            index = [X.name]
+            X = X.values
+        elif isinstance(X, torch.Tensor):
+            X = X.numpy()
+        if len(X.shape) == 1:
+            logger.warning("Reshape")
+            X = X.reshape(-1, self.M)
+        res = self.pipeline.inverse_transform(X)
+        res = pd.DataFrame(res, columns=columns, index=index)
+        return res
