@@ -82,14 +82,13 @@ class DatasetWithMaskAndNoTarget(Dataset):
 
 # DatasetWithMaskAndNoTargetAndNanReplaced
 
-
 class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
     
     Dataset: torch.utils.data.Dataset
     """
 
-    def __init__(self, data: pd.DataFrame, fill_na=0, device=None):
+    def __init__(self, *args, fill_na=0, **kwargs):
         """[summary]
 
         Parameters
@@ -99,14 +98,9 @@ class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
         fill_na : int, optional
             value to fill missing values, by default 0
         """
-        assert np.isnan(data).sum(
-        ) > 0, "There a no missing values in the data."
-        # ensure copy? https://stackoverflow.com/a/52103839/9684872
-        # https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation
-        self.mask_obs = torch.from_numpy(np.isfinite(data))
-        # data = data.fillna(fill_na)
-        self.peptides = torch.from_numpy(np.nan_to_num(data, nan=fill_na))
-        self.length_ = len(data)
+        self.fill_na = fill_na
+        super().__init__(*args, **kwargs)
+        self.data.fillna(self.fill_na, inplace=True)
 
 
 class PeptideDatasetInMemoryNoMissings(Dataset):
