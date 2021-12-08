@@ -1,9 +1,13 @@
 import pandas
 import torch
 from typing import Tuple
-from torch.utils.data import DataLoader
 
-# This function temporaily.
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
+from fastai.data.core import DataLoaders
+
+from vaep.io.datasets import DatasetWithTarget
+from vaep.transform import VaepPipeline
 
 
 class DataLoadersCreator():
@@ -15,8 +19,7 @@ class DataLoadersCreator():
                  scaler,
                  DataSetClass: torch.utils.data.Dataset,
                  batch_size: int
-        ):
-
+                 ):
         """Helper function to create from pandas.DataFrame(s) in memory datasets.
 
         Parameters
@@ -41,7 +44,7 @@ class DataLoadersCreator():
             data=scaler.transform(df_train))
         self.data_valid = DataSetClass(data=scaler.transform(df_valid))
         self.scaler = scaler
-        self.batch_size=batch_size
+        self.batch_size = batch_size
 
     def get_dls(self, shuffle_train: bool = True, **kwargs) -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
         self.shuffle_train = shuffle_train
@@ -56,3 +59,42 @@ class DataLoadersCreator():
 
     def __repr__(self):
         return f"{self.__class__.__name__} for creating dataloaders with {self.batch_size}."
+
+
+def get_dls(train_X: pandas.DataFrame,
+            valid_X: pandas.DataFrame,
+            transformer: VaepPipeline,
+            dataset: Dataset = DatasetWithTarget,
+            bs: int = 64) -> DataLoaders:
+    """Create training and validation dataloaders
+
+    Parameters
+    ----------
+    train_X : pandas.DataFrame
+        Training Data, index is ignored for data fetching
+    valid_X : pandas.DataFrame
+        Validation data, won't be shuffled.
+    transformer : VaepPipeline
+        Pipeline with separate encode and decode
+    bs : int, optional
+        number of samples in a single batch, by default 64
+
+    Returns
+    -------
+    fastai.data.core.DataLoaders
+        FastAI DataLoaders with train and valid Dataloder
+
+    Example
+    -------
+    dae_default_pipeline = sklearn.pipeline.Pipeline(
+        [('normalize', StandardScaler()),
+         ('impute', SimpleImputer(add_indicator=False))
+         ])
+    dae_transforms = VaepPipeline(df_train=data.train_X,
+                                  encode=dae_default_pipeline,
+                                  decode=['normalize'])
+    dls = get_dls(data.train_X, data.val_X, dae_transforms, bs=4)    
+    """
+    train_ds, valid_ds = (dataset(train_X, transformer),
+                          dataset(train_X, transformer))
+    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs)
