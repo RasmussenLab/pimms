@@ -56,6 +56,9 @@ def to_tensor(s: pd.Series) -> torch.Tensor:
 
 class DatasetWithMaskAndNoTarget(Dataset):
 
+    nan = torch.tensor(np.double('NaN'))
+    #  if res.dtype is torch.float64: return res.float()
+
     def __init__(self, df: pd.DataFrame, transformer: sklearn.pipeline.Pipeline = None):
         if not issubclass(type(df), pd.DataFrame):
             raise ValueError(
@@ -78,9 +81,15 @@ class DatasetWithMaskAndNoTarget(Dataset):
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
         mask = self.mask_obs.iloc[idx]
         data = self.data.iloc[idx]
-        return to_tensor(mask), to_tensor(data)
+        mask, data = to_tensor(mask), to_tensor(data)
+        return  mask, data
 
-# DatasetWithMaskAndNoTargetAndNanReplaced
+class DatasetWithTarget(DatasetWithMaskAndNoTarget):
+
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mask, data = super().__getitem__(idx)
+        # target = torch.where(mask, self.nan, data)
+        return  mask, data, data
 
 class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
