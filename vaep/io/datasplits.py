@@ -42,6 +42,7 @@ class DataSplits():
 
     def __post_init__(self):
         self._items = sorted(self.__dict__)
+        self._is_wide = None
 
     def __getitem__(self, index):
         return (self._items[index], getattr(self, self._items[index]))
@@ -81,13 +82,37 @@ class DataSplits():
         args = load_items(folder=folder, items=self.__annotations__, use_wide_format=use_wide_format)
         for _attr, _df in args.items():
             setattr(self, _attr, _df)
+        self._is_wide = use_wide_format
         return None  # could also be self
 
     @classmethod
     def from_folder(cls, folder: str, use_wide_format=False) -> DataSplits:
         """Build DataSplits instance from folder."""
         args = load_items(folder=folder, items=cls.__annotations__, use_wide_format=use_wide_format)
-        return cls(**args)
+        _data_splits = cls(**args)
+        _data_splits._is_wide = use_wide_format
+        return _data_splits
+
+    def to_wide_format(self):
+        if self._is_wide:
+            return
+
+        for _attr, _series in self:
+            _df = _series.unstack()
+            setattr(self, _attr, _df)
+        self._is_wide = True
+    
+    def to_long_format(self):
+        if not self._is_wide: 
+            return
+        
+        for _attr, _df in self:
+            index_name = _df.columns.name
+            _series = _df.stack()
+            _series.index.name = index_name
+            setattr(self, _attr, _series)
+        self._is_wide = False
+
 
 
 def load_items(folder: str, items: dict, use_wide_format=False) -> dict:

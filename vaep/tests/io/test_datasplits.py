@@ -56,3 +56,29 @@ def test_dump_load(tmp_path):
     npt.assert_almost_equal(_splits['train_X'].values, splits.train_X)
     # #ToDo: Index and Column names are not yet correctly set
     # assert splits.train_X.equals(_splits['train_X'])
+
+def test_to_long_format(tmp_path):
+    splits = DataSplits(**_splits)
+    splits.dump(folder=tmp_path)
+    splits = DataSplits()
+    splits.load(folder=tmp_path, use_wide_format=True)
+    assert splits._is_wide
+    expected = splits.val_X.copy()
+    splits.to_long_format()
+    assert not splits._is_wide
+    splits.to_wide_format()
+    assert splits.val_X is not expected
+    assert splits.val_X.equals(expected)
+
+def test_to_wide_format(tmp_path):
+    splits = DataSplits(**_splits)
+    splits.dump(folder=tmp_path)
+    splits = DataSplits()
+    splits.load(folder=tmp_path, use_wide_format=False)
+    assert not splits._is_wide
+    expected = splits.val_X.copy()
+    splits.to_wide_format()
+    assert splits._is_wide
+    splits.to_long_format()
+    assert splits.val_X is not expected
+    assert splits.val_X.equals(expected)
