@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import Dataset
 from typing import Tuple
 
+DEFAULT_DTYPE = torch.get_default_dtype()
 
 class PeptideDatasetInMemory(Dataset):
     """Peptide Dataset fully in memory."""
@@ -51,13 +52,13 @@ class PeptideDatasetInMemory(Dataset):
 
 
 def to_tensor(s: pd.Series) -> torch.Tensor:
-    return torch.from_numpy(s.values)
+    return torch.from_numpy(s.values).type(DEFAULT_DTYPE)
 
 
 class DatasetWithMaskAndNoTarget(Dataset):
 
-    nan = torch.tensor(np.double('NaN'))
-    #  if res.dtype is torch.float64: return res.float()
+    # nan = torch.tensor(np.float32('NaN'))
+    # if res.dtype is torch.float64: return res.float()
 
     def __init__(self, df: pd.DataFrame, transformer: sklearn.pipeline.Pipeline = None):
         if not issubclass(type(df), pd.DataFrame):
@@ -88,7 +89,6 @@ class DatasetWithTarget(DatasetWithMaskAndNoTarget):
 
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mask, data = super().__getitem__(idx)
-        # target = torch.where(mask, self.nan, data)
         return  mask, data, data
 
 class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
