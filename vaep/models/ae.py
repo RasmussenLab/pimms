@@ -174,13 +174,19 @@ class ModelAdapter(Callback):
 
     def after_pred(self):
         M = self._mask.shape[-1]
-
+        self.learn._all_pred = self.pred.detach().clone()
+        self.learn._all_y = None
         if len(self.yb):
+            self.learn._all_y = self.y.detach().clone()
             self.learn.yb = (self.y[self.learn._mask],)            
 
         self.learn.pred = self.pred[self._mask]
 
-
+    def after_loss(self):
+        self.learn.pred = self.learn._all_pred
+        if self._all_y is not None: 
+            self.learn.yb = (self._all_y,)
+         
 class ModelAdapterVAE(Callback):
     """Models forward only expects on input matrix. 
     Apply mask from dataloader to both pred and targets."""
