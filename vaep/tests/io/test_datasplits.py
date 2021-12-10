@@ -82,3 +82,19 @@ def test_to_wide_format(tmp_path):
     splits.to_long_format()
     assert splits.val_X is not expected
     assert splits.val_X.equals(expected)
+
+def test_interpolate():
+    splits = DataSplits(**_splits)
+    splits._is_wide = True # ToDo. Is not correctly set when init is called.
+    with pytest.raises(AttributeError):
+        _ = splits.interpolate('non-existing')
+
+    _ = splits.interpolate('test_X')
+    _ = splits.interpolate(splits.test_X)
+
+    val_X = splits.val_y
+    splits.val_X = None
+    with pytest.raises(ValueError):
+        _ = splits.interpolate('val_X')
+    with pytest.raises(TypeError):
+        _ = splits.interpolate(4)
