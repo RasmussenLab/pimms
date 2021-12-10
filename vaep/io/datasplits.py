@@ -5,6 +5,10 @@ from functools import partial
 from pathlib import Path
 
 import pandas as pd
+from pandas.core.algorithms import isin
+
+from vaep.pandas import interpolate
+from vaep.io.format import classname, class_full_module
 
 logger = logging.getLogger('vaep')
 
@@ -112,6 +116,34 @@ class DataSplits():
             _series.index.name = index_name
             setattr(self, _attr, _series)
         self._is_wide = False
+
+    # singledispatch possible
+    def interpolate(self, dataset:Union[str, pd.DataFrame]):
+        if issubclass(type(dataset), pd.DataFrame):
+            ds = dataset
+        elif issubclass(type(dataset), pd.Series):
+            ds = dataset.unstack()
+        elif issubclass(type(dataset), str):
+            try:
+                ds = getattr(self, dataset)
+            except AttributeError:
+                raise AttributeError(f"Please provide a valid attribute, not '{dataset}'. "
+                "Valid attributes are {}".format(', '.join(x for x in self._items)))
+            if dataset[-1] in ['y', 'Y']:
+                logger.warning(
+                    f'Attempting to interpolate target: {dataset} '
+                    '(this might make sense, but a warning')
+            if ds is None:
+                raise ValueError(f'Attribute is None: {dataset!r}.')
+            if not self._is_wide:
+                ds = ds.unstack() # series is unstack to DataFrame
+        else:
+            raise TypeError(f"Unknown type: {classname(dataset)}."
+            f" None of str, {class_full_module(pd.DataFrame)}, {class_full_module(pd.Series)}"
+            )
+ 
+        return interpolate(wide_df=ds)
+
 
 
 
