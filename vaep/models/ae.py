@@ -167,36 +167,18 @@ class ModelAdapter(Callback):
 
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
-        # assert self.yb
-        mask, data = self.xb  # x_cat, x_cont
+        mask, data = self.xb  # x_cat, x_cont (model could be adapted)
         self.learn._mask = mask != 1
-        if self.training:
-            self.learn.yb = (data[self.learn._mask],)
         # dropout data using median
         self.learn.xb = (self.do(data),)
-        #         # could be function handeled by switch set at beginning of evaluation/training?
-        #         if self.training:
-        #             self.learn.yb = (data[self.learn._mask],)
-        #         else:
-        #             # self.y is not available at "before_batch" - > why?
-        #             self.learn.yb = (self.y[mask],)
 
     def after_pred(self):
         M = self._mask.shape[-1]
 
-        if not self.training:
-            if len(self.yb):
-                self.learn.yb = (self.y[self.learn._mask],)
-                self.val_targets.append(self.learn.yb[0])
+        if len(self.yb):
+            self.learn.yb = (self.y[self.learn._mask],)            
 
-        #         self.learn.pred = self.pred.view(-1, M)[self._mask] #is this flat?
-        self.learn.pred = self.pred[self._mask]  # is this flat?
-        if not self.training:
-            self.val_preds.append(self.learn.pred)
-
-    def before_validate(self):
-        "containers for current predictions"
-        self.learn.val_preds, self.learn.val_targets = [], []
+        self.learn.pred = self.pred[self._mask]
 
 
 class ModelAdapterVAE(Callback):
