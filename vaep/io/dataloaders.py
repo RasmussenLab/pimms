@@ -86,15 +86,23 @@ def get_dls(train_X: pandas.DataFrame,
 
     Example
     -------
+    import sklearn
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import StandardScaler
+
+    from vaep.dataloader import get_dls
+    from vaep.transform import VaepPipeline
+
     dae_default_pipeline = sklearn.pipeline.Pipeline(
         [('normalize', StandardScaler()),
          ('impute', SimpleImputer(add_indicator=False))
          ])
-    dae_transforms = VaepPipeline(df_train=data.train_X,
+    # train_X, val_X = None, None # pandas.DataFrames
+    transforms = VaepPipeline(df_train=train_X,
                                   encode=dae_default_pipeline,
                                   decode=['normalize'])
-    dls = get_dls(data.train_X, data.val_X, dae_transforms, bs=4)    
+    dls = get_dls(train_X, val_X, transforms, bs=4)    
     """
     train_ds, valid_ds = (dataset(train_X, transformer),
-                          dataset(train_X, transformer))
+                          dataset(valid_X, transformer))
     return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs)
