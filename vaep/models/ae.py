@@ -10,6 +10,9 @@ import pandas as pd
 import torch
 from torch import nn
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def transform_preds(pred: torch.Tensor, index: pd.Index, normalizer) -> pd.Series:
     pred = pd.Series(pred, index).unstack()
@@ -158,9 +161,12 @@ class VAE(Autoencoder):
         return mu, logvar
 
 
-class ModelAdapter(Callback):
+class ModelAdapterFlatPred(Callback):
     """Models forward only expects on input matrix. 
-    Apply mask from dataloader to both pred and targets."""
+    Apply mask from dataloader to both pred and targets.
+    
+    Return only predictions and target for non NA inputs.
+    """
 
     def __init__(self, p=0.1):
         self.do = nn.Dropout(p=p)  # for denoising AE
@@ -173,20 +179,47 @@ class ModelAdapter(Callback):
         self.learn.xb = (self.do(data),)
 
     def after_pred(self):
+        # self.learn._all_pred = self.pred.detach().clone()
+        # self.learn._all_y = None
+
         M = self._mask.shape[-1]
+        if len(self.yb):
+            try:
+                self.learn.yb = (self.y[self.learn._mask],)
+            except IndexError:
+                logger.warn(
+                    f"Mismatch between mask ({self._mask.shape}) and y ({self.y.shape}).")
+                # self.learn.y = None
+                self.learn.yb = (self.xb[0],)
+                self.learn.yb = (self.learn.xb[0].clone()[self._mask],)
+
+        self.learn.pred = self.pred[self._mask]
+
+    # def after_loss(self):
+    #     self.learn.pred = self.learn._all_pred
+    #     if self._all_y is not None:
+    #         self.learn.yb = (self._all_y,)
+
+
+class ModelAdapter(ModelAdapterFlatPred):
+    """Models forward only expects on input matrix. 
+    Apply mask from dataloader to both pred and targets.
+    
+    Keep original dimension, i.e. also predictions for NA."""
+
+    def after_pred(self):
         self.learn._all_pred = self.pred.detach().clone()
         self.learn._all_y = None
         if len(self.yb):
             self.learn._all_y = self.y.detach().clone()
-            self.learn.yb = (self.y[self.learn._mask],)            
-
-        self.learn.pred = self.pred[self._mask]
+        super().after_pred()
 
     def after_loss(self):
         self.learn.pred = self.learn._all_pred
-        if self._all_y is not None: 
+        if self._all_y is not None:
             self.learn.yb = (self._all_y,)
-         
+
+
 class ModelAdapterVAE(Callback):
     """Models forward only expects on input matrix. 
     Apply mask from dataloader to both pred and targets."""
