@@ -21,6 +21,9 @@ from vaep.io.datasplits import long_format, wide_format
 
 from . import metadata
 
+__doc__ = 'A collection of Analyzers to perform certain type of analysis.'
+
+
 ALPHA = 0.5
 
 
@@ -44,15 +47,33 @@ class AnalyzePeptides(SimpleNamespace):
     Many more attributes are set dynamically depending on the concrete analysis.
     """
 
-    def __init__(self, fname, nrows=None, index_col='Sample ID'):
-        self.df = read_csv(fname, nrows=nrows, index_col=index_col)
+    def __init__(self, data,
+                 is_log_transformed: bool = False,
+                 is_wide_format: bool = True, ind_unstack: str = '',):
+        if not is_wide_format:
+            if not ind_unstack:
+                raise ValueError("Please specify index level for unstacking via "
+                                 f"'ind_unstack' from: {data.index.names}")
+            data = data.unstack(ind_unstack)
+            is_wide_format = True
+        self.df = data  # assume wide
         self.N, self.M = self.df.shape
-        assert f'N{self.N:05d}' in str(fname) and f'M{self.M:05d}' in str(fname), \
-            f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
-        self.is_log_transformed = False
-        self.is_wide_format = True
-        self.index_col = index_col
+        self.is_log_transformed = is_log_transformed
+        self.is_wide_format = is_wide_format
+        self.index_col = self.df.index.name
+
+    @classmethod
+    def from_file(cls, fname, nrows=None,
+                  index_col='Sample ID', # could be potentially 0 for the first column
+                  verify_fname=False,  **kwargs):
+        df = read_csv(fname, nrows=nrows, index_col=index_col)
+        N, M = df.shape
+        if verify_fname:
+            assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
+                ("Filename number don't match loaded numbers: "
+                 f"{fname} should contain N{N} and M{M}")
+        return cls(data=df, **kwargs)
 
     def get_consecutive_dates(self, n_samples, seed=42):
         """Select n consecutive samples using a seed.
@@ -106,7 +127,7 @@ class AnalyzePeptides(SimpleNamespace):
             self.df,
             colname_values=colname_values,
             # index_name=index_name
-            )
+        )
 
         if inplace:
             self.df = df_long
@@ -202,6 +223,10 @@ class AnalyzePeptides(SimpleNamespace):
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
+        if not self.is_wide_format:
+            self.df = self.df.unstack()
+            self.is_wide_format = True
+
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
 
@@ -219,16 +244,19 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by instrument
         ax = axes[0]
-        seaborn_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax, meta=pca['ms_instrument'], title='by MS instrument')
+        seaborn_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax,
+                        meta=pca['ms_instrument'], title='by MS instrument')
 
         # by complettness/missingness
         # continues colormap will be a bit trickier using seaborn: https://stackoverflow.com/a/44642014/9684872
         ax = axes[1]
-        plot_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax, meta=self.df_meta['prop_not_na'], title='by number on na')
-        
+        plot_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax,
+                     meta=self.df_meta['prop_not_na'], title='by number on na')
+
         # by dates
         ax = axes[2]
-        plot_date_map(df=pca.iloc[:, :2], fig=fig, ax=ax, dates=self.df_meta.date)
+        plot_date_map(df=pca.iloc[:, :2], fig=fig,
+                      ax=ax, dates=self.df_meta.date)
 
         return fig
 
@@ -271,9 +299,9 @@ class AnalyzePeptides(SimpleNamespace):
         keys = sorted(self.__dict__)
         items = ("{}".format(k, self.__dict__[k]) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
-    
-    def __dir__(self):
-        return sorted(self.__dict__)
+
+    # def __dir__(self):
+    #     return sorted(self.__dict__)
 
     @property
     def fname_stub(self):
@@ -348,9 +376,10 @@ def run_pca(df, n_components=2):
     pca = pd.DataFrame(PCs, index=df.index, columns=cols)
     return pca
 
+
 def plot_date_map(df, fig, ax, dates: pd.Series):
-    cols = list(df.columns)    
-    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
     ax.set_title('by date', fontsize=18)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
@@ -358,24 +387,26 @@ def plot_date_map(df, fig, ax, dates: pd.Series):
         ax, df, dates=dates, errors='raise')
     path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
 
-def plot_scatter(df, fig, ax, meta: pd.Series, title: str='by some metadata', alpha=ALPHA):
-    cols = list(df.columns)    
-    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+
+def plot_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
     ax.set_title(title, fontsize=18)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = ax.scatter(
         x=cols[0], y=cols[1], c=meta, data=df, alpha=alpha)
     _ = fig.colorbar(path_collection, ax=ax)
-    
-    
-def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str='by some metadata', alpha=ALPHA):
-    cols = list(df.columns)    
-    assert len(cols)==2, f'Please provide two dimensons, not {df.columns}'
+
+
+def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
     seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
                         hue=meta, ax=ax, palette='deep')
     ax.set_title(title, fontsize=18)
     ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
+
 
 def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
     """plot first vs. second column in DataFrame.
@@ -427,4 +458,3 @@ def cast_object_to_category(df: pd.DataFrame) -> pd.DataFrame:
     """
     _columns = df.select_dtypes(include='object').columns
     return df.astype({col: 'category' for col in _columns})
-
