@@ -226,29 +226,20 @@ class ModelAdapterVAE(Callback):
 
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
-        # assert self.yb
-        data, mask = self.xb
-        self.learn._mask = mask  # mask is True for non-missing, measured values
-        # dropout data using median
+        mask, data = self.xb
+        self.learn._mask = mask  != 1 # True in mask indicates NA values in Dataset
         self.learn.xb = (data,)
 
     def after_pred(self):
         M = self._mask.shape[-1]
-#         self.learn.yb = (self.y[self.learn._mask],)
-#         if not self.training:
         if len(self.yb):
-            #             breakpoint()
             self.learn.yb = (self.y[self.learn._mask],)
-# #                 self.val_targets.append(self.learn.yb[0])
-
         pred, mu, logvar = self.pred  # return predictions
         self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
-#         if not self.training:
-#             self.val_preds.append(self.learn.pred)
+
 
 
 # from fastai.losses import CrossEntropyLossFlat
-
 def loss_function(recon_batch: torch.tensor,
                   batch: torch.tensor,
                   mu: torch.tensor,
