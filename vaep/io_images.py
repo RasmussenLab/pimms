@@ -13,4 +13,5 @@ def _savefig(fig, name, folder:pathlib.Path ='.', pdf=True):
     logger.info(f"Saved Figures to {fname}")
 
 
+savefig = _savefig
 
