@@ -377,10 +377,10 @@ def run_pca(df, n_components=2):
     return pca
 
 
-def plot_date_map(df, fig, ax, dates: pd.Series):
+def plot_date_map(df, fig, ax, dates: pd.Series, title:str='by date'):
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
-    ax.set_title('by date', fontsize=18)
+    ax.set_title(title, fontsize=18)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = scatter_plot_w_dates(
