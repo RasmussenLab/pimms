@@ -21,5 +21,5 @@ def test_basic_repr():
     actual_repr = repr(model)
     assert actual_repr == expected_repr
     assert model.dim_latent == 10
-    assert model.n_neurons == 30
+    assert model.n_neurons == [30]
     assert model.n_features == 100
