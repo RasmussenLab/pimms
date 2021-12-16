@@ -222,20 +222,17 @@ class ModelAdapter(ModelAdapterFlatPred):
             self.learn.yb = (self._all_y,)
 
 
-class ModelAdapterVAE(Callback):
+class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
     """Models forward only expects on input matrix. 
     Apply mask from dataloader to both pred and targets."""
 
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
-        mask, data = self.xb
-        self.learn._mask = mask  != 1 # True in mask indicates NA values in Dataset
+        data = super().before_batch()
         self.learn.xb = (data,)
 
     def after_pred(self):
-        M = self._mask.shape[-1]
-        if len(self.yb):
-            self.learn.yb = (self.y[self.learn._mask],)
+        super().after_pred()
         pred, mu, logvar = self.pred  # return predictions
         self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
 
