@@ -1,6 +1,8 @@
 from torch.nn import functional as F
-from fastcore.basics import store_attr
-from fastcore.imports import noop
+import torch.utils.data
+
+from fastai.basics import store_attr, L, Learner #, noop
+import fastai.learner
 from fastai.data.transforms import Normalize, broadcast_vec
 from fastai.callback.core import Callback
 from fastai.tabular.core import Tabular, TabularPandas
@@ -9,6 +11,10 @@ import pandas as pd
 
 import torch
 from torch import nn
+
+import vaep.io.datasets
+import vaep.io.dataloaders
+import vaep.transform
 
 import logging
 logger = logging.getLogger(__name__)
@@ -20,6 +26,45 @@ def transform_preds(pred: torch.Tensor, index: pd.Index, normalizer) -> pd.Serie
     _ = normalizer.decode(pred)
     pred = pred.items.stack()
     return pred
+
+
+def get_preds_from_df(df:pd.DataFrame, 
+                      learn:fastai.learner.Learner, 
+                      transformer:vaep.transform.VaepPipeline,
+                      position_pred_tuple:int=None,
+                      dataset:torch.utils.data.Dataset=vaep.io.datasets.DatasetWithTarget):
+    """Get predictions for specified DataFrame, using a fastai learner
+    and a custom sklearn Pipeline.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame to create predictions from.
+    learn : fastai.learner.Learner
+        fastai Learner with trained model
+    transformer : vaep.transform.VaepPipeline
+        Pipeline with separate encode and decode
+    position_pred_tuple : int, optional
+        In that the model returns multiple outputs, select the one which contains
+        the predictions matching the target variable (VAE case), by default None
+    dataset : torch.utils.data.Dataset, optional
+        Dataset to build batches from, by default vaep.io.datasets.DatasetWithTarget
+
+    Returns
+    -------
+    tuple
+        tuple of pandas DataFrames (prediciton and target) based on learn.get_preds
+    """
+    dl = vaep.io.dataloaders.get_test_dl(df=df,
+                                         transformer=transformer,
+                                         dataset=dataset)
+    res = learn.get_preds(dl=dl, concat_dim=0, reorder=False)
+    if position_pred_tuple is not None and issubclass(type(res[0]), tuple):
+        res = (res[0][position_pred_tuple], *res[1:])
+    res = L(res).map(lambda x: pd.DataFrame(
+        x, index=df.index, columns=df.columns))
+    res = L(res).map(lambda x: transformer.inverse_transform(x))
+    return res
 
 
 class NormalizeShiftedMean(Normalize):
