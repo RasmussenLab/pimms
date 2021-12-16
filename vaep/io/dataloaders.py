@@ -3,8 +3,9 @@ import torch
 from typing import Tuple
 
 from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
-from fastai.data.core import DataLoaders
+# from fastai.data.load import DataLoader
+# from fastai.data.core import DataLoaders
+from fastai.data.all import *
 
 from vaep.io.datasets import DatasetWithTarget
 from vaep.transform import VaepPipeline
@@ -25,15 +26,16 @@ class DataLoadersCreator():
         Parameters
         ----------
         df_train : pandas.DataFrame
-            [description]
+            Training data samples in DataFrames.
         df_valid : pandas.DataFrame
-            [description]
+            Validation data (for training) in DataFrames.
         scaler : [type]
             A pipeline of transform to apply to the dataset.
         DataSetClass : torch.utils.data.Dataset
-            [description]
+            Type of dataset to use for generating single samples based on 
+            DataFrames.
         batch_size : int
-            [description]
+            Batch size to use.
 
         Returns
         -------
@@ -76,8 +78,10 @@ def get_dls(train_X: pandas.DataFrame,
         Validation data, won't be shuffled.
     transformer : VaepPipeline
         Pipeline with separate encode and decode
+    dataset : torch.utils.data.Dataset, optional
+        torch Dataset to yield encoded samples, by default DatasetWithTarget
     bs : int, optional
-        number of samples in a single batch, by default 64
+        batch size, by default 64
 
     Returns
     -------
@@ -106,3 +110,31 @@ def get_dls(train_X: pandas.DataFrame,
     train_ds, valid_ds = (dataset(train_X, transformer),
                           dataset(valid_X, transformer))
     return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs)
+
+
+# dls.test_dl
+# needs to be part of setup procedure of a class
+def get_test_dl(df: pandas.DataFrame,
+                transformer: VaepPipeline,
+                dataset: Dataset = DatasetWithTarget,
+                bs: int = 64):
+    """[summary]
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Test data in a DataFrame
+    transformer : vaep.transform.VaepPipeline
+        Pipeline with separate encode and decode
+    dataset : torch.utils.data.Dataset, optional
+        torch Dataset to yield encoded samples, by default DatasetWithTarget
+    bs : int, optional
+        batch size, by default 64
+
+    Returns
+    -------
+    fastai.data.load.DataLoader
+        DataLoader from fastai for test data.
+    """
+    ds = dataset(df, transformer)
+    return DataLoader(ds, bs=bs, shuffle=False)
