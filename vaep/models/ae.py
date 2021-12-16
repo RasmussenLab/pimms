@@ -1,7 +1,9 @@
+from typing import Union
+
 from torch.nn import functional as F
 import torch.utils.data
 
-from fastai.basics import store_attr, L, Learner #, noop
+from fastai.basics import store_attr, L, Learner  # , noop
 import fastai.learner
 from fastai.data.transforms import Normalize, broadcast_vec
 from fastai.callback.core import Callback
@@ -28,11 +30,11 @@ def transform_preds(pred: torch.Tensor, index: pd.Index, normalizer) -> pd.Serie
     return pred
 
 
-def get_preds_from_df(df:pd.DataFrame, 
-                      learn:fastai.learner.Learner, 
-                      transformer:vaep.transform.VaepPipeline,
-                      position_pred_tuple:int=None,
-                      dataset:torch.utils.data.Dataset=vaep.io.datasets.DatasetWithTarget):
+def get_preds_from_df(df: pd.DataFrame,
+                      learn: fastai.learner.Learner,
+                      transformer: vaep.transform.VaepPipeline,
+                      position_pred_tuple: int = None,
+                      dataset: torch.utils.data.Dataset = vaep.io.datasets.DatasetWithTarget):
     """Get predictions for specified DataFrame, using a fastai learner
     and a custom sklearn Pipeline.
 
@@ -96,9 +98,13 @@ class NormalizeShiftedMean(Normalize):
 
 
 class Autoencoder(nn.Module):
+    """Autoencoder base class.
+
+    """
+
     def __init__(self,
                  n_features: int,
-                 n_neurons: int,
+                 n_neurons: Union[int, list],
                  activation=nn.Tanh,
                  last_encoder_activation=nn.Tanh,
                  last_decoder_activation=None,
@@ -110,7 +116,8 @@ class Autoencoder(nn.Module):
         n_features : int
             Input dimension
         n_neurons : int
-            Hidden layer dimension in Encoder and Decoder
+            Hidden layer dimension(s) in Encoder and Decoder.
+            Can be a single integer or list.
         activation : [type], optional
             Activatoin for hidden layers, by default nn.Tanh
         last_encoder_activation : [type], optional
@@ -121,24 +128,33 @@ class Autoencoder(nn.Module):
             Hidden space dimension, by default 10
         """
         super().__init__()
-        self.n_features, self.n_neurons = n_features, n_neurons
+        self.n_features, self.n_neurons = n_features, list(L(n_neurons))
+        self.layers = [n_features, *self.n_neurons]
         self.dim_latent = dim_latent
 
         # Encoder
-        self.encoder = [
-            nn.Linear(n_features, n_neurons),
-            activation(),
-            nn.Linear(n_neurons, dim_latent)]
+        self.encoder = []
+        for i in range(len(self.layers)-1):
+            in_feat, out_feat = self.layers[i:i+2]
+            self.encoder.extend([nn.Linear(in_feat, out_feat), activation()])
+        self.encoder.append(nn.Linear(out_feat, self.dim_latent))
         if last_encoder_activation:
             self.encoder.append(last_encoder_activation())
         self.encoder = nn.Sequential(*self.encoder)
 
         # Decoder
-        self.decoder = [nn.Linear(dim_latent, n_neurons),
-                        activation(),
-                        nn.Linear(n_neurons, n_features)]
-        if last_decoder_activation:
-            self.decoder.append(last_decoder_activation())
+        n_neurons = 30
+        self.layers_decoder = self.layers[::-1]
+        assert self.layers_decoder is not self.layers
+        assert out_feat == self.layers_decoder[0]
+        self.decoder = [nn.Linear(self.dim_latent, out_feat),
+                        activation()]
+        for i in range(len(self.layers_decoder)-1):
+            in_feat, out_feat = self.layers_decoder[i:i+2]
+            self.decoder.extend([nn.Linear(in_feat, out_feat), activation()])                     # ,
+
+        if not last_decoder_activation:
+            _ = self.decoder.pop()
         self.decoder = nn.Sequential(*self.decoder)
 
     def forward(self, x):
