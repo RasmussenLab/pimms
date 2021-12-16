@@ -236,6 +236,19 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         pred, mu, logvar = self.pred  # return predictions
         self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
 
+# same as ModelAdapter. Inheritence is limiting composition here
+class ModelAdapterVAE(ModelAdapterVAEFlat):
+    def after_pred(self):
+        self.learn._all_pred = self.pred[0].detach().clone()
+        self.learn._all_y = None
+        if len(self.yb):
+            self.learn._all_y = self.y.detach().clone()
+        super().after_pred()
+
+    def after_loss(self):
+        self.learn.pred = (self.learn._all_pred, *self.learn.pred[1:])
+        if self._all_y is not None:
+            self.learn.yb = (self._all_y,)
 
 
 # from fastai.losses import CrossEntropyLossFlat
