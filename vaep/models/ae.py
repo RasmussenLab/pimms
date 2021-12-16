@@ -161,27 +161,14 @@ class VAE(Autoencoder):
         return mu, logvar
 
 
-class ModelAdapterFlatPred(Callback):
-    """Models forward only expects on input matrix. 
-    Apply mask from dataloader to both pred and targets.
-    
-    Return only predictions and target for non NA inputs.
-    """
-
-    def __init__(self, p=0.1):
-        self.do = nn.Dropout(p=p)  # for denoising AE
-
+class DatasetWithTargetAdapter(Callback):
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
         mask, data = self.xb  # x_cat, x_cont (model could be adapted)
-        self.learn._mask = mask != 1
-        # dropout data using median
-        self.learn.xb = (self.do(data),)
+        self.learn._mask = mask != 1 # Dataset specific
+        return data
 
     def after_pred(self):
-        # self.learn._all_pred = self.pred.detach().clone()
-        # self.learn._all_y = None
-
         M = self._mask.shape[-1]
         if len(self.yb):
             try:
@@ -193,13 +180,28 @@ class ModelAdapterFlatPred(Callback):
                 self.learn.yb = (self.xb[0],)
                 self.learn.yb = (self.learn.xb[0].clone()[self._mask],)
 
+    
+
+
+class ModelAdapterFlatPred(DatasetWithTargetAdapter):
+    """Models forward only expects on input matrix. 
+    Apply mask from dataloader to both pred and targets.
+    
+    Return only predictions and target for non NA inputs.
+    """
+
+    def __init__(self, p=0.1):
+        self.do = nn.Dropout(p=p)  # for denoising AE
+
+    def before_batch(self):
+        """Remove cont. values from batch (mask)"""
+        data = super().before_batch()
+        # dropout data using median
+        self.learn.xb = (self.do(data),)
+
+    def after_pred(self):
+        super().after_pred()
         self.learn.pred = self.pred[self._mask]
-
-    # def after_loss(self):
-    #     self.learn.pred = self.learn._all_pred
-    #     if self._all_y is not None:
-    #         self.learn.yb = (self._all_y,)
-
 
 class ModelAdapter(ModelAdapterFlatPred):
     """Models forward only expects on input matrix. 
