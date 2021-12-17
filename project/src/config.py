@@ -174,6 +174,10 @@ class Config():
     def __repr__(self):
         return pformat(vars(self))  # does not work in Jupyter?
 
+    def overwrite_entry(self, entry, value):
+        """Explicitly overwrite a given value."""
+        super().__setattr__(entry, value)
+
 
 if __name__ == '__main__':
     cfg = Config()
