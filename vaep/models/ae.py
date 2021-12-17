@@ -97,6 +97,20 @@ class NormalizeShiftedMean(Normalize):
                  decodes="Normalize batch with shifted mean and scaled variance")
 
 
+def build_encoder_units(layers: list, dim_latent: int,
+                        activation,
+                        last_encoder_activation,
+                        factor_latent:int=1):
+    encoder = []
+    for i in range(len(layers)-1):
+        in_feat, out_feat = layers[i:i+2]
+        encoder.extend([nn.Linear(in_feat, out_feat), activation()])
+    encoder.append(nn.Linear(out_feat, dim_latent*factor_latent))
+    if last_encoder_activation:
+        encoder.append(last_encoder_activation())
+    return encoder, out_feat
+
+
 class Autoencoder(nn.Module):
     """Autoencoder base class.
 
@@ -133,13 +147,10 @@ class Autoencoder(nn.Module):
         self.dim_latent = dim_latent
 
         # Encoder
-        self.encoder = []
-        for i in range(len(self.layers)-1):
-            in_feat, out_feat = self.layers[i:i+2]
-            self.encoder.extend([nn.Linear(in_feat, out_feat), activation()])
-        self.encoder.append(nn.Linear(out_feat, self.dim_latent))
-        if last_encoder_activation:
-            self.encoder.append(last_encoder_activation())
+        self.encoder, out_feat = build_encoder_units(self.layers,
+                                                     self.dim_latent,
+                                                     activation,
+                                                     last_encoder_activation)
         self.encoder = nn.Sequential(*self.encoder)
 
         # Decoder
@@ -151,10 +162,13 @@ class Autoencoder(nn.Module):
                         activation()]
         for i in range(len(self.layers_decoder)-1):
             in_feat, out_feat = self.layers_decoder[i:i+2]
-            self.decoder.extend([nn.Linear(in_feat, out_feat), activation()])                     # ,
-
+            self.decoder.extend(
+                [nn.Linear(in_feat, out_feat), activation()])                     # ,
         if not last_decoder_activation:
             _ = self.decoder.pop()
+        else:
+            _ = self.decoder.pop()
+            self.decoder.append(last_decoder_activation())
         self.decoder = nn.Sequential(*self.decoder)
 
     def forward(self, x):
@@ -185,14 +199,13 @@ class VAE(Autoencoder):
         super().__init__(**args)
 
         del self.encoder
-        # this could also become a seperate encoder class
-        self.encoder = [
-            nn.Linear(n_features, n_neurons),
-            activation(),
-            nn.Linear(n_neurons, dim_latent*2)]
-        if last_encoder_activation:
-            self.encoder.append(last_encoder_activation())
+        self.encoder, out_feat = build_encoder_units(self.layers,
+                                                     self.dim_latent,
+                                                     activation,
+                                                     last_encoder_activation,
+                                                     factor_latent=2)
         self.encoder = nn.Sequential(*self.encoder)
+
 
     def reparameterize(self, mu, logvar):
         if self.training:
@@ -226,7 +239,7 @@ class DatasetWithTargetAdapter(Callback):
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
         mask, data = self.xb  # x_cat, x_cont (model could be adapted)
-        self.learn._mask = mask != 1 # Dataset specific
+        self.learn._mask = mask != 1  # Dataset specific
         return data
 
     def after_pred(self):
@@ -240,8 +253,6 @@ class DatasetWithTargetAdapter(Callback):
                 # self.learn.y = None
                 self.learn.yb = (self.xb[0],)
                 self.learn.yb = (self.learn.xb[0].clone()[self._mask],)
-
-    
 
 
 class ModelAdapterFlatPred(DatasetWithTargetAdapter):
@@ -263,6 +274,7 @@ class ModelAdapterFlatPred(DatasetWithTargetAdapter):
     def after_pred(self):
         super().after_pred()
         self.learn.pred = self.pred[self._mask]
+
 
 class ModelAdapter(ModelAdapterFlatPred):
     """Models forward only expects on input matrix. 
@@ -298,6 +310,8 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
 
 # same as ModelAdapter. Inheritence is limiting composition here
+
+
 class ModelAdapterVAE(ModelAdapterVAEFlat):
     def after_pred(self):
         self.learn._all_pred = self.pred[0].detach().clone()
