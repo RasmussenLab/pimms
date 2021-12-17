@@ -8,6 +8,7 @@ https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os
 
 """
 import os
+import yaml
 from collections import namedtuple
 from pathlib import Path
 from pprint import pformat
@@ -19,6 +20,8 @@ def mkdir(path=Path):
     path.mkdir(exist_ok=True)
     return path
 
+import logging
+logger = logging.getLogger('vaep')
 
 ###############################################################################
 ###############################################################################
@@ -177,6 +180,20 @@ class Config():
     def overwrite_entry(self, entry, value):
         """Explicitly overwrite a given value."""
         super().__setattr__(entry, value)
+
+    def dump(self, fname=None):
+        if fname is None:
+            try:
+                fname = self.out_folder
+                fname = Path(fname) / 'model_config.yml'
+            except AttributeError:
+                raise AttributeError('Specify fname or set "out_folder" attribute.')
+        
+        with open(fname, 'w') as f:
+            yaml.dump(self.__dict__, f)
+        logger.info(f"Dumped config to: {fname}")
+
+
 
 
 if __name__ == '__main__':
