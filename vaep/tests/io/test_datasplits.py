@@ -27,7 +27,9 @@ def test_DataSplits_iter():
 
 def test_DataSplits_dir():
     actual = sorted(dir(DataSplits()))
-    expected = sorted(list(_splits))
+    # expected = sorted(list(_splits))
+    expected = ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
+                'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
     assert actual == expected
 
 

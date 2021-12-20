@@ -46,13 +46,15 @@ class DataSplits():
 
     def __post_init__(self):
         self._items = sorted(self.__dict__)
-        self._is_wide = None
+        self._is_wide = None # some guessing logic?
 
     def __getitem__(self, index):
         return (self._items[index], getattr(self, self._items[index]))
 
     def __dir__(self):
-        return self._items
+        # return self._items
+        return ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
+                'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
 
     def dump(self, folder='data'):
         """dump in long format."""
@@ -102,6 +104,8 @@ class DataSplits():
             return
 
         for _attr, _series in self:
+            if _series is None:
+                continue
             _df = _series.unstack()
             setattr(self, _attr, _df)
         self._is_wide = True
@@ -111,6 +115,8 @@ class DataSplits():
             return
         
         for _attr, _df in self:
+            if _df is None:
+                continue
             index_name = _df.columns.name
             _series = _df.stack()
             _series.index.name = index_name
