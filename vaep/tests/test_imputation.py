@@ -35,8 +35,8 @@ def example_data():
 
 def test_imputation_KNN(example_data):
     threshold = 0.55
-    data = example_data
-    data_transformed = imputation_KNN(data.copy(), threshold=threshold)
+    data = example_data.copy()
+    data_transformed = imputation_KNN(data, threshold=threshold)
     columns_to_impute = data.notnull().mean() >= threshold
     columns_to_impute = columns_to_impute[columns_to_impute].index
     assert all(data_transformed.loc[:, columns_to_impute].isna().sum() < 15)
