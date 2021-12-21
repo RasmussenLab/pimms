@@ -1,6 +1,8 @@
 from collections import namedtuple
 from operator import index
+from pathlib import Path
 from types import SimpleNamespace
+from typing import Tuple
 import itertools
 import random
 
@@ -15,7 +17,7 @@ from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectFwe
 from sklearn.impute import SimpleImputer
 
-
+import vaep
 from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
 
@@ -65,7 +67,7 @@ class AnalyzePeptides(SimpleNamespace):
 
     @classmethod
     def from_file(cls, fname, nrows=None,
-                  index_col='Sample ID', # could be potentially 0 for the first column
+                  index_col='Sample ID',  # could be potentially 0 for the first column
                   verify_fname=False,  **kwargs):
         df = read_csv(fname, nrows=nrows, index_col=index_col)
         N, M = df.shape
@@ -309,6 +311,47 @@ class AnalyzePeptides(SimpleNamespace):
         return 'N{:05d}_M{:05d}'.format(*self.df.shape)
 
 
+class LatentAnalysis(Analysis):
+
+    def __init__(self, latent_space: pd.DataFrame, meta_data: pd.DataFrame, model_name: str,
+                 fig_size: Tuple[int, int] = (15, 15), folder: Path = None):
+        self.latent_space, self.meta_data = latent_space, meta_data
+        self.fig_size, self.folder = fig_size, folder
+        self.model_name = model_name
+        self.folder = Path(self.folder) if self.folder else Path('.')
+        assert len(
+            self.latent_space.shape) == 2, "Expected a two dimensional DataFrame."
+        self.latent_dim = self.latent_space.shape[-1]
+        if self.latent_dim > 2:
+            # pca, add option for different methods
+            self.latent_reduced = run_pca(self.latent_space)
+        else:
+            self.latent_reduced = self.latent_space
+
+    def plot_by_date(self, meta_key: str = 'date', save: bool = True):
+        fig, ax = self._plot(fct=plot_date_map, meta_key=meta_key, save=save)
+        return fig, ax
+
+    def plot_by_category(self, meta_key: str, save: bool = True):
+        fig, ax = self._plot(fct=seaborn_scatter, meta_key=meta_key, save=save)
+        return fig, ax
+
+    def _plot(self, fct, meta_key: str, save: bool = True):
+        try:
+            meta_data = self.meta_data[meta_key]
+        except KeyError:
+            raise ValueError(f"Requested key: '{meta_key}' is not in available,"
+                             f" use: {', '.join(x for x in self.meta_data.columns)}")
+        fig, ax = plt.subplots(figsize=self.fig_size)
+        _ = fct(df=self.latent_reduced, fig=fig, ax=ax,
+                meta=meta_data.loc[self.latent_reduced.index],
+                title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
+        if save:
+            vaep.io_images._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
+                                    folder=self.folder)
+        return fig, ax
+
+
 def read_csv(fname, nrows, index_col=None):
     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
@@ -377,7 +420,12 @@ def run_pca(df, n_components=2):
     return pca
 
 
-def plot_date_map(df, fig, ax, dates: pd.Series, title:str='by date'):
+def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, title: str = 'by date'):
+    if dates is not None and meta is not None:
+        raise ValueError("Only set either dates or meta parameters.")
+        # ToDo: Clean up arguments
+    if dates is None:
+        dates = meta
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
     ax.set_title(title, fontsize=18)
