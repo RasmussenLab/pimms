@@ -355,6 +355,25 @@ class LatentAnalysis(Analysis):
 def read_csv(fname, nrows, index_col=None):
     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
+def build_metadata_df(filenames:pd.Index) -> pd.DataFrame:
+    """Build a DataFrame based on a list of strings (an Index) to parse.
+    Is strongly coupled to the analysis context.
+
+    Parameters
+    ----------
+    filenames : pd.Index
+        An Iterable with strings.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with the parsed metadata.
+    """
+    
+    d_meta = metadata.get_metadata_from_filenames(filenames)
+    df_meta = pd.DataFrame.from_dict(d_meta, orient='index')
+    df_meta.index.name = filenames.name
+    return df_meta
 
 def get_consecutive_data_indices(df, n_samples):
     index = df.sort_index().index
