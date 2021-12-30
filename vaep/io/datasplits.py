@@ -1,8 +1,9 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import logging
 from functools import partial
 from pathlib import Path
+from typing import Protocol
 
 import pandas as pd
 from pandas.core.algorithms import isin
@@ -38,15 +39,18 @@ def wide_format(df: pd.DataFrame,
 
 @dataclass
 class DataSplits():
+    is_wide_format: bool = field(init=True, repr=False)
     train_X: pd.DataFrame = None
     val_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
     test_X: pd.DataFrame = None
     test_y: pd.DataFrame = None
+    
 
-    def __post_init__(self):
+    def __post_init__(self, is_wide_format=True):
         self._items = sorted(self.__dict__)
-        self._is_wide = None # some guessing logic?
+        self._items.remove('is_wide_format')
+        self._is_wide = is_wide_format # needs to be set explicitly when using the init
 
     def __getitem__(self, index):
         return (self._items[index], getattr(self, self._items[index]))
@@ -85,7 +89,9 @@ class DataSplits():
 
     def load(self, folder: str, use_wide_format=False) -> None:
         """Load data in place from folder"""
-        args = load_items(folder=folder, items=self.__annotations__, use_wide_format=use_wide_format)
+        items = dict(self.__annotations__)
+        del items['is_wide_format']
+        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format)
         for _attr, _df in args.items():
             setattr(self, _attr, _df)
         self._is_wide = use_wide_format
@@ -94,8 +100,10 @@ class DataSplits():
     @classmethod
     def from_folder(cls, folder: str, use_wide_format=False) -> DataSplits:
         """Build DataSplits instance from folder."""
-        args = load_items(folder=folder, items=cls.__annotations__, use_wide_format=use_wide_format)
-        _data_splits = cls(**args)
+        items = dict(cls.__annotations__)
+        del items['is_wide_format']
+        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format)
+        _data_splits = cls(**args, is_wide_format=use_wide_format)
         _data_splits._is_wide = use_wide_format
         return _data_splits
 

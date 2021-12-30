@@ -21,12 +21,12 @@ _splits = {'train_X': df.iloc[:int(N*0.6)],
 def test_DataSplits_iter():
     # expected = [(k, None) for k in list(DataSplits.__annotations__)]
     expected = [(k, None) for k in list(_splits)]
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=None)
     assert sorted(list(splits)) == sorted(expected)
 
 
 def test_DataSplits_dir():
-    actual = sorted(dir(DataSplits()))
+    actual = sorted(dir(DataSplits(is_wide_format=False)))
     # expected = sorted(list(_splits))
     expected = ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
                 'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
@@ -34,24 +34,24 @@ def test_DataSplits_dir():
 
 
 def test_load_missing_dir():
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=False)
     with pytest.raises(AssertionError):
         splits.load(folder='non_exisiting')
 
 
 def test_dump_empty(tmp_path):
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=False)
     with pytest.raises(ValueError):
         splits.dump(tmp_path)
 
 
 def test_dump_load(tmp_path):
-    splits = DataSplits(**_splits)
+    splits = DataSplits(**_splits, is_wide_format=True)
     splits.dump(folder=tmp_path)
     splits.load(folder=tmp_path)
     splits = DataSplits.from_folder(folder=tmp_path)
 
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=True)
     assert splits.train_X is not _splits['train_X']
     
@@ -60,9 +60,9 @@ def test_dump_load(tmp_path):
     # assert splits.train_X.equals(_splits['train_X'])
 
 def test_to_long_format(tmp_path):
-    splits = DataSplits(**_splits)
+    splits = DataSplits(**_splits, is_wide_format=True)
     splits.dump(folder=tmp_path)
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=True)
     assert splits._is_wide
     expected = splits.val_X.copy()
@@ -73,9 +73,9 @@ def test_to_long_format(tmp_path):
     assert splits.val_X.equals(expected)
 
 def test_to_wide_format(tmp_path):
-    splits = DataSplits(**_splits)
+    splits = DataSplits(**_splits, is_wide_format=True)
     splits.dump(folder=tmp_path)
-    splits = DataSplits()
+    splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=False)
     assert not splits._is_wide
     expected = splits.val_X.copy()
@@ -86,7 +86,7 @@ def test_to_wide_format(tmp_path):
     assert splits.val_X.equals(expected)
 
 def test_interpolate():
-    splits = DataSplits(**_splits)
+    splits = DataSplits(**_splits, is_wide_format=True)
     splits._is_wide = True # ToDo. Is not correctly set when init is called.
     with pytest.raises(AttributeError):
         _ = splits.interpolate('non-existing')
