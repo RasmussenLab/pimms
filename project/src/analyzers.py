@@ -212,15 +212,28 @@ class AnalyzePeptides(SimpleNamespace):
         return self.df_meta
 
     def get_PCA(self, n_components=2, imputer=SimpleImputer):
-        X = imputer().fit_transform(self.df)
+        self.imputer_ = imputer()
+        X = self.imputer_.fit_transform(self.df)
         X = _add_indices(X, self.df)
         assert all(X.notna())
 
-        pca = run_pca(X, n_components=n_components)
+        PCs, self.pca_ = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
-        pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
-        return pca
+        PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
+        return PCs
+
+    def calculate_PCs(self, new_df, is_wide=True):
+        if not is_wide:
+            new_df = new_df.unstack()
+        
+        X = self.imputer_.transform(new_df)
+        X = _add_indices(X, new_df)
+        PCs = self.pca_.transform(X)
+        PCs = _add_indices(PCs, new_df, index_only=True)
+        PCs.columns = [f'PC {i+1}' for i in range(PCs.shape[-1])]
+        return PCs  
+
 
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
@@ -232,8 +245,8 @@ class AnalyzePeptides(SimpleNamespace):
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
 
-        pca = self.get_PCA()
-        cols = list(pca.columns)
+        PCs = self.get_PCA()
+        cols = list(PCs.columns)
 
         fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(
             15, 20), constrained_layout=True)
@@ -246,18 +259,18 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by instrument
         ax = axes[0]
-        seaborn_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax,
-                        meta=pca['ms_instrument'], title='by MS instrument')
+        seaborn_scatter(df=PCs.iloc[:, :2], fig=fig, ax=ax,
+                        meta=PCs['ms_instrument'], title='by MS instrument')
 
         # by complettness/missingness
         # continues colormap will be a bit trickier using seaborn: https://stackoverflow.com/a/44642014/9684872
         ax = axes[1]
-        plot_scatter(df=pca.iloc[:, :2], fig=fig, ax=ax,
+        plot_scatter(df=PCs.iloc[:, :2], fig=fig, ax=ax,
                      meta=self.df_meta['prop_not_na'], title='by number on na')
 
         # by dates
         ax = axes[2]
-        plot_date_map(df=pca.iloc[:, :2], fig=fig,
+        plot_date_map(df=PCs.iloc[:, :2], fig=fig,
                       ax=ax, dates=self.df_meta.date)
 
         return fig
@@ -324,7 +337,7 @@ class LatentAnalysis(Analysis):
         self.latent_dim = self.latent_space.shape[-1]
         if self.latent_dim > 2:
             # pca, add option for different methods
-            self.latent_reduced = run_pca(self.latent_space)
+            self.latent_reduced, self.pca_ = run_pca(self.latent_space)
         else:
             self.latent_reduced = self.latent_space
 
@@ -423,20 +436,28 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
     return fig, axes
 
 
-def run_pca(df, n_components=2):
-    """Run PCA on DataFrame.
+def run_pca(df_wide:pd.DataFrame, n_components:int=2) -> Tuple[pd.DataFrame, PCA]:
+    """Run PCA on DataFrame and return result.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame in wide format to fit features on.
+    n_components : int, optional
+        Number of Principal Components to fit, by default 2
 
     Returns
     -------
-    pandas.DataFrame
-        with same indices as in original DataFrame
+    Tuple[pd.DataFrame, PCA]
+        principal compoments of DataFrame with same indices as in original DataFrame,
+        and fitted PCA model of sklearn
     """
     pca = PCA(n_components=n_components)
-    PCs = pca.fit_transform(df)
+    PCs = pca.fit_transform(df_wide)
     cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
             var_explained in enumerate(pca.explained_variance_ratio_)]
-    pca = pd.DataFrame(PCs, index=df.index, columns=cols)
-    return pca
+    PCs = pd.DataFrame(PCs, index=df_wide.index, columns=cols)
+    return PCs, pca
 
 
 def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, title: str = 'by date'):
