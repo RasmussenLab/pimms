@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.testing as npt
 import pandas as pd
 
 import vaep
@@ -24,8 +25,9 @@ data.to_long_format()
 
 def test_combine_data():
     N_train, N_val = len(data.train_X), len(data.val_X)
-    X, splits = collab.combine_data(data.train_X, data.val_X)
+    X, frac = collab.combine_data(data.train_X, data.val_X)
     assert len(X) == N_train + N_val
-    assert len(splits[0]) == N_train
-    assert len(splits[1]) == N_val
-    assert splits == [list(range(N_train)), list(range(N_train, N_train+N_val))]
+    npt.assert_almost_equal(frac, N_val / (N_train+N_val))
+    # assert len(splits[0]) == N_train
+    # assert len(splits[1]) == N_val
+    # assert splits == [list(range(N_train)), list(range(N_train, N_train+N_val))]
