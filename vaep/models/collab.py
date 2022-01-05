@@ -28,9 +28,11 @@ class DotProductBias(Module):
         return sigmoid_range(res, *self.y_range)
 
 
-def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataFrame, List[List[int]]]:
-    """Helper function to combine training and validation data in long-format. Returns
-    additionally list of list of row indices for each split for further use in fastai.
+def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
+    """Helper function to combine training and validation data in long-format. The 
+    training and validation data will be mixed up in Collab training as the sample
+    embeddings have to be trained for all samples. The returned frac can be used to have
+    the same number of (non-missing) validation samples as before.
 
     Parameters
     ----------
@@ -43,14 +45,15 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
     -------
     Tuple[pd.DataFrame, List[list, list]]
         Pandas DataFrame of concatenated samples of training and validation data.
-        List of list of indices belonging to training data and list of indices belonging
-        to validation data.
+        Fraction of samples originally in validation data.
     """
     X = train_df.append(val_df).reset_index()
+    frac = len(val_df) / (len(train_df)+len(val_df))
 
     # idx_splitter = IndexSplitter(list(range(len(data.train_X), len(data.train_X)+ len(data.val_X) )))
     # splits = idx_splitter(ana_collab.X)
-    N_train, N_valid = len(train_df), len(val_df)
-    splits = [list(range(0, N_train)), list(range(N_train, N_train + N_valid))]
-
-    return X, splits
+    #N_train, N_valid = len(train_df), len(val_df)
+    #splits = [list(range(0, N_train)), list(range(N_train, N_train + N_valid))]
+    # List of list of indices belonging to training data and list of indices belonging
+    # to validation data.
+    return X, frac
