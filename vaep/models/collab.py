@@ -2,7 +2,9 @@ import logging
 from typing import Tuple, List
 
 import pandas as pd
+import torch
 
+import fastai
 from fastai.collab import Module, Embedding, sigmoid_range
 from fastai.collab import EmbeddingDotBias
 
@@ -57,3 +59,93 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
     # List of list of indices belonging to training data and list of indices belonging
     # to validation data.
     return X, frac
+
+
+def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tensor,
+                       feat_embeddings: Embedding, feat_bias: Embedding, items: torch.tensor,
+                       y_range=None) -> torch.tensor:
+    """Collab dot product for a single sample using a set of feature items.
+
+    Parameters
+    ----------
+    sample_embeddings : torch.tensor
+        Sample emedding to use prediction for
+    sample_bias : torch.tensor
+        sample bias
+    feat_embeddings : Embedding
+        Embedding layer for fetch feature items from
+    feat_bias : Embedding
+        Embedding layer to fetch feature biases from
+    items : torch.tensor
+        Set of feature IDs to use
+    y_range : tuple, optional
+        range transformation based on sigmoid function, by default None
+
+    Returns
+    -------
+    torch.tensor
+        target predictions for sample features.
+
+    Example
+    -------
+    # learn is a Collab Learner
+    idx = learn.classes['Sample ID'].map_objs(['sample1', 'sample2'])
+    idx = torch.tensor(idx)
+    collab_dot_product(learn.u_weight(idx), learn.u_bias(idx),
+                   learn.i_weight, learn.i_bias, idx_feat, # this is abritrary
+                   y_range=learn.y_range)
+    """
+    dot = sample_embeddings * feat_embeddings(items)
+    res = dot.sum(1) + sample_bias.squeeze() + feat_bias(items).squeeze()
+    res = res.detach()
+    if y_range is None:
+        return res
+    return torch.sigmoid(res) * (y_range[1]-y_range[0]) + y_range[0]
+
+
+def collab_prediction(idx_samples: torch.tensor,
+                      learn: fastai.learner.Learner,
+                      index_samples: pd.Index = None) -> pd.DataFrame:
+    """Based on a Collab model Learner, calculate all out of sample predicitons
+    for all features trained.
+
+    Parameters
+    ----------
+    idx_samples : torch.tensor
+        An array containing the neighreast neighbors in the training data for 
+        set of list of test samples. Normallay obtained from a sklearn KNN search.
+    learn : fastai.learner.Learner
+        The learner used for collab training
+    index_samples : pd.Index, optional
+        The pandas.Index for the training samples.
+        If no index_samples is provided, the samples will just be numbered,
+        by default None 
+
+    Returns
+    -------
+    pd.DataFrame
+        predictions as DataFrame for all features encoded by the model for all samples.
+        
+    """
+    # Matrix multiplication way
+    test_sample_embeddings = learn.u_weight(
+        idx_samples).mean(1)  # torch.tensor
+    test_sample_biases = learn.u_bias(idx_samples).mean(1)  # torch.tensor
+
+    # first token is for NA
+    idx_feat = torch.arange(1, learn.i_weight.num_embeddings)
+    feat_embeddings = learn.i_weight(idx_feat)
+    feat_biases = learn.i_bias(idx_feat)
+
+    res = test_sample_embeddings.matmul(feat_embeddings.T)
+    res = res + feat_biases.T + test_sample_biases
+
+    if learn.y_range is not None:
+        res = torch.sigmoid(res) * (learn.y_range[1]-learn.y_range[0]
+                                    ) + learn.y_range[0]
+
+    res = pd.DataFrame(res,
+                       columns=pd.Index(list(learn.classes[learn.model.item].items[1:]),
+                                        name=learn.model.item),
+                       index=index_samples)
+    return res
