@@ -61,7 +61,7 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     return directories
 
 
-def dump_json(data_dict:dict, filename):
+def dump_json(data_dict: dict, filename):
     """Dump dictionary as json.
 
     Parameters
@@ -70,7 +70,6 @@ def dump_json(data_dict:dict, filename):
         [description]
     filename : [type]
         [description]
-    """    
+    """
     with open(filename, 'w') as f:
-        json.dump(obj=data_dict, fp=f)
-    
+        json.dump(obj=data_dict, fp=f, indent=4)
