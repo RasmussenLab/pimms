@@ -10,9 +10,10 @@ https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os
 import os
 import yaml
 from collections import namedtuple
-from pathlib import Path
+from pathlib import Path, PurePath, PurePosixPath
 from pprint import pformat
 
+import numpy as np
 import pandas
 import matplotlib as mpl
 
@@ -188,9 +189,15 @@ class Config():
                 fname = Path(fname) / 'model_config.yml'
             except AttributeError:
                 raise AttributeError('Specify fname or set "out_folder" attribute.')
-        
+        d = dict()
+        for k,v in self.__dict__.items():
+            if isinstance(v, PurePath):
+                v = str(PurePosixPath(v))
+            elif isinstance(v, np.ndarray):
+                v = v.tolist()
+            d[k] = v
         with open(fname, 'w') as f:
-            yaml.dump(self.__dict__, f)
+            yaml.dump(d, f)
         logger.info(f"Dumped config to: {fname}")
 
 
