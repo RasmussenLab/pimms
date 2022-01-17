@@ -21,6 +21,8 @@ def mkdir(path=Path):
     path.mkdir(exist_ok=True)
     return path
 
+import vaep.io
+
 import logging
 logger = logging.getLogger('vaep')
 
@@ -189,13 +191,7 @@ class Config():
                 fname = Path(fname) / 'model_config.yml'
             except AttributeError:
                 raise AttributeError('Specify fname or set "out_folder" attribute.')
-        d = dict()
-        for k,v in self.__dict__.items():
-            if isinstance(v, PurePath):
-                v = str(PurePosixPath(v))
-            elif isinstance(v, np.ndarray):
-                v = v.tolist()
-            d[k] = v
+        d = vaep.io.parse_dict(input_dict=self.__dict__)
         with open(fname, 'w') as f:
             yaml.dump(d, f)
         logger.info(f"Dumped config to: {fname}")
