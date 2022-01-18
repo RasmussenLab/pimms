@@ -1,6 +1,8 @@
 from functools import reduce
 import logging
 from operator import mul
+from pathlib import Path
+import pickle
 from typing import Tuple, List, Callable
 
 import matplotlib.pyplot as plt
@@ -51,6 +53,30 @@ def plot_loss(recorder: learner.Recorder,
         ax.legend()
     return ax
 
+
+
+class RecorderDump:
+    """Simple Class to hold fastai Recorder Callback data for serialization using pickle.
+    """
+    filename_tmp = 'recorder_{}.pkl'
+
+    def __init__(self, recorder, name):
+        self.losses = recorder.losses
+        self.values = recorder.values
+        self.iters = recorder.iters
+        self.name = name
+
+    def save(self, folder=Path('.')):
+        with open(Path(folder) / self.filename_tmp.format(self.name), 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, filepath, name):
+        with open(Path(filepath) / cls.filename_tmp.format(name), 'rb') as f:
+            ret = pickle.load(f)
+        return ret
+
+    plot_loss = plot_loss
 
 def split_prediction_by_mask(pred: pd.DataFrame,
                              mask: pd.DataFrame,
