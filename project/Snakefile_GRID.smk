@@ -1,16 +1,22 @@
 import pathlib
 
-GRID = {
-    'epochs': [30],
-    'latend_dim': [10, 25, 50, 75, 100],
-    'hidden_layers': [1,2,3,4],
-    'batch_size': [32, 64],
-}
 
-FOLDER = 'runs/experiment03'
+configfile: "config_grid.yaml"
+configfile: "config_paths.yaml"
+
+GRID = {k:config[k] 
+        for k 
+        in ['epochs',
+            'latend_dim',
+            'hidden_layers',
+            'batch_size']
+        }
+
+FOLDER = config['FOLDER']
 pathlib.Path(FOLDER).mkdir(parents=True, exist_ok=True)
 
-name_template = "experiment_HL_{hidden_layers}_LD_{latend_dim}_E_{epochs}_BS_{batch_size}"
+name_template = config['name_template']
+
 
 rule all:
     input:
