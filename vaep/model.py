@@ -1,4 +1,6 @@
+from vaep.models.ae import loss_function
 import logging
+import numpy as np
 import pandas as pd
 
 import torch
@@ -7,144 +9,294 @@ from torch.utils.data import Dataset
 from torch import nn
 from torch.nn import functional as F
 
-logger = logging.getLogger()
+import fastai.collab as _fastai
+# from fastai.collab import sigmoid_range, Module, Embedding
+
+logger = logging.getLogger(__name__)
+
 
 # from IPython.core.debugger import set_trace # invoke debugging
-class VAE(nn.Module):
-    """Variational Autoencoder
 
 
-    Attributes
-    ----------
-    compression_factor: int
-        Compression factor for latent representation in comparison
-        to input features, default 0.25
-    """
-
-    compression_factor = 0.25
-
-    def __init__(self, n_features: int, n_neurons: int):
-        """PyTorch model for Variational autoencoder
-
-        Parameters
-        ----------
-        n_features : int
-            number of input features.
-        n_neurons : int
-            number of neurons in encoder and decoder layer
-        """
-        super().__init__()
-
-        self._n_neurons = n_neurons
-        self._n_features = n_features
-
-        dim_vae_latent = int(n_features * self.compression_factor)
-
-        self.encoder = nn.Linear(n_features, n_neurons)
-        # latent representation:
-        self.mean = nn.Linear(n_neurons, dim_vae_latent)  # mean
-        self.std = nn.Linear(n_neurons, dim_vae_latent)   # stdev
-
-        self.decoder = nn.Linear(dim_vae_latent, n_neurons)
-        self.out = nn.Linear(n_neurons, n_features)
-
-    def encode(self, x):
-        h1 = F.relu(self.encoder(x))
-        return self.mean(h1), self.std(h1)
-
-    def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5*logvar)
-        eps = torch.randn_like(std)
-        return mu + eps*std
-
-    def decode(self, z):
-        h3 = F.relu(self.decoder(z))
-        return self.out(h3)
-
-    def forward(self, x):
-        mu, logvar = self.encode(x.view(-1, self._n_features))
-        z = self.reparameterize(mu, logvar)
-        return self.decode(z), mu, logvar
+# from fastai.losses import MSELossFlat
+# from fastai.learner import Learner
 
 
-def loss_function(recon_x, x, mask, mu, logvar, t=0.9, device=None):
-    """Loss function only considering the observed values in the reconstruction loss.
+# Reconstruction + β * KL divergence losses summed over all elements and batch
+# def loss_function(recon_batch, batch, mu, logvar, beta=1):
+#     BCE = nn.functional.binary_cross_entropy(
+#         recon_batch, batch, reduction='sum'
+#     )
+#     KLD = 0.5 * torch.sum(logvar.exp() - logvar - 1 + mu.pow(2))
 
-    Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
+#     return {'loss':  BCE + beta * KLD, 'BCE': BCE, 'KLD': KLD}
 
-    Default MSE loss would have a too big nominator (Would this matter?)
-    MSE = F.mse_loss(input=recon_x, target=x, reduction='mean')
-
+def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, optimizer: torch.optim,
+          device, return_pred=False):
+    """Train one epoch.
 
     Parameters
     ----------
-    recon_x : [type]
+    model : torch.nn.Module
         [description]
-    x : [type]
+    train_loader : torch.utils.data.DataLoader
         [description]
-    mask : [type]
+    optimizer : torch.optim
         [description]
-    mu : [type]
+    device : [type]
         [description]
-    logvar : [type]
+    """
+    model.train()
+    batch_metrics = {}
+
+    for batch_idx, batch in enumerate(train_loader):
+        try:
+            data, mask = batch
+            batch = batch.to(device)
+            mask = mask.to(device)
+            batch = (data, mask)
+        except:
+            batch = batch.to(device)
+            data = batch
+
+        recon_batch, mu, logvar = model(data)
+        _batch_metric = loss_function(
+            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
+            recon_batch=recon_batch,
+            batch=data,
+            mu=mu,
+            reconstruction_loss=F.binary_cross_entropy,
+            logvar=logvar)
+
+        # train specific
+        optimizer.zero_grad()
+        loss = _batch_metric['loss']
+        loss.backward()
+        optimizer.step()
+
+        batch_metrics[batch_idx] = {
+            key: value.item() / len(data) for key, value in _batch_metric.items()}
+
+    return batch_metrics
+
+
+def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
+             device,
+             return_pred=False):
+    """Evaluate all batches in data_loader
+
+    Parameters
+    ----------
+    model : torch.nn.Module
         [description]
-    t : float, optional
-        [description], by default 0.9
+    data_loader : torch.utils.data.DataLoader
+        [description]
+    device : [type]
+        [description]
 
     Returns
     -------
-    total: float
-        Total, weighted average loss for provided input and mask
-    mse: float
-        unweighted mean-squared-error for non-masked inputs
-    kld: float
-        unweighted Kullback-Leibler divergence between prior and empirical
-        normal distribution (defined by encoded moments) on latent representation.
+    [type]
+        [description]
     """
-    MSE = F.mse_loss(input=recon_x*mask,
-                     target=x*mask,
-                     reduction='sum')  # MSE of observed values
-    MSE /= mask.sum()  # only consider observed number of values
+    model.eval()
+    assert model.training == False
+    batch_metrics = {}
+    if return_pred:
+        pred = []
+    for batch_idx, batch in enumerate(data_loader):
+        try:
+            if not isinstance(batch, torch.Tensor):
+                data, mask = batch
+            else:
+                raise ValueError
+            batch = batch.to(device)
+            mask = mask.to(device)
+            batch = (data, mask)
+        except ValueError:
+            batch = batch.to(device)
+            data = batch
 
-    # KL-divergence
-    # see Appendix B from VAE paper:
-    # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
-    # https://arxiv.org/abs/1312.6114
-    # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
-    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-
-    total = t*MSE + (1-t)*KLD
-    return total, MSE, KLD
-
-
-def train(epoch, model, train_loader, optimizer, device, writer=None):
-    model.train()
-    train_loss = 0
-    n_samples = len(train_loader.dataset)
-    for batch_idx, (data, mask) in enumerate(train_loader):
-        data = data.to(device)
-        mask = mask.to(device)
-        # assert data.is_cuda and mask.is_cuda
-        optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
-        loss, mse, kld = loss_function(
-                            recon_x=recon_batch,
-                            x=data,
-                            mask=mask,
-                            mu=mu,
-                            logvar=logvar,
-                            device=device)
-        logger.debug("Epoch: {epoch:3}, Batch: {batch_idx:4}")
-        loss.backward()
-        train_loss += loss.item()
-        optimizer.step()
+        _batch_metric = loss_function(
+            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
+            recon_batch=recon_batch,
+            batch=data,
+            mu=mu,
+            logvar=logvar)
+        batch_metrics[batch_idx] = {
+            key: value.item() / len(data) for key, value in _batch_metric.items()}
+        if return_pred:
+            pred.append(recon_batch.detach().numpy())
+    return batch_metrics if not return_pred else (batch_metrics, pred)
 
-    avg_loss_per_sample = train_loss / n_samples
-    if epoch % 25 == 0:
-        logger.info('====> Epoch: {epoch:3} Average loss: {avg_loss:10.4f}'.format(
-            epoch=epoch, avg_loss=avg_loss_per_sample))
-    if writer is not None:
-        writer.add_scalar('training loss',
-                          avg_loss_per_sample,
-                          epoch)
-    return
+
+def build_df_from_pred_batches(pred, scaler=None, index=None, columns=None):
+    pred = np.vstack(pred)
+    if scaler:
+        pred = scaler.inverse_transform(pred)
+    pred = pd.DataFrame(pred, index=index, columns=columns)
+    return pred
+
+
+def get_latent_space(model_method_call:callable,
+                     dl:torch.utils.data.DataLoader,
+                     dl_index:pd.Index,
+                     latent_tuple_pos:int=0) -> pd.DataFrame:
+    """Create a DataFrame of the latent space based on the model method call
+    to be used (here: the model encoder or a latent space helper method)
+
+    Parameters
+    ----------
+    model_method_call : callable
+        A method call on a pytorch.Module to create encodings for a batch of data.
+    dl : torch.utils.data.DataLoader
+        The DataLoader to use, producing predictions in a non-random fashion.
+    dl_index : pd.Index
+        pandas Index
+    latent_tuple_pos : int, optional
+        if model_method_call returns a tuple from a batch,
+        the tensor at the tuple position to selecet, by default 0
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame of latent space indexed with dl_index.
+    """
+    latent_space = []
+    for b in dl:
+        model_input = b[1]
+        res = model_method_call(model_input)
+        #if issubclass(type(res), torch.Tensor):
+        if isinstance(res, tuple):
+            res = res[latent_tuple_pos]
+        res = res.detach().numpy()
+        latent_space.append(res)
+    M = res.shape[-1]
+
+    latent_space = build_df_from_pred_batches(latent_space,
+                                              index=dl_index,
+                                              columns=[f'latent dimension {i+1}'
+                                                       for i in range(M)])
+    return latent_space
+
+
+def process_train_loss(d: dict, alpha=0.1):
+    """Process training loss to DataFrame.
+
+    Parameters
+    ----------
+    d: dict
+        Dictionary of {'key': Iterable}
+    alpha: float
+        Smooting factor, default 0.1
+
+    Returns
+    -------
+    df: pandas.DataFrame
+        Pandas DataFrame including the loss and smoothed loss.
+    """
+    assert len(
+        d) == 1, "Not supported here. Only one list-like loss with key {key: Iterable}."
+    df = pd.DataFrame(d)
+    key = next(iter(d.keys()))
+    df = df.reset_index(drop=False).rename(columns={'index': 'steps'})
+    key_new = f'{key} smoothed'
+    df[key_new] = df[key].ewm(alpha=alpha).mean()
+    return df
+
+
+# # Defining the model manuelly
+
+# import torch.nn as nn
+# d = 3
+
+# n_features= 10
+
+# class VAE(nn.Module):
+#     def __init__(self, d_input=n_features, d=d):
+#         super().__init__()
+
+#         self.d_input = d_input
+#         self.d_hidden = d
+
+#         self.encoder = nn.Sequential(
+#             nn.Linear(d_input, d ** 2),
+#             nn.ReLU(),
+#             nn.Linear(d ** 2, d * 2)
+#         )
+
+#         self.decoder = nn.Sequential(
+#             nn.Linear(d, d ** 2),
+#             nn.ReLU(),
+#             nn.Linear(d ** 2, self.d_input),
+#             nn.Sigmoid(),
+#         )
+
+#     def reparameterise(self, mu, logvar):
+#         if self.training:
+#             std = logvar.mul(0.5).exp_()
+#             eps = std.data.new(std.size()).normal_()
+#             return eps.mul(std).add_(mu)
+#         else:
+#             return mu
+
+#     def forward(self, x):
+#         mu_logvar = self.encoder(x.view(-1, self.d_input)).view(-1, 2, d)
+#         mu = mu_logvar[:, 0, :]
+#         logvar = mu_logvar[:, 1, :]
+#         z = self.reparameterise(mu, logvar)
+#         return self.decoder(z), mu, logvar
+
+# model = VAE().double().to(device)
+# model
+
+# # Training and testing the VAE
+
+# def loss_function(recon_batch, batch, mu, logvar, beta=1):
+#     BCE = nn.functional.binary_cross_entropy(
+#         recon_batch, batch, reduction='sum'
+#     )
+#     KLD = 0.5 * torch.sum(logvar.exp() - logvar - 1 + mu.pow(2))
+
+#     return BCE + beta * KLD
+
+# epochs = 10
+# codes = dict(μ=list(), logσ2=list())
+# for epoch in range(0, epochs + 1):
+#     # Training
+#     if epoch > 0:  # test untrained net first
+#         model.train()
+#         train_loss = 0
+#         for x in dl_train:
+#             x = x.to(device)
+#             # ===================forward=====================
+#             x_hat, mu, logvar = model(x)
+#             loss = loss_function(x_hat, x, mu, logvar)
+#             train_loss += loss.item()
+#             # ===================backward====================
+#             optimizer.zero_grad()
+#             loss.backward()
+#             optimizer.step()
+#         # ===================log========================
+#         print(f'====> Epoch: {epoch} Average loss: {train_loss / len(dl_train.dataset):.4f}')
+
+#     # Testing
+
+#     means, logvars = list(), list()
+#     with torch.no_grad():
+#         model.eval()
+#         test_loss = 0
+#         for x in dl_valid:
+#             x = x.to(device)
+#             # ===================forward=====================
+#             x_hat, mu, logvar = model(x)
+#             test_loss += loss_function(x_hat, x, mu, logvar).item()
+#             # =====================log=======================
+#             means.append(mu.detach())
+#             logvars.append(logvar.detach())
+#     # ===================log========================
+#     codes['μ'].append(torch.cat(means))
+#     codes['logσ2'].append(torch.cat(logvars))
+#     test_loss /= len(dl_valid.dataset)
+#     print(f'====> Test set loss: {test_loss:.4f}')

@@ -1,0 +1,9 @@
+# conda env update -f environment.yml
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - sphinx
+  - sphinxcontrib-napoleon
+  - recommonmark
+  - sphinx-markdown-tables

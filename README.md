@@ -52,7 +52,9 @@ For a detailed description of a setup using conda, see [docs]()
 
 Thermo-Fisher or Bruker machines output their own file-format (`.raw` and `.d`). These binaries need to be transfered into text based files for protability, 
 as `mzML` or `mgf`.
-    - [MGF format](http://www.matrixscience.com/help/data_file_help.html) for spectra
+
+  - [MGF format](http://www.matrixscience.com/help/data_file_help.html) for spectra
+  - [mzML format](https://www.psidev.info/mzML)
 
 > The [HUPO Proteomics Standardiation Initiative](http://www.psidev.info/)
 > defines community standards for data representation in proteomics and 

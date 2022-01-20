@@ -1,6 +1,10 @@
 from collections import namedtuple
+from typing import List, Tuple
 import json
-from pathlib import Path
+from pathlib import Path, PurePath, PurePosixPath
+
+import numpy as np
+
 
 PathsList = namedtuple('PathsList', ['files', 'folder'])
 
@@ -61,7 +65,7 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     return directories
 
 
-def dump_json(data_dict:dict, filename):
+def dump_json(data_dict: dict, filename):
     """Dump dictionary as json.
 
     Parameters
@@ -70,7 +74,19 @@ def dump_json(data_dict:dict, filename):
         [description]
     filename : [type]
         [description]
-    """    
+    """
     with open(filename, 'w') as f:
-        json.dump(obj=data_dict, fp=f)
-    
+        json.dump(obj=data_dict, fp=f, indent=4)
+
+
+def parse_dict(input_dict: dict,
+               types: List[Tuple] = [(PurePath, lambda p: str(PurePosixPath(p))),
+                                     (np.ndarray, lambda a: a.to_list())]):
+    """Transform a set of items (instances) to their string representation"""
+    d = dict()
+    for k, v in input_dict.items():
+        for (old_type, fct) in types:
+          if isinstance(v, old_type):
+              v = fct(v)
+        d[k] = v
+    return d

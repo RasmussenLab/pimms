@@ -8,7 +8,7 @@ import logging
 
 from tqdm import tqdm
 
-logger = logging.getLogger('vaep.fasta')
+logger = logging.getLogger(__name__)
 
 
 def get_n_miscleaved(pep_sequences: list, num_missed: int):
