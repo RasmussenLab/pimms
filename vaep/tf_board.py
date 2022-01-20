@@ -17,7 +17,7 @@ class TensorboardModelNamer():
             Experiment folder-name. All new setups will be written to new summary files.
         root_dir : Path, optional
             Root directory to store experiments, by default Path('runs')
-        """        
+        """
         self.prefix_folder = prefix_folder
         self.root_logdir = Path(root_dir)
         self.folder = (self.root_logdir /

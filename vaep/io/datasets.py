@@ -1,9 +1,13 @@
-from attr import Attribute
 import numpy as np
 import pandas as pd
+
+import sklearn.pipeline
+
 import torch
 from torch.utils.data import Dataset
+from typing import Tuple
 
+DEFAULT_DTYPE = torch.get_default_dtype()
 
 class PeptideDatasetInMemory(Dataset):
     """Peptide Dataset fully in memory."""
@@ -36,8 +40,8 @@ class PeptideDatasetInMemory(Dataset):
                 self.mask, self.nan, self.peptides)
 
         self.peptides = torch.where(self.peptides.isnan(),
-                            torch.FloatTensor([fill_na]), self.peptides)
-        
+                                    torch.FloatTensor([fill_na]), self.peptides)
+
         self.length_ = len(self.peptides)
 
     def __len__(self):
@@ -47,12 +51,53 @@ class PeptideDatasetInMemory(Dataset):
         return self.peptides[idx], self.mask[idx], self.y[idx]
 
 
-class PeptideDatasetInMemoryMasked(Dataset):
+def to_tensor(s: pd.Series) -> torch.Tensor:
+    return torch.from_numpy(s.values).type(DEFAULT_DTYPE)
+
+
+class DatasetWithMaskAndNoTarget(Dataset):
+
+    # nan = torch.tensor(np.float32('NaN'))
+    # if res.dtype is torch.float64: return res.float()
+
+    def __init__(self, df: pd.DataFrame, transformer: sklearn.pipeline.Pipeline = None):
+        if not issubclass(type(df), pd.DataFrame):
+            raise ValueError(
+                f'please pass a pandas DataFrame, not: {type(df) = }')
+        self.mask_obs = df.isna()  # .astype('uint8') # in case 0,1 is preferred
+        self.columns = df.columns
+        self.transformer = transformer
+        if transformer:
+            if hasattr(transformer, 'transform'):
+                df = transformer.transform(df)
+            else:
+                raise AttributeError(
+                    f'{type(transformer)} is not sklearn compatible, has no inverse_transform.')
+        self.data = df
+        self.length_ = len(self.data)
+
+    def __len__(self):
+        return self.length_
+
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
+        mask = self.mask_obs.iloc[idx]
+        data = self.data.iloc[idx]
+        mask, data = to_tensor(mask), to_tensor(data)
+        return  mask, data
+
+class DatasetWithTarget(DatasetWithMaskAndNoTarget):
+
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mask, data = super().__getitem__(idx)
+        return  mask, data, data
+
+class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
     
     Dataset: torch.utils.data.Dataset
     """
-    def __init__(self, data: pd.DataFrame, fill_na=0, device=None):
+
+    def __init__(self, *args, fill_na=0, **kwargs):
         """[summary]
 
         Parameters
@@ -62,25 +107,17 @@ class PeptideDatasetInMemoryMasked(Dataset):
         fill_na : int, optional
             value to fill missing values, by default 0
         """
-        assert np.isnan(data).sum() > 0, "There a no missing values in the data."
-        # ensure copy? https://stackoverflow.com/a/52103839/9684872
-        # https://numpy.org/doc/stable/reference/routines.array-creation.html#routines-array-creation
-        self.mask_obs = torch.from_numpy(np.isfinite(data))
-        # data = data.fillna(fill_na)
-        self.peptides = torch.from_numpy(np.nan_to_num(data, nan=fill_na))
-        self.length_ = len(data)
+        self.fill_na = fill_na
+        super().__init__(*args, **kwargs)
+        self.data.fillna(self.fill_na, inplace=True)
 
-    def __len__(self):
-        return self.length_
-
-    def __getitem__(self, idx):
-        return self.peptides[idx], self.mask_obs[idx]
 
 class PeptideDatasetInMemoryNoMissings(Dataset):
     """Peptide Dataset fully in memory.
     
     Dataset: torch.utils.data.Dataset
     """
+
     def __init__(self, data: pd.DataFrame, transform=None):
         """Create {} instance.
 
@@ -92,7 +129,8 @@ class PeptideDatasetInMemoryNoMissings(Dataset):
         transform : Callable
             Series of transform to be performed on the training data
         """.format(self.__class__.__name__)
-        assert np.isnan(data).sum().sum() == 0, f"There are {int(np.isnan(data).sum())} missing values."
+        assert np.isnan(data).sum().sum(
+        ) == 0, f"There are {int(np.isnan(data).sum())} missing values."
         self.peptides = np.array(data)
         self.transform = transform
         self.length_ = len(data)
