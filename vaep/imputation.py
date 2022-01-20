@@ -94,13 +94,12 @@ def imputation_KNN(data, alone=True, threshold=0.5):
         Threshold of missing data by column in interval (0, 1)
     """
     mask_selected = _select_data(data=data, threshold=threshold)
-    data_selected = data.loc[:, mask_selected]
+    data_selected = data.loc[:, mask_selected].copy()
     data_selected_sparse = _sparse_coo_array(data_selected)
     # impute
     knn_fitted = NearestNeighbors(n_neighbors=3, algorithm='brute').fit(
         data_selected_sparse)
     fit_distances, fit_neighbors = knn_fitted.kneighbors(data_selected_sparse)
-
     for i, (distances, ids) in enumerate(zip(fit_distances, fit_neighbors)):
         mean_imputed = _get_weighted_mean(distances, data_selected.loc[ids])
         if all(distances == 0.0):
@@ -111,7 +110,7 @@ def imputation_KNN(data, alone=True, threshold=0.5):
                 "for ids: {}".format(ids[distances == 0.0])
             )
         mask = data_selected.iloc[i].isna()
-        data_selected.loc[i, mask] = mean_imputed.loc[mask]
+        data_selected.loc[i, mask] = mean_imputed.loc[mask] # SettingWithCopyError
 
     data.update(data_selected)
     return data

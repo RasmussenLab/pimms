@@ -1,6 +1,10 @@
 from collections import namedtuple
+from operator import index
+from pathlib import Path
 from types import SimpleNamespace
+from typing import Tuple
 import itertools
+import random
 
 import numpy as np
 import pandas as pd
@@ -13,12 +17,17 @@ from sklearn.decomposition import PCA
 from sklearn.feature_selection import SelectFwe
 from sklearn.impute import SimpleImputer
 
-
+import vaep
 from vaep.pandas import _add_indices
+from vaep.io.datasplits import long_format, wide_format
 
 from . import metadata
 
+__doc__ = 'A collection of Analyzers to perform certain type of analysis.'
+
+
 ALPHA = 0.5
+
 
 class Analysis(SimpleNamespace):
 
@@ -40,16 +49,141 @@ class AnalyzePeptides(SimpleNamespace):
     Many more attributes are set dynamically depending on the concrete analysis.
     """
 
-    def __init__(self, fname, nrows=None):
-        self.df = self.read_csv(fname, nrows=nrows)
+    def __init__(self, data,
+                 is_log_transformed: bool = False,
+                 is_wide_format: bool = True, ind_unstack: str = '',):
+        if not is_wide_format:
+            if not ind_unstack:
+                raise ValueError("Please specify index level for unstacking via "
+                                 f"'ind_unstack' from: {data.index.names}")
+            data = data.unstack(ind_unstack)
+            is_wide_format = True
+        self.df = data  # assume wide
         self.N, self.M = self.df.shape
-        assert f'N{self.N:05d}' in str(fname) and f'M{self.M:05d}' in str(fname), \
-            f"Filename number don't match loaded numbers: {fname} should contain N{self.N} and M{self.M}"
         self.stats = SimpleNamespace()
-        self.is_log_transformed = False
+        self.is_log_transformed = is_log_transformed
+        self.is_wide_format = is_wide_format
+        self.index_col = self.df.index.name
 
-    def read_csv(self, fname, nrows):
-        return pd.read_csv(fname, index_col=0, low_memory=False, nrows=nrows)
+    @classmethod
+    def from_file(cls, fname, nrows=None,
+                  index_col='Sample ID',  # could be potentially 0 for the first column
+                  verify_fname=False,  **kwargs):
+        df = read_csv(fname, nrows=nrows, index_col=index_col)
+        N, M = df.shape
+        if verify_fname:
+            assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
+                ("Filename number don't match loaded numbers: "
+                 f"{fname} should contain N{N} and M{M}")
+        return cls(data=df, **kwargs)
+
+    def get_consecutive_dates(self, n_samples, seed=42):
+        """Select n consecutive samples using a seed.
+        
+        Updated the original DataFrame attribute: df
+        """
+        self.df.sort_index(inplace=True)
+        n_samples = min(len(self.df), n_samples) if n_samples else len(self.df)
+        print(f"Get {n_samples} samples.")
+
+        if seed:
+            random.seed(42)
+
+        _attr_name = f'df_{n_samples}'
+        setattr(self, _attr_name, get_consecutive_data_indices(self.df, n_samples))
+        print("Training data referenced unter:", _attr_name)
+        self.df = getattr(self, _attr_name)
+        print("Updated attribute: df")
+        return self.df
+
+    @property
+    def df_long(self):
+        if hasattr(self, '_df_long'):
+            return self._df_long
+        return self.to_long_format(colname_values='intensity', index_name=self.index_col)
+
+    def to_long_format(self, colname_values: str = 'intensity', index_name: str = 'Sample ID', inplace: str = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        colname_values : str, optional
+            New column name for values in matrix, by default 'intensity'
+        index_name : str, optional
+            Name of column to assign as index (based on long-data format), by default 'Sample ID'
+        inplace : bool, optional
+            Assign result to df_long (False), or to df (True) attribute, by default False
+        Returns
+        -------
+        pd.DataFrame
+            Data in long-format as DataFrame
+        """
+
+        """Build long data view."""
+        if not self.is_wide_format:
+            return self.df
+        if hasattr(self, '_df_long'):
+            return self._df_long  # rm attribute to overwrite
+
+        df_long = long_format(
+            self.df,
+            colname_values=colname_values,
+            # index_name=index_name
+        )
+
+        if inplace:
+            self.df = df_long
+            self.is_wide_format = False
+            return self.df
+        self._df_long = df_long
+        return df_long
+
+    @property
+    def df_wide(self):
+        return self.to_wide_format()
+
+    def to_wide_format(self, columns: str = 'Sample ID', name_values: str = 'intensity', inplace: bool = False) -> pd.DataFrame:
+        """[summary]
+
+        Parameters
+        ----------
+        columns : str, optional
+            Index level to be shown as columns, by default 'Sample ID'
+        name_values : str, optional
+            Column in long-data format to be used as values, by default 'intensity'
+        inplace : bool, optional
+            Assign result to df_wide (False), or to df (True) attribute, by default False
+
+        Returns
+        -------
+        pd.DataFrame
+            [description]
+        """
+
+        """Build wide data view.
+        
+        Return df attribute in case this is in wide-format. If df attribute is in long-format
+        this is used. If df is wide, but long-format exist, then the wide format is build.
+        
+        
+        """
+        if self.is_wide_format:
+            return self.df
+
+        if hasattr(self, '_df_long'):
+            df = self._df_long
+        else:
+            df = self.df
+
+        df_wide = wide_format(df, columns=columns, name_values=name_values)
+
+        if inplace:
+            self.df = df_wide
+            self.is_wide_format = True
+            return self.df
+        self._df_wide = df_wide
+        print(f"Set attribute: df_wide")
+        return df_wide
 
     def describe_peptides(self, sample_n: int = None):
         if sample_n:
@@ -65,35 +199,54 @@ class AnalyzePeptides(SimpleNamespace):
         """Get prop. of not NA values for each sample."""
         return self.df.notna().sum(axis=1) / self.df.shape[-1]
 
-    def add_metadata(self):
+    def add_metadata(self, add_prop_not_na=True):
         d_meta = metadata.get_metadata_from_filenames(self.df.index)
         self.df_meta = pd.DataFrame.from_dict(
             d_meta, orient='index')
+        self.df_meta.index.name = self.df.index.name
         print(f'Created metadata DataFrame attribute `df_meta`.')
         # add proportion on not NA to meta data
-        self.df_meta['prop_not_na'] = self.get_prop_not_na()
+        if add_prop_not_na:
+            self.df_meta['prop_not_na'] = self.get_prop_not_na()
         print(f'Added proportion of not NA values based on `df` intensities.')
         return self.df_meta
 
     def get_PCA(self, n_components=2, imputer=SimpleImputer):
-        X = imputer().fit_transform(self.df)
+        self.imputer_ = imputer()
+        X = self.imputer_.fit_transform(self.df)
         X = _add_indices(X, self.df)
         assert all(X.notna())
 
-        pca = run_pca(X, n_components=n_components)
+        PCs, self.pca_ = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
-        pca['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
-        return pca
+        PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
+        return PCs
+
+    def calculate_PCs(self, new_df, is_wide=True):
+        if not is_wide:
+            new_df = new_df.unstack()
         
+        X = self.imputer_.transform(new_df)
+        X = _add_indices(X, new_df)
+        PCs = self.pca_.transform(X)
+        PCs = _add_indices(PCs, new_df, index_only=True)
+        PCs.columns = [f'PC {i+1}' for i in range(PCs.shape[-1])]
+        return PCs  
+
+
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
+        if not self.is_wide_format:
+            self.df = self.df.unstack()
+            self.is_wide_format = True
+
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
 
-        pca = self.get_PCA()
-        cols = list(pca.columns)
+        PCs = self.get_PCA()
+        cols = list(PCs.columns)
 
         fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(
             15, 20), constrained_layout=True)
@@ -106,31 +259,20 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by instrument
         ax = axes[0]
-        # for name, group in pca.groupby('ms_instrument'):
-        #     ax.scatter(x=group[cols[0]], y=group[cols[1]], label=name)
-        seaborn.scatterplot(x=pca[cols[0]], y=pca[cols[1]],
-                            hue=pca['ms_instrument'], ax=ax, palette='deep')
-        ax.set_title('by category', fontsize=18)
-        ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
+        seaborn_scatter(df=PCs.iloc[:, :2], fig=fig, ax=ax,
+                        meta=PCs['ms_instrument'], title='by MS instrument')
 
         # by complettness/missingness
         # continues colormap will be a bit trickier using seaborn: https://stackoverflow.com/a/44642014/9684872
         ax = axes[1]
-        ax.set_title('by number on na', fontsize=18)
-        ax.set_xlabel(cols[0])
-        ax.set_ylabel(cols[1])
-        path_collection = ax.scatter(
-            x=cols[0], y=cols[1], c=self.df_meta['prop_not_na'], data=pca, alpha=ALPHA)
-        _ = fig.colorbar(path_collection, ax=ax)
+        plot_scatter(df=PCs.iloc[:, :2], fig=fig, ax=ax,
+                     meta=self.df_meta['prop_not_na'], title='by number on na')
 
         # by dates
         ax = axes[2]
-        ax.set_title('by date', fontsize=18)
-        ax.set_xlabel(cols[0])
-        ax.set_ylabel(cols[1])
-        path_collection = scatter_plot_w_dates(
-            ax, pca, dates=self.df_meta.date, errors='raise')
-        path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
+        plot_date_map(df=PCs.iloc[:, :2], fig=fig,
+                      ax=ax, dates=self.df_meta.date)
+
         return fig
 
     def log_transform(self, log_fct: np.ufunc):
@@ -173,10 +315,102 @@ class AnalyzePeptides(SimpleNamespace):
         items = ("{}".format(k, self.__dict__[k]) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
 
+    # def __dir__(self):
+    #     return sorted(self.__dict__)
+
     @property
     def fname_stub(self):
         assert hasattr(self, 'df'), f'Attribute df is missing: {self}'
         return 'N{:05d}_M{:05d}'.format(*self.df.shape)
+
+
+class LatentAnalysis(Analysis):
+
+    def __init__(self, latent_space: pd.DataFrame, meta_data: pd.DataFrame, model_name: str,
+                 fig_size: Tuple[int, int] = (15, 15), folder: Path = None):
+        self.latent_space, self.meta_data = latent_space, meta_data
+        self.fig_size, self.folder = fig_size, folder
+        self.model_name = model_name
+        self.folder = Path(self.folder) if self.folder else Path('.')
+        assert len(
+            self.latent_space.shape) == 2, "Expected a two dimensional DataFrame."
+        self.latent_dim = self.latent_space.shape[-1]
+        if self.latent_dim > 2:
+            # pca, add option for different methods
+            self.latent_reduced, self.pca_ = run_pca(self.latent_space)
+        else:
+            self.latent_reduced = self.latent_space
+
+    def plot_by_date(self, meta_key: str = 'date', save: bool = True):
+        fig, ax = self._plot(fct=plot_date_map, meta_key=meta_key, save=save)
+        return fig, ax
+
+    def plot_by_category(self, meta_key: str, save: bool = True):
+        fig, ax = self._plot(fct=seaborn_scatter, meta_key=meta_key, save=save)
+        return fig, ax
+
+    def _plot(self, fct, meta_key: str, save: bool = True):
+        try:
+            meta_data = self.meta_data[meta_key]
+        except KeyError:
+            raise ValueError(f"Requested key: '{meta_key}' is not in available,"
+                             f" use: {', '.join(x for x in self.meta_data.columns)}")
+        fig, ax = plt.subplots(figsize=self.fig_size)
+        _ = fct(df=self.latent_reduced, fig=fig, ax=ax,
+                meta=meta_data.loc[self.latent_reduced.index],
+                title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
+        if save:
+            vaep.io_images._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
+                                    folder=self.folder)
+        return fig, ax
+
+
+def read_csv(fname, nrows, index_col=None):
+    return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
+
+def build_metadata_df(filenames:pd.Index) -> pd.DataFrame:
+    """Build a DataFrame based on a list of strings (an Index) to parse.
+    Is strongly coupled to the analysis context.
+
+    Parameters
+    ----------
+    filenames : pd.Index
+        An Iterable with strings.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame with the parsed metadata.
+    """
+    
+    d_meta = metadata.get_metadata_from_filenames(filenames)
+    df_meta = pd.DataFrame.from_dict(d_meta, orient='index')
+    df_meta.index.name = filenames.name
+    return df_meta
+
+def get_consecutive_data_indices(df, n_samples):
+    index = df.sort_index().index
+    start_sample = len(index) - n_samples
+    start_sample = random.randint(0, start_sample)
+    return df.loc[index[start_sample:start_sample+n_samples]]
+
+
+# def long_format(df: pd.DataFrame,
+#                 colname_values: str = 'intensity',
+#                 # index_name: str = 'Sample ID'
+#                 ) -> pd.DataFrame:
+#     # ToDo: Docstring as in class when finalized
+#     df_long = df.stack().to_frame(colname_values)
+#     return df_long
+
+
+# def wide_format(df: pd.DataFrame,
+#                 columns: str = 'Sample ID',
+#                 name_values: str = 'intensity') -> pd.DataFrame:
+#     # ToDo: Docstring as in class when finalized
+#     df_wide = df.pivot(columns=columns, values=name_values)
+#     df_wide = df_wide.T
+#     return df_wide
 
 
 def corr_lower_triangle(df):
@@ -202,19 +436,64 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
     return fig, axes
 
 
-def run_pca(df, n_components=2):
-    """Run PCA on DataFrame.
+def run_pca(df_wide:pd.DataFrame, n_components:int=2) -> Tuple[pd.DataFrame, PCA]:
+    """Run PCA on DataFrame and return result.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame in wide format to fit features on.
+    n_components : int, optional
+        Number of Principal Components to fit, by default 2
 
     Returns
     -------
-    pandas.DataFrame
-        with same indices as in original DataFrame
+    Tuple[pd.DataFrame, PCA]
+        principal compoments of DataFrame with same indices as in original DataFrame,
+        and fitted PCA model of sklearn
     """
     pca = PCA(n_components=n_components)
-    PCs = pca.fit_transform(df)
-    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i, var_explained in enumerate(pca.explained_variance_ratio_)]
-    pca = pd.DataFrame(PCs, index=df.index, columns=cols)
-    return pca
+    PCs = pca.fit_transform(df_wide)
+    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
+            var_explained in enumerate(pca.explained_variance_ratio_)]
+    PCs = pd.DataFrame(PCs, index=df_wide.index, columns=cols)
+    return PCs, pca
+
+
+def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, title: str = 'by date'):
+    if dates is not None and meta is not None:
+        raise ValueError("Only set either dates or meta parameters.")
+        # ToDo: Clean up arguments
+    if dates is None:
+        dates = meta
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
+    ax.set_title(title, fontsize=18)
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    path_collection = scatter_plot_w_dates(
+        ax, df, dates=dates, errors='raise')
+    path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
+
+
+def plot_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
+    ax.set_title(title, fontsize=18)
+    ax.set_xlabel(cols[0])
+    ax.set_ylabel(cols[1])
+    path_collection = ax.scatter(
+        x=cols[0], y=cols[1], c=meta, data=df, alpha=alpha)
+    _ = fig.colorbar(path_collection, ax=ax)
+
+
+def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+    cols = list(df.columns)
+    assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
+    seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
+                        hue=meta, ax=ax, palette='deep')
+    ax.set_title(title, fontsize=18)
+    ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
 
 
 def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
@@ -250,3 +529,20 @@ def add_date_colorbar(mappable, ax, fig):
     _ = fig.colorbar(mappable, ax=ax, ticks=loc,
                      format=mdates.AutoDateFormatter(loc))
     return ax
+
+
+def cast_object_to_category(df: pd.DataFrame) -> pd.DataFrame:
+    """Cast object columns to category dtype.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with columns
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with category columns instead of object columns.
+    """
+    _columns = df.select_dtypes(include='object').columns
+    return df.astype({col: 'category' for col in _columns})

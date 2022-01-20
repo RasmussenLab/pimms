@@ -12,3 +12,8 @@ import vaep
 from vaep.transform import StandardScaler, get_df_fitted_mean_std
 
 
+plt.rcParams.update({'xtick.labelsize': 'xx-large',
+                     'ytick.labelsize': 'xx-large',
+                     'axes.titlesize' : 'xx-large',
+                     'axes.labelsize' : 'xx-large',
+                    })
