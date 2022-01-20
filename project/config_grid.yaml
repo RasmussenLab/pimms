@@ -1,0 +1,16 @@
+batch_size:
+- 32
+- 64
+epochs:
+- 30
+hidden_layers:
+- 1
+- 2
+- 3
+- 4
+latend_dim:
+- 10
+- 25
+- 50
+- 75
+- 100
