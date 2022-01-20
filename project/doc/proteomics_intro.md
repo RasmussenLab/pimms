@@ -1,4 +1,4 @@
-### Lennart Martens - [Introduction to Prteomics videos](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl)
+## Lennart Martens - [Introduction to Prteomics videos](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl)
 - Digitalizer: Transform an analog signal into a digital signal
 
 - Ionization Types
@@ -36,11 +36,15 @@
 
 
 
-# Introduction to proteomics
+## Introduction to proteomics
 Given by Jeppe Madsen and Martin Rzkær
 
 > Support-Request: SUND-CPR-Mssupport
 > E-Mail Subject: CC-QE1-ISSUE
+
+## Blog articles
+
+- FAIMS, DDA and DIA - ideas and performance comparisons, [thermo-fischer 2020-04-23](https://www.technologynetworks.com/analysis/articles/how-faims-is-changing-the-game-in-proteomics-333843)
 
 
 ## Mass Spectrometry
@@ -161,6 +165,9 @@ Valine          | Val | V    |  99.06841
 Term   | meaning
 ----   | ---
 c-Trap | Meaning of c? collects one million particles before forwarding them
+cv     | compensation voltage (in FAIMS)
 elute  | remove (an adsorbed substance) by washing with a solvent, especially in chromatography
+FAIMS  | high-field asymmetric waveform ion mobility spectrometry
 HCD    | 
+gcf    | gas phase fractionation
 XIC    | Extracted Ion  Current

@@ -5,9 +5,17 @@
 *.pyc
 
 #folders
+project/_archiv
 project/data/*
+!project\data\all_raw_files_dump.txt
 project/tutorials/
 project/tex/
+project/logs/
+project/runs/
+
+# exclude builds
+docs/_* 
+
 
 !project/data/README.md
 project/Figures/
@@ -29,5 +37,9 @@ workflows/maxquant/out/
 *.e
 *.o
 
+# remove temp/hidden folders
+.*/
 
-
+# builds
+docs/_*
+docs/source
