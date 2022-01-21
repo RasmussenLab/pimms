@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import List, Tuple
+from typing import List, Tuple, Union
 import json
 from pathlib import Path, PurePath, PurePosixPath
 
@@ -65,18 +65,36 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     return directories
 
 
-def dump_json(data_dict: dict, filename):
-    """Dump dictionary as json.
+def dump_json(data_dict: dict, filename: Union[str, Path]):
+    """Dump dictionary as JSON.
 
     Parameters
     ----------
     data_dict : dict
-        [description]
-    filename : [type]
-        [description]
+        Dictionary with valid JSON entries to dump.
+    filename : Union[str, Path]
+        Filepath to save dictionary as JSON.
     """
     with open(filename, 'w') as f:
         json.dump(obj=data_dict, fp=f, indent=4)
+
+
+def load_json(fname: Union[str, Path]) -> dict:
+    """Load JSON from disc.
+
+    Parameters
+    ----------
+    fname : Union[str, Path]
+        Filepath to JSON on disk.
+
+    Returns
+    -------
+    dict
+        Loaded JSON file.
+    """
+    with open(Path(fname)) as f:
+        d = json.load(f)
+    return d
 
 
 def parse_dict(input_dict: dict,
