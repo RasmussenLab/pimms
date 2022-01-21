@@ -29,8 +29,17 @@ rule all:
         epochs= GRID["epochs"],
         batch_size = GRID['batch_size']
         ),
-        f"{FOLDER}/all_metrics.json",
+        f"{FOLDER}/analysis_metrics.ipynb",
 
+rule analyze_metrics:
+    input:
+        metrics = "{folder}/all_metrics.json",
+        nb = "14_experiment_03_hyperpara_analysis.ipynb"
+    output:
+        "{folder}/analysis_metrics.ipynb"
+    shell:
+        "papermill {input.nb} {output}"
+        " -p metrics_json {input.metrics}"
 
 rule collect_metrics:
     input:
