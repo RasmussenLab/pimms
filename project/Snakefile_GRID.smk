@@ -16,6 +16,7 @@ FOLDER = config['FOLDER']
 pathlib.Path(FOLDER).mkdir(parents=True, exist_ok=True)
 
 name_template = config['name_template']
+DATA = config['DATA']
 
 
 rule all:
@@ -58,7 +59,8 @@ rule collect_metrics:
 
 rule execute_nb:
     input:
-        nb = "14_experiment_03_latent_space_analysis.ipynb"
+        nb = "14_experiment_03_latent_space_analysis.ipynb",
+        data = "{folder}/data"
     output:
         nb = f"{{folder}}/{name_template}/{name_template}.ipynb",
         metrics = f"{{folder}}/{name_template}/metrics.json"
@@ -66,6 +68,7 @@ rule execute_nb:
         out_folder = f"{{folder}}/{name_template}"
     shell:
         "papermill {input.nb} {output.nb}"
+        " -p data {input.data}"
         " -p latend_dim {wildcards.latend_dim}"
         " -p hidden_layers {wildcards.hidden_layers}"
         " -p n_epochs {wildcards.epochs}"
@@ -85,3 +88,19 @@ rule covert_to_md:
         ]
         for c in commands:
             shell(c)
+
+
+rule data_splits:
+    input:
+        DATA
+    output:
+        data = directory("{folder}/data"),
+        nb="{folder}/data_selection.ipynb"
+        #  / '{folder}/freq_train.csv'
+    params:
+        query = config['QUERY_SUBSET']
+    shell:
+        "papermill 14_experiment_03_data.ipynb {output.nb}"
+        ' -p query_subset_meta  "{params.query}"'
+        " -p FN_PEPTIDE_INTENSITIES {input}"
+        " -p experiment_folder {wildcards.folder}"
