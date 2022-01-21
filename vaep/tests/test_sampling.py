@@ -40,7 +40,7 @@ def test_frequency_by_index(example_data):
                                   sample_index_to_drop=0))
 
 
-def test_sampling(random_data):
+def test_sample_data(random_data):
     X = random_data
     freq = feature_frequency(X)
     excluded_feat = freq.sample(2).index.to_list()

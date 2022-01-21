@@ -170,6 +170,7 @@ def flatten_dict_of_dicts(d: dict, parent_key: str = '') -> dict:
     dict
         Flattend dictionary with tuple keys: {(outer_key, ..., inner_key) : value}
     """
+    # simplified and adapted from: https://stackoverflow.com/a/6027615/9684872
     items = []
     for k, v in d.items():
         new_key = parent_key + (k,) if parent_key else (k,)
