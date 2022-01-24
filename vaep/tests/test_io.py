@@ -1,6 +1,9 @@
+from pathlib import Path
+
 import numpy as np
 import numpy.testing as npt
 
+import vaep.io 
 from vaep.io.datasets import PeptideDatasetInMemory
 
 data = np.random.random(size=(10,5))
@@ -18,3 +21,9 @@ def test_PeptideDatasetInMemory_wo_Mask():
     npt.assert_array_equal(train_ds.peptides == 0.0, ~mask)
 
 
+def test_relative_to():
+    fpath = Path('project/runs/experiment_name/run')
+    to  = 'project/runs/' # per defaut '.' (the current working directory)
+    expected =  Path('experiment_name/run')
+    acutal = vaep.io.resolve_path(fpath, to)
+    assert expected == acutal
