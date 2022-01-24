@@ -65,6 +65,14 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     return directories
 
 
+def resolve_path(path:Union[str, Path], to:Union[str, Path]='.')-> Path:
+    """Resolve a path partly overlapping with to another path."""
+    pwd = Path(to).absolute()
+    pwd = [p for p in pwd.parts]
+    ret = [p for p in Path(path).parts  if p not in pwd]
+    return Path('/'.join(ret))
+
+
 def dump_json(data_dict: dict, filename: Union[str, Path]):
     """Dump dictionary as JSON.
 
