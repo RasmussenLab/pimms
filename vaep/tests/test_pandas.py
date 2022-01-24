@@ -50,3 +50,42 @@ def test_flatten_dict_of_dicts():
     actual = vaep.pandas.flatten_dict_of_dicts(data)
 
     assert expected == actual
+
+
+def test_key_map():
+    # Build a schema of dicts
+    d = {'one': {'alpha': {'a': 0.5, 'b': 0.3}},
+         'two': {'beta': {'a': 0.7, 'b': 0.5},
+                 'gamma': {'a': 0.8, 'b': 0.9}},
+         'three': {'alpha': {'a': 0.4, 'b': 0.4},
+                   'beta': {'a': 0.6, 'b': 0.5},
+                   'gamma': {'a': 0.7, 'b': 0.6},
+                   'delta': {'a': 0.2, 'b': 0.8}}
+         }
+    expected = {'one': {'alpha': ('a', 'b')},
+                'two': {'beta': ('a', 'b'),
+                        'gamma': ('a', 'b')},
+                'three': {'alpha': ('a', 'b'),
+                          'beta': ('a', 'b'),
+                          'gamma': ('a', 'b'),
+                          'delta': ('a', 'b')}}
+    actual = vaep.pandas.key_map(d)
+    assert expected == actual
+
+    d = {'one': {'alpha': {'a': 0.5, 'b': 0.3}},
+         'two': {'beta': {'a': 0.7, 'b': 0.5},
+                 'gamma': {'a': 0.8, 'b': 0.9}},
+         'three': {'alpha': {'a': 0.4, 'b': 0.4},
+                   'beta': {'a': 0.6, 'b': 0.5},
+                   'gamma': {'a': 0.7, 'b': 0.6},
+                   'delta': 3}
+         }
+    expected = {'one': {'alpha': ('a', 'b')},
+                'two': {'beta': ('a', 'b'),
+                        'gamma': ('a', 'b')},
+                'three': {'alpha': ('a', 'b'),
+                          'beta': ('a', 'b'),
+                          'gamma': ('a', 'b'),
+                          'delta': None}}
+    actual = vaep.pandas.key_map(d)
+    assert expected == actual

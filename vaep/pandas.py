@@ -179,3 +179,34 @@ def flatten_dict_of_dicts(d: dict, parent_key: str = '') -> dict:
         else:
             items.append((new_key, v))
     return dict(items)
+
+
+
+def key_map(d: dict)-> dict:
+    """Build a schema of dicts
+
+    Parameters
+    ----------
+    d : dict
+        dictionary of dictionaries
+
+    Returns
+    -------
+    dict
+        Key map of dictionaries
+    """
+    ret = {}
+    _keys = ()
+    for k, v in d.items():
+        if isinstance(v, dict):
+            ret[k] = key_map(v)
+        else:
+            _keys = (_keys) + (k, )
+    if _keys:
+        if ret:
+            print(f"Dictionaries are not of the same length: {_keys = } and {ret = }")
+            for k in _keys:
+                ret[k] = None
+        else:
+            return _keys       
+    return ret

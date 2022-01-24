@@ -7,10 +7,11 @@ import pandas as pd
 from vaep.io.datasplits import long_format
 
 
-def sample_iterable(iterable: dict, n=10):
+def sample_iterable(iterable: dict, n=10) -> list:
     """Sample some keys from a given dictionary."""
     n_examples_ = n if len(iterable) > n else len(iterable)
-    sample_ = sample(iterable, n_examples_)
+    keys = list(iterable)
+    sample_ = sample(keys, n_examples_)
     return sample_
 
 
