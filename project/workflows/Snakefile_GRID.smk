@@ -1,8 +1,8 @@
 import pathlib
 
 
-configfile: "config_grid.yaml"
-configfile: "config_paths.yaml"
+configfile: "config/config_grid.yaml"
+configfile: "config/config_paths.yaml"
 
 GRID = {k:config[k] 
         for k 
@@ -101,7 +101,8 @@ rule covert_to_md:
 
 rule data_splits:
     input:
-        DATA
+        file = DATA,
+        nb = "14_experiment_03_data.ipynb"
     output:
         data = directory("{folder}/data"),
         nb="{folder}/data_selection.ipynb"
@@ -109,7 +110,7 @@ rule data_splits:
     params:
         query = config['QUERY_SUBSET']
     shell:
-        "papermill 14_experiment_03_data.ipynb {output.nb}"
+        "papermill {input.nb} {output.nb}"
         ' -p query_subset_meta  "{params.query}"'
-        " -p FN_PEPTIDE_INTENSITIES {input}"
+        " -p FN_PEPTIDE_INTENSITIES {input.file}"
         " -p experiment_folder {wildcards.folder}"
