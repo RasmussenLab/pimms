@@ -22,7 +22,16 @@ DATA = config['DATA']
 rule all:
     input:
         expand(
-        f"{{folder}}/{name_template}/metrics.json",
+        f"{{folder}}/{name_template}{{files}}",
+        folder=FOLDER,
+        hidden_layers= GRID['hidden_layers'],
+        latend_dim= GRID['latend_dim'],
+        epochs= GRID["epochs"],
+        batch_size = GRID['batch_size'],
+        files = ['/metrics.json']#, f'/{name_template}.md']
+        ),
+        expand(
+        f"{{folder}}/{name_template}/{name_template}.md",
         folder=FOLDER,
         hidden_layers= GRID['hidden_layers'],
         latend_dim= GRID['latend_dim'],
