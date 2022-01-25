@@ -117,7 +117,7 @@ def _add_indices(array, original_df, index_only=False):
     return pd.DataFrame(array, index=index, columns=columns)
 
 
-def interpolate(wide_df: pd.DataFrame, name='replicates'):
+def interpolate(wide_df: pd.DataFrame, name='interpolated'):
     """Interpolate NA values with the values before and after.
     Uses n=3 replicates.
     First rows replicates are the two following. 
@@ -150,7 +150,7 @@ def interpolate(wide_df: pd.DataFrame, name='replicates'):
     ret.iloc[0] = first_row
     ret.iloc[-1] = last_row
 
-    ret = ret[mask].stack().dropna()
+    ret = ret[mask].stack().dropna().squeeze()
     ret.rename(name, inplace=True)
     return ret
 
