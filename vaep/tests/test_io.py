@@ -23,7 +23,15 @@ def test_PeptideDatasetInMemory_wo_Mask():
 
 def test_relative_to():
     fpath = Path('project/runs/experiment_name/run')
-    to  = 'project/runs/' # per defaut '.' (the current working directory)
+    pwd  = 'project/runs/' # per defaut '.' (the current working directory)
     expected =  Path('experiment_name/run')
-    acutal = vaep.io.resolve_path(fpath, to)
+    acutal = vaep.io.resolve_path(fpath, pwd)
     assert expected == acutal
+
+    # # no solution yet, expect chaning notebook pwd
+    # fpath = Path('data/file')
+    # # pwd is different subfolder
+    # pwd  = 'root/home/project/runs/' # per defaut '.' (the current working directory)
+    # expected =  Path('root/home/project/data/file')
+    # acutal = vaep.io.resolve_path(fpath, pwd)
+    # assert expected == acutal
