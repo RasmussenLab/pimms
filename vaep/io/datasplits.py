@@ -163,7 +163,7 @@ class DataSplits():
 
 def load_items(folder: str, items: dict, use_wide_format=False) -> dict:
     folder = Path(folder)
-    assert folder.exists(), 'Could not find folder: {folder}'
+    assert folder.exists(), f'Could not find folder: {folder}'
     args = {}
     for _attr, _cls in items.items():
         # assert issubclass(_cls, (pd.DataFrame, pd.Series)) # now strings, see
