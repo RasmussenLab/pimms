@@ -8,11 +8,10 @@ from typing import Tuple, List, Callable
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import torch 
 from fastcore.foundation import L
 from fastai import learner
-
 import sklearn.metrics as sklm
-
 
 from . import ae
 
@@ -54,6 +53,13 @@ def plot_loss(recorder: learner.Recorder,
     return ax
 
 
+def calc_net_weight_count(model: torch.nn.modules.module.Module) -> int:
+    model.train()
+    model_params = filter(lambda p: p.requires_grad, model.parameters())
+    weight_count = 0
+    for param in model_params:
+        weight_count += np.prod(param.size())
+    return int(weight_count)
 
 class RecorderDump:
     """Simple Class to hold fastai Recorder Callback data for serialization using pickle.
