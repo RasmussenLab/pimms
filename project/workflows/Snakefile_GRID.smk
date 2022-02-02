@@ -7,7 +7,7 @@ configfile: "config/config_paths.yaml"
 GRID = {k:config[k] 
         for k 
         in ['epochs',
-            'latend_dim',
+            'latent_dim',
             'hidden_layers',
             'batch_size']
         }
@@ -25,7 +25,7 @@ rule all:
         f"{{folder}}/{name_template}{{files}}",
         folder=FOLDER,
         hidden_layers= GRID['hidden_layers'],
-        latend_dim= GRID['latend_dim'],
+        latent_dim= GRID['latent_dim'],
         epochs= GRID["epochs"],
         batch_size = GRID['batch_size'],
         files = ['/metrics.json']#, f'/{name_template}.md']
@@ -34,7 +34,7 @@ rule all:
         f"{{folder}}/{name_template}/{name_template}.md",
         folder=FOLDER,
         hidden_layers= GRID['hidden_layers'],
-        latend_dim= GRID['latend_dim'],
+        latent_dim= GRID['latent_dim'],
         epochs= GRID["epochs"],
         batch_size = GRID['batch_size']
         ),
@@ -56,7 +56,7 @@ rule collect_metrics:
         f"{{folder}}/{name_template}/metrics.json",
         folder=FOLDER,
         hidden_layers= GRID['hidden_layers'],
-        latend_dim= GRID['latend_dim'],
+        latent_dim= GRID['latent_dim'],
         epochs= GRID["epochs"],
         batch_size = GRID['batch_size']
         )
@@ -87,7 +87,7 @@ rule execute_nb:
     shell:
         "papermill {input.nb} {output.nb}"
         " -p data {input.data}"
-        " -p latend_dim {wildcards.latend_dim}"
+        " -p latent_dim {wildcards.latent_dim}"
         " -p hidden_layers {wildcards.hidden_layers}"
         " -p n_epochs {wildcards.epochs}"
         " -p out_folder {params.out_folder}"

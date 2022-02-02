@@ -8,7 +8,7 @@ hidden_layers:
 - 2
 - 3
 - 4
-latend_dim:
+latent_dim:
 - 10
 - 25
 - 50
