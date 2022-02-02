@@ -43,12 +43,14 @@ rule all:
 rule analyze_metrics:
     input:
         metrics = "{folder}/all_metrics.json",
+        configs = "{folder}/all_configs.json",
         nb = "14_experiment_03_hyperpara_analysis.ipynb"
     output:
         "{folder}/analysis_metrics.ipynb"
     shell:
         "papermill {input.nb} {output}"
         " -p metrics_json {input.metrics}"
+        " -p configs_json {input.configs}"
 
 rule collect_metrics:
     input:
@@ -70,9 +72,33 @@ rule collect_metrics:
             key = Path(fname).parent.name
             with open(fname) as f:
                 all_metrics[key] = json.load(f)
-            
         with open(output.out, 'w') as f:
             json.dump(all_metrics, f)
+
+
+rule collect_all_configs:
+    input:
+        expand(
+        f"{{folder}}/{name_template}/model_config.yml",
+        folder=FOLDER,
+        hidden_layers= GRID['hidden_layers'],
+        latent_dim= GRID['latent_dim'],
+        epochs= GRID["epochs"],
+        batch_size = GRID['batch_size']
+        )
+    output:
+        out = "{folder}/all_configs.json",
+    run:
+        import json
+        import yaml
+        from pathlib import Path
+        all = {}
+        for fname in input:
+            key = Path(fname).parent.name
+            with open(fname) as f:
+                all[key] = yaml.safe_load(f)
+        with open(output.out, 'w') as f:
+            json.dump(all, f)
 
 
 rule execute_nb:
@@ -81,7 +107,8 @@ rule execute_nb:
         data = "{folder}/data"
     output:
         nb = f"{{folder}}/{name_template}/{name_template}.ipynb",
-        metrics = f"{{folder}}/{name_template}/metrics.json"
+        metrics = f"{{folder}}/{name_template}/metrics.json",
+        config = f"{{folder}}/{name_template}/model_config.yml",
     params:
         out_folder = f"{{folder}}/{name_template}"
     shell:
