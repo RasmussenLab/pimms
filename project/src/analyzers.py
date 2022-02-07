@@ -66,9 +66,9 @@ class AnalyzePeptides(SimpleNamespace):
         self.index_col = self.df.index.name
 
     @classmethod
-    def from_file(cls, fname, nrows=None,
-                  index_col='Sample ID',  # could be potentially 0 for the first column
-                  verify_fname=False,  **kwargs):
+    def from_file(cls, fname:str, nrows:int=None,
+                  index_col:str='Sample ID',  # could be potentially 0 for the first column
+                  verify_fname:bool=False,  **kwargs):
         df = read_csv(fname, nrows=nrows, index_col=index_col)
         N, M = df.shape
         if verify_fname:
@@ -365,7 +365,7 @@ class LatentAnalysis(Analysis):
         return fig, ax
 
 
-def read_csv(fname, nrows, index_col=None):
+def read_csv(fname:str, nrows:int, index_col:str=None)-> pd.DataFrame:
     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
 def build_metadata_df(filenames:pd.Index) -> pd.DataFrame:
