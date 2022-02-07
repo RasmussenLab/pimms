@@ -118,16 +118,15 @@ class DataSplits():
             setattr(self, _attr, _df)
         self._is_wide = True
     
-    def to_long_format(self):
+    def to_long_format(self, name_values:str='intensity'):
         if not self._is_wide: 
             return
         
         for _attr, _df in self:
             if _df is None:
                 continue
-            index_name = _df.columns.name
             _series = _df.stack()
-            _series.index.name = index_name
+            _series.name = name_values
             setattr(self, _attr, _series)
         self._is_wide = False
 
