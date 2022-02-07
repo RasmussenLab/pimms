@@ -119,6 +119,7 @@ rule execute_nb:
         " -p n_epochs {wildcards.epochs}"
         " -p out_folder {params.out_folder}"
         " -p batch_size {wildcards.batch_size}"
+        " -p force_train True"
 
 
 rule covert_to_md:
