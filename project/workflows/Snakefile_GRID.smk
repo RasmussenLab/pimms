@@ -142,8 +142,8 @@ rule data_splits:
         nb = "14_experiment_03_data.ipynb"
     output:
         data = directory("{folder}/data"),
-        nb="{folder}/data_selection.ipynb"
-        #  / '{folder}/freq_train.csv'
+        nb="{folder}/data_selection.ipynb",
+        freq="{folder}/data/freq_train.csv"
     params:
         query = config['QUERY_SUBSET']
     shell:
