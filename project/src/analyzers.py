@@ -68,8 +68,13 @@ class AnalyzePeptides(SimpleNamespace):
     @classmethod
     def from_file(cls, fname:str, nrows:int=None,
                   index_col:str='Sample ID',  # could be potentially 0 for the first column
-                  verify_fname:bool=False,  **kwargs):
-        df = read_csv(fname, nrows=nrows, index_col=index_col)
+                  verify_fname:bool=False,
+                  usecols=None,
+                  **kwargs):
+        df = pd.read_csv(fname, index_col=index_col, low_memory=False,
+                         nrows=nrows, usecols=usecols)
+        if usecols and isinstance(index_col, str):
+            assert index_col in usecols, 'Add index_col to usecols Sequence'
         N, M = df.shape
         if verify_fname:
             assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
@@ -365,8 +370,8 @@ class LatentAnalysis(Analysis):
         return fig, ax
 
 
-def read_csv(fname:str, nrows:int, index_col:str=None)-> pd.DataFrame:
-    return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
+# def read_csv(fname:str, nrows:int, index_col:str=None)-> pd.DataFrame:
+#     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
 def build_metadata_df(filenames:pd.Index) -> pd.DataFrame:
     """Build a DataFrame based on a list of strings (an Index) to parse.
