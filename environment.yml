@@ -28,6 +28,7 @@ dependencies:
   - tqdm
   - xmltodict
   - openpyxl
+  - omegaconf
   - pandas-profiling
   - papermill
   - snakemake-minimal

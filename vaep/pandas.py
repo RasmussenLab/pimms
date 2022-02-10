@@ -1,10 +1,12 @@
 import collections.abc
 from collections import namedtuple
 from types import SimpleNamespace
+
+import numpy as np
 import pandas as pd
 
 
-def combine_value_counts(X: pd.DataFrame, dropna=True):
+def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     """Pass a selection of columns to combine it's value counts.
 
     This performs no checks. Make sure the scale of the variables
@@ -31,7 +33,7 @@ def combine_value_counts(X: pd.DataFrame, dropna=True):
     return freq_targets
 
 
-def unique_cols(s: pd.Series):
+def unique_cols(s: pd.Series) -> bool:
     """Check all entries are equal in pandas.Series
 
     Ref: https://stackoverflow.com/a/54405767/968487
@@ -49,7 +51,7 @@ def unique_cols(s: pd.Series):
     return (s.iloc[0] == s).all()
 
 
-def get_unique_non_unique_columns(df: pd.DataFrame):
+def get_unique_non_unique_columns(df: pd.DataFrame) -> SimpleNamespace:
     """Get back a namespace with an column.Index both
     of the unique and non-unique columns.
 
@@ -71,7 +73,7 @@ def get_unique_non_unique_columns(df: pd.DataFrame):
     return columns
 
 
-def get_columns_namedtuple(df: pd.DataFrame):
+def get_columns_namedtuple(df: pd.DataFrame) -> namedtuple:
     """Create namedtuple instance of column names.
     Spaces in column names are replaced with underscores in the look-up.
 
@@ -91,7 +93,7 @@ def get_columns_namedtuple(df: pd.DataFrame):
     return ColumnsNamedTuple(**{k: v for k, v in zip(column_keys, columns)})
 
 
-def highlight_min(s):
+def highlight_min(s:pd.Series) -> list:
     """Highlight the min in a Series yellow for using in pandas.DataFrame.style
 
     Parameters
@@ -109,7 +111,8 @@ def highlight_min(s):
     return ['background-color: yellow' if v else '' for v in to_highlight]
 
 
-def _add_indices(array, original_df, index_only=False):
+def _add_indices(array: np.array, original_df: pd.DataFrame,
+                 index_only: bool = False) -> pd.DataFrame:
     index = original_df.index
     columns = None
     if not index_only:
@@ -117,7 +120,7 @@ def _add_indices(array, original_df, index_only=False):
     return pd.DataFrame(array, index=index, columns=columns)
 
 
-def interpolate(wide_df: pd.DataFrame, name='interpolated'):
+def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
     """Interpolate NA values with the values before and after.
     Uses n=3 replicates.
     First rows replicates are the two following. 
@@ -181,7 +184,6 @@ def flatten_dict_of_dicts(d: dict, parent_key: str = '') -> dict:
     return dict(items)
 
 
-
 def key_map(d: dict)-> dict:
     """Build a schema of dicts
 
@@ -210,3 +212,11 @@ def key_map(d: dict)-> dict:
         else:
             return _keys       
     return ret
+
+
+printable = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ '
+
+def parse_query_expression(s:str, printable:str=printable)-> str:
+    """Parse a query expression for pd.DataFrame.query to a file name.
+    Removes all characters not listed in printable."""
+    return ''.join(filter(lambda x: x in printable, s))
