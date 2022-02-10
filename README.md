@@ -61,6 +61,7 @@ as `mzML` or `mgf`.
 > interactomics to facilitate data comparison, exchange and verification.
 
 1. [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
+2. [MSConvert](https://proteowizard.sourceforge.io/tools.shtml)
 
 
 ### Unsorted
