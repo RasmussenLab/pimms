@@ -103,17 +103,19 @@ rule collect_all_configs:
 
 rule execute_nb:
     input:
+        expand("{{folder}}/data/{split}",
+        split=['train_X', 'val_X', 'test_X', 'val_y', 'test_y', 'freq_train.csv']),
         nb = "14_experiment_03_latent_space_analysis.ipynb",
-        data = "{folder}/data"
     output:
         nb = f"{{folder}}/{name_template}/{name_template}.ipynb",
         metrics = f"{{folder}}/{name_template}/metrics.json",
         config = f"{{folder}}/{name_template}/model_config.yml",
     params:
-        out_folder = f"{{folder}}/{name_template}"
+        out_folder = f"{{folder}}/{name_template}",
+        data = "{folder}/data",
     shell:
         "papermill {input.nb} {output.nb}"
-        " -p data {input.data}"
+        " -p data {params.data}"
         " -p latent_dim {wildcards.latent_dim}"
         " -p hidden_layers {wildcards.hidden_layers}"
         " -p n_epochs {wildcards.epochs}"
@@ -141,9 +143,9 @@ rule data_splits:
         file = DATA,
         nb = "14_experiment_03_data.ipynb"
     output:
-        data = directory("{folder}/data"),
+        expand("{{folder}}/data/{split}",
+        split=['train_X', 'val_X', 'test_X', 'val_y', 'test_y', 'freq_train.csv']),
         nb="{folder}/data_selection.ipynb",
-        freq="{folder}/data/freq_train.csv"
     params:
         query = config['QUERY_SUBSET']
     shell:
