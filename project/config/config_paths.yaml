@@ -1,4 +1,4 @@
-DATA: data/df_intensities_N07285_M01000
+DATA: data/df_intensities_N07813_M10000.csv
 QUERY_SUBSET: ms_instrument in ['QE4', ]
 FOLDER: runs/hyperparameters_1000_peptides
 name_template: run_HL_{hidden_layers}_LD_{latent_dim}_E_{epochs}_BS_{batch_size}
