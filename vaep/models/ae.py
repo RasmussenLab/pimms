@@ -269,7 +269,10 @@ class ModelAdapterFlatPred(DatasetWithTargetAdapter):
         """Remove cont. values from batch (mask)"""
         data = super().before_batch()
         # dropout data using median
-        self.learn.xb = (self.do(data),)
+        if self.learn.training:
+            self.learn.xb = (self.do(data),)
+        else:
+            self.learn.xb = (data,)
 
     def after_pred(self):
         super().after_pred()
