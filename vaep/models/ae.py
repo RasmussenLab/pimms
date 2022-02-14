@@ -60,7 +60,7 @@ def get_preds_from_df(df: pd.DataFrame,
     dl = vaep.io.dataloaders.get_test_dl(df=df,
                                          transformer=transformer,
                                          dataset=dataset)
-    res = learn.get_preds(dl=dl, concat_dim=0, reorder=False)
+    res = learn.get_preds(dl=dl) #, concat_dim=0, reorder=False)
     if position_pred_tuple is not None and issubclass(type(res[0]), tuple):
         res = (res[0][position_pred_tuple], *res[1:])
     res = L(res).map(lambda x: pd.DataFrame(
@@ -299,13 +299,14 @@ class ModelAdapter(ModelAdapterFlatPred):
 
 
 class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
-    """Models forward only expects on input matrix. 
+    """Models forward method only expects one input matrix. 
     Apply mask from dataloader to both pred and targets."""
 
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
         data = super().before_batch()
         self.learn.xb = (data,)
+        # data augmentation here?
 
     def after_pred(self):
         super().after_pred()
