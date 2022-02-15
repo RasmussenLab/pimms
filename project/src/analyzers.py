@@ -18,6 +18,8 @@ from sklearn.feature_selection import SelectFwe
 from sklearn.impute import SimpleImputer
 
 import vaep
+from vaep.analyzers import Analysis
+
 from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
 
@@ -29,11 +31,6 @@ __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 ALPHA = 0.5
 
 
-class Analysis(SimpleNamespace):
-
-    def __repr__(self):
-        ret = super().__repr__()
-        return ret
 
 
 class AnalyzePeptides(SimpleNamespace):

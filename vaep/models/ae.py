@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, List
 
 from torch.nn import functional as F
 import torch.utils.data
@@ -11,9 +11,14 @@ from fastai.tabular.core import Tabular, TabularPandas
 
 import pandas as pd
 
+import sklearn.pipeline
+
 import torch
 from torch import nn
 
+from . import analysis
+import vaep.models
+import vaep.io.datasplits
 import vaep.io.datasets
 import vaep.io.dataloaders
 import vaep.transform
@@ -401,3 +406,40 @@ def loss_fct_vae(pred, y):
                         logvar=logvar,
                         reconstruction_loss=F.binary_cross_entropy)
     return res['loss']
+
+
+
+class AutoEncoderAnalysis(analysis.ModelAnalysis):
+
+    def __init__(self,
+                 datasplits: vaep.io.datasplits.DataSplits,
+                 model:torch.nn.modules.module.Module,
+                 model_kwargs:dict,
+                 transform: sklearn.pipeline.Pipeline,
+                 decode: List[str],
+                 bs=64
+                 ):
+        self.datasplits = datasplits
+        self.transform =  vaep.transform.VaepPipeline(df_train=self.datasplits.train_X,
+                                      encode=transform,
+                                      decode=decode)
+        self.dls = vaep.io.dataloaders.get_dls(self.datasplits.train_X,
+                           self.datasplits.val_X,
+                           transformer=self.transform, bs=bs)
+
+        # M = data.train_X.shape[-1]
+        self.kwargs_model = model_kwargs
+        self.params = dict(self.kwargs_model)
+        self.model = model(**self.kwargs_model)
+        
+        self.n_params_ae = vaep.models.calc_net_weight_count(self.model)
+        self.params['n_parameters'] = self.n_params_ae
+        self.learn = None
+
+        
+    def get_preds_from_df(self, df_wide:pd.DataFrame) -> pd.DataFrame:
+        if self.learn is None: raise ValueError("Assign Learner first as learn attribute.")
+        return get_preds_from_df(df=df_wide, learn=self.learn, transformer=self.transform) 
+    
+    def get_test_dl(self, df_wide:pd.DataFrame, bs:int=64) -> pd.DataFrame:
+        return vaep.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)

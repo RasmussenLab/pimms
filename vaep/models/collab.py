@@ -5,8 +5,15 @@ import pandas as pd
 import torch
 
 import fastai
-from fastai.collab import Module, Embedding, sigmoid_range
-from fastai.collab import EmbeddingDotBias
+# from fastai.collab import Module, Embedding, sigmoid_range
+# from fastai.collab import EmbeddingDotBias
+from fastai.tabular.all import *
+from fastai.collab import *
+
+from . import analysis
+import vaep.io.datasplits
+import vaep.io.dataloaders
+
 
 logger = logging.getLogger(__name__)
 
@@ -149,3 +156,29 @@ def collab_prediction(idx_samples: torch.tensor,
                                         name=learn.model.item),
                        index=index_samples)
     return res
+
+
+class CollabAnalysis(analysis.ModelAnalysis):
+
+    def __init__(self,
+                 datasplits: vaep.io.datasplits.DataSplits,
+                 sample_column='Sample ID',
+                 item_column='peptide',
+                 target_column='intensity',
+                 model_kwargs=dict(),
+                 batch_size=64):
+        self.X, self.frac = combine_data(datasplits.train_X,
+                                         datasplits.val_X)
+        self.batch_size = batch_size
+        self.dls = CollabDataLoaders.from_df(self.X, valid_pct=self.frac,
+                                             seed=42,
+                                             user_name=sample_column,
+                                             item_name=item_column,
+                                             rating_name=target_column,
+                                             bs=self.batch_size)
+        self.params = {}
+        self.model_kwargs = model_kwargs
+        self.params['model_kwargs'] = self.model_kwargs
+
+        self.transform = None  # No data transformation needed
+        self.learn = None
