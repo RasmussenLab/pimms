@@ -14,6 +14,8 @@ from fastai import learner
 import sklearn.metrics as sklm
 
 from . import ae
+from . import analysis
+from . import collab
 
 logger = logging.getLogger(__name__)
 
