@@ -3,6 +3,7 @@ import logging
 from operator import mul
 from pathlib import Path
 import pickle
+import pprint
 from typing import Tuple, List, Callable
 
 import matplotlib.pyplot as plt
@@ -208,8 +209,34 @@ def get_metrics_df(pred_df: pd.DataFrame,
                              in model_pred.index.difference(model_pred_no_na.index)]))
 
         metrics[model_key] = dict(
-            [(k, f(y_true=y_true.loc[model_pred_no_na.index], y_pred=model_pred_no_na))
+            [(k, float(f(y_true=y_true.loc[model_pred_no_na.index],
+                         y_pred=model_pred_no_na)))
              for k, f in scoring]
         )
-    metrics = pd.DataFrame(metrics)
+        metrics[model_key]['N'] = int(len(model_pred_no_na))
+    # metrics = pd.DataFrame(metrics)
     return metrics
+
+
+class Metrics():
+
+    def __init__(self, no_na_key='no_na', with_na_key='with_na', na_column_to_drop=['interpolated']):
+        self.no_na_key, self.with_na_key = no_na_key, with_na_key
+        self.na_column_to_drop = na_column_to_drop
+        self.metrics = {self.no_na_key: {}, self.with_na_key: {}}
+
+    def add_metrics(self, pred, key):
+        self.metrics[self.no_na_key][key] = get_metrics_df(
+            pred_df=pred.dropna())
+        mask_na = pred.isna().any(axis=1)
+        # assert (~mask_na).sum() + mask_na.sum() == len(pred)
+        if mask_na.sum():
+            self.metrics[self.with_na_key][key] = get_metrics_df(
+                pred_df=pred.loc[mask_na].drop(self.na_column_to_drop, axis=1))
+        else:
+            self.metrics[self.with_na_key][key] = None
+        return {self.no_na_key: self.metrics[self.no_na_key][key],
+                self.with_na_key:  self.metrics[self.with_na_key][key]}
+
+    def __repr__(self):
+        return pprint.pformat(self.metrics, indent=2, compact=True)
