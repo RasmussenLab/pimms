@@ -9,6 +9,7 @@ from fastai.data.transforms import Normalize, broadcast_vec
 from fastai.callback.core import Callback
 from fastai.tabular.core import Tabular, TabularPandas
 
+import numpy as np
 import pandas as pd
 
 import sklearn.pipeline
@@ -100,6 +101,31 @@ class NormalizeShiftedMean(Normalize):
 
     _docs = dict(encodes="Normalize batch with shifted mean and scaled variance",
                  decodes="Normalize batch with shifted mean and scaled variance")
+
+
+def get_funnel_layers(dim_in:int, dim_latent:int, n_layers:int) -> List[int]:
+    """Create a list of layer with a funnel of dimensions. 
+
+    Parameters
+    ----------
+    dim_in : int
+        Input dimension
+    dim_latent : int
+        target latent dimension
+    n_layers : int
+        number of layers between input and target latent dimension        
+
+    Returns
+    -------
+    List[int]
+        List of layer dimensions between input and target latent dimension.
+    """    
+    hidden_layer_dimensions = np.linspace(dim_latent,
+                dim_in,
+                2+n_layers,
+                endpoint=True
+                )
+    return hidden_layer_dimensions.astype(int)[-2:0:-1].tolist()
 
 
 def build_encoder_units(layers: list, dim_latent: int,
