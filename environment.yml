@@ -33,6 +33,10 @@ dependencies:
   - pandas-profiling
   - papermill
   - snakemake-minimal
+  - jupyterlab # standalone jupyter installation
+  - jupyterlab_code_formatter
+  - jupyterlab-git
+  - jupyter-dash
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
