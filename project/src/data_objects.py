@@ -110,7 +110,7 @@ class MqAllSummaries():
             self.df = _convert_dtypes(pd.DataFrame.from_dict(d_summaries, orient='index'))
             self.save_state()
         else:
-            print("Now new sample added.")
+            print("No new sample added.")
         return self.df
     
     def save_state(self):
