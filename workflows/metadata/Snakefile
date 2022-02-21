@@ -1,0 +1,63 @@
+from pathlib import Path, PurePosixPath
+configfile: "config/files.yaml"
+
+files = [PurePosixPath(p) for p in config['files']]
+files = [p.parent/ p.stem for p in files]
+# files = {p.stem: p for p in files}
+
+rule all:
+    input:
+        "rawfile_metadata.json"
+
+rule combine_json:
+    input:
+        expand(
+        "jsons/{file}-metadata.json",
+        file=files
+        )
+    output:
+        out = "rawfile_metadata.json"
+    threads:
+        1
+    run:
+        import json
+        import yaml
+        from pathlib import Path
+        all = {}
+        for fname in input:
+            key = Path(fname).name.split('-metadata.json')[0]
+            with open(fname) as f:
+                all[key] = yaml.safe_load(f)
+        with open(output.out, 'w') as f:
+            json.dump(all, f)
+
+
+rule parse_rawfile_metadata:
+    input:
+        raw = 'tmp/{file}.raw'
+    output:
+        json = "jsons/{file}-metadata.json",
+        txt = "txts/{file}-metadata.txt"
+    params:
+        thermo_exe = config['thermo_raw_file_parser_exe']
+    threads:
+        1
+    shell:
+        """
+        {params.thermo_exe} -i {input.raw} -m 0 -b {output.json}
+        {params.thermo_exe} -i {input.raw} -m 1 -b {output.txt}
+        """
+
+rule download:
+    output:
+        raw_local = temp('tmp/{file}.raw')
+    params:
+        remote = config['remote_in'],
+        raw_remote = '{file}.raw'
+    threads:
+        1
+    shell:
+        """
+        sftp -B 258048 {params.remote} <<< 'get {params.raw_remote} {output.raw_local}' 
+        """
+
