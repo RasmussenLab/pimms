@@ -147,9 +147,11 @@ rule data_splits:
         split=['train_X', 'val_X', 'test_X', 'val_y', 'test_y', 'freq_train.csv']),
         nb="{folder}/data_selection.ipynb",
     params:
-        query = config['QUERY_SUBSET']
+        query = config['QUERY_SUBSET'],
+        M = config['M']
     shell:
         "papermill {input.nb} {output.nb}"
         ' -p query_subset_meta  "{params.query}"'
         " -p FN_PEPTIDE_INTENSITIES {input.file}"
         " -p experiment_folder {wildcards.folder}"
+        " -p M {params.M}"
