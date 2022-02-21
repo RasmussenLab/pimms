@@ -1,9 +1,10 @@
 from pathlib import Path, PurePosixPath
-configfile: "config/files.yaml"
+configfile: "config/other.yaml"
+configfile: "config/remote_files.yaml"
 
 files = [PurePosixPath(p) for p in config['files']]
 files = [p.parent/ p.stem for p in files]
-# files = {p.stem: p for p in files}
+
 
 rule all:
     input:
