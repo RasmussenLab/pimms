@@ -24,13 +24,13 @@ rule combine_json:
         import json
         import yaml
         from pathlib import Path
-        all = {}
+        metadata = {}
         for fname in input:
             key = Path(fname).name.split('-metadata.json')[0]
             with open(fname) as f:
-                all[key] = yaml.safe_load(f)
+                metadata[key] = yaml.safe_load(f)
         with open(output.out, 'w') as f:
-            json.dump(all, f)
+            json.dump(metadata, f)
 
 
 rule parse_rawfile_metadata:
