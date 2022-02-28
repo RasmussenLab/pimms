@@ -1,5 +1,4 @@
 from collections import namedtuple
-from operator import index
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple
@@ -14,7 +13,6 @@ import matplotlib.dates as mdates
 import seaborn
 
 from sklearn.decomposition import PCA
-from sklearn.feature_selection import SelectFwe
 from sklearn.impute import SimpleImputer
 
 import vaep
