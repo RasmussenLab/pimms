@@ -261,6 +261,7 @@ class AnalyzePeptides(SimpleNamespace):
         ax = axes[0]
         seaborn_scatter(df=PCs.iloc[:, :2], fig=fig, ax=ax,
                         meta=PCs['ms_instrument'], title='by MS instrument')
+        ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
 
         # by complettness/missingness
         # continues colormap will be a bit trickier using seaborn: https://stackoverflow.com/a/44642014/9684872
@@ -493,7 +494,6 @@ def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata
     seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
                         hue=meta, ax=ax, palette='deep')
     ax.set_title(title, fontsize=18)
-    ax.legend(loc='center right', bbox_to_anchor=(1.11, 0.5))
 
 
 def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
