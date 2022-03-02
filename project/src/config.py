@@ -109,6 +109,8 @@ FN_ALL_SUMMARIES = FOLDER_PROCESSED / 'all_summaries.json'
 FN_PEPTIDE_STUMP = 'peptide_intensities'
 FN_PEPTIDE_INTENSITIES = Path(FOLDER_DATA) / 'peptide_intensities.pkl'
 
+FN_PROTEIN_TSV = FOLDER_DATA / 'Mann_Hepa_data.tsv'
+
 PREFIX_IMPUTED = 'hela_imputed_proteins'
 PREFIX_META = 'hela_metadata'
 
