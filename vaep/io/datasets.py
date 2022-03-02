@@ -30,14 +30,14 @@ class PeptideDatasetInMemory(Dataset):
         """
         self.peptides = torch.FloatTensor(data)
         if mask is None:
-            self.mask = torch.from_numpy(np.isfinite(data))
+            self.mask = torch.from_numpy(np.isnan(data))
         else:
             self.mask = torch.from_numpy(mask)
-        self.y = torch.where(self.mask, self.peptides, self.nan)
+        self.y = torch.where(~self.mask, self.peptides, self.nan)
 
         if mask is not None:
             self.peptides = torch.where(
-                self.mask, self.nan, self.peptides)
+                ~self.mask, self.nan, self.peptides)
 
         self.peptides = torch.where(self.peptides.isnan(),
                                     torch.FloatTensor([fill_na]), self.peptides)
@@ -48,7 +48,7 @@ class PeptideDatasetInMemory(Dataset):
         return self.length_
 
     def __getitem__(self, idx):
-        return self.peptides[idx], self.mask[idx], self.y[idx]
+        return self.mask[idx], self.peptides[idx], self.y[idx]
 
 
 def to_tensor(s: pd.Series) -> torch.Tensor:

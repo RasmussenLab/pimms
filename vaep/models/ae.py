@@ -28,8 +28,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def transform_preds(pred: torch.Tensor, index: pd.Index, normalizer) -> pd.Series:
-    pred = pd.Series(pred, index).unstack()
+def transform_preds(pred: torch.Tensor, reference: pd.DataFrame, normalizer) -> pd.Series:
+    pred = pd.DataFrame(pred, index=reference.index, columns=reference.columns)
     pred = TabularPandas(pred, cont_names=list(pred.columns))
     _ = normalizer.decode(pred)
     pred = pred.items.stack()
