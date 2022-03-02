@@ -12,6 +12,7 @@ project/tutorials/
 project/tex/
 project/logs/
 project/runs/
+project/test_nb
 
 # exclude builds
 docs/_* 
