@@ -2,4 +2,4 @@ tmp
 jsons
 txts
 config
-rawfile_metadata.json
+rawfile_metadata*.json
