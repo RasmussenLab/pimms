@@ -15,10 +15,12 @@ assert (~np.isnan(data_w_na) == mask).all()
 
 def test_PeptideDatasetInMemory_wo_Mask():
     train_ds = PeptideDatasetInMemory(data_w_na, fill_na=0.0)
-    npt.assert_array_equal(train_ds.mask, mask)
-    npt.assert_almost_equal(data[mask], train_ds.y[train_ds.mask])
-    npt.assert_array_equal(train_ds.peptides[train_ds.mask], train_ds.y[train_ds.mask])
+    mask_isna = np.isnan(data_w_na)
+    npt.assert_array_equal(train_ds.mask, mask_isna)
+    npt.assert_almost_equal(data_w_na, train_ds.y)
+    npt.assert_array_equal(train_ds.peptides[~train_ds.mask], train_ds.y[~train_ds.mask])
     npt.assert_array_equal(train_ds.peptides == 0.0, ~mask)
+    npt.assert_array_equal(train_ds.peptides == 0.0, train_ds.mask)
 
 
 def test_relative_to():
