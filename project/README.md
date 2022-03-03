@@ -20,6 +20,7 @@ _ | 01_FASTA_data_agg_by_gene.ipynb    | Investigate possibility to join protein
 _ | 01_FASTA_tryptic_digest.ipynb      | Analyze fasta file used for peptide identification
 _ | 02_data_exploration_peptides.ipynb | Describe current peptides training data
 _ | 02_data_exploration_proteins.ipynb | \[NEEDS UPDATE\] Describe protein training data 
+_ | 02_metadata_rawfiles.ipynb         |  Analyze rawfile metadata and prepare for data selection
 _ | 02_summaries.ipynb                 | Analyzse summaries.txt data from all samples
 _ | 04_all_raw_files.ipynb             | Find duplicate raw files, analyze sizes
 _ | 02_data_available.ipynb            | Plots on theoretically available data
@@ -79,6 +80,11 @@ _ | VAEP_POC.ipynb                     | First POC analysis
 
 ### `02_data_exploration_proteins.ipynb` 
 
+
+### `02_metadata_rawfiles.ipynb`
+
+- group by MS instrument parameters
+- create `data/files_per_instrument_nested.yaml` for selection of data by massspectrometer
 
 ### `02_summaries.ipynb`
 - analysze all `summaries.txt`

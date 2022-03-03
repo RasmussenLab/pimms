@@ -7,6 +7,7 @@ notebookes = [
     "02_data_available.ipynb",
     "02_data_exploration_peptides.ipynb",
     "02_data_exploration_proteins.ipynb",
+    "02_metadata_rawfiles.ipynb",
     "02_summaries.ipynb",
     "04_all_raw_files.ipynb",                      
     "09_data_available.ipynb",                     

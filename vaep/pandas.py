@@ -1,6 +1,9 @@
 import collections.abc
 from collections import namedtuple
+from subprocess import call
+import numbers
 from types import SimpleNamespace
+import typing
 
 import numpy as np
 import pandas as pd
@@ -155,6 +158,29 @@ def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
 
     ret = ret[mask].stack().dropna().squeeze()
     ret.rename(name, inplace=True)
+    return ret
+
+
+def create_dict_of_dicts(d: dict, verbose=False,
+                        # maybe this should not be here... 
+                         transform_values: typing.Union[typing.Callable, numbers.Number] = None):
+    """Unpack a dictionary with tuple keys to a nested dictonary
+    of single tuple keys.
+    """
+    ret = dict()
+    for keys, v in d.items():
+        if verbose:
+            print(f"current key: {str(keys):90}: {len(v):>5}")
+        current_dict = ret
+        for k in keys[:-1]:
+            if not k in current_dict:
+                current_dict[k] = dict()
+            current_dict = current_dict[k]
+        last_key = keys[-1]
+        if last_key not in current_dict:
+            current_dict[last_key] = transform_values(v) if transform_values else v
+        else:
+            raise KeyError(f"Key already in dict: {last_key}")
     return ret
 
 
