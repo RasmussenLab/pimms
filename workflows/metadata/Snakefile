@@ -20,6 +20,8 @@ rule combine_json:
         out = "rawfile_metadata.json"
     threads:
         1
+    resources:
+        load=1 # multiplexing
     run:
         import json
         import yaml
@@ -57,6 +59,8 @@ rule download:
         raw_remote = '{file}.raw'
     threads:
         1
+    resources:
+        load=10 # multiplexing allows 10 max
     shell:
         """
         sftp -B 258048 {params.remote} <<< 'get {params.raw_remote} {output.raw_local}' 
