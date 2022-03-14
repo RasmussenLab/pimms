@@ -5,11 +5,23 @@ configfile: "config/excluded.yaml"
 files = [PurePosixPath(p) for p in config['files'] if p not in config['excluded']]
 files = [p.parent/ p.stem for p in files]
 
-
+CSV_OUT = '../../project/data/rawfile_metadata.csv'
 
 rule all:
     input:
-        "rawfile_metadata.json"
+        CSV_OUT
+
+
+rule build_csv:
+    input:
+        data = "rawfile_metadata.json",
+        nb = 'read_metadata.ipynb'
+    output:
+        csv = CSV_OUT,
+        nb = 'read_metadata_executed.ipynb'
+    shell:
+        "papermill {input.nb} {output.nb}"
+
 
 rule combine_json:
     input:
