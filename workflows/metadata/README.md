@@ -51,3 +51,11 @@ sudo apt install mono-complete
 conda activate vaep # actually only snakemake needed
 snakemake -n  # see job listing
 ```
+
+## zip outputs
+
+
+```bash
+# could be part of snakemake process
+zip -r metadata.zip txt jsons
+```
