@@ -23,6 +23,23 @@ files:
 
 The list of files is fetched from [`project/04_all_raw_files.ipynb`](../../project/04_all_raw_files.ipynb) notebook.
 
+### Excluded files
+
+Some files might be corrupted and not be processed by `ThermoRawFileParser`. These can be
+excluded based on the `tmp` folder
+
+```bash 
+# check files
+echo 'excluded:' > config/excluded_$(date +"%Y%m%d").yaml
+find  tmp -name '*.raw*' | awk 'sub(/^.{4}/," ? ")' >> config/excluded_$(date +"%Y%m%d").yaml
+
+# potentially add these to the workflow exclusion files:
+find  tmp -name '*.raw*' | awk 'sub(/^.{4}/," ? ")' >> config/excluded.yaml
+# rm -r tmp/* # remove excluded files
+```
+
+these files are ignored in the workflow (configured as a python set).
+
 ## Setup
 
 - download and unzip [`ThermoRawFileParser`](https://github.com/compomics/ThermoRawFileParser)
