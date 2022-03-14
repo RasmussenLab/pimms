@@ -1,9 +1,10 @@
 from pathlib import Path, PurePosixPath
 configfile: "config/other.yaml"
-configfile: "config/remote_files.yaml"
+configfile: "config/excluded.yaml"
 
-files = [PurePosixPath(p) for p in config['files']]
+files = [PurePosixPath(p) for p in config['files'] if p not in config['excluded']]
 files = [p.parent/ p.stem for p in files]
+
 
 
 rule all:
@@ -45,10 +46,12 @@ rule parse_rawfile_metadata:
         thermo_exe = config['thermo_raw_file_parser_exe']
     threads:
         1
+    resources:
+        load=1 
     shell:
         """
-        {params.thermo_exe} -i {input.raw} -m 0 -b {output.json}
-        {params.thermo_exe} -i {input.raw} -m 1 -b {output.txt}
+        {params.thermo_exe} -i "{input.raw}" -m 0 -b "{output.json}"
+        {params.thermo_exe} -i "{input.raw}" -m 1 -b "{output.txt}"
         """
 
 rule download:
@@ -60,9 +63,8 @@ rule download:
     threads:
         1
     resources:
-        load=10 # multiplexing allows 10 max
+        load=10 # erda: multiplexing allows 10 max concurrent sessions
     shell:
         """
-        sftp -B 258048 {params.remote} <<< 'get {params.raw_remote} {output.raw_local}' 
+        sftp -B 258048 {params.remote} <<< 'get "{params.raw_remote}" "{output.raw_local}"' 
         """
-
