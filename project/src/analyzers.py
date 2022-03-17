@@ -220,7 +220,10 @@ class AnalyzePeptides(SimpleNamespace):
         PCs, self.pca_ = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
             _ = self.add_metadata()
-        PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
+        try:
+            PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
+        except KeyError:
+            print("No MS instrument added.")
         return PCs
 
     def calculate_PCs(self, new_df, is_wide=True):
