@@ -11,11 +11,11 @@ snakemake --snakefile Snakefile_2D_latent.smk -p --jobs 1 -n
 ## Notebooks
 for | notebook  | Description
 --- | ---  |  --- 
-erda | 00_mq_aggregate_summaries.ipynb | Aggregate current summary files from MQ runs
-erda | 00_mq_count_peptides.ipynb      | Aggregate peptide information from all MQ peptides.txt files <br> Saves processed file used for data selection (10_training_data)
-erda | 01_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data
-erda | 10_training_data.ipynb          | ERDA: Build training data dump
-erda | 3_select_training_data.ipynb    | \[NEEDS UPDATE\] Sort training data by gene
+erda | erda_01_mq_aggregate_summaries.ipynb | Aggregate current summary files from MQ runs into table
+erda | erda_01_mq_count_peptides.ipynb      | Aggregate peptide information from all MQ peptides.txt files <br> Saves processed file used for data selection (10_training_data)
+erda | erda_10_training_data.ipynb          | ERDA: Build training data dump
+erda | erda_11_select_training_data.ipynb   | \[NEEDS UPDATE\] Sort training data by gene
+erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
 _ | 01_FASTA_data_agg_by_gene.ipynb    | Investigate possibility to join proteins by gene
 _ | 01_FASTA_tryptic_digest.ipynb      | Analyze fasta file used for peptide identification
 _ | 02_data_exploration_peptides.ipynb | Describe current peptides training data
