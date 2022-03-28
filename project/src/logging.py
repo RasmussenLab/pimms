@@ -37,13 +37,13 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     >>> _ = setup_logger_w_file() # 
 
     """
-    logger.setLevel(logging.INFO)
+    logger.setLevel(level)
     logger.handlers = []  # remove any handler in case you reexecute the cell
 
     c_format = logging.Formatter(f'%(name)s - %(levelname)-8s %(message)s')
 
     c_handler = logging.StreamHandler(sys.stdout)
-    c_handler.setLevel(logging.INFO)
+    c_handler.setLevel(level)
     c_handler.setFormatter(c_format)
     logger.addHandler(c_handler)
 
@@ -51,7 +51,7 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
         date_log_file = "{:%y%m%d_%H%M}".format(datetime.now())
         f_handler = logging.FileHandler(
             LOG_FOLDER / f"{fname_base}_{date_log_file}.txt")
-        f_handler.setLevel(logging.INFO)
+        f_handler.setLevel(level)
         f_handler.setFormatter(c_format)
         logger.addHandler(f_handler)
 
