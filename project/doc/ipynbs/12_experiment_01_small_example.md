@@ -21,7 +21,7 @@ figures = {}  # collection of ax or figures
 
 ```python
 import logging
-from src.logging import setup_logger
+from vaep.logging import setup_logger
 
 logger = setup_logger(logger=logging.getLogger('vaep'))
 logger.info("Experiment 01")
@@ -264,7 +264,7 @@ detection_limit = analysis.df.min().min() if LOG_TRANSFORM else np.log10(
 
 
 ```python
-from src import metadata
+from vaep.analyzers import metadata
 
 data_meta = metadata.get_metadata_from_filenames(indices_selected)
 analysis.df_meta = pd.DataFrame.from_dict(

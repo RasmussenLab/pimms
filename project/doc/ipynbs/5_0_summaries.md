@@ -9,7 +9,7 @@
 ```python
 import ipywidgets as widgets
 
-from src.data_objects import MqAllSummaries
+from vaep.io.data_objects import MqAllSummaries
 import vaep
 
 from src.src.config import FN_ALL_SUMMARIES

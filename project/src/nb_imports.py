@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import torch
 
 from src import config
-from src.analyzers import Analysis, AnalyzePeptides
-from src import analyzers
+from vaep.analyzers.analyzers import Analysis, AnalyzePeptides
+from vaep.analyzers import analyzers
 
 import vaep
 from vaep.transform import StandardScaler, get_df_fitted_mean_std

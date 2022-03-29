@@ -5,7 +5,7 @@
 from pathlib import Path
 
 from src import config
-from src.analyzers import *
+from vaep.analyzers.analyzers import *
 from vaep.transform import StandardScaler, get_df_fitted_mean_std
 ```
 
@@ -15,7 +15,7 @@ from vaep.transform import StandardScaler, get_df_fitted_mean_std
 
 ```python
 import logging
-from src.logging import setup_logger
+from vaep.logging import setup_logger
 
 logger = logging.getLogger()  # returns root-logger
 logger.setLevel(logging.CRITICAL)  # silence for everything else

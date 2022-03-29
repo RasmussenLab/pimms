@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from src import config
-from src import analyzers
+from vaep.analyzers import analyzers
 
 # from sklearn import preprocessing
 # from sklearn.decomposition import PCA
