@@ -14,7 +14,15 @@ import pandas as pd
 from vaep.io import dump_json
 import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
-from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
+# from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
+
+FOLDER_DATA = Path('data')
+FOLDER_DATA.mkdir(exist_ok=True)
+
+FOLDER_PROCESSED = FOLDER_DATA / 'processed'
+FOLDER_PROCESSED.mkdir(exist_ok=True)
+
+FOLDER_MQ_TXT_DATA = FOLDER_DATA / 'mq_out'
 
 
 # from vaep.cfg import DEFAULTS

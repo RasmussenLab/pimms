@@ -8,7 +8,7 @@
 
 ```python
 import pandas as pd
-from src.data_objects import MqAllSummaries
+from vaep.io.data_objects import MqAllSummaries
 from vaep.pandas import get_unique_non_unique_columns
 
 mq_all_summaries = MqAllSummaries()
