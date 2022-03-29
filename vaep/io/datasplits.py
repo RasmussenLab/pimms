@@ -11,7 +11,7 @@ from pandas.core.algorithms import isin
 from vaep.pandas import interpolate
 from vaep.io.format import classname, class_full_module
 
-logger = logging.getLogger('vaep')
+logger = logging.getLogger(__name__)
 
 
 def long_format(df: pd.DataFrame,
