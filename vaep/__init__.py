@@ -3,8 +3,11 @@ VAEP
 Variatonal autoencoder for proteomics
 """
 
-# Add imports here
-# from . import *
+# Set default logging handler to avoid "No handler found" warnings.
+import logging
+from logging import NullHandler
+
+logging.getLogger(__name__).addHandler(NullHandler())
 
 # put into some pandas_cfg.py file and import all
 import pandas as pd
