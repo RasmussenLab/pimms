@@ -5746,7 +5746,7 @@ data_to_visualize.sum(axis=1).nsmallest(20) # Samplest with the fewest measureme
 
 ```python
 # # This currently crashes if you want to have a pdf
-from vaep.io_images import _savefig
+from vaep.plotting import _savefig
 from datetime import datetime
 datetime_now = datetime.now()
 

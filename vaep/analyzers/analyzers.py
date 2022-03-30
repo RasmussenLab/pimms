@@ -364,7 +364,7 @@ class LatentAnalysis(Analysis):
                 meta=meta_data.loc[self.latent_reduced.index],
                 title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
         if save:
-            vaep.io_images._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
+            vaep.plotting._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
                                     folder=self.folder)
         return fig, ax
 
