@@ -1,5 +1,8 @@
 import pathlib
 import logging
+
+import matplotlib
+
 logger = logging.getLogger(__name__)
 
 def _savefig(fig, name, folder:pathlib.Path ='.', pdf=True):
@@ -14,4 +17,3 @@ def _savefig(fig, name, folder:pathlib.Path ='.', pdf=True):
 
 
 savefig = _savefig
-

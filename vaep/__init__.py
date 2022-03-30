@@ -14,8 +14,8 @@ import pandas as pd
 import pandas.io.formats.format as pf
 
 import vaep.pandas
-import vaep.io_images
-from vaep.io_images import savefig
+import vaep.plotting
+from vaep.plotting import savefig
 
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
