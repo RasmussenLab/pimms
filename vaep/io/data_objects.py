@@ -131,7 +131,7 @@ class MqAllSummaries():
         threshold_ms2_identified = threshold
         mask  = self.df[self.usecolumns.MS2] > threshold_ms2_identified
         print(f"Selected  {mask.sum()} of {len(mask)} folders.")
-        return [Path(FOLDER_MQ_TXT_DATA) / folder for folder in self.df.loc[mask].index]
+        return [Path(relativ_to) / folder for folder in self.df.loc[mask].index]
 
 # # check df for redundant information (same feature value for all entries)
 usecols = mq.COLS_  + ['Potential contaminant', mq.mq_col.SEQUENCE]
