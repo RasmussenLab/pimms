@@ -25,14 +25,15 @@ _ | 02_summaries.ipynb                 | Analyzse summaries.txt data from all sa
 _ | 04_all_raw_files.ipynb             | Find duplicate raw files, analyze sizes
 _ | 02_data_available.ipynb            | Plots on theoretically available data
 _ | 11_training_data_exploration_peptides.ipynb | Analyze dump of training data for patterns<br>  Visualize key metrics
-_ | 12_experiment_01_small_example     |  Assess inital model performance on smaller training data<br> - linear vs log transformed data<br> - vary number of layers and neurons in layers<br> - compare   | performance in original space
 _ | 13_experiment_03*.ipynb            | See snakemake workflow
-_ | 14_experiment_03_data_support.ipynb| Support of training data samples on selected training data
-_ | 14_experiment_03_data.ipynb        | Create train, validation and test data splits
-_ | 14_experiment_03_dataloaders.ipynb | Dataloading functionality
-_ | 14_experiment_03_dataset.ipynb     | Dataset functionality
-_ | 14_experiment_03_hyperpara_analysis.ipynb | Analyze different runs with varying hyperparameters on a dataset
+_ | 14_experiment_03_data_support.ipynb          | Support of training data samples on selected training data
+_ | 14_experiment_03_data.ipynb                  | Create train, validation and test data splits
+_ | 14_experiment_03_hyperpara_analysis.ipynb    | Analyze different runs with varying hyperparameters on a dataset
 _ | 14_experiment_03_latent_space_analysis.ipynb | Single run of all three models on a dataset
+_ | 15_pytorch_fastai_dataset.ipynb    | Dataset functionality
+_ | 15_pytorch_fastai_dataloaders.ipynb| Dataloading functionality
+_ | 15_embeddings.ipynb                | FastAI Embeddings
+_ | 15_illustrations.ipynb             | Illustrations of certain concepts (e.g. draw from shifted random distribution)
 _ | 2_clustering_proteins.ipynb        | \[documentation\] PCA protein analysis from Annelaura w/ initial data <br> (Executed, only for documentation)
 _ | 3_select_data.ipynb                | Visualize all data (and try running models) <br> 16GB RAM needed
 _ | id_mapper.ipynb                    | train models per gene, see overlaps in proteins, see coverage   | of proteins with observed peptides, align overlapping peptide sequences
@@ -122,11 +123,16 @@ _ | VAEP_POC.ipynb                     | First POC analysis
 ### `14_experiment_03_latent_space_analysis.ipynb`
 
 ## Misc
-### `99_illustrations.ipynb`
+
+### `15_embeddings.ipynb`
+
+### `15_illustrations.ipynb`
 - illustrations for presentations
 - e.g. shifted normal imputation
 
-### `embeddings.ipynb`
+### `15_pytorch_fastai_dataloaders.ipynb`
+
+### `15_pytorch_fastai_dataset.ipynb`
 ### `id_mapper.ipynb`
 
 ### `json_formats.ipynb`
