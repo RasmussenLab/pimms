@@ -1,5 +1,6 @@
 from collections import Counter
 import os
+import sys
 import logging
 import json
 from pathlib import Path
@@ -16,6 +17,9 @@ import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
 # from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 
+logger = logging.getLogger(__name__)
+logger.info(f"Calling from {__name__}")
+
 FOLDER_DATA = Path('data')
 FOLDER_DATA.mkdir(exist_ok=True)
 
@@ -30,10 +34,16 @@ DEFAULTS = SimpleNamespace()
 DEFAULTS.ALL_SUMMARIES =  Path(FOLDER_PROCESSED) / 'all_summaries.json'
 DEFAULTS.COUNT_ALL_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json'
 
-N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 16 else 16
+# fastcore.imports has in_notebook, etc functionality
+from fastcore.imports import IN_IPYTHON,IN_JUPYTER,IN_COLAB,IN_NOTEBOOK
+# IN_IPYTHON,IN_JUPYTER,IN_COLAB,IN_NOTEBOOK = in_ipython(),in_jupyter(),in_colab(),in_notebook()
 
-logger = logging.getLogger(__name__)
-logger.info(f"Calling from {__name__}")
+N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 16 else 16
+if sys.platform == 'win32' and IN_NOTEBOOK:
+    N_WORKERS_DEFAULT = 1
+    logger.warn("only use main process due to issue with ipython and multiprocessing on Windows")
+
+
 manager = multiprocessing.Manager()
 
 def _convert_dtypes(df):
@@ -92,7 +102,7 @@ class MqAllSummaries():
                 logger.error(f"{mq_output}, No summary and not empty.")
         return {}
     
-    def load_new_samples(self, folders, workers=N_WORKERS_DEFAULT):
+    def load_new_samples(self, folders, workers:int=1):
         if self.df is not None:
             d_summaries = self.df.to_dict(orient='index')
             samples = set(folder.stem for folder in folders) - set(d_summaries.keys())
@@ -105,11 +115,15 @@ class MqAllSummaries():
             self.empty_folders = manager.list()
         
         if samples:
-            with multiprocessing.Pool(workers) as p:
-                # set chunksize: https://stackoverflow.com/a/49533645/9684872
-                chunksize = calc_chunksize(workers, len(samples), factor=2)
-                list_of_updates = list(tqdm(p.imap(self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
-                
+            
+            if workers > 1:          
+                with multiprocessing.Pool(workers) as p:
+                    # set chunksize: https://stackoverflow.com/a/49533645/9684872
+                    chunksize = calc_chunksize(workers, len(samples), factor=2)
+                    list_of_updates = list(tqdm(p.imap(self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
+            else:
+                list_of_updates = [self.load_summary(folder) for folder in tqdm(samples)]
+
             print("Newly loaded samples:", len(list_of_updates))
 
             for d in list_of_updates:
