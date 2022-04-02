@@ -49,45 +49,6 @@ def check_for_key(iterable, key):
 # check tf.data
 
 
-def process_files(handler_fct, filepaths, key=None, relative_to=None):
-    """Process a list of filepaths using a `handler_fct`.
-    `Handler_fct`s have to return a `pandas.DataFrame`.
-
-    handle_fct: function
-        Function returning a DataFrame for a filepath from `filepaths`
-    key_lookup: function, dict
-    filepaths: Iterable
-        List, tuple, etc. containing filepath to iteratore over.
-    """
-    names = []
-    failed = []
-    for i, _file in enumerate(tqdm(filepaths, position=0, leave=True)):
-        if relative_to:
-            _file = os.path.join(relative_to, _file)
-            logger.debug(f"New File path: {_file}")
-        if i == 0:
-            # throws an error if the first file cannot be read-in
-            df = handler_fct(_file)
-            if key:
-                names.append(check_for_key(
-                    iterable=_file.split(os.sep), key=key))
-            else:
-                names.append(os.path.basename(os.path.dirname(_file)))
-        else:
-            try:
-                df = df.join(handler_fct(filepath=_file),
-                             how='outer', rsuffix=i)
-                if key:
-                    names.append(check_for_key(
-                        iterable=_file.split(os.sep), key=key))
-                else:
-                    names.append(os.path.basename(os.path.dirname(_file)))
-            except EmptyDataError:
-                logger.warning('\nEmpty DataFrame: {}'.format(_file))
-                failed.append(_file)
-    return df, names, failed
-
-
 def load_summary(filepath: str = 'summary.txt') -> pd.DataFrame:
     f"""Load MaxQuant {MQ_VERSION} summary.txt file.
 
@@ -107,7 +68,7 @@ def load_summary(filepath: str = 'summary.txt') -> pd.DataFrame:
     return df
 
 
-def load_mqpar_xml(filepath):
+def load_mqpar_xml(filepath:Path) -> dict:
     f"""Load MaxQuant {MQ_VERSION}parameter file in xml format which stores parameters for MaxQuant run,
     including version numbers.
 
@@ -118,13 +79,14 @@ def load_mqpar_xml(filepath):
 
     Returns
     -------
-    pd.DataFrame
-        XML-File is returned as pandas.DataFrame     
+    dict
+        XML-File parsed as dictionary 
     """
     with open(filepath) as f:
         _ = f.readline()
         xml = f.read()
-        return pd.DataFrame(xmltodict.parse(xml))
+    
+    return xmltodict.parse(xml)
 
 
 types_peptides = {'N-term cleavage window': dtype('O'),

@@ -28,7 +28,8 @@ For a detailed description of a setup using conda, see [docs]()
     - MaxQuant itself yields peptide intensities
         - `mqpar.xml`: Parameters for running MQ
         - `summary.txt`: Overview of results
-        - `peptides.txt`: Peptide information
+        - `evidence.txt`: Identified peptides (includes duplicates of differently charged peptides)
+        - `peptides.txt`: Peptide information (aggregated over different charges)
         - `proteinGroups.txt`: Grouped Protein Information
     - [MaxLFQ]() for Label-free quantification between runs
         - assumes that 90% of the proteins do not vary and can be used for normalization between replicates
