@@ -56,6 +56,8 @@ _ | VAEP_POC.ipynb                     | First POC analysis
 ## erda notebooks
 
 - [ ] determine order and rename accordingly with prefix
+
+
 ## 01 Analysis Fasta
 
 ### `01_FASTA_tryptic_digest.ipynb`
@@ -115,9 +117,6 @@ _ | VAEP_POC.ipynb                     | First POC analysis
 ### `14_experiment_03_data_support.ipynb`
 
 ### `14_experiment_03_data.ipynb`
-### `14_experiment_03_dataloaders.ipynb`
-
-### `14_experiment_03_dataset.ipynb`
 ### `14_experiment_03_hyperpara_analysis.ipynb`
 
 ### `14_experiment_03_latent_space_analysis.ipynb`
