@@ -6,10 +6,18 @@ import sys
 LOG_FOLDER = Path('logs')
 LOG_FOLDER.mkdir(exist_ok=True)
 
-# silence root logger
-logger = logging.getLogger()  # returns root-logger
-logger.setLevel(logging.CRITICAL)  # silence for everything else
-logger.handlers = []
+
+def setup_nb_logger(level:int=logging.INFO, 
+                 format_str:str=f'%(name)s - %(levelname)-8s %(message)s') -> None:
+    logging.basicConfig(level=level, format=format_str)
+    logger = logging.getLogger()
+    logger.setLevel(level) # in case logger existed already before calling basicConfig
+    c_format = logging.Formatter(format_str)
+    if logger.handlers:
+        handler = logger.handlers[0]
+    else:
+        handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(c_format)
 
 def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     """Setup logging in project. Takes a logger an creates
@@ -37,6 +45,7 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     >>> _ = setup_logger_w_file() # 
 
     """
+    logger = logging.getLogger()
     logger.setLevel(level)
     logger.handlers = []  # remove any handler in case you reexecute the cell
 
