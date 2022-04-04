@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
-from typing import Iterable, List
+from typing import Callable, Iterable, List
 
 from tqdm.notebook import tqdm
 import numpy as np
@@ -169,9 +169,11 @@ def get_fname(N, M):
 def get_folder_names(folders: Iterable[str]):
     return set(Path(folder).stem for folder in folders)
 
-class PeptideCounter():
-    def __init__(self, fp_count_all_peptides=DEFAULTS.COUNT_ALL_PEPTIDES):
-        self.fp = Path(fp_count_all_peptides)
+
+class FeatureCounter():
+    def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter]):
+        self.fp = Path(fp_counter)
+        self.counting_fct = counting_fct
         if self.fp.exists():
             d = self.load(self.fp)
             self.counter = d['counter']
@@ -181,7 +183,7 @@ class PeptideCounter():
             self.counter = None
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(fp_count_all_peptides={str(self.fp)})"
+        return f"{self.__class__.__name__}(fp_counter={str(self.fp)})"
             
     def get_new_folders(self, folders : List[str]):
         ret = get_folder_names(folders) - self.loaded
@@ -201,11 +203,11 @@ class PeptideCounter():
             folder_splits = np.array_split(folders, min(100, len(folders)))
             if n_workers > 1:
                 with multiprocessing.Pool(n_workers) as p:
-                    list_of_sample_dicts = list(tqdm(p.imap(count_peptides, folder_splits),
+                    list_of_sample_dicts = list(tqdm(p.imap(self.counting_fct, folder_splits),
                                                      total=len(folder_splits), 
                                                      desc='Count peptides in 100 chunks'))
             else:
-                list_of_sample_dicts = map(count_peptides, folder_splits)
+                list_of_sample_dicts = map(self.counting_fct, folder_splits)
             if not self.counter:
                 self.counter = Counter()
             for d in tqdm(list_of_sample_dicts, 
@@ -240,3 +242,9 @@ class PeptideCounter():
             d = json.load(f)
         d['counter'] = Counter(d['counter'])
         return d
+
+class PeptideCounter(FeatureCounter):
+
+    def __init__(self, fp_counter:str, counting_fct:Callable[[List], Counter]=count_peptides):
+        super().__init__(fp_counter, counting_fct)
+
