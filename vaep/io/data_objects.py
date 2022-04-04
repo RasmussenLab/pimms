@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
-from typing import Iterable
+from typing import Iterable, List
 
 from tqdm.notebook import tqdm
 import numpy as np
@@ -166,8 +166,8 @@ def get_fname(N, M):
     """Helper function to get file for intensities"""
     return f'df_intensities_N{N:05d}_M{M:05d}'
 
-def get_folder_names(folders: Iterable):
-    return set(folder.stem for folder in folders)
+def get_folder_names(folders: Iterable[str]):
+    return set(Path(folder).stem for folder in folders)
 
 class PeptideCounter():
     def __init__(self, fp_count_all_peptides=DEFAULTS.COUNT_ALL_PEPTIDES):
@@ -183,12 +183,12 @@ class PeptideCounter():
     def __repr__(self):
         return f"{self.__class__.__name__}(fp_count_all_peptides={str(self.fp)})"
             
-    def get_new_folders(self, folders : Path):
+    def get_new_folders(self, folders : List[str]):
         ret = get_folder_names(folders) - self.loaded
         return ret
        
     # combine multiprocessing into base class?
-    def sum_over_files(self, folders: list, n_workers=N_WORKERS_DEFAULT, save=True):
+    def sum_over_files(self, folders: List[Path], n_workers=N_WORKERS_DEFAULT, save=True):
         if self.loaded:
             new_folder_names = self.get_new_folders(folders)
             print(f'{len(new_folder_names)} new folders to process.')
@@ -198,12 +198,19 @@ class PeptideCounter():
                 folders = []
         
         if folders:
-            with multiprocessing.Pool(n_workers) as p:
-                list_of_sample_dicts = list(tqdm(p.imap(count_peptides, np.array_split(folders, 100)), 
-                                             total=100, desc='Count peptides in 100 chunks'))
+            folder_splits = np.array_split(folders, min(100, len(folders)))
+            if n_workers > 1:
+                with multiprocessing.Pool(n_workers) as p:
+                    list_of_sample_dicts = list(tqdm(p.imap(count_peptides, folder_splits),
+                                                     total=len(folder_splits), 
+                                                     desc='Count peptides in 100 chunks'))
+            else:
+                list_of_sample_dicts = map(count_peptides, folder_splits)
             if not self.counter:
                 self.counter = Counter()
-            for d in tqdm(list_of_sample_dicts, desc='combine counters from chunks'):
+            for d in tqdm(list_of_sample_dicts, 
+                          total=len(folder_splits),
+                          desc='combine counters from chunks'):
                 self.counter += d
             
             if self.loaded:
