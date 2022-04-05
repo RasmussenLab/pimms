@@ -147,20 +147,6 @@ class MqAllSummaries():
         print(f"Selected  {mask.sum()} of {len(mask)} folders.")
         return [Path(relativ_to) / folder for folder in self.df.loc[mask].index]
 
-# # check df for redundant information (same feature value for all entries)
-usecols = mq.COLS_  + ['Potential contaminant', mq.mq_col.SEQUENCE]
-
-def count_peptides(folders):
-    c = Counter()
-    for folder in folders:
-        peptides = pd.read_table(folder / 'peptides.txt',
-                                 usecols=usecols,
-                                 index_col=0)
-        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
-        peptides = peptides.loc[~mask]
-        c.update(peptides.index)
-        peptides.drop('Potential contaminant', axis=1).to_csv(FOLDER_PROCESSED / f"{folder.stem}.csv")
-    return c
 
 def get_fname(N, M):
     """Helper function to get file for intensities"""
@@ -243,8 +229,36 @@ class FeatureCounter():
         d['counter'] = Counter(d['counter'])
         return d
 
+
+# aggregated peptides
+
+# # check df for redundant information (same feature value for all entries)
+usecols = mq.COLS_  + ['Potential contaminant', mq.mq_col.SEQUENCE]
+
+def count_peptides(folders:List[Path], dump=True):
+    c = Counter()
+    for folder in folders:
+        peptides = pd.read_table(folder / 'peptides.txt',
+                                 usecols=usecols,
+                                 index_col=0)
+        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
+        peptides = peptides.loc[~mask]
+        c.update(peptides.index)
+        if dump:
+            # change into subfolder structure:
+            folder_out = FOLDER_PROCESSED / folder.stem[:4] 
+            folder_out.mkdir(exist_ok=True, parents=True)
+            fpath = folder_out / f"{folder.stem}.csv" 
+            logger.info(f"Dump file: {fpath}")
+            peptides.drop('Potential contaminant', axis=1).to_csv(fpath)
+    return c
 class PeptideCounter(FeatureCounter):
 
     def __init__(self, fp_counter:str, counting_fct:Callable[[List], Counter]=count_peptides):
         super().__init__(fp_counter, counting_fct)
+
+
+# Evidence
+
+# Protein Groups
 

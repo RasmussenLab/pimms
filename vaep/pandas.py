@@ -2,12 +2,13 @@ import collections.abc
 from collections import namedtuple
 from subprocess import call
 import numbers
+
 from types import SimpleNamespace
 import typing
 
 import numpy as np
 import pandas as pd
-
+import omegaconf
 
 def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     """Pass a selection of columns to combine it's value counts.
@@ -75,6 +76,17 @@ def get_unique_non_unique_columns(df: pd.DataFrame) -> SimpleNamespace:
     columns.non_unique = df.columns[~mask_unique_columns]
     return columns
 
+
+def replace_with(string_key:str, replace:str="()/", replace_with:str='') -> str:
+    for symbol in replace:
+        string_key = string_key.replace(symbol, '')
+    return string_key
+
+def get_colums_accessor(df:pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
+    cols = {replace_with(col.replace(' ', '_')):col for col in df.columns}
+    if all_lower_case:
+        cols = {k.lower(): v for k,v in cols.items()}
+    return omegaconf.OmegaConf.create(cols)
 
 def get_columns_namedtuple(df: pd.DataFrame) -> namedtuple:
     """Create namedtuple instance of column names.
