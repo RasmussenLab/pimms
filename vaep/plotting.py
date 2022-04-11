@@ -8,14 +8,16 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-def _savefig(fig, name, folder:pathlib.Path ='.', pdf=True):
+
+def _savefig(fig, name, folder: pathlib.Path = '.', pdf=True):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
-    folder = fname.parent # in case name specifies folders
+    folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
     fig.savefig(fname.with_suffix('.png'))
-    if pdf: fig.savefig( fname.with_suffix('.pdf'))
+    if pdf:
+        fig.savefig(fname.with_suffix('.pdf'))
     logger.info(f"Saved Figures to {fname}")
 
 
@@ -44,7 +46,8 @@ def select_xticks(ax: matplotlib.axes.Axes, max_ticks: int = 50) -> list:
         return ax.set_xticks(x_ticks[::offset])
     return x_ticks
 
-def select_dates(date_series:pd.Series, max_ticks=30) -> np.array:
+
+def select_dates(date_series: pd.Series, max_ticks=30) -> np.array:
     """Get unique dates (single days) for selection in pd.plot.line
     with xticks argument.
 
@@ -66,6 +69,7 @@ def select_dates(date_series:pd.Series, max_ticks=30) -> np.array:
         return xticks[::offset]
     else:
         xticks
+
 
 def make_large_descriptors():
     """Helper function to have very large titles, labes and tick texts for 
