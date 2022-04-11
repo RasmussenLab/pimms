@@ -55,6 +55,13 @@ def unique_cols(s: pd.Series) -> bool:
     return (s.iloc[0] == s).all()
 
 
+def show_columns_with_variation(df: pd.DataFrame) -> pd.DataFrame:
+    df_describe = df.describe(include='all', datetime_is_numeric=True)
+    col_mask = (df_describe.loc['unique'] > 1) | (
+        df_describe.loc['std'] > 0.01)
+    return df.loc[:, col_mask]
+
+
 def get_unique_non_unique_columns(df: pd.DataFrame) -> SimpleNamespace:
     """Get back a namespace with an column.Index both
     of the unique and non-unique columns.
@@ -77,7 +84,11 @@ def get_unique_non_unique_columns(df: pd.DataFrame) -> SimpleNamespace:
     return columns
 
 
-def replace_with(string_key:str, replace:str="()/", replace_with:str='') -> str:
+def prop_unique_index(df: pd.DataFrame) -> pd.DataFrame:
+    counts = df.index.value_counts()
+    prop = (counts > 1).sum() / len(counts)
+    return 1 - prop
+
     for symbol in replace:
         string_key = string_key.replace(symbol, '')
     return string_key
