@@ -259,6 +259,87 @@ class PeptideCounter(FeatureCounter):
 
 
 # Evidence
+evidence_cols = mq.mq_evidence_cols
+
+
+def select_evidence(df_evidence: pd.DataFrame) -> pd.DataFrame:
+    mask = (df_evidence[evidence_cols.Potential_contaminant]
+            == '+') | (df_evidence[evidence_cols.Intensity] == 0)
+    evidence = df_evidence.loc[~mask].drop(
+        evidence_cols.Potential_contaminant, axis=1)
+    evidence = evidence.dropna(subset=[evidence_cols.Intensity])
+    return evidence
+
+
+idx_columns_evidence = [evidence_cols.Sequence, evidence_cols.Charge]
+
+
+def create_parent_folder_name(folder: Path) -> str:
+    return folder.stem[:4]
+
+
+def count_evidence(folders: List[Path],
+                   select_by: str = 'Score',
+                   dump=True,
+                   parent_folder_fct: Callable = create_parent_folder_name,
+                   outfolder=FOLDER_PROCESSED / 'evidence_dumps'):
+    outfolder = Path(outfolder)
+    outfolder.mkdir(exist_ok=True, parents=True)
+    c = Counter()
+
+    use_cols = [evidence_cols.mz,
+                evidence_cols.Protein_group_IDs,
+                evidence_cols.Intensity,
+                evidence_cols.Score,
+                evidence_cols.Potential_contaminant]
+
+    for folder in tqdm(folders):
+        folder = Path(folder)
+        evidence = pd.read_table(folder / 'evidence.txt',
+                                 usecols=idx_columns_evidence + use_cols)
+        evidence = select_evidence(evidence)
+        evidence = vaep.pandas.select_max_by(
+            evidence, index_columns=idx_columns_evidence, selection_column=select_by)
+        evidence = evidence.sort_index()
+        c.update(evidence.index)
+        if dump:
+            fname = f"{folder.stem}.csv"
+            if parent_folder_fct is not None:
+                parent_folder = outfolder / parent_folder_fct(folder)
+                parent_folder.mkdir(exist_ok=True)
+                fname = parent_folder / fname
+            else:
+                fname = outfolder / fname
+            logging.info(f"Dump to file: {fname}")
+            evidence.to_csv(fname)
+
+    return c
+
+
+class EvidenceCounter(FeatureCounter):
+
+    def __init__(self, fp_counter: str,
+                 counting_fct: Callable[[List], Counter] = count_evidence):
+        super().__init__(fp_counter, counting_fct)
+
+    def save(self):
+        """Save state
+
+        {
+         'counter': Counter with tuple keys,
+         'based_on': list
+         }
+        """
+        d = {'counter': vaep.pandas.create_dict_of_dicts(self.counter),
+             'based_on': list(self.loaded)}
+        print(f"Save to: {self.fp}")
+        dump_json(d, filename=self.fp)
+
+    def load(self, fp):
+        with open(self.fp) as f:
+            d = json.load(f)
+        d['counter'] = Counter(
+            vaep.pandas.flatten_dict_of_dicts(d['counter']))
+        return d
 
 # Protein Groups
-
