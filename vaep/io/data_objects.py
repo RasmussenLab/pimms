@@ -15,6 +15,7 @@ import pandas as pd
 from vaep.io import dump_json
 import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
+import vaep.pandas
 # from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 
 logger = logging.getLogger(__name__)
@@ -31,20 +32,22 @@ FOLDER_MQ_TXT_DATA = FOLDER_DATA / 'mq_out'
 
 # from vaep.cfg import DEFAULTS
 DEFAULTS = SimpleNamespace()
-DEFAULTS.ALL_SUMMARIES =  Path(FOLDER_PROCESSED) / 'all_summaries.json'
+DEFAULTS.ALL_SUMMARIES = Path(FOLDER_PROCESSED) / 'all_summaries.json'
 DEFAULTS.COUNT_ALL_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json'
 
 # fastcore.imports has in_notebook, etc functionality
-from fastcore.imports import IN_IPYTHON,IN_JUPYTER,IN_COLAB,IN_NOTEBOOK
+from fastcore.imports import IN_IPYTHON, IN_JUPYTER, IN_COLAB, IN_NOTEBOOK
 # IN_IPYTHON,IN_JUPYTER,IN_COLAB,IN_NOTEBOOK = in_ipython(),in_jupyter(),in_colab(),in_notebook()
 
 N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 16 else 16
 if sys.platform == 'win32' and IN_NOTEBOOK:
     N_WORKERS_DEFAULT = 1
-    logger.warn("only use main process due to issue with ipython and multiprocessing on Windows")
+    logger.warn(
+        "only use main process due to issue with ipython and multiprocessing on Windows")
 
 
 manager = multiprocessing.Manager()
+
 
 def _convert_dtypes(df):
     """Convert dtypes automatically and make string columns categories."""
@@ -53,6 +56,7 @@ def _convert_dtypes(df):
     if not l_string_columns.empty:
         df[l_string_columns] = df[l_string_columns].astype('category')
     return df
+
 
 def calc_chunksize(n_workers, len_iterable, factor=4):
     """Calculate chunksize argument for Pool-methods.
@@ -64,48 +68,54 @@ def calc_chunksize(n_workers, len_iterable, factor=4):
         chunksize += 1
     return chunksize
 
+
 class col_summary:
     MS = 'MS'
     MS2 = 'MS/MS Identified'
 
+
 class MqAllSummaries():
-    
+
     def __init__(self, fp_summaries=DEFAULTS.ALL_SUMMARIES):
         fp_summaries = Path(fp_summaries)
         if fp_summaries.exists():
-            self.df = _convert_dtypes(pd.read_json(fp_summaries, orient='index'))
-            print(f"{self.__class__.__name__}: Load summaries of {len(self.df)} folders.")
+            self.df = _convert_dtypes(
+                pd.read_json(fp_summaries, orient='index'))
+            print(
+                f"{self.__class__.__name__}: Load summaries of {len(self.df)} folders.")
         else:
             if not fp_summaries.parent.exists():
-                raise FileNotFoundError(f'Folder of filename not found: {fp_summaries.parent}')
+                raise FileNotFoundError(
+                    f'Folder of filename not found: {fp_summaries.parent}')
             self.df = None
         self.fp_summaries = fp_summaries
-        self.usecolumns= col_summary()
-    
+        self.usecolumns = col_summary()
+
     def __len__(self):
         if self.df is not None:
             return len(self.df)
         else:
             raise ValueError("No data loaded yet.")
-    
+
     def load_summary(self, folder):
         folder_name = folder.stem
         try:
             mq_output = MaxQuantOutputDynamic(folder)
-            return {folder_name : mq_output.summary.iloc[0].to_dict()}
+            return {folder_name: mq_output.summary.iloc[0].to_dict()}
         except FileNotFoundError as e:
-            if not mq_output.files and len(list(mq_output.folder.iterdir())) == 0 :
+            if not mq_output.files and len(list(mq_output.folder.iterdir())) == 0:
                 mq_output.folder.rmdir()
                 logger.warning(f'Remove empty folder: {mq_output}')
                 self.empty_folders.append(f"{folder_name}\n")
             else:
                 logger.error(f"{mq_output}, No summary and not empty.")
         return {}
-    
-    def load_new_samples(self, folders, workers:int=1):
+
+    def load_new_samples(self, folders, workers: int = 1):
         if self.df is not None:
             d_summaries = self.df.to_dict(orient='index')
-            samples = set(folder.stem for folder in folders) - set(d_summaries.keys())
+            samples = set(folder.stem for folder in folders) - \
+                set(d_summaries.keys())
             samples = [folder for folder in folders if folder.stem in samples]
         else:
             d_summaries = {}
@@ -113,37 +123,41 @@ class MqAllSummaries():
         if not hasattr(self, 'empty_folders'):
             # should this depend on multiprocessing?
             self.empty_folders = manager.list()
-        
+
         if samples:
-            
-            if workers > 1:          
+
+            if workers > 1:
                 with multiprocessing.Pool(workers) as p:
                     # set chunksize: https://stackoverflow.com/a/49533645/9684872
                     chunksize = calc_chunksize(workers, len(samples), factor=2)
-                    list_of_updates = list(tqdm(p.imap(self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
+                    list_of_updates = list(tqdm(p.imap(
+                        self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
             else:
-                list_of_updates = [self.load_summary(folder) for folder in tqdm(samples)]
+                list_of_updates = [self.load_summary(
+                    folder) for folder in tqdm(samples)]
 
             print("Newly loaded samples:", len(list_of_updates))
 
             for d in list_of_updates:
                 d_summaries.update(d)
-            
-            self.df = _convert_dtypes(pd.DataFrame.from_dict(d_summaries, orient='index'))
+
+            self.df = _convert_dtypes(
+                pd.DataFrame.from_dict(d_summaries, orient='index'))
             self.save_state()
         else:
             print("No new sample added.")
         return self.df
-    
+
     def save_state(self):
         """Save summaries DataFrame as json and pickled object."""
         self.df.to_json(self.fp_summaries, orient='index')
-        self.df.to_pickle(self.fp_summaries.parent / f"{self.fp_summaries.stem}.pkl")
-        
+        self.df.to_pickle(self.fp_summaries.parent /
+                          f"{self.fp_summaries.stem}.pkl")
+
     def get_files_w_min_MS2(self, threshold=10_000, relativ_to=FOLDER_MQ_TXT_DATA):
         """Get a list of file ids with a minimum MS2 observations."""
         threshold_ms2_identified = threshold
-        mask  = self.df[self.usecolumns.MS2] > threshold_ms2_identified
+        mask = self.df[self.usecolumns.MS2] > threshold_ms2_identified
         print(f"Selected  {mask.sum()} of {len(mask)} folders.")
         return [Path(relativ_to) / folder for folder in self.df.loc[mask].index]
 
@@ -151,6 +165,7 @@ class MqAllSummaries():
 def get_fname(N, M):
     """Helper function to get file for intensities"""
     return f'df_intensities_N{N:05d}_M{M:05d}'
+
 
 def get_folder_names(folders: Iterable[str]):
     return set(Path(folder).stem for folder in folders)
@@ -170,37 +185,38 @@ class FeatureCounter():
 
     def __repr__(self):
         return f"{self.__class__.__name__}(fp_counter={str(self.fp)})"
-            
-    def get_new_folders(self, folders : List[str]):
+
+    def get_new_folders(self, folders: List[str]):
         ret = get_folder_names(folders) - self.loaded
         return ret
-       
+
     # combine multiprocessing into base class?
     def sum_over_files(self, folders: List[Path], n_workers=N_WORKERS_DEFAULT, save=True):
         if self.loaded:
             new_folder_names = self.get_new_folders(folders)
             print(f'{len(new_folder_names)} new folders to process.')
             if new_folder_names:
-                folders = [folder for folder in folders if folder.stem in new_folder_names]
+                folders = [
+                    folder for folder in folders if folder.stem in new_folder_names]
             else:
                 folders = []
-        
+
         if folders:
             folder_splits = np.array_split(folders, min(100, len(folders)))
             if n_workers > 1:
                 with multiprocessing.Pool(n_workers) as p:
                     list_of_sample_dicts = list(tqdm(p.imap(self.counting_fct, folder_splits),
-                                                     total=len(folder_splits), 
+                                                     total=len(folder_splits),
                                                      desc='Count peptides in 100 chunks'))
             else:
                 list_of_sample_dicts = map(self.counting_fct, folder_splits)
             if not self.counter:
                 self.counter = Counter()
-            for d in tqdm(list_of_sample_dicts, 
+            for d in tqdm(list_of_sample_dicts,
                           total=len(folder_splits),
                           desc='combine counters from chunks'):
                 self.counter += d
-            
+
             if self.loaded:
                 self.loaded |= new_folder_names
             else:
@@ -213,7 +229,7 @@ class FeatureCounter():
 
     def save(self):
         """Save state
-        
+
         {
          'counter': Counter,
          'based_on': list
@@ -233,28 +249,33 @@ class FeatureCounter():
 # aggregated peptides
 
 # # check df for redundant information (same feature value for all entries)
-usecols = mq.COLS_  + ['Potential contaminant', mq.mq_col.SEQUENCE]
+usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE]
 
-def count_peptides(folders:List[Path], dump=True):
+
+def count_peptides(folders: List[Path], dump=True):
     c = Counter()
     for folder in folders:
         peptides = pd.read_table(folder / 'peptides.txt',
                                  usecols=usecols,
                                  index_col=0)
-        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (peptides["Potential contaminant"] == '+')
+        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (
+            peptides["Potential contaminant"] == '+')
         peptides = peptides.loc[~mask]
         c.update(peptides.index)
         if dump:
             # change into subfolder structure:
-            folder_out = FOLDER_PROCESSED / folder.stem[:4] 
+            folder_out = FOLDER_PROCESSED / folder.stem[:4]
             folder_out.mkdir(exist_ok=True, parents=True)
-            fpath = folder_out / f"{folder.stem}.csv" 
+            fpath = folder_out / f"{folder.stem}.csv"
             logger.info(f"Dump file: {fpath}")
             peptides.drop('Potential contaminant', axis=1).to_csv(fpath)
     return c
+
+
 class PeptideCounter(FeatureCounter):
 
-    def __init__(self, fp_counter:str, counting_fct:Callable[[List], Counter]=count_peptides):
+    def __init__(self, fp_counter: str,
+                 counting_fct: Callable[[List], Counter] = count_peptides):
         super().__init__(fp_counter, counting_fct)
 
 
