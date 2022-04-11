@@ -2,9 +2,10 @@ import logging
 from collections import Counter, namedtuple
 from pathlib import Path
 from typing import Iterable
-
+import omegaconf
 
 import pandas as pd
+from pandas import Int64Dtype, StringDtype, Float64Dtype
 
 import vaep.io
 
@@ -91,9 +92,74 @@ mq_evidence_cols = {'Sequence': 'Sequence',
                     'Oxidation_M_site_IDs': 'Oxidation (M) site IDs',
                     'Taxonomy_IDs': 'Taxonomy IDs'}
 
+mq_evidence_cols = omegaconf.OmegaConf.create(mq_evidence_cols)
+
+
+mq_evidence_dtypes = {'Length': Int64Dtype(),
+                      'Modifications': StringDtype,
+                      'Modified sequence': StringDtype,
+                      'Oxidation (M) Probabilities': StringDtype,
+                      'Oxidation (M) Score Diffs': StringDtype,
+                      'Acetyl (Protein N-term)': Int64Dtype(),
+                      'Oxidation (M)': Int64Dtype(),
+                      'Missed cleavages': Int64Dtype(),
+                      'Proteins': StringDtype,
+                      'Leading proteins': StringDtype,
+                      'Leading razor protein': StringDtype,
+                      'Gene names': StringDtype,
+                      'Protein names': StringDtype,
+                      'Type': StringDtype,
+                      'Raw file': StringDtype,
+                      'MS/MS m/z': Float64Dtype(),
+                      'm/z': Float64Dtype(),
+                      'Mass': Float64Dtype(),
+                      'Uncalibrated - Calibrated m/z [ppm]': Float64Dtype(),
+                      'Uncalibrated - Calibrated m/z [Da]': Float64Dtype(),
+                      'Mass error [ppm]': Float64Dtype(),
+                      'Mass error [Da]': Float64Dtype(),
+                      'Uncalibrated mass error [ppm]': Float64Dtype(),
+                      'Uncalibrated mass error [Da]': Float64Dtype(),
+                      'Max intensity m/z 0': Float64Dtype(),
+                      'Retention time': Float64Dtype(),
+                      'Retention length': Float64Dtype(),
+                      'Calibrated retention time': Float64Dtype(),
+                      'Calibrated retention time start': Float64Dtype(),
+                      'Calibrated retention time finish': Float64Dtype(),
+                      'Retention time calibration': Float64Dtype(),
+                      'Match time difference': Int64Dtype(),
+                      'Match m/z difference': Int64Dtype(),
+                      'Match q-value': Int64Dtype(),
+                      'Match score': Int64Dtype(),
+                      'Number of data points': Int64Dtype(),
+                      'Number of scans': Int64Dtype(),
+                      'Number of isotopic peaks': Int64Dtype(),
+                      'PIF': Int64Dtype(),
+                      'Fraction of total spectrum': Int64Dtype(),
+                      'Base peak fraction': Int64Dtype(),
+                      'PEP': Float64Dtype(),
+                      'MS/MS count': Int64Dtype(),
+                      'MS/MS scan number': Int64Dtype(),
+                      'Score': Float64Dtype(),
+                      'Delta score': Float64Dtype(),
+                      'Combinatorics': Int64Dtype(),
+                      'Intensity': Int64Dtype(),
+                      'Reverse': Int64Dtype(),
+                      'Potential contaminant': Int64Dtype(),
+                      'id': Int64Dtype(),
+                      'Protein group IDs': StringDtype,
+                      'Peptide ID': Int64Dtype(),
+                      'Mod. peptide ID': Int64Dtype(),
+                      'MS/MS IDs': StringDtype,
+                      'Best MS/MS': Int64Dtype(),
+                      'Oxidation (M) site IDs': StringDtype,
+                      'Taxonomy IDs': StringDtype,
+                      }
+
 ##########################################################################################
 ##########################################################################################
 # import abc # abc.ABCMeta ?
+
+
 class MaxQuantOutput():
     """Class assisting with MaxQuant txt output folder.
 
@@ -181,15 +247,12 @@ class MaxQuantOutput():
         folder.mkdir(exist_ok=True)
         fname = folder / f"{self.folder.stem}.json"
         vaep.io.dump_json(
-            data_dict=self.peptides.Intensity.dropna().to_dict(), 
+            data_dict=self.peptides.Intensity.dropna().to_dict(),
             filename=fname)
         logger.info(f'Dumped intensities in peptides.txt: {fname}.')
 
-
     # needed to reset attributes on instance creation.
     _inital_attritubutes = [x for x in dir() if not x.startswith('__')]
-
-
 
 
 # register all properties
@@ -358,7 +421,7 @@ def count_genes_in_sets(gene_sets, sep=';'):
     -------
     collections.Counter
         Counter with keys as genes and counts as value.
-    """    
+    """
     genes_counted_each_in_unique_sets = Counter()
 
     for gene in pd.Series(gene_sets).dropna():
@@ -425,7 +488,7 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
         was set.
     KeyError
         If no protein could be found in fasta_db for specified gene.
-    """    
+    """
     # ToDo: Replace with config from package
     KEY_PEPTIDES = 'peptides'
 
@@ -463,21 +526,25 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
         # assert len(gene_data[mq_col.PROTEINS].unique()) == 1, f"{gene_data[mq_col.PROTEINS].unique()}"
         protein_sets = gene_data[mq_col.PROTEINS].unique()
         if len(protein_sets) > 1:
-            logger.warning(f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
+            logger.warning(
+                f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
             # ToDo: find intersection of proteins between all sequences.
-        
+
         # Enforce: proteins have to be share between all peptides
         protein_sets = [set.split(';') for set in protein_sets]
         # ToDo: Check if ordering is relevant (if not all proteins are checked)
-        proteins_shared_by_all = set(protein_sets.pop()).intersection(*protein_sets)
+        proteins_shared_by_all = set(
+            protein_sets.pop()).intersection(*protein_sets)
         # ToDo: Some CON_ proteins are also present in the fasta and appear twice.
         #       Remove all CON__ proteins from data globally, including their fasta
         #       pendants (e.g. Keratin: Q04695;CON__Q04695)
         # exclude potential other contaminents
-        protein_sets = [x for x in proteins_shared_by_all if not 'CON__' in x] #.sorted()
+        protein_sets = [
+            x for x in proteins_shared_by_all if not 'CON__' in x]  # .sorted()
         if len(protein_sets) == 0:
             # raise KeyError("No other overall protein found for sequences.")
-            logger.warning(f'No good protein found for gene ({gene_id:8}). Return empty list.')
+            logger.warning(
+                f'No good protein found for gene ({gene_id:8}). Return empty list.')
             return []
         if len(protein_sets) > 1:
             logger.warning(
@@ -507,10 +574,10 @@ def calculate_completness_for_sample(
     -------
     float
         proportion of exact peptides for which some evidence was found.
-    """    
+    """
     c = 0
     if not peps_exact_cleaved:
-        return 0 # no exact peptides
+        return 0  # no exact peptides
     for i, _pep in enumerate(peps_exact_cleaved):
         logger.debug(f"Check if exact peptide matches: {_pep}")
         for _found_pep in peps_in_data:
@@ -548,7 +615,7 @@ class ExtractFromPeptidesTxt():
 
     def __call__(self):
         """Dump valid cases to file.
-        
+
         Returns:
         collections.Counter
             Counter with gene IDs as key and completeness as value.
