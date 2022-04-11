@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import omegaconf
 
+
 def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     """Pass a selection of columns to combine it's value counts.
 
@@ -89,21 +90,25 @@ def prop_unique_index(df: pd.DataFrame) -> pd.DataFrame:
     prop = (counts > 1).sum() / len(counts)
     return 1 - prop
 
+def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') -> str:
     for symbol in replace:
         string_key = string_key.replace(symbol, '')
     return string_key
 
-def get_colums_accessor(df:pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
-    cols = {replace_with(col.replace(' ', '_')):col for col in df.columns}
+
+def get_colums_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
+    cols = {replace_with(col.replace(' ', '_')): col for col in df.columns}
     if all_lower_case:
-        cols = {k.lower(): v for k,v in cols.items()}
+        cols = {k.lower(): v for k, v in cols.items()}
     return omegaconf.OmegaConf.create(cols)
-    
+
+
 def select_max_by(df: pd.DataFrame, index_columns: list, selection_column: str) -> pd.DataFrame:
     df = df.sort_values(by=[*index_columns, selection_column], ascending=False)
     df = df.drop_duplicates(subset=index_columns,
-                                     keep='first').set_index(index_columns)
+                            keep='first').set_index(index_columns)
     return df
+
 
 def get_columns_namedtuple(df: pd.DataFrame) -> namedtuple:
     """Create namedtuple instance of column names.
@@ -125,7 +130,7 @@ def get_columns_namedtuple(df: pd.DataFrame) -> namedtuple:
     return ColumnsNamedTuple(**{k: v for k, v in zip(column_keys, columns)})
 
 
-def highlight_min(s:pd.Series) -> list:
+def highlight_min(s: pd.Series) -> list:
     """Highlight the min in a Series yellow for using in pandas.DataFrame.style
 
     Parameters
@@ -191,7 +196,7 @@ def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
 
 
 def create_dict_of_dicts(d: dict, verbose=False,
-                        # maybe this should not be here... 
+                         # maybe this should not be here...
                          transform_values: typing.Union[typing.Callable, numbers.Number] = None):
     """Unpack a dictionary with tuple keys to a nested dictonary
     of single tuple keys.
@@ -207,7 +212,8 @@ def create_dict_of_dicts(d: dict, verbose=False,
             current_dict = current_dict[k]
         last_key = keys[-1]
         if last_key not in current_dict:
-            current_dict[last_key] = transform_values(v) if transform_values else v
+            current_dict[last_key] = transform_values(
+                v) if transform_values else v
         else:
             raise KeyError(f"Key already in dict: {last_key}")
     return ret
@@ -239,7 +245,7 @@ def flatten_dict_of_dicts(d: dict, parent_key: str = '') -> dict:
     return dict(items)
 
 
-def key_map(d: dict)-> dict:
+def key_map(d: dict) -> dict:
     """Build a schema of dicts
 
     Parameters
@@ -261,17 +267,19 @@ def key_map(d: dict)-> dict:
             _keys = (_keys) + (k, )
     if _keys:
         if ret:
-            print(f"Dictionaries are not of the same length: {_keys = } and {ret = }")
+            print(
+                f"Dictionaries are not of the same length: {_keys = } and {ret = }")
             for k in _keys:
                 ret[k] = None
         else:
-            return _keys       
+            return _keys
     return ret
 
 
 printable = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ '
 
-def parse_query_expression(s:str, printable:str=printable)-> str:
+
+def parse_query_expression(s: str, printable: str = printable) -> str:
     """Parse a query expression for pd.DataFrame.query to a file name.
     Removes all characters not listed in printable."""
     return ''.join(filter(lambda x: x in printable, s))
