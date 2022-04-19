@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import multiprocessing
 from types import SimpleNamespace
-from typing import Callable, Iterable, List
+from typing import Callable, Iterable, List, Union
 
 from tqdm.notebook import tqdm
 import numpy as np
@@ -375,3 +375,92 @@ class EvidenceCounter(FeatureCounter):
         return d
 
 # Protein Groups
+
+
+pg_cols = mq.mq_protein_groups_cols
+
+# def load_process_evidence(folder: Path, use_cols, select_by):
+
+
+def load_and_process_proteinGroups(folder: Union[str, Path],
+                                   use_cols: List = [
+                                       pg_cols.Protein_IDs,
+                                       pg_cols.Majority_protein_IDs,
+                                       pg_cols.Gene_names,
+                                       pg_cols.Evidence_IDs,
+                                       pg_cols.Q_value,
+                                       pg_cols.Score,
+                                       pg_cols.Only_identified_by_site,
+                                       pg_cols.Reverse,
+                                       pg_cols.Potential_contaminant,
+                                       pg_cols.Intensity,
+]):
+    folder = Path(folder)
+    pg = pd.read_table(folder / 'proteinGroups.txt',
+                       index_col=pg_cols.Protein_IDs,
+                       usecols=use_cols)
+    mask = pg[[pg_cols.Only_identified_by_site, pg_cols.Reverse,
+               pg_cols.Potential_contaminant]].notna().sum(axis=1) > 0
+    pg = pg.loc[~mask]
+    mask = pg[pg_cols.Intensity] > 1
+    pg = pg.loc[mask]
+    gene_set = pg[pg_cols.Gene_names].str.split(';')
+    col_loc_gene_names = pg.columns.get_loc(pg_cols.Gene_names)
+    _ = pg.insert(col_loc_gene_names+1, 'Number of Genes',
+                  gene_set.apply(vaep.pandas.length))
+    return pg
+
+
+class Count():
+
+    def __init__(self,
+                 process_folder_fct: Callable,
+                 use_cols=None,
+                 parent_folder_fct: Callable = create_parent_folder_name,
+                 outfolder=FOLDER_PROCESSED / 'dumps',
+                 dump=True):
+        self.outfolder = Path(outfolder)
+        self.outfolder.mkdir(exist_ok=True, parents=True)
+        self.use_cols = use_cols
+        self.process_folder_fct = process_folder_fct
+        self.parent_folder_fct = parent_folder_fct
+        self.dump = dump
+
+    def __call__(self, folders,
+                 **fct_args):
+        logging.debug(
+            f"Passed function arguments for process_folder_fct Callable: {fct_args}")
+        c = Counter()
+
+        for folder in tqdm(folders):
+            folder = Path(folder)
+            df = self.process_folder_fct(
+                folder=folder, use_cols=self.use_cols, **fct_args)
+            c.update(df.index)
+            if self.dump:
+                dump_to_csv(df, folder=folder, outfolder=self.outfolder,
+                            parent_folder_fct=self.parent_folder_fct)
+        return c
+
+
+count_protein_groups = Count(load_and_process_proteinGroups,
+                             use_cols=[
+                                 pg_cols.Protein_IDs,
+                                 pg_cols.Majority_protein_IDs,
+                                 pg_cols.Gene_names,
+                                 pg_cols.Evidence_IDs,
+                                 pg_cols.Q_value,
+                                 pg_cols.Score,
+                                 pg_cols.Only_identified_by_site,
+                                 pg_cols.Reverse,
+                                 pg_cols.Potential_contaminant,
+                                 pg_cols.Intensity,
+                             ],
+                             outfolder=FOLDER_PROCESSED / 'proteinGroups_dumps')
+
+
+class ProteinGroupsCounter(FeatureCounter):
+
+    def __init__(self, fp_counter: str,
+                 counting_fct: Callable[[List], Counter] = count_protein_groups):
+        super().__init__(fp_counter, counting_fct)
