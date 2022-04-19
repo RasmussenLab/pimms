@@ -38,6 +38,20 @@ def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     return freq_targets
 
 
+def counts_with_proportion(s: pd.Series) -> pd.DataFrame:
+    """Counts with proportion of counts(!). 
+    
+    Note: In case of missing values the proportion is not based on the total number of 
+    rows in the DataFrame.
+    """
+    s = s.value_counts()
+    s.index.name = 'value'
+    N = s.sum()
+    ret = s.to_frame('counts')
+    ret['prop.'] = s / N
+    return ret
+
+
 def unique_cols(s: pd.Series) -> bool:
     """Check all entries are equal in pandas.Series
 

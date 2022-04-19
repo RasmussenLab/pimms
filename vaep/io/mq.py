@@ -155,6 +155,45 @@ mq_evidence_dtypes = {'Length': Int64Dtype(),
                       'Taxonomy IDs': StringDtype,
                       }
 
+
+mq_protein_groups_cols = {'Protein_IDs': 'Protein IDs',
+                          'Majority_protein_IDs': 'Majority protein IDs',
+                          'Peptide_counts_all': 'Peptide counts (all)',
+                          'Peptide_counts_razor+unique': 'Peptide counts (razor+unique)',
+                          'Peptide_counts_unique': 'Peptide counts (unique)',
+                          'Protein_names': 'Protein names',
+                          'Gene_names': 'Gene names',
+                          'Fasta_headers': 'Fasta headers',
+                          'Number_of_proteins': 'Number of proteins',
+                          'Peptides': 'Peptides',
+                          'Razor_+_unique_peptides': 'Razor + unique peptides',
+                          'Unique_peptides': 'Unique peptides',
+                          'Sequence_coverage_[%]': 'Sequence coverage [%]',
+                          'Unique_+_razor_sequence_coverage_[%]': 'Unique + razor sequence coverage [%]',
+                          'Unique_sequence_coverage_[%]': 'Unique sequence coverage [%]',
+                          'Mol._weight_[kDa]': 'Mol. weight [kDa]',
+                          'Sequence_length': 'Sequence length',
+                          'Sequence_lengths': 'Sequence lengths',
+                          'Q_value': 'Q-value',
+                          'Score': 'Score',
+                          'Intensity': 'Intensity',
+                          'MSMS_count': 'MS/MS count',
+                          'Only_identified_by_site': 'Only identified by site',
+                          'Reverse': 'Reverse',
+                          'Potential_contaminant': 'Potential contaminant',
+                          'id': 'id',
+                          'Peptide_IDs': 'Peptide IDs',
+                          'Peptide_is_razor': 'Peptide is razor',
+                          'Mod._peptide_IDs': 'Mod. peptide IDs',
+                          'Evidence_IDs': 'Evidence IDs',
+                          'MSMS_IDs': 'MS/MS IDs',
+                          'Best_MSMS': 'Best MS/MS',
+                          'Oxidation_M_site_IDs': 'Oxidation (M) site IDs',
+                          'Oxidation_M_site_positions': 'Oxidation (M) site positions',
+                          'Taxonomy_IDs': 'Taxonomy IDs'}
+
+mq_protein_groups_cols = omegaconf.OmegaConf.create(mq_protein_groups_cols)
+
 ##########################################################################################
 ##########################################################################################
 # import abc # abc.ABCMeta ?
