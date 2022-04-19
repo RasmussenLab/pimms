@@ -299,41 +299,51 @@ def create_parent_folder_name(folder: Path) -> str:
     return folder.stem[:4]
 
 
+def dump_to_csv(df: pd.DataFrame,
+                folder: Path,
+                outfolder: Path,
+                parent_folder_fct=None
+                ) -> None:
+    fname = f"{folder.stem}.csv"
+    if parent_folder_fct is not None:
+        outfolder = outfolder / parent_folder_fct(folder)
+    outfolder.mkdir(exist_ok=True)
+    fname = outfolder / fname
+    logging.info(f"Dump to file: {fname}")
+    df.to_csv(fname)
+
+
+def load_process_evidence(folder: Path, use_cols, select_by):
+    evidence = pd.read_table(folder / 'evidence.txt',
+                             usecols=idx_columns_evidence + use_cols)
+    evidence = select_evidence(evidence)
+    evidence = vaep.pandas.select_max_by(
+        evidence, index_columns=idx_columns_evidence, selection_column=select_by)
+    evidence = evidence.sort_index()
+    return evidence
+
+
 def count_evidence(folders: List[Path],
                    select_by: str = 'Score',
                    dump=True,
+                   use_cols=[evidence_cols.mz,
+                             evidence_cols.Protein_group_IDs,
+                             evidence_cols.Intensity,
+                             evidence_cols.Score,
+                             evidence_cols.Potential_contaminant],
                    parent_folder_fct: Callable = create_parent_folder_name,
                    outfolder=FOLDER_PROCESSED / 'evidence_dumps'):
     outfolder = Path(outfolder)
     outfolder.mkdir(exist_ok=True, parents=True)
     c = Counter()
 
-    use_cols = [evidence_cols.mz,
-                evidence_cols.Protein_group_IDs,
-                evidence_cols.Intensity,
-                evidence_cols.Score,
-                evidence_cols.Potential_contaminant]
-
     for folder in tqdm(folders):
         folder = Path(folder)
-        evidence = pd.read_table(folder / 'evidence.txt',
-                                 usecols=idx_columns_evidence + use_cols)
-        evidence = select_evidence(evidence)
-        evidence = vaep.pandas.select_max_by(
-            evidence, index_columns=idx_columns_evidence, selection_column=select_by)
-        evidence = evidence.sort_index()
+        evidence = load_process_evidence(
+            folder=folder, use_cols=use_cols, select_by=select_by)
         c.update(evidence.index)
         if dump:
-            fname = f"{folder.stem}.csv"
-            if parent_folder_fct is not None:
-                parent_folder = outfolder / parent_folder_fct(folder)
-                parent_folder.mkdir(exist_ok=True)
-                fname = parent_folder / fname
-            else:
-                fname = outfolder / fname
-            logging.info(f"Dump to file: {fname}")
-            evidence.to_csv(fname)
-
+            dump_to_csv(folder)
     return c
 
 
