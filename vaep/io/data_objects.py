@@ -343,7 +343,8 @@ def count_evidence(folders: List[Path],
             folder=folder, use_cols=use_cols, select_by=select_by)
         c.update(evidence.index)
         if dump:
-            dump_to_csv(folder)
+            dump_to_csv(evidence, folder=folder, outfolder=outfolder,
+            parent_folder_fct=parent_folder_fct)
     return c
 
 
