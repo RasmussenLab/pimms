@@ -90,6 +90,7 @@ def prop_unique_index(df: pd.DataFrame) -> pd.DataFrame:
     prop = (counts > 1).sum() / len(counts)
     return 1 - prop
 
+
 def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') -> str:
     for symbol in replace:
         string_key = string_key.replace(symbol, '')
@@ -97,7 +98,8 @@ def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') 
 
 
 def get_colums_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
-    cols = {replace_with(col.replace(' ', '_')): col for col in df.columns}
+    cols = {replace_with(col.replace(' ', '_').replace(
+        '-', '_')): col for col in df.columns}
     if all_lower_case:
         cols = {k.lower(): v for k, v in cols.items()}
     return omegaconf.OmegaConf.create(cols)
