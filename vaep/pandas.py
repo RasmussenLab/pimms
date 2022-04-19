@@ -285,3 +285,12 @@ def parse_query_expression(s: str, printable: str = printable) -> str:
     """Parse a query expression for pd.DataFrame.query to a file name.
     Removes all characters not listed in printable."""
     return ''.join(filter(lambda x: x in printable, s))
+
+
+def length(x):
+    """Len function which return 0 if object (probably np.nan) has no length.
+    Otherwise return length of list, pandas.Series, numpy.array, dict, etc."""
+    try:
+        return len(x)
+    except:
+        return 0
