@@ -383,6 +383,7 @@ pg_cols = mq.mq_protein_groups_cols
 
 
 def load_and_process_proteinGroups(folder: Union[str, Path],
+                                   #use_cols not really a parameter (or needs asserts?)
                                    use_cols: List = [
                                        pg_cols.Protein_IDs,
                                        pg_cols.Majority_protein_IDs,
@@ -397,7 +398,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
 ]):
     folder = Path(folder)
     pg = pd.read_table(folder / 'proteinGroups.txt',
-                       index_col=pg_cols.Protein_IDs,
+                      #index_col=pg_cols.Protein_IDs,
                        usecols=use_cols)
     mask = pg[[pg_cols.Only_identified_by_site, pg_cols.Reverse,
                pg_cols.Potential_contaminant]].notna().sum(axis=1) > 0
@@ -408,6 +409,10 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     col_loc_gene_names = pg.columns.get_loc(pg_cols.Gene_names)
     _ = pg.insert(col_loc_gene_names+1, 'Number of Genes',
                   gene_set.apply(vaep.pandas.length))
+    pg = vaep.pandas.select_max_by(df=pg,
+                                   index_columns=[pg_cols.Gene_names],
+                                   selection_column=pg_cols.Score)
+    pg = pg.reset_index().set_index(pg_cols.Protein_IDs)
     return pg
 
 
