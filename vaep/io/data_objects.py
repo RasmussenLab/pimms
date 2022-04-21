@@ -194,7 +194,7 @@ class FeatureCounter():
     def sum_over_files(self, folders: List[Path], n_workers=N_WORKERS_DEFAULT, save=True):
         if self.loaded:
             new_folder_names = self.get_new_folders(folders)
-            print(f'{len(new_folder_names)} new folders to process.')
+            logger.info(f'{len(new_folder_names)} new folders to process.')
             if new_folder_names:
                 folders = [
                     folder for folder in folders if folder.stem in new_folder_names]
@@ -224,7 +224,7 @@ class FeatureCounter():
             if save:
                 self.save()
         else:
-            print('Nothing to process.')
+            logger.info('Nothing to process.')
         return self.counter
 
     def save(self):
@@ -236,7 +236,7 @@ class FeatureCounter():
          }
         """
         d = {'counter': self.counter, 'based_on': list(self.loaded)}
-        print(f"Save to: {self.fp}")
+        logger.info(f"Save to: {self.fp}")
         dump_json(d, filename=self.fp)
 
     def load(self, fp):
@@ -309,7 +309,7 @@ def dump_to_csv(df: pd.DataFrame,
         outfolder = outfolder / parent_folder_fct(folder)
     outfolder.mkdir(exist_ok=True)
     fname = outfolder / fname
-    logging.info(f"Dump to file: {fname}")
+    logger.info(f"Dump to file: {fname}")
     df.to_csv(fname)
 
 
