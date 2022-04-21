@@ -321,8 +321,8 @@ def load_process_evidence(folder: Path, use_cols, select_by):
                              usecols=idx_columns_evidence + use_cols)
     evidence = select_evidence(evidence)
     evidence = vaep.pandas.select_max_by(
-        evidence, index_columns=idx_columns_evidence, selection_column=select_by)
-    evidence = evidence.sort_index()
+        evidence, grouping_columns=idx_columns_evidence, selection_column=select_by)
+    evidence = evidence.set_index(idx_columns_evidence).sort_index()
     return evidence
 
 
@@ -412,10 +412,14 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     col_loc_gene_names = pg.columns.get_loc(pg_cols.Gene_names)
     _ = pg.insert(col_loc_gene_names+1, 'Number of Genes',
                   gene_set.apply(vaep.pandas.length))
-    pg = vaep.pandas.select_max_by(df=pg,
-                                   index_columns=[pg_cols.Gene_names],
+    mask_no_gene = pg[pg_cols.Gene_names].isna()
+    pg_no_gene = pg.loc[mask_no_gene]
+    logger.debug(f"Entries without any gene annotation: {len(pg_no_gene)}")
+    pg = vaep.pandas.select_max_by(df=pg.loc[~mask_no_gene],
+                                   grouping_columns=[pg_cols.Gene_names],
                                    selection_column=pg_cols.Score)
-    pg = pg.reset_index().set_index(pg_cols.Protein_IDs)
+    pg = pg.append(pg_no_gene)
+    pg = pg.set_index(pg_cols.Protein_IDs)
     return pg
 
 
