@@ -119,10 +119,10 @@ def get_colums_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.Ome
     return omegaconf.OmegaConf.create(cols)
 
 
-def select_max_by(df: pd.DataFrame, index_columns: list, selection_column: str) -> pd.DataFrame:
-    df = df.sort_values(by=[*index_columns, selection_column], ascending=False)
-    df = df.drop_duplicates(subset=index_columns,
-                            keep='first').set_index(index_columns)
+def select_max_by(df: pd.DataFrame, grouping_columns: list, selection_column: str) -> pd.DataFrame:
+    df = df.sort_values(by=[*grouping_columns, selection_column], ascending=False)
+    df = df.drop_duplicates(subset=grouping_columns,
+                            keep='first')
     return df
 
 

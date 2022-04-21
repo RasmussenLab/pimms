@@ -1,4 +1,5 @@
 import io
+from tokenize import group
 import pandas as pd
 from vaep.pandas import select_max_by
 
@@ -36,8 +37,8 @@ def test_select_max_by():
     df = pd.read_csv(io.StringIO(data))
 
     actual = select_max_by(df,
-                           index_columns=index_columns,
-                           selection_column=selection_column)
+                           grouping_columns=index_columns,
+                           selection_column=selection_column).set_index(index_columns)
 
     desired = pd.read_csv(io.StringIO(expected), index_col=index_columns)
     assert desired.equals(actual)
