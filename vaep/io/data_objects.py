@@ -12,6 +12,8 @@ from tqdm.notebook import tqdm
 import numpy as np
 import pandas as pd
 
+from fastcore.meta import delegates
+
 from vaep.io import dump_json
 import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
@@ -172,10 +174,10 @@ def get_folder_names(folders: Iterable[str]):
 
 
 class FeatureCounter():
-    def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter]):
+    def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter], overwrite=False):
         self.fp = Path(fp_counter)
         self.counting_fct = counting_fct
-        if self.fp.exists():
+        if self.fp.exists() and not overwrite:
             d = self.load(self.fp)
             self.counter = d['counter']
             self.loaded = set(folder for folder in d['based_on'])
@@ -272,11 +274,12 @@ def count_peptides(folders: List[Path], dump=True):
     return c
 
 
+@delegates()
 class PeptideCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_peptides):
-        super().__init__(fp_counter, counting_fct)
+                 counting_fct: Callable[[List], Counter] = count_peptides, **kwargs):
+        super().__init__(fp_counter, counting_fct, **kwargs)
 
 
 # Evidence
@@ -347,12 +350,12 @@ def count_evidence(folders: List[Path],
             parent_folder_fct=parent_folder_fct)
     return c
 
-
+@delegates()
 class EvidenceCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_evidence):
-        super().__init__(fp_counter, counting_fct)
+                 counting_fct: Callable[[List], Counter] = count_evidence, **kwargs):
+        super().__init__(fp_counter, counting_fct, **kwargs)
 
     def save(self):
         """Save state
@@ -463,9 +466,10 @@ count_protein_groups = Count(load_and_process_proteinGroups,
                              ],
                              outfolder=FOLDER_PROCESSED / 'proteinGroups_dumps')
 
-
+@delegates()
 class ProteinGroupsCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_protein_groups):
-        super().__init__(fp_counter, counting_fct)
+                 counting_fct: Callable[[List], Counter] = count_protein_groups,
+                 **kwargs):
+        super().__init__(fp_counter, counting_fct, **kwargs)
