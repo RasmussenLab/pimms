@@ -1,13 +1,17 @@
 from collections import namedtuple
+import logging
 from typing import List, Tuple, Union
 import json
 from pathlib import Path, PurePath, PurePosixPath
 
 import numpy as np
-
+import pandas as pd
 
 PathsList = namedtuple('PathsList', ['files', 'folder'])
 
+
+logger = logging.getLogger(__name__)
+logger.info(f"Calling from {__name__}")
 
 def search_files(path='.', query='.txt'):
     """Uses Pathlib to find relative to path files 
@@ -71,6 +75,20 @@ def resolve_path(path:Union[str, Path], to:Union[str, Path]='.')-> Path:
     pwd = [p for p in pwd.parts]
     ret = [p for p in Path(path).parts  if p not in pwd]
     return Path('/'.join(ret))
+
+
+def dump_to_csv(df: pd.DataFrame,
+                folder: Path,
+                outfolder: Path,
+                parent_folder_fct=None
+                ) -> None:
+    fname = f"{folder.stem}.csv"
+    if parent_folder_fct is not None:
+        outfolder = outfolder / parent_folder_fct(folder)
+    outfolder.mkdir(exist_ok=True, parents=True)
+    fname = outfolder / fname
+    logger.info(f"Dump to file: {fname}")
+    df.to_csv(fname)
 
 
 def dump_json(data_dict: dict, filename: Union[str, Path]):
