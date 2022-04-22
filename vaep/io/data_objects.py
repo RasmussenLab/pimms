@@ -14,7 +14,7 @@ import pandas as pd
 
 from fastcore.meta import delegates
 
-from vaep.io import dump_json
+from vaep.io import dump_json, dump_to_csv
 import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
 import vaep.pandas
@@ -248,13 +248,19 @@ class FeatureCounter():
         return d
 
 
-# aggregated peptides
+def create_parent_folder_name(folder: Path) -> str:
+    return folder.stem[:4]
+
+### aggregated peptides
 
 # # check df for redundant information (same feature value for all entries)
 usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE]
 
 
-def count_peptides(folders: List[Path], dump=True):
+def count_peptides(folders: List[Path], dump=True,
+                   use_cols=usecols,
+                   parent_folder_fct: Callable = create_parent_folder_name,
+                   outfolder=FOLDER_PROCESSED / 'agg_peptides_dumps'):
     c = Counter()
     for folder in folders:
         peptides = pd.read_table(folder / 'peptides.txt',
@@ -265,12 +271,9 @@ def count_peptides(folders: List[Path], dump=True):
         peptides = peptides.loc[~mask]
         c.update(peptides.index)
         if dump:
-            # change into subfolder structure:
-            folder_out = FOLDER_PROCESSED / folder.stem[:4]
-            folder_out.mkdir(exist_ok=True, parents=True)
-            fpath = folder_out / f"{folder.stem}.csv"
-            logger.info(f"Dump file: {fpath}")
-            peptides.drop('Potential contaminant', axis=1).to_csv(fpath)
+            dump_to_csv(peptides.drop('Potential contaminant', axis=1),
+                             folder=folder, outfolder=outfolder,
+                    parent_folder_fct=parent_folder_fct)
     return c
 
 
@@ -282,7 +285,7 @@ class PeptideCounter(FeatureCounter):
         super().__init__(fp_counter, counting_fct, **kwargs)
 
 
-# Evidence
+### Evidence
 evidence_cols = mq.mq_evidence_cols
 
 
@@ -296,24 +299,6 @@ def select_evidence(df_evidence: pd.DataFrame) -> pd.DataFrame:
 
 
 idx_columns_evidence = [evidence_cols.Sequence, evidence_cols.Charge]
-
-
-def create_parent_folder_name(folder: Path) -> str:
-    return folder.stem[:4]
-
-
-def dump_to_csv(df: pd.DataFrame,
-                folder: Path,
-                outfolder: Path,
-                parent_folder_fct=None
-                ) -> None:
-    fname = f"{folder.stem}.csv"
-    if parent_folder_fct is not None:
-        outfolder = outfolder / parent_folder_fct(folder)
-    outfolder.mkdir(exist_ok=True)
-    fname = outfolder / fname
-    logger.info(f"Dump to file: {fname}")
-    df.to_csv(fname)
 
 
 def load_process_evidence(folder: Path, use_cols, select_by):
@@ -350,6 +335,7 @@ def count_evidence(folders: List[Path],
             parent_folder_fct=parent_folder_fct)
     return c
 
+
 @delegates()
 class EvidenceCounter(FeatureCounter):
 
@@ -377,7 +363,7 @@ class EvidenceCounter(FeatureCounter):
             vaep.pandas.flatten_dict_of_dicts(d['counter']))
         return d
 
-# Protein Groups
+### Protein Groups
 
 
 pg_cols = mq.mq_protein_groups_cols
@@ -401,7 +387,6 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
 ]):
     folder = Path(folder)
     pg = pd.read_table(folder / 'proteinGroups.txt',
-                      #index_col=pg_cols.Protein_IDs,
                        usecols=use_cols)
     mask = pg[[pg_cols.Only_identified_by_site, pg_cols.Reverse,
                pg_cols.Potential_contaminant]].notna().sum(axis=1) > 0
