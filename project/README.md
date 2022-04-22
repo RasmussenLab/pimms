@@ -11,8 +11,8 @@ snakemake --snakefile Snakefile_2D_latent.smk -p --jobs 1 -n
 ## Notebooks
 for | notebook  | Description
 --- | ---  |  --- 
-erda | erda_01_mq_aggregate_summaries.ipynb | Aggregate current summary files from MQ runs into table
-erda | erda_01_mq_count_peptides.ipynb      | Aggregate peptide information from all MQ peptides.txt files <br> Saves processed file used for data selection (10_training_data)
+erda | erda_01_mq_select_runs.ipynb | Aggregate current summary files from MQ runs into table
+erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (10_training_data)
 erda | erda_10_training_data.ipynb          | ERDA: Build training data dump
 erda | erda_11_select_training_data.ipynb   | \[NEEDS UPDATE\] Sort training data by gene
 erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
@@ -56,6 +56,17 @@ _ | VAEP_POC.ipynb                     | First POC analysis
 ## erda notebooks
 
 - [ ] determine order and rename accordingly with prefix
+
+The data is for now processed only using MaxQuant. If the files are processed
+by another Software, these notebooks need to be adapted for if they contain `mq` or `MQ`.
+### erda_01_mq_select_runs
+
+- read in all summaries and select eligable runs based on number of identified peptides
+### erda_02_mq_count_features
+
+- Feature Extraction and Feature counting
+- dumps extracted features per group into `FOLDER_PROCESSED`
+  (separated for type and by year)
 
 
 ## 01 Analysis Fasta
