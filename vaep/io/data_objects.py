@@ -163,7 +163,7 @@ class MqAllSummaries():
         print(f"Selected  {mask.sum()} of {len(mask)} folders.")
         return [Path(relativ_to) / folder for folder in self.df.loc[mask].index]
 
-
+# maybe move functions related to fnames
 def get_fname(N, M):
     """Helper function to get file for intensities"""
     return f'df_intensities_N{N:05d}_M{M:05d}'
@@ -171,6 +171,10 @@ def get_fname(N, M):
 
 def get_folder_names(folders: Iterable[str]):
     return set(Path(folder).stem for folder in folders)
+
+
+def create_parent_folder_name(folder: Path) -> str:
+    return folder.stem[:4]
 
 
 class FeatureCounter():
@@ -209,7 +213,7 @@ class FeatureCounter():
                 with multiprocessing.Pool(n_workers) as p:
                     list_of_sample_dicts = list(tqdm(p.imap(self.counting_fct, folder_splits),
                                                      total=len(folder_splits),
-                                                     desc='Count peptides in 100 chunks'))
+                                                     desc='Count features in 100 chunks'))
             else:
                 list_of_sample_dicts = map(self.counting_fct, folder_splits)
             if not self.counter:
@@ -248,8 +252,36 @@ class FeatureCounter():
         return d
 
 
-def create_parent_folder_name(folder: Path) -> str:
-    return folder.stem[:4]
+class Count():
+
+    def __init__(self,
+                 process_folder_fct: Callable,
+                 use_cols=None,
+                 parent_folder_fct: Callable = create_parent_folder_name,
+                 outfolder=FOLDER_PROCESSED / 'dumps',
+                 dump=False):
+        self.outfolder = Path(outfolder)
+        self.outfolder.mkdir(exist_ok=True, parents=True)
+        self.use_cols = use_cols
+        self.process_folder_fct = process_folder_fct
+        self.parent_folder_fct = parent_folder_fct
+        self.dump = dump
+
+    def __call__(self, folders,
+                 **fct_args):
+        logging.debug(
+            f"Passed function arguments for process_folder_fct Callable: {fct_args}")
+        c = Counter()
+
+        for folder in tqdm(folders):
+            folder = Path(folder)
+            df = self.process_folder_fct(
+                folder=folder, use_cols=self.use_cols, **fct_args)
+            c.update(df.index)
+            if self.dump:
+                dump_to_csv(df, folder=folder, outfolder=self.outfolder,
+                            parent_folder_fct=self.parent_folder_fct)
+        return c
 
 ### aggregated peptides
 
@@ -408,36 +440,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     return pg
 
 
-class Count():
 
-    def __init__(self,
-                 process_folder_fct: Callable,
-                 use_cols=None,
-                 parent_folder_fct: Callable = create_parent_folder_name,
-                 outfolder=FOLDER_PROCESSED / 'dumps',
-                 dump=True):
-        self.outfolder = Path(outfolder)
-        self.outfolder.mkdir(exist_ok=True, parents=True)
-        self.use_cols = use_cols
-        self.process_folder_fct = process_folder_fct
-        self.parent_folder_fct = parent_folder_fct
-        self.dump = dump
-
-    def __call__(self, folders,
-                 **fct_args):
-        logging.debug(
-            f"Passed function arguments for process_folder_fct Callable: {fct_args}")
-        c = Counter()
-
-        for folder in tqdm(folders):
-            folder = Path(folder)
-            df = self.process_folder_fct(
-                folder=folder, use_cols=self.use_cols, **fct_args)
-            c.update(df.index)
-            if self.dump:
-                dump_to_csv(df, folder=folder, outfolder=self.outfolder,
-                            parent_folder_fct=self.parent_folder_fct)
-        return c
 
 
 count_protein_groups = Count(load_and_process_proteinGroups,
@@ -453,7 +456,8 @@ count_protein_groups = Count(load_and_process_proteinGroups,
                                  pg_cols.Potential_contaminant,
                                  pg_cols.Intensity,
                              ],
-                             outfolder=FOLDER_PROCESSED / 'proteinGroups_dumps')
+                             outfolder=FOLDER_PROCESSED / 'proteinGroups_dumps',
+                             dump=True)
 
 @delegates()
 class ProteinGroupsCounter(FeatureCounter):
