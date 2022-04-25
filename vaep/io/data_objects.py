@@ -249,6 +249,7 @@ class FeatureCounter():
         with open(self.fp) as f:
             d = json.load(f)
         d['counter'] = Counter(d['counter'])
+        self.loaded = set(folder for folder in d['based_on'])
         return d
 
 
