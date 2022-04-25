@@ -140,6 +140,11 @@ fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 FILEPATH_UTILS = 'src/file_utils.py'
 
+FNAME_C_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json' # aggregated peptides
+FNAME_C_EVIDENCE = FOLDER_PROCESSED / 'count_all_evidences.json' # evidence peptides (sequence, charge, modification)
+
+FNAME_C_PG = FOLDER_PROCESSED / 'count_all_protein_groups.json'
+FNAME_C_GENES = FOLDER_PROCESSED / 'count_all_genes.json'
 
 def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
     N, M = df.shape
