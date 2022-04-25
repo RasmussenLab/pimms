@@ -178,9 +178,12 @@ def create_parent_folder_name(folder: Path) -> str:
 
 
 class FeatureCounter():
-    def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter], overwrite=False):
+    def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter],
+                idx_names:Union[List, None]=None,
+                overwrite=False):
         self.fp = Path(fp_counter)
         self.counting_fct = counting_fct
+        self.idx_names = idx_names
         if self.fp.exists() and not overwrite:
             d = self.load(self.fp)
             self.counter = d['counter']
@@ -232,6 +235,30 @@ class FeatureCounter():
         else:
             logger.info('Nothing to process.')
         return self.counter
+
+    @property
+    def n_samples(self):
+        return len(self.loaded)
+    
+
+    def get_df_counts(self) -> pd.DataFrame:
+        """Counted features as DataFrame with proportion values.
+
+        Returns
+        -------
+        pd.DataFrame
+            _description_
+        """
+        feat_counts = (pd.Series(self.counter)
+                    .sort_values(ascending=False)
+                    .to_frame('counts'))
+        feat_counts['proportion'] = feat_counts / self.n_samples
+        if self.idx_names: 
+            feat_counts.index.names = self.idx_names
+        feat_counts.reset_index(inplace=True)
+        feat_counts.index.name = 'consecutive count'
+        return feat_counts  
+
 
     def save(self):
         """Save state
@@ -313,9 +340,12 @@ def count_peptides(folders: List[Path], dump=True,
 @delegates()
 class PeptideCounter(FeatureCounter):
 
-    def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_peptides, **kwargs):
-        super().__init__(fp_counter, counting_fct, **kwargs)
+    def __init__(self,
+                 fp_counter: str,
+                 counting_fct: Callable[[List], Counter] = count_peptides,
+                 idx_names=['Sequence'], **kwargs):
+        super().__init__(fp_counter, counting_fct=counting_fct,
+                         idx_names=idx_names, **kwargs)
 
 
 ### Evidence
@@ -373,8 +403,11 @@ def count_evidence(folders: List[Path],
 class EvidenceCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_evidence, **kwargs):
-        super().__init__(fp_counter, counting_fct, **kwargs)
+                 counting_fct: Callable[[List], Counter] = count_evidence,
+                 idx_names=['Sequence', 'Charge'],
+                 **kwargs):
+        super().__init__(fp_counter, counting_fct,
+                         idx_names=idx_names, **kwargs)
 
     def save(self):
         """Save state
@@ -465,5 +498,6 @@ class ProteinGroupsCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List], Counter] = count_protein_groups,
+                 idx_names=['protein group'],
                  **kwargs):
-        super().__init__(fp_counter, counting_fct, **kwargs)
+        super().__init__(fp_counter, counting_fct, idx_names=idx_names, **kwargs)
