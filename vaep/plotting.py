@@ -79,3 +79,54 @@ def make_large_descriptors():
                          'axes.titlesize':  'xx-large',
                          'axes.labelsize':  'xx-large',
                          })
+
+
+def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
+                             format_str: str = '{x:,.3f}') -> matplotlib.axes.Axes:
+    """Add proportion as second axis. Try to align cleverly
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Axes for which you want to add a second y-axis
+    n_samples : int
+        Number of total samples (to normalize against)
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        Second layover twin Axes with right-hand side y-axis
+    """
+    ax2 = ax.twinx()
+    n_min, n_max = np.round(ax.get_ybound())
+    lower_prop = n_min/n_samples + (ax.get_ybound()[0] - n_min) / n_samples
+    upper_prop = n_max/n_samples + (ax.get_ybound()[1] - n_max) / n_samples
+    ax2.set_ybound(lower_prop, upper_prop)
+    _ = ax2.set_yticks(np.linspace(n_min/n_samples, n_max /
+                       n_samples, len(ax.get_yticks())-2))
+    ax2.yaxis.set_major_formatter(
+        matplotlib.ticker.StrMethodFormatter(format_str))
+    return ax2
+
+
+def format_large_numbers(ax: matplotlib.axes.Axes,
+                         format_str: str = '{x:,.0f}') -> matplotlib.axes.Axes:
+    """Format large integer numbers to be read more easily.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        Axes which labels should be manipulated.
+    format_str : str, optional
+        Default float format string, by default '{x:,.0f}'
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        _description_
+    """
+    ax.xaxis.set_major_formatter(
+        matplotlib.ticker.StrMethodFormatter(format_str))
+    ax.yaxis.set_major_formatter(
+        matplotlib.ticker.StrMethodFormatter(format_str))
+    return ax
