@@ -283,7 +283,7 @@ class FeatureCounter():
         feat_counts.index.name = 'consecutive count'
         return feat_counts  
 
-    def plot_counts(self, df_counts: pd.DataFrame = None, ax=None):
+    def plot_counts(self, df_counts: pd.DataFrame = None, ax=None, prop_feat=0.25, min_feat_prop=.01):
         """Plot counts based on get_df_counts."""
         if df_counts is None:
             df_counts = self.get_df_counts()
@@ -292,6 +292,27 @@ class FeatureCounter():
                               n_samples=self.n_samples,
                               count_col='counts',
                               ax=ax)
+        n_feat_cutoff = vaep.pandas.get_last_value_matching_proportion(
+            df_counts=df_counts, prop=prop_feat, ordered=False)
+        n_samples_cutoff = df_counts.loc[n_feat_cutoff, 'counts']
+        logger.info(f'{n_feat_cutoff = }, {n_samples_cutoff = }')
+        x_lim_max = vaep.pandas.get_last_value_matching_proportion(
+            df_counts, min_feat_prop)
+        logger.info(f'{x_lim_max = }')
+        ax.set_xlim(-1, x_lim_max)
+        ax.axvline(n_feat_cutoff, c='red')
+
+        # ax.text(n_feat_cutoff + 0.03 * x_lim_max,
+        #         n_samples_cutoff, '25% cutoff',
+        #         style='italic', fontsize=12,
+        #         bbox={'facecolor': 'grey', 'alpha': 0.5, 'pad': 10})
+
+        ax.annotate(f'{prop_feat*100}% cutoff',
+                    xy=(n_feat_cutoff, n_samples_cutoff),
+                    xytext=(n_feat_cutoff + 0.1 * x_lim_max, n_samples_cutoff),
+                    fontsize=16,
+                    arrowprops=dict(facecolor='black', shrink=0.05))
+
         return ax
 
     def save(self):
