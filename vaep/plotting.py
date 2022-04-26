@@ -99,11 +99,14 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     """
     ax2 = ax.twinx()
     n_min, n_max = np.round(ax.get_ybound())
+    logger.info(f"{n_min = }, {n_max = }")
     lower_prop = n_min/n_samples + (ax.get_ybound()[0] - n_min) / n_samples
     upper_prop = n_max/n_samples + (ax.get_ybound()[1] - n_max) / n_samples
+    logger.info(f'{lower_prop = }, {upper_prop = }')
     ax2.set_ybound(lower_prop, upper_prop)
-    _ = ax2.set_yticks(np.linspace(n_min/n_samples, n_max /
-                       n_samples, len(ax.get_yticks())-2))
+    # _ = ax2.set_yticks(np.linspace(n_min/n_samples,
+    #                    n_max /n_samples, len(ax.get_yticks())-2))
+    _ = ax2.set_yticks(ax.get_yticks()[1:-1]/n_samples)
     ax2.yaxis.set_major_formatter(
         matplotlib.ticker.StrMethodFormatter(format_str))
     return ax2

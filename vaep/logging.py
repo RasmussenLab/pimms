@@ -7,8 +7,8 @@ LOG_FOLDER = Path('logs')
 LOG_FOLDER.mkdir(exist_ok=True)
 
 
-def setup_nb_logger(level:int=logging.INFO, 
-                 format_str:str=f'%(name)s - %(levelname)-8s %(message)s') -> None:
+def setup_nb_logger(level: int = logging.INFO,
+                    format_str: str = f'%(name)s - %(levelname)-8s %(message)s') -> None:
     logging.basicConfig(level=level, format=format_str)
     logger = logging.getLogger()
     logger.setLevel(level) # in case logger existed already before calling basicConfig
