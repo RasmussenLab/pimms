@@ -177,13 +177,37 @@ def create_parent_folder_name(folder: Path) -> str:
     return folder.stem[:4]
 
 
+## plotting function for value_counts from FeatureCounter.get_df_counts
+
+def plot_feat_counts(df_counts, feat_name, n_samples,
+                     ax=None, figsize=(15, 10),
+                     count_col='counts'):
+    ax = df_counts[count_col].plot(
+        figsize=figsize,
+        ylabel='counts',
+        xlabel=f'{feat_name} count ordered by completeness',
+        title=f'Count and proportion of {len(df_counts):,d} {feat_name}s over {n_samples:,d} samples',
+        grid=True,
+        ax=ax)
+
+    # default nearly okay, but rather customize to see minimal and maxium proportion
+    # ax = peptide_counts['proportion'].plot(secondary_y=True, style='b')
+
+    ax2 = vaep.plotting.add_prop_as_second_yaxis(ax=ax, n_samples=n_samples)
+    ax2.set_ylabel('proportion')
+    ax = vaep.plotting.format_large_numbers(ax=ax)
+    return ax
+
+
 class FeatureCounter():
     def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter],
                 idx_names:Union[List, None]=None,
+                feature_name='feature',
                 overwrite=False):
         self.fp = Path(fp_counter)
         self.counting_fct = counting_fct
         self.idx_names = idx_names
+        self.feature_name = feature_name
         if self.fp.exists() and not overwrite:
             d = self.load(self.fp)
             self.counter = d['counter']
@@ -259,6 +283,16 @@ class FeatureCounter():
         feat_counts.index.name = 'consecutive count'
         return feat_counts  
 
+    def plot_counts(self, df_counts: pd.DataFrame = None, ax=None):
+        """Plot counts based on get_df_counts."""
+        if df_counts is None:
+            df_counts = self.get_df_counts()
+        ax = plot_feat_counts(df_counts,
+                              feat_name=self.feature_name,
+                              n_samples=self.n_samples,
+                              count_col='counts',
+                              ax=ax)
+        return ax
 
     def save(self):
         """Save state
@@ -343,9 +377,11 @@ class PeptideCounter(FeatureCounter):
     def __init__(self,
                  fp_counter: str,
                  counting_fct: Callable[[List], Counter] = count_peptides,
-                 idx_names=['Sequence'], **kwargs):
+                 idx_names=['Sequence'],
+                 feature_name='aggregated peptide',
+                  **kwargs):
         super().__init__(fp_counter, counting_fct=counting_fct,
-                         idx_names=idx_names, **kwargs)
+                         idx_names=idx_names, feature_name=feature_name, **kwargs)
 
 
 ### Evidence
@@ -405,9 +441,10 @@ class EvidenceCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List], Counter] = count_evidence,
                  idx_names=['Sequence', 'Charge'],
+                 feature_name='charged peptide',
                  **kwargs):
         super().__init__(fp_counter, counting_fct,
-                         idx_names=idx_names, **kwargs)
+                         idx_names=idx_names, feature_name=feature_name, **kwargs)
 
     def save(self):
         """Save state
@@ -493,14 +530,18 @@ count_protein_groups = Count(load_and_process_proteinGroups,
                              outfolder=FOLDER_PROCESSED / 'proteinGroups_dumps',
                              dump=True)
 
+
 @delegates()
 class ProteinGroupsCounter(FeatureCounter):
 
     def __init__(self, fp_counter: str,
-                 counting_fct: Callable[[List], Counter] = count_protein_groups,
+                 counting_fct: Callable[[List],
+                                        Counter] = count_protein_groups,
                  idx_names=['protein group'],
+                 feature_name='protein group',
                  **kwargs):
-        super().__init__(fp_counter, counting_fct, idx_names=idx_names, **kwargs)
+        super().__init__(fp_counter, counting_fct, idx_names=idx_names,
+                         feature_name=feature_name, **kwargs)
 
 
 ## Gene Counter
@@ -526,7 +567,10 @@ count_genes = Count(pg_idx_gene_fct,
 @delegates()
 class GeneCounter(FeatureCounter):
     """Gene Counter to count gene in dumped proteinGroups."""
-    def __init__(self, fp_counter:str,
-                counting_fct: Callable[[List], Counter] = count_genes,
-                idx_names=['Gene'], **kwargs):
-        super().__init__(fp_counter, counting_fct, idx_names=idx_names, **kwargs)
+
+    def __init__(self, fp_counter: str,
+                 counting_fct: Callable[[List], Counter] = count_genes,
+                 feature_name='gene',
+                 idx_names=['Gene'], **kwargs):
+        super().__init__(fp_counter, counting_fct, idx_names=idx_names,
+                         feature_name=feature_name, **kwargs)
