@@ -501,3 +501,32 @@ class ProteinGroupsCounter(FeatureCounter):
                  idx_names=['protein group'],
                  **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names, **kwargs)
+
+
+## Gene Counter
+
+def pg_idx_gene_fct(folder:Union[str, Path], use_cols=None):
+    folder = Path(folder)
+    logger.debug(f"Load: {folder}")
+    df = pd.read_csv(folder, index_col=pg_cols.Gene_names, usecols=use_cols)
+    return df
+
+
+count_genes = Count(pg_idx_gene_fct,
+                    use_cols=[
+                        pg_cols.Protein_IDs,
+                        pg_cols.Gene_names,
+                        pg_cols.Intensity,
+                    ],
+                    outfolder=FOLDER_PROCESSED / 'gene_dumps',  # don't dump, only read
+                    dump=False)
+
+
+#summing needs to be done over processed proteinGroup dumps
+@delegates()
+class GeneCounter(FeatureCounter):
+    """Gene Counter to count gene in dumped proteinGroups."""
+    def __init__(self, fp_counter:str,
+                counting_fct: Callable[[List], Counter] = count_genes,
+                idx_names=['Gene'], **kwargs):
+        super().__init__(fp_counter, counting_fct, idx_names=idx_names, **kwargs)
