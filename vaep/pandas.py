@@ -308,3 +308,14 @@ def length(x):
         return len(x)
     except:
         return 0
+
+
+def get_last_value_matching_proportion(df_counts: pd.DataFrame,
+                                       prop:float=0.25,
+                                       prop_col:str='proportion',
+                                       ordered: bool = True) -> int:
+    if not ordered:
+        df_counts = df_counts.sort_values(prop_col, ascending=False)
+    mask = df_counts[prop_col] > prop
+    idx_cutoff = df_counts[prop_col].loc[mask].tail(1).index[0]
+    return idx_cutoff
