@@ -398,6 +398,19 @@ def count_peptides(folders: List[Path], dump=True,
     ret = {'counter': c, 'dumps': fpath_dict}
     return ret
 
+d_dtypes_training_sample = {
+    'Sequence': pd.StringDtype(),
+    'Proteins': pd.StringDtype(),
+    'Leading razor protein': pd.StringDtype(),
+    'Gene names': pd.StringDtype(),
+    'Intensity': pd.Int64Dtype()
+}
+
+
+def load_agg_peptide_dump(fpath):
+    fpath = Path(fpath)
+    peptides = pd.read_csv(fpath, index_col=0, dtype=d_dtypes_training_sample)
+    return peptides
 
 @delegates()
 class PeptideCounter(FeatureCounter):
@@ -410,6 +423,11 @@ class PeptideCounter(FeatureCounter):
                   **kwargs):
         super().__init__(fp_counter, counting_fct=counting_fct,
                          idx_names=idx_names, feature_name=feature_name, **kwargs)
+
+    @staticmethod
+    def load_dump(fpath):
+        return load_agg_peptide_dump(fpath)
+
 
 
 ### Evidence
