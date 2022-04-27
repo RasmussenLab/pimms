@@ -89,6 +89,7 @@ def dump_to_csv(df: pd.DataFrame,
     fname = outfolder / fname
     logger.info(f"Dump to file: {fname}")
     df.to_csv(fname)
+    return fname
 
 
 def dump_json(data_dict: dict, filename: Union[str, Path]):
