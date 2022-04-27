@@ -212,9 +212,11 @@ class FeatureCounter():
             d = self.load(self.fp)
             self.counter = d['counter']
             self.loaded = set(folder for folder in d['based_on'])
+            self.dumps = d['dumps']
         else:
-            self.loaded = None
-            self.counter = None
+            self.loaded = set() # None
+            self.counter = Counter()
+            self.dumps = dict()
 
     def __repr__(self):
         return f"{self.__class__.__name__}(fp_counter={str(self.fp)})"
@@ -243,12 +245,11 @@ class FeatureCounter():
                                                      desc='Count features in 100 chunks'))
             else:
                 list_of_sample_dicts = map(self.counting_fct, folder_splits)
-            if not self.counter:
-                self.counter = Counter()
             for d in tqdm(list_of_sample_dicts,
                           total=len(folder_splits),
                           desc='combine counters from chunks'):
-                self.counter += d
+                self.counter += d['counter']
+                self.dumps.update(d['dumps'])
 
             if self.loaded:
                 self.loaded |= new_folder_names
@@ -320,10 +321,13 @@ class FeatureCounter():
 
         {
          'counter': Counter,
-         'based_on': list
+         'based_on': list,
+         'dumps: dict,
          }
         """
-        d = {'counter': self.counter, 'based_on': list(self.loaded)}
+        d = {'counter': self.counter,
+            'based_on': list(self.loaded),
+            'dumps': {k: str(v) for k, v in self.dumps.items()}}
         logger.info(f"Save to: {self.fp}")
         dump_json(d, filename=self.fp)
 
@@ -331,7 +335,7 @@ class FeatureCounter():
         with open(self.fp) as f:
             d = json.load(f)
         d['counter'] = Counter(d['counter'])
-        self.loaded = set(folder for folder in d['based_on'])
+        d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
 
 
@@ -355,16 +359,17 @@ class Count():
         logging.debug(
             f"Passed function arguments for process_folder_fct Callable: {fct_args}")
         c = Counter()
-
+        fpath_dict = {}
         for folder in tqdm(folders):
             folder = Path(folder)
             df = self.process_folder_fct(
                 folder=folder, use_cols=self.use_cols, **fct_args)
             c.update(df.index)
             if self.dump:
-                dump_to_csv(df, folder=folder, outfolder=self.outfolder,
+                fpath_dict[folder.stem] = dump_to_csv(df, folder=folder, outfolder=self.outfolder,
                             parent_folder_fct=self.parent_folder_fct)
-        return c
+        ret = {'counter': c, 'dumps': fpath_dict}
+        return ret
 
 ### aggregated peptides
 
@@ -377,6 +382,7 @@ def count_peptides(folders: List[Path], dump=True,
                    parent_folder_fct: Callable = create_parent_folder_name,
                    outfolder=FOLDER_PROCESSED / 'agg_peptides_dumps'):
     c = Counter()
+    fpath_dict = {}
     for folder in folders:
         peptides = pd.read_table(folder / 'peptides.txt',
                                  usecols=usecols,
@@ -386,10 +392,11 @@ def count_peptides(folders: List[Path], dump=True,
         peptides = peptides.loc[~mask]
         c.update(peptides.index)
         if dump:
-            dump_to_csv(peptides.drop('Potential contaminant', axis=1),
+            fpath_dict[folder.stem] = dump_to_csv(peptides.drop('Potential contaminant', axis=1),
                              folder=folder, outfolder=outfolder,
                     parent_folder_fct=parent_folder_fct)
-    return c
+    ret = {'counter': c, 'dumps': fpath_dict}
+    return ret
 
 
 @delegates()
@@ -444,16 +451,18 @@ def count_evidence(folders: List[Path],
     outfolder = Path(outfolder)
     outfolder.mkdir(exist_ok=True, parents=True)
     c = Counter()
-
+    if dump:
+        fpath_dict = {}
     for folder in tqdm(folders):
         folder = Path(folder)
         evidence = load_process_evidence(
             folder=folder, use_cols=use_cols, select_by=select_by)
         c.update(evidence.index)
         if dump:
-            dump_to_csv(evidence, folder=folder, outfolder=outfolder,
+            fpath_dict[folder.stem] = dump_to_csv(evidence, folder=folder, outfolder=outfolder,
             parent_folder_fct=parent_folder_fct)
-    return c
+    ret = {'counter': c, 'dumps': fpath_dict}
+    return ret
 
 
 @delegates()
@@ -467,6 +476,7 @@ class EvidenceCounter(FeatureCounter):
         super().__init__(fp_counter, counting_fct,
                          idx_names=idx_names, feature_name=feature_name, **kwargs)
 
+    # Methods should use super, otherwise non-specific duplication is needed.
     def save(self):
         """Save state
 
@@ -476,7 +486,8 @@ class EvidenceCounter(FeatureCounter):
          }
         """
         d = {'counter': vaep.pandas.create_dict_of_dicts(self.counter),
-             'based_on': list(self.loaded)}
+             'based_on': list(self.loaded), 
+             'dumps': {k: str(v) for k, v in self.dumps.items()}}
         print(f"Save to: {self.fp}")
         dump_json(d, filename=self.fp)
 
@@ -485,6 +496,7 @@ class EvidenceCounter(FeatureCounter):
             d = json.load(f)
         d['counter'] = Counter(
             vaep.pandas.flatten_dict_of_dicts(d['counter']))
+        d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
 
 ### Protein Groups
