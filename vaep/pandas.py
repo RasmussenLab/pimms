@@ -1,3 +1,4 @@
+from ast import Index
 import collections.abc
 from collections import namedtuple
 from subprocess import call
@@ -310,12 +311,27 @@ def length(x):
         return 0
 
 
-def get_last_value_matching_proportion(df_counts: pd.DataFrame,
+def get_last_index_matching_proportion(df_counts: pd.DataFrame,
                                        prop:float=0.25,
-                                       prop_col:str='proportion',
-                                       ordered: bool = True) -> int:
-    if not ordered:
-        df_counts = df_counts.sort_values(prop_col, ascending=False)
+                                       prop_col:str='proportion') -> object:
+    """df_counts needs to be sorted by "prop_col" (descending).
+
+    Parameters
+    ----------
+    df_counts : pd.DataFrame
+        df counts with ascending values along proportion column.
+        Index should be unique.
+    prop : float, optional
+        cutoff, inclusive, by default 0.25
+    prop_col : str, optional
+        column name for proportion, by default 'proportion'
+
+    Returns
+    -------
+    object
+        Index value for cutoff
+    """
+    assert df_counts.index.is_unique
     mask = df_counts[prop_col] > prop
     idx_cutoff = df_counts[prop_col].loc[mask].tail(1).index[0]
     return idx_cutoff
