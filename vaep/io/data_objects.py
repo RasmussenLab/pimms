@@ -293,11 +293,11 @@ class FeatureCounter():
                               n_samples=self.n_samples,
                               count_col='counts',
                               ax=ax)
-        n_feat_cutoff = vaep.pandas.get_last_value_matching_proportion(
-            df_counts=df_counts, prop=prop_feat, ordered=False)
+        n_feat_cutoff = vaep.pandas.get_last_index_matching_proportion(
+            df_counts=df_counts, prop=prop_feat)
         n_samples_cutoff = df_counts.loc[n_feat_cutoff, 'counts']
         logger.info(f'{n_feat_cutoff = }, {n_samples_cutoff = }')
-        x_lim_max = vaep.pandas.get_last_value_matching_proportion(
+        x_lim_max = vaep.pandas.get_last_index_matching_proportion(
             df_counts, min_feat_prop)
         logger.info(f'{x_lim_max = }')
         ax.set_xlim(-1, x_lim_max)
