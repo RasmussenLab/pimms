@@ -199,6 +199,40 @@ def plot_feat_counts(df_counts, feat_name, n_samples,
     return ax
 
 
+def collect_in_chuncks(paths: Iterable[Union[str, Path]],
+                       process_chunk_fct: Callable,
+                       n_workers: int = N_WORKERS_DEFAULT,
+                       chunks=10,
+                       desc='Run chunks in parallel') -> List:
+    """collect the results from process_chunk_fct (chunk of files to loop over).
+    The idea is that process_chunk_fct creates a more memory-efficient intermediate
+    result than possible if only callling single fpaths in paths. 
+
+    Parameters
+    ----------
+    paths : Iterable
+        Iterable of paths
+    process_chunk_fct : Iterable[str, Path]
+        Callable which takes a chunk of paths and returns an result to collect, e.g. a dict
+    n_workers : int, optional
+        number of processes, by default N_WORKERS_DEFAULT
+
+    Returns
+    -------
+    List
+        List of results returned by process_chunk_fct
+    """
+    paths_splits = np.array_split(paths, min(chunks, len(paths)))
+    if n_workers > 1:
+        with multiprocessing.Pool(n_workers) as p:
+            list_of_sample_dicts = list(tqdm(p.imap(process_chunk_fct, paths_splits),
+                                             total=len(paths_splits),
+                                             desc=desc))
+    else:
+        list_of_sample_dicts = map(process_chunk_fct, paths_splits)
+    return list_of_sample_dicts
+
+
 class FeatureCounter():
     def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter],
                 idx_names:Union[List, None]=None,
@@ -237,16 +271,14 @@ class FeatureCounter():
                 folders = []
 
         if folders:
-            folder_splits = np.array_split(folders, min(100, len(folders)))
-            if n_workers > 1:
-                with multiprocessing.Pool(n_workers) as p:
-                    list_of_sample_dicts = list(tqdm(p.imap(self.counting_fct, folder_splits),
-                                                     total=len(folder_splits),
-                                                     desc='Count features in 100 chunks'))
-            else:
-                list_of_sample_dicts = map(self.counting_fct, folder_splits)
+            list_of_sample_dicts = collect_in_chuncks(folders,
+                       process_chunk_fct=self.counting_fct,
+                       n_workers = n_workers,
+                         chunks=n_workers*3,
+                       desc = 'Count features in 100 chunks')
+
             for d in tqdm(list_of_sample_dicts,
-                          total=len(folder_splits),
+                          total=len(list_of_sample_dicts),
                           desc='combine counters from chunks'):
                 self.counter += d['counter']
                 self.dumps.update(d['dumps'])
