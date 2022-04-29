@@ -150,8 +150,11 @@ def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
     N, M = df.shape
     return f'{stub}_N{N:05d}_M{M:05d}'
 
-def insert_shape(df: pandas.DataFrame, template: str = "filename{}.txt"):
-    N, M = df.shape
+def insert_shape(df: pandas.DataFrame, template: str = "filename{}.txt", shape=None):
+    if shape is None:
+        N, M = df.shape
+    else:
+        N, M = shape
     return template.format(f'_N{N:05d}_M{M:05d}')
 
 # put to testing
