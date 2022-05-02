@@ -18,7 +18,7 @@ import pandas
 import matplotlib as mpl
 
 def mkdir(path=Path):
-    path.mkdir(exist_ok=True)
+    path.mkdir(exist_ok=True, parents=True)
     return path
 
 import vaep.io

@@ -549,6 +549,11 @@ class EvidenceCounter(FeatureCounter):
         d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
 
+
+def load_evidence_dump(fpath, index_col=['Sequence', 'Charge']):
+    df = pd.read_csv(fpath, index_col=index_col)
+    return df
+
 ### Protein Groups
 
 
@@ -620,12 +625,17 @@ class ProteinGroupsCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List],
                                         Counter] = count_protein_groups,
-                 idx_names=['protein group'],
+                 idx_names=[pg_cols.Protein_IDs], # mq_specfic
                  feature_name='protein group',
                  **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names,
                          feature_name=feature_name, **kwargs)
 
+
+def load_pg_dump(folder, use_cols=None):
+    logger.debug(f"Load: {folder}")
+    df = pd.read_csv(folder, index_col=pg_cols.Protein_IDs, usecols=use_cols)
+    return df
 
 ## Gene Counter
 
@@ -654,6 +664,6 @@ class GeneCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List], Counter] = count_genes,
                  feature_name='gene',
-                 idx_names=['Gene'], **kwargs):
+                 idx_names=['Gene names'], **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names,
                          feature_name=feature_name, **kwargs)
