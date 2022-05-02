@@ -132,8 +132,12 @@ class MqAllSummaries():
                 with multiprocessing.Pool(workers) as p:
                     # set chunksize: https://stackoverflow.com/a/49533645/9684872
                     chunksize = calc_chunksize(workers, len(samples), factor=2)
-                    list_of_updates = list(tqdm(p.imap(
-                        self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
+                    list_of_updates = list(
+                        tqdm(
+                            p.imap(self.load_summary, samples,
+                                   chunksize=chunksize),
+                            total=len(samples),
+                            desc='Load summaries'))
             else:
                 list_of_updates = [self.load_summary(
                     folder) for folder in tqdm(samples)]
@@ -225,12 +229,12 @@ def collect_in_chuncks(paths: Iterable[Union[str, Path]],
     paths_splits = np.array_split(paths, min(chunks, len(paths)))
     if n_workers > 1:
         with multiprocessing.Pool(n_workers) as p:
-            list_of_sample_dicts = list(tqdm(p.imap(process_chunk_fct, paths_splits),
+            collected = list(tqdm(p.imap(process_chunk_fct, paths_splits),
                                              total=len(paths_splits),
                                              desc=desc))
     else:
-        list_of_sample_dicts = map(process_chunk_fct, paths_splits)
-    return list_of_sample_dicts
+        collected = map(process_chunk_fct, paths_splits)
+    return collected
 
 
 class FeatureCounter():
