@@ -1,9 +1,11 @@
 from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Tuple
+from typing import Tuple, Union, List
 import itertools
 import random
+
+# from fastcore.meta import delegates
 
 import numpy as np
 import pandas as pd
@@ -23,13 +25,27 @@ from vaep.io.datasplits import long_format, wide_format
 
 from . import metadata
 
+
 __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 
 
 ALPHA = 0.5
 
 
-
+def verify_df(df,
+           fname,
+           index_col,  # could be potentially 0 for the first column
+           verify_fname: bool = False,
+           usecols=None,
+           ):
+    if usecols and isinstance(index_col, str):
+        assert index_col in usecols, 'Add index_col to usecols Sequence'
+    N, M = df.shape
+    if verify_fname:
+        assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
+            ("Filename number don't match loaded numbers: "
+                f"{fname} should contain N{N} and M{M}")
+    
 
 class AnalyzePeptides(SimpleNamespace):
     """Namespace for current analysis
@@ -61,21 +77,35 @@ class AnalyzePeptides(SimpleNamespace):
         self.index_col = self.df.index.name
 
     @classmethod
-    def from_csv(cls, fname:str, nrows:int=None,
-                  index_col:str='Sample ID',  # could be potentially 0 for the first column
-                  verify_fname:bool=False,
-                  usecols=None,
-                  **kwargs):
+    def from_csv(cls, fname: str,
+                 nrows: int = None,
+                 # could be potentially 0 for the first column
+                 index_col: Union[int, str, List] = 'Sample ID',
+                 verify_fname: bool = False,
+                 usecols=None,
+                 **kwargs):
         df = pd.read_csv(fname, index_col=index_col, low_memory=False,
                          nrows=nrows, usecols=usecols)
-        if usecols and isinstance(index_col, str):
-            assert index_col in usecols, 'Add index_col to usecols Sequence'
-        N, M = df.shape
-        if verify_fname:
-            assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
-                ("Filename number don't match loaded numbers: "
-                 f"{fname} should contain N{N} and M{M}")
-        return cls(data=df, **kwargs)
+        verify_df(df=df, fname=fname,
+                  index_col=index_col,
+                  verify_fname=verify_fname,
+                  usecols=usecols)
+        return cls(data=df, **kwargs)  # all __init__ parameters are kwargs
+
+    @classmethod
+    # @delegates(from_csv)  # does only include parameters with defaults
+    def from_pickle(cls, fname: str,
+                    # could be potentially 0 for the first column
+                    index_col: Union[int, str, List] = 'Sample ID',
+                    verify_fname: bool = False,
+                    usecols=None,
+                    **kwargs):
+        df = pd.read_pickle(fname)
+        verify_df(df=df, fname=fname,
+                  index_col=index_col,
+                  verify_fname=verify_fname,
+                  usecols=usecols)
+        return cls(data=df, **kwargs)  # all __init__ parameters are kwargs
 
     def get_consecutive_dates(self, n_samples, seed=42):
         """Select n consecutive samples using a seed.
