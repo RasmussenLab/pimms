@@ -38,7 +38,7 @@ logger.info("Experiment 01")
 ```python
 N_SAMPLES_TO_LOAD = None
 FN_PEPTIDE_INTENSITIES = config.FOLDER_DATA / 'df_intensities_N07813_M01000'
-analysis = AnalyzePeptides.from_file(
+analysis = AnalyzePeptides.from_csv(
     fname=FN_PEPTIDE_INTENSITIES, nrows=N_SAMPLES_TO_LOAD)
 analysis.df = analysis.df.sort_index()  # sort by date
 assert analysis.df.index.is_unique, "Non-unique training samples"

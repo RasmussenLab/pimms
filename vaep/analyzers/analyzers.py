@@ -61,7 +61,7 @@ class AnalyzePeptides(SimpleNamespace):
         self.index_col = self.df.index.name
 
     @classmethod
-    def from_file(cls, fname:str, nrows:int=None,
+    def from_csv(cls, fname:str, nrows:int=None,
                   index_col:str='Sample ID',  # could be potentially 0 for the first column
                   verify_fname:bool=False,
                   usecols=None,
