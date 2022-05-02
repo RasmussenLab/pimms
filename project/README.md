@@ -13,7 +13,7 @@ for | notebook  | Description
 --- | ---  |  --- 
 erda | erda_01_mq_select_runs.ipynb | Aggregate current summary files from MQ runs into table
 erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (10_training_data)
-erda | erda_10_training_data.ipynb          | ERDA: Build training data dump
+erda | erda_03_training_data.ipynb          | ERDA: Build training data dump (one by one)
 erda | erda_11_select_training_data.ipynb   | \[NEEDS UPDATE\] Sort training data by gene
 erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
 _ | 01_FASTA_data_agg_by_gene.ipynb    | Investigate possibility to join proteins by gene
@@ -68,6 +68,11 @@ by another Software, these notebooks need to be adapted for if they contain `mq`
 - dumps extracted features per group into `FOLDER_PROCESSED`
   (separated for type and by year)
 
+### erda_03_training_data
+
+- needs to be executed for each data type
+- loads a python config file (setting `FeatureCounter` classes and custom functions)
+  along string configuration variables
 
 ## 01 Analysis Fasta
 
