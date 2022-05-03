@@ -377,6 +377,9 @@ class FeatureCounter():
         d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
 
+    def load_dump(self, fpath, fct=pd.read_csv, use_cols=None):
+        return fct(fpath, index=self.idx_names, usecols=None)
+
 
 class Count():
 
