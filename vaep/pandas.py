@@ -108,7 +108,7 @@ def prop_unique_index(df: pd.DataFrame) -> pd.DataFrame:
 
 def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') -> str:
     for symbol in replace:
-        string_key = string_key.replace(symbol, '')
+        string_key = string_key.replace(symbol, replace_with)
     return string_key
 
 
