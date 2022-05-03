@@ -34,14 +34,17 @@ ALPHA = 0.5
 
 def verify_df(df,
            fname,
-           index_col,  # could be potentially 0 for the first column
+           index_col:str,  # could be potentially 0 for the first column
            verify_fname: bool = False,
            usecols=None,
            ):
     if usecols and isinstance(index_col, str):
         assert index_col in usecols, 'Add index_col to usecols Sequence'
-    N, M = df.shape
     if verify_fname:
+        if not len(df.shape) == 2:
+            raise ValueError(f"Expected 2 -dimensional array, not {len(df.shape)} -dimensional,"
+            f" of type: {type(df)}")
+        N, M = df.shape
         assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
             ("Filename number don't match loaded numbers: "
                 f"{fname} should contain N{N} and M{M}")

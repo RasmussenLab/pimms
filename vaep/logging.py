@@ -10,14 +10,15 @@ LOG_FOLDER.mkdir(exist_ok=True)
 def setup_nb_logger(level: int = logging.INFO,
                     format_str: str = f'%(name)s - %(levelname)-8s %(message)s') -> None:
     logging.basicConfig(level=level, format=format_str)
-    logger = logging.getLogger()
-    logger.setLevel(level) # in case logger existed already before calling basicConfig
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level) # in case root_logger existed already before calling basicConfig
     c_format = logging.Formatter(format_str)
-    if logger.handlers:
-        handler = logger.handlers[0]
+    if root_logger.handlers:
+        handler = root_logger.handlers[0]
     else:
         handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(c_format)
+    return root_logger
 
 def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     """Setup logging in project. Takes a logger an creates
