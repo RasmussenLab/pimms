@@ -103,6 +103,7 @@ class MqAllSummaries():
         folder_name = folder.stem
         try:
             mq_output = MaxQuantOutputDynamic(folder)
+            # to_dict not very performant
             return {folder_name: mq_output.summary.iloc[0].to_dict()}
         except FileNotFoundError as e:
             if not mq_output.files and len(list(mq_output.folder.iterdir())) == 0:
@@ -127,13 +128,19 @@ class MqAllSummaries():
             self.empty_folders = manager.list()
 
         if samples:
-
+            # process_chunch_fct = self.load_summary
+            # workers=workers
+            # desc = 'Load summaries'
             if workers > 1:
                 with multiprocessing.Pool(workers) as p:
                     # set chunksize: https://stackoverflow.com/a/49533645/9684872
                     chunksize = calc_chunksize(workers, len(samples), factor=2)
-                    list_of_updates = list(tqdm(p.imap(
-                        self.load_summary, samples, chunksize=chunksize), total=len(samples), desc='Load summaries'))
+                    list_of_updates = list(
+                        tqdm(
+                            p.imap(self.load_summary, samples,
+                                   chunksize=chunksize),
+                            total=len(samples),
+                            desc='Load summaries'))
             else:
                 list_of_updates = [self.load_summary(
                     folder) for folder in tqdm(samples)]
@@ -225,12 +232,12 @@ def collect_in_chuncks(paths: Iterable[Union[str, Path]],
     paths_splits = np.array_split(paths, min(chunks, len(paths)))
     if n_workers > 1:
         with multiprocessing.Pool(n_workers) as p:
-            list_of_sample_dicts = list(tqdm(p.imap(process_chunk_fct, paths_splits),
+            collected = list(tqdm(p.imap(process_chunk_fct, paths_splits),
                                              total=len(paths_splits),
                                              desc=desc))
     else:
-        list_of_sample_dicts = map(process_chunk_fct, paths_splits)
-    return list_of_sample_dicts
+        collected = map(process_chunk_fct, paths_splits)
+    return collected
 
 
 class FeatureCounter():
@@ -369,6 +376,9 @@ class FeatureCounter():
         d['counter'] = Counter(d['counter'])
         d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
+
+    def load_dump(self, fpath, fct=pd.read_csv, use_cols=None):
+        return fct(fpath, index=self.idx_names, usecols=None)
 
 
 class Count():
@@ -549,6 +559,11 @@ class EvidenceCounter(FeatureCounter):
         d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
         return d
 
+
+def load_evidence_dump(fpath, index_col=['Sequence', 'Charge']):
+    df = pd.read_csv(fpath, index_col=index_col)
+    return df
+
 ### Protein Groups
 
 
@@ -620,12 +635,17 @@ class ProteinGroupsCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List],
                                         Counter] = count_protein_groups,
-                 idx_names=['protein group'],
+                 idx_names=[pg_cols.Protein_IDs], # mq_specfic
                  feature_name='protein group',
                  **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names,
                          feature_name=feature_name, **kwargs)
 
+
+def load_pg_dump(folder, use_cols=None):
+    logger.debug(f"Load: {folder}")
+    df = pd.read_csv(folder, index_col=pg_cols.Protein_IDs, usecols=use_cols)
+    return df
 
 ## Gene Counter
 
@@ -654,6 +674,6 @@ class GeneCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List], Counter] = count_genes,
                  feature_name='gene',
-                 idx_names=['Gene'], **kwargs):
+                 idx_names=['Gene names'], **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names,
                          feature_name=feature_name, **kwargs)
