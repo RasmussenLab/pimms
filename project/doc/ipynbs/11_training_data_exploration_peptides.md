@@ -44,7 +44,7 @@ FIGUREFOLDER.mkdir(exist_ok=True)
 
 ```python
 N_FIRST_ROWS = None # possibility to select N first rows
-analysis = analyzers.AnalyzePeptides.from_file(fname=FN_PEPTIDE_INTENSITIES, nrows=N_FIRST_ROWS)
+analysis = analyzers.AnalyzePeptides.from_csv(fname=FN_PEPTIDE_INTENSITIES, nrows=N_FIRST_ROWS)
 analysis.describe_peptides(sample_n=30)
 ```
 
