@@ -103,6 +103,7 @@ class MqAllSummaries():
         folder_name = folder.stem
         try:
             mq_output = MaxQuantOutputDynamic(folder)
+            # to_dict not very performant
             return {folder_name: mq_output.summary.iloc[0].to_dict()}
         except FileNotFoundError as e:
             if not mq_output.files and len(list(mq_output.folder.iterdir())) == 0:
@@ -127,7 +128,9 @@ class MqAllSummaries():
             self.empty_folders = manager.list()
 
         if samples:
-
+            # process_chunch_fct = self.load_summary
+            # workers=workers
+            # desc = 'Load summaries'
             if workers > 1:
                 with multiprocessing.Pool(workers) as p:
                     # set chunksize: https://stackoverflow.com/a/49533645/9684872
