@@ -7,6 +7,8 @@ from pathlib import Path, PurePath, PurePosixPath
 import numpy as np
 import pandas as pd
 
+import vaep.pandas
+
 PathsList = namedtuple('PathsList', ['files', 'folder'])
 
 
@@ -75,6 +77,16 @@ def resolve_path(path:Union[str, Path], to:Union[str, Path]='.')-> Path:
     pwd = [p for p in pwd.parts]
     ret = [p for p in Path(path).parts  if p not in pwd]
     return Path('/'.join(ret))
+
+
+def get_fname_from_keys(keys, folder=Path('.'), file_ext='.pkl', remove_duplicates=True):
+    if remove_duplicates:
+        # https://stackoverflow.com/a/53657523/9684872
+        keys = list(dict.fromkeys(keys))
+    folder.mkdir(exist_ok=True, parents=True)
+    fname_dataset = folder / '{}{}'.format(vaep.pandas.replace_with(
+        ' '.join(keys), replace='- ', replace_with='_'), file_ext)
+    return fname_dataset
 
 
 def dump_to_csv(df: pd.DataFrame,
