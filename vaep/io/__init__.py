@@ -83,6 +83,7 @@ def get_fname_from_keys(keys, folder=Path('.'), file_ext='.pkl', remove_duplicat
     if remove_duplicates:
         # https://stackoverflow.com/a/53657523/9684872
         keys = list(dict.fromkeys(keys))
+    folder = Path(folder)
     folder.mkdir(exist_ok=True, parents=True)
     fname_dataset = folder / '{}{}'.format(vaep.pandas.replace_with(
         ' '.join(keys), replace='- ', replace_with='_'), file_ext)
