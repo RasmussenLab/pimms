@@ -13,6 +13,9 @@ from vaep.io.format import classname, class_full_module
 
 logger = logging.getLogger(__name__)
 
+FILE_FORMAT_TO_DUMP_FCT = {'pkl': ('to_pickle', 'read_pickle'),
+                           # 'pickle': 'to_pickle',
+                           'csv': ('to_csv', 'read_csv')}
 
 def long_format(df: pd.DataFrame,
                 colname_values: str = 'intensity',
@@ -41,9 +44,9 @@ def wide_format(df: pd.DataFrame,
 class DataSplits():
     is_wide_format: bool = field(init=True, repr=False)
     train_X: pd.DataFrame = None
-    val_X: pd.DataFrame = None
+    # val_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
-    test_X: pd.DataFrame = None
+    # test_X: pd.DataFrame = None
     test_y: pd.DataFrame = None
     
 
@@ -60,10 +63,14 @@ class DataSplits():
         return ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
                 'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
 
-    def dump(self, folder='data'):
+    def dump(self, folder='data', file_format='csv'):
         """dump in long format."""
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
+
+        if not file_format in FILE_FORMAT_TO_DUMP_FCT:
+            raise ValueError(f"Select one of these formats: {', '.join(FILE_FORMAT_TO_DUMP_FCT.keys())}")
+
         n_dumped = 0
         for (_attr, _df) in self:
             if _df is None:
@@ -79,9 +86,10 @@ class DataSplits():
                 logger.info(f"'{_attr}' has new shape: {_df.shape}")
             else:
                 raise ValueError()
-            fname = folder / _attr
+            fname = folder / f"{_attr}.{file_format}"
             logger.info(f"save '{_attr}' to file: {fname}")
-            _df.to_csv(fname)
+            dump_fct = getattr(_df, FILE_FORMAT_TO_DUMP_FCT[file_format][0])
+            dump_fct(fname)
             n_dumped += 1
         if not n_dumped:
             raise ValueError(f'Nothing to dump, all None: {self}')
@@ -160,17 +168,18 @@ class DataSplits():
 
 
 
-def load_items(folder: str, items: dict, use_wide_format=False) -> dict:
+def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv') -> dict:
     folder = Path(folder)
     assert folder.exists(), f'Could not find folder: {folder}'
     args = {}
     for _attr, _cls in items.items():
         # assert issubclass(_cls, (pd.DataFrame, pd.Series)) # now strings, see
         # https://docs.python.org/3/whatsnew/3.7.html#pep-563-postponed-evaluation-of-annotations
-        fname = folder / _attr
+        fname = folder / f"{_attr}.{file_format}"
         if not fname.exists():
             raise FileNotFoundError(f"Missing file requested for attr '{_attr}', missing {fname}")
-        _df = pd.read_csv(fname)
+        read_fct = getattr(pd, FILE_FORMAT_TO_DUMP_FCT[file_format][1])
+        _df = read_fct(fname)
         cols = list(_df.columns)
         if use_wide_format:
             # ToDo: Add warning for case of more than 3 columns
