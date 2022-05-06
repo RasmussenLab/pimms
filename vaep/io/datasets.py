@@ -64,7 +64,7 @@ class DatasetWithMaskAndNoTarget(Dataset):
         if not issubclass(type(df), pd.DataFrame):
             raise ValueError(
                 f'please pass a pandas DataFrame, not: {type(df) = }')
-        self.mask_obs = df.isna()  # .astype('uint8') # in case 0,1 is preferred
+        self.mask_isna = df.isna()  # .astype('uint8') # in case 0,1 is preferred
         self.columns = df.columns
         self.transformer = transformer
         if transformer:
@@ -80,16 +80,57 @@ class DatasetWithMaskAndNoTarget(Dataset):
         return self.length_
 
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
-        mask = self.mask_obs.iloc[idx]
+        mask_isna = self.mask_isna.iloc[idx]
         data = self.data.iloc[idx]
-        mask, data = to_tensor(mask), to_tensor(data)
-        return  mask, data
+        mask_isna, data = to_tensor(mask_isna), to_tensor(data)
+        return  mask_isna, data
 
 class DatasetWithTarget(DatasetWithMaskAndNoTarget):
 
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mask, data = super().__getitem__(idx)
         return  mask, data, data
+
+class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
+
+    def __init__(self, df: pd.DataFrame, targets:pd.DataFrame,
+                 transformer: sklearn.pipeline.Pipeline = None):
+        """Create a dataset for validation. 
+
+        Parameters
+        ----------
+        df : pd.DataFrame
+            DataFrame, indexed as targets
+        targets : _type_, optional
+            DataFrame, indexed as df
+        transformer : sklearn.pipeline.Pipeline, optional
+            transformation pipeline to use, by default None
+        """
+        if not issubclass(type(df), pd.DataFrame):
+            raise ValueError(
+                f'please pass a pandas DataFrame, not: {type(df) = }')
+        self.mask_isna = targets.isna()
+        self.columns = df.columns
+        self.transformer = transformer
+
+        self.target = df.fillna(targets) # not really necessary, without mask would not be needed
+
+        if transformer:
+            if hasattr(transformer, 'transform'):
+                df = transformer.transform(df)
+                self.target = transformer.transform(self.target)
+            else:
+                raise AttributeError(
+                    f'{type(transformer)} is not sklearn compatible, has no inverse_transform.')
+
+        self.data = df
+        self.length_ = len(self.data)
+        
+
+    def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
+        mask_isna, data =  super().__getitem__(idx)
+        target =  to_tensor(self.target.iloc[idx])
+        return mask_isna, data, target
 
 class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
