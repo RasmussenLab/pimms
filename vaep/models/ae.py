@@ -66,7 +66,7 @@ def get_preds_from_df(df: pd.DataFrame,
     dl = vaep.io.dataloaders.get_test_dl(df=df,
                                          transformer=transformer,
                                          dataset=dataset)
-    res = learn.get_preds(dl=dl) #, concat_dim=0, reorder=False)
+    res = learn.get_preds(dl=dl) # -> dl could be int
     if position_pred_tuple is not None and issubclass(type(res[0]), tuple):
         res = (res[0][position_pred_tuple], *res[1:])
     res = L(res).map(lambda x: pd.DataFrame(
@@ -438,20 +438,22 @@ def loss_fct_vae(pred, y):
 class AutoEncoderAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
-                 datasplits: vaep.io.datasplits.DataSplits,
+                train_df:pd.DataFrame,
+                val_df:pd.DataFrame, # values to use for validation
                  model:torch.nn.modules.module.Module,
                  model_kwargs:dict,
                  transform: sklearn.pipeline.Pipeline,
                  decode: List[str],
                  bs=64
                  ):
-        self.datasplits = datasplits
-        self.transform =  vaep.transform.VaepPipeline(df_train=self.datasplits.train_X,
+        self.transform =  vaep.transform.VaepPipeline(
+                                      df_train=train_df,
                                       encode=transform,
                                       decode=decode)
-        self.dls = vaep.io.dataloaders.get_dls(self.datasplits.train_X,
-                           self.datasplits.val_X,
-                           transformer=self.transform, bs=bs)
+        self.dls = vaep.io.dataloaders.get_dls(
+                        train_X=train_df,
+                        valid_X=val_df,
+                        transformer=self.transform, bs=bs)
 
         # M = data.train_X.shape[-1]
         self.kwargs_model = model_kwargs

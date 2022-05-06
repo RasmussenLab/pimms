@@ -7,6 +7,7 @@ from torch.utils.data import Dataset
 # from fastai.data.core import DataLoaders
 from fastai.data.all import *
 
+from vaep.io import datasets
 from vaep.io.datasets import DatasetWithTarget
 from vaep.transform import VaepPipeline
 
@@ -66,7 +67,6 @@ class DataLoadersCreator():
 def get_dls(train_X: pandas.DataFrame,
             valid_X: pandas.DataFrame,
             transformer: VaepPipeline,
-            dataset: Dataset = DatasetWithTarget,
             bs: int = 64) -> DataLoaders:
     """Create training and validation dataloaders
 
@@ -107,8 +107,11 @@ def get_dls(train_X: pandas.DataFrame,
                                   decode=['normalize'])
     dls = get_dls(train_X, val_X, transforms, bs=4)    
     """
-    train_ds, valid_ds = (dataset(train_X, transformer),
-                          dataset(valid_X, transformer))
+    train_ds = datasets.DatasetWithTarget(df=train_X,
+                                          transformer=transformer)
+    valid_ds = datasets.DatasetWithTargetSpecifyTarget(df=train_X,
+                                                       targets=valid_X,
+                                                       transformer=transformer)
     return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs)
 
 

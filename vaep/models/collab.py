@@ -168,7 +168,7 @@ class CollabAnalysis(analysis.ModelAnalysis):
                  model_kwargs=dict(),
                  batch_size=64):
         self.X, self.frac = combine_data(datasplits.train_X,
-                                         datasplits.val_X)
+                                         datasplits.val_y)
         self.batch_size = batch_size
         self.dls = CollabDataLoaders.from_df(self.X, valid_pct=self.frac,
                                              seed=42,
@@ -176,6 +176,16 @@ class CollabAnalysis(analysis.ModelAnalysis):
                                              item_name=item_column,
                                              rating_name=target_column,
                                              bs=self.batch_size)
+        user_name=sample_column
+        item_name=item_column
+        rating_name=target_column
+        cat_names = [user_name,item_name]
+        ratings = self.X
+        # splits = RandomSplitter(valid_pct=valid_pct, seed=42)(range_of(ratings))
+        idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
+        splits = idx_splitter(self.X)
+        to = TabularCollab(ratings, [Categorify], cat_names, y_names=[rating_name], y_block=TransformBlock(), splits=splits)
+        self.dls = to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}
         self.model_kwargs = model_kwargs
         self.params['model_kwargs'] = self.model_kwargs
