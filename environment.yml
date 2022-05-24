@@ -37,6 +37,7 @@ dependencies:
   - jupyterlab_code_formatter
   - jupyterlab-git
   - jupyter-dash
+  - python-kaleido
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
