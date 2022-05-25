@@ -104,6 +104,8 @@ class AnalyzePeptides(SimpleNamespace):
                     usecols=None,
                     **kwargs):
         df = pd.read_pickle(fname)
+        if len(df.shape) == 1:
+            df = df.unstack()
         verify_df(df=df, fname=fname,
                   index_col=index_col,
                   verify_fname=verify_fname,
