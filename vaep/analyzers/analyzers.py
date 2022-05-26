@@ -56,14 +56,14 @@ class AnalyzePeptides(SimpleNamespace):
     Attributes
     ----------
     df:  pandas.DataFrame
-        current eagerly loaded data
+        current eagerly loaded data in wide format only: sample index, features in columns
     stats: types.SimpleNamespace
         Some statistics of certain aspects. Normally each will be a DataFrame.
 
     Many more attributes are set dynamically depending on the concrete analysis.
     """
 
-    def __init__(self, data,
+    def __init__(self, data:pd.DataFrame,
                  is_log_transformed: bool = False,
                  is_wide_format: bool = True, ind_unstack: str = '',):
         if not is_wide_format:
@@ -88,7 +88,9 @@ class AnalyzePeptides(SimpleNamespace):
                  usecols=None,
                  **kwargs):
         df = pd.read_csv(fname, index_col=index_col, low_memory=False,
-                         nrows=nrows, usecols=usecols)
+                         nrows=nrows, usecols=usecols, squeeze=True)
+        if len(df.shape) == 1:
+            df = df.unstack()    
         verify_df(df=df, fname=fname,
                   index_col=index_col,
                   verify_fname=verify_fname,
@@ -103,7 +105,7 @@ class AnalyzePeptides(SimpleNamespace):
                     verify_fname: bool = False,
                     usecols=None,
                     **kwargs):
-        df = pd.read_pickle(fname)
+        df = pd.read_pickle(fname).squeeze()
         if len(df.shape) == 1:
             df = df.unstack()
         verify_df(df=df, fname=fname,
