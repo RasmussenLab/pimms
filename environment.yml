@@ -33,6 +33,8 @@ dependencies:
   - pandas-profiling
   - papermill
   - snakemake-minimal
+  # jupyter
+  - jupytext
   - jupyterlab # standalone jupyter installation
   - jupyterlab_code_formatter
   - jupyterlab-git
