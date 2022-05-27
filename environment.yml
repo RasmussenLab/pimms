@@ -38,6 +38,9 @@ dependencies:
   - jupyterlab-git
   - jupyter-dash
   - python-kaleido
+  # dev
+  - pytest
+  - pytest-cov
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
