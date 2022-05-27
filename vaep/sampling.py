@@ -48,13 +48,10 @@ def frequency_by_index(df_long: pd.DataFrame, sample_index_to_drop: Union[str, i
     return freq_per_feat.squeeze()
 
 
-"""Doubly indexed series with sample index and feature index."""
-
-
 def sample_data(series: pd.Series, sample_index_to_drop: Union[str, int],
                 frac=0.95, weights: pd.Series = None,
                 random_state=42) -> Tuple[pd.Series, pd.Series]:
-    """[summary]
+    """sample from doubly indexed series with sample index and feature index.
 
     Parameters
     ----------
