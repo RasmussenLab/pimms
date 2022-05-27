@@ -1,6 +1,6 @@
 from random import sample
 import pathlib
-
+from typing import Union
 import numpy as np
 import pandas as pd
 
@@ -15,14 +15,15 @@ def sample_iterable(iterable: dict, n=10) -> list:
     return sample_
 
 
-def append_to_filepath(filepath: pathlib.Path,
+def append_to_filepath(filepath: Union[pathlib.Path, str],
                        to_append: str,
                        sep: str = '_',
-                       new_suffix: str = None):
+                       new_suffix: str = None) -> pathlib.Path:
     """Append filepath with specified to_append using a seperator. 
     
     Example: `data.csv` to data_processed.csv
     """
+    filepath = pathlib.Path(filepath)
     suffix = filepath.suffix
     if new_suffix:
         suffix = f".{new_suffix}"
