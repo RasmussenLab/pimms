@@ -45,16 +45,13 @@ figures = {}  # collection of ax or figures
 
 ## Arguments
 
-```python
-FN_INTENSITIES_TEMPLATE = 'data/single_datasets/df_intensities_{type}_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
-```
-
 ```python tags=["parameters"]
-FN_INTENSITIES: str =  FN_INTENSITIES_TEMPLATE.format(type="proteinGroups") # Intensities for feature
+FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # M: int = 5000 # M most common features
 MIN_SAMPLE: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+min_RT_max: Union[int, float] = 120 # Minum retention time (RT) in minutes
 index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column)
 # query expression for subsetting
 # query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options
@@ -63,19 +60,16 @@ folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}
 # columns_name: str = 'Gene names'
 ```
 
-
-
 ```python
 # # peptides
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.csv'  # Intensities for feature
-# index_col: Union[str,int] = 'Sample ID' # Can be either a string or position (typical 0 for first column)
-# columns_name: str = 'peptide'
+FN_INTENSITIES: str = 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
+folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
-
 ```python
 # # evidence
-
 ```
+
 
 ```python
 # There must be a better way...
@@ -134,8 +128,8 @@ folder_data.mkdir(exist_ok=True)
 logger.info(f'Folder for data: {folder_data = }')
 
 folder_figures = folder_experiment / 'figures'
-folder_data.mkdir(exist_ok=True)
-logger.info(f'Folder for figures: {folder_data = }')
+folder_figures.mkdir(exist_ok=True)
+logger.info(f'Folder for figures: {folder_figures = }')
 ```
 
 <!-- #region tags=[] -->
@@ -252,7 +246,7 @@ df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 1
 set a minimum retention time
 
 ```python
-min_RT_max = 120 # minutes
+# min_RT_max = 120 # minutes
 msg = f"Minimum RT time maxiumum is set to {min_RT_max} minutes (to exclude too short runs, which are potentially fractions)."
 mask_RT = df_meta['MS max RT'] >= 120 # can be integrated into query string
 msg += f" Total number of samples retained: {int(mask_RT.sum())}."
@@ -295,6 +289,7 @@ df_meta[meta_raw_settings].drop_duplicates() # index gives first example with th
 view without `MS max charge`:
   - software can be updated
   - variation by `injection volume setting` and instrument over time
+    - 500ng of peptides should be injected, based on concentration of peptides this setting is adjustd to get it
   - missing `dilution factor`
   
 
@@ -401,8 +396,8 @@ _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
 vaep.savefig(fig, folder_figures / 'median_boxplot')
 figures['median_boxplot'] = fig
-
 ```
+
 
 Plot sample median over time
   - check if points are equally spaced (probably QC samples are run in close proximity)
@@ -423,8 +418,8 @@ ax = median_sample_intensity.plot.scatter(x='date', y='median intensity',
                                           xticks=vaep.plotting.select_dates(
                                               median_sample_intensity['date'])
                                           )
-
 ```
+
 
 - the closer the labels are there denser the samples are measured aroudn that time.
 
