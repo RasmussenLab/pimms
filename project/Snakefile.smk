@@ -3,6 +3,12 @@ Document how all the notebooks are connected.
 """
 
 nb_outfolder = 'runs'
+
+DATASETS=[ "df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547",
+            # "df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725",
+            # "df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321"
+            ]
+
 rule all:
     input: 
         'data/files_per_instrument.yaml', # nested: model, attribute, serial number
@@ -11,8 +17,9 @@ rule all:
         'data/files_selected_per_instrument_counts.csv', # counts
         f'{nb_outfolder}/{"04_all_raw_files.ipynb"}',
         'data/samples_selected.yaml',
-        "splits_proteinGroups.txt"
-
+        expand(f"data/single_datasets/{{d}}/{'13_training_data_splitting.ipynb'}", 
+            d=DATASETS,
+            ),
 
 # # rule template
 
@@ -76,6 +83,23 @@ rule metadata_rawfiles:
 
 
 
+nb='13_training_data_splitting.ipynb'
+outfolder=f'single_datasets'
+ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
+OUT_INFO = "dataset_info"
+
+rule split_data:
+    input:
+        nb=nb,
+        data=f'{ROOT_DUMPS}/{{dataset}}.pkl'
+    output:
+        nb=f"data/single_datasets/{{dataset}}/{nb}",
+        json=f'data/single_datasets/{{dataset}}/{OUT_INFO}.json'
+    params:
+        folder_datasets = "single_datasets/{dataset}"
+    shell:
+        # papermill parameters with whitespaces > 
+       f'papermill {{input.nb}} {{output.nb}} -r DUMP "{{input.data}}" -p FILE_EXT pkl -r FOLDER_DATASETS {{params.folder_datasets}} -r SAMPLE_ID "Sample ID" -p OUT_INFO {OUT_INFO}'
 
 # rule experiment:
 
@@ -94,11 +118,9 @@ rule create_splits:
         metadata='data/files_selected_metadata.csv',
         
     output:
-        data=f"{nb_outfolder}/experiment_03/df_intensities_{{type}}_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/data/train_X",
+        data=f"{nb_outfolder}/experiment_03/df_intensities_{{type}}_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/data/train_X.pkl",
         nb=f"{nb_outfolder}/experiment_03/df_intensities_{{type}}_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb}",
-        help="splits_{type}.txt"
     shell:
         """
         papermill {input.nb} {output.nb} -p FN_INTENSITIES {input.intensities} -p fn_rawfile_metadata {input.metadata}
-        touch {output.help}
         """
