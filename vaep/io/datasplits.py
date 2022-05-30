@@ -95,22 +95,22 @@ class DataSplits():
             raise ValueError(f'Nothing to dump, all None: {self}')
             # _df.to_json(fname) # does not work easily for series
 
-    def load(self, folder: str, use_wide_format=False) -> None:
+    def load(self, folder: str, use_wide_format=False, file_format='csv') -> None:
         """Load data in place from folder"""
         items = dict(self.__annotations__)
         del items['is_wide_format']
-        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format)
+        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format, file_format=file_format)
         for _attr, _df in args.items():
             setattr(self, _attr, _df)
         self._is_wide = use_wide_format
         return None  # could also be self
 
     @classmethod
-    def from_folder(cls, folder: str, use_wide_format=False) -> DataSplits:
+    def from_folder(cls, folder: str, use_wide_format=False, file_format='csv') -> DataSplits:
         """Build DataSplits instance from folder."""
         items = dict(cls.__annotations__)
         del items['is_wide_format']
-        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format)
+        args = load_items(folder=folder, items=items, use_wide_format=use_wide_format, file_format=file_format)
         _data_splits = cls(**args, is_wide_format=use_wide_format)
         _data_splits._is_wide = use_wide_format
         return _data_splits
@@ -180,10 +180,11 @@ def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv
             raise FileNotFoundError(f"Missing file requested for attr '{_attr}', missing {fname}")
         read_fct = getattr(pd, FILE_FORMAT_TO_DUMP_FCT[file_format][1])
         _df = read_fct(fname)
+        # logic below is suited for csv reader -> maybe split up loading and saving later?
+        if len(_df.shape) == 1: _df = _df.to_frame().reset_index() # in case Series was pickled
         cols = list(_df.columns)
         if use_wide_format:
-            # ToDo: Add warning for case of more than 3 columns
-            _df = wide_format(_df.set_index(cols[1]), columns=cols[0], name_values=cols[-1])
+            _df = wide_format(_df.set_index(cols[1:-1]), columns=cols[0], name_values=cols[-1])
         else:
             _df.set_index(cols[:-1], inplace=True)
         logger.info(f"Loaded '{_attr}' from file: {fname}")

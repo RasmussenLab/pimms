@@ -558,12 +558,12 @@ splits.val_y
 <!-- #endregion -->
 
 ```python
-splits.dump(folder=folder_data)  # dumps data in long-format
+splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-format
 ```
 
 ```python
 # # Reload from disk
-splits = DataSplits.from_folder(folder_data)
+splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
 ```
 
 ## PCA plot of training data

@@ -529,11 +529,11 @@ splits.val_y
 # - no missing values kept
 
 # %%
-splits.dump(folder=folder_data)  # dumps data in long-format
+splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-format
 
 # %%
 # # Reload from disk
-splits = DataSplits.from_folder(folder_data)
+splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
 
 # %% [markdown]
 # ## PCA plot of training data
