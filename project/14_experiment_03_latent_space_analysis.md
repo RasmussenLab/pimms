@@ -19,6 +19,7 @@ jupyter:
 import logging
 from pathlib import Path
 from pprint import pprint
+from typing import Union, List
 from src.nb_imports import *
 import plotly.express as px
 
@@ -76,8 +77,8 @@ Papermill script parameters:
 ```python tags=["parameters"]
 # folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
-# out_folder:str = 'runs/experiment_03' # Output folder to store all figures and metrics
 # training
 # n_training_samples_max:int = 1000 # Maximum number of training samples to use for training. Take most recent
 epochs_max:int = 10  # Maximum number of epochs
@@ -88,6 +89,7 @@ cuda:bool=True # Use the GPU for training?
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
+sample_idx_position: int = 0 # position of index which is sample ID
 ```
 
 Some argument transformations
@@ -129,7 +131,7 @@ TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 ## Load data in long format
 
 ```python
-data = datasplits.DataSplits.from_folder(args.data) 
+data = datasplits.DataSplits.from_folder(args.data, file_format=file_format) 
 # select max_train_samples
 ```
 
@@ -145,6 +147,24 @@ data is loaded in long format
 
 ```python
 data.train_X.sample(5)
+```
+
+Infer index names from long format 
+
+```python
+index_columns = list(data.train_X.index.names)
+sample_id = index_columns.pop(sample_idx_position)
+if len(index_columns) == 1: 
+    index_column = index_columns.pop()
+    index_columns = None
+    logger.info(f"{sample_id = }, single feature: {index_column = }")
+else:
+    logger.info(f"{sample_id = }, multiple features: {index_columns = }")
+
+if not index_columns:
+    index_columns = [sample_id, index_column]
+else:
+    raise NotImplementedError("More than one feature: Needs to be implemented. see above logging output.")
 ```
 
 meta data for splits
@@ -224,8 +244,8 @@ And predictions on validation (to see if the test data performs worse than the v
 args.batch_size_collab = args.batch_size*64
 
 ana_collab = models.collab.CollabAnalysis(datasplits=data,
-                                          sample_column='Sample ID',
-                                          item_column='peptide',
+                                          sample_column=sample_id,
+                                          item_column=index_column, # not generic
                                           target_column='intensity',
                                           model_kwargs=dict(n_factors=args.latent_dim,
                                                             y_range=(int(data.train_X.min()),
@@ -297,14 +317,12 @@ except FileNotFoundError:
 # valid_pred_collab = ana_collab.dls.valid_ds.new(ana_collab.dls.valid_ds.all_cols).decode().items
 # pred, target = ana_collab.learn.get_preds()
 # valid_pred_collab['collab'] = pred.flatten().numpy()
-# index_columns = ['Sample ID', 'peptide']
+# index_columns = [sample_id, index_column]
 # valid_pred_collab = valid_pred_collab.set_index(index_columns)
 # valid_pred_collab
 ```
 
 ```python
-index_columns = ['Sample ID', 'peptide']
-
 collab_train = ana_collab.dls.train_ds.new(ana_collab.dls.train_ds.all_cols).decode().items
 collab_train = collab_train.set_index(index_columns).unstack()
 val_pred_fake_na['interpolated'] = vaep.pandas.interpolate(wide_df = collab_train)
@@ -334,7 +352,7 @@ Build new embeddings for test data.
 ```python
 # # KNN with ana_collab.X
 # ana_collab.K_neighbours = 2
-# ana_X = analyzers.AnalyzePeptides(data=ana_collab.X.set_index(['Sample ID', 'peptide']).squeeze(), is_wide_format=False, ind_unstack='peptide')
+# ana_X = analyzers.AnalyzePeptides(data=ana_collab.X.set_index([sample_id, index_column]).squeeze(), is_wide_format=False, ind_unstack=index_column)
 # # this does compute it twice, maybe add optional "get_model"?
 # ana_X.df_meta = df_meta
 # _ = ana_X.get_PCA(n_components=ana_collab.K_neighbours)
