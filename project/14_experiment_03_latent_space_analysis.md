@@ -92,6 +92,12 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 ```
 
+```python
+folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
+latent_dim = 30
+hidden_layers = "1024 512 256" # huge input dimension
+```
+
 Some argument transformations
 
 ```python
@@ -323,9 +329,10 @@ except FileNotFoundError:
 ```
 
 ```python
+# here: do it after data is in wide format as it is based on training data in wide format
 collab_train = ana_collab.dls.train_ds.new(ana_collab.dls.train_ds.all_cols).decode().items
 collab_train = collab_train.set_index(index_columns).unstack()
-val_pred_fake_na['interpolated'] = vaep.pandas.interpolate(wide_df = collab_train)
+val_pred_fake_na['interpolated'] = vaep.pandas.interpolate(wide_df = collab_train) 
 ```
 
 Compare fake_na data (not used for validation) based on original training and validation data
@@ -398,11 +405,11 @@ test_pred_fake_na['collab'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_d
 test_pred_fake_na
 ```
 
+free gpu memory
+
 ```python
-# test_pred_collab = test_pred_collab.stack()
-# test_pred_fake_na['collab'] = test_pred_collab
-# test_pred_real_na['collab'] = test_pred_collab
-# test_pred_observed['collab'] = test_pred_collab
+del collab_train, ana_collab
+torch.cuda.current_device(), torch.cuda.memory_allocated() 
 ```
 
 ## Data in wide format
@@ -581,6 +588,14 @@ figures['latent_DAE_by_date'], ax = ana_latent_dae.plot_by_date('Content Creatio
 
 ```python
 figures['latent_DAE_by_ms_instrument'], ax = ana_latent_dae.plot_by_category('instrument serial number')
+```
+
+free gpu memory
+
+```python
+del ana_dae, ana_latent_dae
+msg = f"device ID: {torch.cuda.current_device()} ,{torch.cuda.memory_allocated():,d} bytes, {torch.cuda.memory_allocated()//1024**2:,d} MB"
+print(msg)
 ```
 
 ## Variational Autoencoder
@@ -862,4 +877,8 @@ fig.show()
 ```python
 args.dump()
 args
+```
+
+```python
+
 ```
