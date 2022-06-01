@@ -20,13 +20,13 @@ import logging
 from pathlib import Path
 from pprint import pprint
 from typing import Union, List
+
 from src.nb_imports import *
+
 import plotly.express as px
 
-from typing import Union
-
-from fastai.losses import MSELossFlat
-from fastai.learner import Learner
+# from fastai.losses import MSELossFlat
+# from fastai.learner import Learner
 
 
 import fastai
@@ -52,6 +52,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
 
 import vaep
+from vaep.analyzers import analyzers
 import vaep.model
 import vaep.models as models
 from vaep.models import ae
@@ -63,7 +64,6 @@ from vaep.io import datasplits
 from vaep import sampling
 
 import src
-from vaep.analyzers import analyzers
 from src import config
 from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'))
@@ -81,7 +81,7 @@ file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
 # n_training_samples_max:int = 1000 # Maximum number of training samples to use for training. Take most recent
-epochs_max:int = 10  # Maximum number of epochs
+epochs_max:int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
@@ -93,9 +93,9 @@ sample_idx_position: int = 0 # position of index which is sample ID
 ```
 
 ```python
-folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-latent_dim = 30
-hidden_layers = "1024 512 256" # huge input dimension
+# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
+# latent_dim = 30
+# hidden_layers = "1024 512 256" # huge input dimension
 ```
 
 Some argument transformations
@@ -330,9 +330,9 @@ except FileNotFoundError:
 
 ```python
 # here: do it after data is in wide format as it is based on training data in wide format
-collab_train = ana_collab.dls.train_ds.new(ana_collab.dls.train_ds.all_cols).decode().items
-collab_train = collab_train.set_index(index_columns).unstack()
-val_pred_fake_na['interpolated'] = vaep.pandas.interpolate(wide_df = collab_train) 
+# collab_train = ana_collab.dls.train_ds.new(ana_collab.dls.train_ds.all_cols).decode().items
+# collab_train = collab_train.set_index(index_columns).unstack()
+# val_pred_fake_na['interpolated'] = vaep.pandas.interpolate(wide_df = collab_train) 
 ```
 
 Compare fake_na data (not used for validation) based on original training and validation data
@@ -408,7 +408,7 @@ test_pred_fake_na
 free gpu memory
 
 ```python
-del collab_train, ana_collab
+del ana_collab
 torch.cuda.current_device(), torch.cuda.memory_allocated() 
 ```
 
@@ -429,6 +429,16 @@ if isinstance(args.hidden_layers, int):
     args.overwrite_entry(entry='hidden_layers',
                          value=ae.get_funnel_layers(dim_in=args.M, dim_latent=args.latent_dim, n_layers=args.hidden_layers))
 args
+```
+
+### Add interpolation performance
+
+```python
+interpolated = vaep.pandas.interpolate(wide_df = data.train_X) 
+val_pred_fake_na['interpolated'] = interpolated
+test_pred_fake_na['interpolated'] = interpolated
+del interpolated
+test_pred_fake_na
 ```
 
 ## Denoising Autoencoder
@@ -467,10 +477,6 @@ args.n_params_dae = ana_dae.n_params_ae
 if args.cuda:
     ana_dae.model = ana_dae.model.cuda()
 ana_dae.model
-```
-
-```python
-# import importlib; importlib.reload(ae)
 ```
 
 ```python
@@ -844,7 +850,8 @@ fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('
                  title=f'Performance for {subset}',
                  labels={"data_split": "data",
                          "metric_value": '', 'metric_name': 'metric'},
-                 height=500
+                 height=500,
+                 width=300,
                  )
 fig.show()
 ```
@@ -865,7 +872,8 @@ fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('
                  title=f'Performance for {subset}',
                  labels={"data_split": "data",
                          "metric_value": '', 'metric_name': 'metric'},
-                 height=500
+                 height=500,
+                 width=300,
                  )
 fig.show()
 ```
