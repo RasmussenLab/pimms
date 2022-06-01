@@ -1,13 +1,12 @@
-"""
-Document how all the notebooks are connected.
-"""
-
+"""Workflow to produce global analysis for the project."""
 nb_outfolder = 'runs'
 
 DATASETS=[ "df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547",
            "df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725",
-            # "df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321"
-            ]
+           "df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321"
+           ]
+
+OUT_INFO = "dataset_info"
 
 rule all:
     input: 
@@ -17,24 +16,9 @@ rule all:
         'data/files_selected_per_instrument_counts.csv', # counts
         f'{nb_outfolder}/{"04_all_raw_files.ipynb"}',
         'data/samples_selected.yaml',
-        expand("{nb_outfolder}/experiment_03/"
-            "{dataset}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb}",
-            nb_outfolder=nb_outfolder,
-            dataset=DATASETS,
-            nb='14_experiment_03_latent_space_analysis.ipynb')
-
-# # rule template
-
-# nb = '.ipynb'
-# rule name:
-#     input:
-#         nb=nb,
-#     output:
-#         nb=f"{nb_outfolder}/{nb}",
-#     shell:
-#         "papermill {input.nb} {output.nb}"
-
-
+        expand('data/single_datasets/{dataset}/{OUT_INFO}.json',
+        dataset=DATASETS,
+        OUT_INFO=OUT_INFO)
 
 nb='04_all_raw_files.ipynb'
 rule metadata:
@@ -92,7 +76,6 @@ rule metadata_rawfiles:
 nb='13_training_data_splitting.ipynb'
 outfolder=f'single_datasets'
 ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
-OUT_INFO = "dataset_info"
 rule split_data:
     input:
         nb=nb,
@@ -111,39 +94,3 @@ rule split_data:
        ' -r SAMPLE_ID "Sample ID" '
        f' -r OUT_INFO {OUT_INFO} '
         ' && jupyter nbconvert --to html {output.nb}'
-
-
-# separate workflow by level -> provide custom configs
-nb_pre='13_training_data_splitting.ipynb'
-nb = '14_experiment_03_data.ipynb'
-rule create_splits:
-    input:
-        nb=nb,
-        intensities='data\single_datasets\{dataset}\Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl',
-        metadata='data/files_selected_metadata.csv',
-        folder_experiment=f"{nb_outfolder}/experiment_03/{{dataset}}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070",
-        previous=f"data/single_datasets/{{dataset}}/{nb_pre}"
-    output:
-        data=f"{nb_outfolder}""/experiment_03/{dataset}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/data/train_X.pkl",
-        nb=f"{nb_outfolder}/experiment_03/{{dataset}}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb}",
-    shell:
-        "papermill {input.nb} {output.nb} -p FN_INTENSITIES {input.intensities}"
-        " -p fn_rawfile_metadata {input.metadata}"
-        " -r folder_experiment {input.folder_experiment}"
-        " && jupyter nbconvert --to html {output.nb}"
-
-nb_pre='14_experiment_03_data.ipynb'
-nb = '14_experiment_03_latent_space_analysis.ipynb'
-rule train_models:
-    input:
-        nb=nb,
-        folder_experiment=f"{nb_outfolder}/experiment_03/"
-                          "{dataset}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070",
-        previous=f"{nb_outfolder}/experiment_03/{{dataset}}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb_pre}"
-    output:
-        nb=f"{nb_outfolder}/experiment_03/"
-           f"{{dataset}}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb}",
-    shell:
-        "papermill {input.nb} {output.nb}"
-        " -r folder_experiment {input.folder_experiment}"
-        " && jupyter nbconvert --to html {output.nb}"
