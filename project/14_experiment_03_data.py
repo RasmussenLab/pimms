@@ -51,8 +51,8 @@ FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2
 # FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # M: int = 5000 # M most common features
-MIN_SAMPLE: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
-min_RT_max: Union[int, float] = 120 # Minum retention time (RT) in minutes
+sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+min_RT_time: Union[int, float] = 120 # Minum retention time (RT) in minutes
 index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column)
 # query expression for subsetting
 # query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options

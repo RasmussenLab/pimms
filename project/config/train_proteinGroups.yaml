@@ -1,2 +1,13 @@
 #
+intensities: 'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
+metadata: 'data/files_selected_metadata.csv'
+sample_completeness: 0.5
+min_rt_time: 120
+# models_training:
 DATASET: df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070
+folder_experiment:  'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070'
+file_format: pkl
+latent_dim: 15
+batch_size: 64
+hidden_layers: "1024 512 256"
+sample_idx_position: 0

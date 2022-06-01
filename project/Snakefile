@@ -3,16 +3,14 @@ Document how all the notebooks for a single experiment are connected.
 """
 
 configfile: "config/train_proteinGroups.yaml"
-print(config)
 
-nb_outfolder = 'runs'
+folder_experiment = config['folder_experiment']
+
+print(f"{folder_experiment = }")
 
 rule all:
     input: 
-        expand("{nb_outfolder}/experiment_03/"
-            "{dataset}/{nb}",
-            nb_outfolder=nb_outfolder,
-            dataset=config['DATASET'],
+        expand(f"{folder_experiment}/{{nb}}",
             nb='14_experiment_03_latent_space_analysis.ipynb')
 
 # # rule template
@@ -28,37 +26,39 @@ rule all:
 
 
 # separate workflow by level -> provide custom configs
-nb_pre='13_training_data_splitting.ipynb'
 nb = '14_experiment_03_data.ipynb'
 rule create_splits:
     input:
         nb=nb,
-        intensities='data/single_datasets/{dataset}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl',
-        metadata='data/files_selected_metadata.csv',
-        previous=f"data/single_datasets/{{dataset}}/{nb_pre}"
+        intensities=config['intensities'],
+        metadata=config['metadata'],
     output:
-        data=f"{nb_outfolder}""/experiment_03/{dataset}/data/train_X.pkl",
-        nb=f"{nb_outfolder}/experiment_03{{dataset}}/{nb}",
+        data=f"{folder_experiment}/data/train_X.pkl",
+        nb=f"{folder_experiment}/{nb}",
     params:
-        folder_experiment=f"{nb_outfolder}/experiment_03/{{dataset}}",
+        folder_experiment=folder_experiment,
+        sample_completeness=config["sample_completeness"],
+        min_rt_time=config["min_rt_time"]
+
     shell:
         "papermill {input.nb} {output.nb} -p FN_INTENSITIES {input.intensities}"
         " -p fn_rawfile_metadata {input.metadata}"
         " -r folder_experiment {params.folder_experiment}"
+        " -p sample_completeness {params.sample_completeness}"
+        " -p min_RT_max {params.min_rt_time}"
         " && jupyter nbconvert --to html {output.nb}"
 
-nb_pre='14_experiment_03_data.ipynb'
 nb = '14_experiment_03_latent_space_analysis.ipynb'
 rule train_models:
     input:
         nb=nb,
-        folder_experiment=f"{nb_outfolder}/experiment_03/"
-                          "{dataset}",
-        previous=f"{nb_outfolder}/experiment_03{{dataset}}/{nb_pre}"
+        train_split=f"{folder_experiment}/data/train_X.pkl",
     output:
-        nb=f"{nb_outfolder}/experiment_03/"
-           f"{{dataset}}/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070/{nb}",
+        nb=f"{folder_experiment}/{nb}",
+    params:
+        folder_experiment=f"{folder_experiment}",
     shell:
         "papermill {input.nb} {output.nb}"
-        " -r folder_experiment {input.folder_experiment}"
+        " -f config/train_proteinGroups.yaml" # pass on config file
+        " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
