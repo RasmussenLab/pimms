@@ -2,8 +2,8 @@
 Document how all the notebooks for a single experiment are connected.
 """
 
-configfile: "config/split_proteinGroups.yaml"
-configfile: "config/train_proteinGroups.yaml"
+configfile: "config/proteinGroups_split.yaml"
+configfile: "config/proteinGroups_train.yaml"
 
 folder_experiment = config['folder_experiment']
 
