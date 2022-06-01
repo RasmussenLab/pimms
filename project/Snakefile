@@ -2,9 +2,11 @@
 Document how all the notebooks for a single experiment are connected.
 """
 
+configfile: "config/split_proteinGroups.yaml"
 configfile: "config/train_proteinGroups.yaml"
 
 folder_experiment = config['folder_experiment']
+
 
 print(f"{folder_experiment = }")
 
@@ -29,9 +31,7 @@ rule all:
 nb = '14_experiment_03_data.ipynb'
 rule create_splits:
     input:
-        nb=nb,
-        intensities=config['intensities'],
-        metadata=config['metadata'],
+        nb=nb
     output:
         data=f"{folder_experiment}/data/train_X.pkl",
         nb=f"{folder_experiment}/{nb}",
@@ -41,11 +41,9 @@ rule create_splits:
         min_rt_time=config["min_rt_time"]
 
     shell:
-        "papermill {input.nb} {output.nb} -p FN_INTENSITIES {input.intensities}"
-        " -p fn_rawfile_metadata {input.metadata}"
+        "papermill {input.nb} {output.nb}"
+        " -f config/split_proteinGroups.yaml"
         " -r folder_experiment {params.folder_experiment}"
-        " -p sample_completeness {params.sample_completeness}"
-        " -p min_RT_max {params.min_rt_time}"
         " && jupyter nbconvert --to html {output.nb}"
 
 nb = '14_experiment_03_latent_space_analysis.ipynb'
