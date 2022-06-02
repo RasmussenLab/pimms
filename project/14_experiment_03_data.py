@@ -46,6 +46,11 @@ figures = {}  # collection of ax or figures
 # %% [markdown]
 # ## Arguments
 
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
+
 # %% tags=["parameters"]
 FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
@@ -61,6 +66,10 @@ folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}
 # columns_name: str = 'Gene names'
 
 # %%
+args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
+args
+
+# %%
 # # peptides
 # FN_INTENSITIES: str = 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
@@ -73,13 +82,14 @@ folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}
 # There must be a better way...
 @dataclass
 class DataConfig:
-    """Documentation. Copy pasted arguments to a dataclass."""
+    """Documentation. Copy parameters one-to-one to a dataclass."""
     FN_INTENSITIES: str  # Samples metadata extraced from erda
-    file_ext: str # file extension
+    # file_ext: str # file extension
     # FN_PEPTIDE_FREQ: str # Peptide counts for all parsed files on erda (for data selection)
     fn_rawfile_metadata: str  # Machine parsed metadata from rawfile workflow
     # M: int # M most common features
-    MIN_SAMPLE: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+    sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+    min_RT_time: Union[int, float] = 120
     index_col: Union[
         str, int
     ] = "Sample ID"  # Can be either a string or position (typical 0 for first column)
@@ -90,19 +100,7 @@ class DataConfig:
     # columns_name: str = "peptide"
 
 
-params = DataConfig(
-    FN_INTENSITIES=FN_INTENSITIES,
-    file_ext=Path(FN_INTENSITIES).suffix[1:],
-    # FN_PEPTIDE_FREQ=FN_PEPTIDE_FREQ,
-    fn_rawfile_metadata=fn_rawfile_metadata,
-    # M=M,
-    MIN_SAMPLE=MIN_SAMPLE,
-    index_col=index_col,
-    # query_subset_meta=query_subset_meta,
-    logarithm=logarithm,
-    folder_experiment=folder_experiment,
-    # columns_name=columns_name
-)
+params = DataConfig(**args) # catches if non-specified arguments were passed
 
 params = OmegaConf.create(params.__dict__)
 dict(params)
@@ -111,12 +109,6 @@ dict(params)
 # ## Setup
 
 # %%
-# if not folder_experiment:
-#     folder_experiment = query_subset_meta.replace('_', ' ')
-#     folder_experiment = parse_query_expression(Ffolder_experiment)
-#     folder_experiment = folder_experiment.strip()
-#     folder_experiment = folder_experiment.replace(' ', '_')
-#     params.folder_experiment
 folder_experiment = Path(folder_experiment)
 folder_experiment.mkdir(exist_ok=True, parents=True)
 logger.info(f'Folder for output = {folder_experiment}')
@@ -199,16 +191,16 @@ analysis.df.sort_index(inplace=True)
 # Select samples based on completeness
 
 # %%
-if isinstance(params.MIN_SAMPLE, float):
-    msg = f'Fraction of minimum sample completeness over all features specified with: {params.MIN_SAMPLE}\n'
+if isinstance(params.sample_completeness, float):
+    msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
     # assumes df in wide format
-    params.MIN_SAMPLE = int(analysis.df.shape[1] * params.MIN_SAMPLE)
-    msg += f'This translates to a minimum number of total samples: {params.MIN_SAMPLE}'
+    params.sample_completeness = int(analysis.df.shape[1] * params.sample_completeness)
+    msg += f'This translates to a minimum number of total samples: {params.sample_completeness}'
     print(msg)
 
 sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
 
-mask = sample_counts > params.MIN_SAMPLE
+mask = sample_counts > params.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 print(msg)
 analysis.df = analysis.df.loc[mask]
@@ -239,8 +231,8 @@ df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 1
 # set a minimum retention time
 
 # %%
-# min_RT_max = 120 # minutes
-msg = f"Minimum RT time maxiumum is set to {min_RT_max} minutes (to exclude too short runs, which are potentially fractions)."
+# min_RT_time = 120 # minutes
+msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
 mask_RT = df_meta['MS max RT'] >= 120 # can be integrated into query string
 msg += f" Total number of samples retained: {int(mask_RT.sum())}."
 print(msg)
