@@ -26,7 +26,8 @@ rule metadata:
         nb=nb,
         # meta='../workflows/metadata/rawfile_metadata.json',
         meta='data/all_raw_files_dump_2021_10_29.txt',
-        summaries='data/processed/all_summaries.json'
+        summaries='data/processed/all_summaries.json',
+        intensities='data/df_intensities_N07285_M01000' # csv
     output:
         nb=f"{nb_outfolder}/{nb}",
         # # final config
@@ -40,7 +41,9 @@ rule metadata:
         # 'remote_files': 'data/remote_files.yaml'}
     shell:
         "papermill {input.nb} {output.nb}"
-        " -p FN_ALL_RAW_FILES {input.meta} -p FN_ALL_SUMMARIES {input.summaries}"
+        " -p FN_ALL_RAW_FILES {input.meta}"
+        " -p FN_ALL_SUMMARIES {input.summaries}"
+        " -p FN_PEPTIDE_INTENSITIES {input.intensities}"
         " && jupyter nbconvert --to html {output.nb}"
 
 nb = "02_summaries.ipynb"
@@ -53,6 +56,7 @@ rule summaries:
         selected='data/samples_selected.yaml'
     shell:
         "papermill {input.nb} {output.nb}"
+        " -r FN_ALL_SUMMARIES {input.summaries}"
         " && jupyter nbconvert --to html {output.nb}"
 
 nb = "02_metadata_rawfiles.ipynb"
