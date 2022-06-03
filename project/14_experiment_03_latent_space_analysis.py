@@ -116,6 +116,8 @@ args.out_metrics = args.folder_experiment / 'metrics'
 args.out_metrics.mkdir(exist_ok=True)
 args.out_models = args.folder_experiment / 'models'
 args.out_models.mkdir(exist_ok=True)
+args.out_preds = args.folder_experiment / 'preds'
+args.out_preds.mkdir(exist_ok=True)
 # args.n_training_samples_max = n_training_samples_max; del n_training_samples_max
 args.epochs_max = epochs_max
 del epochs_max
@@ -731,6 +733,13 @@ fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('
                  width=300,
                  )
 fig.show()
+
+# %% [markdown]
+# ## Save predictions
+
+# %%
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test.csv")
 
 # %% [markdown] tags=[]
 # ## Config
