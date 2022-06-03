@@ -67,20 +67,23 @@ folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}
 ```
 
 ```python
-args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
-args
-```
-
-```python
 # # peptides
 # FN_INTENSITIES: str = 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
 ```python
-# # evidence
+# evidence
+# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+# index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
+# folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
 
+
+```python
+args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
+args
+```
 
 ```python
 # There must be a better way...
@@ -174,14 +177,7 @@ analysis.df
 > Ignored for now, instead select based on feature availabiltiy across samples (see below)
 
 ```python tags=[]
-# import json
-# from collections import Counter
-# # Use PeptideCounter instead?
-# with open(Path(params.FN_PEPTIDE_FREQ)) as f:
-#     freq_pep_all = Counter(json.load(f)['counter'])
-    
-# selected_peptides = {k: v for k, v in freq_pep_all.most_common(params.M)}
-# print(f"No. of selected features: {len(selected_peptides):,d}")
+# potentially create freq based on DataFrame
 analysis.M
 ```
 
@@ -201,7 +197,7 @@ if isinstance(params.sample_completeness, float):
     msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
     # assumes df in wide format
     params.sample_completeness = int(analysis.df.shape[1] * params.sample_completeness)
-    msg += f'This translates to a minimum number of total samples: {params.sample_completeness}'
+    msg += f'This translates to a minimum number of features per sample (to be included): {params.sample_completeness}'
     print(msg)
 
 sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
@@ -221,9 +217,9 @@ params.used_samples = analysis.df.index.to_list()
 - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
 ```python
-df_meta = pd.read_csv('data/files_selected_metadata.csv', index_col=0)
+df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
 df_meta = df_meta.loc[analysis.df.index.to_list()] # index is sample index
-date_col = 'Content Creation Date'
+date_col = 'Content Creation Date' # hard-coded date column -> potential parameter
 df_meta[date_col] = pd.to_datetime(df_meta[date_col])
 df_meta
 ```
@@ -334,7 +330,7 @@ pcs
 ```
 
 ```python
-pcs.describe(include='all')
+pcs.describe(include='all').T
 ```
 
 ```python
@@ -372,8 +368,6 @@ fig
 - check boxplot functions: [bokeh](https://docs.bokeh.org/en/latest/docs/gallery/boxplot.html), [plotly](https://plotly.com/python/box-plots/), [eventplot](https://matplotlib.org/stable/gallery/lines_bars_and_markers/eventplot_demo.html#sphx-glr-gallery-lines-bars-and-markers-eventplot-demo-py)
 
 ```python
-# analysis.df.iloc[:100].T.boxplot(rot=90, backend=None, figsize=None)
-# analysis.df.boxplot()
 analysis.df.head()
 ```
 
@@ -418,56 +412,7 @@ ax = median_sample_intensity.plot.scatter(x='date', y='median intensity',
 - the closer the labels are there denser the samples are measured aroudn that time.
 
 
-## Split: Train, validation and test data
-
-- test data is in clinical language often denoted as independent validation cohort
-- validation data (for model)
-
-```python
-analysis.splits = DataSplits(is_wide_format=True)
-splits = analysis.splits
-print(f"{analysis.splits = }")
-analysis.splits.__annotations__
-```
-
-```python
-# percentiles = (0.8, 0.9)  # change here
-
-# percent_str = [f'{int(x*100)}%' for x in percentiles]
-# split_at_date = analysis.df_meta[date_col].describe(
-#     datetime_is_numeric=True, percentiles=(0.8, 0.9)).loc[percent_str]
-# split_at_date = tuple(pd.Timestamp(t.date()) for t in split_at_date)
-
-# print(f"{split_at_date[0] = }", f"{split_at_date[1] = }", sep="\n")
-```
-
-```python
-# idx_train = analysis.df_meta[date_col] < split_at_date[0]
-# analysis.splits.train_X = analysis.df.loc[idx_train]
-# analysis.splits.train_X
-```
-
-```python
-# idx_validation = ((analysis.df_meta[date_col] >= split_at_date[0]) & (
-#     analysis.df_meta[date_col] < split_at_date[1]))
-# analysis.splits.val_X = analysis.df.loc[idx_validation]
-# analysis.splits.val_X
-```
-
-```python
-# idx_test = (analysis.df_meta[date_col] >= split_at_date[1])
-# # analysis.df_test =
-# analysis.splits.test_X = analysis.df.loc[idx_test]
-# analysis.splits.test_X
-```
-
-```python
-# idx_test_na = analysis.splits.test_X.stack(
-#     dropna=False).loc[splits.test_X.isna().stack()].index
-# print(f"number of missing values in test data: {len(idx_test_na)}")
-```
-
-## Peptide frequency  in training data
+## Peptide frequency  in data
 
 - higher count, higher probability to be sampled into training data
 - missing peptides are sampled both into training as well as into validation dataset
@@ -502,7 +447,19 @@ Conserning sampling with frequency weights:
   - weights need to be alignable to index of original DataFrame before grouping (same index)
 
 
-## Sample targets (Fake NAs)
+## Split: Train, validation and test data
+
+- test data is in clinical language often denoted as independent validation cohort
+- validation data (for model)
+
+```python
+analysis.splits = DataSplits(is_wide_format=True)
+splits = analysis.splits
+print(f"{analysis.splits = }")
+analysis.splits.__annotations__
+```
+
+### Sample targets (Fake NAs)
 
 
 Add goldstandard targets for valiation and test data
@@ -518,8 +475,6 @@ analysis.df_long
 ```
 
 ```python
-# analysis.splits.to_long_format(name_values='intensity') # long format as sample_data uses long-format 
-# analysis.splits
 fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(), sample_index_to_drop=0, weights=freq_per_feature, frac=0.1)
 assert len(splits.train_X) > len(fake_na)
 splits.val_y = fake_na.sample(frac=0.5).sort_index()
@@ -536,16 +491,11 @@ splits.val_y
 ```
 
 ```python
-# potential bug: wrong order...
-# splits.val_X, splits.val_y = sample_data(splits.val_X, sample_index_to_drop=0, weights=freq_per_peptide) # I this the wrong way around?
-# splits.test_X, splits.test_y = sample_data(splits.test_X, sample_index_to_drop=0, weights=freq_per_peptide)
-
-# for k, s in splits:
-#     s.sort_index(inplace=True)
+splits.train_X
 ```
 
 <!-- #region tags=[] -->
-## Save in long format
+### Save in long format
 
 - Data in long format: (peptide, sample_id, intensity)
 - no missing values kept
@@ -560,83 +510,16 @@ splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-form
 splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
 ```
 
-## PCA plot of training data
+## PCA plot of training data - with filename metadata
 
 - [ ] update: uses old metadata reading to indicate metadata derived from filename
 
 
 ```python
-ana_train_X = analyzers.AnalyzePeptides(data=splits.train_X, is_wide_format=False, ind_unstack=columns_name)
+ana_train_X = analyzers.AnalyzePeptides(data=splits.train_X, is_wide_format=False, ind_unstack=splits.train_X.index.names[1:])
 figures['pca_train'] = ana_train_X.plot_pca()
-vaep.savefig(figures['pca_train'], folder_figures / f'pca_plot_raw_data_{ana_train_X.fname_stub}')
+vaep.savefig(figures['pca_train'], folder_figures / f'pca_plot_raw_data_w_filename_meta_{ana_train_X.fname_stub}')
 # ana_train_X = add_meta_data(ana_train_X) # inplace, returns ana_train_X
-```
-
-## Move: Script on matching similar samples 
-
-- how to identify similar samples, e.g. using KNNs
-
-```python
-# # add to DataSplits a inputs attribute
-
-# data_dict = {'train': splits.train_X, 'valid': splits.val_X, 'test': splits.test_X}
-# PCs = pd.DataFrame()
-# split_map = pd.Series(dtype='string')
-# for key, df in data_dict.items():
-#     df = df.unstack()
-#     PCs = PCs.append(ana_train_X.calculate_PCs(df))
-#     split_map = split_map.append(pd.Series(key, index=df.index))
-
-# fig, ax = plt.subplots(figsize=(15,8))
-# ax.legend(title='splits')
-# analyzers.seaborn_scatter(PCs.iloc[:, :2], fig, ax, meta=split_map,
-#                           title='First two principal compements (based on training data PCA)')
-# ax.get_legend().set_title("split")
-```
-
-For *Collaborative Filtering*, new samples could be initialized based on a KNN approach in the original sample space or the reduced PCA dimension.
-  - The sample embeddings of the K neighearst neighbours could be averaged for a new sample
-
-```python
-# # Optional: Change number of principal components
-# # K = 2
-# # _ = ana_train_X.get_PCA(n_components=K)
-
-# train_PCs = ana_train_X.calculate_PCs(splits.train_X.unstack())
-# test_PCs = ana_train_X.calculate_PCs(splits.test_X.unstack())
-# nn = NearestNeighbors(n_neighbors=5).fit(train_PCs)
-```
-
-Select K neareast neighbors for first test data sample from training data. Compare equal distance mean to mean weighted by distances.
-
-```python
-# d, idx = nn.kneighbors(test_PCs.iloc[1:2])
-# # test_PCs.iloc[1]
-# idx
-```
-
-```python
-# train_PCs.iloc[idx[0]]
-```
-
-```python
-# w = d / d.sum()
-# display(f"Sample weights based on distances: {w = }")
-# w.flatten().reshape(5,1) * train_PCs.iloc[idx[0]] # apply weights to values
-```
-
-```python
-# pd.DataFrame( (train_PCs.iloc[idx[0]].mean(), # mean
-#               (w.flatten().reshape(5,1) * train_PCs.iloc[idx[0]]).sum() # sum of weighted samples
-#               ), index=['mean','weighted by distance '])
-```
-
-Add visual representation of picked points in the first two principal components
-
-```python
-# ax.scatter(x=test_PCs.iloc[1]['PC 1'], y=test_PCs.iloc[1]['PC 2'], s=100, marker="v", c='r')
-# ax.scatter(x=train_PCs.iloc[idx[0]]['PC 1'], y=train_PCs.iloc[idx[0]]['PC 2'], s=100, marker="s", c='y')
-# fig
 ```
 
 ## Save parameters
