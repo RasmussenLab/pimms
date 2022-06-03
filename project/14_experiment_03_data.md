@@ -73,10 +73,10 @@ column_names: List = None # Manuelly set column names
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
 ```python
-# # # evidence
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-# index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
-# folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# # evidence
+FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
+folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
 
 
@@ -166,6 +166,25 @@ log_fct = getattr(np, params.logarithm)
 analysis.log_transform(log_fct)
 logger.info(f"{analysis = }")
 analysis.df
+```
+
+In case there are multiple features for each intensity values (currenlty: peptide sequence and charge), combine the column names to a single str index.
+
+> The Collaborative Modeling approach will need a single feature column.
+
+```python
+def join_as_str(seq):
+    ret = "_".join(str(x) for x in seq)
+    return ret
+    
+# if hasattr(analysis.df.columns, "levels"):
+if isinstance(analysis.df.columns, pd.MultiIndex):
+    logger.warning("combine MultiIndex columns to one feature column")
+    print(analysis.df.columns[:10].map(join_as_str))
+    _new_name = join_as_str(analysis.df.columns.names)
+    analysis.df.columns = analysis.df.columns.map(join_as_str)
+    analysis.df.columns.name = _new_name
+    logger.warning(f"New name: {analysis.df.columns.names = }")
 ```
 
 ### Select M most common features
