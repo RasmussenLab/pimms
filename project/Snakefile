@@ -2,8 +2,7 @@
 Document how all the notebooks for a single experiment are connected.
 """
 
-configfile: "config/proteinGroups_split.yaml"
-configfile: "config/proteinGroups_train.yaml"
+configfile: "config/proteinGroups.yaml"
 
 folder_experiment = config['folder_experiment']
 
@@ -13,7 +12,10 @@ print(f"{folder_experiment = }")
 rule all:
     input: 
         expand(f"{folder_experiment}/{{nb}}",
-            nb='14_experiment_03_latent_space_analysis.ipynb')
+            nb=['14_experiment_03_train_collab.ipynb',
+                '14_experiment_03_train_dae.ipynb',
+                '14_experiment_03_train_vae.ipynb'
+                ])
 
 # # rule template
 
@@ -37,26 +39,24 @@ rule create_splits:
         nb=f"{folder_experiment}/{nb}",
     params:
         folder_experiment=folder_experiment,
-        sample_completeness=config["sample_completeness"],
-        min_rt_time=config["min_rt_time"]
-
+        configfile=config['config_split']
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f config/split_proteinGroups.yaml"
+        " -f {params.configfile}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
 
-nb = '14_experiment_03_latent_space_analysis.ipynb'
 rule train_models:
     input:
-        nb=nb,
+        nb="{nb}",
         train_split=f"{folder_experiment}/data/train_X.pkl",
     output:
-        nb=f"{folder_experiment}/{nb}",
+        nb=f"{folder_experiment}/{{nb}}",
     params:
-        folder_experiment=f"{folder_experiment}",
+        folder_experiment=folder_experiment,
+        configfile=config['config_train']
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f config/train_proteinGroups.yaml" # pass on config file
+        " -f {params.configfile}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"

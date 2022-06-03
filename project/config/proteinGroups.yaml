@@ -1,0 +1,3 @@
+config_split: config/proteinGroups_split.yaml
+config_train: config/proteinGroups_train.yaml
+folder_experiment: runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070

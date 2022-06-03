@@ -18,6 +18,8 @@ from . import ae
 from . import analysis
 from . import collab
 
+import vaep
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,6 +58,25 @@ def plot_loss(recorder: learner.Recorder,
     return ax
 
 
+def plot_training_losses(learner: learner.Learner,
+                         name: str,
+                         ax=None,
+                         save_recorder: bool = True,
+                         folder='figures',
+                         figsize=(15, 8)):
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize)
+    else:
+        fig = ax.get_figure()
+    ax.set_title(f'{name} loss: Reconstruction loss')
+    learner.recorder.plot_loss(skip_start=5, ax=ax)
+    name = name.lower()
+    _ = RecorderDump(learner.recorder, name).save(folder)
+    vaep.savefig(fig, name=f'{name}_training',
+                 folder=folder)
+    return fig
+
+
 def calc_net_weight_count(model: torch.nn.modules.module.Module) -> int:
     model.train()
     model_params = filter(lambda p: p.requires_grad, model.parameters())
@@ -86,6 +107,9 @@ class RecorderDump:
         return ret
 
     plot_loss = plot_loss
+
+
+
 
 def split_prediction_by_mask(pred: pd.DataFrame,
                              mask: pd.DataFrame,
