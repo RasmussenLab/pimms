@@ -18,7 +18,7 @@ jupyter:
 Create data splits
 
 ```python
-from typing import Union
+from typing import Union, List
 from dataclasses import dataclass
 import logging
 from pathlib import Path
@@ -63,7 +63,7 @@ index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string
 # query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# columns_name: str = 'Gene names'
+column_names: List = None # Manuelly set column names
 ```
 
 ```python
@@ -73,7 +73,7 @@ folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
 ```python
-# evidence
+# # # evidence
 # FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
@@ -104,7 +104,7 @@ class DataConfig:
     # query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options
     logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
     folder_experiment: str = 'runs/experiment_03'
-    # columns_name: str = "peptide"
+    column_names: str = None # Manuelly set column names
 
 
 params = DataConfig(**args) # catches if non-specified arguments were passed
@@ -158,9 +158,9 @@ analysis = constructor(fname=params.FN_INTENSITIES,
                                      usecols=params.used_features
                                     )
 
-# set automatically
-# analysis.df.columns.name = params.columns_name
-columns_name = analysis.df.columns.name # ToDo: MultiIndex adaptions will be needed
+if params.column_names:
+    analysis.df.columns.names = params.column_names
+
 
 log_fct = getattr(np, params.logarithm)
 analysis.log_transform(log_fct)
