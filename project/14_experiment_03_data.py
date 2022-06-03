@@ -71,10 +71,10 @@ column_names: List = None # Manuelly set column names
 # index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 # %%
-# # evidence
-FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
-folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# # # evidence
+# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+# index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
+# folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 
 
 # %%
