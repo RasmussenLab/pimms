@@ -18,10 +18,15 @@ def feature_frequency(df_wide: pd.DataFrame, measure_name: str = 'freq') -> pd.S
     pd.Series
         Frequency on non-missing entries per feature (column). 
     """
-    _df_feat = df_wide.stack().to_frame(measure_name)
+    # if hasattr(df_wide.columns, "levels"): # is columns.names always set?
+    # is listed as attribute: https://pandas.pydata.org/docs/reference/api/pandas.Index.html
+    _df_feat = df_wide.stack(df_wide.columns.names) # ensure that columns are named
+
+    _df_feat = _df_feat.to_frame(measure_name)
     # implicit as stack puts column index in the last position (here: 1)
     _df_feat = _df_feat.reset_index(0, drop=True)
-    freq_per_feat = _df_feat.notna().groupby(level=0).sum()
+    level = list(range(len(_df_feat.index.names)))
+    freq_per_feat = _df_feat.notna().groupby(level=level).sum()
     return freq_per_feat.squeeze()
 
 

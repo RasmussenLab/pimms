@@ -90,7 +90,8 @@ class AnalyzePeptides(SimpleNamespace):
         df = pd.read_csv(fname, index_col=index_col, low_memory=False,
                          nrows=nrows, usecols=usecols, squeeze=True)
         if len(df.shape) == 1:
-            df = df.unstack()    
+            # unstack all but first column
+            df = df.unstack(df.index.names[1:])
         verify_df(df=df, fname=fname,
                   index_col=index_col,
                   verify_fname=verify_fname,
@@ -107,7 +108,7 @@ class AnalyzePeptides(SimpleNamespace):
                     **kwargs):
         df = pd.read_pickle(fname).squeeze()
         if len(df.shape) == 1:
-            df = df.unstack()
+            df = df.unstack(df.index.names[1:])
         verify_df(df=df, fname=fname,
                   index_col=index_col,
                   verify_fname=verify_fname,

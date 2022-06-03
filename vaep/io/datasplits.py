@@ -22,7 +22,8 @@ def long_format(df: pd.DataFrame,
                 # index_name: str = 'Sample ID'
                 ) -> pd.DataFrame:
     # ToDo: Docstring as in class when finalized
-    df_long = df.stack().to_frame(colname_values)
+    names = df.columns.names
+    df_long = df.stack(names).to_frame(colname_values)
     return df_long
 
 
