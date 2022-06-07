@@ -81,12 +81,12 @@ folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_20
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
-epochs_max:int = 20  # Maximum number of epochs
+epochs_max:int = 50  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
-latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
+latent_dim:int = 15 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
@@ -271,7 +271,7 @@ data.val_y
 # %%
 vae_default_pipeline = sklearn.pipeline.Pipeline(
     [
-        ('normalize', MinMaxScaler()),
+        ('normalize', StandardScaler()),
         ('impute', SimpleImputer(add_indicator=False))
     ])
 
@@ -288,7 +288,7 @@ ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
                       n_neurons=args.hidden_layers,
                       last_encoder_activation=None,
-                      last_decoder_activation=Sigmoid,
+                      last_decoder_activation=None,
                       dim_latent=args.latent_dim),
     transform=vae_default_pipeline,
     decode=['normalize'])
@@ -302,9 +302,11 @@ ana_vae.model
 
 # %%
 # papermill_description=train_vae
+# import functools
+# loss_fct = functools.partial(ae.loss_fct_vae, reduction='mean')
 ana_vae.learn = Learner(dls=ana_vae.dls,
                         model=ana_vae.model,
-                        loss_func=ae.loss_fct_vae,
+                        loss_func=ae.loss_fct_vae, #loss_fct
                         cbs=[ae.ModelAdapterVAE(), EarlyStoppingCallback()])
 
 ana_vae.learn.show_training_loop()
@@ -347,12 +349,14 @@ pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=ana_vae.learn,
                                           position_pred_tuple=0,
                                           transformer=ana_vae.transform)
 val_pred_fake_na['VAE'] = pred.stack()
+val_pred_fake_na
 
 # %% [markdown]
 # select test data predictions
 
 # %%
 test_pred_fake_na['VAE'] = pred.stack()
+test_pred_fake_na
 
 # %% [markdown]
 # ### Plots
