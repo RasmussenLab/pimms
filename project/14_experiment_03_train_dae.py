@@ -301,8 +301,8 @@ ana_dae.model
 
 # %%
 ana_dae.learn = Learner(dls=ana_dae.dls, model=ana_dae.model,
-                        loss_func=MSELossFlat(),
-                        cbs=[EarlyStoppingCallback(), ae.ModelAdapter()]
+                        loss_func=MSELossFlat(reduction='sum'),
+                        cbs=[EarlyStoppingCallback(), ae.ModelAdapter(p=0.1)]
                         )
 
 # %%
@@ -349,6 +349,11 @@ def plot_training_losses(learner: fastai.learner.Learner, name: str, ax=None, sa
 fig = plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args.out_figures)
 
 # %% [markdown]
+# Why is the validation loss better then the training loss?
+# - during training input data is masked and needs to be reconstructed
+# - when evaluating the model, all input data is provided and only the artifically masked data is used for evaluation.
+
+# %% [markdown]
 # ### Predictions
 #
 # - data of training data set and validation dataset to create predictions is the same as training data.
@@ -359,6 +364,7 @@ fig = plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args.out_fi
 # create predictiona and select for validation data
 
 # %%
+ana_dae.model.eval()
 pred, target = ana_dae.get_preds_from_df(df_wide=data.train_X)  # train_X
 pred = pred.stack()
 val_pred_fake_na['DAE'] = pred
@@ -379,7 +385,7 @@ test_pred_fake_na
 
 # %%
 # could also be a method
-ana_dae.model = ana_dae.model.cpu()
+ana_dae.model.cpu()
 df_dae_latent = vaep.model.get_latent_space(ana_dae.model.encoder,
                                             dl=ana_dae.dls.valid,
                                             dl_index=ana_dae.dls.valid.data.index)

@@ -367,6 +367,7 @@ def loss_function(recon_batch: torch.tensor,
                   mu: torch.tensor,
                   logvar: torch.tensor,
                   reconstruction_loss=F.mse_loss,
+                  reduction='sum',
                   t: float = 0.9):
     """Loss function only considering the observed values in the reconstruction loss.
 
@@ -409,7 +410,7 @@ def loss_function(recon_batch: torch.tensor,
     except ValueError:
         X = batch
     recon_loss = reconstruction_loss(
-        input=recon_batch, target=X, reduction='sum')
+        input=recon_batch, target=X, reduction=reduction)
 
     # KL-divergence
     # see Appendix B from VAE paper:
@@ -417,20 +418,30 @@ def loss_function(recon_batch: torch.tensor,
     # https://arxiv.org/abs/1312.6114
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     # there might be an error in the paper log(sigma^2) -> log(sigma)
+    # KLD =  (-0.5*(1+logvar - mu**2- torch.exp(logvar)).sum(dim = 1)).mean(dim =0)  
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     total = recon_loss + t*KLD
     return {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
 
 
+def log_mse(input, target, reduction='sum'):
+    res = F.mse_loss(input, target, reduction=reduction)
+    res = res.log()
+    return res
+
 #self.loss_func(self.pred, *self.yb)
-def loss_fct_vae(pred, y):
+def loss_fct_vae(pred, y, reduction='sum'):
     recon_batch, mu, logvar = pred
     batch = y
+
     res = loss_function(recon_batch=recon_batch,
                         batch=batch,
                         mu=mu,
                         logvar=logvar,
-                        reconstruction_loss=F.binary_cross_entropy)
+                        # reconstruction_loss=F.binary_cross_entropy,
+                        reconstruction_loss=log_mse,
+                        reduction=reduction,
+                        )
     return res['loss']
 
 
@@ -471,3 +482,4 @@ class AutoEncoderAnalysis(analysis.ModelAnalysis):
     
     def get_test_dl(self, df_wide:pd.DataFrame, bs:int=64) -> pd.DataFrame:
         return vaep.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)
+
