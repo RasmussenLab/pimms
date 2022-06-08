@@ -266,7 +266,7 @@ class AnalyzePeptides(SimpleNamespace):
 
     def calculate_PCs(self, new_df, is_wide=True):
         if not is_wide:
-            new_df = new_df.unstack()
+            new_df = new_df.unstack(new_df.index.names[1:]) 
         
         X = self.imputer_.transform(new_df)
         X = _add_indices(X, new_df)
@@ -280,7 +280,7 @@ class AnalyzePeptides(SimpleNamespace):
         """Create principal component plot with three heatmaps showing
         instrument, degree of non NA data and sample by date."""
         if not self.is_wide_format:
-            self.df = self.df.unstack()
+            self.df = self.df.unstack(self.df.index.names[1:])
             self.is_wide_format = True
 
         if not hasattr(self, 'df_meta'):
