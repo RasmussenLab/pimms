@@ -68,7 +68,7 @@ def plot_training_losses(learner: learner.Learner,
         fig, ax = plt.subplots(figsize=figsize)
     else:
         fig = ax.get_figure()
-    ax.set_title(f'{name} loss: Reconstruction loss')
+    ax.set_title(f'{name} loss')
     learner.recorder.plot_loss(skip_start=5, ax=ax)
     name = name.lower()
     _ = RecorderDump(learner.recorder, name).save(folder)
