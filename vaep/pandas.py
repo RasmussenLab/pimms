@@ -207,7 +207,7 @@ def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
     ret.iloc[0] = first_row
     ret.iloc[-1] = last_row
 
-    ret = ret[mask].stack().dropna().squeeze()
+    ret = ret[mask].stack().dropna().squeeze() # does not work with MultiIndex columns
     ret.rename(name, inplace=True)
     return ret
 
