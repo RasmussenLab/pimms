@@ -7,11 +7,12 @@ configfile: "config/proteinGroups.yaml"
 folder_experiment = config['folder_experiment']
 
 
-print(f"{folder_experiment = }")
+# print(f"{folder_experiment = }")
 
 rule all:
     input: 
-        expand(f"{folder_experiment}/{{nb}}",
+        expand("{folder_experiment}/{nb}",
+            folder_experiment=config['folder_experiment'],
             nb=['14_experiment_03_train_collab.ipynb',
                 '14_experiment_03_train_dae.ipynb',
                 '14_experiment_03_train_vae.ipynb'
@@ -33,30 +34,31 @@ rule all:
 nb = '14_experiment_03_data.ipynb'
 rule create_splits:
     input:
-        nb=nb
+        nb=nb,
+        configfile = config['config_split']
     output:
-        data=f"{folder_experiment}/data/train_X.pkl",
-        nb=f"{folder_experiment}/{nb}",
+        train_split="{folder_experiment}/data/train_X.pkl",
+        nb="{folder_experiment}"
+           f"/{nb}",
     params:
-        folder_experiment=folder_experiment,
-        configfile=config['config_split']
+        folder_experiment="{folder_experiment}"
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f {params.configfile}"
+        " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
 
 rule train_models:
     input:
         nb="{nb}",
-        train_split=f"{folder_experiment}/data/train_X.pkl",
-    output:
-        nb=f"{folder_experiment}/{{nb}}",
-    params:
-        folder_experiment=folder_experiment,
+        train_split="{folder_experiment}/data/train_X.pkl",
         configfile=config['config_train']
+    output:
+        nb="{folder_experiment}/{nb}",
+    params:
+        folder_experiment="{folder_experiment}"
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f {params.configfile}"
+        " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
