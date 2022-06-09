@@ -77,6 +77,7 @@ Papermill script parameters:
 ```python tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
@@ -108,7 +109,12 @@ args.folder_experiment.mkdir(exist_ok=True, parents=True)
 args.file_format = file_format
 del file_format
 args.out_folder = args.folder_experiment
-args.data = args.folder_experiment / 'data'
+if folder_data:
+    args.data = Path(folder_data)
+else:
+    args.data = args.folder_experiment / 'data'
+assert args.data.exists(), f"Directory not found: {args.data}"
+del folder_data
 args.out_figures = args.folder_experiment / 'figures'
 args.out_figures.mkdir(exist_ok=True)
 args.out_metrics = args.folder_experiment / 'metrics'
