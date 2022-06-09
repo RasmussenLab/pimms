@@ -286,6 +286,8 @@ data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.
 ```
 
 ```python
+_model_key = 'DAE'
+
 dae_default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
@@ -335,7 +337,7 @@ suggested_lr
 ```
 
 ```python
-vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format("dae"))
+vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(_model_key.lower()))
 ```
 
 ### Training
@@ -412,7 +414,6 @@ df_meta
 ```
 
 ```python
-_model_key = 'DAE'
 ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, _model_key, folder=args.out_figures)
 figures['latent_DAE_by_date'], ax = ana_latent_dae.plot_by_date('Content Creation Date')
 ```
@@ -461,7 +462,7 @@ added_metrics
 Save all metrics as json
 
 ```python tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key.lower()}.json')
 ```
 
 ```python tags=[]
@@ -551,11 +552,11 @@ fig.show()
 ## Save predictions
 
 ```python
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key.lower()}.csv")
 ```
 
 ```python
-args.dump(fname=args.out_models/ f"model_config_{_model_key}")
+args.dump(fname=args.out_models/ f"model_config_{_model_key.lower()}.yaml")
 args
 ```

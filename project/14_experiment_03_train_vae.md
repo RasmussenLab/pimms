@@ -279,6 +279,8 @@ data.val_y
 ### Transform of data
 
 ```python
+_model_key = 'VAE'
+
 vae_default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
@@ -340,7 +342,7 @@ vaep.io.dump_json(
         ana_vae.params, types=[
             (torch.nn.modules.module.Module, lambda m: str(m))
         ]),
-    args.out_models / TEMPLATE_MODEL_PARAMS.format("vae"))
+    args.out_models / TEMPLATE_MODEL_PARAMS.format(_model_key.lower()))
 
 # restore original value
 ana_vae.params['last_decoder_activation'] = Sigmoid
@@ -385,19 +387,18 @@ df_vae_latent
 ```
 
 ```python
-_model_key = 'VAE'
 ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
                                           df_meta,
                                           _model_key,
                                           folder=args.out_figures)
-figures[f'latent_{_model_key}_by_date'], ax = ana_latent_vae.plot_by_date(
+figures[f'latent_{_model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
     'Content Creation Date')
 ```
 
 ```python
 # Could be created in data as an ID from three instrument variables
 _cat = 'ms_instrument'
-figures[f'latent_{_model_key}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
+figures[f'latent_{_model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
 ```
 
 ## Comparisons
@@ -440,7 +441,7 @@ added_metrics
 Save all metrics as json
 
 ```python tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key.lower()}.json')
 ```
 
 ```python tags=[]
@@ -530,11 +531,11 @@ fig.show()
 ## Save predictions
 
 ```python
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key.lower()}.csv")
 ```
 
 ```python
-args.dump(fname=args.out_models/ f"model_config_{_model_key}")
+args.dump(fname=args.out_models/ f"model_config_{_model_key.lower()}")
 args
 ```
