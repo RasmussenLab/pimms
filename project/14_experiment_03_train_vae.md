@@ -77,6 +77,7 @@ Papermill script parameters:
 ```python tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
@@ -112,7 +113,12 @@ args.folder_experiment.mkdir(exist_ok=True, parents=True)
 args.file_format = file_format
 del file_format
 args.out_folder = args.folder_experiment
-args.data = args.folder_experiment / 'data'
+if folder_data:
+    args.data = Path(folder_data)
+else:
+    args.data = args.folder_experiment / 'data'
+assert args.data.exists(), f"Directory not found: {args.data}"
+del folder_data
 args.out_figures = args.folder_experiment / 'figures'
 args.out_figures.mkdir(exist_ok=True)
 args.out_metrics = args.folder_experiment / 'metrics'
@@ -275,7 +281,6 @@ data.val_y
 ```python
 vae_default_pipeline = sklearn.pipeline.Pipeline(
     [
-        # ('normalize', MinMaxScaler()),
         ('normalize', StandardScaler()),
         ('impute', SimpleImputer(add_indicator=False))
     ])
@@ -293,7 +298,7 @@ ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
                       n_neurons=args.hidden_layers,
                       last_encoder_activation=None,
-                      last_decoder_activation=None, #Sigmoid,
+                      last_decoder_activation=None,
                       dim_latent=args.latent_dim),
     transform=vae_default_pipeline,
     decode=['normalize'])
@@ -307,11 +312,11 @@ ana_vae.model
 
 ```python
 # papermill_description=train_vae
-import functools
-loss_fct = functools.partial(ae.loss_fct_vae, reduction='mean')
+# import functools
+# loss_fct = functools.partial(ae.loss_fct_vae, reduction='mean')
 ana_vae.learn = Learner(dls=ana_vae.dls,
                         model=ana_vae.model,
-                        loss_func=loss_fct, #ae.loss_fct_vae,
+                        loss_func=ae.loss_fct_vae, #loss_fct
                         cbs=[ae.ModelAdapterVAE(), EarlyStoppingCallback()])
 
 ana_vae.learn.show_training_loop()

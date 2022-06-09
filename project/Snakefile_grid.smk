@@ -50,6 +50,8 @@ use rule train_models from single_experiment  as model with:
                    f"{name_template}/config_train.yaml"
     output:
         nb=f"{{folder_experiment}}/{name_template}/{{nb}}",
+    params:
+        folder_experiment=f"{{folder_experiment}}/{name_template}"
 
 # rule build_split_config:
 #     output:
@@ -59,11 +61,15 @@ rule build_train_config:
     output:
         config_train="{folder_experiment}/"
              f"{name_template}/config_train.yaml"
+    params:
+        folder_data="{folder_experiment}/data/"
     run:
+        from pathlib import PurePosixPath
         import yaml
 
         config = {k: resolve_type(v) for k, v in wildcards.items()}
-
+        config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
+        config['folder_data'] = params.folder_data
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
 
