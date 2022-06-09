@@ -26,15 +26,27 @@ print(GRID)
 name_template= config['name_template']
 print(name_template)
 
+
 rule all:
     input:
-        expand(f"{{folder_experiment}}/{name_template}/{{nb}}",
+        expand("{folder_experiment}/hyperpar_{split}_results.pdf",
+        folder_experiment=config["folder_experiment"],
+        split=["test_fake_na", "valid_fake_na"])
+
+rule results:
+    input:
+        nbs=expand(f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{model}}.ipynb",
             folder_experiment=config["folder_experiment"],
-            nb=['14_experiment_03_train_collab.ipynb',
-                '14_experiment_03_train_dae.ipynb',
-                '14_experiment_03_train_vae.ipynb'
-        ],
-       **GRID)
+            model=['collab', 'dae', 'vae'],
+            **GRID),
+        metrics="{folder_experiment}/all_metrics.json",
+        config="{folder_experiment}/all_configs.json"
+    output:
+        expand("{{folder_experiment}}/hyperpar_{split}_results.pdf",
+            split=["test_fake_na", "valid_fake_na"])
+    notebook:
+        "14_experiment_03_hyperpara_analysis.ipynb"
+
 
 use rule create_splits from single_experiment as splits with:
     input:
@@ -44,12 +56,13 @@ use rule create_splits from single_experiment as splits with:
 
 use rule train_models from single_experiment  as model with:
     input:
-        nb="{nb}",
+        nb="14_experiment_03_train_{model}.ipynb",
         train_split="{folder_experiment}/data/train_X.pkl",
         configfile="{folder_experiment}/"
                    f"{name_template}/config_train.yaml"
     output:
-        nb=f"{{folder_experiment}}/{name_template}/{{nb}}",
+        nb=f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{model}}.ipynb",
+        metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_{{model}}.json"
     params:
         folder_experiment=f"{{folder_experiment}}/{name_template}"
 
@@ -74,3 +87,59 @@ rule build_train_config:
             yaml.dump(config, f)
 
 
+rule collect_all_configs:
+    input:
+        configs=expand("{folder_experiment}/"
+                       f"{name_template}/models/model_config_{{model}}",
+                folder_experiment=config["folder_experiment"],
+                **GRID,
+                model=['collab', 'dae', 'vae'])
+    output:
+        out = "{folder_experiment}/all_configs.json",
+    notebook:
+        "14_aggregate_configs.py.ipynb"
+    # run:
+    #     import json
+    #     import yaml
+    #     from pathlib import Path
+    #     all = {}
+    #     for fname in input:
+    #         key = Path(fname).parent.name
+    #         with open(fname) as f:
+    #             all[key] = yaml.safe_load(f)
+    #     with open(output.out, 'w') as f:
+    #         json.dump(all, f)
+
+
+rule collect_metrics:
+    input:
+        expand(f"{{folder_experiment}}/{name_template}/metrics/metrics_{{model}}.json",
+            folder_experiment=config["folder_experiment"],
+            model=['collab', 'dae', 'vae'],
+            **GRID),
+    output:
+        out = "{folder_experiment}/all_metrics.json",
+    run:
+        import json
+        from pathlib import Path
+        import pandas as pd
+        import vaep.pandas
+        all_metrics = {}
+        for fname in input:
+            key = Path(fname).parents[1].name  # "grandparent" directory gives name
+            with open(fname) as f:
+                loaded = json.load(f)
+            loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
+            if key not in all_metrics:
+                all_metrics[key] = loaded
+                continue
+            for k, v in loaded.items():
+                if k in all_metrics[key]:
+                    assert all_metrics[key][k] == v, "Diverging values for {k}: {v1} vs {v2}".format(
+                        k=k,
+                        v1=all_metrics[key][k],
+                        v2=v)
+                else:
+                    all_metrics[key][k] = v
+        
+        pd.DataFrame(all_metrics).to_json(output.out)
