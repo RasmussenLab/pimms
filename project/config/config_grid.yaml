@@ -1,10 +1,7 @@
-batch_size:
-- 32
-- 64
 epochs:
-- 30
+- 100
 hidden_layers:
-- 1
+# - 1
 - 2
 - 3
 - 4
@@ -17,4 +14,4 @@ latent_dim:
 folder_experiment: "runs/grid_search/proteinGroups"
 config_split: 'proteinGroups.yaml'
 config_train: 'placeholder.yaml'
-name_template: run_HL_{hidden_layers}_LD_{latent_dim}_E_{epochs}_BS_{batch_size}
+name_template: run_LD_{latent_dim}_HL_{hidden_layers}_E_{epochs}

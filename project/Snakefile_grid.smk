@@ -17,8 +17,8 @@ GRID = {k:config[k]
         for k 
         in ['epochs',
             'latent_dim',
-            'hidden_layers',
-            'batch_size']
+            'hidden_layers', # collab does not change based on #hidden layers -> repeated computation
+            ]
         }
 
 print(GRID)
@@ -34,16 +34,14 @@ rule all:
         split=["test_fake_na", "valid_fake_na"])
 
 rule results:
-    input:
-        nbs=expand(f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{model}}.ipynb",
-            folder_experiment=config["folder_experiment"],
-            model=['collab', 'dae', 'vae'],
-            **GRID),
+    input:     
         metrics="{folder_experiment}/all_metrics.json",
         config="{folder_experiment}/all_configs.json"
     output:
         expand("{{folder_experiment}}/hyperpar_{split}_results.pdf",
             split=["test_fake_na", "valid_fake_na"])
+    log:
+        notebook="{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
     notebook:
         "14_experiment_03_hyperpara_analysis.ipynb"
 
@@ -93,9 +91,11 @@ rule collect_all_configs:
                        f"{name_template}/models/model_config_{{model}}",
                 folder_experiment=config["folder_experiment"],
                 **GRID,
-                model=['collab', 'dae', 'vae'])
+                model=['collab', 'dae.yaml', 'vae'])
     output:
         out = "{folder_experiment}/all_configs.json",
+    log:
+        notebook="{folder_experiment}/14_aggregate_configs.ipynb"
     notebook:
         "14_aggregate_configs.py.ipynb"
     # run:
