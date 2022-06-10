@@ -60,7 +60,8 @@ use rule train_models from single_experiment  as model with:
                    f"{name_template}/config_train.yaml"
     output:
         nb=f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{model}}.ipynb",
-        metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_{{model}}.json"
+        metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_{{model}}.json",
+        config=f"{{folder_experiment}}/{name_template}/models/model_config_{{model}}.yaml"
     params:
         folder_experiment=f"{{folder_experiment}}/{name_template}"
 
