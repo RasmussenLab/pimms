@@ -77,8 +77,12 @@ rule build_train_config:
     run:
         from pathlib import PurePosixPath
         import yaml
-
-        config = {k: resolve_type(v) for k, v in wildcards.items()}
+        config = dict(wildcards) # copy dict
+        config = {k: resolve_type(v) for k, v in config.items() if k != 'hidden_layers'}
+        if '_' not in wildcards['hidden_layers']:
+            config['hidden_layers'] = int(wildcards['hidden_layers'])
+        else:
+            config['hidden_layers'] = wildcards['hidden_layers']
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
         with open(output.config_train, 'w') as f:
@@ -91,7 +95,7 @@ rule collect_all_configs:
                        f"{name_template}/models/model_config_{{model}}",
                 folder_experiment=config["folder_experiment"],
                 **GRID,
-                model=['collab', 'dae.yaml', 'vae'])
+                model=['collab.yaml', 'dae.yaml', 'vae.yaml'])
     output:
         out = "{folder_experiment}/all_configs.json",
     log:
