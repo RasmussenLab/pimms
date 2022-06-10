@@ -5,6 +5,7 @@ hidden_layers:
 - 2
 - 3
 - 4
+- '1024_512_256'
 latent_dim:
 - 10
 - 25

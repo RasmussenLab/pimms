@@ -141,7 +141,7 @@ print(hidden_layers)
 if isinstance(hidden_layers, int):
     args.hidden_layers = hidden_layers
 elif isinstance(hidden_layers, str):
-    args.hidden_layers = [int(x) for x in hidden_layers.split()]
+    args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
     # list(map(int, hidden_layers.split()))
 else:
     raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
@@ -494,6 +494,6 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
 <!-- #endregion -->
 
 ```python
-args.dump(fname=args.out_models/ f"model_config_{_model_key}")
+args.dump(fname=args.out_models/ f"model_config_{_model_key}.yaml")
 args
 ```
