@@ -116,14 +116,18 @@ def imputation_KNN(data, alone=True, threshold=0.5):
     return data
 
 
-def imputation_normal_distribution(log_intensities: pd.Series, mean_shift=1.8, std_shrinkage=0.3):
-    """Impute missing log-transformed intensity values of DDA run.
+def imputation_normal_distribution(log_intensities: pd.Series,
+                                   mean_shift=1.8,
+                                   std_shrinkage=0.3,
+                                   copy=True):
+    """Impute missing log-transformed intensity values of a single feature.
+    Samples one value for imputation for all samples.
 
     Parameters
     ----------
     log_intensities: pd.Series
-        Series of normally distributed values. Here usually log-transformed
-        protein intensities.
+        Series of normally distributed values of a single feature (for all samples/runs).
+        Here usually log-transformed intensities.
     mean_shift: integer, float
         Shift the mean of the log_intensities by factors of their standard
         deviation to the negative.
@@ -153,6 +157,9 @@ def imputation_normal_distribution(log_intensities: pd.Series, mean_shift=1.8, s
 
     mean_shifted = mean - (std * mean_shift)
     std_shrinked = std * std_shrinkage
+
+    if copy:
+        log_intensities = log_intensities.copy(deep=True)
 
     return log_intensities.where(log_intensities.notna(),
                                  np.random.normal(mean_shifted, std_shrinked))
