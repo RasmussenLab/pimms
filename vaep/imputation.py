@@ -165,6 +165,38 @@ def imputation_normal_distribution(log_intensities: pd.Series,
                                  np.random.normal(mean_shifted, std_shrinked))
 
 
+def impute_shifted_normal(df_wide:pd.DataFrame,
+                          mean_shift:float=1.8,
+                          std_shrinkage:float=0.3,) -> pd.Series:
+    """Get replacements for missing values.
+
+    Parameters
+    ----------
+    df_wide : pd.DataFrame
+        DataFrame in wide format, contains missing
+    mean_shift : float, optional
+        shift mean of feature by factor of standard deviations, by default 1.8
+    std_shrinkage : float, optional
+        shrinks standard deviation by facotr, by default 0.3
+
+    Returns
+    -------
+    pd.Series
+        Series of imputed values in long format.
+    """
+    mean = df_wide.mean()
+    std = df_wide.std()
+    mean_shifted = mean - (std * mean_shift)
+    std_shrinked = std * std_shrinkage
+
+    imputed_shifted_normal = pd.DataFrame(
+        np.random.normal(mean_shifted, std_shrinked, size=df_wide.shape),
+        index=df_wide.index,
+        columns=df_wide.columns)
+    imputed_shifted_normal = imputed_shifted_normal[df_wide.isna()].stack()
+    return imputed_shifted_normal
+
+
 def imputation_mixed_norm_KNN(data):
     # impute columns with less than 50% missing values with KNN
     data = imputation_KNN(data, alone=False)  # ToDo: Alone is not used.
