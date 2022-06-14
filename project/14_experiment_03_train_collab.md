@@ -83,7 +83,7 @@ fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed m
 # training
 epochs_max:int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
-batch_size:int = 32_768 # Batch size for training (and evaluation)
+batch_size_collab:int = 32_768 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
@@ -126,8 +126,8 @@ args.out_preds.mkdir(exist_ok=True)
 # args.n_training_samples_max = n_training_samples_max; del n_training_samples_max
 args.epochs_max = epochs_max
 del epochs_max
-args.batch_size = batch_size
-del batch_size
+args.batch_size_collab = batch_size_collab
+del batch_size_collab
 args.cuda = cuda
 del cuda
 args.latent_dim = latent_dim
@@ -236,7 +236,7 @@ test_pred_fake_na.describe()
 
 ```python
 # larger mini-batches speed up training
-args.batch_size_collab = args.batch_size
+# args.batch_size_collab = args.batch_size
 
 ana_collab = models.collab.CollabAnalysis(datasplits=data,
                                           sample_column=sample_id,
