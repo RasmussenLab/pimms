@@ -136,6 +136,7 @@ def build_encoder_units(layers: list, dim_latent: int,
     for i in range(len(layers)-1):
         in_feat, out_feat = layers[i:i+2]
         encoder.extend([nn.Linear(in_feat, out_feat), activation()])
+        encoder.append(nn.BatchNorm1d(out_feat))
     encoder.append(nn.Linear(out_feat, dim_latent*factor_latent))
     if last_encoder_activation:
         encoder.append(last_encoder_activation())
@@ -185,7 +186,6 @@ class Autoencoder(nn.Module):
         self.encoder = nn.Sequential(*self.encoder)
 
         # Decoder
-        n_neurons = 30
         self.layers_decoder = self.layers[::-1]
         assert self.layers_decoder is not self.layers
         assert out_feat == self.layers_decoder[0]
@@ -208,7 +208,7 @@ class Autoencoder(nn.Module):
         return x
 
 
-class VAE(Autoencoder):
+class VAE(nn.Module):
     """Variational Autoencoder. Latent dimension is composed of mean and log variance,
     so effecively the number of neurons are duplicated.
     """
@@ -216,27 +216,42 @@ class VAE(Autoencoder):
     def __init__(self,
                  n_features: int,
                  n_neurons: int,
-                 activation=nn.Tanh,
-                 last_encoder_activation=nn.Tanh,
+                 activation=nn.ReLU,
+                 last_encoder_activation=nn.ReLU,
                  last_decoder_activation=None,
                  dim_latent: int = 10):
 
-        # locals() need to be cleand, otherwise one runs into
-        # ModuleAttributeError: 'VAE' object has no attribute '_modules'
-        _locals = locals()
-        args = {k: _locals[k] for k in _locals.keys() if k not in [
-            'self', '__class__', '_locals']}
+        super().__init__()
+        self.n_features, self.n_neurons = n_features, list(L(n_neurons))
+        self.layers = [n_features, *self.n_neurons]
+        self.dim_latent = dim_latent
 
-        super().__init__(**args)
-
-        del self.encoder
+        # Encoder
         self.encoder, out_feat = build_encoder_units(self.layers,
                                                      self.dim_latent,
                                                      activation,
                                                      last_encoder_activation,
                                                      factor_latent=2)
         self.encoder = nn.Sequential(*self.encoder)
-
+        # Decoder
+        self.layers_decoder = self.layers[::-1]
+        assert self.layers_decoder is not self.layers
+        assert out_feat == self.layers_decoder[0]
+        self.decoder = [nn.Linear(self.dim_latent, out_feat),
+                        activation(), 
+                        nn.BatchNorm1d(out_feat)]
+        for i in range(len(self.layers_decoder)-1):
+            in_feat, out_feat = self.layers_decoder[i:i+2]
+            self.decoder.extend(
+                [nn.Linear(in_feat, out_feat),
+                 activation(),
+                 nn.BatchNorm1d(out_feat)])                     # ,
+        if not last_decoder_activation:
+            _ = self.decoder.pop()
+        else:
+            _ = self.decoder.pop()
+            self.decoder.append(last_decoder_activation())
+        self.decoder = nn.Sequential(*self.decoder)
 
     def reparameterize(self, mu, logvar):
         if self.training:
@@ -246,8 +261,7 @@ class VAE(Autoencoder):
             # std = torch.exp(0.5*logvar)  # will always be positive
             # eps = torch.randn_like(std)
             # return mu + eps*std
-        else:
-            return mu
+        return mu
 
     def forward(self, x):
         mu, logvar = self.get_mu_and_logvar(x)
@@ -433,14 +447,14 @@ def log_mse(input, target, reduction='sum'):
 def loss_fct_vae(pred, y, reduction='sum'):
     recon_batch, mu, logvar = pred
     batch = y
-
     res = loss_function(recon_batch=recon_batch,
                         batch=batch,
                         mu=mu,
                         logvar=logvar,
                         # reconstruction_loss=F.binary_cross_entropy,
-                        reconstruction_loss=log_mse,
-                        reduction=reduction,
+                        # reconstruction_loss=log_mse,
+                        reconstruction_loss=F.mse_loss,
+                        t=1.0
                         )
     return res['loss']
 
