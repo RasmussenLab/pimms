@@ -49,7 +49,7 @@ rule results:
 use rule create_splits from single_experiment as splits with:
     input:
         nb='14_experiment_03_data.ipynb',
-        configfile ="config/proteinGroups_split.yaml"
+        configfile =config['config_split']
 
 
 use rule train_models from single_experiment  as model with:
