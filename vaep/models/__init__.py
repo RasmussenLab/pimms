@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 
 def plot_loss(recorder: learner.Recorder,
+              norm_train:np.int64=np.int64(1),
+              norm_val:np.int64=np.int64(1),
               skip_start: int = 5,
               with_valid: bool = True,
               ax: plt.Axes = None) -> plt.Axes:
@@ -34,6 +36,10 @@ def plot_loss(recorder: learner.Recorder,
     ----------
     recorder : learner.Recorder
         fastai Recorder object, learn.recorder
+    norm_train: np.int64, optional
+        Normalize epoch loss by number of training samples, by default 1 
+    norm_val: np.int64, optional
+        Normalize epoch loss by number of validation samples, by default 1 
     skip_start : int, optional
         Skip N first batch metrics, by default 5
     with_valid : bool, optional
@@ -49,11 +55,11 @@ def plot_loss(recorder: learner.Recorder,
     if not ax:
         fig, ax = plt.subplots()
     ax.plot(list(range(skip_start, len(recorder.losses))),
-            recorder.losses[skip_start:], label='train')
+            recorder.losses[skip_start:] / norm_train, label='train')
     if with_valid:
         idx = (np.array(recorder.iters) < skip_start).sum()
         ax.plot(recorder.iters[idx:], L(
-            recorder.values[idx:]).itemgot(1), label='valid')
+            recorder.values[idx:]).itemgot(1) / norm_val , label='valid') 
         ax.legend()
     return ax
 
@@ -62,6 +68,7 @@ def plot_training_losses(learner: learner.Learner,
                          name: str,
                          ax=None,
                          save_recorder: bool = True,
+                         norm_factors = np.array([1,1], dtype='int'),
                          folder='figures',
                          figsize=(15, 8)):
     if ax is None:
@@ -69,7 +76,9 @@ def plot_training_losses(learner: learner.Learner,
     else:
         fig = ax.get_figure()
     ax.set_title(f'{name} loss')
-    learner.recorder.plot_loss(skip_start=5, ax=ax)
+    norm_train, norm_val = norm_factors  # exactly two
+    learner.recorder.plot_loss(skip_start=5, ax=ax,
+                               norm_train=norm_train, norm_val=norm_val)
     name = name.lower()
     _ = RecorderDump(learner.recorder, name).save(folder)
     vaep.savefig(fig, name=f'{name}_training',
