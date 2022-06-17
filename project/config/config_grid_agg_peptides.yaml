@@ -2,18 +2,17 @@ epochs:
 - 100
 hidden_layers:
 - '1024_512'
-- '512_256'
 - '512_256_128'
-- '1024_512_256'
 - '2056_1024_512'
 - '2056_1024_512_256'
+- '2056_1024_1024_512_512'
 latent_dim:
 - 10
 - 25
 - 50
 - 75
 - 100
-folder_experiment: "runs/grid_search/proteinGroups"
-config_split: 'proteinGroups.yaml'
+folder_experiment: "runs/grid_search/aggPeptides"
+config_split: 'config/peptides_split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_HL_{hidden_layers}_E_{epochs}
