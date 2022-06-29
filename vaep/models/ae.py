@@ -433,7 +433,20 @@ def loss_function(recon_batch: torch.tensor,
     # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
     # there might be an error in the paper log(sigma^2) -> log(sigma)
     # KLD =  (-0.5*(1+logvar - mu**2- torch.exp(logvar)).sum(dim = 1)).mean(dim =0)  
-    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    # KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    
+    # ## freebits
+    freebits = 0.1
+    KLD = torch.sum(F.relu(-0.5 *
+                           torch.sum(1
+                                     + logvar
+                                     - mu.pow(2)
+                                     - logvar.exp()
+                                     - freebits*0.6931471805599453))
+                    + freebits*0.6931471805599453)
+
+
+    # KLD = - 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     total = recon_loss + t*KLD
     return {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
 
