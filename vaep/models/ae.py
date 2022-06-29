@@ -215,15 +215,15 @@ class VAE(nn.Module):
 
     def __init__(self,
                  n_features: int,
-                 n_neurons: int,
+                 h_layers: int,
                  activation=nn.ReLU,
                  last_encoder_activation=nn.ReLU,
                  last_decoder_activation=None,
                  dim_latent: int = 10):
 
         super().__init__()
-        self.n_features, self.n_neurons = n_features, list(L(n_neurons))
-        self.layers = [n_features, *self.n_neurons]
+        self.n_features, self.h_layers = n_features, list(L(h_layers))
+        self.layers = [n_features, *self.h_layers]
         self.dim_latent = dim_latent
 
         # Encoder
@@ -355,8 +355,12 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
 
     def after_pred(self):
         super().after_pred()
-        pred, mu, logvar = self.pred  # return predictions
-        self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
+        if len(self.pred) == 3:
+            pred, mu, logvar = self.pred  # return predictions
+            self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
+        elif len(self.pred) == 4:
+            x_mu,x_logvar, z_mu, z_logvar = self.pred
+            self.learn.pred = (x_mu[self._mask], x_logvar[self._mask], z_mu, z_logvar)
 
 # same as ModelAdapter. Inheritence is limiting composition here
 

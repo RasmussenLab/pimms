@@ -17,6 +17,7 @@ import sklearn.metrics as sklm
 from . import ae
 from . import analysis
 from . import collab
+from . import vae
 
 import vaep
 
