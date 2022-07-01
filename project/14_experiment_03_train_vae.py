@@ -87,8 +87,8 @@ epochs_max:int = 50  # Maximum number of epochs
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
-latent_dim:int = 15 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
+latent_dim:int = 16 # Dimensionality of encoding dimension (latent space of model)
+hidden_layers:Union[int,str] = '128_128' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 
@@ -208,8 +208,9 @@ torch.cuda.current_device(), torch.cuda.memory_allocated()
 #     - [x] add some additional NAs based on distribution of data
 
 # %%
-freq_peptides = sampling.frequency_by_index(data.train_X, 0)
-freq_peptides.head() # training data
+freq_feat = sampling.frequency_by_index(data.train_X, 0)
+freq_feat.name = 'freq'
+freq_feat.head() # training data
 
 # %% [markdown]
 # ### Produce some addional fake samples
@@ -255,6 +256,15 @@ test_pred_fake_na['interpolated'] = interpolated
 del interpolated
 test_pred_fake_na
 
+# %%
+# Add median pred performance
+medians_train = data.train_X.median()
+medians_train.name = 'median'
+
+val_pred_fake_na = val_pred_fake_na.join(medians_train)
+test_pred_fake_na = test_pred_fake_na.join(medians_train)
+val_pred_fake_na
+
 # %% [markdown]
 # ### Fill Validation data with potentially missing features
 
@@ -292,9 +302,10 @@ from torch.nn import Sigmoid
 ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
     train_df=data.train_X,
     val_df=data.val_y,
-    model=ae.VAE,
+    # model=ae.VAE,
+    model= models.vae.VAE,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
-                      n_neurons=args.hidden_layers,
+                      h_layers=args.hidden_layers,
                       last_encoder_activation=None,
                       last_decoder_activation=None,
                       dim_latent=args.latent_dim),
@@ -309,13 +320,20 @@ ana_vae.model
 # ### Training
 
 # %%
+#self.loss_func(self.pred, *self.yb)
+
+results = []
+loss_fct = partial(models.vae.loss_fct, results=results)
+
+# %%
 # papermill_description=train_vae
-# import functools
-# loss_fct = functools.partial(ae.loss_fct_vae, reduction='mean')
 ana_vae.learn = Learner(dls=ana_vae.dls,
                         model=ana_vae.model,
-                        loss_func=ae.loss_fct_vae, #loss_fct
-                        cbs=[ae.ModelAdapterVAE(), EarlyStoppingCallback()])
+                        # loss_func=ae.loss_fct_vae, #loss_fct
+                        loss_func=loss_fct,
+                        cbs=[ae.ModelAdapterVAE(),
+                            #  EarlyStoppingCallback()
+                             ])
 
 ana_vae.learn.show_training_loop()
 # learn.summary() # see comment above under DAE
@@ -324,6 +342,9 @@ ana_vae.learn.show_training_loop()
 suggested_lr = ana_vae.learn.lr_find()
 ana_vae.params['suggested_inital_lr'] = suggested_lr.valley
 suggested_lr
+
+# %%
+results.clear() # reset results
 
 # %% [markdown]
 # dump model config
@@ -345,8 +366,13 @@ ana_vae.params['last_decoder_activation'] = Sigmoid
 # %% tags=[]
 ana_vae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 
+# %%
+results
+
 # %% tags=[]
-fig = models.plot_training_losses(ana_vae.learn, 'VAE', folder=args.out_figures)
+N_train_notna = data.train_X.notna().sum().sum()
+N_val_notna = data.val_y.notna().sum().sum()
+fig = models.plot_training_losses(ana_vae.learn, 'VAE', folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
 
 # %% [markdown]
 # ### Predictions
@@ -356,6 +382,9 @@ fig = models.plot_training_losses(ana_vae.learn, 'VAE', folder=args.out_figures)
 pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=ana_vae.learn,
                                           position_pred_tuple=0,
                                           transformer=ana_vae.transform)
+pred
+
+# %%
 val_pred_fake_na['VAE'] = pred.stack()
 val_pred_fake_na
 
@@ -390,6 +419,16 @@ figures[f'latent_{_model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_dat
 # Could be created in data as an ID from three instrument variables
 _cat = 'ms_instrument'
 figures[f'latent_{_model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
+
+# %%
+errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
+errors_val = errors_val.abs().groupby(level=-1).mean()
+errors_val = errors_val.join(freq_feat).sort_values(by='freq', ascending=True)
+
+errors_val_smoothed = errors_val.copy()
+errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
+ax = errors_val_smoothed.plot(x='freq', figsize=(15,10) )
+# errors_val_smoothed
 
 # %% [markdown]
 # ## Comparisons
