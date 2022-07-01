@@ -316,7 +316,8 @@ ana_dae.model
 ```python
 ana_dae.learn = Learner(dls=ana_dae.dls, model=ana_dae.model,
                         loss_func=MSELossFlat(reduction='sum'),
-                        cbs=[EarlyStoppingCallback(), ae.ModelAdapter(p=0.1)]
+                        cbs=[EarlyStoppingCallback(patience=5),
+                             ae.ModelAdapter(p=0.2)]
                         )
 ```
 
@@ -348,22 +349,22 @@ vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format
 ana_dae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 ```
 
+#### Loss unnormalized
+
+- differences in number of total measurements not changed
+
 ```python
-def plot_training_losses(learner: fastai.learner.Learner, name: str, ax=None, save_recorder: bool = True, folder='figures', figsize=(15, 8)):
-    if ax is None:
-        fig, ax = plt.subplots(figsize=figsize)
-    else:
-        fig = ax.get_figure()
-    ax.set_title(f'{name} loss: Reconstruction loss')
-    learner.recorder.plot_loss(skip_start=5, ax=ax)
-    name = name.lower()
-    _ = RecorderDump(learner.recorder, name).save(args.out_figures)
-    vaep.savefig(fig, name=f'{name}_training',
-                 folder=folder)
-    return fig
+fig = models.plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args.out_figures)
+```
 
+#### Loss normalized by total number of measurements
 
-fig = plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args.out_figures)
+```python
+N_train_notna = data.train_X.notna().sum().sum()
+N_val_notna = data.val_y.notna().sum().sum()
+fig = models.plot_training_losses(ana_dae.learn, 'VAE',
+                                  folder=args.out_figures,
+                                  norm_factors=[N_train_notna, N_val_notna])  # non-normalized plot of total loss
 ```
 
 Why is the validation loss better then the training loss?
