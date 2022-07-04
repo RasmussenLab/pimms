@@ -5,8 +5,9 @@ hidden_layers:
 - '512_256'
 - '512_256_128'
 - '1024_512_256'
-- '2056_1024_512'
-- '2056_1024_512_256'
+- '256_128'
+- '128_128_128'
+- '256_256_128_128'
 latent_dim:
 - 10
 - 25
@@ -14,6 +15,6 @@ latent_dim:
 - 75
 - 100
 folder_experiment: "runs/grid_search/proteinGroups"
-config_split: 'proteinGroups.yaml'
+config_split: 'config/proteinGroups_split.yaml'
 config_train: 'placeholder.yaml'
-name_template: run_LD_{latent_dim}_HL_{hidden_layers}_E_{epochs}
+name_template: run_LD_{latent_dim}_E_{epochs}

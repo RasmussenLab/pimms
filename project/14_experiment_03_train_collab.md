@@ -90,6 +90,7 @@ latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of mode
 hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
+model_key = 'collab'
 ```
 
 ```python
@@ -398,8 +399,7 @@ added_metrics
 Save all metrics as json
 
 ```python tags=[]
-_model_key = 'collab'
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key}.json')
 ```
 
 ```python tags=[]
@@ -485,8 +485,8 @@ fig.show()
 ## Save predictions
 
 ```python
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key}.csv")
 ```
 
 <!-- #region tags=[] -->
@@ -494,6 +494,6 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
 <!-- #endregion -->
 
 ```python
-args.dump(fname=args.out_models/ f"model_config_{_model_key}.yaml")
+args.dump(fname=args.out_models/ f"model_config_{model_key}.yaml")
 args
 ```
