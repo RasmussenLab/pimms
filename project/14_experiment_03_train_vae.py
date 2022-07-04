@@ -91,6 +91,7 @@ latent_dim:int = 16 # Dimensionality of encoding dimension (latent space of mode
 hidden_layers:Union[int,str] = '128_128' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
+model_key = 'VAE'
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -285,8 +286,6 @@ data.val_y
 # ### Transform of data
 
 # %%
-_model_key = 'VAE'
-
 vae_default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
@@ -358,7 +357,7 @@ vaep.io.dump_json(
         ana_vae.params, types=[
             (torch.nn.modules.module.Module, lambda m: str(m))
         ]),
-    args.out_models / TEMPLATE_MODEL_PARAMS.format(_model_key.lower()))
+    args.out_models / TEMPLATE_MODEL_PARAMS.format(model_key.lower()))
 
 # restore original value
 ana_vae.params['last_decoder_activation'] = Sigmoid
@@ -410,15 +409,15 @@ df_vae_latent
 # %%
 ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
                                           df_meta,
-                                          _model_key,
+                                          model_key,
                                           folder=args.out_figures)
-figures[f'latent_{_model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
+figures[f'latent_{model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
     'Content Creation Date')
 
 # %%
 # Could be created in data as an ID from three instrument variables
 _cat = 'ms_instrument'
-figures[f'latent_{_model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
+figures[f'latent_{model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
 
 # %%
 errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
@@ -469,7 +468,7 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key.lower()}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key.lower()}.json')
 
 
 # %% tags=[]
@@ -556,9 +555,9 @@ fig.show()
 # ## Save predictions
 
 # %%
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key.lower()}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key.lower()}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{_model_key.lower()}.yaml")
+args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
 args

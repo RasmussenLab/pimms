@@ -91,6 +91,7 @@ latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of mode
 hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
+model_key = 'collab'
 
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -390,8 +391,7 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=[]
-_model_key = 'collab'
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key}.json')
 
 
 # %% tags=[]
@@ -475,12 +475,12 @@ fig.show()
 # ## Save predictions
 
 # %%
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key}.csv")
 
 # %% [markdown] tags=[]
 # ## Config
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{_model_key}.yaml")
+args.dump(fname=args.out_models/ f"model_config_{model_key}.yaml")
 args

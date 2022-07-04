@@ -90,6 +90,7 @@ latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of mode
 hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
+model_key = 'DAE'
 ```
 
 ```python
@@ -286,8 +287,6 @@ data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.
 ```
 
 ```python
-_model_key = 'DAE'
-
 dae_default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
@@ -338,7 +337,7 @@ suggested_lr
 ```
 
 ```python
-vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(_model_key.lower()))
+vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(model_key.lower()))
 ```
 
 ### Training
@@ -415,7 +414,7 @@ df_meta
 ```
 
 ```python
-ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, _model_key, folder=args.out_figures)
+ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, model_key, folder=args.out_figures)
 figures['latent_DAE_by_date'], ax = ana_latent_dae.plot_by_date('Content Creation Date')
 ```
 
@@ -463,7 +462,7 @@ added_metrics
 Save all metrics as json
 
 ```python tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{_model_key.lower()}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key.lower()}.json')
 ```
 
 ```python tags=[]
@@ -553,11 +552,11 @@ fig.show()
 ## Save predictions
 
 ```python
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{_model_key.lower()}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{_model_key.lower()}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
 ```
 
 ```python
-args.dump(fname=args.out_models/ f"model_config_{_model_key.lower()}.yaml")
+args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
 args
 ```
