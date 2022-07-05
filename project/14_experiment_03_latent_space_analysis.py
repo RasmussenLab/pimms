@@ -81,13 +81,13 @@ folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_20
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
-epochs_max:int = 20  # Maximum number of epochs
+epochs_max:int = 2  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:Union[int,str] = 3 # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
+hidden_layers:str = '128' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 
@@ -133,11 +133,8 @@ args.sample_idx_position = sample_idx_position
 del sample_idx_position
 
 print(hidden_layers)
-if isinstance(hidden_layers, int):
-    args.hidden_layers = hidden_layers
-elif isinstance(hidden_layers, str):
-    args.hidden_layers = [int(x) for x in hidden_layers.split()]
-    # list(map(int, hidden_layers.split()))
+if isinstance(hidden_layers, str):
+    args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
 else:
     raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
 del hidden_layers
@@ -333,15 +330,6 @@ torch.cuda.current_device(), torch.cuda.memory_allocated()
 data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
-
-# %% [markdown]
-# Calculate hidden layer dimensionality based on latent space dimension and number of hidden layers requested:
-
-# %%
-if isinstance(args.hidden_layers, int):
-    args.overwrite_entry(entry='hidden_layers',
-                         value=ae.get_funnel_layers(dim_in=args.M, dim_latent=args.latent_dim, n_layers=args.hidden_layers))
-args
 
 # %% [markdown]
 # ### Add interpolation performance
