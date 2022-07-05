@@ -16,4 +16,4 @@ latent_dim:
 folder_experiment: "runs/grid_search/evidence"
 config_split: 'config/evidence_split.yaml'
 config_train: 'placeholder.yaml'
-name_template: run_LD_{latent_dim}_HL_{hidden_layers}_E_{epochs}
+name_template: run_LD_{latent_dim}_E_{epochs}
