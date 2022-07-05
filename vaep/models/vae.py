@@ -59,6 +59,7 @@ class VAE(nn.Module):
         # [nn.Linear(self.dim_latent, out_feat),
         #                 activation(),
         #                 nn.BatchNorm1d(out_feat)]
+        i = -1 # in case a single hidden layer is passed
         for i in range(len(self.layers_decoder)-2):
             in_feat, out_feat = self.layers_decoder[i:i+2]
             self.decoder.extend(build_layer(in_feat=in_feat,
