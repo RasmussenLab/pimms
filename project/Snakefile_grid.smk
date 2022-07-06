@@ -130,7 +130,7 @@ rule build_train_config_collab:
         import yaml
         config = dict(wildcards) # copy dict
         config = {k: resolve_type(v) for k, v in config.items() if k != 'hidden_layers'}
-        config['hidden_layers'] = wildcards['hidden_layers'] # not needed -> to remove
+        
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
         with open(output.config_train, 'w') as f:
