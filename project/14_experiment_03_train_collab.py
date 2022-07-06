@@ -88,7 +88,7 @@ batch_size_collab:int = 32_768 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
+# hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'collab'
@@ -138,13 +138,14 @@ del force_train
 args.sample_idx_position = sample_idx_position
 del sample_idx_position
 
-print(hidden_layers)
-if isinstance(hidden_layers, str):
-    args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
-    # list(map(int, hidden_layers.split()))
-else:
-    raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
-del hidden_layers
+# # Currently not needed -> DotProduct used, not a FNN
+# print(hidden_layers)
+# if isinstance(hidden_layers, str):
+#     args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
+#     # list(map(int, hidden_layers.split()))
+# else:
+#     raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
+# del hidden_layers
 args
 
 # %% [markdown]
