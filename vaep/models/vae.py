@@ -50,6 +50,7 @@ class VAE(nn.Module):
 
         def build_layer(in_feat, out_feat):
             return [nn.Linear(in_feat, out_feat),
+                    nn.Dropout(0.2),
                     nn.BatchNorm1d(out_feat),
                     activation()]
 
