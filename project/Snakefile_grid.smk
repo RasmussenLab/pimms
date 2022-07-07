@@ -15,7 +15,7 @@ module single_experiment:
 # could be in a subkey of the dictionary
 GRID = {k:config[k] 
         for k 
-        in ['epochs',
+        in ['epochs_max',
             'latent_dim',
             'hidden_layers', # collab does not change based on #hidden layers -> repeated computation
             ]
