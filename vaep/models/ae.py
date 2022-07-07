@@ -135,8 +135,10 @@ def build_encoder_units(layers: list, dim_latent: int,
     encoder = []
     for i in range(len(layers)-1):
         in_feat, out_feat = layers[i:i+2]
-        encoder.extend([nn.Linear(in_feat, out_feat), activation()])
+        encoder.append(nn.Linear(in_feat, out_feat))
+        encoder.append(nn.Dropout(0.2))
         encoder.append(nn.BatchNorm1d(out_feat))
+        encoder.append(activation())
     encoder.append(nn.Linear(out_feat, dim_latent*factor_latent))
     if last_encoder_activation:
         encoder.append(last_encoder_activation())
