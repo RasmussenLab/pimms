@@ -1,0 +1,257 @@
+{'epochs': [100], 'latent_dim': [10, 25, 50, 75, 100], 'hidden_layers': ['512']}
+run_LD_{latent_dim}_E_{epochs}
+Building DAG of jobs...
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+build_train_config         5              1              1
+collect_all_configs        1              1              1
+collect_metrics            1              1              1
+results                    1              1              1
+train_ae_models           10              1              1
+train_collab_model         5              1              1
+total                     24              1              1
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_collab_model:
+    input: 14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_collab.yaml
+    output: runs/grid_search/proteinGroups/run_LD_25_E_100/14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_collab.yaml
+    jobid: 25
+    reason: Updated input files: 14_experiment_03_train_collab.ipynb
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=25, epochs=100, collab_model=collab
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_collab_model:
+    input: 14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_collab.yaml
+    output: runs/grid_search/proteinGroups/run_LD_50_E_100/14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_collab.yaml
+    jobid: 26
+    reason: Updated input files: 14_experiment_03_train_collab.ipynb
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=50, epochs=100, collab_model=collab
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule build_train_config:
+    output: runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    jobid: 17
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=100, epochs=100, hidden_layers=512
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule build_train_config:
+    output: runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    jobid: 8
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=25, epochs=100, hidden_layers=512
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule train_collab_model:
+    input: 14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_collab.yaml
+    output: runs/grid_search/proteinGroups/run_LD_100_E_100/14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_collab.yaml
+    jobid: 28
+    reason: Updated input files: 14_experiment_03_train_collab.ipynb
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=100, epochs=100, collab_model=collab
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule build_train_config:
+    output: runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    jobid: 11
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=50, epochs=100, hidden_layers=512
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule build_train_config:
+    output: runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    jobid: 14
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=75, epochs=100, hidden_layers=512
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule train_collab_model:
+    input: 14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_collab.yaml
+    output: runs/grid_search/proteinGroups/run_LD_10_E_100/14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_collab.yaml
+    jobid: 24
+    reason: Updated input files: 14_experiment_03_train_collab.ipynb
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=10, epochs=100, collab_model=collab
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule build_train_config:
+    output: runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    jobid: 5
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=10, epochs=100, hidden_layers=512
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule train_collab_model:
+    input: 14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_collab.yaml
+    output: runs/grid_search/proteinGroups/run_LD_75_E_100/14_experiment_03_train_collab.ipynb, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_collab.yaml
+    jobid: 27
+    reason: Updated input files: 14_experiment_03_train_collab.ipynb
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=75, epochs=100, collab_model=collab
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_dae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_25_E_100/14_experiment_03_train_HL_512_dae.ipynb, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_dae.yaml
+    jobid: 7
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_dae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=25, epochs=100, hidden_layers=512, ae_model=dae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_vae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_10_E_100/14_experiment_03_train_HL_512_vae.ipynb, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_vae.yaml
+    jobid: 19
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_vae.json; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=10, epochs=100, hidden_layers=512, ae_model=vae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_vae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_25_E_100/14_experiment_03_train_HL_512_vae.ipynb, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_vae.yaml
+    jobid: 20
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_vae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_25_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=25, epochs=100, hidden_layers=512, ae_model=vae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_dae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_50_E_100/14_experiment_03_train_HL_512_dae.ipynb, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_dae.yaml
+    jobid: 10
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_dae.json; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=50, epochs=100, hidden_layers=512, ae_model=dae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_vae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_50_E_100/14_experiment_03_train_HL_512_vae.ipynb, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_vae.yaml
+    jobid: 21
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_vae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_50_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=50, epochs=100, hidden_layers=512, ae_model=vae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_dae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_75_E_100/14_experiment_03_train_HL_512_dae.ipynb, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_dae.yaml
+    jobid: 13
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_dae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=75, epochs=100, hidden_layers=512, ae_model=dae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_vae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_75_E_100/14_experiment_03_train_HL_512_vae.ipynb, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_vae.yaml
+    jobid: 22
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_vae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_75_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=75, epochs=100, hidden_layers=512, ae_model=vae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_vae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_100_E_100/14_experiment_03_train_HL_512_vae.ipynb, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_vae.yaml
+    jobid: 23
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_vae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=100, epochs=100, hidden_layers=512, ae_model=vae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_dae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_100_E_100/14_experiment_03_train_HL_512_dae.ipynb, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_dae.yaml
+    jobid: 16
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_dae.json; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_100_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=100, epochs=100, hidden_layers=512, ae_model=dae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule train_ae_models:
+    input: 14_experiment_03_train_dae.ipynb, runs/grid_search/proteinGroups/data/train_X.pkl, runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    output: runs/grid_search/proteinGroups/run_LD_10_E_100/14_experiment_03_train_HL_512_dae.ipynb, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_dae.yaml
+    jobid: 3
+    reason: Missing output files: runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_dae.yaml; Input files updated by another job: runs/grid_search/proteinGroups/run_LD_10_E_100/config_train_HL_512.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups, latent_dim=10, epochs=100, hidden_layers=512, ae_model=dae
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+
+[Tue Jul  5 18:18:36 2022]
+rule collect_metrics:
+    input: runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_collab.json
+    output: runs/grid_search/proteinGroups/all_metrics.json
+    log: runs/grid_search/proteinGroups/14_collect_all_metrics.ipynb
+    jobid: 2
+    reason: Input files updated by another job: runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_50_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_75_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_25_E_100/metrics/metrics_HL_512_vae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_collab.json, runs/grid_search/proteinGroups/run_LD_100_E_100/metrics/metrics_HL_512_dae.json, runs/grid_search/proteinGroups/run_LD_10_E_100/metrics/metrics_HL_512_vae.json
+    wildcards: folder_experiment=runs/grid_search/proteinGroups
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule collect_all_configs:
+    input: runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_collab.yaml
+    output: runs/grid_search/proteinGroups/all_configs.json
+    log: runs/grid_search/proteinGroups/14_aggregate_configs.ipynb
+    jobid: 29
+    reason: Input files updated by another job: runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_50_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_100_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_75_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_dae.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_collab.yaml, runs/grid_search/proteinGroups/run_LD_25_E_100/models/model_config_HL_512_vae.yaml, runs/grid_search/proteinGroups/run_LD_10_E_100/models/model_config_HL_512_vae.yaml
+    wildcards: folder_experiment=runs/grid_search/proteinGroups
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+rule results:
+    input: runs/grid_search/proteinGroups/all_metrics.json, runs/grid_search/proteinGroups/all_configs.json
+    output: runs/grid_search/proteinGroups/hyperpar_test_fake_na_results.pdf, runs/grid_search/proteinGroups/hyperpar_valid_fake_na_results.pdf
+    log: runs/grid_search/proteinGroups/14_experiment_03_hyperpara_analysis.ipynb
+    jobid: 1
+    reason: Input files updated by another job: runs/grid_search/proteinGroups/all_configs.json, runs/grid_search/proteinGroups/all_metrics.json
+    wildcards: folder_experiment=runs/grid_search/proteinGroups
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+[Tue Jul  5 18:18:36 2022]
+localrule all:
+    input: runs/grid_search/proteinGroups/hyperpar_test_fake_na_results.pdf, runs/grid_search/proteinGroups/hyperpar_valid_fake_na_results.pdf
+    jobid: 0
+    reason: Input files updated by another job: runs/grid_search/proteinGroups/hyperpar_test_fake_na_results.pdf, runs/grid_search/proteinGroups/hyperpar_valid_fake_na_results.pdf
+    resources: tmpdir=C:\Users\kzl465\AppData\Local\Temp
+
+Job stats:
+job                    count    min threads    max threads
+-------------------  -------  -------------  -------------
+all                        1              1              1
+build_train_config         5              1              1
+collect_all_configs        1              1              1
+collect_metrics            1              1              1
+results                    1              1              1
+train_ae_models           10              1              1
+train_collab_model         5              1              1
+total                     24              1              1
+
+
+This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.
