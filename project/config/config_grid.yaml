@@ -1,4 +1,4 @@
-epochs:
+epochs_max:
 - 100
 hidden_layers:
 - '256'
@@ -18,4 +18,4 @@ latent_dim:
 folder_experiment: "runs/grid_search/proteinGroups"
 config_split: 'config/proteinGroups_split.yaml'
 config_train: 'placeholder.yaml'
-name_template: run_LD_{latent_dim}_E_{epochs}
+name_template: run_LD_{latent_dim}_E_{epochs_max}
