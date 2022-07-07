@@ -87,8 +87,8 @@ epochs_max:int = 50  # Maximum number of epochs
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
-latent_dim:int = 16 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:Union[int,str] = '128_64' # A underscore separated string of layers, '128_128' for the encoder, reverse will be use for decoder
+latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
+hidden_layers:Union[int,str] = '256_128' # A underscore separated string of layers, '128_128' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'VAE'
@@ -289,7 +289,6 @@ from torch.nn import Sigmoid
 ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
     train_df=data.train_X,
     val_df=data.val_y,
-    # model=ae.VAE,
     model= models.vae.VAE,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
                       h_layers=args.hidden_layers,
@@ -316,7 +315,6 @@ loss_fct = partial(models.vae.loss_fct, results=results)
 # papermill_description=train_vae
 ana_vae.learn = Learner(dls=ana_vae.dls,
                         model=ana_vae.model,
-                        # loss_func=ae.loss_fct_vae, #loss_fct
                         loss_func=loss_fct,
                         cbs=[ae.ModelAdapterVAE(),
                             #  EarlyStoppingCallback()

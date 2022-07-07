@@ -210,76 +210,76 @@ class Autoencoder(nn.Module):
         return x
 
 
-class VAE(nn.Module):
-    """Variational Autoencoder. Latent dimension is composed of mean and log variance,
-    so effecively the number of neurons are duplicated.
-    """
+# class VAE(nn.Module):
+#     """Variational Autoencoder. Latent dimension is composed of mean and log variance,
+#     so effecively the number of neurons are duplicated.
+#     """
 
-    def __init__(self,
-                 n_features: int,
-                 h_layers: int,
-                 activation=nn.ReLU,
-                 last_encoder_activation=nn.ReLU,
-                 last_decoder_activation=None,
-                 dim_latent: int = 10):
+#     def __init__(self,
+#                  n_features: int,
+#                  h_layers: int,
+#                  activation=nn.LeakyReLU,
+#                  last_encoder_activation=nn.LeakyReLU,
+#                  last_decoder_activation=None,
+#                  dim_latent: int = 10):
 
-        super().__init__()
-        self.n_features, self.h_layers = n_features, list(L(h_layers))
-        self.layers = [n_features, *self.h_layers]
-        self.dim_latent = dim_latent
+#         super().__init__()
+#         self.n_features, self.h_layers = n_features, list(L(h_layers))
+#         self.layers = [n_features, *self.h_layers]
+#         self.dim_latent = dim_latent
 
-        # Encoder
-        self.encoder, out_feat = build_encoder_units(self.layers,
-                                                     self.dim_latent,
-                                                     activation,
-                                                     last_encoder_activation,
-                                                     factor_latent=2)
-        self.encoder = nn.Sequential(*self.encoder)
-        # Decoder
-        self.layers_decoder = self.layers[::-1]
-        assert self.layers_decoder is not self.layers
-        assert out_feat == self.layers_decoder[0]
-        self.decoder = [nn.Linear(self.dim_latent, out_feat),
-                        activation(), 
-                        nn.BatchNorm1d(out_feat)]
-        for i in range(len(self.layers_decoder)-1):
-            in_feat, out_feat = self.layers_decoder[i:i+2]
-            self.decoder.extend(
-                [nn.Linear(in_feat, out_feat),
-                 activation(),
-                 nn.BatchNorm1d(out_feat)])                     # ,
-        if not last_decoder_activation:
-            _ = self.decoder.pop()
-        else:
-            _ = self.decoder.pop()
-            self.decoder.append(last_decoder_activation())
-        self.decoder = nn.Sequential(*self.decoder)
+#         # Encoder
+#         self.encoder, out_feat = build_encoder_units(self.layers,
+#                                                      self.dim_latent,
+#                                                      activation,
+#                                                      last_encoder_activation,
+#                                                      factor_latent=2)
+#         self.encoder = nn.Sequential(*self.encoder)
+#         # Decoder
+#         self.layers_decoder = self.layers[::-1]
+#         assert self.layers_decoder is not self.layers
+#         assert out_feat == self.layers_decoder[0]
+#         self.decoder = [nn.Linear(self.dim_latent, out_feat),
+#                         activation(), 
+#                         nn.BatchNorm1d(out_feat)]
+#         for i in range(len(self.layers_decoder)-1):
+#             in_feat, out_feat = self.layers_decoder[i:i+2]
+#             self.decoder.extend(
+#                 [nn.Linear(in_feat, out_feat),
+#                  activation(),
+#                  nn.BatchNorm1d(out_feat)])                     # ,
+#         if not last_decoder_activation:
+#             _ = self.decoder.pop()
+#         else:
+#             _ = self.decoder.pop()
+#             self.decoder.append(last_decoder_activation())
+#         self.decoder = nn.Sequential(*self.decoder)
 
-    def reparameterize(self, mu, logvar):
-        if self.training:
-            std = logvar.mul(0.5).exp_()
-            eps = std.data.new(std.size()).normal_()
-            return eps.mul(std).add_(mu)
-            # std = torch.exp(0.5*logvar)  # will always be positive
-            # eps = torch.randn_like(std)
-            # return mu + eps*std
-        return mu
+#     def reparameterize(self, mu, logvar):
+#         if self.training:
+#             std = logvar.mul(0.5).exp_()
+#             eps = std.data.new(std.size()).normal_()
+#             return eps.mul(std).add_(mu)
+#             # std = torch.exp(0.5*logvar)  # will always be positive
+#             # eps = torch.randn_like(std)
+#             # return mu + eps*std
+#         return mu
 
-    def forward(self, x):
-        mu, logvar = self.get_mu_and_logvar(x)
-        z = self.reparameterize(mu=mu, logvar=logvar)
-        recon = self.decoder(z)
-        return recon, mu, logvar
+#     def forward(self, x):
+#         mu, logvar = self.get_mu_and_logvar(x)
+#         z = self.reparameterize(mu=mu, logvar=logvar)
+#         recon = self.decoder(z)
+#         return recon, mu, logvar
 
-    def get_mu_and_logvar(self, x, detach=False):
-        """Helper function to return mu and logvar"""
-        mu_logvar = self.encoder(x)
-        mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
-        if detach:
-            mu_logvar = mu_logvar.detach().numpy()
-        mu = mu_logvar[:, 0, :]
-        logvar = mu_logvar[:, 1, :]
-        return mu, logvar
+#     def get_mu_and_logvar(self, x, detach=False):
+#         """Helper function to return mu and logvar"""
+#         mu_logvar = self.encoder(x)
+#         mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
+#         if detach:
+#             mu_logvar = mu_logvar.detach().numpy()
+#         mu = mu_logvar[:, 0, :]
+#         logvar = mu_logvar[:, 1, :]
+#         return mu, logvar
 
 
 class DatasetWithTargetAdapter(Callback):
