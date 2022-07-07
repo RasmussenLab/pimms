@@ -20,8 +20,8 @@ class VAE(nn.Module):
     def __init__(self,
                  n_features: int,
                  h_layers: List[str],
-                 activation=nn.ReLU,
-                 last_encoder_activation=nn.ReLU,
+                 activation=nn.LeakyReLU(.1),
+                #  last_encoder_activation=nn.LeakyReLU(.1),
                  last_decoder_activation=None,
                  dim_latent: int = 10):
         super().__init__()
@@ -30,54 +30,43 @@ class VAE(nn.Module):
         self.layers = [n_features, *self.h_layers]
         self.dim_latent = dim_latent
 
-        #define architecture
-        # Encoder
-        self.encoder, out_feat = build_encoder_units(self.layers,
-                                                    self.dim_latent,
-                                                    activation,
-                                                    last_encoder_activation,
-                                                    factor_latent=2)
-        self.encoder = nn.Sequential(*self.encoder)
+        #define architecture hidden layer
+        def build_layer(in_feat, out_feat):
+            return [nn.Linear(in_feat, out_feat),
+                    nn.Dropout(0.2),
+                    nn.BatchNorm1d(out_feat),
+                    activation]
 
-        # decoder_dense = DenseBlock(self.latent_dim, growth,depth)
-        # decoder_linear = nn.utils.weight_norm(nn.Linear(self.latent_dim+growth*depth, 2*2))
-        # self.decoder = nn.Sequential(decoder_dense, decoder_linear)
+        # Encoder
+        self.encoder = []
+
+        for i in range(len(self.layers)-1):
+            in_feat, out_feat = self.layers[i:i+2]
+            self.encoder.extend(build_layer(in_feat=in_feat,
+                                            out_feat=out_feat))
+        self.encoder.append(nn.Linear(out_feat, dim_latent*2))
+
+        self.encoder = nn.Sequential(*self.encoder)
 
         # Decoder
         self.layers_decoder = self.layers[::-1]
         assert self.layers_decoder is not self.layers
         assert out_feat == self.layers_decoder[0]
 
-        def build_layer(in_feat, out_feat):
-            return [nn.Linear(in_feat, out_feat),
-                    nn.Dropout(0.2),
-                    nn.BatchNorm1d(out_feat),
-                    activation()]
-
         self.decoder = build_layer(in_feat=self.dim_latent,
-                                out_feat=out_feat)
+                                   out_feat=out_feat)
 
-        # [nn.Linear(self.dim_latent, out_feat),
-        #                 activation(),
-        #                 nn.BatchNorm1d(out_feat)]
-        i = -1 # in case a single hidden layer is passed
+        i = -1  # in case a single hidden layer is passed
         for i in range(len(self.layers_decoder)-2):
             in_feat, out_feat = self.layers_decoder[i:i+2]
             self.decoder.extend(build_layer(in_feat=in_feat,
-                                            out_feat=out_feat)
-                                # [nn.Linear(in_feat, out_feat),
-                                #     activation(),
-                                #     nn.BatchNorm1d(out_feat)]
-                                )                     # ,
+                                            out_feat=out_feat))
         in_feat, out_feat = self.layers_decoder[i+1:i+3]
-        self.decoder.extend(
-            build_layer(in_feat=in_feat, out_feat=2*out_feat)
-        )
-        if not last_decoder_activation:
-            _ = self.decoder.pop()
-        else:
-            _ = self.decoder.pop()
-            self.decoder.append(last_decoder_activation())
+
+        self.decoder.append(nn.Linear(in_feat, out_feat*2))
+        if last_decoder_activation is not None:
+            self.append(last_decoder_activation)
+
         self.decoder = nn.Sequential(*self.decoder)
 
     def encode(self, x):
