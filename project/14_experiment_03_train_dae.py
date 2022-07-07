@@ -87,8 +87,8 @@ epochs_max:int = 20  # Maximum number of epochs
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
-latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:str = '128_64' # A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
+latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
+hidden_layers:str = '512' # A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'DAE'
