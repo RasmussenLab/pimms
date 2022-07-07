@@ -26,3 +26,4 @@ class IntArrayFormatter(pf.GenericArrayFormatter):
 pd.options.display.float_format = '{:,.3f}'.format
 pf.IntArrayFormatter = IntArrayFormatter
 
+vaep.plotting.make_large_descriptors()
