@@ -1,0 +1,592 @@
+# ---
+# jupyter:
+#   jupytext:
+#     formats: ipynb,py:percent
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.13.8
+#   kernelspec:
+#     display_name: vaep
+#     language: python
+#     name: vaep
+# ---
+
+# %% [markdown]
+# # Analyis of grid hyperparameter search
+
+# %%
+######## snakemake preamble start (automatically inserted, do not edit) ########
+import sys; sys.path.extend(['C:\\Users\\kzl465\\Anaconda3\\envs\\vaep\\lib\\site-packages', 'C:\\Users\\kzl465\\Documents\\repos\\vaep\\project']); import pickle; snakemake = pickle.loads(b'\x80\x04\x95\xea\x06\x00\x00\x00\x00\x00\x00\x8c\x10snakemake.script\x94\x8c\tSnakemake\x94\x93\x94)\x81\x94}\x94(\x8c\x05input\x94\x8c\x0csnakemake.io\x94\x8c\nInputFiles\x94\x93\x94)\x81\x94(\x8c/runs/grid_search/proteinGroups/all_metrics.json\x94\x8c/runs/grid_search/proteinGroups/all_configs.json\x94e}\x94(\x8c\x06_names\x94}\x94(\x8c\x07metrics\x94K\x00N\x86\x94\x8c\x06config\x94K\x01N\x86\x94u\x8c\x12_allowed_overrides\x94]\x94(\x8c\x05index\x94\x8c\x04sort\x94eh\x15\x8c\tfunctools\x94\x8c\x07partial\x94\x93\x94h\x06\x8c\x19Namedlist._used_attribute\x94\x93\x94\x85\x94R\x94(h\x1b)}\x94\x8c\x05_name\x94h\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94bh\x0fh\nh\x11h\x0bub\x8c\x06output\x94h\x06\x8c\x0bOutputFiles\x94\x93\x94)\x81\x94(\x8c@runs/grid_search/proteinGroups/hyperpar_test_fake_na_results.pdf\x94\x8cAruns/grid_search/proteinGroups/hyperpar_valid_fake_na_results.pdf\x94e}\x94(h\r}\x94h\x13]\x94(h\x15h\x16eh\x15h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94bub\x8c\x06params\x94h\x06\x8c\x06Params\x94\x93\x94)\x81\x94}\x94(h\r}\x94h\x13]\x94(h\x15h\x16eh\x15h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94bub\x8c\twildcards\x94h\x06\x8c\tWildcards\x94\x93\x94)\x81\x94\x8c\x1eruns/grid_search/proteinGroups\x94a}\x94(h\r}\x94\x8c\x11folder_experiment\x94K\x00N\x86\x94sh\x13]\x94(h\x15h\x16eh\x15h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94b\x8c\x11folder_experiment\x94hIub\x8c\x07threads\x94K\x01\x8c\tresources\x94h\x06\x8c\tResources\x94\x93\x94)\x81\x94(K\x01K\x01\x8c"C:\\Users\\kzl465\\AppData\\Local\\Temp\x94e}\x94(h\r}\x94(\x8c\x06_cores\x94K\x00N\x86\x94\x8c\x06_nodes\x94K\x01N\x86\x94\x8c\x06tmpdir\x94K\x02N\x86\x94uh\x13]\x94(h\x15h\x16eh\x15h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94bh`K\x01hbK\x01hdh]ub\x8c\x03log\x94h\x06\x8c\x03Log\x94\x93\x94)\x81\x94\x8cHruns/grid_search/proteinGroups/14_experiment_03_hyperpara_analysis.ipynb\x94a}\x94(h\r}\x94\x8c\x08notebook\x94K\x00N\x86\x94sh\x13]\x94(h\x15h\x16eh\x15h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x15sNt\x94bh\x16h\x19h\x1b\x85\x94R\x94(h\x1b)}\x94h\x1fh\x16sNt\x94bhvhsubh\x11}\x94(\x8c\nepochs_max\x94]\x94Kda\x8c\rhidden_layers\x94]\x94(\x8c\x03256\x94\x8c\x03512\x94\x8c\x041024\x94\x8c\x06128_64\x94\x8c\x07256_128\x94\x8c\x07512_256\x94\x8c\x07512_512\x94\x8c\x0b512_256_128\x94\x8c\x0c1024_512_256\x94\x8c\x0b128_128_128\x94\x8c\x0f256_256_128_128\x94e\x8c\nlatent_dim\x94]\x94(K\nK\x19K2KKKde\x8c\x11folder_experiment\x94\x8c\x1eruns/grid_search/proteinGroups\x94\x8c\x0cconfig_split\x94\x8c\x1fconfig/proteinGroups_split.yaml\x94\x8c\x0cconfig_train\x94\x8c\x10placeholder.yaml\x94\x8c\rname_template\x94\x8c"run_LD_{latent_dim}_E_{epochs_max}\x94u\x8c\x04rule\x94\x8c\x07results\x94\x8c\x0fbench_iteration\x94N\x8c\tscriptdir\x94\x8c,C:\\Users\\kzl465\\Documents\\repos\\vaep\\project\x94ub.'); from snakemake.logging import logger; logger.printshellcmds = True; import os; os.chdir(r'C:\Users\kzl465\Documents\repos\vaep\project');
+######## snakemake preamble end #########
+
+# %%
+import json
+import pathlib
+import pandas as pd
+import plotly.express as px
+import matplotlib
+
+
+import vaep.nb
+matplotlib.rcParams['figure.figsize'] = [16.0, 7.0]
+
+import vaep.io
+import vaep.pandas
+import vaep.utils
+from vaep.analyzers import compare_predictions
+
+pd.options.display.max_columns = 45
+pd.options.display.max_rows = 100
+pd.options.display.multi_sparse = False
+
+# %% [markdown]
+# ### Papermill parameters
+
+# %% [markdown]
+# papermill parameters:
+
+# %% tags=["parameters"]
+metrics_json:str = "path/to/all_metrics.json" # file path to metrics json
+configs_json:str = "path/to/all_configs.json" # file path to configs json ("meta data")
+
+# %%
+try:
+    assert pathlib.Path(metrics_json).exists()
+    assert pathlib.Path(configs_json).exists()
+except AssertionError:
+    metrics_json = snakemake.input.metrics
+    configs_json = snakemake.input.config
+    print(f"{metrics_json = }", f"{configs_json = }", sep="\n")  
+
+# %% [markdown]
+# ## Load metrics
+
+# %%
+path_metrics_json = pathlib.Path(metrics_json)
+path_configs_json = pathlib.Path(configs_json)
+FOLDER = path_metrics_json.parent
+
+metrics_dict = vaep.io.load_json(path_metrics_json)
+configs_dict = vaep.io.load_json(path_configs_json)
+
+# %% [markdown]
+# Random sample metric schema (all should be the same)
+
+# %%
+key_sampled = vaep.utils.sample_iterable(metrics_dict, 1)[0]
+key_map = vaep.pandas.key_map(metrics_dict[key_sampled])
+key_map
+
+# %% [markdown]
+# Metrics a `pandas.DataFrame`:
+
+# %% tags=[]
+metrics_dict_multikey = {}
+for k, run_metrics in metrics_dict.items():
+    metrics_dict_multikey[k] = {eval(k): v for k, v in run_metrics.items()} #vaep.pandas.flatten_dict_of_dicts(run_metrics)
+
+# metrics_dicts = {
+#     'AEs': {k:v for k,v in metrics_dict_multikey.items() if 'collab' not in k},
+#     'collab': {k:v for k,v in metrics_dict_multikey.items() if 'collab' in k}
+# }
+
+metrics = pd.DataFrame.from_dict(metrics_dict_multikey, orient='index')
+metrics.columns.names = ['subset','data_split', 'model', 'metric_name']
+metrics.index.name = 'id'
+metrics = metrics.dropna(axis=1,how='all')
+metrics = metrics.stack('model')
+metrics = metrics.drop_duplicates()
+metrics
+
+# %%
+metrics.sort_values(by=('NA interpolated', 'valid_fake_na', 'MAE'))
+
+# %%
+# sort_by = 'MAE'
+metric_columns = ['MSE', 'MAE']
+model_keys = ['collab', 'dae', 'vae']
+subset = metrics.columns.levels[0][0]
+print(f"{subset = }")
+
+# %% [markdown]
+# ## Metadata
+
+# %% [markdown]
+# Experiment metadata from configs
+
+# %%
+meta = pd.read_json(path_configs_json).T
+meta['hidden_layers'] = meta.loc[meta['hidden_layers'].notna() ,'hidden_layers'].apply(tuple) # make list a tuple
+meta['n_hidden_layers'] = meta.hidden_layers.loc[meta['hidden_layers'].notna()].apply(len).fillna(0)
+
+mask_collab = meta.index.str.contains('collab')
+meta.loc[mask_collab, 'batch_size'] = meta.loc[mask_collab, 'batch_size_collab']
+meta.loc[mask_collab, 'hidden_layers'] = None
+
+meta
+
+# %% [markdown]
+# Batch size for collab models depends on a factor (as the data in long format has roughly  N samples * M features entries).
+
+# %% [markdown] tags=[]
+# ### Plot Top 10 for fake na validation data
+# - options see [2Dline plot](https://matplotlib.org/stable/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D)
+
+# %%
+ax = metrics[subset]["valid_fake_na"].sort_values(
+    'MSE').iloc[:10, :-1].plot(rot=70, 
+                          x_compat=True, 
+                          xticks=list(range(10)),
+                          marker='o',
+                          linestyle='',
+                          title='Top 10 results for hyperparameters',
+                          figsize=(16,7)
+                         )
+
+# %%
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
+
+# %% [markdown]
+# ## Colorcoded metrics
+#
+# - can be one of the [matplotlib color maps](https://matplotlib.org/stable/tutorials/colors/colormaps.html), which also have reversed version indicated by `*_r`
+#
+# ``` python
+# ['Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap', 'CMRmap_r', 'Dark2', 'Dark2_r', 'GnBu', 'GnBu_r', 'Greens', 'Greens_r', 'Greys', 'Greys_r', 'OrRd', 'OrRd_r', 'Oranges', 'Oranges_r', 'PRGn', 'PRGn_r', 'Paired', 'Paired_r', 'Pastel1', 'Pastel1_r', 'Pastel2', 'Pastel2_r', 'PiYG', 'PiYG_r', 'PuBu', 'PuBuGn', 'PuBuGn_r', 'PuBu_r', 'PuOr', 'PuOr_r', 'PuRd', 'PuRd_r', 'Purples', 'Purples_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdPu', 'RdPu_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r', 'Reds', 'Reds_r', 'Set1', 'Set1_r', 'Set2', 'Set2_r', 'Set3', 'Set3_r', 'Spectral', 'Spectral_r', 'Wistia', 'Wistia_r', 'YlGn', 'YlGnBu', 'YlGnBu_r', 'YlGn_r', 'YlOrBr', 'YlOrBr_r', 'YlOrRd', 'YlOrRd_r', 'afmhot', 'afmhot_r', 'autumn', 'autumn_r', 'binary', 'binary_r', 'bone', 'bone_r', 'brg', 'brg_r', 'bwr', 'bwr_r', 'cividis', 'cividis_r', 'cool', 'cool_r', 'coolwarm', 'coolwarm_r', 'copper', 'copper_r', 'cubehelix', 'cubehelix_r', 'flag', 'flag_r', 'gist_earth', 'gist_earth_r', 'gist_gray', 'gist_gray_r', 'gist_heat', 'gist_heat_r', 'gist_ncar', 'gist_ncar_r', 'gist_rainbow', 'gist_rainbow_r', 'gist_stern', 'gist_stern_r', 'gist_yarg', 'gist_yarg_r', 'gnuplot', 'gnuplot2', 'gnuplot2_r', 'gnuplot_r', 'gray', 'gray_r', 'hot', 'hot_r', 'hsv', 'hsv_r', 'inferno', 'inferno_r', 'jet', 'jet_r', 'magma', 'magma_r', 'nipy_spectral', 'nipy_spectral_r', 'ocean', 'ocean_r', 'pink', 'pink_r', 'plasma', 'plasma_r', 'prism', 'prism_r', 'rainbow', 'rainbow_r', 'seismic', 'seismic_r', 'spring', 'spring_r', 'summer', 'summer_r', 'tab10', 'tab10_r', 'tab20', 'tab20_r', 'tab20b', 'tab20b_r', 'tab20c', 'tab20c_r', 'terrain', 'terrain_r', 'turbo', 'turbo_r', 'twilight', 'twilight_r', 'twilight_shifted', 'twilight_shifted_r', 'viridis', 'viridis_r', 'winter', 'winter_r']
+# ```
+
+# %%
+cmap='cividis_r'
+
+# %%
+metrics_styled = metrics.unstack('model')
+
+metrics_styled = (
+    metrics_styled.set_index(
+        pd.MultiIndex.from_frame(
+            meta.loc[metrics_styled.index, ['latent_dim', 'hidden_layers', 'batch_size']]
+        ))
+    .sort_index()
+    .stack('model')
+    .style.background_gradient(cmap)
+)
+metrics = metrics_styled.data
+metrics_styled
+
+# %%
+metrics_styled.to_excel(FOLDER/ 'metrics_styled.xlsx')
+
+# %%
+for k in metrics.columns.levels[0][::-1]:
+    print("\n"+"*"*10, f"Subset: {k}\n")
+    display(metrics[k].style.background_gradient(cmap))
+
+# %% [markdown]
+# ### Plot Top 10 for fake na validation data
+
+# %%
+_ = metrics[subset]["valid_fake_na"].sort_values(
+    'MSE').iloc[:10,:-1].plot(rot=45,
+                          x_compat=False,
+                          xticks=list(range(10)),
+                          marker='o',
+                          linestyle='',
+                          figsize=(16,7)    
+                          )
+
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, name='top_10_models_validation_fake_na_v02', folder=FOLDER)
+
+# %% [markdown]
+# ## Collection of Performance plots 
+#
+# - similar to hyperparameter performance plots in Tensorboard
+
+# %%
+metrics = metrics.unstack('model').reset_index()
+metrics.iloc[:, :7].head(3)
+
+
+# %% [markdown]
+# ### Parallel coordinates
+#
+# - similar to Tensorboard visualization of a set of hyperparameters
+
+# %%
+def plot_parallel_categories(metrics=metrics, model_type='DAE', metric_type='MSE', subset='NA interpolated', split='valid_fake_na'):
+    sel_metric = (subset, split , metric_type, model_type)
+    metric_sel = metrics.loc[:, [('latent_dim', '', '', ''),
+                                ('hidden_layers', '', '', ''),
+                                sel_metric]].dropna()
+    title = ' '.join(sel_metric)
+    metric_sel.columns = [' '.join(x[0].split('_'))
+                        for x in metric_sel.columns[:-1]] + [sel_metric[-2]]
+    fig = px.parallel_categories(metric_sel, dimensions=metric_sel.columns[:-1],
+                color="MSE", color_continuous_scale=px.colors.sequential.Inferno,
+                title=title
+    )
+    
+    return fig
+
+fig = plot_parallel_categories(model_type='DAE')
+fig.show()
+
+# %%
+fig = plot_parallel_categories(metrics, 'VAE')
+fig.show()
+
+# %% [markdown]
+# ### Plotting without Multi-Index
+
+# %%
+metrics = {k: vaep.pandas.create_dict_of_dicts(d) for k, d in metrics_dict_multikey.items()}
+metrics = pd.json_normalize([{'index': k, **d} for k,d in metrics.items()], meta='index', sep= ' ')
+metrics = metrics.set_index('index')
+metrics = meta.join(metrics)
+metrics
+
+# %%
+labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
+               'batch_size_collab': 'bs',
+               'n_hidden_layers': "No. of hidden layers",
+               'latent_dim': 'hidden layer dimension',
+               'subset_w_N': 'subset',
+               'n_params': 'no. of parameter',
+               "metric_value": 'value',
+               'metric_name': 'metric'}
+
+# %% [markdown]
+# #### Single model metric - collab
+
+# %% [markdown]
+# ### Plotting from long format
+#
+# To use colors meaningfully, the long format of the data is needed.
+
+# %%
+metrics_long = pd.DataFrame.from_dict(metrics_dict_multikey, orient='index')
+columns_names = ['subset', 'data_split', 'model', 'metric_name']
+metrics_long.columns.names = columns_names
+metrics_long.index.name = 'id'
+metrics_long
+
+# %% [markdown]
+# Combine N into single column
+
+# %%
+metrics_N = metrics_long.loc[:, pd.IndexSlice[:,:,:, 'N']]
+metrics_N = metrics_N.stack(['subset', 'data_split', 'model', 'metric_name']).unstack('metric_name').astype(int)
+metrics_N #.unstack(['subset', 'data_split', 'model',])
+
+# %% [markdown]
+# join N used to compute metric
+
+# %%
+metrics_long=metrics_long.loc[:, pd.IndexSlice[:,:,:, metric_columns]]
+metrics_long = metrics_long.stack(metrics_long.columns.names).to_frame('metric_value').reset_index('metric_name').join(metrics_N)
+metrics_long
+
+# %% [markdown]
+# join metadata for each metric
+
+# %%
+metrics_long = metrics_long.reset_index(['subset', 'data_split', 'model']).join(meta)
+metrics_long.index.name = 'id'
+metrics_long
+
+# %% [markdown]
+# Combine number of parameters into one columns (they are mutually exclusive)
+
+# %%
+metrics_long['n_params'] = metrics_long['n_params_collab']
+for key in ['DAE', 'VAE']:
+    mask = metrics_long.model == key
+    metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, f'n_params_{key.lower()}']
+mask = metrics_long.model == 'interpolated'
+metrics_long.loc[mask, 'n_params'] = 1 # at least overall (and 1 for the number of replicates?)
+mask = metrics_long.model == 'median'
+metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M'] # number of features to calculate median of
+
+metrics_long[[*columns_names, 'n_params', 'n_params_vae', 'n_params_dae', 'n_params_collab']]
+
+# %%
+metrics_long['subset_w_N'] = metrics_long['subset'].str[0:] + ' - N: ' + metrics_long['N'].astype(str)
+metrics_long[['subset_w_N', 'subset']]
+
+# %%
+metrics_long.to_csv(FOLDER / 'metrics_long_df.csv') # Should all the plots be done without the metrics?
+
+# %%
+category_orders = {'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE'],
+                   }
+
+# %%
+col = "NA interpolated valid_fake_na collab MAE"
+# col = ("NA interpolated","valid_fake_na","collab","MSE")
+fig = px.scatter(metrics_long.query('model == "collab"'),
+                 x="latent_dim",
+                 y='metric_value',
+                 color="subset", # needs data in long format
+                 facet_row="metric_name",
+                 facet_col="data_split",
+                 title='Performance of collaborative filtering models',
+                 labels={**labels_dict, 'data_split': 'data split'},
+                 category_orders={'data_split': ['valid_fake_na', 'test_fake_na']},
+                 width=1600,
+                 height=700,
+                 template='seaborn',
+                 )
+fig.update_layout(
+        font={'size': 18},
+        xaxis={'title': {'standoff': 15}},
+        yaxis={'title': {'standoff': 15}})
+fig.update_xaxes(dict(
+            tickmode='array',
+            tickvals=sorted(metrics_long["latent_dim"].unique()),
+        )
+    )
+fig.write_image(FOLDER / 'collab_performance_overview.pdf')
+fig.show()
+
+
+# %% [markdown]
+# ## Plot hyperparameter results - overview
+
+# %%
+def plot_by_params(data_split: str = '', subset: str = ''):
+    selected = metrics_long
+    if data_split:
+        selected = selected.query(f'data_split == "{data_split}"')
+    if subset:
+        selected = selected.query(f'subset == "{subset}"')
+    fig = px.scatter(selected,
+                     x='n_params',
+                     y='metric_value',
+                     color="model",
+                     facet_row="metric_name",
+                     facet_col="subset_w_N",
+                     hover_data=['hidden_layers', 'latent_dim'],
+                     #             'batch_size', 'batch_size_collab',
+                     # 'subset', f'NA not interpolated {dataset} N', f'NA interpolated {dataset} N'],
+                     title=f'Performance by number of parameters for {data_split.replace("_", " ")} data'.replace(
+                         "  ", " "),
+                     labels=labels_dict,
+                     category_orders=category_orders,
+                     width=1600,
+                     height=700,
+                     template='seaborn',
+                     )
+    
+    fig.update_layout(
+            font={'size': 18},
+            xaxis={'title': {'standoff': 15}},
+            yaxis={'title': {'standoff': 15}})
+    return fig
+
+
+dataset = "valid_fake_na"
+fig = plot_by_params(dataset)
+fig.write_image(FOLDER / f"hyperpar_{dataset}_results_by_parameters_all.pdf")
+fig
+
+# %%
+fig = plot_by_params('', subset='NA interpolated')
+fig.write_image(FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
+fig
+
+# %%
+dataset = "test_fake_na"
+fig = plot_by_params(dataset, 'NA interpolated')
+fig.write_image(FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
+fig
+
+# %% [markdown]
+# ### select best run (->minimum loss) for criteria compared:
+
+# %%
+group_by = ['data_split','subset', 'latent_dim', 'metric_name', 'model']
+metrics_long_sel_min = metrics_long.reset_index(
+    ).groupby(by=group_by
+    ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]) 
+metrics_long_sel_min
+
+
+# %%
+def get_plotly_figure(dataset: str, x='latent_dim'):
+    fig = px.scatter(metrics_long_sel_min.loc[dataset],
+                     x=x,
+                     y='metric_value',
+                     color="model",
+                     facet_row="metric_name",
+                     facet_col="subset_w_N",
+                     hover_data=['n_hidden_layers', 'hidden_layers',
+                                 'batch_size', 'batch_size_collab',
+                                 'n_params'
+                                ],
+                     title=f'Performance on {dataset.replace("_", " ")} data',
+                     labels=labels_dict,
+                     category_orders=category_orders,
+                     width=1600,
+                     height=700,
+                     template='seaborn',
+                     )
+    fig.update_xaxes(dict(
+            tickmode='array',
+            tickvals=sorted(metrics_long[x].unique()),
+        )
+    )
+    fig.update_layout(
+            font={'size': 18},
+            xaxis={'title': {'standoff': 15}},
+            yaxis={'title': {'standoff': 15}})
+    return fig
+
+
+dataset = 'test_fake_na'
+fig = get_plotly_figure(dataset)
+fig.write_image(FOLDER / f"hyperpar_{dataset}_results_best.pdf")
+fig.show()
+
+# %%
+dataset = 'valid_fake_na'
+fig = get_plotly_figure(dataset)
+fig.write_image(FOLDER / f"hyperpar_{dataset}_results_best.pdf")
+fig.show()
+
+# %% [markdown]
+# ## Plot for best models predictions along completeness
+
+# %%
+dataset = 'valid_fake_na'
+group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim' ]
+selected = metrics_long.reset_index(
+    ).groupby(by=group_by
+    ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
+selected
+
+# %% [markdown]
+# select minimum value of latent dim over trained models on average
+
+# %%
+min_latent = selected.loc['NA interpolated'].loc['MAE'].loc[['DAE', 'VAE', 'collab']].groupby(level='latent_dim').mean().sort_values('metric_value')
+min_latent
+
+# %%
+min_latent = min_latent.index[0]
+print("Minimum latent value for average of models:", min_latent)
+
+# %%
+selected = selected.loc['NA interpolated'].loc['MAE'].loc[['collab', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
+selected
+
+# %% [markdown]
+# load predictions (could be made better)
+
+# %%
+selected['pred_to_load'] = (
+    selected['out_preds']
+    + ('/pred_val' if 'val' in dataset else '/pred_test_')  # not good...
+    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x) for x in s) + '_' if s is not None else '_')
+    + selected.model.str.lower()
+    + '.csv'
+)
+selected['pred_to_load'].to_list()
+
+# %%
+selected.to_csv(FOLDER / 'best_models_metrics.csv')
+
+# %%
+selected
+
+# %%
+mapper = {k: f'{k} - ' + "HL: {}".format(
+    str(selected.loc[k, 'hidden_layers'].to_list()[0]))
+          for k in selected.model
+         }
+mapper
+
+# %%
+pred_val = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
+pred_val = pred_val.rename(mapper, axis=1)
+category_orders['model'] = list(pred_val.columns[1:])
+pred_val
+
+# %%
+from vaep.io import datasplits
+from vaep import sampling
+
+data = datasplits.DataSplits.from_folder(FOLDER / 'data', file_format='pkl') 
+
+freq_feat = sampling.frequency_by_index(data.train_X, 0)
+freq_feat.name = 'freq'
+freq_feat.head() # training data
+
+# %%
+errors_val = pred_val.drop('observed', axis=1).sub(pred_val['observed'], axis=0)
+errors_val = errors_val.abs().groupby(freq_feat.index.name).mean()# # absolute error
+errors_val = errors_val.join(freq_feat)
+errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
+errors_val.columns.name = 'model'
+errors_val
+
+# %%
+M_feat = len(errors_val)
+window_size = int(M_feat / 50)
+print(f"Features in split: {M_feat}, set window size for smoothing: {window_size}")
+msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size: {window_size})"
+
+# %%
+errors_val_smoothed = errors_val.copy()
+# errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=window_size, min_periods=1).mean()
+errors_val_smoothed[category_orders['model']] = errors_val[category_orders['model']].rolling(window=window_size, min_periods=1).mean()
+ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average', 
+                             title=f'Rolling average error by feature frequency {msg_annotation}')
+
+vaep.savefig(
+    ax.get_figure(),
+    folder=FOLDER,
+    name=f'best_models_ld_{min_latent}_rolling_errors_by_freq')
+
+# %%
+errors_val_smoothed_long = errors_val_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat)
+errors_val_smoothed_long
+
+# %% tags=[]
+fig= px.line(errors_val_smoothed_long.sort_values(by='freq'),
+             x=freq_feat.name,
+             color='model',
+             y='rolling error average',
+             title=f'Rolling average error by feature frequency {msg_annotation}',
+             labels=labels_dict,
+             category_orders=category_orders,
+             width=1600,
+             height=700,
+             template='seaborn',
+                     )
+fig.update_layout(
+        font={'size': 18},
+        xaxis={'title': {'standoff': 15}},
+        yaxis={'title': {'standoff': 15}})
+fig.write_image(FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.pdf')
+fig
+
+# %%
+errors_val_smoothed = errors_val.copy()
+ax = errors_val_smoothed.groupby(by='freq'
+                       ).mean(
+                       ).sort_index(
+                       ).rolling(window=5, min_periods=1
+                       ).mean().plot(
+    ylabel='rolling error average',
+    title='mean error for features averaged for each frequency'
+)
+
+vaep.savefig(
+    ax.get_figure(),
+    folder=FOLDER,
+    name=f'best_models_ld_{min_latent}_errors_by_freq_averaged')
