@@ -1,3 +1,3 @@
-config_split: config/peptides_split.yaml
-config_train: config/peptides_train.yaml
+config_split: config/aggPeptides_split.yaml
+config_train: config/aggPeptides_train.yaml
 folder_experiment: 'runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070'

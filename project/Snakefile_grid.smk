@@ -21,65 +21,57 @@ GRID = {k:config[k]
             ]
         }
 
-# print(GRID)
-
 name_template= config['name_template']
-# print(name_template)
 
+folder_experiment = config['folder_experiment']
+folder_experiment2 = config['folder_experiment2'] # expand fct, replaces single {} by double {{}}
 
 rule all:
     input:
-        expand("{folder_experiment}/hyperpar_{split}_results.pdf",
-        folder_experiment=config["folder_experiment"],
+        expand(
+            f"{folder_experiment}/hyperpar_{{split}}_results_best.pdf",
+            #"runs/grid_search/{level}/hyperpar_{split}.pdf",
+        level=config['levels'],
         split=["test_fake_na", "valid_fake_na"])
 
 rule results:
     input:     
-        metrics="{folder_experiment}/all_metrics.json",
-        config="{folder_experiment}/all_configs.json"
+        metrics=f"{folder_experiment}/all_metrics.json",
+        config=f"{folder_experiment}/all_configs.json"
     output:
-        expand("{{folder_experiment}}/hyperpar_{split}_results.pdf",
-            split=["test_fake_na", "valid_fake_na"])
+        expand(f"{folder_experiment2}/hyperpar_{{split}}_results_best.pdf",
+            split=["test_fake_na", "valid_fake_na"],
+            )
     log:
-        notebook="{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
+        notebook=f"{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
     notebook:
         "14_experiment_03_hyperpara_analysis.ipynb"
 
-
+nb='14_experiment_03_data.ipynb',
 use rule create_splits from single_experiment as splits with:
     input:
-        nb='14_experiment_03_data.ipynb',
-        configfile =config['config_split']
-
-
-
-# use rule train_models from single_experiment  as model with:
-#     input:
-#         nb="14_experiment_03_train_{model}.ipynb",
-#         train_split="{folder_experiment}/data/train_X.pkl",
-#         configfile="{folder_experiment}/"
-#                    f"{name_template}/config_train.yaml"
-#     output:
-#         nb=f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{model}}.ipynb",
-#         metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_{{model}}.json",
-#         config=f"{{folder_experiment}}/{name_template}/models/model_config_{{model}}.yaml"
-#     params:
-#         folder_experiment=f"{{folder_experiment}}/{name_template}"
+        nb=nb,
+        configfile=config['config_split']
+    output:
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        nb=f"{folder_experiment}/{nb}",
+    params:
+        folder_experiment=f"{folder_experiment}"
 
 
 # use rule train_models from single_experiment as train_ae_models with:
 rule train_ae_models:
     input:
         nb="14_experiment_03_train_{ae_model}.ipynb",
-        train_split="{folder_experiment}/data/train_X.pkl",
-        configfile="{folder_experiment}/"
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        configfile=f"{folder_experiment}/"
                    f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     output:
-        nb=f"{{folder_experiment}}/{name_template}/14_experiment_03_train_HL_{{hidden_layers}}_{{ae_model}}.ipynb",
-        metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
-        config=f"{{folder_experiment}}/{name_template}/models/model_config_HL_{{hidden_layers}}_{{ae_model}}.yaml"
+        nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_HL_{{hidden_layers}}_{{ae_model}}.ipynb",
+        metric=f"{folder_experiment}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
+        config=f"{folder_experiment}/{name_template}/models/model_config_HL_{{hidden_layers}}_{{ae_model}}.yaml"
     params:
-        folder_experiment=f"{{folder_experiment}}/{name_template}",
+        folder_experiment=f"{folder_experiment}/{name_template}",
         model_key="HL_{hidden_layers}_{ae_model}"
     shell:
         "papermill {input.nb} {output.nb}"
@@ -91,23 +83,23 @@ rule train_ae_models:
 use rule train_models from single_experiment as train_collab_model with:
     input:
         nb="14_experiment_03_train_{collab_model}.ipynb",
-        train_split="{folder_experiment}/data/train_X.pkl",
-        configfile="{folder_experiment}/"
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        configfile=f"{folder_experiment}/"
                    f"{name_template}/config_train_collab.yaml"
     output:
-        nb=f"{{folder_experiment}}/{name_template}/14_experiment_03_train_{{collab_model}}.ipynb",
-        metric=f"{{folder_experiment}}/{name_template}/metrics/metrics_{{collab_model}}.json",
-        config=f"{{folder_experiment}}/{name_template}/models/model_config_{{collab_model}}.yaml"
+        nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_{{collab_model}}.ipynb",
+        metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{collab_model}}.json",
+        config=f"{folder_experiment}/{name_template}/models/model_config_{{collab_model}}.yaml"
     params:
-        folder_experiment=f"{{folder_experiment}}/{name_template}"
+        folder_experiment=f"{folder_experiment}/{name_template}"
 
 
 rule build_train_config:
     output:
-        config_train="{folder_experiment}/"
+        config_train=f"{folder_experiment}/"
              f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     params:
-        folder_data="{folder_experiment}/data/",
+        folder_data=f"{folder_experiment}/data/",
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -121,10 +113,10 @@ rule build_train_config:
 
 rule build_train_config_collab:
     output:
-        config_train="{folder_experiment}/"
+        config_train=f"{folder_experiment}/"
             f"{name_template}/config_train_collab.yaml"
     params:
-        folder_data="{folder_experiment}/data/"
+        folder_data=f"{folder_experiment}/data/"
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -139,36 +131,32 @@ rule build_train_config_collab:
 
 rule collect_all_configs:
     input:
-        expand("{folder_experiment}/"
+        expand(f"{folder_experiment2}/"
               f"{name_template}/models/model_config_HL_{{hidden_layers}}_{{ae_model}}.yaml",
-                folder_experiment=config["folder_experiment"],
                 **GRID,
                 ae_model=['dae', 'vae']),
-        expand(f"{{folder_experiment}}/{name_template}/models/model_config_{{collab_model}}.yaml",
-                folder_experiment=config["folder_experiment"],
+        expand(f"{folder_experiment2}/{name_template}/models/model_config_{{collab_model}}.yaml",
                 **GRID,
                 collab_model='collab')
     output:
-        out = "{folder_experiment}/all_configs.json",
+        out = f"{folder_experiment}/all_configs.json",
     log:
-        notebook="{folder_experiment}/14_aggregate_configs.ipynb"
+        notebook=f"{folder_experiment}/14_aggregate_configs.ipynb"
     notebook:
         "14_aggregate_configs.py.ipynb"
 
 
 rule collect_metrics:
     input:
-        expand(f"{{folder_experiment}}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
-            folder_experiment=config["folder_experiment"],
+        expand(f"{folder_experiment2}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
             ae_model=['dae', 'vae'],
             **GRID),
-        expand(f"{{folder_experiment}}/{name_template}/metrics/metrics_{{collab_model}}.json",
-                  folder_experiment=config["folder_experiment"],
+        expand(f"{folder_experiment2}/{name_template}/metrics/metrics_{{collab_model}}.json",
                   collab_model=['collab'],
                   **GRID)
     output:
-        out = "{folder_experiment}/all_metrics.json",
+        out = f"{folder_experiment}/all_metrics.json",
     log:
-        notebook="{folder_experiment}/14_collect_all_metrics.ipynb"
+        notebook=f"{folder_experiment}/14_collect_all_metrics.ipynb"
     notebook:
         "14_collect_all_metrics.py.ipynb"

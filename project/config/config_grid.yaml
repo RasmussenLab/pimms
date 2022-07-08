@@ -18,7 +18,12 @@ latent_dim:
 - 50
 - 75
 - 100
-folder_experiment: "runs/grid_search/proteinGroups"
-config_split: 'config/proteinGroups_split.yaml'
+folder_experiment2: "runs/grid_search2/{{level}}"
+folder_experiment: "runs/grid_search2/{level}"
+levels:
+- proteinGroups
+- aggPeptides
+- evidence 
+config_split: 'config/{level}_split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
