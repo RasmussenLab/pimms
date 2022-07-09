@@ -18,8 +18,8 @@ latent_dim:
 - 50
 - 75
 - 100
-folder_experiment2: "runs/grid_search2/{{level}}"
-folder_experiment: "runs/grid_search2/{level}"
+folder_experiment2: "runs/grid_search/{{level}}"
+folder_experiment: "runs/grid_search/{level}"
 levels:
 - proteinGroups
 - aggPeptides
