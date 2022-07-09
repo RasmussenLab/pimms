@@ -32,7 +32,8 @@ rule all:
             f"{folder_experiment}/hyperpar_{{split}}_results_best.pdf",
             #"runs/grid_search/{level}/hyperpar_{split}.pdf",
         level=config['levels'],
-        split=["test_fake_na", "valid_fake_na"])
+        split=["test_fake_na", "valid_fake_na"]),
+        'runs/grid_search/best_models_over_all_data.pdf'
 
 rule results:
     input:     
@@ -41,13 +42,25 @@ rule results:
     output:
         expand(f"{folder_experiment2}/hyperpar_{{split}}_results_best.pdf",
             split=["test_fake_na", "valid_fake_na"],
-            )
+            ),
+        f'{folder_experiment}/metrics_long_df.csv'
     log:
         notebook=f"{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
     notebook:
         "14_experiment_03_hyperpara_analysis.ipynb"
 
-nb='14_experiment_03_data.ipynb',
+rule compare_search_by_dataset:
+    input:
+        expand(f'{folder_experiment}/metrics_long_df.csv',
+        level=config['levels'])
+    output:
+        'runs/grid_search/best_models_over_all_data.pdf'
+    log:
+        notebook="runs/grid_search/best_models_over_all_data.ipynb"
+    notebook:
+        "14_best_models_over_all_data.ipynb"
+
+nb='14_experiment_03_data.ipynb'
 use rule create_splits from single_experiment as splits with:
     input:
         nb=nb,
