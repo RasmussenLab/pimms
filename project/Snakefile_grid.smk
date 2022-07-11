@@ -29,7 +29,7 @@ folder_experiment2 = config['folder_experiment2'] # expand fct, replaces single 
 rule all:
     input:
         expand(
-            f"{folder_experiment}/hyperpar_{{split}}_results_best.pdf",
+            f"{folder_experiment}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
             #"runs/grid_search/{level}/hyperpar_{split}.pdf",
         level=config['levels'],
         split=["test_fake_na", "valid_fake_na"]),
@@ -40,7 +40,7 @@ rule results:
         metrics=f"{folder_experiment}/all_metrics.json",
         config=f"{folder_experiment}/all_configs.json"
     output:
-        expand(f"{folder_experiment2}/hyperpar_{{split}}_results_best.pdf",
+        expand(f"{folder_experiment2}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
             split=["test_fake_na", "valid_fake_na"],
             ),
         f'{folder_experiment}/metrics_long_df.csv'
