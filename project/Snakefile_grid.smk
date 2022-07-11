@@ -33,7 +33,7 @@ rule all:
             #"runs/grid_search/{level}/hyperpar_{split}.pdf",
         level=config['levels'],
         split=["test_fake_na", "valid_fake_na"]),
-        'runs/grid_search/best_models_over_all_data.pdf'
+        'runs/grid_search/average_performance_over_data_levels_best.pdf'
 
 rule results:
     input:     
@@ -54,7 +54,7 @@ rule compare_search_by_dataset:
         expand(f'{folder_experiment}/metrics_long_df.csv',
         level=config['levels'])
     output:
-        'runs/grid_search/best_models_over_all_data.pdf'
+        'runs/grid_search/average_performance_over_data_levels_best.pdf'
     log:
         notebook="runs/grid_search/best_models_over_all_data.ipynb"
     notebook:

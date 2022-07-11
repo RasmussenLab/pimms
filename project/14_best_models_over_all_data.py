@@ -27,6 +27,12 @@ import vaep.plotting
 # import vaep.plotting.plotly
 
 import vaep.nb
+
+
+pd.options.display.max_columns = 45
+pd.options.display.max_rows = 110
+pd.options.display.multi_sparse = False
+
 plt.rcParams['figure.figsize'] = [16.0, 7.0]
 
 vaep.plotting.make_large_descriptors()
@@ -54,14 +60,15 @@ FOLDER = fname.parent.parent
 print(f"{FOLDER =}")
 
 # %%
+metrics_long.loc[metrics_long['model'].isin(['interpolated', 'median']), ['latent_dim', 'hidden_layers']] = '-'
 metrics_long['hidden_layers'] = metrics_long['hidden_layers'].fillna('-')
 metrics_long['text'] = 'LD: ' + metrics_long['latent_dim'].astype(str) + ' HL: ' + metrics_long['hidden_layers']
-metrics_long.loc[metrics_long['model'].isin(['interpolated', 'median']), 'text'] = '-'
+
 
 metrics_long[['latent_dim', 'hidden_layers', 'model', 'text', ]]
 
 # %%
-group_by = ['data level', 'data_split', 'subset', 'metric_name', 'model']
+group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
                     'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
@@ -70,24 +77,38 @@ IDX_ORDER = (['proteinGroups', 'aggPeptides', 'evidence'],
 METRIC = 'MAE'
 
 # %%
-# dataset = 'valid_fake_na'
+dataset = 'valid_fake_na'
 
 selected = metrics_long.reset_index(
     ).groupby(by=group_by
               ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
-selected
+selected.loc[
+    pd.IndexSlice[dataset, IDX_ORDER[0], 'NA interpolated', 'MAE', IDX_ORDER[1]],
+    ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']]
 
 # %%
+fname = 'best_models_1_mpl'
 _to_plot = selected.droplevel(['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
-_to_plot = _to_plot.set_index(['data level', 'model'])['metric_value'].unstack()
-_to_plot = _to_plot.loc[IDX_ORDER]
+
+_to_plot = _to_plot.set_index(['data level', 'model'])[['metric_value', 'text']]
+_to_plot = _to_plot.loc[IDX_ORDER,:]
 _to_plot.index.name = ''
+text = _to_plot['text'].unstack().loc[IDX_ORDER].unstack()
+_to_plot = _to_plot['metric_value'].unstack().loc[IDX_ORDER]
+_to_plot.to_csv(FOLDER / f'{fname}.csv')
+display(text.to_frame('text'))
 _to_plot
 
 # %%
-ax = _to_plot.plot.bar(rot=90, ylabel=METRIC)
+ax = _to_plot.plot.bar(rot=0, ylabel=METRIC)
+ax = vaep.plotting.add_height_to_barplot(ax)
+ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, fname, folder=FOLDER)
 
 # %%
+fname = 'best_models_1_plotly'
 _to_plot = selected.droplevel(['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
 _to_plot = _to_plot.set_index(['data level', 'model'])[
                               ['metric_value', 'latent_dim', 'hidden_layers', 'text']].fillna('-')
@@ -96,17 +117,20 @@ _to_plot = _to_plot.set_index(['data level', 'model'])[
 # _to_plot.loc[pd.IndexSlice[:, ['interpolated', 'median']], 'text'] = ''
 
 _to_plot = _to_plot.loc[pd.IndexSlice[IDX_ORDER], :]
+_to_plot.to_csv(FOLDER / f"{fname}.csv")
 _to_plot
 
 # %%
-px.bar(_to_plot.reset_index(),
-       x='data level',
-       y='metric_value',
-       color='model',
-       barmode="group",
-       text='text',
-       category_orders=order_categories,
-       height=600)
+fig = px.bar(_to_plot.reset_index(),
+             x='data level',
+             y='metric_value',
+             color='model',
+             barmode="group",
+             text='text',
+             category_orders=order_categories,
+             height=600)
+fig.write_image(FOLDER / f"{fname}.pdf")
+fig
 
 # %% [markdown]
 # ## Order by best model setup over all datasets
@@ -114,24 +138,27 @@ px.bar(_to_plot.reset_index(),
 # %%
 group_by = ['model', 'latent_dim', 'hidden_layers']
 
-best = metrics_long.query('data_split == "valid_fake_na"'
-                          ' & subset == "NA interpolated"'
-                          f' & metric_name == "{METRIC}"').reset_index(
+data_split = 'valid_fake_na'
+subset = 'NA interpolated'
+
+metrics_long_sel = metrics_long.query(f'data_split == "{data_split}"'
+                                      f' & subset == "{subset}"'
+                                      f' & metric_name == "{METRIC}"')
+
+best_on_average = metrics_long_sel.reset_index(
     ).groupby(by=group_by
-              )['metric_value'].mean()
-best
+              )['metric_value'].mean().sort_values().reset_index(level=group_by[1:])
+best_on_average
 
 # %%
-best.loc['collab']
+best_on_average.to_csv(FOLDER / 'average_performance_over_data_levels.csv')
+best_on_average = best_on_average.groupby(group_by[0]).apply(
+    lambda df: df.sort_values(by='metric_value').iloc[0]).set_index(group_by[1:], append=True)
+best_on_average
 
 # %%
-best = best.reset_index(level=group_by[1:]).groupby(group_by[0]).min().set_index(group_by[1:], append=True)
-best
-
-# %%
-to_plot = metrics_long.query('data_split == "valid_fake_na"'
-                             ' & subset == "NA interpolated"'
-                             f' & metric_name == "{METRIC}"').reset_index().set_index(group_by).loc[best.index].reset_index().set_index(['model', 'data level']).loc[
+fname = 'average_performance_over_data_levels_best'
+to_plot = metrics_long_sel.reset_index().set_index(group_by).loc[best_on_average.index].reset_index().set_index(['model', 'data level']).loc[
     pd.IndexSlice[order_categories['model'], order_categories['data level']], :]
 to_plot
 
@@ -139,8 +166,9 @@ to_plot
 to_plot = to_plot.reset_index()
 to_plot['model annotated'] = to_plot['model'] + ' - ' + to_plot['text']
 order_model = to_plot['model annotated'].drop_duplicates().to_list()
-# to_plot = to_plot.set_index(['model annotated', 'data level'])
-# to_plot = to_plot['metric_value'].unstack().loc[order_model, order_categories['data level']]
+
+to_plot = to_plot.drop_duplicates(subset=['model', 'data level', 'metric_value'])
+to_plot.to_csv(f"{fname}.csv")
 to_plot
 
 # %%
@@ -152,6 +180,8 @@ ax = (to_plot
           xlabel="model with overall best performance for all datasets",
           rot=45)
       )
+fig = ax.get_figure()
+vaep.savefig(fig, fname, folder=FOLDER)
 
 # %%
 # ToDo
@@ -164,6 +194,5 @@ fig = px.bar(to_plot,
              text='text',
              category_orders=order_categories,
              height=600)
-
-# %%
-fig.write_image(FOLDER / 'best_models_over_all_data.pdf')
+fig.write_image(FOLDER / f"{fname}.pdf")
+fig
