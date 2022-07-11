@@ -112,6 +112,33 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     return ax2
 
 
+def add_height_to_barplot(ax, size=15):
+    for bar in ax.patches:
+        ax.annotate(text=format(bar.get_height(), '.2f'),
+                    xy=(bar.get_x() + bar.get_width() / 2,
+                        bar.get_height()),
+                    xytext=(0, 7),
+                    ha='center',
+                    va='center',
+                    size=size,
+                    textcoords='offset points')
+    return ax
+
+
+def add_text_to_barplot(ax, text, size=15):
+    for bar, text in zip(ax.patches, text):
+        logger.debug(f"{bar = }, f{text = }, {bar.get_height() = }")
+        ax.annotate(text=text,
+                    xy=(bar.get_x() + bar.get_width() / 2,
+                        bar.get_height()),
+                    xytext=(0, -5),
+                    rotation=90,
+                    ha='center',
+                    va='top',
+                    size=size,
+                    textcoords='offset points')
+    return ax
+
 def format_large_numbers(ax: matplotlib.axes.Axes,
                          format_str: str = '{x:,.0f}') -> matplotlib.axes.Axes:
     """Format large integer numbers to be read more easily.
