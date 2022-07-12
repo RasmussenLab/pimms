@@ -318,7 +318,7 @@ ana_vae.learn = Learner(dls=ana_vae.dls,
                         model=ana_vae.model,
                         loss_func=loss_fct,
                         cbs=[ae.ModelAdapterVAE(),
-                            #  EarlyStoppingCallback()
+                             EarlyStoppingCallback(patience=50)
                              ])
 
 ana_vae.learn.show_training_loop()
@@ -352,13 +352,25 @@ ana_vae.params['last_decoder_activation'] = Sigmoid
 # %% tags=[]
 ana_vae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 
+# %% [markdown]
+# Save number of actually trained epochs
+
 # %%
-results
+args.epoch_vae = ana_vae.learn.epoch + 1
+args.epoch_vae
+
+# %%
+# results are mixed (train and validation) -> better design needed
+# in general: L_rec >> L_reg (seems so)
+# # rename _results!
+# results_train = pd.DataFrame.from_records(_results[::2], columns=['L_rec', 'L_reg'])
+# results_train.index.name = 'step'
+# results_train.plot()
 
 # %% tags=[]
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_vae.learn, 'VAE', folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
+fig = models.plot_training_losses(ana_vae.learn, model_key, folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
 
 # %% [markdown]
 # ### Predictions
@@ -371,14 +383,14 @@ pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=ana_vae.learn,
 pred
 
 # %%
-val_pred_fake_na['VAE'] = pred.stack()
+val_pred_fake_na['VAE'] = pred.stack() # 'model_key' ?
 val_pred_fake_na
 
 # %% [markdown]
 # select test data predictions
 
 # %%
-test_pred_fake_na['VAE'] = pred.stack()
+test_pred_fake_na['VAE'] = pred.stack() # model_key?
 test_pred_fake_na
 
 # %% [markdown]
@@ -452,10 +464,11 @@ added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
 added_metrics
 
 # %% [markdown]
-# Save all metrics as json
+# ### Save all metrics as json
 
 # %% tags=[]
 vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key.lower()}.json')
+d_metrics
 
 
 # %% tags=[]
@@ -547,4 +560,8 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
 
 # %%
 args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
+args.model_type = 'VAE'
+args.model_key = model_key
 args
+
+# %%
