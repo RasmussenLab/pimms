@@ -4,6 +4,7 @@ hidden_layers:
 - '256'
 - '512'
 - '1024'
+- '2056'
 - '128_64'
 - '256_128'
 - '512_256'
@@ -18,6 +19,7 @@ latent_dim:
 - 50
 - 75
 - 100
+folder_grid_search: "runs/grid_search"
 folder_experiment2: "runs/grid_search/{{level}}"
 folder_experiment: "runs/grid_search/{level}"
 levels:
