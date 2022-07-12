@@ -282,6 +282,7 @@ except FileNotFoundError:
     suggested_lr = ana_collab.learn.lr_find()
     print(f"{suggested_lr.valley = :.5f}")
     ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
+    args.epoch_collab = ana_collab.learn.epoch + 1
     # ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=1e-3)
     ana_collab.model_kwargs['suggested_inital_lr'] = suggested_lr.valley
     ana_collab.learn.save('collab_model')

@@ -332,7 +332,7 @@ ana_dae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 # - differences in number of total measurements not changed
 
 # %%
-fig = models.plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args.out_figures)
+fig = models.plot_training_losses(learner=ana_dae.learn, name=model_key, folder=args.out_figures)
 
 # %% [markdown]
 # #### Loss normalized by total number of measurements
@@ -340,9 +340,15 @@ fig = models.plot_training_losses(learner=ana_dae.learn, name='DAE', folder=args
 # %%
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_dae.learn, 'VAE',
+fig = models.plot_training_losses(ana_dae.learn, model_key,
                                   folder=args.out_figures,
                                   norm_factors=[N_train_notna, N_val_notna])  # non-normalized plot of total loss
+# %% [markdown]
+# Save number of actually trained epochs
+
+# %%
+args.epoch_dae = ana_dae.learn.epoch + 1
+args.epoch_dae
 
 # %% [markdown]
 # Why is the validation loss better then the training loss?
@@ -363,14 +369,14 @@ fig = models.plot_training_losses(ana_dae.learn, 'VAE',
 ana_dae.model.eval()
 pred, target = ana_dae.get_preds_from_df(df_wide=data.train_X)  # train_X
 pred = pred.stack()
-val_pred_fake_na['DAE'] = pred
+val_pred_fake_na['DAE'] = pred # model_key ?
 val_pred_fake_na
 
 # %% [markdown]
 # select predictions for test dataset
 
 # %% tags=[]
-test_pred_fake_na['DAE'] = pred
+test_pred_fake_na['DAE'] = pred # model_key?
 test_pred_fake_na
 
 # %% [markdown]
@@ -523,9 +529,18 @@ fig.show()
 # ## Save predictions
 
 # %%
+# prediction_dumps = {'val': args.out_preds / f"pred_val_{model_key.lower()}.csv",
+#                     'test': args.out_preds / f"pred_test_{model_key.lower()}.csv"
+#                     }
+# args.prediction_dump_val =  args.out_preds / f"pred_val_{model_key.lower()}.csv"
+# args.prediction_dump_test = args.out_preds / f"pred_test_{model_key.lower()}.csv"
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key.lower()}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
 
 # %%
 args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
 args
+
+# %%
+figures # show save figures 
+
