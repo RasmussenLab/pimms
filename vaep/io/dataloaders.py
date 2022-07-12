@@ -112,7 +112,7 @@ def get_dls(train_X: pandas.DataFrame,
     valid_ds = datasets.DatasetWithTargetSpecifyTarget(df=train_X,
                                                        targets=valid_X,
                                                        transformer=transformer)
-    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs)
+    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=False)
 
 
 # dls.test_dl

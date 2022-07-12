@@ -57,6 +57,7 @@ FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # M: int = 5000 # M most common features
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+select_N = None # sample a certain number of samples
 min_RT_time: Union[int, float] = 120 # Minum retention time (RT) in minutes
 index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column)
 # query expression for subsetting
@@ -93,6 +94,7 @@ class DataConfig:
     fn_rawfile_metadata: str  # Machine parsed metadata from rawfile workflow
     # M: int # M most common features
     sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
+    select_N:int = None # sample a certain number of samples
     min_RT_time: Union[int, float] = 120
     index_col: Union[
         str, int
@@ -225,6 +227,10 @@ analysis.df = analysis.df.loc[mask]
 # %%
 params.used_samples = analysis.df.index.to_list()
 
+# %%
+ax = analysis.df.T.describe().loc['count'].hist()
+_ = ax.set_title('histogram of features for all eligable samples')
+
 # %% [markdown]
 # ## Machine metadata
 #
@@ -319,6 +325,25 @@ def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
 analysis = add_meta_data(analysis, df_meta=df_meta)
 
 # %% [markdown]
+# ## Select a subset of samples if specified (reduce the number of samples)
+#
+# - for interpolation to make sense, it is best to select a consecutive number of samples:
+#   - take N most recent samples
+
+# %%
+if select_N is not None:
+    select_N = min(select_N, len(analysis.df_meta))
+                   
+    analysis.df_meta = analysis.df_meta.iloc[-select_N:]
+    
+    analysis.df = analysis.df.loc[analysis.df_meta.index].dropna(how='all', axis=1)
+    ax = analysis.df.T.describe().loc['count'].hist()
+    _ = ax.set_title('histogram of features for all eligable samples')
+    
+    # updates
+    sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
+
+# %% [markdown]
 # ### Interactive and Single plots
 
 # %% [markdown]
@@ -330,7 +355,7 @@ sample_counts.name = 'identified features'
 # %%
 K = 2
 pcs = analysis.get_PCA(n_components=K) # should be renamed to get_PCs
-pcs = pcs.iloc[:,:K].join(df_meta).join(sample_counts)
+pcs = pcs.iloc[:,:K].join(analysis.df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
 pcs = pcs.reset_index()
@@ -524,3 +549,5 @@ print(OmegaConf.to_yaml(params))
 # %%
 with open(folder_experiment/'data_config.yaml', 'w') as f:
     OmegaConf.save(params, f)
+
+# %%

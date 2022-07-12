@@ -1,6 +1,6 @@
 epochs_max:
 - 100
-batch_size: 64
+batch_size: 10
 hidden_layers:
 - '256'
 - '512'
@@ -12,21 +12,21 @@ hidden_layers:
 - '512_512'
 - '512_256_128'
 - '1024_512_256'
-- '128_128_128'
-- '256_256_128_128'
+# - '128_128_128'
+# - '256_256_128_128'
 latent_dim:
 - 10
 - 25
 - 50
 - 75
 - 100
-folder_grid_search: "runs/grid_search"
-folder_experiment2: "runs/grid_search/{{level}}"
-folder_experiment: "runs/grid_search/{level}"
+folder_grid_search: "runs/grid_search_small_data"
+folder_experiment2: "runs/grid_search_small_data/{{level}}"
+folder_experiment: "runs/grid_search_small_data/{level}"
 levels:
 - proteinGroups
 - aggPeptides
 - evidence 
-config_split: 'config/{level}_split.yaml'
+config_split: 'config/grid_search_small_data/{level}_split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
