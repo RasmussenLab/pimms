@@ -23,6 +23,7 @@ GRID = {k:config[k]
 
 name_template= config['name_template']
 
+folder_grid_search = config['folder_grid_search']
 folder_experiment = config['folder_experiment']
 folder_experiment2 = config['folder_experiment2'] # expand fct, replaces single {} by double {{}}
 
@@ -30,10 +31,10 @@ rule all:
     input:
         expand(
             f"{folder_experiment}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
-            #"runs/grid_search/{level}/hyperpar_{split}.pdf",
+            #"{folder_grid_search}/{level}/hyperpar_{split}.pdf",
         level=config['levels'],
         split=["test_fake_na", "valid_fake_na"]),
-        'runs/grid_search/average_performance_over_data_levels_best.pdf'
+        f'{folder_grid_search}/average_performance_over_data_levels_best.pdf'
 
 rule results:
     input:     
@@ -54,9 +55,9 @@ rule compare_search_by_dataset:
         expand(f'{folder_experiment}/metrics_long_df.csv',
         level=config['levels'])
     output:
-        'runs/grid_search/average_performance_over_data_levels_best.pdf'
+        f'{folder_grid_search}/average_performance_over_data_levels_best.pdf'
     log:
-        notebook="runs/grid_search/best_models_over_all_data.ipynb"
+        notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb"
     notebook:
         "14_best_models_over_all_data.ipynb"
 
