@@ -301,7 +301,8 @@ ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
                       last_decoder_activation=None,
                       dim_latent=args.latent_dim),
     transform=vae_default_pipeline,
-    decode=['normalize'])
+    decode=['normalize'],
+    bs=args.batch_size)
 args.n_params_vae = ana_vae.n_params_ae
 if args.cuda:
     ana_vae.model = ana_vae.model.cuda()

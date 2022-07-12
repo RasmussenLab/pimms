@@ -114,6 +114,7 @@ rule build_train_config:
              f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     params:
         folder_data=f"{folder_experiment}/data/",
+        batch_size=config['batch_size']
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -122,6 +123,7 @@ rule build_train_config:
         config['hidden_layers'] = wildcards['hidden_layers']
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
+        config['batch_size'] = params.batch_size
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
 
