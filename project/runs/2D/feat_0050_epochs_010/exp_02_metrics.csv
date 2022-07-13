@@ -1,3 +1,0 @@
-,train_median,train_average,replicates,intensity_pred_collab,intensity_pred_dae,intensity_pred_vae
-MSE,2.045,1.985,1.675,0.620,0.651,1.846
-MAE,1.016,1.037,0.874,0.488,0.512,0.990
