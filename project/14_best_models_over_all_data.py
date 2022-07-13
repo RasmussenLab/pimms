@@ -21,6 +21,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
+import seaborn
 
 import vaep.plotting
 
@@ -34,6 +35,7 @@ pd.options.display.max_rows = 110
 pd.options.display.multi_sparse = False
 
 plt.rcParams['figure.figsize'] = [16.0, 7.0]
+seaborn.set_theme()
 
 vaep.plotting.make_large_descriptors()
 
@@ -100,7 +102,7 @@ display(text.to_frame('text'))
 _to_plot
 
 # %%
-ax = _to_plot.plot.bar(rot=0, ylabel=METRIC)
+ax = _to_plot.plot.bar(rot=0, ylabel=METRIC, width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
@@ -178,9 +180,12 @@ ax = (to_plot
       .loc[order_model, order_categories['data level']]
       .plot.bar(
           xlabel="model with overall best performance for all datasets",
-          rot=45)
+          rot=45,
+          width=.8)
       )
 fig = ax.get_figure()
+ax = vaep.plotting.add_height_to_barplot(ax)
+fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
 
 # %%
