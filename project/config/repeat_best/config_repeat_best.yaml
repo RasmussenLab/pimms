@@ -1,0 +1,11 @@
+epochs_max:
+- 100
+batch_size: 64
+repeats: 5
+folder: "runs/repeat_best"
+levels:
+- proteinGroups
+- aggPeptides
+- evidence 
+config_split: 'config/{level}_split.yaml'
+config_train: 'config/{level}_train.yaml'
