@@ -34,7 +34,7 @@ rule plot:
     output:
         f"{config['folder']}/model_performance_repeated_runs.pdf"
     log:
-        f"{config['folder']}/14_best_models_repeated.ipynb"
+        notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
     notebook:
         "14_best_models_repeated.ipynb"
 
