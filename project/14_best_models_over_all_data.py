@@ -175,7 +175,7 @@ to_plot['model annotated'] = to_plot['model'] + ' - ' + to_plot['text']
 order_model = to_plot['model annotated'].drop_duplicates().to_list()
 
 to_plot = to_plot.drop_duplicates(subset=['model', 'data level', 'metric_value'])
-to_plot.to_csv(f"{fname}.csv")
+to_plot.to_csv(FOLDER /f"{fname}.csv")
 to_plot
 
 # %%
