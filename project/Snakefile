@@ -1,13 +1,14 @@
 """
 Document how all the notebooks for a single experiment are connected.
 """
+from snakemake.logging import logger
 
 configfile: "config/proteinGroups.yaml"
 
 folder_experiment = config['folder_experiment']
 
 
-# print(f"{folder_experiment = }")
+logger.info(f"{folder_experiment = }")
 
 rule all:
     input: 
@@ -17,17 +18,6 @@ rule all:
                 '14_experiment_03_train_dae.ipynb',
                 '14_experiment_03_train_vae.ipynb'
                 ])
-
-# # rule template
-
-# nb = '.ipynb'
-# rule name:
-#     input:
-#         nb=nb,
-#     output:
-#         nb=f"{nb_outfolder}/{nb}",
-#     shell:
-#         "papermill {input.nb} {output.nb}"
 
 
 # separate workflow by level -> provide custom configs
