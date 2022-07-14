@@ -66,6 +66,9 @@ metrics_long.loc[metrics_long['model'].isin(['interpolated', 'median']), ['laten
 metrics_long['hidden_layers'] = metrics_long['hidden_layers'].fillna('-')
 metrics_long['text'] = 'LD: ' + metrics_long['latent_dim'].astype(str) + ' HL: ' + metrics_long['hidden_layers']
 
+fname = 'metrics_long'
+metrics_long.to_csv(FOLDER / f'{fname}.csv')
+metrics_long.to_excel(FOLDER / f'{fname}.xlsx')
 
 metrics_long[['latent_dim', 'hidden_layers', 'model', 'text', ]]
 
@@ -98,6 +101,7 @@ _to_plot.index.name = ''
 text = _to_plot['text'].unstack().loc[IDX_ORDER].unstack()
 _to_plot = _to_plot['metric_value'].unstack().loc[IDX_ORDER]
 _to_plot.to_csv(FOLDER / f'{fname}.csv')
+_to_plot.to_excel(FOLDER / f'{fname}.xlsx')
 display(text.to_frame('text'))
 _to_plot
 
@@ -120,6 +124,7 @@ _to_plot = _to_plot.set_index(['data level', 'model'])[
 
 _to_plot = _to_plot.loc[pd.IndexSlice[IDX_ORDER], :]
 _to_plot.to_csv(FOLDER / f"{fname}.csv")
+_to_plot.to_excel(FOLDER / f"{fname}.xlsx")
 _to_plot
 
 # %%
