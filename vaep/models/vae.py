@@ -86,7 +86,7 @@ class VAE(nn.Module):
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5*logvar)
-        return mu + torch.cuda.FloatTensor(std.shape).normal_() * std
+        return mu + torch.randn_like(std) * std
 
     def forward(self, x):
         z_mu, z_logvar = self.encode(x)
