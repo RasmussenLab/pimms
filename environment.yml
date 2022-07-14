@@ -47,6 +47,7 @@ dependencies:
   # dev
   - pytest
   - pytest-cov
+  - jupytext
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
