@@ -94,6 +94,7 @@ metrics = metrics.T.sort_index().loc[pd.IndexSlice[['NA interpolated', 'NA not i
                                          ['median', 'interpolated', 'collab', 'DAE', 'VAE'],
                                          :]]
 metrics.to_csv(FOLDER/ "metrics.csv")
+metrics.to_excel(FOLDER/ "metrics.xlsx")
 metrics
 
 # %%
@@ -108,6 +109,7 @@ to_plot = selected.loc[level].loc[split].loc[pd.IndexSlice[:,'MAE',:]]
 to_plot = to_plot.stack().unstack('repeat').T.describe().loc[['mean','std']].T.unstack(0)
 to_plot = to_plot.loc[IDX[0], pd.IndexSlice[:, IDX[1]]]
 to_plot.to_csv(FOLDER/ "model_performance_repeated_runs_avg.csv")
+to_plot.to_excel(FOLDER/ "model_performance_repeated_runs_avg.xlsx")
 to_plot
 
 # %%
