@@ -1,4 +1,2 @@
 file_format: pkl
 latent_dim: 75
-hidden_layers: "512"
-

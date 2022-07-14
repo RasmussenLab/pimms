@@ -1,4 +1,4 @@
 file_format: pkl
-latent_dim: 10
-hidden_layers: "1024"
+latent_dim: 75
+hidden_layers: "2056"
 batch_size: 64
