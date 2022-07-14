@@ -1,10 +1,34 @@
-import pathlib
-import logging
-
-import matplotlib
-import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
+import matplotlib
+import logging
+import pathlib
+import matplotlib.pyplot as plt
+import seaborn
+
+plt.rcParams['figure.figsize'] = [16.0, 7.0]
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+
+seaborn.set_theme()
+
+
+labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
+               'batch_size_collab': 'bs',
+               'n_hidden_layers': "No. of hidden layers",
+               'latent_dim': 'hidden layer dimension',
+               'subset_w_N': 'subset',
+               'n_params': 'no. of parameter',
+               "metric_value": 'value',
+               'metric_name': 'metric',
+               }
+
+order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+                    'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
+
+IDX_ORDER = (['proteinGroups', 'aggPeptides', 'evidence'],
+             ['median', 'interpolated', 'collab', 'DAE', 'VAE'])
+
 
 logger = logging.getLogger(__name__)
 
@@ -138,6 +162,7 @@ def add_text_to_barplot(ax, text, size=15):
                     size=size,
                     textcoords='offset points')
     return ax
+
 
 def format_large_numbers(ax: matplotlib.axes.Axes,
                          format_str: str = '{x:,.0f}') -> matplotlib.axes.Axes:
