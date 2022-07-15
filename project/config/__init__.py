@@ -1,3 +1,6 @@
+# src.config goes here
+# import src.config -> import config
+
 """
 Project config file.
 
@@ -7,6 +10,8 @@ os to pathlib functionaly, see
 https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os-module
 
 """
+import vaep.io
+import logging
 import os
 import yaml
 from collections import namedtuple
@@ -17,13 +22,12 @@ import numpy as np
 import pandas
 import matplotlib as mpl
 
+
 def mkdir(path=Path):
     path.mkdir(exist_ok=True, parents=True)
     return path
 
-import vaep.io
 
-import logging
 logger = logging.getLogger('vaep')
 
 ###############################################################################
@@ -140,15 +144,19 @@ fasta_entry = FastaEntry(*KEYS_FASTA_ENTRY)
 
 FILEPATH_UTILS = 'src/file_utils.py'
 
-FNAME_C_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json' # aggregated peptides
-FNAME_C_EVIDENCE = FOLDER_PROCESSED / 'count_all_evidences.json' # evidence peptides (sequence, charge, modification)
+FNAME_C_PEPTIDES = FOLDER_PROCESSED / \
+    'count_all_peptides.json'  # aggregated peptides
+# evidence peptides (sequence, charge, modification)
+FNAME_C_EVIDENCE = FOLDER_PROCESSED / 'count_all_evidences.json'
 
 FNAME_C_PG = FOLDER_PROCESSED / 'count_all_protein_groups.json'
 FNAME_C_GENES = FOLDER_PROCESSED / 'count_all_genes.json'
 
+
 def build_df_fname(df: pandas.DataFrame, stub: str) -> str:
     N, M = df.shape
     return f'{stub}_N{N:05d}_M{M:05d}'
+
 
 def insert_shape(df: pandas.DataFrame, template: str = "filename{}.txt", shape=None):
     if shape is None:
@@ -204,13 +212,12 @@ class Config():
                 fname = self.out_folder
                 fname = Path(fname) / 'model_config.yml'
             except AttributeError:
-                raise AttributeError('Specify fname or set "out_folder" attribute.')
+                raise AttributeError(
+                    'Specify fname or set "out_folder" attribute.')
         d = vaep.io.parse_dict(input_dict=self.__dict__)
         with open(fname, 'w') as f:
             yaml.dump(d, f)
         logger.info(f"Dumped config to: {fname}")
-
-
 
 
 if __name__ == '__main__':
@@ -218,4 +225,3 @@ if __name__ == '__main__':
     cfg.test = 'test'
     print(cfg.test)
     cfg.test = 'raise ValueError'
-
