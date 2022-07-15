@@ -21,7 +21,6 @@ from pathlib import Path
 from pprint import pprint
 from typing import Union, List
 
-from src.nb_imports import *
 
 import plotly.express as px
 
@@ -63,8 +62,8 @@ from vaep.io import datasplits
 # from vaep.io.dataloaders import get_dls, get_test_dl
 from vaep import sampling
 
-import src
-from src import config
+
+import vaep.nb as config
 from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
