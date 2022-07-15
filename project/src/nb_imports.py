@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import torch
 
-from src import config
+# from src import config
 from vaep.analyzers.analyzers import Analysis, AnalyzePeptides
 from vaep.analyzers import analyzers
 
