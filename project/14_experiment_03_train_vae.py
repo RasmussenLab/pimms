@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -191,9 +191,6 @@ else:
 # %%
 df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
 df_meta.loc[data.train_X.index.levels[0]]
-
-# %%
-torch.cuda.current_device(), torch.cuda.memory_allocated() 
 
 # %% [markdown]
 # ## Initialize Comparison
