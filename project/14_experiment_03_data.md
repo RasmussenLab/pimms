@@ -6,7 +6,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.13.8
+      jupytext_version: 1.14.0
   kernelspec:
     display_name: Python 3
     language: python
@@ -23,19 +23,27 @@ from dataclasses import dataclass
 import logging
 from pathlib import Path
 from pprint import pprint
-from src.nb_imports import *
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
 pd.options.display.max_columns = 32
 
 import plotly.express as px
 
 from omegaconf import OmegaConf
 from sklearn.neighbors import NearestNeighbors
+
+import vaep
 from vaep.pandas import interpolate, parse_query_expression
 from vaep.io.datasplits import DataSplits
 from vaep.io import thermo_raw_files
 from vaep.sampling import feature_frequency, frequency_by_index, sample_data
 
-import src
+from vaep.analyzers import analyzers
+from vaep.analyzers.analyzers import  AnalyzePeptides
+
 from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'))
 logger.info("Experiment 03 - data")
