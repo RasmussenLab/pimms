@@ -543,10 +543,10 @@ splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
 #
 
 # %%
-ana_train_X = analyzers.AnalyzePeptides(data=splits.train_X, is_wide_format=False, ind_unstack=splits.train_X.index.names[1:])
-figures['pca_train'] = ana_train_X.plot_pca()
-vaep.savefig(figures['pca_train'], folder_figures / f'pca_plot_raw_data_w_filename_meta_{ana_train_X.fname_stub}')
-# ana_train_X = add_meta_data(ana_train_X) # inplace, returns ana_train_X
+# ana_train_X = analyzers.AnalyzePeptides(data=splits.train_X, is_wide_format=False, ind_unstack=splits.train_X.index.names[1:])
+# figures['pca_train'] = ana_train_X.plot_pca()
+# vaep.savefig(figures['pca_train'], folder_figures / f'pca_plot_raw_data_w_filename_meta_{ana_train_X.fname_stub}')
+# # ana_train_X = add_meta_data(ana_train_X) # inplace, returns ana_train_X
 
 # %% [markdown]
 # ## Save parameters
