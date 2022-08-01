@@ -29,7 +29,7 @@ rule create_splits:
     output:
         train_split="{folder_experiment}/data/train_X.pkl",
         nb="{folder_experiment}"
-           f"/{nb}",
+           f"/{nb}"
     params:
         folder_experiment="{folder_experiment}"
     shell:
