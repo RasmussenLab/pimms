@@ -34,3 +34,12 @@ snakemake --snakefile workflow/Snakefile_GRID.smk --configfile config/other.yaml
 ```bash
 snakemake --snakefile workflow/Snakefile_GRID.smk -n -p
 ```
+
+### Repeated trainign of models across machine datasets
+
+- see how model perform across similar datasets
+
+
+```
+snakemake --snakefile workflow\Snakefile_across_datasets.smk -p -c1 -n
+```
