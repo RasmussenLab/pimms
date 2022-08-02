@@ -36,33 +36,18 @@ plt.rcParams['figure.figsize'] = [16.0, 7.0]
 IDX =[['proteinGroups', 'aggPeptides', 'evidence'],
       ['median', 'interpolated', 'collab', 'DAE', 'VAE']]
 
-REPITITION_NAME = 'repeat'
-
+REPITITION_NAME = 'dataset'
 
 # %%
-def select_content(s:str):
-    s = s.split('metrics_')[1]
-    assert isinstance(s, str), f"More than one split: {s}"
-    model, repeat = s.split('_')
-    return model, int(repeat)
-    
-test_cases = ['model_metrics_DAE_0',
-              'model_metrics_VAE_3',
-              'model_metrics_collab_2']
- 
-for test_case in test_cases:
-    print(f"{test_case} = {select_content(test_case)}")
+# key fully specified in path 
 
 # %%
 all_metrics = {}
 for fname in snakemake.input.metrics:
     fname = Path(fname)
     logger.info(f"Load file: {fname = }")
-    model, repeat = select_content(fname.stem)
-    # key = f"{fname.parents[1].name}_{model}_{repeat}"
-    key = (fname.parents[1].name, repeat)
-    # if key in all_metrics:
-    #     raise KeyError(f"Key already in use: {key}")
+
+    key = ( fname.parents[2].name, fname.parents[1].name) # level, dataset
         
     logger.debug(f"{key = }")
     with open(fname) as f:
@@ -87,7 +72,7 @@ metrics.index.names = ('data level', REPITITION_NAME)
 metrics
 
 # %%
-FOLDER = fname.parent.parent.parent
+FOLDER = fname.parents[3]
 FOLDER
 
 # %%
