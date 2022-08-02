@@ -83,7 +83,7 @@ column_names: List = None # Manuelly set column names
 ```
 ```python
 # # # evidence
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 ```
@@ -235,6 +235,7 @@ mask = sample_counts > params.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 print(msg)
 analysis.df = analysis.df.loc[mask]
+analysis.df = analysis.df.dropna(axis=1, how='all') # drop now missing features
 ```
 
 ```python
@@ -244,6 +245,7 @@ params.used_samples = analysis.df.index.to_list()
 ```python
 ax = analysis.df.T.describe().loc['count'].hist()
 _ = ax.set_title('histogram of features for all eligable samples')
+vaep.savefig(ax.get_figure(), 'feature_distribution_overall', folder=folder_figures)
 ```
 
 ## Machine metadata
@@ -338,7 +340,7 @@ def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
         logger.warning("Ignore missing samples in quantified samples")
         analysis.df = analysis.df.loc[analysis.df.index.intersection(df_meta.index)]
 
-    analysis.df_meta = df_meta # ToDo: Don't have preset metadata from filename
+    analysis.df_meta = df_meta
     return analysis
 
 analysis = add_meta_data(analysis, df_meta=df_meta)
