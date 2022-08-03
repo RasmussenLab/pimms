@@ -19,19 +19,20 @@
 # %%
 from pathlib import Path
 import pandas as pd
+import vaep
 
 # %%
-file = 'data/applications/ald_proteome_spectronaut.csv'
+file = 'data/applications/ald_proteome_spectronaut.tsv'
 
 # %%
-data = pd.read_csv(file, delimiter=';', low_memory=False)
+data = pd.read_table(file, low_memory=False)
 data.shape
 
 # %%
 data
 
 # %%
-data.iloc[:,:8].describe()
+data.iloc[:,:8].describe(include='all')
 
 # %%
 column_types = data.iloc[:,8:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
@@ -99,9 +100,17 @@ sel_data = data.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2]
 sel_data
 
 # %%
-sel_data.squeeze().dropna().unstack()
+sel_data = sel_data.squeeze().dropna().astype(float).unstack()
+sel_data
 
 # %%
+idx = sel_data.index.to_series()
+idx = idx.str.extract(r'(Plate[\d]_[A-H]\d*)').squeeze()
+idx.name = 'Sample ID'
+idx.describe()
+
+# %%
+sel_data = sel_data.set_index(idx)
 sel_data.to_pickle('data/single_datasets/ald_aggPeptides_spectronaut.pkl')
 
 # %%
