@@ -25,7 +25,7 @@ rule plot:
     log:
         notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
     notebook:
-        "../14_across_datasets.ipynb"
+        "../14_best_models_repeated.ipynb"
 
 
 rule collect_metrics:

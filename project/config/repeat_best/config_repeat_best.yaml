@@ -9,3 +9,4 @@ levels:
 - evidence 
 config_split: 'config/{level}_split.yaml'
 config_train: 'config/{level}_train.yaml'
+repitition_name: 'repeat'

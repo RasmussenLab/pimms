@@ -23,7 +23,6 @@ import seaborn as sns
 
 import vaep.pandas
 import vaep.nb
-import vaep.models
 
 import logging
 from vaep.logging import setup_logger
@@ -37,45 +36,16 @@ plt.rcParams['figure.figsize'] = [16.0, 7.0]
 IDX =[['proteinGroups', 'aggPeptides', 'evidence'],
       ['median', 'interpolated', 'collab', 'DAE', 'VAE']]
 
-REPITITION_NAME = 'repeat'
+REPITITION_NAME = snakemake.params.repitition_name # 'dataset', 'repeat'
 
-
-# %%
-def select_content(s:str):
-    s = s.split('metrics_')[1]
-    assert isinstance(s, str), f"More than one split: {s}"
-    model, repeat = s.split('_')
-    return model, int(repeat)
-    
-test_cases = ['model_metrics_DAE_0',
-              'model_metrics_VAE_3',
-              'model_metrics_collab_2']
- 
-for test_case in test_cases:
-    print(f"{test_case} = {select_content(test_case)}")
-
-def key_from_fname(fname:Path):
-    model, repeat = select_content(fname.stem)
-    key = (fname.parents[1].name, repeat)
-    return key
+metrics_fname = Path(snakemake.input.metrics)
 
 # %%
-all_metrics = vaep.models.collect_metrics(snakemake.input.metrics, key_from_fname)
-metrics = pd.DataFrame(all_metrics).T
-metrics.index.names = ('data level', REPITITION_NAME)
-metrics
-
-# %%
-FOLDER = Path(snakemake.input.metrics[0]).parents[2]
+FOLDER = metrics_fname.parent
 FOLDER
 
 # %%
-metrics = metrics.T.sort_index().loc[pd.IndexSlice[['NA interpolated', 'NA not interpolated'],
-                                         ['valid_fake_na', 'test_fake_na'],
-                                         ['median', 'interpolated', 'collab', 'DAE', 'VAE'],
-                                         :]]
-metrics.to_csv(FOLDER/ "metrics.csv")
-metrics.to_excel(FOLDER/ "metrics.xlsx")
+metrics = pd.read_pickle(metrics_fname)
 metrics
 
 # %%
@@ -103,7 +73,6 @@ selected = metrics.loc[pd.IndexSlice[level,
                           split,
                           :, 'MAE']].stack(1)
 selected.index.names = ('x', 'split', 'model', 'metric', REPITITION_NAME)
-# # selected.reset_index()
 selected.stack().to_frame('MAE').reset_index()
 
 # %%
@@ -117,5 +86,3 @@ fig = ax.get_figure()
 
 # %%
 vaep.savefig(fig, FOLDER/ "model_performance_repeated_runs.pdf" )
-
-# %%
