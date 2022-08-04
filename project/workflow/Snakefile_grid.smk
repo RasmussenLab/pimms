@@ -82,8 +82,8 @@ rule train_ae_models:
                    f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     output:
         nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_HL_{{hidden_layers}}_{{ae_model}}.ipynb",
-        metric=f"{folder_experiment}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
-        config=f"{folder_experiment}/{name_template}/models/model_config_HL_{{hidden_layers}}_{{ae_model}}.yaml"
+        metric=f"{folder_experiment}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
+        config=f"{folder_experiment}/{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml"
     params:
         folder_experiment=f"{folder_experiment}/{name_template}",
         model_key="HL_{hidden_layers}_{ae_model}"
@@ -114,7 +114,8 @@ rule build_train_config:
              f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     params:
         folder_data=f"{folder_experiment}/data/",
-        batch_size=config['batch_size']
+        batch_size=config['batch_size'],
+        cuda=config['cuda']
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -124,6 +125,7 @@ rule build_train_config:
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
         config['batch_size'] = params.batch_size
+        config['cuda'] = params.cuda
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
 
@@ -132,7 +134,8 @@ rule build_train_config_collab:
         config_train=f"{folder_experiment}/"
             f"{name_template}/config_train_collab.yaml"
     params:
-        folder_data=f"{folder_experiment}/data/"
+        folder_data=f"{folder_experiment}/data/",
+        cuda=config['cuda'] 
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -141,6 +144,7 @@ rule build_train_config_collab:
         
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
+        config['cuda'] = params.cuda
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
 
@@ -148,7 +152,7 @@ rule build_train_config_collab:
 rule collect_all_configs:
     input:
         expand(f"{folder_experiment2}/"
-              f"{name_template}/models/model_config_HL_{{hidden_layers}}_{{ae_model}}.yaml",
+              f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml",
                 **GRID,
                 ae_model=['dae', 'vae']),
         expand(f"{folder_experiment2}/{name_template}/models/model_config_{{collab_model}}.yaml",
@@ -164,7 +168,7 @@ rule collect_all_configs:
 
 rule collect_metrics:
     input:
-        expand(f"{folder_experiment2}/{name_template}/metrics/metrics_HL_{{hidden_layers}}_{{ae_model}}.json",
+        expand(f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
             ae_model=['dae', 'vae'],
             **GRID),
         expand(f"{folder_experiment2}/{name_template}/metrics/metrics_{{collab_model}}.json",
