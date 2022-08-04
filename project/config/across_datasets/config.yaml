@@ -18,3 +18,4 @@ data_folders:
     evidence: df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321
     aggPeptides: df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725
     proteinGroups: df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547
+repitition_name: dataset
