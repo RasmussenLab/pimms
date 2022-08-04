@@ -4,7 +4,7 @@ configfile: f'{config_folder}/config.yaml'
 
 
 folder_experiment = config['folder'] + "/{level}"
-# folder_experiment = config['folder'] + "/{level}" + "/{dataset}"
+# folder_experiment = config['folder'] + "/{level}" + "/{dataset}" # Possibility
 folder_experiment2 = config['folder'] + "/{{level}}"
 
 config['folder_experiment'] = folder_experiment
@@ -16,6 +16,19 @@ rule all:
 
 
 rule plot:
+    input:
+        metrics=f"{config['folder']}/metrics.pkl"
+    output:
+        f"{config['folder']}/model_performance_repeated_runs.pdf"
+    params:
+        repitition_name=config['repitition_name']
+    log:
+        notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
+    notebook:
+        "../14_across_datasets.ipynb"
+
+
+rule collect_metrics:
     input:
         configs=expand(
             f"{folder_experiment}/{{dataset}}/models/model_config_{{model}}.yaml",
@@ -30,12 +43,36 @@ rule plot:
             dataset=config['datasets']
         ),
     output:
-        f"{config['folder']}/model_performance_repeated_runs.pdf"
-    log:
-        notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
-    notebook:
-        "../14_across_datasets.ipynb"
+        f"{config['folder']}/metrics.pkl"
+    params:
+        folder=config['folder'],
+        repitition_name=config['repitition_name']
+    run:
+        from pathlib import Path
+        import pandas as pd
+        import vaep.models
 
+        REPITITION_NAME=params.repitition_name
+
+        # key fully specified in path 
+        def key_from_fname(fname):
+            key = (fname.parents[2].name, fname.parents[1].name) 
+            return key
+
+        all_metrics = vaep.models.collect_metrics(input.metrics, key_from_fname)
+        metrics = pd.DataFrame(all_metrics).T
+        metrics.index.names = ('data level', REPITITION_NAME)
+        metrics
+
+        FOLDER = Path(params.folder)
+
+        metrics = metrics.T.sort_index().loc[pd.IndexSlice[['NA interpolated', 'NA not interpolated'],
+                                                ['valid_fake_na', 'test_fake_na'],
+                                                ['median', 'interpolated', 'collab', 'DAE', 'VAE'],
+                                                :]]
+        metrics.to_csv(FOLDER/ "metrics.csv")
+        metrics.to_excel(FOLDER/ "metrics.xlsx")
+        metrics.to_pickle(FOLDER/ "metrics.pkl")
 
 def get_fn_intensities(wildcards):
     """Some metadata is stored in folder name which leads to the need for a lookup of names"""
