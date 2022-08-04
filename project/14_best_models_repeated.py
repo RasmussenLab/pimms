@@ -23,6 +23,7 @@ import seaborn as sns
 
 import vaep.pandas
 import vaep.nb
+import vaep.models
 
 import logging
 from vaep.logging import setup_logger
@@ -53,41 +54,19 @@ test_cases = ['model_metrics_DAE_0',
 for test_case in test_cases:
     print(f"{test_case} = {select_content(test_case)}")
 
-# %%
-all_metrics = {}
-for fname in snakemake.input.metrics:
-    fname = Path(fname)
-    logger.info(f"Load file: {fname = }")
+def key_from_fname(fname:Path):
     model, repeat = select_content(fname.stem)
-    # key = f"{fname.parents[1].name}_{model}_{repeat}"
     key = (fname.parents[1].name, repeat)
-    # if key in all_metrics:
-    #     raise KeyError(f"Key already in use: {key}")
-        
-    logger.debug(f"{key = }")
-    with open(fname) as f:
-        loaded = json.load(f)
-    loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
-    
-    if key not in all_metrics:
-        all_metrics[key] = loaded
-        continue
-    for k, v in loaded.items():
-        if k in all_metrics[key]:
-            logger.debug(f"Found existing key: {k = } ")
-            assert all_metrics[key][k] == v, "Diverging values for {k}: {v1} vs {v2}".format(
-                k=k,
-                v1=all_metrics[key][k],
-                v2=v)
-        else:
-            all_metrics[key][k] = v
-        # raise ValueError()
+    return key
+
+# %%
+all_metrics = vaep.models.collect_metrics(snakemake.input.metrics, key_from_fname)
 metrics = pd.DataFrame(all_metrics).T
 metrics.index.names = ('data level', REPITITION_NAME)
 metrics
 
 # %%
-FOLDER = fname.parent.parent.parent
+FOLDER = Path(snakemake.input.metrics[0]).parents[2]
 FOLDER
 
 # %%

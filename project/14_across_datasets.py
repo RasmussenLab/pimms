@@ -23,6 +23,7 @@ import seaborn as sns
 
 import vaep.pandas
 import vaep.nb
+import vaep.models
 
 import logging
 from vaep.logging import setup_logger
@@ -40,39 +41,18 @@ REPITITION_NAME = 'dataset'
 
 # %%
 # key fully specified in path 
+def key_from_fname(fname):
+    key = ( fname.parents[2].name, fname.parents[1].name) 
+    return key
 
 # %%
-all_metrics = {}
-for fname in snakemake.input.metrics:
-    fname = Path(fname)
-    logger.info(f"Load file: {fname = }")
-
-    key = ( fname.parents[2].name, fname.parents[1].name) # level, dataset
-        
-    logger.debug(f"{key = }")
-    with open(fname) as f:
-        loaded = json.load(f)
-    loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
-    
-    if key not in all_metrics:
-        all_metrics[key] = loaded
-        continue
-    for k, v in loaded.items():
-        if k in all_metrics[key]:
-            logger.debug(f"Found existing key: {k = } ")
-            assert all_metrics[key][k] == v, "Diverging values for {k}: {v1} vs {v2}".format(
-                k=k,
-                v1=all_metrics[key][k],
-                v2=v)
-        else:
-            all_metrics[key][k] = v
-        # raise ValueError()
+all_metrics = vaep.models.collect_metrics(snakemake.input.metrics, key_from_fname)
 metrics = pd.DataFrame(all_metrics).T
 metrics.index.names = ('data level', REPITITION_NAME)
 metrics
 
 # %%
-FOLDER = fname.parents[3]
+FOLDER = Path(snakemake.input.metrics[0]).parents[3]
 FOLDER
 
 # %%
