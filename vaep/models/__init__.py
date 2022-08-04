@@ -5,6 +5,7 @@ from pathlib import Path
 import pickle
 import pprint
 from typing import Tuple, List, Callable
+import json
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -180,9 +181,58 @@ scoring = [('MSE', sklm.mean_squared_error),
            ('MAE', sklm.mean_absolute_error)]
 
 
-def get_metrics_df(pred_df: pd.DataFrame,
+
+def collect_metrics(metrics_jsons:List, key_fct: Callable) -> dict:
+    """Collect and aggregate a bunch of json metrics.
+
+    Parameters
+    ----------
+    metrics_jsons : List
+        list of filepaths to json metric files
+    key_fct : Callable
+        Callable which creates key function of a single filepath
+
+    Returns
+    -------
+    dict
+        Aggregated metrics dictionary with outer key defined by key_fct
+
+    Raises
+    ------
+    AssertionError:
+        If key should be overwritten, but value would change.
+    """
+    all_metrics = {}
+    for fname in metrics_jsons:
+        fname = Path(fname)
+        logger.info(f"Load file: {fname = }")
+
+        key = key_fct(fname) # level, repeat
+
+        logger.debug(f"{key = }")
+        with open(fname) as f:
+            loaded = json.load(f)
+        loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
+
+        if key not in all_metrics:
+            all_metrics[key] = loaded
+            continue
+        for k, v in loaded.items():
+            if k in all_metrics[key]:
+                logger.debug(f"Found existing key: {k = } ")
+                assert all_metrics[key][k] == v, "Diverging values for {k}: {v1} vs {v2}".format(
+                    k=k,
+                    v1=all_metrics[key][k],
+                    v2=v)
+            else:
+                all_metrics[key][k] = v
+    return all_metrics
+
+
+
+def calculte_metrics(pred_df: pd.DataFrame,
                    true_col: List[str] = None,
-                   scoring: List[Tuple[str, Callable]] = scoring) -> pd.DataFrame:
+                   scoring: List[Tuple[str, Callable]] = scoring) -> dict:
     """Create metrics based on predictions, a truth reference and a
     list of scoring function with a name.
 
@@ -260,12 +310,12 @@ class Metrics():
         self.metrics = {self.no_na_key: {}, self.with_na_key: {}}
 
     def add_metrics(self, pred, key):
-        self.metrics[self.no_na_key][key] = get_metrics_df(
+        self.metrics[self.no_na_key][key] = calculte_metrics(
             pred_df=pred.dropna())
         mask_na = pred.isna().any(axis=1)
         # assert (~mask_na).sum() + mask_na.sum() == len(pred)
         if mask_na.sum():
-            self.metrics[self.with_na_key][key] = get_metrics_df(
+            self.metrics[self.with_na_key][key] = calculte_metrics(
                 pred_df=pred.loc[mask_na].drop(self.na_column_to_drop, axis=1))
         else:
             self.metrics[self.with_na_key][key] = None
