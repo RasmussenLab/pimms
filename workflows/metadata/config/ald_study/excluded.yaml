@@ -1,0 +1,3 @@
+excluded:
+# ERROR Unable to access the RAW file using the native Thermo library.
+ ? 20211014_EXPL3_PRIEvosep2_LiNi_SA_Plasma_ALD_Plate2_C1.raw 
