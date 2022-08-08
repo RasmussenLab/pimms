@@ -23,6 +23,15 @@ files:
 
 The list of files is fetched from [`project/04_all_raw_files.ipynb`](../../project/04_all_raw_files.ipynb) notebook.
 
+
+Then invoke the workflow with the list of config files
+
+```bash
+# dry-run
+snakemake --configfiles config/ald_study/config.yaml config/ald_study/excluded.yaml -p -n
+```
+
+
 ### Excluded files
 
 Some files might be corrupted and not be processed by `ThermoRawFileParser`. These can be
