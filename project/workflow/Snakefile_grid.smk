@@ -48,7 +48,7 @@ rule results:
     log:
         notebook=f"{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
     notebook:
-        "14_experiment_03_hyperpara_analysis.ipynb"
+        "../14_experiment_03_hyperpara_analysis.ipynb"
 
 rule compare_search_by_dataset:
     input:
@@ -59,7 +59,7 @@ rule compare_search_by_dataset:
     log:
         notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb"
     notebook:
-        "14_best_models_over_all_data.ipynb"
+        "../14_best_models_over_all_data.ipynb"
 
 nb='14_experiment_03_data.ipynb'
 use rule create_splits from single_experiment as splits with:
@@ -87,6 +87,7 @@ rule train_ae_models:
     params:
         folder_experiment=f"{folder_experiment}/{name_template}",
         model_key="HL_{hidden_layers}_{ae_model}"
+    threads: 10
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -104,6 +105,7 @@ use rule train_models from single_experiment as train_collab_model with:
         nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_{{collab_model}}.ipynb",
         metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{collab_model}}.json",
         config=f"{folder_experiment}/{name_template}/models/model_config_{{collab_model}}.yaml"
+    threads: 10
     params:
         folder_experiment=f"{folder_experiment}/{name_template}"
 
@@ -163,7 +165,7 @@ rule collect_all_configs:
     log:
         notebook=f"{folder_experiment}/14_aggregate_configs.ipynb"
     notebook:
-        "14_aggregate_configs.py.ipynb"
+        "../14_aggregate_configs.py.ipynb"
 
 
 rule collect_metrics:
@@ -179,4 +181,4 @@ rule collect_metrics:
     log:
         notebook=f"{folder_experiment}/14_collect_all_metrics.ipynb"
     notebook:
-        "14_collect_all_metrics.py.ipynb"
+        "../14_collect_all_metrics.py.ipynb"
