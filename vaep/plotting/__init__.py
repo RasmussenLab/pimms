@@ -6,6 +6,8 @@ import pathlib
 import matplotlib.pyplot as plt
 import seaborn
 
+import vaep.pandas
+
 plt.rcParams['figure.figsize'] = [16.0, 7.0]
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
@@ -184,4 +186,69 @@ def format_large_numbers(ax: matplotlib.axes.Axes,
         matplotlib.ticker.StrMethodFormatter(format_str))
     ax.yaxis.set_major_formatter(
         matplotlib.ticker.StrMethodFormatter(format_str))
+    return ax
+
+
+def plot_feat_counts(df_counts:pd.DataFrame, feat_name:str, n_samples:int,
+                     ax=None, figsize=(15, 10),
+                     count_col='counts',
+                     **kwargs):
+    args = dict(
+        ylabel='count',
+        xlabel=f'{feat_name} ordered by completeness',
+        title=f'Count and proportion of {len(df_counts):,d} {feat_name}s over {n_samples:,d} samples',
+    )
+    args.update(kwargs)
+    
+    ax = df_counts[count_col].plot(
+        figsize=figsize,
+
+        grid=True,
+        ax=ax,
+        **args)
+
+    # default nearly okay, but rather customize to see minimal and maxium proportion
+    # ax = peptide_counts['proportion'].plot(secondary_y=True, style='b')
+
+    ax2 = add_prop_as_second_yaxis(ax=ax, n_samples=n_samples)
+    ax2.set_ylabel('proportion')
+    ax = format_large_numbers(ax=ax)
+    return ax
+
+
+def plot_counts(df_counts: pd.DataFrame, n_samples,
+                feat_col_name:str='count',
+                feature_name=None, 
+                ax=None, prop_feat=0.25, min_feat_prop=.01,
+                **kwargs):
+    """Plot counts based on get_df_counts."""
+    if feature_name is None:
+        feature_name = feat_col_name
+    # df_counts = df_counts[[feat_col_name]].copy()
+    ax = plot_feat_counts(df_counts,
+                          feat_name=feature_name,
+                          n_samples=n_samples,
+                          count_col=feat_col_name,
+                          ax=ax, **kwargs)
+    df_counts['prop'] = df_counts[feat_col_name] / n_samples
+    n_feat_cutoff = vaep.pandas.get_last_index_matching_proportion(
+    df_counts=df_counts, prop=prop_feat, prop_col='prop')
+    n_samples_cutoff = df_counts.loc[n_feat_cutoff, feat_col_name]
+    logger.info(f'{n_feat_cutoff = }, {n_samples_cutoff = }')
+    x_lim_max = vaep.pandas.get_last_index_matching_proportion(
+        df_counts, min_feat_prop, prop_col='prop')
+    logger.info(f'{x_lim_max = }')
+    ax.set_xlim(-1, x_lim_max)
+    ax.axvline(n_feat_cutoff, c='red')
+
+    # ax.text(n_feat_cutoff + 0.03 * x_lim_max,
+    #         n_samples_cutoff, '25% cutoff',
+    #         style='italic', fontsize=12,
+    #         bbox={'facecolor': 'grey', 'alpha': 0.5, 'pad': 10})
+
+    ax.annotate(f'{prop_feat*100}% cutoff',
+                xy=(n_feat_cutoff, n_samples_cutoff),
+                xytext=(n_feat_cutoff + 0.1 * x_lim_max, n_samples_cutoff),
+                fontsize=16,
+                arrowprops=dict(facecolor='black', shrink=0.05))
     return ax
