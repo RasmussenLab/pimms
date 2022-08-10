@@ -18,6 +18,7 @@ from vaep.io import dump_json, dump_to_csv
 import vaep.io.mq as mq
 from vaep.io.mq import MaxQuantOutputDynamic
 import vaep.pandas
+from vaep.plotting import plot_feat_counts
 # from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 
 logger = logging.getLogger(__name__)
@@ -186,24 +187,6 @@ def create_parent_folder_name(folder: Path) -> str:
 
 ## plotting function for value_counts from FeatureCounter.get_df_counts
 
-def plot_feat_counts(df_counts, feat_name, n_samples,
-                     ax=None, figsize=(15, 10),
-                     count_col='counts'):
-    ax = df_counts[count_col].plot(
-        figsize=figsize,
-        ylabel='counts',
-        xlabel=f'{feat_name} count ordered by completeness',
-        title=f'Count and proportion of {len(df_counts):,d} {feat_name}s over {n_samples:,d} samples',
-        grid=True,
-        ax=ax)
-
-    # default nearly okay, but rather customize to see minimal and maxium proportion
-    # ax = peptide_counts['proportion'].plot(secondary_y=True, style='b')
-
-    ax2 = vaep.plotting.add_prop_as_second_yaxis(ax=ax, n_samples=n_samples)
-    ax2.set_ylabel('proportion')
-    ax = vaep.plotting.format_large_numbers(ax=ax)
-    return ax
 
 
 def collect_in_chuncks(paths: Iterable[Union[str, Path]],
