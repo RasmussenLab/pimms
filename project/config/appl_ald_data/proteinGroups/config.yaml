@@ -1,0 +1,3 @@
+config_split: config/appl_ald_data/proteinGroups/split.yaml
+config_train: config/appl_ald_data/proteinGroups/train.yaml
+folder_experiment: runs/appl_ald_data/proteinGroups
