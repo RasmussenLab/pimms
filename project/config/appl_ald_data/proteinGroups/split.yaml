@@ -1,0 +1,4 @@
+FN_INTENSITIES: 'data/single_datasets/ald_proteinGroups_spectronaut.pkl'
+fn_rawfile_metadata: 'data/single_datasets/raw_meta.csv'
+sample_completeness: 0.5
+min_RT_time: 20

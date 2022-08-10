@@ -1,0 +1,3 @@
+config_split: config/appl_ald_data/split.yaml
+config_train: config/appl_ald_data/train.yaml
+folder_experiment: runs/appl_ald_data/aggPeptides/
