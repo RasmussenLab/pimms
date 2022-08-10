@@ -32,23 +32,27 @@ folder_run.mkdir(parents=True, exist_ok=True)
 
 print(*(folder_data.iterdir()), sep='\n')
 
+f_proteinGroups = folder_data / '20190620_210717_20190620_P0000005_Lili2Klibrary_Report.csv'
 f_proteome = folder_data / 'ald_proteome_spectronaut.tsv'
 f_annotations = folder_data / 'ald_experiment_annotations.csv'
 f_clinic = folder_data / 'ald_cli_164.csv'
 f_raw_meta = folder_data / 'ald_metadata_rawfiles.csv'
 
-# %%
-data = pd.read_table(f_proteome, low_memory=False)
-data.shape
+# %% [markdown]
+# ## (Aggregated) Peptide Data 
 
 # %%
-data
+peptides = pd.read_table(f_proteome, low_memory=False)
+peptides.shape
 
 # %%
-data.iloc[:, :8].describe(include='all')
+peptides
 
 # %%
-column_types = data.iloc[:, 8:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
+peptides.iloc[:, :8].describe(include='all')
+
+# %%
+column_types = peptides.iloc[:, 8:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
 column_types.describe()  # .apply(lambda l: l[-1])
 
 # %%
@@ -56,22 +60,51 @@ column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
 column_types
 
 # %%
-data = data.set_index(list(data.columns[:8])).sort_index(axis=1)
+peptides = peptides.set_index(list(peptides.columns[:8])).sort_index(axis=1)
 
 # %%
-data.loc[:, data.columns.str.contains(column_types[0])]
+peptides.loc[:, peptides.columns.str.contains(column_types[0])]
 
 # %%
-data.iloc[:20, :6]
+peptides.iloc[:20, :6]
 
 # %% [markdown]
 # create new multiindex from column
 
 # %%
-data.columns = pd.MultiIndex.from_tuples(data.columns.str.split().str[1].str.split(
+peptides.columns = pd.MultiIndex.from_tuples(peptides.columns.str.split().str[1].str.split(
     '.raw.').to_series().apply(tuple), names=['Sample ID', 'vars'])
-data = data.stack(0)
-data
+peptides = peptides.stack(0)
+peptides
+
+# %% [markdown]
+# ## Protein Group data
+
+# %%
+pg = pd.read_csv(f_proteinGroups, low_memory=False)
+N_FRIST_META = 2
+pg
+
+# %%
+pg.iloc[:, :N_FRIST_META].describe(include='all')
+
+# %%
+column_types = pg.iloc[:, N_FRIST_META:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
+column_types.describe()  # .apply(lambda l: l[-1])
+
+# %%
+column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
+column_types
+
+# %%
+pg = pg.set_index(list(pg.columns[:N_FRIST_META])).sort_index(axis=1)
+pg.loc[:, pg.columns.str.contains(column_types[1])]
+
+# %%
+pg.columns = pd.MultiIndex.from_tuples(pg.columns.str.split().str[1].str.split(
+    '.htrms.').to_series().apply(tuple), names=['Sample ID', 'vars'])
+pg = pg.stack(0)
+pg
 
 # %% [markdown]
 # ## Meta data
@@ -85,7 +118,7 @@ data
 # ### From Spectronaut file
 
 # %%
-meta = data.index.to_frame().reset_index(drop=True)
+meta = peptides.index.to_frame().reset_index(drop=True)
 meta
 
 # %%
@@ -154,7 +187,7 @@ idx.name = 'Sample ID'
 idx.describe()
 
 # %%
-raw_meta = raw_meta.reset_index().set_index(idx)
+raw_meta = raw_meta.set_index(idx)
 raw_meta
 
 # %%
@@ -175,7 +208,7 @@ idx_overlap = idx_overlap.intersection(raw_meta.index)  # proteomics data has to
 # Still save all metadata which is there, but subselect data samples accordingly
 
 # %%
-raw_meta.to_pickle(folder_data_out / 'raw_meta.pkl')
+raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
 
 # %% [markdown]
 # ## Missing samples
@@ -187,7 +220,7 @@ raw_meta.to_pickle(folder_data_out / 'raw_meta.pkl')
 # > see section below
 
 # %% [markdown]
-# ## Select Proteomics data
+# ## Select aggregated peptide level data
 #
 # taken from [Spectronaut manuel](https://biognosys.com/resources/spectronaut-manual/)
 #
@@ -213,7 +246,7 @@ raw_meta.to_pickle(folder_data_out / 'raw_meta.pkl')
 
 # %%
 sel_cols = ['Sample ID', 'PEP.StrippedSequence', 'PEP.Quantity']
-sel_data = data.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2])
+sel_data = peptides.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2])
 sel_data
 
 # %%
@@ -253,10 +286,117 @@ kwargs = {'xlabel': 'peptide number ordered by completeness',
           'ylabel': 'peptide was found in # samples',
           'title': 'peptide measurement distribution'}
 
-ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(sel_data), ax=None, **kwargs)
+ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(sel_data), ax=None, **kwargs)
+
+# %% [markdown]
+# ### Select features which are present in at least 25% of the samples
+
+# %%
+PROP_FEAT_OVER_SAMPLES = .25
+prop = des_data.loc['count'] / len(sel_data)
+selected = prop >= PROP_FEAT_OVER_SAMPLES
+selected.value_counts()
+
+# %%
+sel_data = sel_data.loc[:, selected]
+sel_data
 
 # %% [markdown]
 # Dump selected data
 
 # %%
 sel_data.to_pickle(folder_data_out / 'ald_aggPeptides_spectronaut.pkl')
+
+# %% [markdown]
+# ## Select Protein Group data
+
+# %%
+sel_data = pg.drop('PG.NrOfStrippedSequencesUsedForQuantification', axis=1)
+sel_data
+
+# %%
+mask = sel_data['PG.Quantity'] == 'Filtered'
+print("No. of Filtered entries: ", mask.sum())
+sel_data = sel_data.loc[~mask]
+sel_data
+
+# %%
+sel_data = sel_data.squeeze().dropna().astype(float).unstack()
+sel_data
+
+# %%
+gene_non_unique = sel_data.index.to_frame()["PG.Genes"].value_counts() > 1
+gene_non_unique = gene_non_unique[gene_non_unique].index
+gene_non_unique
+
+# %%
+sel_data.loc[pd.IndexSlice[:, gene_non_unique], :].T.describe()
+
+# %%
+sel_data = sel_data.T
+
+idx = sel_data.index.to_series()
+idx = idx.str.extract(r'(Plate[\d]_[A-H]\d*)').squeeze()
+idx.name = 'Sample ID'
+idx.describe()
+
+# %%
+sel_data = sel_data.set_index(idx)
+sel_data = sel_data.loc[idx_overlap]
+sel_data
+
+# %%
+des_data = sel_data.describe()
+des_data
+
+# %% [markdown]
+# ### Check for metadata from rawfile overlap
+
+# %%
+idx_diff = sel_data.index.difference(raw_meta.index)
+annotations.loc[idx_diff]
+
+# %%
+kwargs = {'xlabel': 'protein group number ordered by completeness',
+          'ylabel': 'peptide was found in # samples',
+          'title': 'protein group measurement distribution'}
+
+ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(sel_data), ax=None, **kwargs)
+
+# %% [markdown]
+# ### Select features which are present in at least 25% of the samples
+
+# %%
+PROP_FEAT_OVER_SAMPLES = .25
+prop = des_data.loc['count'] / len(sel_data)
+selected = prop >= PROP_FEAT_OVER_SAMPLES
+selected.value_counts()
+
+# %%
+sel_data = sel_data.loc[:, selected]
+sel_data
+
+# %% [markdown]
+# Check for non unique genes after dropping uncommon protein groups.
+
+# %%
+gene_non_unique = sel_data.columns.to_frame()["PG.Genes"].value_counts() > 1
+gene_non_unique = gene_non_unique[gene_non_unique].index
+gene_non_unique
+
+# %% [markdown]
+# - less often found -> less intensity on average and on maximum
+#
+# - [ ] decided if protein group should be subselected
+# - alternative selection: per sample, select protein group with highest intensity per sample
+
+# %%
+sel_data.T.loc[pd.IndexSlice[:, gene_non_unique], :].T.describe()
+
+# %%
+sel_data = sel_data.droplevel(1, axis=1)
+
+# %%
+sel_data.to_pickle(folder_data_out / 'ald_proteinGroups_spectronaut.pkl')
