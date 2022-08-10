@@ -266,7 +266,7 @@ df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 1
 # %%
 # min_RT_time = 120 # minutes
 msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
-mask_RT = df_meta['MS max RT'] >= 120 # can be integrated into query string
+mask_RT = df_meta['MS max RT'] >= params.min_RT_time # can be integrated into query string
 msg += f" Total number of samples retained: {int(mask_RT.sum())}."
 print(msg)
 
@@ -296,7 +296,7 @@ meta_raw_settings = [
  'MS max charge',
  'mass resolution',
  'beam-type collision-induced dissociation', 
- 'injection volume setting',
+ # 'injection volume setting',
  'dilution factor',
 ]
 df_meta[meta_raw_settings].drop_duplicates() # index gives first example with this combination
@@ -372,7 +372,7 @@ pcs = pcs.reset_index()
 pcs
 
 # %%
-pcs.describe(include='all').T
+pcs.describe(include='all', datetime_is_numeric=True).T
 
 # %%
 fig, ax = plt.subplots(figsize=(18,10))
@@ -537,18 +537,6 @@ splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-form
 # %%
 # # Reload from disk
 splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
-
-# %% [markdown]
-# ## PCA plot of training data - with filename metadata
-#
-# - [ ] update: uses old metadata reading to indicate metadata derived from filename
-#
-
-# %%
-# ana_train_X = analyzers.AnalyzePeptides(data=splits.train_X, is_wide_format=False, ind_unstack=splits.train_X.index.names[1:])
-# figures['pca_train'] = ana_train_X.plot_pca()
-# vaep.savefig(figures['pca_train'], folder_figures / f'pca_plot_raw_data_w_filename_meta_{ana_train_X.fname_stub}')
-# # ana_train_X = add_meta_data(ana_train_X) # inplace, returns ana_train_X
 
 # %% [markdown]
 # ## Save parameters
