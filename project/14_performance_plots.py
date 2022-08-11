@@ -26,6 +26,8 @@ import matplotlib.pyplot as plt
 import numpy as np 
 import pandas as pd
 
+pd.options.display.max_rows = 120
+pd.options.display.min_rows = 50
 
 import vaep
 import vaep.imputation
@@ -41,6 +43,9 @@ matplotlib.rcParams['figure.figsize'] = [10.0, 8.0]
 logging.basicConfig(level=logging.INFO)
 
 # %%
+models = ['collab', 'DAE', 'VAE']
+
+# %% tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
@@ -138,7 +143,7 @@ M = len(feature_names)
 pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
 
 # %%
-options = ['NCOR1', ]
+options = random.sample(set(freq_feat.index), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
 
 # %%
@@ -151,6 +156,20 @@ pred_val['random shifted normal'] = imputed_shifted_normal
 
 # 
 errors_val = pred_val.drop('observed', axis=1).sub(pred_val['observed'], axis=0)
+errors_val.describe() # over all samples, and all features
+
+# %% [markdown]
+# Describe absolute error
+
+# %%
+errors_val.abs().describe() # over all samples, and all features
+
+# %%
+c_error_min = 4.5
+mask = (errors_val[models].abs() > c_error_min).any(axis=1)
+errors_val.loc[mask].sort_index(level=1)
+
+# %%
 errors_val = errors_val.abs().groupby(freq_feat.index.name).mean() # absolute error
 errors_val = errors_val.join(freq_feat)
 errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
@@ -160,12 +179,20 @@ errors_val
 # Some interpolated features are missing
 
 # %%
-errors_val.describe() 
+errors_val.describe()  # mean of means
+
+# %%
+c_avg_error = 2
+mask = (errors_val[models] >= c_avg_error).any(axis=1)
+errors_val.loc[mask]
 
 # %%
 errors_val_smoothed = errors_val.copy()
 errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
-ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average')
+ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average', ylim=(0,2))
+
+# %%
+errors_val_smoothed.describe()
 
 # %%
 vaep.savefig(
@@ -173,6 +200,16 @@ vaep.savefig(
     folder=args.out_figures,
     name='performance_methods_by_completness')
 
+# %% [markdown]
+# ### Average errors
+# - see how smoothing is done, here `collab`
+# - shows how features are distributed in training data
+
 # %%
 # scatter plots to see spread
-errors_val.plot.scatter(x=prop.name, y='collab')
+model = models[0]
+ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2))
+
+# %% [markdown]
+# - [ ] plotly plot with number of observations the mean for each feature is based on
+# - [ ] 

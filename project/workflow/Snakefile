@@ -10,15 +10,31 @@ folder_experiment = config['folder_experiment']
 
 logger.info(f"{folder_experiment = }")
 
+
 rule all:
     input: 
-        expand("{folder_experiment}/{nb}",
+        f"{folder_experiment}/figures/performance_methods_by_completness.pdf"
+
+nb= '14_performance_plots.ipynb'
+rule comparison:
+    input:
+        nb=nb,
+        runs=expand("{folder_experiment}/{nb}",
             folder_experiment=config['folder_experiment'],
             nb=['14_experiment_03_train_collab.ipynb',
                 '14_experiment_03_train_dae.ipynb',
                 '14_experiment_03_train_vae.ipynb'
                 ])
-
+    output:
+        pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
+        nb="{folder_experiment}" f"/{nb}"
+    params:
+        meta_data=config["fn_rawfile_metadata"]
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r fn_rawfile_metadata {params.meta_data}"
+        " -r folder_experiment {wildcards.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
 
 # separate workflow by level -> provide custom configs
 nb = '14_experiment_03_data.ipynb'
@@ -52,3 +68,5 @@ rule train_models:
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
+
+
