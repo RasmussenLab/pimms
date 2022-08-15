@@ -27,7 +27,7 @@ pd.options.display.max_rows = 100
 # %%
 folder_data = Path('data/applications/')
 folder_data_out = Path('data/single_datasets/')
-folder_run = Path('runs/ald_study')
+folder_run = Path('runs/appl_ald_data')
 folder_run.mkdir(parents=True, exist_ok=True)
 
 print(*(folder_data.iterdir()), sep='\n')
@@ -215,7 +215,7 @@ raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
 #
 # From the above we can note that there is
 # - no clinical data for `Plate6_F2`
-# - no metadata for `Plate2_C1`
+# - no metadata for `Plate2_C1`: re-measured sample which looks fine, but fails with error `"Unable to access the RAW file using the native Thermo library"`
 #
 # > see section below
 
@@ -288,6 +288,10 @@ kwargs = {'xlabel': 'peptide number ordered by completeness',
 
 ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
 ), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(sel_data), ax=None, **kwargs)
+
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, name='data_aggPeptides_completness', folder=folder_run)
 
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples
@@ -363,7 +367,11 @@ kwargs = {'xlabel': 'protein group number ordered by completeness',
           'title': 'protein group measurement distribution'}
 
 ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
-), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(sel_data), ax=None, **kwargs)
+), feat_col_name='count', n_samples=len(sel_data), ax=None, **kwargs)
+
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, name='data_proteinGroups_completness', folder=folder_run)
 
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples
@@ -400,3 +408,5 @@ sel_data = sel_data.droplevel(1, axis=1)
 
 # %%
 sel_data.to_pickle(folder_data_out / 'ald_proteinGroups_spectronaut.pkl')
+
+# %%
