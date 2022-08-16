@@ -105,7 +105,7 @@ prop = freq_feat / len(data.train_X.index.levels[0])
 prop.to_frame()
 
 # %% [markdown]
-# ## reference methods
+# # reference methods
 #
 # - drawing from shifted normal distribution
 # - drawing from (-) normal distribution?
@@ -131,7 +131,10 @@ medians_train = data.train_X.median()
 medians_train.name = 'median'
 
 # %% [markdown]
-# ## load predictions
+# # load predictions
+
+# %% [markdown]
+# ## test data
 
 # %%
 split = 'test'
@@ -143,12 +146,31 @@ pred_test['random normal'] = imputed_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 pred_test_corr = pred_test.corr()
 ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
-    title='Correlation between Fake NA and model predictions on test data',
-    ylabel='correlation coefficient'
+    title='Corr. between Fake NA and model predictions on test data',
+    ylabel='correlation coefficient',
+    ylim=(0.7,1)
 )
 ax = vaep.plotting.add_height_to_barplot(ax)
 vaep.savefig(ax.get_figure(), name='pred_corr_test', folder=args.out_figures)
 pred_test_corr
+
+# %%
+corr_per_sample_test = pred_test.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+
+kwargs = dict(ylim=(0.7,1), rot=90,
+              title='Corr. betw. fake NA and model predictions per sample on test data',
+              ylabel='correlation coefficient')
+ax = corr_per_sample_test.plot.box(**kwargs)
+fig = ax.get_figure()
+fig.tight_layout()
+
+# %% [markdown]
+# identify samples which are below lower whisker for models
+
+# %%
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[models]).min()
+mask = (corr_per_sample_test[models] < treshold).any(axis=1)
+corr_per_sample_test.loc[mask].style.highlight_min(axis=1)
 
 # %%
 feature_names = pred_test.index.levels[-1]
@@ -158,6 +180,9 @@ pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
 # %%
 options = random.sample(set(freq_feat.index), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
+
+# %% [markdown]
+# ## Validation data
 
 # %%
 split = 'val'
@@ -173,6 +198,24 @@ ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
 ax = vaep.plotting.add_height_to_barplot(ax)
 vaep.savefig(ax.get_figure(), name='pred_corr_val', folder=args.out_figures)
 pred_val_corr
+
+# %%
+corr_per_sample_val = pred_val.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+
+kwargs = dict(ylim=(0.7,1), rot=90,
+              title='Corr. betw. fake NA and model pred. per sample on validation data',
+              ylabel='correlation coefficient')
+ax = corr_per_sample_val.plot.box(**kwargs)
+fig = ax.get_figure()
+fig.tight_layout()
+
+# %% [markdown]
+# identify samples which are below lower whisker for models
+
+# %%
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[models]).min()
+mask = (corr_per_sample_val[models] < treshold).any(axis=1)
+corr_per_sample_val.loc[mask].style.highlight_min(axis=1)
 
 # %%
 errors_val = pred_val.drop('observed', axis=1).sub(pred_val['observed'], axis=0)
@@ -221,7 +264,7 @@ vaep.savefig(
     name='performance_methods_by_completness')
 
 # %% [markdown]
-# ### Average errors
+# # Average errors per feature - example scatter for collab
 # - see how smoothing is done, here `collab`
 # - shows how features are distributed in training data
 

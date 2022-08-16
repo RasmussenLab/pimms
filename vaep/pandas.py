@@ -333,3 +333,10 @@ def get_last_index_matching_proportion(df_counts: pd.DataFrame,
     mask = df_counts[prop_col] > prop
     idx_cutoff = df_counts[prop_col].loc[mask].tail(1).index[0]
     return idx_cutoff
+
+
+def get_lower_whiskers(df:pd.DataFrame, factor:float=1.5) -> pd.Series:
+    ret = df.describe()
+    iqr = ret.loc['75%'] - ret.loc['25%']
+    ret = ret.loc['25%'] - iqr*factor
+    return ret
