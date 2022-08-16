@@ -44,6 +44,9 @@ logging.basicConfig(level=logging.INFO)
 
 # %%
 models = ['collab', 'DAE', 'VAE']
+ORDER_MODELS = ['random shifted normal', 'median', 'interpolated',
+                'collab', 'DAE', 'VAE',
+                ]
 
 # %% tags=["parameters"]
 # files and folders
@@ -85,6 +88,9 @@ _ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
         rot=90,
         ax=axes[1],
         title='Test data')
+fig.suptitle("Fake NAs per sample availability.", size=24)
+fig.tight_layout()
+vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 
 # %% [markdown]
 # ## Across data completeness
@@ -128,14 +134,21 @@ medians_train.name = 'median'
 # ## load predictions
 
 # %%
-split='test'
-pred_files =  [f for f in args.out_preds.iterdir() if split in f.name]
+split = 'test'
+pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_test = compare_predictions.load_predictions(pred_files)
 # pred_test = pred_test.join(medians_train, on=prop.index.name)
 pred_test['random shifted normal'] = imputed_shifted_normal
 pred_test['random normal'] = imputed_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
-pred_test
+pred_test_corr = pred_test.corr()
+ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
+    title='Correlation between Fake NA and model predictions on test data',
+    ylabel='correlation coefficient'
+)
+ax = vaep.plotting.add_height_to_barplot(ax)
+vaep.savefig(ax.get_figure(), name='pred_corr_test', folder=args.out_figures)
+pred_test_corr
 
 # %%
 feature_names = pred_test.index.levels[-1]
@@ -147,14 +160,21 @@ options = random.sample(set(freq_feat.index), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
 
 # %%
-split='val'
-pred_files =  [f for f in args.out_preds.iterdir() if split in f.name]
+split = 'val'
+pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_val = compare_predictions.load_predictions(pred_files)
 # pred_val = pred_val.join(medians_train, on=freq_feat.index.name)
 pred_val['random shifted normal'] = imputed_shifted_normal
 # pred_val = pred_val.join(freq_feat, on=freq_feat.index.name)
+pred_val_corr = pred_val.corr()
+ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
+    title='Correlation between Fake NA and model predictions on validation data',
+    ylabel='correlation coefficient')
+ax = vaep.plotting.add_height_to_barplot(ax)
+vaep.savefig(ax.get_figure(), name='pred_corr_val', folder=args.out_figures)
+pred_val_corr
 
-# 
+# %%
 errors_val = pred_val.drop('observed', axis=1).sub(pred_val['observed'], axis=0)
 errors_val.describe() # over all samples, and all features
 
@@ -208,7 +228,15 @@ vaep.savefig(
 # %%
 # scatter plots to see spread
 model = models[0]
-ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2))
+ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
+  title=f"Average error per feature on validation data for {model}",
+  ylabel='absolute error')
+
+vaep.savefig(
+    ax.get_figure(),
+    folder=args.out_figures,
+    name='performance_methods_by_completness_scatter',
+)
 
 # %% [markdown]
 # - [ ] plotly plot with number of observations the mean for each feature is based on
