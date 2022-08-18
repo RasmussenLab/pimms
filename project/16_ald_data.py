@@ -54,103 +54,6 @@ VAR_PEP = 'PEP.Quantity'
 VAR_PG = 'PG.Quantity'
 
 # %% [markdown]
-# # Plasma samples
-
-# %% [markdown]
-# ## (Aggregated) Peptide Data 
-
-# %%
-peptides = pd.read_table(fnames.plasma_aggPeptides, low_memory=False)
-peptides.shape
-
-# %%
-peptides
-
-# %%
-peptides.iloc[:, :8].describe(include='all')
-
-# %%
-column_types = peptides.iloc[:, 8:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
-column_types.describe()  # .apply(lambda l: l[-1])
-
-# %%
-column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
-column_types
-
-# %%
-peptides = peptides.set_index(list(peptides.columns[:8])).sort_index(axis=1)
-
-# %%
-peptides.loc[:, peptides.columns.str.contains(VAR_PEP)]
-
-# %%
-peptides.iloc[:20, :6]
-
-# %% [markdown]
-# create new multiindex from column
-
-# %%
-peptides.columns = pd.MultiIndex.from_tuples(peptides.columns.str.split().str[1].str.split(
-    '.raw.').to_series().apply(tuple), names=['Sample ID', 'vars'])
-peptides = peptides.stack(0)
-peptides
-
-# %% [markdown]
-# ### Index meta data
-
-# %% tags=[]
-meta = peptides.index.to_frame().reset_index(drop=True)
-meta
-
-# %%
-meta.describe(include='all')
-
-# %% [markdown]
-# ## Protein Group data
-
-# %%
-pg = pd.read_csv(fnames.plasma_proteinGroups, low_memory=False)
-idx_cols = ['PG.ProteinAccessions', 'PG.Genes']
-N_FRIST_META = 3
-pg
-
-# %%
-pg.iloc[:, :N_FRIST_META].describe(include='all')
-
-# %%
-column_types = pg.iloc[:, N_FRIST_META:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
-column_types.describe()  # .apply(lambda l: l[-1])
-
-# %%
-column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
-column_types # 'PG.Quantity' expected
-
-# %%
-pg = pg.set_index(list(pg.columns[:N_FRIST_META])).sort_index(axis=1)
-pg.loc[:, pg.columns.str.contains(VAR_PG)]
-
-# %% [markdown]
-# Drop index columns which are not selected
-
-# %%
-to_drop = [x for x in pg.index.names if not x in idx_cols]
-print("Columnns to drop: {}".format(",".join((str(x) for x in to_drop))))
-pg = pg.reset_index(level=to_drop, drop=True)
-
-# %% [markdown]
-# extract long sample name (highly specific to task)
-# - whitespace split, taking last position of column name
-# - `sep` splits `Sample ID` from `vars`
-
-# %%
-sep = '.raw.'
-# sep = '.htrms.'
-pg.columns = pd.MultiIndex.from_tuples(pg.columns.str.split().str[-1].str.split(
-    sep).to_series().apply(tuple), names=['Sample ID', 'vars'])
-pg = pg.stack(0)
-pg
-
-# %% [markdown]
 # # Meta data
 #
 # - sample annotation (to select correct samples)
@@ -269,7 +172,57 @@ raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
 # > see section below
 
 # %% [markdown]
-# ## Select aggregated peptide level data
+# ## (Aggregated) Peptide Data 
+
+# %%
+peptides = pd.read_table(fnames.plasma_aggPeptides, low_memory=False)
+peptides.shape
+
+# %%
+peptides
+
+# %%
+peptides.iloc[:, :8].describe(include='all')
+
+# %%
+column_types = peptides.iloc[:, 8:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
+column_types.describe()  # .apply(lambda l: l[-1])
+
+# %%
+column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
+column_types
+
+# %%
+peptides = peptides.set_index(list(peptides.columns[:8])).sort_index(axis=1)
+
+# %%
+peptides.loc[:, peptides.columns.str.contains(VAR_PEP)]
+
+# %%
+peptides.iloc[:20, :6]
+
+# %% [markdown]
+# create new multiindex from column
+
+# %%
+peptides.columns = pd.MultiIndex.from_tuples(peptides.columns.str.split().str[1].str.split(
+    '.raw.').to_series().apply(tuple), names=['Sample ID', 'vars'])
+peptides = peptides.stack(0)
+peptides
+
+# %% [markdown]
+# ### Index meta data
+
+# %% tags=[]
+meta = peptides.index.to_frame().reset_index(drop=True)
+meta
+
+# %%
+meta.describe(include='all')
+
+
+# %% [markdown]
+# ### Select aggregated peptide level data
 #
 # taken from [Spectronaut manuel](https://biognosys.com/resources/spectronaut-manual/)
 #
@@ -362,7 +315,52 @@ sel_data
 sel_data.to_pickle(folder_data_out / 'ald_aggPeptides_spectronaut.pkl')
 
 # %% [markdown]
-# ## Select Protein Group data
+# ## Protein Group data
+
+# %%
+pg = pd.read_csv(fnames.plasma_proteinGroups, low_memory=False)
+idx_cols = ['PG.ProteinAccessions', 'PG.Genes']
+N_FRIST_META = 3
+pg
+
+# %%
+pg.iloc[:, :N_FRIST_META].describe(include='all')
+
+# %%
+column_types = pg.iloc[:, N_FRIST_META:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
+column_types.describe()  # .apply(lambda l: l[-1])
+
+# %%
+column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
+column_types # 'PG.Quantity' expected
+
+# %%
+pg = pg.set_index(list(pg.columns[:N_FRIST_META])).sort_index(axis=1)
+pg.loc[:, pg.columns.str.contains(VAR_PG)]
+
+# %% [markdown]
+# Drop index columns which are not selected
+
+# %%
+to_drop = [x for x in pg.index.names if not x in idx_cols]
+print("Columnns to drop: {}".format(",".join((str(x) for x in to_drop))))
+pg = pg.reset_index(level=to_drop, drop=True)
+
+# %% [markdown]
+# extract long sample name (highly specific to task)
+# - whitespace split, taking last position of column name
+# - `sep` splits `Sample ID` from `vars`
+
+# %%
+sep = '.raw.'
+# sep = '.htrms.'
+pg.columns = pd.MultiIndex.from_tuples(pg.columns.str.split().str[-1].str.split(
+    sep).to_series().apply(tuple), names=['Sample ID', 'vars'])
+pg = pg.stack(0)
+pg
+
+# %% [markdown]
+# ### Select Protein Group data
 
 # %%
 sel_data = pg[[VAR_PG]]
