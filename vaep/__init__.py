@@ -15,6 +15,7 @@ import pandas.io.formats.format as pf
 
 import vaep.pandas
 import vaep.plotting
+import vaep.logging
 from vaep.plotting import savefig
 
 from . import nb
