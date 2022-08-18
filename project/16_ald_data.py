@@ -32,17 +32,35 @@ folder_run.mkdir(parents=True, exist_ok=True)
 
 print(*(folder_data.iterdir()), sep='\n')
 
-f_proteinGroups = folder_data / '20190620_210717_20190620_P0000005_Lili2Klibrary_Report.csv'
-f_proteome = folder_data / 'ald_proteome_spectronaut.tsv'
-f_annotations = folder_data / 'ald_experiment_annotations.csv'
-f_clinic = folder_data / 'ald_cli_164.csv'
-f_raw_meta = folder_data / 'ald_metadata_rawfiles.csv'
+fnames = dict(
+plasma_proteinGroups = folder_data / 'Protein_ALDupgrade_Report.csv',
+plasma_aggPeptides = folder_data / 'ald_proteome_spectronaut.tsv',
+liver_proteinGroups = folder_data / 'Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report',
+liver_aggpeptides = folder_data / 'Peptide_20200221_094544_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report',
+annotations = folder_data / 'ald_experiment_annotations.csv',
+clinic = folder_data / 'ald_cli_164.csv',
+raw_meta = folder_data / 'ald_metadata_rawfiles.csv')
+fnames =vaep.nb.Config.from_dict(fnames) # could be handeled kwargs as in normal dict
+
+
+# %%
+fnames
+
+# %% [markdown]
+# ## Parameters
+
+# %%
+VAR_PEP = 'PEP.Quantity'
+VAR_PG = 'PG.Quantity'
+
+# %% [markdown]
+# # Plasma samples
 
 # %% [markdown]
 # ## (Aggregated) Peptide Data 
 
 # %%
-peptides = pd.read_table(f_proteome, low_memory=False)
+peptides = pd.read_table(fnames.plasma_aggPeptides, low_memory=False)
 peptides.shape
 
 # %%
@@ -63,7 +81,7 @@ column_types
 peptides = peptides.set_index(list(peptides.columns[:8])).sort_index(axis=1)
 
 # %%
-peptides.loc[:, peptides.columns.str.contains(column_types[0])]
+peptides.loc[:, peptides.columns.str.contains(VAR_PEP)]
 
 # %%
 peptides.iloc[:20, :6]
@@ -78,11 +96,22 @@ peptides = peptides.stack(0)
 peptides
 
 # %% [markdown]
+# ### Index meta data
+
+# %% tags=[]
+meta = peptides.index.to_frame().reset_index(drop=True)
+meta
+
+# %%
+meta.describe(include='all')
+
+# %% [markdown]
 # ## Protein Group data
 
 # %%
-pg = pd.read_csv(f_proteinGroups, low_memory=False)
-N_FRIST_META = 2
+pg = pd.read_csv(fnames.plasma_proteinGroups, low_memory=False)
+idx_cols = ['PG.ProteinAccessions', 'PG.Genes']
+N_FRIST_META = 3
 pg
 
 # %%
@@ -94,83 +123,100 @@ column_types.describe()  # .apply(lambda l: l[-1])
 
 # %%
 column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
-column_types
+column_types # 'PG.Quantity' expected
 
 # %%
 pg = pg.set_index(list(pg.columns[:N_FRIST_META])).sort_index(axis=1)
-pg.loc[:, pg.columns.str.contains(column_types[1])]
+pg.loc[:, pg.columns.str.contains(VAR_PG)]
+
+# %% [markdown]
+# Drop index columns which are not selected
 
 # %%
-pg.columns = pd.MultiIndex.from_tuples(pg.columns.str.split().str[1].str.split(
-    '.htrms.').to_series().apply(tuple), names=['Sample ID', 'vars'])
+to_drop = [x for x in pg.index.names if not x in idx_cols]
+print("Columnns to drop: {}".format(",".join((str(x) for x in to_drop))))
+pg = pg.reset_index(level=to_drop, drop=True)
+
+# %% [markdown]
+# extract long sample name (highly specific to task)
+# - whitespace split, taking last position of column name
+# - `sep` splits `Sample ID` from `vars`
+
+# %%
+sep = '.raw.'
+# sep = '.htrms.'
+pg.columns = pd.MultiIndex.from_tuples(pg.columns.str.split().str[-1].str.split(
+    sep).to_series().apply(tuple), names=['Sample ID', 'vars'])
 pg = pg.stack(0)
 pg
 
 # %% [markdown]
-# ## Meta data
+# # Meta data
 #
 # - sample annotation (to select correct samples)
-# - meta data from Spectronaut ouput
 # - clinical data
 # - meta data from raw files (MS machine recorded meta data)
 
 # %% [markdown]
-# ### From Spectronaut file
-
-# %%
-meta = peptides.index.to_frame().reset_index(drop=True)
-meta
-
-# %%
-meta.describe()
-
-# %% [markdown]
-# ### Sample annotations
+# ## Sample annotations
 #
 # - `Groups`: more detailed (contains sub-batch information)
 # - `Group2`: used to separate samples into cohorts for study
 # - `Sample type`: There are liver biopsy samples measured -> select only Plasma samples
 
 # %%
-annotations = pd.read_csv(f_annotations, index_col='Sample ID')
+annotations = pd.read_csv(fnames.annotations, index_col='Sample ID')
 annotations
 
 # %% [markdown]
-# Select ALD subcohort
-
-# %%
-# annotations.Groups.value_counts()
-annotations.Group2.value_counts()
+# ### Select ALD subcohort
 
 # %%
 groups = ['ALD']  # 'ALD-validation', 'HP'
-selected = (annotations.Group2.isin(['ALD'])) & (annotations['Sample type'] == 'Plasma')
-selected = selected.loc[selected].index
-annotations.loc[selected].describe(include=['object', 'string'])
+
+# annotations.Groups.value_counts()
+annotations.Group2.value_counts()
 
 # %% [markdown]
-# ### Clinical data
+# ### Select plasma samples
 
 # %%
-clinic = pd.read_csv(f_clinic, index_col=0)
+sel_plasma_samples = (annotations.Group2.isin(['ALD'])) & (annotations['Sample type'] == 'Plasma')
+sel_plasma_samples = sel_plasma_samples.loc[sel_plasma_samples].index
+annotations.loc[sel_plasma_samples].describe(include=['object', 'string'])
+
+# %% [markdown]
+# ### Select liver samples
+
+# %%
+groups = ['ALD']  # 'ALD-validation', 'HP'
+sel_liver_samples = (annotations.Group2.isin(['ALD'])) & (annotations['Sample type'] == 'Liver')
+sel_liver_samples = sel_liver_samples.loc[sel_liver_samples].index
+annotations.loc[sel_liver_samples].describe(include=['object', 'string'])
+
+# %% [markdown]
+# ## Clinical data
+
+# %%
+clinic = pd.read_csv(fnames.clinic, index_col=0)
 clinic
 
 # %% [markdown]
-# - `idx_overlap`:  Will be used to select samples with data across datasets available
+# - `idx_overlap_plasma`:  Will be used to select samples with data across datasets available
 
 # %%
-print('Missing labels: ', selected.difference(clinic.index))
-idx_overlap = clinic.index.intersection(selected)
+print('Missing labels: ', sel_plasma_samples.difference(clinic.index))
+idx_overlap_plasma = clinic.index.intersection(sel_plasma_samples)
 
 
 # %%
-clinic.loc[idx_overlap]
+clinic.loc[idx_overlap_plasma]
 
 # %% [markdown]
-# ### Rawfile information
+# ## Rawfile information
 
 # %%
-raw_meta = pd.read_csv(f_raw_meta, header=[0, 1], index_col=0)
+raw_meta = pd.read_csv(fnames.raw_meta, header=[0, 1], index_col=0)
 raw_meta.index.name = "Sample ID (long)"
 raw_meta
 
@@ -201,14 +247,17 @@ raw_meta.columns = meta_raw_names
 raw_meta.loc[['Plate6_F2']]
 
 # %%
-print("Missing metadata in set of selected labels: ", idx_overlap.difference(raw_meta.index))
-idx_overlap = idx_overlap.intersection(raw_meta.index)  # proteomics data has to be part of metadata
+print("Missing metadata in set of selected labels: ", idx_overlap_plasma.difference(raw_meta.index))
+idx_overlap_plasma = idx_overlap_plasma.intersection(raw_meta.index)  # proteomics data has to be part of metadata
 
 # %% [markdown]
 # Still save all metadata which is there, but subselect data samples accordingly
 
 # %%
 raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
+
+# %% [markdown]
+# # Plasma samples
 
 # %% [markdown]
 # ## Missing samples
@@ -245,7 +294,7 @@ raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
 # After discussing with Lili, `PEP.Quantity` is the fitting entity for each unique aggregated Peptide. Duplicated entries are just to drop
 
 # %%
-sel_cols = ['Sample ID', 'PEP.StrippedSequence', 'PEP.Quantity']
+sel_cols = ['Sample ID', 'PEP.StrippedSequence', 'PEP.Quantity'] # selected quantity in last position
 sel_data = peptides.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2])
 sel_data
 
@@ -264,7 +313,7 @@ idx.describe()
 
 # %%
 sel_data = sel_data.set_index(idx)
-sel_data = sel_data.loc[idx_overlap]
+sel_data = sel_data.loc[idx_overlap_plasma]
 sel_data
 
 # %%
@@ -316,7 +365,7 @@ sel_data.to_pickle(folder_data_out / 'ald_aggPeptides_spectronaut.pkl')
 # ## Select Protein Group data
 
 # %%
-sel_data = pg.drop('PG.NrOfStrippedSequencesUsedForQuantification', axis=1)
+sel_data = pg[[VAR_PG]]
 sel_data
 
 # %%
@@ -324,6 +373,9 @@ mask = sel_data['PG.Quantity'] == 'Filtered'
 print("No. of Filtered entries: ", mask.sum())
 sel_data = sel_data.loc[~mask]
 sel_data
+
+# %%
+sel_data.dtypes
 
 # %%
 sel_data = sel_data.squeeze().dropna().astype(float).unstack()
@@ -347,7 +399,7 @@ idx.describe()
 
 # %%
 sel_data = sel_data.set_index(idx)
-sel_data = sel_data.loc[idx_overlap]
+sel_data = sel_data.loc[idx_overlap_plasma]
 sel_data
 
 # %%
@@ -405,8 +457,17 @@ sel_data.T.loc[pd.IndexSlice[:, gene_non_unique], :].T.describe()
 
 # %%
 sel_data = sel_data.droplevel(1, axis=1)
+sel_data
 
 # %%
 sel_data.to_pickle(folder_data_out / 'ald_proteinGroups_spectronaut.pkl')
+
+# %% [markdown]
+# # Liver samples
+
+# %%
+# index_cols = ['PG.ProteinAccessions', 'PG.Genes', 'Sample ID']
+# to_remove = ['PG.Qvalue', 'PG.MolecularWeight', 'PG.ProteinDescriptions']
+# sel_data = sel_data.reset_index(level=to_remove, drop=True)
 
 # %%

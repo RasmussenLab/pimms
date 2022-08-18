@@ -17,6 +17,8 @@ import vaep.pandas
 import vaep.plotting
 from vaep.plotting import savefig
 
+from . import nb
+
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
         formatter = self.formatter or '{:,d}'.format
