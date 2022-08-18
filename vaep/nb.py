@@ -17,7 +17,6 @@ class Config():
     keys, paths,
     
     """
-
     def __setattr__(self, entry, value):
         """Set if attribute not in instance."""
         if hasattr(self, entry) and getattr(self, entry) != value:
@@ -44,6 +43,13 @@ class Config():
         with open(fname, 'w') as f:
             yaml.dump(d, f)
         logger.info(f"Dumped config to: {fname}")
+
+    @classmethod
+    def from_dict(cls, d:dict):
+        cfg = cls()
+        for k, v in d.items():
+            setattr(cfg, k, v)
+        return cfg
 
 
 def add_default_paths(cfg: Config, folder_data='', out_root=None):
