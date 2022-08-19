@@ -38,7 +38,7 @@ fnames = dict(
 plasma_proteinGroups = folder_data / 'Protein_ALDupgrade_Report.csv',
 plasma_aggPeptides = folder_data / 'ald_proteome_spectronaut.tsv',
 liver_proteinGroups = folder_data / 'Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
-liver_aggPeptides = folder_data / 'Peptide_20200221_094544_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.tsv',
+liver_aggPeptides = folder_data / 'Peptide_20220819_100847_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
 annotations = folder_data / 'ald_experiment_annotations.csv',
 clinic = folder_data / 'ald_cli_164.csv',
 raw_meta = folder_data / 'ald_metadata_rawfiles.csv')
@@ -488,10 +488,10 @@ df.to_pickle(folder_data_out / 'ald_plasma_proteinGroups.pkl')
 
 # %%
 idx_cols = ['PG.ProteinAccessions', 'PG.Genes', 'Sample ID']
-N_FRIST_META = 9
+N_FRIST_META = 8
 
 # %%
-df = pd.read_table(fnames.liver_aggPeptides, low_memory=False)
+df = pd.read_csv(fnames.liver_aggPeptides, low_memory=False)
 df.shape
 
 # %%
@@ -512,14 +512,17 @@ column_types
 df = df.set_index(list(df.columns[:N_FRIST_META])).sort_index(axis=1)
 
 # %%
-VAR_PEP = 'EG.TotalQuantity'
 df.loc[:, df.columns.str.contains(VAR_PEP)]
 
 # %%
 df.columns[:10]
 
 # %% [markdown]
-# create new multiindex from column
+# create new multiindex from column (see examples above)
+#
+# - split on whitespace
+# - select string at first position
+# - split on `sep`, keep both
 
 # %%
 sep = '.htrms.'
@@ -608,8 +611,10 @@ df = df.loc[sel_liver_samples]
 df
 
 # %%
-des_data = df.describe()
-des_data
+# %%time
+# des_data = df.describe() unnecessary computation which take too long
+des_data = df.isna().sum().to_frame('count').T
+des_data                        
 
 # %% [markdown]
 # ### Check for metadata from rawfile overlap
