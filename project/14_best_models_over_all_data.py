@@ -6,11 +6,11 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.13.8
+#       jupytext_version: 1.14.0
 #   kernelspec:
-#     display_name: vaep
+#     display_name: Python 3
 #     language: python
-#     name: vaep
+#     name: python3
 # ---
 
 # %% [markdown]
@@ -204,5 +204,5 @@ fig = px.bar(to_plot,
              text='text',
              category_orders=order_categories,
              height=600)
-fig.write_image(FOLDER / f"{fname}.pdf")
+fig.write_image(FOLDER / f"{fname}_plotly.pdf")
 fig
