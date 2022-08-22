@@ -1,3 +1,4 @@
 config_split: config/evidence_split.yaml
 config_train: config/evidence_train.yaml
-folder_experiment: 'runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070'
+folder_experiment: runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070
+fn_rawfile_metadata: data/files_selected_metadata.csv
