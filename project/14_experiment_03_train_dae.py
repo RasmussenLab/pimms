@@ -91,6 +91,7 @@ hidden_layers:str = '512' # A underscore separated string of layers, '128_64' fo
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'DAE'
+save_pred_real_na:bool=True # Save all predictions for real na
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -139,6 +140,8 @@ args.force_train = force_train
 del force_train
 args.sample_idx_position = sample_idx_position
 del sample_idx_position
+args.save_pred_real_na = save_pred_real_na
+del save_pred_real_na
 
 print(hidden_layers)
 if isinstance(hidden_layers, str):
@@ -375,6 +378,18 @@ val_pred_fake_na
 # %% tags=[]
 test_pred_fake_na['DAE'] = pred # model_key?
 test_pred_fake_na
+
+# %%
+if args.save_pred_real_na:
+    # all idx missing in training data
+    mask = data.train_X.isna().stack()
+    idx_real_na = mask.index[mask]
+    # remove fake_na idx
+    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+    pred_real_na = pred.loc[idx_real_na]
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    del mask, idx_real_na, pred_real_na, pred
+
 
 # %% [markdown]
 # ### Plots

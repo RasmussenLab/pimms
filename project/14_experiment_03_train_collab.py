@@ -91,6 +91,7 @@ latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of mode
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'collab'
+save_pred_real_na:bool=False # Save all predictions for real na
 
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -136,6 +137,8 @@ args.force_train = force_train
 del force_train
 args.sample_idx_position = sample_idx_position
 del sample_idx_position
+args.save_pred_real_na = save_pred_real_na
+del save_pred_real_na
 
 # # Currently not needed -> DotProduct used, not a FNN
 # print(hidden_layers)
@@ -309,16 +312,28 @@ val_pred_fake_na['collab'], _ = ana_collab.learn.get_preds(
     dl=ana_collab.test_dl)
 val_pred_fake_na
 
-# %% [markdown]
-# Move everything to cpu, to make sure all tensors will be compatible
 
-# %%
-# ana_collab.learn.cpu()
+# %% [markdown]
+# select test data predictions
 
 # %%
 ana_collab.test_dl = ana_collab.dls.test_dl(data.test_y.reset_index())
 test_pred_fake_na['collab'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
 test_pred_fake_na
+
+# %%
+if args.save_pred_real_na:
+    # missing values in train data
+    mask = data.train_X.unstack().isna().stack()
+    idx_real_na = mask.loc[mask].index
+    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+    dl_real_na = ana_collab.dls.test_dl(idx_real_na.to_frame())
+    pred_real_na, _ = ana_collab.learn.get_preds(dl=dl_real_na)
+    pred_real_na = pd.Series(pred_real_na, idx_real_na)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    del mask, idx_real_na, pred_real_na, dl_real_na
+    # use indices of test and val to drop fake_na
+    # get remaining predictions
 
 # %% [markdown]
 # ## Data in wide format

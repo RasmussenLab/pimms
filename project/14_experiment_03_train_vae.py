@@ -90,6 +90,7 @@ hidden_layers:Union[int,str] = '256_128' # A underscore separated string of laye
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'VAE'
+save_pred_real_na:bool=False # Save all predictions for real na
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -138,6 +139,8 @@ args.force_train = force_train
 del force_train
 args.sample_idx_position = sample_idx_position
 del sample_idx_position
+args.save_pred_real_na = save_pred_real_na
+del save_pred_real_na
 
 print(hidden_layers)
 if isinstance(hidden_layers, str):
@@ -375,18 +378,32 @@ fig = models.plot_training_losses(ana_vae.learn, model_key, folder=args.out_figu
 pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=ana_vae.learn,
                                           position_pred_tuple=0,
                                           transformer=ana_vae.transform)
+pred = pred.stack()
 pred
 
 # %%
-val_pred_fake_na['VAE'] = pred.stack() # 'model_key' ?
+val_pred_fake_na['VAE'] = pred # 'model_key' ?
 val_pred_fake_na
 
 # %% [markdown]
 # select test data predictions
 
 # %%
-test_pred_fake_na['VAE'] = pred.stack() # model_key?
+test_pred_fake_na['VAE'] = pred # model_key?
 test_pred_fake_na
+
+# %% [markdown]
+# save real na predictions
+# %%
+if args.save_pred_real_na:
+    # all idx missing in training data
+    mask = data.train_X.isna().stack()
+    idx_real_na = mask.index[mask]
+    # remove fake_na idx
+    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+    pred_real_na = pred.loc[idx_real_na]
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    del mask, idx_real_na, pred_real_na, pred
 
 # %% [markdown]
 # ### Plots
