@@ -4,3 +4,9 @@ latent_dim: 10
 hidden_layers: "64"
 sample_idx_position: 0
 cuda: True
+#colab
+#latent_dim: 5
+batch_size_collab: 1024
+# AE
+#batch_size: 32
+save_pred_real_na: True
