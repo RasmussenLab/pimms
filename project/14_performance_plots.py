@@ -8,9 +8,9 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.0
 #   kernelspec:
-#     display_name: vaep
+#     display_name: Python 3
 #     language: python
-#     name: vaep
+#     name: python3
 # ---
 
 # %% [markdown]
@@ -123,7 +123,7 @@ imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X)
 imputed_shifted_normal
 
 # %%
-imputed_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=0.0, std_shrinkage=1.0)
+imputed_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3)
 imputed_normal
 
 # %%
