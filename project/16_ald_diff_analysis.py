@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import vaep
 import vaep.analyzers
 import vaep.io.datasplits
+import vaep.imputation
 # from vaep.analyzers import analyzers
 
 import vaep.nb as config
@@ -88,11 +89,11 @@ def plot_cutoffs(df, feat_completness_over_samples=None, min_feat_in_sample=None
     notna = df.notna()
     fig, axes = plt.subplots(1, 2)
     ax  = axes[0]
-    notna.sum(axis=0).sort_values().plot(rot=90, ax=ax, ylabel='count')
+    notna.sum(axis=0).sort_values().plot(rot=90, ax=ax, ylabel='count samples', xlabel='feature name')
     if min_feat_in_sample is not None:
         ax.axhline(min_feat_in_sample)
     ax  = axes[1]
-    notna.sum(axis=1).sort_values().plot(rot=90, ax=ax)
+    notna.sum(axis=1).sort_values().plot(rot=90, ax=ax, ylabel='count features', xlabel='sample name')
     if feat_completness_over_samples is not None:
         ax.axhline(feat_completness_over_samples)
 
@@ -122,10 +123,23 @@ pred_real_na.sample(3)
 
 
 # %%
-ax = pred_real_na.hist()
+pred_real_na_imputed_normal = vaep.imputation.impute_shifted_normal(data.train_X.unstack()).loc[pred_real_na.index]
 
-# %%
-ax = observed.hist()
+fig, axes = plt.subplots(3, figsize=(10, 15), sharex=True)
+ax = axes[1]
+ax = pred_real_na.hist(ax=ax)
+ax.set_title(f'real na imputed using {args.model_key}')
+ax.set_ylabel('count measurments')
+
+ax = axes[0]
+ax = observed.hist(ax=ax)
+ax.set_title('observed measurments')
+ax.set_ylabel('count measurments')
+
+ax = axes[2]
+ax = pred_real_na_imputed_normal.hist(ax=ax)
+ax.set_title(f'real na imputed using shifted normal distribution')
+ax.set_ylabel('count measurments')
 
 # %%
 df = pd.concat([data.train_X, data.val_y, data.test_y, pred_real_na]).unstack()
@@ -133,5 +147,3 @@ df
 
 # %%
 assert df.isna().sum().sum() == 0, "DataFrame has missing entries"
-
-# %%
