@@ -671,7 +671,7 @@ fig = px_vaep.line(errors_val_smoothed_long.sort_values(by='freq'),
                    category_orders={'model': order_models})
 fig = px_vaep.apply_default_layout(fig)
 fig.write_image(FOLDER / f'best_models_errors_by_freq_plotly.pdf')
-fig.write_html(FOLDER / f'best_models_errors_by_freq_plotly.hmtl')
+fig.write_html(FOLDER / f'best_models_errors_by_freq_plotly.html')
 fig
 
 # %%

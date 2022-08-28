@@ -111,7 +111,7 @@ def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') 
     return string_key
 
 
-def get_colums_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
+def get_columns_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
     cols = {replace_with(col.replace(' ', '_').replace(
         '-', '_')): col for col in df.columns}
     if all_lower_case:

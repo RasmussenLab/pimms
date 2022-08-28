@@ -26,6 +26,7 @@ def _savefig(fig, name, folder: pathlib.Path = '.', pdf=True):
     fname = folder / name
     folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
+    fig.tight_layout()
     fig.savefig(fname.with_suffix('.png'))
     if pdf:
         fig.savefig(fname.with_suffix('.pdf'))
