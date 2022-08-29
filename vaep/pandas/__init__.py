@@ -110,10 +110,15 @@ def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') 
         string_key = string_key.replace(symbol, replace_with)
     return string_key
 
+def index_to_dict(index:pd.Index) -> dict:
+    cols = {replace_with(col.replace(' ', '_').replace(
+        '-', '_')): col for col in index}
+    return cols
 
 def get_columns_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
-    cols = {replace_with(col.replace(' ', '_').replace(
-        '-', '_')): col for col in df.columns}
+    if isinstance(df.columns, pd.MultiIndex):
+        raise ValueError("MultiIndex not supported.")
+    cols = index_to_dict(df.columns)
     if all_lower_case:
         cols = {k.lower(): v for k, v in cols.items()}
     return omegaconf.OmegaConf.create(cols)
