@@ -2,7 +2,7 @@
 VAEP
 Variatonal autoencoder for proteomics
 """
-
+from __future__ import annotations
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
 from logging import NullHandler
