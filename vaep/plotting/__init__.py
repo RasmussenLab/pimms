@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -238,3 +239,39 @@ def plot_counts(df_counts: pd.DataFrame, n_samples,
                 fontsize=16,
                 arrowprops=dict(facecolor='black', shrink=0.05))
     return ax
+
+
+def plot_cutoffs(df: pd.DataFrame,
+                 feat_completness_over_samples: int = None,
+                 min_feat_in_sample: int = None
+                 ) -> tuple[matplotlib.figure.Figure, np.array[matplotlib.axes.Axes]]:
+    """plot number of available features along index and columns (feat vs samples),
+    potentially including some cutoff.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame in wide data format.
+    feat_completness_over_samples : int, optional
+        horizental line to plot as cutoff for features, by default None
+    min_feat_in_sample : int, optional
+        horizental line to plot as cutoff for samples, by default None
+
+    Returns
+    -------
+    tuple[matplotlib.figure.Figure, np.array[matplotlib.axes.Axes]]
+        _description_
+    """
+    notna = df.notna()
+    fig, axes = plt.subplots(1, 2)
+    ax = axes[0]
+    notna.sum(axis=0).sort_values().plot(rot=90, ax=ax,
+                                         ylabel='count samples', xlabel='feature name')
+    if min_feat_in_sample is not None:
+        ax.axhline(min_feat_in_sample)
+    ax = axes[1]
+    notna.sum(axis=1).sort_values().plot(rot=90, ax=ax,
+                                         ylabel='count features', xlabel='sample name')
+    if feat_completness_over_samples is not None:
+        ax.axhline(feat_completness_over_samples)
+    return fig, axes

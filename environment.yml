@@ -11,9 +11,9 @@ dependencies:
   - biopython # Aligner
   - python=3.8.*
   - numpy=1.20*
-  - pandas=1.2
+  - pandas
   - pandas-profiling
-  - scipy=1.6.*
+  - scipy>=1.6
   # plotting
   - matplotlib=3.3.*
   - python-kaleido
@@ -27,6 +27,9 @@ dependencies:
   - torchvision
   - cudatoolkit=10.2
   - tensorboard
+  # stats
+  - pingouin
+  - statsmodels
   # other
   - tqdm # progress bars
   - xmltodict # configs
