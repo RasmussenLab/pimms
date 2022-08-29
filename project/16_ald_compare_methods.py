@@ -1,0 +1,176 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.14.0
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
+# # Compare outcomes from differential analysis based on different imputation methods
+#
+# - load scores based on `16_ald_diff_analysis`
+
+# %%
+from pathlib import Path
+
+import pandas as pd
+import seaborn as sns
+
+import vaep
+logger = vaep.logging.setup_nb_logger()
+
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
+
+# %% [markdown]
+# ## Parameters
+
+# %%
+folder_experiment = "runs/appl_ald_data/proteinGroups"
+model_key = 'vae'
+target = 'kleiner'
+
+# %%
+params = vaep.nb.get_params(args, globals=globals())
+params
+
+# %%
+args = vaep.nb.Config()
+args.folder_experiment = Path(params["folder_experiment"])
+args.update_from_dict(params)
+args = vaep.nb.add_default_paths(args)
+args
+
+# %% [markdown]
+# # Load scores 
+
+# %%
+[x for x in args.folder_experiment.iterdir() if 'scores' in str(x)]
+
+# %%
+fname = args.folder_experiment / f'diff_analysis_scores_{args.model_key}.pkl'
+fname
+
+# %%
+scores = pd.read_pickle(fname)
+scores
+
+# %%
+import omegaconf
+models = vaep.nb.Config.from_dict(vaep.pandas.index_to_dict(scores.columns.levels[0]))
+vars(models)
+
+# %%
+assert args.model_key in models.keys(), f"Missing model key which was expected: {args.model_key}"
+
+# %%
+scores.describe()
+
+# %%
+scores = scores.loc[pd.IndexSlice[:, args.target], :]
+scores
+
+# %%
+scores.describe()
+
+# %% [markdown]
+# ## Load frequencies of observed features
+
+# %%
+fname = args.folder_experiment / 'freq_features_observed.csv'
+freq_feat = pd.read_csv(fname, index_col=0)
+freq_feat
+
+# %% [markdown]
+# # Compare shared features
+
+# %%
+scores_common = scores.dropna().reset_index(-1, drop=True)
+scores_common
+
+
+# %%
+def annotate_decision(scores, model):
+    return scores[(model, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+
+annotations = None
+for model, model_column in models.items():
+    if not annotations is None:
+        annotations += ' - '
+        annotations += scores_common[(model_column, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+    else:
+        annotations= scores_common[(model_column, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+annotations.name = 'Differential Analysis Comparison'
+annotations.value_counts()
+
+# %%
+mask_different = ( (scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1)) & 
+ ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(axis=1))
+)
+
+scores_common.loc[mask_different]
+
+# %%
+fname = args.folder_experiment / f'diff_analysis_differences_{args.model_key}.xlsx'
+scores_common.loc[mask_different].to_excel(fname)
+fname
+
+# %%
+var = 'qvalue'
+to_plot = [scores_common[v][var] for k,v in models.items()]
+for s, k in zip(to_plot, models.keys()): s.name = k.replace('_', ' ') 
+to_plot.append(freq_feat.loc[scores_common.index])
+to_plot.append(annotations)
+to_plot = pd.concat(to_plot, axis=1)
+to_plot
+
+# %% [markdown]
+# ## Differences plotted
+#
+# - first only using created annotations
+
+# %%
+ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison')
+fname = args.out_figures / f'diff_analysis_comparision_1_{args.model_key}'
+fig = ax.get_figure()
+vaep.savefig(fig, name = fname)
+
+# %% [markdown]
+# - showing how many features were measured ("observed")
+
+# %%
+ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],  size='frequency', hue='Differential Analysis Comparison')
+fig = ax.get_figure()
+fname = args.out_figures / f'diff_analysis_comparision_2_{args.model_key}'
+vaep.savefig(fig, name=fname)
+
+# %% [markdown]
+# # Only features contained in model
+
+# %%
+scores_model_only = scores.reset_index(level=-1, drop=True)
+scores_model_only = (scores_model_only
+                     .loc[
+                         scores_model_only.index.difference(scores_common.index),
+                         args.model_key]
+                     .sort_values(by='qvalue', ascending=True)
+                     .join(freq_feat)
+                     )
+scores_model_only
+
+# %%
+scores_model_only.rejected.value_counts()
+
+# %%
+fname = args.folder_experiment / 'diff_analysis_only_model.xlsx'
+scores_model_only.to_excel(fname)
+fname
