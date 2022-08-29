@@ -38,7 +38,7 @@ import vaep.io.datasplits
 import vaep.imputation
 import vaep.stats
 
-import vaep.nb as config
+import vaep.nb
 
 logger = vaep.logging.setup_nb_logger()
 
@@ -63,23 +63,17 @@ model_key = 'vae'
 value_name='intensity'
 
 # %%
-params = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
+params = vaep.nb.get_params(args, globals=globals(), remove=True)
 params
 
 # %%
-args = config.Config()
-args.fn_rawfile_metadata = Path(fn_rawfile_metadata)
-args.fn_clinical_data = Path(fn_clinical_data)
-args.folder_experiment = Path(folder_experiment)
-args = vaep.nb.add_default_paths(args, folder_data=folder_data)
-args.covar = covar.split(',')
-args
-for k, v in params.items():
-    try:
-        setattr(args, k, v)
-    except AttributeError:
-        pass
-del fn_rawfile_metadata, fn_clinical_data, folder_experiment, file_format, folder_data, model_key, target, covar
+args = vaep.nb.Config()
+args.fn_rawfile_metadata = Path(params["fn_rawfile_metadata"])
+args.fn_clinical_data = Path(params["fn_clinical_data"])
+args.folder_experiment = Path(params["folder_experiment"])
+args = vaep.nb.add_default_paths(args, folder_data=params["folder_data"])
+args.covar = params["covar"].split(',')
+args.update_from_dict(params)
 args
 
 # %% [markdown]
