@@ -56,11 +56,12 @@ folder_data: str = ''  # specify data directory if needed
 fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
 fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
 target: str = 'kleiner'
-covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal'
+covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
 
 file_format = "pkl"
 model_key = 'vae'
 value_name='intensity'
+out_folder='diff_analysis'
 
 # %%
 params = vaep.nb.get_params(args, globals=globals(), remove=True)
@@ -71,10 +72,16 @@ args = vaep.nb.Config()
 args.fn_rawfile_metadata = Path(params["fn_rawfile_metadata"])
 args.fn_clinical_data = Path(params["fn_clinical_data"])
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args, folder_data=params["folder_data"])
+args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment/params["out_folder"]/params["target"]/params["model_key"])
 args.covar = params["covar"].split(',')
 args.update_from_dict(params)
 args
+
+# %% [markdown]
+# Outputs of this notebook will be stored here
+
+# %%
+args.out_folder
 
 # %% [markdown]
 # # Data
@@ -94,14 +101,30 @@ observed
 # ## Clinical data
 
 # %%
-# covar = ['age', 'bmi', 'gender_num', 'abstinent_num', 'nas_steatosis_ordinal']
-# covar_steatosis = ['age', 'bmi', 'gender_num', 'abstinent_num', 'kleiner', 'nas_inflam']
+# covar = 'age,bmi,gender_num,abstinent_num,nas_steatosis_ordinal'
+# covar_steatosis = 'age,bmi,gender_num,abstinent_num,kleiner,nas_inflam'
 
 # %%
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
+df_clinic['abstinent_num'] = (df_clinic["currentalc"] == 0.00).astype(int)
 cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
-df_clinic.describe()
+df_clinic[[args.target, *args.covar]].describe()
+
+# %% [markdown]
+# Impute missing values (otherwise rows with missing values will be removed)
+#
+# - check how many rows have one missing values
+
+# %%
+#ToDo
+df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
+
+# %% [markdown]
+# Data description of data used:
+
+# %%
+df_clinic[[args.target, *args.covar]].dropna().describe()
 
 # %% [markdown]
 # ## ALD study approach using all measurments
@@ -125,8 +148,9 @@ freq_feat.to_csv(fname)
 freq_feat
 
 # %%
-vaep.plotting.plot_cutoffs(observed.unstack(), feat_completness_over_samples=cutoffs.feat_completness_over_samples,
+fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(), feat_completness_over_samples=cutoffs.feat_completness_over_samples,
              min_feat_in_sample=cutoffs.min_feat_in_sample)
+vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 
 # %%
 pred_real_na_imputed_normal = vaep.imputation.impute_shifted_normal(
@@ -165,7 +189,7 @@ ax = pred_real_na_imputed_normal.hist(ax=ax)
 ax.set_title(f'real na imputed using shifted normal distribution')
 ax.set_ylabel('count measurments')
 
-vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=args.out_figures)
+vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=args.out_folder)
 
 # %% [markdown]
 # # Differential analysis
@@ -187,7 +211,7 @@ scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
         df_clinic=df_clinic,
         target=args.target,
         covar=args.covar,
-        value_name=value_name)
+        value_name=args.value_name)
 
 scores.columns = pd.MultiIndex.from_product([[args.model_key], scores.columns],
                                             names=('model', 'var'))
@@ -206,7 +230,7 @@ _scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
         df_clinic=df_clinic,
         target=args.target,
         covar=args.covar,
-        value_name=value_name)
+        value_name=args.value_name)
 _scores.columns = pd.MultiIndex.from_product([['random shifted_imputation'], _scores.columns],
                                             names=('model', 'var'))
 _scores
@@ -220,6 +244,6 @@ scores=scores.join(_scores)
 scores.describe()
 
 # %%
-fname = args.folder_experiment/f'diff_analysis_scores_{args.model_key}.pkl'
+fname = args.out_folder/f'diff_analysis_scores.pkl'
 scores.to_pickle(fname)
 fname

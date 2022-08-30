@@ -81,6 +81,7 @@ def add_default_paths(cfg: Config, folder_data='', out_root=None):
     """Add default paths to config."""
     if out_root:
         cfg.out_folder = Path(out_root)
+        cfg.out_folder.mkdir(exist_ok=True, parents=True)
     else:
         cfg.out_folder = cfg.folder_experiment
     if folder_data:
