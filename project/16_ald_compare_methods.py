@@ -34,7 +34,7 @@ args = dict(globals()).keys()
 # %% [markdown]
 # ## Parameters
 
-# %%
+# %% tags=["parameters"]
 folder_experiment = "runs/appl_ald_data/proteinGroups"
 model_key = 'vae'
 target = 'kleiner'

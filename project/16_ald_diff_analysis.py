@@ -50,7 +50,7 @@ args = dict(globals()).keys()
 # %% [markdown]
 # ## Parameters
 
-# %%
+# %% tags=["parameters"]
 folder_experiment = "runs/appl_ald_data/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
