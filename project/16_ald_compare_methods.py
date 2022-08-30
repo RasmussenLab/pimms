@@ -38,6 +38,7 @@ args = dict(globals()).keys()
 folder_experiment = "runs/appl_ald_data/proteinGroups"
 model_key = 'vae'
 target = 'kleiner'
+out_folder='diff_analysis'
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -46,18 +47,18 @@ params
 # %%
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
+args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment/params["out_folder"]/params["target"]/params["model_key"])
 args.update_from_dict(params)
-args = vaep.nb.add_default_paths(args)
 args
 
 # %% [markdown]
 # # Load scores 
 
 # %%
-[x for x in args.folder_experiment.iterdir() if 'scores' in str(x)]
+[x for x in args.out_folder.iterdir() if 'scores' in str(x)]
 
 # %%
-fname = args.folder_experiment / f'diff_analysis_scores_{args.model_key}.pkl'
+fname = args.out_folder / f'diff_analysis_scores.pkl'
 fname
 
 # %%
@@ -120,7 +121,7 @@ mask_different = ( (scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=
 scores_common.loc[mask_different]
 
 # %%
-fname = args.folder_experiment / f'diff_analysis_differences_{args.model_key}.xlsx'
+fname = args.out_folder / f'diff_analysis_differences.xlsx'
 scores_common.loc[mask_different].to_excel(fname)
 fname
 
@@ -140,7 +141,7 @@ to_plot
 
 # %%
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison')
-fname = args.out_figures / f'diff_analysis_comparision_1_{args.model_key}'
+fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
 fig = ax.get_figure()
 vaep.savefig(fig, name = fname)
 
@@ -150,7 +151,7 @@ vaep.savefig(fig, name = fname)
 # %%
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],  size='frequency', hue='Differential Analysis Comparison')
 fig = ax.get_figure()
-fname = args.out_figures / f'diff_analysis_comparision_2_{args.model_key}'
+fname = args.out_folder / f'diff_analysis_comparision_2_{args.model_key}'
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
@@ -171,6 +172,18 @@ scores_model_only
 scores_model_only.rejected.value_counts()
 
 # %%
-fname = args.folder_experiment / 'diff_analysis_only_model.xlsx'
+fname = args.out_folder / 'diff_analysis_only_model.xlsx'
 scores_model_only.to_excel(fname)
 fname
+
+# %%
+from IPython.display import IFrame
+display(IFrame('https://www.uniprot.org/', width=900,height=500))
+
+# %% language="html"
+# <iframe 
+#   style="transform-origin: 0px 0px 0px; transform: scale(1.5); width: 600px; height: 600px;" 
+#   src='https://diseases.jensenlab.org/Search'
+#   name="iFrame"
+#   scrolling="no">
+# </iframe>
