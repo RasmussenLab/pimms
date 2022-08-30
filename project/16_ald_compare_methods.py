@@ -140,9 +140,13 @@ to_plot
 # - first only using created annotations
 
 # %%
+title = 'Q-Value comparison between methods.'
+
+# %%
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison')
 fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
 fig = ax.get_figure()
+fig.suptitle(title, fontsize=24)
 vaep.savefig(fig, name = fname)
 
 # %% [markdown]
@@ -151,6 +155,7 @@ vaep.savefig(fig, name = fname)
 # %%
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],  size='frequency', hue='Differential Analysis Comparison')
 fig = ax.get_figure()
+fig.suptitle(title, fontsize=24)
 fname = args.out_folder / f'diff_analysis_comparision_2_{args.model_key}'
 vaep.savefig(fig, name=fname)
 
