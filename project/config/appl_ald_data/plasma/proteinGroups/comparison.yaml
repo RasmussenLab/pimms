@@ -1,0 +1,6 @@
+folder_experiment: runs/appl_ald_data/plasma/proteinGroups
+fn_rawfile_metadata: 'data/single_datasets/raw_meta.csv'
+covar: 
+  kleiner: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
+  inflammation: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
+  steatosis: age,bmi,gender_num,abstinent_num,kleiner,nas_inflam
