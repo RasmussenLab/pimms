@@ -336,7 +336,7 @@ def get_last_index_matching_proportion(df_counts: pd.DataFrame,
         Index value for cutoff
     """
     assert df_counts.index.is_unique
-    mask = df_counts[prop_col] > prop
+    mask = df_counts[prop_col] >= prop
     idx_cutoff = df_counts[prop_col].loc[mask].tail(1).index[0]
     return idx_cutoff
 
