@@ -51,7 +51,7 @@ args = dict(globals()).keys()
 # ## Parameters
 
 # %% tags=["parameters"]
-folder_experiment = "runs/appl_ald_data/proteinGroups"
+folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
 fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
@@ -173,21 +173,28 @@ pred_real_na.sample(3)
 
 
 # %%
+min_bin, max_bin = (int(min(pred_real_na.min(), observed.min(), pred_real_na_imputed_normal.min())),
+(int(max(pred_real_na.max(), observed.max(), pred_real_na_imputed_normal.max()))) + 1)
+min_bin, max_bin
+
+# %%
 fig, axes = plt.subplots(3, figsize=(10, 15), sharex=True)
 ax = axes[1]
-ax = pred_real_na.hist(ax=ax)
-ax.set_title(f'real na imputed using {args.model_key}')
+bins = range(min_bin, max_bin+1, 1)
+ax = pred_real_na.hist(ax=ax,bins=bins)
+ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
 
 ax = axes[0]
-ax = observed.hist(ax=ax)
-ax.set_title('observed measurments')
+ax = observed.hist(ax=ax, bins=bins)
+ax.set_title(f'observed measurments (N={len(observed):,d})')
 ax.set_ylabel('count measurments')
 
 ax = axes[2]
-ax = pred_real_na_imputed_normal.hist(ax=ax)
-ax.set_title(f'real na imputed using shifted normal distribution')
+ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins)
+ax.set_title(f'real na imputed using shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
 ax.set_ylabel('count measurments')
+ax.set_xlabel(args.value_name)
 
 vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=args.out_folder)
 
