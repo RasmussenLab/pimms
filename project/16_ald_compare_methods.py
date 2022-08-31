@@ -35,7 +35,7 @@ args = dict(globals()).keys()
 # ## Parameters
 
 # %% tags=["parameters"]
-folder_experiment = "runs/appl_ald_data/proteinGroups"
+folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 model_key = 'vae'
 target = 'kleiner'
 out_folder='diff_analysis'
