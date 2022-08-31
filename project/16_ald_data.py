@@ -233,6 +233,11 @@ meta
 # %%
 meta.describe(include='all')
 
+# %%
+id_mappings =  ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
+id_mappings = meta[id_mappings].drop_duplicates()
+id_mappings.to_csv(folder_data_out / 'ald_plasma_aggPeptides_id_mappings.csv')
+id_mappings
 
 # %% [markdown]
 # ### Select aggregated peptide level data
@@ -269,6 +274,10 @@ df = df.squeeze().dropna().astype(float).unstack()
 df
 
 # %%
+df = df.dropna(how='all', axis=1)
+df
+
+# %%
 idx = df.index.to_series()
 idx = idx.str.extract(r'(Plate[\d]_[A-H]\d*)').squeeze()
 idx.name = 'Sample ID'
@@ -283,7 +292,8 @@ df = df.loc[idx_overlap_plasma]
 df
 
 # %%
-des_data = df.describe()
+# des_data = df.describe() # too slow
+des_data = df.isna().sum().to_frame('count').T
 des_data
 
 # %% [markdown]
@@ -338,7 +348,14 @@ N_FRIST_META = 3
 df
 
 # %%
-df.iloc[:, :N_FRIST_META].describe(include='all')
+meta = df.iloc[:, :N_FRIST_META]
+meta.describe(include='all')
+
+# %%
+id_mappings =  ["PG.ProteinAccessions", "PG.Genes"]
+id_mappings = meta[id_mappings].drop_duplicates()
+id_mappings.to_csv(folder_data_out / 'ald_plasma_proteinGroups_id_mappings.csv')
+id_mappings
 
 # %%
 column_types = df.iloc[:, N_FRIST_META:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
@@ -399,6 +416,8 @@ df.dtypes
 df = df.squeeze().dropna().astype(float).unstack()
 df
 
+
+
 # %%
 gene_non_unique = df.index.to_frame()["PG.Genes"].value_counts() > 1
 gene_non_unique = gene_non_unique[gene_non_unique].index
@@ -421,6 +440,10 @@ df = df.loc[idx_overlap_plasma]
 df
 
 # %%
+df = df.dropna(how='all', axis=0)
+df
+
+# %%
 des_data = df.describe()
 des_data
 
@@ -437,7 +460,7 @@ kwargs = {'xlabel': 'protein group number ordered by completeness',
           'title': 'protein group measurement distribution'}
 
 ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
-), feat_col_name='count', n_samples=len(df), ax=None, **kwargs)
+), feat_col_name='count', n_samples=len(df), ax=None, min_feat_prop=.0,**kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
@@ -539,7 +562,12 @@ meta = df.index.to_frame().reset_index(drop=True)
 meta
 
 # %%
-meta.describe(include='all')
+
+# %%
+id_mappings =  ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
+id_mappings = meta[id_mappings].drop_duplicates()
+id_mappings.to_csv(folder_data_out / 'ald_liver_aggPeptides_id_mappings.csv')
+id_mappings
 
 
 # %% [markdown]
@@ -611,6 +639,10 @@ df = df.loc[sel_liver_samples]
 df
 
 # %%
+df = df.dropna(how='all', axis=1)
+df
+
+# %%
 # %%time
 # des_data = df.describe() unnecessary computation which take too long
 des_data = df.isna().sum().to_frame('count').T
@@ -672,7 +704,14 @@ df
 
 
 # %%
-df.iloc[:, :N_FRIST_META].describe(include='all')
+meta = df.iloc[:, :N_FRIST_META]
+meta.describe(include='all')
+
+# %%
+id_mappings =  ["PG.ProteinAccessions", "PG.Genes"]
+id_mappings = meta[id_mappings].drop_duplicates()
+id_mappings.to_csv(folder_data_out / 'ald_liver_proteinGroups_id_mappings.csv')
+id_mappings
 
 # %%
 column_types = df.iloc[:, N_FRIST_META:].columns.to_series().apply(lambda s: tuple(s.split('.')[-2:]))
@@ -750,6 +789,10 @@ idx.describe()
 df = df.set_index(idx)
 # df = df.loc[idx_overlap_liver] # missing
 df = df.loc[sel_liver_samples]
+df
+
+# %%
+df = df.dropna(how='all', axis=1)
 df
 
 # %%
