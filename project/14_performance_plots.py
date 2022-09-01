@@ -74,10 +74,10 @@ del folder_data
 args
 
 # %%
-data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format) 
+data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %%
-fig, axes = plt.subplots(1, 2, sharey=True, figsize=(18,10))
+fig, axes = plt.subplots(1, 2, sharey=True)
 
 _ = data.val_y.unstack().notna().sum(axis=1).sort_values().plot(
         rot=90,
@@ -89,7 +89,6 @@ _ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
         ax=axes[1],
         title='Test data')
 fig.suptitle("Fake NAs per sample availability.", size=24)
-fig.tight_layout()
 vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 
 # %% [markdown]
@@ -119,12 +118,8 @@ data.train_X
 mean = data.train_X.mean()
 std = data.train_X.std()
 
-imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X)
+imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3)
 imputed_shifted_normal
-
-# %%
-imputed_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3)
-imputed_normal
 
 # %%
 medians_train = data.train_X.median()
@@ -132,6 +127,8 @@ medians_train.name = 'median'
 
 # %% [markdown]
 # # load predictions
+#
+# - calculate correlation -> only makes sense per feature (and than save overall correlation stats)
 
 # %% [markdown]
 # ## test data
@@ -142,8 +139,11 @@ pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_test = compare_predictions.load_predictions(pred_files)
 # pred_test = pred_test.join(medians_train, on=prop.index.name)
 pred_test['random shifted normal'] = imputed_shifted_normal
-pred_test['random normal'] = imputed_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
+SAMPLE_ID, FEAT_NAME = pred_test.index.names
+pred_test
+
+# %%
 pred_test_corr = pred_test.corr()
 ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
     title='Corr. between Fake NA and model predictions on test data',
@@ -151,7 +151,7 @@ ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
     ylim=(0.7,1)
 )
 ax = vaep.plotting.add_height_to_barplot(ax)
-vaep.savefig(ax.get_figure(), name='pred_corr_test', folder=args.out_figures)
+vaep.savefig(ax.get_figure(), name='pred_corr_test_overall', folder=args.out_figures)
 pred_test_corr
 
 # %%
@@ -161,8 +161,11 @@ kwargs = dict(ylim=(0.7,1), rot=90,
               title='Corr. betw. fake NA and model predictions per sample on test data',
               ylabel='correlation coefficient')
 ax = corr_per_sample_test.plot.box(**kwargs)
-fig = ax.get_figure()
-fig.tight_layout()
+
+vaep.savefig(ax.get_figure(), name='pred_corr_test_per_sample', folder=args.out_figures)
+with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:   
+    corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
+    corr_per_sample_test.to_excel(writer, sheet_name='correlations')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
@@ -180,6 +183,35 @@ pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
 # %%
 options = random.sample(set(freq_feat.index), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
+
+# %% [markdown]
+# ### Correlation per feature
+
+# %%
+corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+
+kwargs = dict(rot=90,
+              title=f'Corr. betw. fake NA and model predictions per {FEAT_NAME} on test data',
+              ylabel='correlation coefficient')
+ax = corr_per_feat_test.plot.box(**kwargs)
+
+vaep.savefig(ax.get_figure(), name='pred_corr_test_per_feat', folder=args.out_figures)
+with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:
+    corr_per_feat_test.describe().to_excel(writer, sheet_name='summary')
+    corr_per_feat_test.to_excel(writer, sheet_name='correlations')
+
+# %%
+feat_count_test = data.test_y.stack().groupby(FEAT_NAME).count()
+feat_count_test.name = 'count'
+feat_count_test.head()
+
+# %%
+treshold = vaep.pandas.get_lower_whiskers(corr_per_feat_test[models]).min()
+mask = (corr_per_feat_test[models] < treshold).any(axis=1)
+
+def highlight_min(s, color, tolerence=0.00001):
+    return np.where((s - s.min()).abs() < tolerence, f"background-color: {color};", None)
+corr_per_feat_test.join(feat_count_test).loc[mask].sort_values('count').style.apply(highlight_min, color='yellow', axis=1, subset=corr_per_feat_test.columns) 
 
 # %% [markdown]
 # ## Validation data
