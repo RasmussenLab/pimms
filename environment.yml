@@ -54,3 +54,4 @@ dependencies:
   - pip:
     - -e .
     - git+https://github.com/enryH/nbconvert_md_processing.git
+    - mrmr_selection
