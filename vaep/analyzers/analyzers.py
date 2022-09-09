@@ -515,7 +515,7 @@ def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, 
     ax.set_ylabel(cols[1])
     path_collection = scatter_plot_w_dates(
         ax, df, dates=dates, errors='raise')
-    path_collection = add_date_colorbar(path_collection, ax=ax, fig=fig)
+    cbar = add_date_colorbar(path_collection, ax=ax, fig=fig)
 
 
 def plot_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
@@ -526,7 +526,7 @@ def plot_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', 
     ax.set_ylabel(cols[1])
     path_collection = ax.scatter(
         x=cols[0], y=cols[1], c=meta, data=df, alpha=alpha)
-    _ = fig.colorbar(path_collection, ax=ax)
+    cbar = fig.colorbar(path_collection, ax=ax)
 
 
 def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
@@ -537,7 +537,7 @@ def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata
     ax.set_title(title, fontsize=18)
 
 
-def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
+def scatter_plot_w_dates(ax, df, dates=None, marker=None, errors='raise'):
     """plot first vs. second column in DataFrame.
     Use dates to color data.
     
@@ -560,16 +560,17 @@ def scatter_plot_w_dates(ax, df, dates=None, errors='raise'):
         y=df[cols[1]],
         c=[mdates.date2num(t) for t in pd.to_datetime(dates, errors=errors)
            ] if dates is not None else None,
-        alpha=ALPHA
+        alpha=ALPHA,
+        marker=marker,
     )
     return path_collection
 
 
 def add_date_colorbar(mappable, ax, fig):
     loc = mdates.AutoDateLocator()
-    _ = fig.colorbar(mappable, ax=ax, ticks=loc,
+    cbar = fig.colorbar(mappable, ax=ax, ticks=loc,
                      format=mdates.AutoDateFormatter(loc))
-    return ax
+    return cbar
 
 
 def cast_object_to_category(df: pd.DataFrame) -> pd.DataFrame:

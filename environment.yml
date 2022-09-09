@@ -27,6 +27,7 @@ dependencies:
   - torchvision
   - cudatoolkit=10.2
   - tensorboard
+  - umap-learn
   # stats
   - pingouin
   - statsmodels
