@@ -26,6 +26,7 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.dates
 import seaborn as sns
 
 import umap
@@ -81,6 +82,7 @@ logger.info(f"Folder for datasets to be created: {FOLDER_DATASETS.absolute()}")
 # %%
 data = pd.read_pickle(DUMP)
 data = data.squeeze() # In case it is a DataFrame, not a series (-> leads to MultiIndex)
+name_data = data.name
 logger.info(f"Number of rows (row = sample, feature, intensity): {len(data):,d}")
 data
 
@@ -135,8 +137,7 @@ vaep.plotting.savefig(fig, name='support_all',
 
 
 # %%
-FEAT_ID = data.index.names[-1]
-counts = data.groupby(FEAT_ID).count().squeeze()
+counts = data.groupby(idx_non_sample).count().squeeze()
 counts.to_json(FOLDER_DATASETS / 'feat_completeness_all.json', indent=4)
 ax = (counts
       .sort_values()  # will raise an error with a DataFrame
@@ -205,7 +206,10 @@ selected_instruments
 
 # %%
 reducer = umap.UMAP(random_state=42)
-data = data.unstack()
+data = data.unstack(idx_non_sample)
+data
+
+# %%
 embedding = reducer.fit_transform(data.fillna(data.median()))
 embedding = pd.DataFrame(embedding, index=data.index, columns=['UMAP 1', 'UMAP 2'])
 embedding = embedding.join(df_meta[["Content Creation Date", "instrument serial number"]])
@@ -239,17 +243,38 @@ vaep.savefig(fig, name='umap_interval90days_top5_instruments', folder=FOLDER_DAT
 
 # %%
 markers = ['o', 'x', 's', 'P', 'D', '.']
+alpha = 0.5
 fig, ax = plt.subplots(figsize=(20,10))
 groups = list()
+
+embedding["Content Creation Date"] = embedding["Content Creation Date"].dt.round("D")
+embedding["mdate"] = embedding["Content Creation Date"].apply(matplotlib.dates.date2num)
+
+to_plot = embedding.loc[embedding["instrument"] != 'other']
+
+norm = matplotlib.colors.Normalize(embedding["mdate"].min(), embedding["mdate"].max())
+cmap = sns.color_palette("PuBu", n_colors=26, as_cmap=True)
+
+
 for k, _to_plot in to_plot.groupby('instrument with N'):
     if markers:
         marker = markers.pop(0)
-    _ = vaep.analyzers.analyzers.scatter_plot_w_dates(ax=ax, df=_to_plot, marker=marker, dates=_to_plot["Content Creation Date"])
+    _ = ax.scatter(
+        x=_to_plot["UMAP 1"],
+        y=_to_plot["UMAP 2"],
+        c=_to_plot["mdate"],
+        alpha=alpha,
+        marker=marker,
+        cmap=cmap,
+        norm=norm
+    )
     groups.append(k)
-    # break
+    
 cbar = vaep.analyzers.analyzers.add_date_colorbar(ax.collections[0], ax=ax, fig=fig)
 cbar.ax.set_ylabel("date of measurement")
 ax.legend(ax.collections, groups, title='instrument serial number')
+ax.set_xlabel('UMAP 1')
+ax.set_ylabel('UMAP 2')
 vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 
 # %%
@@ -258,13 +283,14 @@ to_plot = data.isna().sum(axis=0).reset_index(drop=True).to_frame('feature preva
 to_plot = to_plot.join(data.isna().sum(axis=1).reset_index(drop=True).to_frame('features per sample'))
 to_plot = to_plot.join(counts_instrument.reset_index(drop=True)['count'].rename('samples per instrument', axis='index'))
 ax = to_plot.plot(kind='box', ax = ax, rot = 30, ylabel='count')
-
+to_plot.to_csv(FOLDER_DATASETS/ 'summary_statistics_dump_data.csv')
 vaep.savefig(fig, name='summary_statistics_dump',
                       folder=FOLDER_DATASETS)
 
 
 # %%
-data = data.stack()
+data = data.stack(idx_non_sample)
+data
 
 # %% [markdown]
 # ## Dump single experiments
@@ -336,6 +362,3 @@ dataset
 # add json dump as target file for script for workflows
 selected_instruments.to_json(f"{fname}.json", indent=4)
 logger.info(f"Saved: {fname}.json")
-
-# %% [markdown]
-#
