@@ -106,7 +106,7 @@ display(text.to_frame('text'))
 _to_plot
 
 # %%
-ax = _to_plot.plot.bar(rot=0, ylabel=METRIC, width=.8)
+ax = _to_plot.plot.bar(rot=0, ylim=(0,.99), ylabel=f"{METRIC} (log2 intensities)", width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
@@ -134,7 +134,9 @@ fig = px.bar(_to_plot.reset_index(),
              color='model',
              barmode="group",
              text='text',
+             labels={'metric_value': f"{METRIC} (log2 intensities)", 'data level': ''},
              category_orders=order_categories,
+             template='seaborn',
              height=600)
 fig.write_image(FOLDER / f"{fname}.pdf")
 fig
@@ -185,8 +187,11 @@ ax = (to_plot
       .loc[order_model, order_categories['data level']]
       .plot.bar(
           xlabel="model with overall best performance for all datasets",
+          ylabel="MAE (log2 intensity)",
           rot=45,
-          width=.8)
+          width=.8,
+          ylim=(0,.99),
+      colormap="inferno")
       )
 fig = ax.get_figure()
 ax = vaep.plotting.add_height_to_barplot(ax)
@@ -201,8 +206,11 @@ fig = px.bar(to_plot,
              y='metric_value',
              color='data level',
              barmode="group",
+             color_discrete_sequence=px.colors.qualitative.Prism,
              text='text',
+             labels={'metric_value': f"{METRIC} (log2 intensities)", 'model': '',},
              category_orders=order_categories,
+             template='seaborn',
              height=600)
 fig.write_image(FOLDER / f"{fname}_plotly.pdf")
 fig
