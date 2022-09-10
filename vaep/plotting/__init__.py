@@ -21,16 +21,19 @@ from . import plotly
 logger = logging.getLogger(__name__)
 
 
-def _savefig(fig, name, folder: pathlib.Path = '.', pdf=True):
+def _savefig(fig, name, folder: pathlib.Path = '.',
+             pdf=True,
+             dpi=300  # default 'figure'
+             ):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
     folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
     fig.tight_layout()
-    fig.savefig(fname.with_suffix('.png'))
+    fig.savefig(fname.with_suffix('.png'), dpi=dpi)
     if pdf:
-        fig.savefig(fname.with_suffix('.pdf'))
+        fig.savefig(fname.with_suffix('.pdf'), dpi=dpi)
     logger.info(f"Saved Figures to {fname}")
 
 
