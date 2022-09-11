@@ -21,12 +21,16 @@ def run_model(splits: Splits,
     results_test.auc = model.score(
         splits.X_test[selected_features], splits.y_test)
 
-    pred_score_target = model.predict_proba(
+    pred_score_test = model.predict_proba(
         splits.X_test[selected_features])[:, 1]
     results_test.roc = AucRocCurve(
-        *sklearn.metrics.roc_curve(y_true=splits.y_test, y_score=pred_score_target))
+        *sklearn.metrics.roc_curve(y_true=splits.y_test, y_score=pred_score_test))
     results_test.prc = PrecisionRecallCurve(*sklearn.metrics.precision_recall_curve(
-        y_true=splits.y_test, probas_pred=pred_score_target))
+        y_true=splits.y_test, probas_pred=pred_score_test))
+
+    results_test.aps = sklearn.metrics.average_precision_score(
+        y_true=splits.y_test,
+         y_score=pred_score_test)
 
     ret = Results(model=model,
                   selected_features=selected_features,

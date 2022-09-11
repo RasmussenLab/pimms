@@ -13,7 +13,7 @@ def plot_split_auc(result: ResultsSplit, name: str, ax: matplotlib.axes.Axes) ->
 
 
 def plot_split_prc(result: ResultsSplit, name: str, ax: matplotlib.axes.Axes) -> matplotlib.axes.Axes:
-    col_name = f"{name} (auc: {result.auc:.3f})"
+    col_name = f"{name} (aps: {result.aps:.3f})"
     roc = pd.DataFrame(result.prc, index='precision recall cutoffs'.split()).rename(
         {'precision': col_name})
     ax = roc.T.plot('recall', col_name, ylabel='precision', ax=ax)
