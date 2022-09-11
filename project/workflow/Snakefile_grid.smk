@@ -146,6 +146,7 @@ rule build_train_config_collab:
         
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
+        config['batch_size_collab'] = config["batch_size_collab"]
         config['cuda'] = params.cuda
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)

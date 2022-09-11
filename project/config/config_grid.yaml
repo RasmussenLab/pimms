@@ -1,6 +1,7 @@
 epochs_max:
 - 100
 batch_size: 64
+batch_size_collab: 32768
 hidden_layers:
 - '256'
 - '512'
