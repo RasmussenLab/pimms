@@ -10,7 +10,8 @@ PrecisionRecallCurve = namedtuple("PrecisionRecallCurve", 'precision recall cuto
 
 @dataclass
 class ResultsSplit:
-    auc: float = None
+    auc: float = None # receiver operation curve area under the curve
+    aps: float = None # average precision score
     roc: AucRocCurve = None
     prc: PrecisionRecallCurve = None
 

@@ -53,7 +53,6 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
-fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
 fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
 target: str = 'kleiner'
 covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
@@ -69,7 +68,6 @@ params
 
 # %%
 args = vaep.nb.Config()
-args.fn_rawfile_metadata = Path(params["fn_rawfile_metadata"])
 args.fn_clinical_data = Path(params["fn_clinical_data"])
 args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment/params["out_folder"]/params["target"]/params["model_key"])
@@ -230,6 +228,7 @@ scores
 
 # %%
 df = pd.concat([ald_study.stack(), pred_real_na_imputed_normal]).unstack()
+ald_study_feat = df.columns.to_list()
 df
 
 # %%
@@ -254,3 +253,16 @@ scores.describe()
 fname = args.out_folder/f'diff_analysis_scores.pkl'
 scores.to_pickle(fname)
 fname
+
+# %% [markdown]
+# ## Save new features with target for further use
+
+# %%
+df = pd.concat([observed, pred_real_na]).unstack()
+df = df[df.columns.difference(ald_study_feat)]
+df = df.join(df_clinic[args.target]).dropna()
+df.to_pickle(args.out_folder / f'new_features.pkl')
+df
+
+# %%
+list(args.out_folder.iterdir())
