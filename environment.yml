@@ -9,13 +9,13 @@ channels:
   - bioconda
 dependencies:
   - biopython # Aligner
-  - python=3.8.*
-  - numpy=1.20*
+  - python=3.8
+  - numpy=1.20
   - pandas
   - pandas-profiling
   - scipy>=1.6
   # plotting
-  - matplotlib=3.3.*
+  - matplotlib=3.3
   - python-kaleido
   - plotly
   - seaborn
@@ -37,11 +37,11 @@ dependencies:
   - openpyxl # xml
   - omegaconf
   # snakemake
-  - snakemake-minimal>=6.0.0
+  - snakemake-minimal=7.12.0
   # jupyter
-  - ipykernel=5.3.*
-  - ipython=7.22.*
-  - ipywidgets=7.6.*
+  - ipykernel=5.3
+  - ipython=7.22
+  - ipywidgets=7.6
   - jupytext
   - jupyterlab # standalone jupyter installation
   - jupyterlab_code_formatter
