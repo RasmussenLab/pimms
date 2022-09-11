@@ -9,3 +9,8 @@ def calc_errors_per_feat(pred: pd.DataFrame, freq_feat: pd.Series, target_col='o
     errors = errors.sort_values(by=freq_feat.name, ascending=True)
     errors.columns.name = 'model'
     return errors
+
+
+def get_absolute_error(pred:pd.DataFrame, y_true:str='observed') -> pd.DataFrame:
+    errors = pred.drop(y_true, axis=1).sub(pred[y_true], axis=0)
+    return errors.abs()
