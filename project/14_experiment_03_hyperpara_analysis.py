@@ -525,7 +525,7 @@ freq_feat.name = 'freq'
 freq_feat.head() # training data
 
 # %%
-errors_val = vaep.pandas.calc_errors(pred=pred_val, freq_feat=freq_feat, target_col='observed')
+errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_val, freq_feat=freq_feat, target_col='observed')
 errors_val
 
 # %%
@@ -634,7 +634,7 @@ ax = feat_count.hist(legend=True)
 freq_feat
 
 # %%
-errors_val = vaep.pandas.calc_errors(pred=pred_val, freq_feat=freq_feat, target_col='observed')
+errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_val, freq_feat=freq_feat, target_col='observed')
 idx_name = errors_val.index.name
 errors_val
 
