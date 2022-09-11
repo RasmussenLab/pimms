@@ -24,9 +24,6 @@ import plotly.express as px
 import seaborn
 
 import vaep.plotting
-
-# import vaep.plotting.plotly
-
 import vaep.nb
 
 
@@ -38,6 +35,8 @@ plt.rcParams['figure.figsize'] = [16.0, 7.0]
 seaborn.set_theme()
 
 vaep.plotting.make_large_descriptors()
+
+logger = vaep.logging.setup_nb_logger()
 
 # %%
 metrics_long = []
@@ -106,7 +105,7 @@ display(text.to_frame('text'))
 _to_plot
 
 # %%
-ax = _to_plot.plot.bar(rot=0, ylim=(0,.99), ylabel=f"{METRIC} (log2 intensities)", width=.8)
+ax = _to_plot.plot.bar(rot=0, ylabel=f"{METRIC} (log2 intensities)", width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
@@ -181,6 +180,7 @@ to_plot.to_csv(FOLDER /f"{fname}.csv")
 to_plot
 
 # %%
+fig, ax = plt.subplots(figsize=(10,8))
 ax = (to_plot
       .set_index(['model annotated', 'data level'])['metric_value']
       .unstack()
@@ -190,10 +190,9 @@ ax = (to_plot
           ylabel="MAE (log2 intensity)",
           rot=45,
           width=.8,
-          ylim=(0,.99),
-      colormap="inferno")
+          ax=ax,
+          colormap="inferno")
       )
-fig = ax.get_figure()
 ax = vaep.plotting.add_height_to_barplot(ax)
 fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
