@@ -25,20 +25,24 @@ provide one or more config files explicitly to overwrite defaults
 snakemake --snakefile workflow/Snakefile_GRID.smk --configfile config/other.yaml -n -p
 ```
 
+e.g. for small N grid search:
+
+```
+snakemake --snakefile workflow/Snakefile_GRID.smk --configfile config/grid_search_small_data/config_grid.yaml -n -p
+```
+
+
 ## Repeated training
 
 ### Repeated training of same models on same dataset
-
-- see if model train stable on one dataset
+- see if model trains stable on one dataset
 
 ```bash
-snakemake --snakefile workflow/Snakefile_GRID.smk -n -p
+snakemake --snakefile workflow/SnakefileRepeatBest.smk -n -p
 ```
 
-### Repeated trainign of models across machine datasets
-
+### Repeated training of models across machine datasets
 - see how model perform across similar datasets
-
 
 ```
 snakemake --snakefile workflow\Snakefile_across_datasets.smk -p -c1 -n

@@ -1,6 +1,7 @@
 epochs_max:
 - 100
 batch_size: 10
+batch_size_collab: 4096
 hidden_layers:
 - '256'
 - '512'
@@ -30,3 +31,4 @@ levels:
 config_split: 'config/grid_search_small_data/{level}_split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
+cuda: True

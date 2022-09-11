@@ -91,7 +91,7 @@ hidden_layers:str = '512' # A underscore separated string of layers, '128_64' fo
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'DAE'
-save_pred_real_na:bool=True # Save all predictions for real na
+save_pred_real_na:bool=False # Save all predictions for real na
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
