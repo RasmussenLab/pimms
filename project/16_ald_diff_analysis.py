@@ -176,17 +176,55 @@ min_bin, max_bin = (int(min(pred_real_na.min(), observed.min(), pred_real_na_imp
 min_bin, max_bin
 
 # %%
+fig, axes = plt.subplots(3, figsize=(20, 15), sharex=True)
+
+# axes = axes.ravel()
+
+ax = axes[0]
+ax = observed.hist(ax=ax, bins=bins)
+ax.set_title(f'observed measurments (N={len(observed):,d})')
+ax.set_ylabel('count measurments')
+
+ax = axes[1]
+bins = range(min_bin, max_bin+1, 1)
+ax = pred_real_na.hist(ax=ax,bins=bins, label=f'all (N={len(pred_real_na):,d})')
+ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
+ax.set_ylabel('count measurments')
+
+idx_new_model = pred_real_na.index.difference(pred_real_na_imputed_normal.index)
+ax = pred_real_na.loc[idx_new_model].hist(ax=ax,bins=bins, label=f'new (N={len(idx_new_model):,d})', color='green', alpha=0.9)
+ax.legend()
+
+ax = axes[2]
+bins = range(min_bin, max_bin+1, 1)
+ax = pred_real_na.loc[pred_real_na_imputed_normal.index].hist(ax=ax,bins=bins, label='VAE')
+ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, label='shifted normal')
+
+ax.set_title(f'real na imputed by shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
+ax.set_ylabel('count measurments')
+ax.set_xlabel(args.value_name)
+ax.legend()
+
+vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}_v2', folder=args.out_folder)
+
+# %% [markdown]
+# plot subsets to highlight differences
+
+# %%
 fig, axes = plt.subplots(3, figsize=(10, 15), sharex=True)
+
+ax = axes[0]
+ax = observed.hist(ax=ax, bins=bins)
+ax.set_title(f'observed measurments (N={len(observed):,d})')
+ax.set_ylabel('count measurments')
+
 ax = axes[1]
 bins = range(min_bin, max_bin+1, 1)
 ax = pred_real_na.hist(ax=ax,bins=bins)
 ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
 
-ax = axes[0]
-ax = observed.hist(ax=ax, bins=bins)
-ax.set_title(f'observed measurments (N={len(observed):,d})')
-ax.set_ylabel('count measurments')
+
 
 ax = axes[2]
 ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins)
@@ -266,3 +304,5 @@ df
 
 # %%
 list(args.out_folder.iterdir())
+
+# %%
