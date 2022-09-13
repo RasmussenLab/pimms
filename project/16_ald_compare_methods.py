@@ -20,6 +20,7 @@
 # %%
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
@@ -143,9 +144,11 @@ to_plot
 title = 'Q-Value comparison between methods.'
 
 # %%
-ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison')
+figsize=(10,10)
+fig, ax = plt.subplots(figsize=figsize)
+ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison', ax=ax)
+sns.move_legend(ax, "upper center")
 fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
-fig = ax.get_figure()
 fig.suptitle(title, fontsize=24)
 vaep.savefig(fig, name = fname)
 
@@ -153,8 +156,9 @@ vaep.savefig(fig, name = fname)
 # - showing how many features were measured ("observed")
 
 # %%
+fig, ax = plt.subplots(figsize=figsize)
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],  size='frequency', hue='Differential Analysis Comparison')
-fig = ax.get_figure()
+sns.move_legend(ax, "upper center")
 fig.suptitle(title, fontsize=24)
 fname = args.out_folder / f'diff_analysis_comparision_2_{args.model_key}'
 vaep.savefig(fig, name=fname)
@@ -181,11 +185,18 @@ fname = args.out_folder / 'diff_analysis_only_model.xlsx'
 scores_model_only.to_excel(fname)
 fname
 
-# %%
-from IPython.display import IFrame
-display(IFrame('https://www.uniprot.org/', width=900,height=500))
+# %% [markdown] tags=[]
+# # Feature lookup
+#
+# - [x] look-up ids and diseases, manually (uncomment)
+# - [ ] automatically by querying `api.jensenlab.org`: see if disease (`DOID` needed) has associations to gene found
 
-# %% language="html"
+# %%
+# from IPython.display import IFrame
+# display(IFrame('https://www.uniprot.org/', width=900,height=500))
+
+# %%
+# # %%html
 # <iframe 
 #   style="transform-origin: 0px 0px 0px; transform: scale(1.5); width: 600px; height: 600px;" 
 #   src='https://diseases.jensenlab.org/Search'
