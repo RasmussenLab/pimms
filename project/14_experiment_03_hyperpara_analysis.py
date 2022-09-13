@@ -22,6 +22,7 @@ import pathlib
 import pandas as pd
 import plotly.express as px
 import matplotlib
+import matplotlib.pyplot as plt
 
 
 import vaep.nb
@@ -38,6 +39,8 @@ import vaep.plotting.plotly as px_vaep
 pd.options.display.max_columns = 45
 pd.options.display.max_rows = 100
 pd.options.display.multi_sparse = False
+
+logger = vaep.logging.setup_nb_logger()
 
 # %% [markdown]
 # ### Papermill parameters
@@ -462,6 +465,7 @@ fig.show()
 # %%
 dataset = 'valid_fake_na'
 group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim' ]
+METRIC = 'MAE'
 selected = metrics_long.reset_index(
     ).groupby(by=group_by
     ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
@@ -477,7 +481,7 @@ selected
 #  2. Choose the on average best model
 
 # %%
-min_latent = selected.loc['NA interpolated'].loc['MAE'].loc[['DAE', 'VAE', 'collab']].groupby(level='latent_dim').mean().sort_values('metric_value')
+min_latent = selected.loc['NA interpolated'].loc[METRIC].loc[['DAE', 'VAE', 'collab']].groupby(level='latent_dim').mean().sort_values('metric_value')
 min_latent
 
 # %%
@@ -512,20 +516,26 @@ mapper = {k: f'{k} - ' + "HL: {}".format(
 mapper
 
 # %%
-pred_val = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
-pred_val = pred_val.rename(mapper, axis=1)
-category_orders['model'] = list(pred_val.columns[1:])
-pred_val
+pred_split = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
+pred_split = pred_split.rename(mapper, axis=1)
+category_orders['model'] = list(pred_split.columns[1:])
+pred_split
 
 # %%
-data = datasplits.DataSplits.from_folder(FOLDER / 'data', file_format='pkl') 
+data = datasplits.DataSplits.from_folder(FOLDER / 'data', file_format='pkl')
 
+N_SAMPLES = int(data.train_X.index.levels[0].nunique())
+FREQ_MIN = int(N_SAMPLES * 0.25) # selection criteria # maybe to be set externally (depends on data selection)
+
+logger.info(f"N Samples: {N_SAMPLES:,d} - set minumum: {FREQ_MIN:,d} for plotting.")
+
+# %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
 freq_feat.name = 'freq'
 freq_feat.head() # training data
 
 # %%
-errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_val, freq_feat=freq_feat, target_col='observed')
+errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_split, freq_feat=freq_feat, target_col='observed')
 errors_val
 
 # %%
@@ -538,7 +548,11 @@ msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size
 errors_val_smoothed = errors_val.copy()
 # errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=window_size, min_periods=1).mean()
 errors_val_smoothed[category_orders['model']] = errors_val[category_orders['model']].rolling(window=window_size, min_periods=1).mean()
-ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average', 
+errors_val_smoothed
+
+# %%
+mask = errors_val_smoothed[freq_feat.name] >= FREQ_MIN
+ax = errors_val_smoothed.loc[mask].plot(x=freq_feat.name, ylabel=f'rolling average error ({METRIC})', xlim=(FREQ_MIN, freq_feat.max()),
                              title=f'Rolling average error by feature frequency {msg_annotation}')
 
 vaep.savefig(
@@ -551,7 +565,7 @@ errors_val_smoothed_long = errors_val_smoothed.drop('freq', axis=1).stack().to_f
 errors_val_smoothed_long
 
 # %% tags=[]
-fig = px_vaep.line(errors_val_smoothed_long.sort_values(by='freq'),
+fig = px_vaep.line(errors_val_smoothed_long.loc[errors_val_smoothed_long[freq_feat.name] >= FREQ_MIN].sort_values(by='freq'),
               x=freq_feat.name,
               color='model',
               y='rolling error average',
@@ -565,13 +579,15 @@ fig
 
 # %%
 errors_val_smoothed = errors_val.copy()
-ax = errors_val_smoothed.groupby(by='freq'
+
+ax = errors_val_smoothed.loc[errors_val_smoothed['freq'] >= FREQ_MIN].groupby(by='freq'
                        ).mean(
                        ).sort_index(
                        ).rolling(window=5, min_periods=1
                        ).mean().plot(
     ylabel='rolling error average',
-    title='mean error for features averaged for each frequency'
+    # title='mean error for features averaged for each frequency'
+    xlim=(FREQ_MIN, freq_feat.max())
 )
 
 vaep.savefig(
@@ -583,7 +599,9 @@ vaep.savefig(
 # ### For best models per model class
 
 # %%
-dataset = 'valid_fake_na'
+# dataset = 'valid_fake_na'
+dataset = 'test_fake_na'
+
 group_by = ['data_split', 'subset', 'metric_name', 'model']
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
@@ -605,7 +623,7 @@ selected
 # %%
 selected['pred_to_load'] = (
     selected['out_preds']
-    + ('/pred_val' if 'val' in dataset else '/pred_test_')  # not good...
+    + ('/pred_val' if 'val' in dataset else '/pred_test')  # not good...
     + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x) for x in s) + '_' if s is not None else '_')
     + selected.model.str.lower()
     + '.csv'
@@ -619,13 +637,13 @@ mapper = {k: f'{k} - LD: {selected.loc[k, "latent_dim"]} - HL: {selected.loc[k, 
 mapper
 
 # %%
-pred_val = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *order_models]]
-pred_val = pred_val.rename(mapper, axis=1)
-order_models = list(pred_val.columns[1:])
-pred_val
+pred_split = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *order_models]]
+pred_split = pred_split.rename(mapper, axis=1)
+order_models = list(pred_split.columns[1:])
+pred_split
 
 # %%
-feat_count=pred_val.groupby(by=pred_val.index.names[-1])[pred_val.columns[0]].count()
+feat_count=pred_split.groupby(by=pred_split.index.names[-1])[pred_split.columns[0]].count()
 feat_count.name = 'feat used for comparison (in split)'
 ax = feat_count.hist(legend=True)
 
@@ -634,7 +652,7 @@ ax = feat_count.hist(legend=True)
 freq_feat
 
 # %%
-errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_val, freq_feat=freq_feat, target_col='observed')
+errors_val = vaep.pandas.calc_errors_per_feat(pred=pred_split, freq_feat=freq_feat, target_col='observed')
 idx_name = errors_val.index.name
 errors_val
 
@@ -648,20 +666,22 @@ msg_annotation = f"(No. of feat: {M_feat}, window_size: {window_size})"
 # %%
 errors_val_smoothed = errors_val.copy()
 errors_val_smoothed[order_models] = errors_val[order_models].rolling(window=window_size, min_periods=1).mean()
-ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average', 
-                             title=f'Rolling average error by feature frequency {msg_annotation}')
+mask = errors_val_smoothed[freq_feat.name] >= FREQ_MIN
+ax = errors_val_smoothed.loc[mask].plot(x=freq_feat.name, ylabel='rolling error average', xlim=(FREQ_MIN,freq_feat.max()),
+                             # title=f'Rolling average error by feature frequency {msg_annotation}'
+                                       )
 
 vaep.savefig(
     ax.get_figure(),
     folder=FOLDER,
-    name=f'best_models_rolling_errors')
+    name=f'best_models_rolling_errors_{dataset}')
 
 # %%
 errors_val_smoothed_long = errors_val_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat).join(feat_count).reset_index()
 errors_val_smoothed_long
 
 # %%
-fig = px_vaep.line(errors_val_smoothed_long.sort_values(by='freq'),
+fig = px_vaep.line(errors_val_smoothed_long.loc[errors_val_smoothed_long[freq_feat.name] >= FREQ_MIN].sort_values(by='freq'),
                    x=freq_feat.name,
                    color='model',
                    y='rolling error average',
@@ -670,8 +690,43 @@ fig = px_vaep.line(errors_val_smoothed_long.sort_values(by='freq'),
                    hover_data=[feat_count.name, idx_name],
                    category_orders={'model': order_models})
 fig = px_vaep.apply_default_layout(fig)
-fig.write_image(FOLDER / f'best_models_errors_by_freq_plotly.pdf')
-fig.write_html(FOLDER / f'best_models_errors_by_freq_plotly.html')
+fig.write_image(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.pdf')
+fig.write_html(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.html')
 fig
 
+# %% [markdown]
+# #### correlation plots
+
 # %%
+pred_split
+
+# %%
+corr_per_feat_val = pred_split.groupby(idx_name).aggregate(lambda df: df.corr().loc['observed'])[order_models]
+
+figsize = (10, 8)
+fig, ax = plt.subplots(figsize=figsize)
+
+kwargs = dict(rot=45,
+              # title='Corr. betw. simulated NA and model pred. per feat',
+              ylabel=f'correlation per feature ({idx_name})')
+ax = corr_per_feat_val.plot.box(**kwargs, ax=ax)
+
+vaep.savefig(ax.get_figure(), name=f'pred_corr_per_feat_{dataset}', folder=FOLDER)
+with pd.ExcelWriter(FOLDER/'pred_corr_test_per_feat_{dataset}.xlsx') as writer:
+    corr_per_feat_val.describe().to_excel(writer, sheet_name='summary')
+    corr_per_feat_val.to_excel(writer, sheet_name='correlations')
+
+# %%
+corr_per_sample_val = pred_split.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[order_models]
+
+fig, ax = plt.subplots(figsize=figsize)
+
+kwargs = dict(ylim=(0.7, 1), rot=45,
+              # title='Corr. betw. fake NA and model pred. per sample',
+              ylabel='correlation per sample')
+ax = corr_per_sample_val.plot.box(**kwargs, ax=ax)
+
+vaep.savefig(ax.get_figure(), name=f'pred_corr_per_sample_{dataset}', folder=FOLDER)
+with pd.ExcelWriter(FOLDER/f'pred_corr_per_sample_{dataset}.xlsx') as writer:
+    corr_per_sample_val.describe().to_excel(writer, sheet_name='summary')
+    corr_per_sample_val.to_excel(writer, sheet_name='correlations')
