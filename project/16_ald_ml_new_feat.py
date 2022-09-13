@@ -185,7 +185,8 @@ results_ald_full.name = 'ALD study all'
 # - plot X_train PCA, map X_test
 
 # %%
-fig, ax = plt.subplots(1,1)
+figsize=(10,7)
+fig, ax = plt.subplots(1,1, figsize=figsize)
 plot_split_auc(results_ald_full.test, results_ald_full.name, ax)
 plot_split_auc(results_model_full.test, results_model_full.name, ax)
 plot_split_auc(results_model_new.test, results_model_new.name, ax)
@@ -203,7 +204,7 @@ roc = pd.DataFrame(results_model_full.test.roc, index='fpr tpr cutoffs'.split())
 ax = roc.T.plot('fpr', col_name, ylabel='tpr', ax=ax)
 
 # %%
-fig, ax = plt.subplots(1,1)
+fig, ax = plt.subplots(1,1, figsize=figsize)
 
 ax = plot_split_prc(results_ald_full.test, results_ald_full.name, ax)
 ax = plot_split_prc(results_model_full.test, results_model_full.name, ax)
