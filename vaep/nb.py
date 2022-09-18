@@ -63,6 +63,9 @@ class Config():
 
     def items(self):
         return vars(self).items()
+    
+    def values(self):
+        return vars(self).values()
 
 def get_params(args:dict.keys, globals, remove=True) -> dict:
     params = {k: v for k, v in globals.items() if k not in args and k[0] != '_'}
