@@ -222,6 +222,7 @@ digits
 
 # %%
 embedding["instrument with N"] = embedding[["instrument serial number", "count"]].apply(lambda s: f"{s[0]} (N={s[1]:{digits}d})", axis=1)
+embedding["instrument with N"] = embedding["instrument with N"].str.replace('Exactive Series slot', 'Instrument')
 embedding
 
 # %% [markdown]
@@ -243,17 +244,18 @@ vaep.savefig(fig, name='umap_interval90days_top5_instruments', folder=FOLDER_DAT
 
 # %%
 markers = ['o', 'x', 's', 'P', 'D', '.']
-alpha = 0.5
-fig, ax = plt.subplots(figsize=(20,10))
+alpha = 0.6
+fig, ax = plt.subplots(figsize=(12,8))
 groups = list()
 
+vaep.plotting.make_large_descriptors()
 embedding["Content Creation Date"] = embedding["Content Creation Date"].dt.round("D")
 embedding["mdate"] = embedding["Content Creation Date"].apply(matplotlib.dates.date2num)
 
 to_plot = embedding.loc[embedding["instrument"] != 'other']
 
-norm = matplotlib.colors.Normalize(embedding["mdate"].min(), embedding["mdate"].max())
-cmap = sns.color_palette("PuBu", n_colors=26, as_cmap=True)
+norm = matplotlib.colors.Normalize(embedding["mdate"].quantile(0.05), embedding["mdate"].quantile(0.95))
+cmap = sns.color_palette("cubehelix", as_cmap=True)
 
 
 for k, _to_plot in to_plot.groupby('instrument with N'):
@@ -271,18 +273,20 @@ for k, _to_plot in to_plot.groupby('instrument with N'):
     groups.append(k)
     
 cbar = vaep.analyzers.analyzers.add_date_colorbar(ax.collections[0], ax=ax, fig=fig)
-cbar.ax.set_ylabel("date of measurement")
+cbar.ax.set_ylabel("date of measurement", labelpad=-115, loc='center')
 ax.legend(ax.collections, groups, title='instrument serial number')
-ax.set_xlabel('UMAP 1')
+ax.set_xlabel('UMAP 1') #, fontdict={'size': 16})
 ax.set_ylabel('UMAP 2')
 vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 
 # %%
-fig,ax = plt.subplots(1,1, figsize=(5, 5))
-to_plot = data.isna().sum(axis=0).reset_index(drop=True).to_frame('feature prevalence')
-to_plot = to_plot.join(data.isna().sum(axis=1).reset_index(drop=True).to_frame('features per sample'))
-to_plot = to_plot.join(counts_instrument.reset_index(drop=True)['count'].rename('samples per instrument', axis='index'))
-ax = to_plot.plot(kind='box', ax = ax, rot = 30, ylabel='count')
+fig,ax = plt.subplots(1,1, figsize=(8, 8))
+vaep.plotting.make_large_descriptors()
+to_plot = data.isna().sum(axis=0).reset_index(drop=True).to_frame('Feature prevalence')
+to_plot = to_plot.join(data.isna().sum(axis=1).reset_index(drop=True).to_frame('Features per sample'))
+to_plot = to_plot.join(counts_instrument.reset_index(drop=True)['count'].rename('Samples per instrument', axis='index'))
+ax = to_plot.plot(kind='box', ax = ax, ylabel='number of observations')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 to_plot.to_csv(FOLDER_DATASETS/ 'summary_statistics_dump_data.csv')
 vaep.savefig(fig, name='summary_statistics_dump',
                       folder=FOLDER_DATASETS)
