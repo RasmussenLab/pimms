@@ -129,7 +129,8 @@ fname
 # %%
 var = 'qvalue'
 to_plot = [scores_common[v][var] for k,v in models.items()]
-for s, k in zip(to_plot, models.keys()): s.name = k.replace('_', ' ') 
+for s, k in zip(to_plot, models.keys()):
+    s.name = k.replace('_', ' ') 
 to_plot.append(freq_feat.loc[scores_common.index])
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
@@ -146,7 +147,10 @@ title = 'Q-Value comparison between methods.'
 # %%
 figsize=(10,10)
 fig, ax = plt.subplots(figsize=figsize)
-ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison', ax=ax)
+ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison',
+                     ax=ax)
+ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
+ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper center")
 fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
 fig.suptitle(title, fontsize=24)
