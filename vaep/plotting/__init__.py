@@ -9,11 +9,13 @@ import seaborn
 
 import vaep.pandas
 
+seaborn.set_style("whitegrid")
+# seaborn.set_theme()
+
 plt.rcParams['figure.figsize'] = [16.0, 7.0]
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 
-seaborn.set_theme()
 
 from . defaults import order_categories, labels_dict, IDX_ORDER
 from . import plotly
