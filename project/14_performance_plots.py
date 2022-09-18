@@ -42,7 +42,7 @@ import vaep.nb
 matplotlib.rcParams['figure.figsize'] = [10.0, 8.0]
 
 
-logging.basicConfig(level=logging.INFO)
+logger = vaep.logging.setup_nb_logger()
 
 # %%
 models = ['collab', 'DAE', 'VAE']
@@ -86,16 +86,19 @@ data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format
 # %%
 fig, axes = plt.subplots(1, 2, sharey=True)
 
+ax = axes[0]
 _ = data.val_y.unstack().notna().sum(axis=1).sort_values().plot(
-        rot=90,
-        ax=axes[0],
+        ax=ax,
         title='Validation data',
         ylabel='number of feat')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
+
+ax = axes[1]
 _ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
-        rot=90,
-        ax=axes[1],
+        ax=ax,
         title='Test data')
 fig.suptitle("Fake NAs per sample availability.", size=24)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 
 # %% [markdown]
@@ -110,8 +113,6 @@ freq_feat.head() # training data
 prop = freq_feat / len(data.train_X.index.levels[0])
 prop.to_frame()
 
-# %%
-
 # %% [markdown]
 # # reference methods
 #
@@ -122,6 +123,10 @@ prop.to_frame()
 # %%
 data.to_wide_format()
 data.train_X
+
+# %%
+N_SAMPLES, M_FEAT = data.train_X.shape
+print(f"N samples: {N_SAMPLES:,d}, M features: {M_FEAT}")
 
 # %%
 mean = data.train_X.mean()
@@ -199,11 +204,12 @@ pred_test
 # %%
 pred_test_corr = pred_test.corr()
 ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
-    title='Corr. between Fake NA and model predictions on test data',
-    ylabel='correlation coefficient',
+    # title='Corr. between Fake NA and model predictions on test data',
+    ylabel='correlation coefficient overall',
     ylim=(0.7,1)
 )
 ax = vaep.plotting.add_height_to_barplot(ax)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_test_overall', folder=args.out_figures)
 pred_test_corr
 
@@ -211,10 +217,10 @@ pred_test_corr
 corr_per_sample_test = pred_test.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
 
 kwargs = dict(ylim=(0.7,1), rot=90,
-              title='Corr. betw. fake NA and model predictions per sample on test data',
-              ylabel='correlation coefficient')
+              # title='Corr. betw. fake NA and model predictions per sample on test data',
+              ylabel='correlation per sample')
 ax = corr_per_sample_test.plot.box(**kwargs)
-
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_test_per_sample', folder=args.out_figures)
 with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer:   
     corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
@@ -230,6 +236,7 @@ corr_per_sample_test.loc[mask].style.highlight_min(axis=1)
 
 # %%
 feature_names = pred_test.index.levels[-1]
+N_SAMPLES = pred_test.index
 M = len(feature_names)
 pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
 
@@ -244,10 +251,10 @@ pred_test.loc[pd.IndexSlice[:, options[0]], :]
 corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
 
 kwargs = dict(rot=90,
-              title=f'Corr. per {FEAT_NAME} on test data',
-              ylabel='correlation coefficient')
+              # title=f'Corr. per {FEAT_NAME} on test data',
+              ylabel=f'correlation per {FEAT_NAME}')
 ax = corr_per_feat_test.plot.box(**kwargs)
-
+_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_test_per_feat', folder=args.out_figures)
 with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:
     corr_per_feat_test.describe().to_excel(writer, sheet_name='summary')
@@ -299,14 +306,16 @@ colors_to_use = [sns.color_palette()[5] ,*sns.color_palette()[:5]]
 sns.color_palette() # select colors for comparibility with grid search (where random shifted was omitted)
 
 # %%
+fig, ax = plt.subplots(figsize=(10,8))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
-                                                 ylabel=f"{METRIC} (log2 intensities)",
-                                                 title=f'performance on test data (based on {n_in_comparison:,} measurements)',
+                                                 ylabel=f"{METRIC} for {feature_names.name} (based on {n_in_comparison:,} log2 intensities)",
+                                                 # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
                                                  color=colors_to_use,
+                                                 ax=ax,
                                                  width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=16)
-fig = ax.get_figure()
+ax.set_xticklabels([])
 vaep.savefig(fig, "performance_models_test", folder=args.out_figures)
 
 # %%
@@ -315,13 +324,21 @@ errors_test
 
 
 # %%
-def plot_rolling_error(errors:pd.DataFrame, window:int=200, freq_col:str='freq', ax=None):
+def plot_rolling_error(errors: pd.DataFrame, metric_name, window: int = 200,
+                       min_freq=None, freq_col: str = 'freq', 
+                       ax=None):
     errors_smoothed = errors.drop(freq_col, axis=1).rolling(window=window, min_periods=1).mean()
     errors_smoothed[freq_col] = errors[freq_col]
-    ax = errors_smoothed.plot(x=freq_col, ylabel='rolling error average', color=colors_to_use, ax=None)
+    if min_freq is None:
+        min_freq=errors_smoothed[freq_col].min()
+    else:
+        errors_smoothed = errors_smoothed.loc[errors_smoothed[freq_col] > min_freq]
+    ax = errors_smoothed.plot(x=freq_col, ylabel=f'rolling average error ({metric_name})', color=colors_to_use, xlim=(min_freq, errors_smoothed[freq_col].max()), ax=None)
     return ax
-ax = plot_rolling_error(errors_test, window=int(len(errors_test)/15))
-vaep.savefig(ax.get_figure(), name='errors_rolling_avg_test',folder=args.out_figures)
+
+min_freq = None
+ax = plot_rolling_error(errors_test, metric_name=METRIC, window=int(len(errors_test)/15), min_freq=min_freq)
+vaep.savefig(ax.get_figure(), name='errors_rolling_avg_test', folder=args.out_figures)
 
 # %% [markdown]
 # ## Validation data
@@ -335,9 +352,10 @@ pred_val['random shifted normal'] = imputed_shifted_normal
 # pred_val = pred_val.join(freq_feat, on=freq_feat.index.name)
 pred_val_corr = pred_val.corr()
 ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
-    title='Correlation between Fake NA and model predictions on validation data',
-    ylabel='correlation coefficient')
+    # title='Correlation between Fake NA and model predictions on validation data',
+    ylabel='correlation overall')
 ax = vaep.plotting.add_height_to_barplot(ax)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_val_overall', folder=args.out_figures)
 pred_val_corr
 
@@ -345,10 +363,10 @@ pred_val_corr
 corr_per_sample_val = pred_val.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
 
 kwargs = dict(ylim=(0.7,1), rot=90,
-              title='Corr. betw. fake NA and model pred. per sample on validation data',
-              ylabel='correlation coefficient')
+              # title='Corr. betw. fake NA and model pred. per sample on validation data',
+              ylabel='correlation per sample')
 ax = corr_per_sample_val.plot.box(**kwargs)
-
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_valid_per_sample', folder=args.out_figures)
 with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as writer:   
     corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
@@ -400,7 +418,7 @@ errors_val.loc[mask]
 # %%
 errors_val_smoothed = errors_val.copy()
 errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
-ax = errors_val_smoothed.plot(x=freq_feat.name, ylabel='rolling error average', color=colors_to_use)
+ax = plot_rolling_error(errors_test, metric_name=METRIC, window=int(len(errors_test)/15), min_freq=min_freq)
 
 # %%
 errors_val_smoothed.describe()
@@ -420,8 +438,8 @@ vaep.savefig(
 # scatter plots to see spread
 model = models[0]
 ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
-  title=f"Average error per feature on validation data for {model}",
-  ylabel='absolute error')
+  # title=f"Average error per feature on validation data for {model}",
+  ylabel=f'average error ({METRIC}) for {model} on valid. data')
 
 vaep.savefig(
     ax.get_figure(),
