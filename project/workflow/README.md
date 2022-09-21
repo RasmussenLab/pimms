@@ -12,9 +12,9 @@ snakemake -n # uses workflow/Snakefile
 
 ```bash
 # pwd: path/to/project
-snakemake --snakefile workflow/Snakefile_GRID.smk -n -p
+snakemake --snakefile workflow/Snakefile_grid.smk -n -p
 # parallel execution on the same machine (shared GPU, CPU) does not work
-snakemake --snakefile workflow/Snakefile_GRID.smk --jobs 1
+snakemake --snakefile workflow/Snakefile_grid.smk --jobs 1
 ```
 
 Configuration files are stored in `project/config` directory
@@ -22,13 +22,13 @@ Configuration files are stored in `project/config` directory
 provide one or more config files explicitly to overwrite defaults
 
 ```
-snakemake --snakefile workflow/Snakefile_GRID.smk --configfile config/other.yaml -n -p
+snakemake --snakefile workflow/Snakefile_grid.smk --configfile config/other.yaml -n -p
 ```
 
 e.g. for small N grid search:
 
 ```
-snakemake --snakefile workflow/Snakefile_GRID.smk --configfile config/grid_search_small_data/config_grid.yaml -n -p
+snakemake --snakefile workflow/Snakefile_grid.smk --configfile config/grid_search_small_data/config_grid.yaml -p -c1 -n
 ```
 
 

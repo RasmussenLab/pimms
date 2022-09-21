@@ -137,6 +137,7 @@ rule build_train_config_collab:
             f"{name_template}/config_train_collab.yaml"
     params:
         folder_data=f"{folder_experiment}/data/",
+        batch_size_collab=config["batch_size_collab"],
         cuda=config['cuda'] 
     run:
         from pathlib import PurePosixPath
@@ -146,7 +147,7 @@ rule build_train_config_collab:
         
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
         config['folder_data'] = params.folder_data
-        config['batch_size_collab'] = config["batch_size_collab"]
+        config['batch_size_collab'] = params.batch_size_collab
         config['cuda'] = params.cuda
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
