@@ -4,7 +4,7 @@ import plotly.express as px
 # set some defaults
 from .defaults import labels_dict, order_categories
 
-TEMPLATE = 'seaborn'
+TEMPLATE = 'none'
 
 
 figure_size_defaults = dict(width=1600,

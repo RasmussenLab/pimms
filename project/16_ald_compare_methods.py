@@ -67,7 +67,6 @@ scores = pd.read_pickle(fname)
 scores
 
 # %%
-import omegaconf
 models = vaep.nb.Config.from_dict(vaep.pandas.index_to_dict(scores.columns.levels[0]))
 vars(models)
 
@@ -142,28 +141,36 @@ to_plot
 # - first only using created annotations
 
 # %%
-title = 'Q-Value comparison between methods.'
-
-# %%
-figsize=(10,10)
+figsize = (10, 10)
 fig, ax = plt.subplots(figsize=figsize)
-ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1], hue='Differential Analysis Comparison',
+x_col = to_plot.columns[0]
+y_col = to_plot.columns[1]
+ax = sns.scatterplot(data=to_plot,
+                     x=x_col,
+                     y=y_col,
+                     hue='Differential Analysis Comparison',
                      ax=ax)
+ax.set_xlabel(f"qvalue for {x_col}")
+ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
 ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper center")
 fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
-fig.suptitle(title, fontsize=24)
-vaep.savefig(fig, name = fname)
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # - showing how many features were measured ("observed")
 
 # %%
 fig, ax = plt.subplots(figsize=figsize)
-ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],  size='frequency', hue='Differential Analysis Comparison')
+ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],
+                     palette='Set2',
+                     size='frequency', hue='Differential Analysis Comparison')
+ax.set_xlabel(f"qvalue for {x_col}")
+ax.set_ylabel(f"qvalue for {y_col}")
+ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
+ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper center")
-fig.suptitle(title, fontsize=24)
 fname = args.out_folder / f'diff_analysis_comparision_2_{args.model_key}'
 vaep.savefig(fig, name=fname)
 

@@ -21,7 +21,6 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import seaborn
 
 import vaep.plotting
 import vaep.nb
@@ -32,7 +31,6 @@ pd.options.display.max_rows = 110
 pd.options.display.multi_sparse = False
 
 plt.rcParams['figure.figsize'] = [16.0, 7.0]
-seaborn.set_theme()
 
 vaep.plotting.make_large_descriptors()
 
@@ -105,7 +103,10 @@ display(text.to_frame('text'))
 _to_plot
 
 # %%
-ax = _to_plot.plot.bar(rot=0, ylabel=f"{METRIC} (log2 intensities)", width=.8)
+ax = _to_plot.plot.bar(rot=0,
+                       xlabel='',
+                       ylabel=f"{METRIC} (log2 intensities)",
+                       width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
@@ -135,7 +136,7 @@ fig = px.bar(_to_plot.reset_index(),
              text='text',
              labels={'metric_value': f"{METRIC} (log2 intensities)", 'data level': ''},
              category_orders=order_categories,
-             template='seaborn',
+             template='none',
              height=600)
 fig.write_image(FOLDER / f"{fname}.pdf")
 fig
@@ -186,14 +187,18 @@ ax = (to_plot
       .unstack()
       .loc[order_model, order_categories['data level']]
       .plot.bar(
-          xlabel="model with overall best performance for all datasets",
+          # xlabel="model with overall best performance for all datasets",
+          xlabel='',
           ylabel="MAE (log2 intensity)",
           rot=45,
           width=.8,
           ax=ax,
-          colormap="inferno")
+          # colormap="Paired",
+          color = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']
+      )
       )
 ax = vaep.plotting.add_height_to_barplot(ax)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
 
@@ -205,11 +210,12 @@ fig = px.bar(to_plot,
              y='metric_value',
              color='data level',
              barmode="group",
-             color_discrete_sequence=px.colors.qualitative.Prism,
+             color_discrete_sequence=px.colors.colorbrewer.Paired,
+             # color_discrete_sequence=['#a6cee3', '#1f78b4', '#b2df8a'],
              text='text',
              labels={'metric_value': f"{METRIC} (log2 intensities)", 'model': '',},
              category_orders=order_categories,
-             template='seaborn',
+             template='none',
              height=600)
 fig.write_image(FOLDER / f"{fname}_plotly.pdf")
 fig
