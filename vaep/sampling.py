@@ -49,7 +49,7 @@ def frequency_by_index(df_long: pd.DataFrame, sample_index_to_drop: Union[str, i
     # to_remove = tuple(set(df_long.index.names) - set([by_index]))
     _df_feat = df_long.reset_index(level=sample_index_to_drop, drop=True)
     # same as in feature_frequency
-    freq_per_feat = _df_feat.notna().groupby(level=0).sum()
+    freq_per_feat = _df_feat.notna().groupby(level=0, observed=True).sum()
     return freq_per_feat.squeeze()
 
 
