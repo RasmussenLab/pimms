@@ -46,7 +46,7 @@ from vaep.analyzers import analyzers
 from vaep.analyzers.analyzers import  AnalyzePeptides
 
 from vaep.logging import setup_logger
-logger = setup_logger(logger=logging.getLogger('vaep'))
+logger = vaep.logging.setup_nb_logger()
 logger.info("Experiment 03 - data")
 
 figures = {}  # collection of ax or figures
@@ -64,6 +64,7 @@ FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2
 # FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # M: int = 5000 # M most common features
+feat_prevalence: Union[int, float] = 0.25 # Minum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
 select_N = None # sample a certain number of samples
 min_RT_time: Union[int, float] = 120 # Minum retention time (RT) in minutes
@@ -73,6 +74,9 @@ index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 column_names: List = None # Manuelly set column names
+
+# %%
+# select_N = 50
 
 # %%
 # # peptides
@@ -101,6 +105,7 @@ class DataConfig:
     # FN_PEPTIDE_FREQ: str # Peptide counts for all parsed files on erda (for data selection)
     fn_rawfile_metadata: str  # Machine parsed metadata from rawfile workflow
     # M: int # M most common features
+    feat_prevalence: Union[int, float] = 0.25 # Minum number or fraction of feature prevalence across samples to be kept
     sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
     select_N:int = None # sample a certain number of samples
     min_RT_time: Union[int, float] = 120
@@ -192,56 +197,7 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
     analysis.df.columns.name = _new_name
     logger.warning(f"New name: {analysis.df.columns.names = }")
 
-# %% [markdown]
-# ### Select M most common features
-#
-# - if number of features should be part of experiments, the selection has to be done here
-# - select between `analysis.M` (number of features available) and requested number of features `params.M` 
-# - can be random or based on most common features from counter objects
-#
-# > Ignored for now, instead select based on feature availabiltiy across samples (see below)
-
-# %% tags=[]
-# potentially create freq based on DataFrame
-analysis.M
-
-# %% [markdown]
-# ### Sample selection
-#
-# - ensure unique indices
-
-# %%
-assert analysis.df.index.is_unique, "Duplicates in index"
-analysis.df.sort_index(inplace=True)
-
-# %% [markdown]
-# Select samples based on completeness
-
-# %%
-if isinstance(params.sample_completeness, float):
-    msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
-    # assumes df in wide format
-    params.sample_completeness = int(analysis.df.shape[1] * params.sample_completeness)
-    msg += f'This translates to a minimum number of features per sample (to be included): {params.sample_completeness}'
-    print(msg)
-
-sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
-
-mask = sample_counts > params.sample_completeness
-msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
-print(msg)
-analysis.df = analysis.df.loc[mask]
-analysis.df = analysis.df.dropna(axis=1, how='all') # drop now missing features
-
-# %%
-params.used_samples = analysis.df.index.to_list()
-
-# %%
-ax = analysis.df.T.describe().loc['count'].hist()
-_ = ax.set_title('histogram of features for all eligable samples')
-vaep.savefig(ax.get_figure(), 'feature_distribution_overall', folder=folder_figures)
-
-# %% [markdown]
+# %% [markdown] tags=[]
 # ## Machine metadata
 #
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
@@ -261,10 +217,9 @@ df_meta.groupby(cols_instrument)[date_col].agg(['count','min','max'])
 df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 10))
 
 # %% [markdown]
-# set a minimum retention time
+# select samples with a minimum retention time
 
 # %%
-# min_RT_time = 120 # minutes
 msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
 mask_RT = df_meta['MS max RT'] >= params.min_RT_time # can be integrated into query string
 msg += f" Total number of samples retained: {int(mask_RT.sum())}."
@@ -341,10 +296,12 @@ analysis = add_meta_data(analysis, df_meta=df_meta)
 #   - take N most recent samples
 
 # %%
-if select_N is not None:
-    select_N = min(select_N, len(analysis.df_meta))
+# ToDo: Second step in procedure -> needs to be done later!
+# First: select via threshold
+if params.select_N is not None:
+    params.select_N = min(params.select_N, len(analysis.df_meta))
                    
-    analysis.df_meta = analysis.df_meta.iloc[-select_N:]
+    analysis.df_meta = analysis.df_meta.iloc[-params.select_N:]
     
     analysis.df = analysis.df.loc[analysis.df_meta.index].dropna(how='all', axis=1)
     ax = analysis.df.T.describe().loc['count'].hist()
@@ -352,6 +309,86 @@ if select_N is not None:
     
     # updates
     sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
+
+# %%
+# export Pathname captured by ThermoRawFileParser
+# analysis.df_meta['Pathname'].to_json(folder_experiment / 'config_rawfile_paths.json', indent=4)
+
+# %% [markdown]
+# ## Select features by prevalence - FOR SUBSETTED DATA
+#
+# - select featues if `select_N` is specifed (for now)
+# - `feat_prevalence` across samples
+
+# %% tags=[]
+if params.select_N is not None: # ToDo: this if clause will be removed
+    freq_per_feature = analysis.df.notna().sum() # on wide format
+    if isinstance(params.feat_prevalence, float):
+        logger.info(f"Current number of samples: {select_N}")
+        N_samples = len(analysis.df_meta)
+        params.feat_prevalence = int(N_samples * params.feat_prevalence)
+    assert isinstance(params.feat_prevalence, int)
+    # select features
+    mask = freq_per_feature >= params.feat_prevalence
+    freq_per_feature = freq_per_feature.loc[mask]
+    analysis.df = analysis.df.loc[:, mask]
+    analysis.N, analysis.M = analysis.df.shape
+
+# # potentially create freq based on DataFrame
+analysis.df
+
+# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# ### Second step - Sample selection
+#
+# - ensure unique indices
+
+# %%
+assert analysis.df.index.is_unique, "Duplicates in index"
+analysis.df.sort_index(inplace=True)
+
+# %% [markdown]
+# Select samples based on completeness
+
+# %%
+if isinstance(params.sample_completeness, float):
+    msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
+    # assumes df in wide format
+    params.sample_completeness = int(analysis.df.shape[1] * params.sample_completeness)
+    msg += f'This translates to a minimum number of features per sample (to be included): {params.sample_completeness}'
+    logger.info(msg)
+
+sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
+    
+# if params.select_N is not None:
+#     logger.warning("Skip for small dataset for now -> only first step performed")
+#     mask = sample_counts > params.sample_completeness
+#     msg = f'This would translate to dropping {len(mask) - mask.sum()} of {len(mask)} selected samples.'
+#     logger.info(msg)
+# else:
+mask = sample_counts > params.sample_completeness
+msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
+print(msg)
+analysis.df = analysis.df.loc[mask]
+analysis.df = analysis.df.dropna(axis=1, how='all') # drop now missing features
+
+# %%
+params.N, params.M = analysis.df.shape # save data dimensions
+params.used_samples = analysis.df.index.to_list()
+
+# %% [markdown]
+# #### Histogram of features per sample
+
+# %%
+ax = analysis.df.notna().sum(axis=1).hist()
+ax.set_xlabel('features per eligable sample')
+ax.set_ylabel('observations')
+vaep.savefig(ax.get_figure(), 'hist_features_per_sample', folder=folder_figures)
+
+# %%
+ax = analysis.df.notna().sum(axis=0).sort_values().plot()
+ax.set_xlabel('feature prevalence')
+ax.set_ylabel('observations')
+vaep.savefig(ax.get_figure(), 'feature_prevalence', folder=folder_figures)
 
 # %% [markdown]
 # ### Interactive and Single plots
@@ -364,6 +401,7 @@ sample_counts.name = 'identified features'
 
 # %%
 K = 2
+analysis.df = analysis.df.astype(float)
 pcs = analysis.get_PCA(n_components=K) # should be renamed to get_PCs
 pcs = pcs.iloc[:,:K].join(analysis.df_meta).join(sample_counts)
 
@@ -444,10 +482,13 @@ ax = median_sample_intensity.plot.scatter(x='date', y='median intensity',
                                           xticks=vaep.plotting.select_dates(
                                               median_sample_intensity['date'])
                                           )
+fig = ax.get_figure()
+vaep.savefig(fig, folder_figures / 'median_scatter')
+figures['median_scatter'] = fig
 
 
 # %% [markdown]
-# - the closer the labels are there denser the samples are measured aroudn that time.
+# - the closer the labels are there denser the samples are measured around that time.
 
 # %% [markdown]
 # ## Peptide frequency  in data
@@ -545,7 +586,9 @@ splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
 print(OmegaConf.to_yaml(params))
 
 # %%
-with open(folder_experiment/'data_config.yaml', 'w') as f:
+fname = folder_experiment/'data_config.yaml'
+with open(fname, 'w') as f:
     OmegaConf.save(params, f)
+fname
 
 # %%
