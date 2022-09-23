@@ -203,8 +203,7 @@ df_meta.loc[data.train_X.index.levels[0]]
 #     - [x] add some additional NAs based on distribution of data
 
 # %%
-freq_feat = sampling.frequency_by_index(data.train_X, 0)
-freq_feat.name = 'freq'
+freq_feat = vaep.io.datasplits.load_freq(args.data)  
 freq_feat.head() # training data
 
 # %% [markdown]
@@ -431,14 +430,34 @@ _cat = 'ms_instrument'
 figures[f'latent_{model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
 
 # %%
+feat_freq_val = val_pred_fake_na['observed'].groupby(level=-1).count()
+feat_freq_val.name = 'freq_val'
+ax = feat_freq_val.plot.box()
+
+# %%
+# # scatter plot between overall feature freq and split freq
+# freq_feat.to_frame('overall').join(feat_freq_val).plot.scatter(x='overall', y='freq_val')
+
+# %%
+feat_freq_val.value_counts().sort_index().head() # require more than one feat?
+
+# %%
 errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
 errors_val = errors_val.abs().groupby(level=-1).mean()
 errors_val = errors_val.join(freq_feat).sort_values(by='freq', ascending=True)
 
-errors_val_smoothed = errors_val.copy()
+
+errors_val_smoothed = errors_val.copy() #.loc[feat_freq_val > 1]
 errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
 ax = errors_val_smoothed.plot(x='freq', figsize=(15,10) )
 # errors_val_smoothed
+
+# %%
+errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
+errors_val.abs().groupby(level=-1).agg(['mean', 'count'])
+
+# %%
+errors_val
 
 # %% [markdown]
 # ## Comparisons
@@ -575,5 +594,3 @@ args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
 args.model_type = 'VAE'
 args.model_key = model_key
 args
-
-# %%
