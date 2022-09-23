@@ -191,3 +191,17 @@ def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv
         logger.info(f"Loaded '{_attr}' from file: {fname}")
         args[_attr] = _df.squeeze()
     return args
+
+
+# set default file name -> intergrate into DataSplits?
+def load_freq(folder:str, file='freq_features.pkl'):
+    folder = Path(folder)
+    fname = folder / file
+    if fname.suffix == '.json':
+        freq_per_feature = pd.read_json(fname, orient='index').squeeze()
+        freq_per_feature.name = 'freq'
+    elif fname.suffix == '.pkl':
+        freq_per_feature = pd.read_pickle(fname)
+    else:
+        raise ValueError(f"Unknown Fileextension: {fname.suffix}")
+    return freq_per_feature

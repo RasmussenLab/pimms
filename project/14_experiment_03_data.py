@@ -177,6 +177,10 @@ analysis.log_transform(log_fct)
 logger.info(f"{analysis = }")
 analysis.df
 
+# %%
+ax = analysis.df.notna().sum(axis=0).to_frame(analysis.df.columns.name).plot.box()
+ax.set_ylabel('number of observation across samples')
+
 
 # %% [markdown]
 # In case there are multiple features for each intensity values (currenlty: peptide sequence and charge), combine the column names to a single str index.
@@ -321,18 +325,18 @@ if params.select_N is not None:
 # - `feat_prevalence` across samples
 
 # %% tags=[]
-if params.select_N is not None: # ToDo: this if clause will be removed
-    freq_per_feature = analysis.df.notna().sum() # on wide format
-    if isinstance(params.feat_prevalence, float):
-        logger.info(f"Current number of samples: {select_N}")
-        N_samples = len(analysis.df_meta)
-        params.feat_prevalence = int(N_samples * params.feat_prevalence)
-    assert isinstance(params.feat_prevalence, int)
-    # select features
-    mask = freq_per_feature >= params.feat_prevalence
-    freq_per_feature = freq_per_feature.loc[mask]
-    analysis.df = analysis.df.loc[:, mask]
-    analysis.N, analysis.M = analysis.df.shape
+# if params.select_N is not None: # ToDo: this if clause will be removed
+freq_per_feature = analysis.df.notna().sum() # on wide format
+if isinstance(params.feat_prevalence, float):
+    logger.info(f"Current number of samples: {select_N}")
+    N_samples = len(analysis.df_meta)
+    params.feat_prevalence = int(N_samples * params.feat_prevalence)
+assert isinstance(params.feat_prevalence, int)
+# select features
+mask = freq_per_feature >= params.feat_prevalence
+freq_per_feature = freq_per_feature.loc[mask]
+analysis.df = analysis.df.loc[:, mask]
+analysis.N, analysis.M = analysis.df.shape
 
 # # potentially create freq based on DataFrame
 analysis.df
@@ -491,7 +495,7 @@ figures['median_scatter'] = fig
 # - the closer the labels are there denser the samples are measured around that time.
 
 # %% [markdown]
-# ## Peptide frequency  in data
+# ## Feature frequency  in data
 #
 # - higher count, higher probability to be sampled into training data
 # - missing peptides are sampled both into training as well as into validation dataset
@@ -516,7 +520,8 @@ freq_per_feature
 
 # %%
 # freq_per_feature.name = 'Gene names freq' # name it differently?
-freq_per_feature.to_json(folder_data / 'freq_train.json')
+freq_per_feature.to_json(folder_data / 'freq_features.json') # index.name is lost when data is stored
+freq_per_feature.to_pickle(folder_data / 'freq_features.pkl')
 
 # %% [markdown]
 # Conserning sampling with frequency weights:
