@@ -141,7 +141,7 @@ to_plot
 # - first only using created annotations
 
 # %%
-figsize = (10, 10)
+figsize = (8, 8)
 fig, ax = plt.subplots(figsize=figsize)
 x_col = to_plot.columns[0]
 y_col = to_plot.columns[1]
@@ -154,7 +154,7 @@ ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
 ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
-sns.move_legend(ax, "upper center")
+sns.move_legend(ax, "upper right")
 fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
 vaep.savefig(fig, name=fname)
 
@@ -170,7 +170,7 @@ ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
 ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
-sns.move_legend(ax, "upper center")
+sns.move_legend(ax, "upper right")
 fname = args.out_folder / f'diff_analysis_comparision_2_{args.model_key}'
 vaep.savefig(fig, name=fname)
 
