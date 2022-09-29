@@ -29,3 +29,9 @@ def select_raw_data(df: pd.DataFrame,
     logger.info("Finally: " + msg.format(*df.shape))
 
     return df, Cutoffs(treshold_completeness, min_n_protein_groups)
+
+
+def select_feat(df_qc:pd.DataFrame, threshold:float=0.4, axis:int=0):
+    qc_cv_feat = df_qc.std(axis=axis) / df_qc.mean(axis=axis)
+    mask = qc_cv_feat < threshold
+    return qc_cv_feat.loc[mask].index

@@ -18,6 +18,8 @@
 
 # %%
 from pathlib import Path
+import yaml
+import numpy as np
 import pandas as pd
 import vaep
 
@@ -40,7 +42,7 @@ plasma_aggPeptides = folder_data / 'ald_proteome_spectronaut.tsv',
 liver_proteinGroups = folder_data / 'Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
 liver_aggPeptides = folder_data / 'Peptide_20220819_100847_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
 annotations = folder_data / 'ald_experiment_annotations.csv',
-clinic = folder_data / 'ald_cli_164.csv',
+clinic = folder_data / 'labtest_integrated_numeric.csv',
 raw_meta = folder_data / 'ald_metadata_rawfiles.csv')
 fnames =vaep.nb.Config.from_dict(fnames) # could be handeled kwargs as in normal dict
 
@@ -102,6 +104,18 @@ sel_liver_samples = (annotations.Group2.isin(['ALD'])) & (annotations['Sample ty
 sel_liver_samples = sel_liver_samples.loc[sel_liver_samples].index
 annotations.loc[sel_liver_samples].describe(include=['object', 'string'])
 
+# %%
+idx_qc_plasma = annotations.Group2[annotations.Group2 == 'QC'].index
+with (folder_data_out / 'qc_samples.yaml').open('w') as f:
+    yaml.safe_dump(idx_qc_plasma.to_list(), f)
+idx_qc_plasma
+
+# %%
+idx_qc_liver = annotations.Group2[annotations.Group2 == 'QC_liver'].index
+with (folder_data_out / 'qc_samples.yaml').open('w') as f:
+    yaml.safe_dump(idx_qc_liver.to_list(), f)
+idx_qc_liver
+
 # %% [markdown]
 # ## Clinical data
 
@@ -119,6 +133,16 @@ idx_overlap_plasma = clinic.index.intersection(sel_plasma_samples)
 
 # %%
 clinic.loc[idx_overlap_plasma]
+
+# %% [markdown]
+# Kleiner score of 0.5 was assigned as value of 0-1 without biopsy. Is set to NA.
+
+# %%
+clinic["kleiner"] = clinic["kleiner"].replace({-1: np.nan, 0.5: np.nan})
+clinic["kleiner"].value_counts()
+
+# %%
+clinic.loc[idx_overlap_plasma].to_csv(folder_data_out /'ald_metadata_cli.csv')
 
 # %% [markdown]
 # ## Rawfile information
@@ -288,6 +312,7 @@ idx.describe()
 
 # %%
 df = df.set_index(idx)
+df_qc = df.loc[idx_qc_plasma].copy()
 df = df.loc[idx_overlap_plasma]
 df
 
@@ -335,8 +360,16 @@ df
 # Dump selected data
 
 # %%
-fnames.sel_plasma_aggPeptids = folder_data_out / 'ald_plasma_aggPeptides.pkl'
-df.to_pickle(fnames.sel_plasma_aggPeptids)
+fnames.sel_plasma_aggPeptides = folder_data_out / 'ald_plasma_aggPeptides.pkl'
+df.to_pickle(fnames.sel_plasma_aggPeptides)
+
+# %% [markdown]
+# Dump QC sample data
+
+# %%
+df_qc = df_qc.loc[:, selected]
+fnames.qc_plasma_aggPeptides = folder_data_out / 'qc_plasma_aggPeptides.pkl'
+df_qc.to_pickle(fnames.qc_plasma_aggPeptides)
 
 # %% [markdown]
 # ## Protein Group data
@@ -416,8 +449,6 @@ df.dtypes
 df = df.squeeze().dropna().astype(float).unstack()
 df
 
-
-
 # %%
 gene_non_unique = df.index.to_frame()["PG.Genes"].value_counts() > 1
 gene_non_unique = gene_non_unique[gene_non_unique].index
@@ -436,6 +467,7 @@ idx.describe()
 
 # %%
 df = df.set_index(idx)
+df_qc = df.loc[idx_qc_plasma].copy()
 df = df.loc[idx_overlap_plasma]
 df
 
@@ -446,6 +478,12 @@ df
 # %%
 des_data = df.describe()
 des_data
+
+# %%
+freq_feat = des_data.loc["count"].droplevel(-1).rename('freq')
+freq_feat.to_csv(folder_data_out / 'freq_ald_plasma_proteinGroups.csv')
+# pd.read_csv(folder_data_out / 'freq_ald_plasma_proteinGroups.csv', index_col=0)
+freq_feat
 
 # %% [markdown]
 # ### Check for metadata from rawfile overlap
@@ -504,6 +542,15 @@ df
 df.to_pickle(folder_data_out / 'ald_plasma_proteinGroups.pkl')
 
 # %% [markdown]
+# Dump QC sample data
+
+# %%
+df_qc = df_qc.loc[:, selected].droplevel(1, axis=1)
+fnames.qc_plasma_proteinGroups = folder_data_out / 'qc_plasma_proteinGroups.pkl'
+df_qc.to_pickle(fnames.qc_plasma_proteinGroups)
+df_qc
+
+# %% [markdown]
 # # Liver samples
 
 # %% [markdown]
@@ -560,8 +607,6 @@ df
 # %% tags=[]
 meta = df.index.to_frame().reset_index(drop=True)
 meta
-
-# %%
 
 # %%
 id_mappings =  ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
@@ -635,6 +680,7 @@ idx.describe()
 
 # %%
 df = df.set_index(idx)
+df_qc = df.loc[idx_qc_liver]
 df = df.loc[sel_liver_samples]
 df
 
@@ -687,8 +733,13 @@ df
 # Dump selected data
 
 # %%
-fnames.sel_liver_aggPeptids = folder_data_out / 'ald_liver_aggPeptides.pkl'
-df.to_pickle(fnames.sel_liver_aggPeptids)
+fnames.sel_liver_aggPeptides = folder_data_out / 'ald_liver_aggPeptides.pkl'
+df.to_pickle(fnames.sel_liver_aggPeptides)
+
+# %%
+fnames.qc_liver_aggPeptides = folder_data_out / 'qc_liver_aggPeptides.pkl'
+df_qc.to_pickle(fnames.qc_liver_aggPeptides)
+df_qc
 
 # %% [markdown]
 # ## Protein Groups
@@ -787,7 +838,7 @@ idx.describe()
 
 # %%
 df = df.set_index(idx)
-# df = df.loc[idx_overlap_liver] # missing
+df_qc = df.loc[idx_qc_liver]
 df = df.loc[sel_liver_samples]
 df
 
@@ -857,6 +908,11 @@ df
 # %%
 fnames.sel_liver_proteinGroups = folder_data_out / 'ald_liver_proteinGroups.pkl'
 df.to_pickle(fnames.sel_liver_proteinGroups)
+
+# %%
+fnames.qc_liver_proteinGroups = folder_data_out / 'qc_liver_proteinGroups.pkl'
+df_qc.to_pickle(fnames.qc_liver_proteinGroups)
+df_qc
 
 # %% [markdown]
 # # All file names

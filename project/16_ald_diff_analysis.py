@@ -21,6 +21,7 @@
 
 # %%
 from pathlib import Path
+import yaml
 from collections import namedtuple
 
 import matplotlib.pyplot as plt
@@ -54,6 +55,9 @@ args = dict(globals()).keys()
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
+fn_qc_samples = 'data/single_datasets/qc_plasma_proteinGroups.pkl'
+
+
 target: str = 'kleiner'
 covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
 
@@ -99,10 +103,6 @@ observed
 # ## Clinical data
 
 # %%
-# covar = 'age,bmi,gender_num,abstinent_num,nas_steatosis_ordinal'
-# covar_steatosis = 'age,bmi,gender_num,abstinent_num,kleiner,nas_inflam'
-
-# %%
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
 df_clinic['abstinent_num'] = (df_clinic["currentalc"] == 0.00).astype(int)
@@ -110,31 +110,47 @@ cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
 df_clinic[[args.target, *args.covar]].describe()
 
 # %% [markdown]
-# Impute missing values (otherwise rows with missing values will be removed)
-#
-# - check how many rows have one missing values
+# Entries with missing values
+# - see how many rows have one missing values (for target and covariates)
+# - only complete data is used for Differential Analysis
+# - covariates are not imputed
 
 # %%
-#ToDo
 df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
 
 # %% [markdown]
 # Data description of data used:
 
 # %%
-df_clinic[[args.target, *args.covar]].dropna().describe()
+idx_complete_data = df_clinic[[args.target, *args.covar]].dropna().index
+df_clinic.loc[idx_complete_data, [args.target, *args.covar]].describe()
 
 # %% [markdown]
 # ## ALD study approach using all measurments
 
 # %%
 DATA_COMPLETENESS = 0.6
-MIN_N_PROTEIN_GROUPS: int = 200
+# MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
+CV_QC_SAMPLE: float = 0.4 # Coef. of variation on 13 QC samples
 
 ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(observed.unstack(
 ), data_completeness=DATA_COMPLETENESS, frac_protein_groups=FRAC_PROTEIN_GROUPS)
 
+ald_study
+
+# %%
+if args.fn_qc_samples:
+    qc_samples = pd.read_pickle(args.fn_qc_samples)
+    qc_samples = qc_samples[ald_study.columns]
+    qc_cv_feat = qc_samples.std() / qc_samples.mean()
+    qc_cv_feat = qc_cv_feat.rename(qc_samples.columns.name)
+    fig, ax = plt.subplots(figsize=(4,7))
+    ax = qc_cv_feat.plot.box(ax=ax)
+    ax.set_ylabel('Coefficient of Variation')
+    print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
+    ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples)]
+    vaep.savefig(fig, name='cv_qc_samples', folder=args.out_figures)
 ald_study
 
 # %%
@@ -179,14 +195,13 @@ min_bin, max_bin
 fig, axes = plt.subplots(3, figsize=(20, 15), sharex=True)
 
 # axes = axes.ravel()
-
+bins = range(min_bin, max_bin+1, 1)
 ax = axes[0]
 ax = observed.hist(ax=ax, bins=bins)
 ax.set_title(f'observed measurments (N={len(observed):,d})')
 ax.set_ylabel('count measurments')
 
 ax = axes[1]
-bins = range(min_bin, max_bin+1, 1)
 ax = pred_real_na.hist(ax=ax,bins=bins, label=f'all (N={len(pred_real_na):,d})')
 ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
@@ -196,14 +211,13 @@ ax = pred_real_na.loc[idx_new_model].hist(ax=ax,bins=bins, label=f'new (N={len(i
 ax.legend()
 
 ax = axes[2]
-bins = range(min_bin, max_bin+1, 1)
 ax = pred_real_na.loc[pred_real_na_imputed_normal.index].hist(ax=ax,bins=bins, label='VAE')
 ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, label='shifted normal')
 
 ax.set_title(f'real na imputed by shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
 ax.set_ylabel('count measurments')
 ax.set_xlabel(args.value_name)
-ax.legend()
+ax.legend(fontsize='xx-large')
 
 vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}_v2', folder=args.out_folder)
 
@@ -224,8 +238,6 @@ ax = pred_real_na.hist(ax=ax,bins=bins)
 ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
 
-
-
 ax = axes[2]
 ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins)
 ax.set_title(f'real na imputed using shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
@@ -242,7 +254,7 @@ vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=arg
 
 # %%
 df = pd.concat([observed, pred_real_na]).unstack()
-df
+df.loc[idx_complete_data]
 
 # %%
 assert df.isna().sum().sum() == 0, "DataFrame has missing entries"
@@ -263,10 +275,13 @@ scores
 
 # %% [markdown]
 # ## Shifted normal distribution
+# - select protein groups which were in original study
+# - loaded from config
 
 # %%
 df = pd.concat([ald_study.stack(), pred_real_na_imputed_normal]).unstack()
 ald_study_feat = df.columns.to_list()
+df = df.loc[idx_complete_data]
 df
 
 # %%
@@ -304,5 +319,3 @@ df
 
 # %%
 list(args.out_folder.iterdir())
-
-# %%

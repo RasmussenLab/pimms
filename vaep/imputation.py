@@ -168,7 +168,8 @@ def imputation_normal_distribution(log_intensities: pd.Series,
 def impute_shifted_normal(df_wide:pd.DataFrame,
                           mean_shift:float=1.8,
                           std_shrinkage:float=0.3,
-                          seed=123) -> pd.Series:
+                          axis=1,
+                          seed=RANDOMSEED) -> pd.Series:
     """Get replacements for missing values.
 
     Parameters
@@ -185,15 +186,18 @@ def impute_shifted_normal(df_wide:pd.DataFrame,
     pd.Series
         Series of imputed values in long format.
     """
-    mean = df_wide.mean()
-    std = df_wide.std()
+    mean = df_wide.mean(axis=1)
+    std = df_wide.std(axis=1)
     mean_shifted = mean - (std * mean_shift)
     std_shrinked = std * std_shrinkage
+    # rng=np.random.default_rng(seed=seed)
+    # rng.normal()
     np.random.seed(seed)
+    N, M = df_wide.shape
     imputed_shifted_normal = pd.DataFrame(
-        np.random.normal(mean_shifted, std_shrinked, size=df_wide.shape),
-        index=df_wide.index,
-        columns=df_wide.columns)
+        np.random.normal(mean_shifted, std_shrinked, size=(M, N)),
+        index=df_wide.columns,
+        columns=df_wide.index).T
     imputed_shifted_normal = imputed_shifted_normal[df_wide.isna()].stack()
     return imputed_shifted_normal
 

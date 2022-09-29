@@ -96,6 +96,7 @@ def make_large_descriptors():
                          'ytick.labelsize': 'xx-large',
                          'axes.titlesize':  'xx-large',
                          'axes.labelsize':  'xx-large',
+                         'legend.fontsize': 'xx-large',
                          })
 
 
