@@ -4,3 +4,7 @@ covar:
   kleiner: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
   inflammation: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
   steatosis: age,bmi,gender_num,abstinent_num,kleiner,nas_inflam
+cutoffs:
+  kleiner: 2
+  inflammation: 2
+  steatosis: 1

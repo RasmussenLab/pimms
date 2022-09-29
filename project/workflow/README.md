@@ -47,3 +47,14 @@ snakemake --snakefile workflow/SnakefileRepeatBest.smk -n -p
 ```
 snakemake --snakefile workflow\Snakefile_across_datasets.smk -p -c1 -n
 ```
+
+## ALD data
+
+This will need a two step procedure as a single experiment for the semi-supervised
+models needs to be run. 
+Then the comparsion with the shifted normal distribution and the ald setup is done.
+
+```
+snakemake --configfile config\appl_ald_data\plasma\proteinGroups\config.yaml -p -c1 -n
+snakemake --snakefile workflow\Snakefile_ald_comparison.smk --configfile config/appl_ald_data/plasma/proteinGroups/comparison.yaml -p -c1 -n
+```
