@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 
 
 import vaep.nb
-matplotlib.rcParams['figure.figsize'] = [16.0, 7.0]
+matplotlib.rcParams['figure.figsize'] = [12.0, 6.0]
 
 import vaep.io
 import vaep.pandas
@@ -43,7 +43,7 @@ pd.options.display.multi_sparse = False
 logger = vaep.logging.setup_nb_logger()
 
 # %% [markdown]
-# ### Papermill parameters
+# ## Papermill parameters
 
 # %% [markdown]
 # papermill parameters:
@@ -143,7 +143,6 @@ ax = metrics[subset]["valid_fake_na"].sort_values(
                           marker='o',
                           linestyle='',
                           title='Top 10 results for hyperparameters',
-                          figsize=(16,7)
                          )
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
@@ -197,7 +196,6 @@ ax = metrics[subset]["valid_fake_na"].sort_values(
                           xticks=list(range(10)),
                           marker='o',
                           linestyle='',
-                          figsize=(16,7)    
                           )
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fig = ax.get_figure()
@@ -534,6 +532,7 @@ logger.info(f"N Samples: {N_SAMPLES:,d} - set minumum: {FREQ_MIN:,d} for plottin
 # %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
 freq_feat.name = 'freq'
+# freq_feat = vaep.io.datasplits.load_freq(data_folder) # could 
 freq_feat.head() # training data
 
 # %%
@@ -554,7 +553,7 @@ errors_val_smoothed
 
 # %%
 mask = errors_val_smoothed[freq_feat.name] >= FREQ_MIN
-ax = errors_val_smoothed.loc[mask].plot(x=freq_feat.name,
+ax = errors_val_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
                                         xlabel='freq/feature prevalence (across samples)',
                                         ylabel=f'rolling average error ({METRIC})',
                                         xlim=(FREQ_MIN, errors_val_smoothed[freq_feat.name].max()),
@@ -580,6 +579,7 @@ fig = px_vaep.line(errors_val_smoothed_long.loc[errors_val_smoothed_long[freq_fe
               category_orders=category_orders,
               )
 fig = px_vaep.apply_default_layout(fig)
+fig.update_layout(legend_title_text='') # remove legend title
 fig.write_image(FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.pdf')
 fig
 
@@ -590,7 +590,9 @@ ax = errors_val_smoothed.loc[errors_val_smoothed['freq'] >= FREQ_MIN].groupby(by
                        ).mean(
                        ).sort_index(
                        ).rolling(window=3, min_periods=1
-                       ).mean().plot(
+                       ).mean(
+                       ).rename_axis('', axis=1
+                       ).plot(
     xlabel='freq/ feature prevalence (across samples)',
     ylabel='rolling error average',
     # title='mean error for features averaged for each frequency'
@@ -675,7 +677,7 @@ msg_annotation = f"(No. of feat: {M_feat}, window_size: {window_size})"
 errors_val_smoothed = errors_val.copy()
 errors_val_smoothed[order_models] = errors_val[order_models].rolling(window=window_size, min_periods=1).mean()
 mask = errors_val_smoothed[freq_feat.name] >= FREQ_MIN
-ax = errors_val_smoothed.loc[mask].plot(x=freq_feat.name,
+ax = errors_val_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
                                         ylabel='rolling error average',
                                         xlabel='freq/feature prevalence (across samples)',
                                         xlim=(FREQ_MIN,freq_feat.max()),
@@ -701,6 +703,7 @@ fig = px_vaep.line(errors_val_smoothed_long.loc[errors_val_smoothed_long[freq_fe
                    hover_data=[feat_count.name, idx_name],
                    category_orders={'model': order_models})
 fig = px_vaep.apply_default_layout(fig)
+fig.update_layout(legend_title_text='') # remove legend title
 fig.write_image(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.pdf')
 fig.write_html(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.html')
 fig
@@ -712,32 +715,36 @@ fig
 pred_split
 
 # %%
-corr_per_feat_val = pred_split.groupby(idx_name).aggregate(lambda df: df.corr().loc['observed'])[order_models]
+corr_per_feat = pred_split.groupby(idx_name).aggregate(lambda df: df.corr().loc['observed'])[order_models]
 
-figsize = (10, 8)
+figsize = 8,8 # None
 fig, ax = plt.subplots(figsize=figsize)
 
 kwargs = dict(rot=45,
               # title='Corr. betw. simulated NA and model pred. per feat',
               ylabel=f'correlation per feature ({idx_name})')
-ax = corr_per_feat_val.plot.box(**kwargs, ax=ax)
+ax = corr_per_feat.plot.box(**kwargs, ax=ax)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name=f'pred_corr_per_feat_{dataset}', folder=FOLDER)
 with pd.ExcelWriter(FOLDER/f'pred_corr_test_per_feat_{dataset}.xlsx') as writer:
-    corr_per_feat_val.describe().to_excel(writer, sheet_name='summary')
-    corr_per_feat_val.to_excel(writer, sheet_name='correlations')
+    corr_per_feat.describe().to_excel(writer, sheet_name='summary')
+    corr_per_feat.to_excel(writer, sheet_name='correlations')
 
 # %%
-corr_per_sample_val = pred_split.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[order_models]
+corr_per_sample = pred_split.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[order_models]
+corr_per_sample.describe()
 
+# %%
 fig, ax = plt.subplots(figsize=figsize)
 
 kwargs = dict(ylim=(0.7, 1), rot=45,
               # title='Corr. betw. simulated NA and model pred. per sample',
               ylabel='correlation per sample')
-ax = corr_per_sample_val.plot.box(**kwargs, ax=ax)
+ax = corr_per_sample.plot.box(**kwargs, ax=ax)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name=f'pred_corr_per_sample_{dataset}', folder=FOLDER)
 with pd.ExcelWriter(FOLDER/f'pred_corr_per_sample_{dataset}.xlsx') as writer:
-    corr_per_sample_val.describe().to_excel(writer, sheet_name='summary')
-    corr_per_sample_val.to_excel(writer, sheet_name='correlations')
+    corr_per_sample.describe().to_excel(writer, sheet_name='summary')
+    corr_per_sample.to_excel(writer, sheet_name='correlations')
+
+# %%

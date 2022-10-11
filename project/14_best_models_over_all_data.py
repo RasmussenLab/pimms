@@ -21,7 +21,6 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-
 import vaep.plotting
 import vaep.nb
 
@@ -30,7 +29,7 @@ pd.options.display.max_columns = 45
 pd.options.display.max_rows = 110
 pd.options.display.multi_sparse = False
 
-plt.rcParams['figure.figsize'] = [16.0, 7.0]
+plt.rcParams['figure.figsize'] = [12.0, 6.0]
 
 vaep.plotting.make_large_descriptors()
 
@@ -103,11 +102,12 @@ display(text.to_frame('text'))
 _to_plot
 
 # %%
+_to_plot.columns.name = ''
 ax = _to_plot.plot.bar(rot=0,
                        xlabel='',
                        ylabel=f"{METRIC} (log2 intensities)",
                        width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax)
+ax = vaep.plotting.add_height_to_barplot(ax, size=12)
 ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
 fig.tight_layout()
@@ -118,9 +118,6 @@ fname = 'best_models_1_plotly'
 _to_plot = selected.droplevel(['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
 _to_plot = _to_plot.set_index(['data level', 'model'])[
                               ['metric_value', 'latent_dim', 'hidden_layers', 'text']].fillna('-')
-
-# _to_plot['text'] = 'LD: ' + _to_plot['latent_dim'].astype(str) + ' HL: ' + _to_plot['hidden_layers']
-# _to_plot.loc[pd.IndexSlice[:, ['interpolated', 'median']], 'text'] = ''
 
 _to_plot = _to_plot.loc[pd.IndexSlice[IDX_ORDER], :]
 _to_plot.to_csv(FOLDER / f"{fname}.csv")
@@ -138,6 +135,7 @@ fig = px.bar(_to_plot.reset_index(),
              category_orders=order_categories,
              template='none',
              height=600)
+fig.update_layout(legend_title_text='')
 fig.write_image(FOLDER / f"{fname}.pdf")
 fig
 
@@ -181,10 +179,12 @@ to_plot.to_csv(FOLDER /f"{fname}.csv")
 to_plot
 
 # %%
-fig, ax = plt.subplots(figsize=(10,8))
+figsize= (10,8) # None # (10,8)
+fig, ax = plt.subplots(figsize=figsize)
+to_plot.columns.name = ''
 ax = (to_plot
       .set_index(['model annotated', 'data level'])['metric_value']
-      .unstack()
+      .unstack().rename_axis('', axis=1)
       .loc[order_model, order_categories['data level']]
       .plot.bar(
           # xlabel="model with overall best performance for all datasets",
@@ -197,7 +197,7 @@ ax = (to_plot
           color = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']
       )
       )
-ax = vaep.plotting.add_height_to_barplot(ax)
+ax = vaep.plotting.add_height_to_barplot(ax, size=11)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
@@ -218,4 +218,5 @@ fig = px.bar(to_plot,
              template='none',
              height=600)
 fig.write_image(FOLDER / f"{fname}_plotly.pdf")
+fig.update_layout(legend_title_text='')
 fig
