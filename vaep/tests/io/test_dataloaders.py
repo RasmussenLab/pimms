@@ -23,7 +23,7 @@ def test_get_dls():
     BS = 4
     dls = get_dls(train_X=X_train, valid_X=X_valid, transformer=transforms, bs=BS)
     assert len(dls.train_ds) == N
-    assert len(dls.valid_ds) == N_valid
+    assert len(dls.valid_ds) == N
     batch = dls.one_batch()
     assert batch[0].shape == (BS, M)
 
