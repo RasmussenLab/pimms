@@ -5,14 +5,17 @@ from vaep.models import ae
 expected_repr = """Autoencoder(
   (encoder): Sequential(
     (0): Linear(in_features=100, out_features=30, bias=True)
-    (1): Tanh()
-    (2): Linear(in_features=30, out_features=10, bias=True)
-    (3): Tanh()
+    (1): Dropout(p=0.2, inplace=False)
+    (2): BatchNorm1d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): LeakyReLU(negative_slope=0.1)
+    (4): Linear(in_features=30, out_features=10, bias=True)
   )
   (decoder): Sequential(
     (0): Linear(in_features=10, out_features=30, bias=True)
-    (1): Tanh()
-    (2): Linear(in_features=30, out_features=100, bias=True)
+    (1): Dropout(p=0.2, inplace=False)
+    (2): BatchNorm1d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): LeakyReLU(negative_slope=0.1)
+    (4): Linear(in_features=30, out_features=100, bias=True)
   )
 )"""
 

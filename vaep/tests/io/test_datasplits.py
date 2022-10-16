@@ -12,9 +12,7 @@ df = pd.DataFrame(X,
                   columns=(f'feat_{i}' for i in range(M)))
 
 _splits = {'train_X': df.iloc[:int(N*0.6)],
-           'val_X': df.iloc[int(N*0.6):int(N*0.8)],
            'val_y': df.iloc[int(N*0.6):int(N*0.8)],
-           'test_X': df.iloc[int(N*0.8):],
            'test_y': df.iloc[int(N*0.8):]}
 
 
@@ -65,12 +63,12 @@ def test_to_long_format(tmp_path):
     splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=True)
     assert splits._is_wide
-    expected = splits.val_X.copy()
+    expected = splits.val_y.copy()
     splits.to_long_format()
     assert not splits._is_wide
     splits.to_wide_format()
-    assert splits.val_X is not expected
-    assert splits.val_X.equals(expected)
+    assert splits.val_y is not expected
+    assert splits.val_y.equals(expected)
 
 def test_to_wide_format(tmp_path):
     splits = DataSplits(**_splits, is_wide_format=True)
@@ -78,12 +76,12 @@ def test_to_wide_format(tmp_path):
     splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=False)
     assert not splits._is_wide
-    expected = splits.val_X.copy()
+    expected = splits.val_y.copy()
     splits.to_wide_format()
     assert splits._is_wide
     splits.to_long_format()
-    assert splits.val_X is not expected
-    assert splits.val_X.equals(expected)
+    assert splits.val_y is not expected
+    assert splits.val_y.equals(expected)
 
 def test_interpolate():
     splits = DataSplits(**_splits, is_wide_format=True)
@@ -91,12 +89,9 @@ def test_interpolate():
     with pytest.raises(AttributeError):
         _ = splits.interpolate('non-existing')
 
-    _ = splits.interpolate('test_X')
-    _ = splits.interpolate(splits.test_X)
+    _ = splits.interpolate('train_X')
 
-    val_X = splits.val_y
-    splits.val_X = None
-    with pytest.raises(ValueError):
+    with pytest.raises(AttributeError):
         _ = splits.interpolate('val_X')
     with pytest.raises(TypeError):
         _ = splits.interpolate(4)
