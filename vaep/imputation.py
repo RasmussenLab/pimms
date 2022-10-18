@@ -186,18 +186,27 @@ def impute_shifted_normal(df_wide:pd.DataFrame,
     pd.Series
         Series of imputed values in long format.
     """
-    mean = df_wide.mean(axis=1)
-    std = df_wide.std(axis=1)
+    # add check if there ar e NaNs or inf in data? see tests
+    # np.isinf(df_wide).values.sum()
+    mean = df_wide.mean(axis=axis)
+    std = df_wide.std(axis=axis)
     mean_shifted = mean - (std * mean_shift)
     std_shrinked = std * std_shrinkage
     # rng=np.random.default_rng(seed=seed)
     # rng.normal()
     np.random.seed(seed)
     N, M = df_wide.shape
-    imputed_shifted_normal = pd.DataFrame(
+    if axis == 1:
+        imputed_shifted_normal = pd.DataFrame(
         np.random.normal(mean_shifted, std_shrinked, size=(M, N)),
         index=df_wide.columns,
-        columns=df_wide.index).T
+        columns=df_wide.index)
+        imputed_shifted_normal = imputed_shifted_normal.T
+    else:
+        imputed_shifted_normal = pd.DataFrame(
+        np.random.normal(mean_shifted, std_shrinked, size=(N, M)),
+        index=df_wide.index,
+        columns=df_wide.columns)
     imputed_shifted_normal = imputed_shifted_normal[df_wide.isna()].stack()
     return imputed_shifted_normal
 

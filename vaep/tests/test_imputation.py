@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from vaep.imputation import imputation_KNN, imputation_normal_distribution
+from vaep.imputation import imputation_KNN, imputation_normal_distribution, impute_shifted_normal
 """
 # Test Data set was created from a sample by shuffling:
 
@@ -56,3 +56,22 @@ def test_imputation_normal_dist():
 
 # def test_imputation_mixed_norm_KNN():
 #     pass
+@pytest.mark.parametrize('axis', [0, 1])
+def test_impute_shifted_normal(example_data, axis):
+    mean_shift=1.8
+    # remove zeros as these lead to -inf 
+    example_data = np.log2(example_data.replace({0.0: np.nan})
+                          ).dropna(thresh=10, axis=1-axis)
+    N, M = example_data.shape
+    mask_observed = example_data.notna()
+    imputed = impute_shifted_normal(example_data, axis=axis, mean_shift=mean_shift)
+    assert len(imputed) == ((N*M) - len(example_data.stack()))
+    mean_imputed = imputed.unstack().mean(axis=axis)
+    mean = example_data.mean(axis=axis)
+    std = example_data.std(axis=axis)
+    mean_shifted = mean - (std * mean_shift)
+    # pd.DataFrame({'mean_expected': mean_shifted, 'mean_imputed': mean_imputed})
+    assert (mean_shifted - mean_imputed).abs().max() < 0.35
+
+
+    
