@@ -25,6 +25,7 @@ import pandas as pd
 import seaborn as sns
 
 import vaep
+import vaep.databases.diseases
 logger = vaep.logging.setup_nb_logger()
 
 # %%
@@ -36,10 +37,14 @@ args = dict(globals()).keys()
 # ## Parameters
 
 # %% tags=["parameters"]
-folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
+folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
 model_key = 'vae'
 target = 'kleiner'
-out_folder='diff_analysis'
+out_folder = 'diff_analysis'
+# 
+disease_ontology = 5082  # code from https://disease-ontology.org/
+f_annotations = 'data/single_datasets/ald_plasma_proteinGroups_annotations.csv' # snakemake -> copy to experiment folder
+annotaitons_gene_col = 'PG.Genes'
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -48,7 +53,8 @@ params
 # %%
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment/params["out_folder"]/params["target"]/params["model_key"])
+args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment /
+                                 params["out_folder"]/params["target"]/params["model_key"])
 args.update_from_dict(params)
 args
 
@@ -78,10 +84,15 @@ scores.describe()
 
 # %%
 scores = scores.loc[pd.IndexSlice[:, args.target], :]
+fname = args.out_folder / f'diff_analysis_compare_methods.xlsx'
+scores.to_excel(fname)
 scores
 
 # %%
 scores.describe()
+
+# %%
+scores.describe(include=['bool', 'O'])
 
 # %% [markdown]
 # ## Load frequencies of observed features
@@ -96,6 +107,7 @@ freq_feat
 
 # %%
 scores_common = scores.dropna().reset_index(-1, drop=True)
+scores_common[('data', 'freq')] = freq_feat
 scores_common
 
 
@@ -103,20 +115,23 @@ scores_common
 def annotate_decision(scores, model):
     return scores[(model, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
 
+
 annotations = None
 for model, model_column in models.items():
     if not annotations is None:
         annotations += ' - '
-        annotations += scores_common[(model_column, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+        annotations += scores_common[(model_column, 'rejected')
+                                     ].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
     else:
-        annotations= scores_common[(model_column, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+        annotations = scores_common[(model_column, 'rejected')].replace(
+            {False: f'{model} ->  no', True: f'{model} -> yes'})
 annotations.name = 'Differential Analysis Comparison'
 annotations.value_counts()
 
 # %%
-mask_different = ( (scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1)) & 
- ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(axis=1))
-)
+mask_different = ((scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1)) &
+                  ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(axis=1))
+                  )
 
 scores_common.loc[mask_different]
 
@@ -127,9 +142,9 @@ fname
 
 # %%
 var = 'qvalue'
-to_plot = [scores_common[v][var] for k,v in models.items()]
+to_plot = [scores_common[v][var] for k, v in models.items()]
 for s, k in zip(to_plot, models.keys()):
-    s.name = k.replace('_', ' ') 
+    s.name = k.replace('_', ' ')
 to_plot.append(freq_feat.loc[scores_common.index])
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
@@ -200,17 +215,36 @@ fname
 # # Feature lookup
 #
 # - [x] look-up ids and diseases, manually (uncomment)
-# - [ ] automatically by querying `api.jensenlab.org`: see if disease (`DOID` needed) has associations to gene found
+# - [x] automatically by querying `api.jensenlab.org`: see if disease (`DOID` needed) has associations to gene found
 
 # %%
-# from IPython.display import IFrame
-# display(IFrame('https://www.uniprot.org/', width=900,height=500))
+data = vaep.databases.diseases.get_disease_association(doid=args.disease_ontology, limit=10000)
+data = pd.DataFrame.from_dict(data, orient='index').rename_axis('ENSP', axis=0)
+data = data.rename(columns={'name': args.annotaitons_gene_col}).reset_index().set_index(args.annotaitons_gene_col)
+data
 
 # %%
-# # %%html
-# <iframe 
-#   style="transform-origin: 0px 0px 0px; transform: scale(1.5); width: 600px; height: 600px;" 
-#   src='https://diseases.jensenlab.org/Search'
-#   name="iFrame"
-#   scrolling="no">
-# </iframe>
+feat_name = scores_common.index.name
+annotations = pd.read_csv(args.f_annotations, usecols=[feat_name, args.annotaitons_gene_col])
+annotations = annotations.drop_duplicates().set_index(args.annotaitons_gene_col)
+annotations
+
+# %%
+disease_associations_all = data.join(annotations).dropna().reset_index().set_index(feat_name)
+disease_associations_all
+
+# %%
+idx = disease_associations_all.index.intersection(scores_model_only.index)
+disease_assocications_new = disease_associations_all.loc[idx].sort_values('score', ascending=False)
+disease_assocications_new.head(20)
+
+# %%
+mask = disease_assocications_new.loc[idx, 'score'] >= 2.0
+disease_assocications_new.loc[idx].loc[mask]
+
+# %%
+fname = args.out_folder / 'gene_disease_associations.xlsx'
+with pd.ExcelWriter(fname) as writer:
+    disease_associations_all.to_excel(writer, sheet_name='all')
+    disease_assocications_new.to_excel(writer, sheet_name='new')
+logger.info(f"Wrote gene-disease associations to file: {fname}")
