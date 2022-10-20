@@ -8,3 +8,9 @@ cutoffs:
   kleiner: 2
   inflammation: 2
   steatosis: 1
+disease_ontology: # code from https://disease-ontology.org/
+  kleiner: 5082 # liver cirrhosis
+  inflammation: 9452 #fatty liver disease
+  steatosis: 9452 #fatty liver disease
+f_annotations: data/single_datasets/ald_plasma_proteinGroups_annotations.csv # snakemake -> copy to experiment folder
+annotaitons_gene_col: PG.Genes

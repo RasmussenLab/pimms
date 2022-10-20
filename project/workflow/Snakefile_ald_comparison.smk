@@ -18,15 +18,22 @@ nb='16_ald_compare_methods.ipynb'
 rule compare_diff_analysis:
     input:
         nb=nb,
-        scores=stem+"diff_analysis_scores.pkl"
+        scores=stem+"diff_analysis_scores.pkl",
+        f_annotations=config["f_annotations"]
     output:
         nb=stem+nb,
         figure=stem+"diff_analysis_comparision_2_{model}.pdf"
+    params:
+        disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
+        annotaitons_gene_col= config["annotaitons_gene_col"]
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
         " -r target {wildcards.target}"
         " -r model_key {wildcards.model}"
+        " -p disease_ontology {params.disease_ontology}"
+        " -r f_annotations {input.f_annotations}"
+        " -r annotaitons_gene_col {params.annotaitons_gene_col}"
         " && jupyter nbconvert --to html {output.nb}"
 
 nb='16_ald_diff_analysis.ipynb'
@@ -51,7 +58,6 @@ rule ml_comparison:
     input:
         nb=nb,
         fn_clinical_data="data/single_datasets/ald_metadata_cli.csv",
-        
     output:
         sel_feat=stem+'mrmr_feat_by_model.xlsx',
         nb=stem+nb,
