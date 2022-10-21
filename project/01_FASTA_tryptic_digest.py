@@ -40,7 +40,7 @@ from vaep.fasta import iterFlatten
 from vaep.fasta import count_peptide_matches
 from vaep.io import search_files
 from vaep.pandas import combine_value_counts
-from vaep.uniprot import query_uniprot_id_mapping
+from vaep.databases.uniprot import query_uniprot_id_mapping
 from vaep.utils import sample_iterable
 from vaep.plotting import _savefig
 

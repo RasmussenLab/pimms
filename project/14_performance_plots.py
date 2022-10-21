@@ -58,9 +58,9 @@ file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 
 # %%
-# Parameters
-fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
-folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
+# # Parameters
+# fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
+# folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 
 # %%
 args = vaep.nb.Config()
@@ -107,7 +107,8 @@ vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 # %%
 # freq_feat = sampling.frequency_by_index(data.train_X, 0)
 # freq_feat.name = 'freq'
-freq_feat = vaep.io.datasplits.load_freq(args.data)   # needs to be pickle -> index.name needed
+freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_train.json')   # needs to be pickle -> index.name needed
+
 freq_feat.head() # training data
 
 # %%
@@ -133,7 +134,7 @@ print(f"N samples: {N_SAMPLES:,d}, M features: {M_FEAT}")
 mean = data.train_X.mean()
 std = data.train_X.std()
 
-imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3)
+imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
 imputed_shifted_normal
 
 # %%
@@ -191,6 +192,9 @@ model_configs.T
 
 # %% [markdown]
 # ## test data
+
+# %%
+freq_feat.index.name = data.train_X.columns.name
 
 # %%
 split = 'test'
@@ -329,12 +333,17 @@ def plot_rolling_error(errors: pd.DataFrame, metric_name, window: int = 200,
                        min_freq=None, freq_col: str = 'freq', 
                        ax=None):
     errors_smoothed = errors.drop(freq_col, axis=1).rolling(window=window, min_periods=1).mean()
+    errors_smoothed_max = errors_smoothed.max().max()
     errors_smoothed[freq_col] = errors[freq_col]
     if min_freq is None:
         min_freq=errors_smoothed[freq_col].min()
     else:
         errors_smoothed = errors_smoothed.loc[errors_smoothed[freq_col] > min_freq]
-    ax = errors_smoothed.plot(x=freq_col, ylabel=f'rolling average error ({metric_name})', color=colors_to_use, xlim=(min_freq, errors_smoothed[freq_col].max()), ax=None)
+    ax = errors_smoothed.plot(x=freq_col, ylabel=f'rolling average error ({metric_name})',
+                              color=colors_to_use,
+                              xlim=(min_freq, errors_smoothed[freq_col].max()),
+                              ylim=(0, min(errors_smoothed_max, 5)), 
+                              ax=None)
     return ax
 
 min_freq = None

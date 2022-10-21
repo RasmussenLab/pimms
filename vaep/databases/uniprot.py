@@ -1,6 +1,7 @@
 import urllib.parse
 import urllib.request
 
+__all__ = ['query_uniprot_id_mapping']
 
 def query_uniprot_id_mapping(query_list: list, FROM='ACC+ID', TO='GENENAME', FORMAT='tab'):
     """Query Uniprot ID mappings programatically.
