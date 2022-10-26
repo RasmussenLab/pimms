@@ -247,6 +247,31 @@ ax.set_xlabel(args.value_name)
 vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=args.out_folder)
 
 # %% [markdown]
+# ## Mean shift by method
+
+# %%
+observed.mean(), observed.std(), pred_real_na.mean(), pred_real_na.std(), pred_real_na_imputed_normal.mean(), pred_real_na_imputed_normal.std()
+
+# %%
+shifts = vaep.imputation.compute_moments_shift(observed, pred_real_na_imputed_normal, names=('observed', 'shifted normal'))
+shifts.update(vaep.imputation.compute_moments_shift(observed, pred_real_na, names=('observed', args.model_key)))
+pd.DataFrame(shifts).T
+
+# %% [markdown]
+# Or by averaging over the calculation by sample
+
+# %%
+index_level = 0 # per sample
+mean_by_sample = {}
+mean_by_sample['observed'] = vaep.imputation.stats_by_level(observed, index_level=index_level)
+mean_by_sample['shifted normal'] = vaep.imputation.stats_by_level(pred_real_na_imputed_normal, index_level=index_level)
+mean_by_sample['vae'] = vaep.imputation.stats_by_level(pred_real_na, index_level=index_level)
+mean_by_sample = pd.DataFrame(mean_by_sample)
+mean_by_sample.loc['mean_shift'] = (mean_by_sample.loc['mean', 'observed'] - mean_by_sample.loc['mean']).abs() / mean_by_sample.loc['std', 'observed']
+mean_by_sample.loc['std shrinkage'] = mean_by_sample.loc['std'] / mean_by_sample.loc['std', 'observed']
+mean_by_sample
+
+# %% [markdown]
 # # Differential analysis
 
 # %% [markdown]
