@@ -53,7 +53,7 @@ y_impute = scipy.stats.norm.pdf(x, loc=mu - (1.8*stddev), scale=0.3*stddev)
 
 colors = plt.cm.viridis([0.25,0.75])    
 
-fig, ax = plt.subplots(1, 1, figsize=(30, 15))
+fig, ax = plt.subplots(1, 1, figsize=(5, 4))
 
 for y, c in zip([y_normal, y_impute], colors):
     ax.plot(x, y, color=c,)
@@ -62,9 +62,11 @@ for y, c in zip([y_normal, y_impute], colors):
     ax.set_ylabel('density')
     ax.set_label("test")
     ax.legend(["original", "down shifted"])
-
+fig.tight_layout()
 # %%
+
 fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation')
+fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation.pdf')
 fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation_highres', dpi=600)
 
 
