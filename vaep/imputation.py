@@ -5,6 +5,7 @@ Imputation can be down by column.
 
 
 """
+from typing import Tuple, Dict
 from sklearn.impute import KNNImputer
 from sklearn.neighbors import KNeighborsTransformer
 from sklearn.neighbors import NearestNeighbors
@@ -218,3 +219,21 @@ def imputation_mixed_norm_KNN(data):
     data = imputation_normal_distribution(
         data, mean_shift=1.8, std_shrinkage=0.3)
     return data
+
+
+def compute_moments_shift(observed: pd.Series, imputed: pd.Series, names:Tuple[str, str]=('observed', 'imputed')) -> Dict[str, float]:
+    """Summary of overall shift of mean and std. dev. of predictions for a imputation method."""
+    name_obs, name_model = names
+    data = {name: {'mean': series.mean(), 'std': series.std()} for series, name in zip([observed, imputed], names)}
+    observed, imputed = data[name_obs], data[name_model]
+    shifts = dict()
+    data[name_model]['mean shift (in std)'] = (observed["mean"] - imputed["mean"]) / observed["std"]
+    data[name_model]['std shrinkage'] = imputed["std"] / observed["std"]
+    return data
+
+
+def stats_by_level(series:pd.Series, index_level:int=0, min_count:int=5) -> pd.Series:
+    """Count, mean and std. dev. by index level."""
+    agg = series.groupby(level=index_level).agg(['count', 'mean', 'std'])
+    agg = agg.loc[agg['count'] > min_count]
+    return agg.mean()
