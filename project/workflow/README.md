@@ -31,6 +31,10 @@ e.g. for small N grid search:
 snakemake --snakefile workflow/Snakefile_grid.smk --configfile config/grid_search_small_data/config_grid.yaml -p -c1 -n
 ```
 
+rule graph is
+
+<img src="rulegraph_gridsearch.png" alt="Rule graph for grid search" width="500"/>
+
 
 ## Repeated training
 
