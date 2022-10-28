@@ -1,7 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py:percent,md
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
@@ -74,6 +74,9 @@ index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 column_names: List = None # Manuelly set column names
+# metadata -> defaults for metadata extracted from machine data
+meta_date_col = 'Content Creation Date'
+meta_cat_col = 'Thermo Scientific instrument model'
 
 # %%
 # select_N = 50
@@ -117,7 +120,9 @@ class DataConfig:
     logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
     folder_experiment: str = 'runs/experiment_03'
     column_names: str = None # Manuelly set column names
-
+    # metadata -> defaults for metadata extracted from machine data
+    meta_date_col: str = None
+    meta_cat_col: str = None
 
 params = DataConfig(**args) # catches if non-specified arguments were passed
 
@@ -209,13 +214,17 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
 # %%
 df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
 df_meta = df_meta.loc[analysis.df.index.to_list()] # index is sample index
-date_col = 'Content Creation Date' # hard-coded date column -> potential parameter
-df_meta[date_col] = pd.to_datetime(df_meta[date_col])
 df_meta
 
 # %%
-cols_instrument = thermo_raw_files.cols_instrument
-df_meta.groupby(cols_instrument)[date_col].agg(['count','min','max']) 
+df_meta[params.meta_date_col] = pd.to_datetime(df_meta[params.meta_date_col])
+df_meta
+
+# %%
+if df_meta.columns.isin(thermo_raw_files.cols_instrument).sum() == len(thermo_raw_files.cols_instrument): 
+    display(df_meta.groupby(thermo_raw_files.cols_instrument)[params.meta_date_col].agg(['count','min','max']))
+else:
+    logger.info(f"Instrument column not found: {thermo_raw_files.cols_instrument}")
 
 # %%
 df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 10))
@@ -224,14 +233,19 @@ df_meta.describe(datetime_is_numeric=True, percentiles=np.linspace(0.05, 0.95, 1
 # select samples with a minimum retention time
 
 # %%
-msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
-mask_RT = df_meta['MS max RT'] >= params.min_RT_time # can be integrated into query string
-msg += f" Total number of samples retained: {int(mask_RT.sum())}."
-print(msg)
+if params.min_RT_time:
+    logger.info("Metadata should have 'MS max RT' entry from ThermoRawFileParser")
+    msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
+    mask_RT = df_meta['MS max RT'] >= params.min_RT_time # can be integrated into query string
+    msg += f" Total number of samples retained: {int(mask_RT.sum())}"
+    msg += f" ({int(len(mask_RT) - mask_RT.sum())} excluded)."
+    logger.info(msg)
+    df_meta = df_meta.loc[mask_RT]
+else:
+    logger.warning(f"Could not find retention time column in meta data: {col_max_rt}")
 
 # %%
-df_meta = df_meta.loc[mask_RT]
-df_meta = df_meta.sort_values(date_col)
+df_meta = df_meta.sort_values(params.meta_date_col)
 
 # %%
 meta_stats = df_meta.describe(include='all', datetime_is_numeric=True)
@@ -244,33 +258,32 @@ meta_stats
 meta_stats.loc[:, (meta_stats.loc['unique'] > 1) |  (meta_stats.loc['std'] > 0.1)]
 
 # %% [markdown]
-# check some columns describing settings
-#   - quite some variation due to `MS max charge`: Is it a parameter?
+# Optional, if using ThermoRawFileParser: check some columns describing settings
+#   - software can be updated: `Software Version`
+#   - `mass resolution` setting for instrument
+#   - colision type for MS2: `beam-type collision-induced dissocation`
+#   - missing `dilution factor` 
+#   - omit (uncomment if needed):
+#     - quite some variation due to `MS max charge`: omit
+#     - variation by `injection volume setting` and instrument over time
+#         - 500ng of peptides should be injected, based on concentration of peptides this setting is adjusted to get it
 
 # %%
 meta_raw_settings = [
  'Thermo Scientific instrument model',
  'instrument serial number',
  'Software Version', 
- 'MS max charge',
+ # 'MS max charge',
  'mass resolution',
  'beam-type collision-induced dissociation', 
  # 'injection volume setting',
  'dilution factor',
 ]
-df_meta[meta_raw_settings].drop_duplicates() # index gives first example with this combination
 
-# %% [markdown]
-# view without `MS max charge`:
-#   - software can be updated
-#   - variation by `injection volume setting` and instrument over time
-#     - 500ng of peptides should be injected, based on concentration of peptides this setting is adjustd to get it
-#   - missing `dilution factor`
-#   
-
-# %%
-to_drop = ['MS max charge']
-df_meta[meta_raw_settings].drop(to_drop, axis=1).drop_duplicates() # index gives first example with this combination
+if df_meta.columns.isin(meta_raw_settings).sum() == len(meta_raw_settings):
+    display(
+        df_meta[meta_raw_settings].drop_duplicates() # index gives first example with this combination
+    )
 
 
 # %% [markdown]
@@ -278,6 +291,7 @@ df_meta[meta_raw_settings].drop(to_drop, axis=1).drop_duplicates() # index gives
 #
 #
 # Update selection of samples based on metadata (e.g. minimal retention time)
+# - sort data the same as sorted meta data
 
 # %%
 def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
@@ -293,6 +307,12 @@ def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
 
 analysis = add_meta_data(analysis, df_meta=df_meta)
 
+# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# Ensure unique indices
+
+# %%
+assert analysis.df.index.is_unique, "Duplicates in index"
+
 # %% [markdown]
 # ## Select a subset of samples if specified (reduce the number of samples)
 #
@@ -300,8 +320,6 @@ analysis = add_meta_data(analysis, df_meta=df_meta)
 #   - take N most recent samples
 
 # %%
-# ToDo: Second step in procedure -> needs to be done later!
-# First: select via threshold
 if params.select_N is not None:
     params.select_N = min(params.select_N, len(analysis.df_meta))
                    
@@ -319,13 +337,12 @@ if params.select_N is not None:
 # analysis.df_meta['Pathname'].to_json(folder_experiment / 'config_rawfile_paths.json', indent=4)
 
 # %% [markdown]
-# ## Select features by prevalence - FOR SUBSETTED DATA
+# ## First Step: Select features by prevalence
 #
-# - select featues if `select_N` is specifed (for now)
+# - select features if `select_N` is specifed (for now)
 # - `feat_prevalence` across samples
 
 # %% tags=[]
-# if params.select_N is not None: # ToDo: this if clause will be removed
 freq_per_feature = analysis.df.notna().sum() # on wide format
 if isinstance(params.feat_prevalence, float):
     logger.info(f"Current number of samples: {select_N}")
@@ -342,13 +359,7 @@ analysis.N, analysis.M = analysis.df.shape
 analysis.df
 
 # %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
-# ### Second step - Sample selection
-#
-# - ensure unique indices
-
-# %%
-assert analysis.df.index.is_unique, "Duplicates in index"
-analysis.df.sort_index(inplace=True)
+# ## Second step - Sample selection
 
 # %% [markdown]
 # Select samples based on completeness
@@ -363,12 +374,6 @@ if isinstance(params.sample_completeness, float):
 
 sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
     
-# if params.select_N is not None:
-#     logger.warning("Skip for small dataset for now -> only first step performed")
-#     mask = sample_counts > params.sample_completeness
-#     msg = f'This would translate to dropping {len(mask) - mask.sum()} of {len(mask)} selected samples.'
-#     logger.info(msg)
-# else:
 mask = sample_counts > params.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 print(msg)
@@ -380,7 +385,7 @@ params.N, params.M = analysis.df.shape # save data dimensions
 params.used_samples = analysis.df.index.to_list()
 
 # %% [markdown]
-# #### Histogram of features per sample
+# ### Histogram of features per sample
 
 # %%
 ax = analysis.df.notna().sum(axis=1).hist()
@@ -393,6 +398,12 @@ ax = analysis.df.notna().sum(axis=0).sort_values().plot()
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
 vaep.savefig(ax.get_figure(), 'feature_prevalence', folder=folder_figures)
+
+# %% [markdown]
+# ### Number off observations accross feature value
+
+# %%
+# ToDo
 
 # %% [markdown]
 # ### Interactive and Single plots
@@ -418,11 +429,11 @@ pcs.describe(include='all', datetime_is_numeric=True).T
 
 # %%
 fig, ax = plt.subplots(figsize=(18,10))
-analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs['Thermo Scientific instrument model'])
+analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col])
 
 # %%
 fig, ax = plt.subplots(figsize=(23,10))
-analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[date_col])
+analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[params.meta_date_col])
 vaep.savefig(fig, folder_figures / 'pca_sample_by_date')
 
 # %% [markdown]
@@ -441,21 +452,18 @@ fig = px.scatter(
     height=600
 )
 fig.write_image(folder_figures / 'pca_identified_features.png')
-fig
+fig # stays interactive in html
 
 # %% [markdown]
 # ## Sample Medians and percentiles
-#
-# - see boxplot [function in R](https://github.dev/symbioticMe/proBatch/blob/8fae15049be67693bd0d4a4383b51bfb4fb287a6/R/initial_assessment.R#L199-L317), which is used for [publication figure](https://github.dev/symbioticMe/batch_effects_workflow_code/blob/696eb609a55ba9ece68b732e616d7ebeaa660373/AgingMice_study/analysis_AgingMice/5b_Fig2_initial_assessment_normalization.R)
-# - check boxplot functions: [bokeh](https://docs.bokeh.org/en/latest/docs/gallery/boxplot.html), [plotly](https://plotly.com/python/box-plots/), [eventplot](https://matplotlib.org/stable/gallery/lines_bars_and_markers/eventplot_demo.html#sphx-glr-gallery-lines-bars-and-markers-eventplot-demo-py)
 
 # %%
 analysis.df.head()
 
 # %%
 df = analysis.df
-df = df.join(df_meta[date_col])
-df = df.set_index(date_col).sort_index().to_period('min').T
+df = df.join(df_meta[params.meta_date_col])
+df = df.set_index(params.meta_date_col).sort_index().to_period('min').T
 df
 
 # %%
@@ -467,12 +475,12 @@ figures['median_boxplot'] = fig
 
 
 # %% [markdown]
-# Plot sample median over time
+# ### Plot sample median over time
 #   - check if points are equally spaced (probably QC samples are run in close proximity)
 #   - the machine will be not use for intermediate periods
 
 # %%
-dates = df_meta[date_col].sort_values()
+dates = df_meta[params.meta_date_col].sort_values()
 dates.name = 'date'
 median_sample_intensity = (analysis.df
                            .median(axis=1)
@@ -595,5 +603,3 @@ fname = folder_experiment/'data_config.yaml'
 with open(fname, 'w') as f:
     OmegaConf.save(params, f)
 fname
-
-# %%

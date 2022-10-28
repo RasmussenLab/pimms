@@ -1,5 +1,15 @@
 # Paper project
 
+## Data requirements
+
+(tbc)
+
+ThermoRawFileParser output is used as metadata so far (a workflow is provided).
+Strictly required is an ordering meta data information,e.g. a measurment data, and whatever else
+   (e.g. some clinical metadata over samples)
+- `meta_date_col`: currently stricktly required
+- `meta_cat_col`: optional column used for visualization of PCAs
+
 ## Workflows
 
 Setup project workflow
@@ -14,7 +24,6 @@ Single Experiment with config files
 # cwd: project folder (this folder)
 
 snakemake --configfile config/peptides_split.yaml --configfile config/peptides_train.yaml -p -n 
-
 ```
 
 
@@ -25,7 +34,6 @@ papermill  14_experiment_03_data.ipynb --help-notebook # check parameters
 papermill  14_experiment_03_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data.ipynb -p MIN_SAMPLE 0.5 -p fn_rawfile_metadata data/single_datasets/%DATASET%.csv -p index_col "Sample ID" -p columns_name peptide
 
 ```
-
 
 ## Notebooks
 for | notebook  | Description
