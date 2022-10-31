@@ -35,6 +35,9 @@ vaep.plotting.make_large_descriptors()
 
 logger = vaep.logging.setup_nb_logger()
 
+# %% [markdown]
+# ## Read input
+
 # %%
 metrics_long = []
 
@@ -57,39 +60,126 @@ metrics_long
 FOLDER = fname.parent.parent
 print(f"{FOLDER =}")
 
+# %% [markdown]
+# ## Annotation & Dump of metrics
+
 # %%
 metrics_long.loc[metrics_long['model'].isin(['interpolated', 'median']), ['latent_dim', 'hidden_layers']] = '-'
 metrics_long['hidden_layers'] = metrics_long['hidden_layers'].fillna('-')
 metrics_long['text'] = 'LD: ' + metrics_long['latent_dim'].astype(str) + ' HL: ' + metrics_long['hidden_layers']
 
+# save metrics
 fname = 'metrics_long'
 metrics_long.to_csv(FOLDER / f'{fname}.csv')
 metrics_long.to_excel(FOLDER / f'{fname}.xlsx')
 
 metrics_long[['latent_dim', 'hidden_layers', 'model', 'text', ]]
 
+# %% [markdown]
+# ## Settings
+
 # %%
 group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
 
+selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
+
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
                     'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
-IDX_ORDER = (['proteinGroups', 'aggPeptides', 'evidence'],
-             ['median', 'interpolated', 'collab', 'DAE', 'VAE'])
+
+_unique = metrics_long["data level"].unique()
+order_categories['data level'] = [l for l in order_categories['data level'] if l in _unique] #ensure predefined order
+_unique = metrics_long['model'].unique()
+order_categories['model'] = [m for m in order_categories['model'] if m in _unique] #ensure predefined order
+
+semi_supervised = [m for m in ['collab', 'DAE', 'VAE'] if m in _unique]
+reference = [m for m in ['median', 'interpolated'] if m in _unique]
+
+IDX_ORDER = (order_categories['data level'],
+             order_categories['model'])
+
 METRIC = 'MAE'
 
+order_categories
+
+# %% [markdown]
+# ## Select best models
+#
+# - based on validation data
+# - report results on test data and validation data
+
 # %%
-dataset = 'valid_fake_na'
+dataset = 'valid_fake_na' # data_split
 
 selected = metrics_long.reset_index(
     ).groupby(by=group_by
               ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
-selected.loc[
+sel_on_val = selected.loc[
     pd.IndexSlice[dataset, IDX_ORDER[0], 'NA interpolated', 'MAE', IDX_ORDER[1]],
-    ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']]
+    selected_cols]
+sel_on_val
+
+# %% [markdown]
+# Retrieve test data values (so far this was always the same as the minimum on the test data)
 
 # %%
-fname = 'best_models_1_mpl'
-_to_plot = selected.droplevel(['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
+sel_on_val = sel_on_val.set_index(['latent_dim', 'hidden_layers', 'id'], append=True)
+idx = sel_on_val.droplevel(level='data_split').index
+sel_on_val = sel_on_val.reset_index(['latent_dim', 'hidden_layers', 'id'])
+
+test_results = ( metrics_long
+ .query('data_split == "test_fake_na"')
+ .reset_index().set_index(idx.names)
+ .loc[idx]
+ .reset_index(['latent_dim', 'hidden_layers', 'id'])
+ .set_index('data_split', append=True)
+)[selected_cols]
+test_results
+
+# %% [markdown]
+# compare to best result on test split
+
+# %%
+selected.loc[
+    pd.IndexSlice['test_fake_na', IDX_ORDER[0], 'NA interpolated', 'MAE', IDX_ORDER[1]],
+    selected_cols]
+
+# %% [markdown]
+# ### test data results
+#
+# - selected on validation data
+
+# %%
+test_results = test_results.droplevel(['subset', 'metric_name']).reset_index().set_index(['model', 'data level'])
+test_results
+
+# %%
+test_results['text']
+
+# %%
+_to_plot = test_results['metric_value'].unstack(0).loc[IDX_ORDER]
+_to_plot
+
+# %%
+fname = 'best_models_1_test_mpl'
+_to_plot.to_excel(FOLDER / f'{fname}.xlsx')
+_to_plot.columns.name = ''
+ax = _to_plot.plot.bar(rot=0,
+                       xlabel='',
+                       ylabel=f"{METRIC} (log2 intensities)",
+                       width=.8)
+ax = vaep.plotting.add_height_to_barplot(ax, size=12)
+ax = vaep.plotting.add_text_to_barplot(ax, test_results['text'], size=12)
+fig = ax.get_figure()
+fig.tight_layout()
+vaep.savefig(fig, fname, folder=FOLDER)
+
+# %% [markdown]
+# ### Validation data results 
+
+# %%
+fname = 'best_models_1_val_mpl'
+
+_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
 
 _to_plot = _to_plot.set_index(['data level', 'model'])[['metric_value', 'text']]
 _to_plot = _to_plot.loc[IDX_ORDER,:]
@@ -114,20 +204,21 @@ fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
 
 # %%
-fname = 'best_models_1_plotly'
-_to_plot = selected.droplevel(['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
-_to_plot = _to_plot.set_index(['data level', 'model'])[
-                              ['metric_value', 'latent_dim', 'hidden_layers', 'text']].fillna('-')
+fname = 'best_models_1_val_plotly'
+_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
+_to_plot = _to_plot.set_index(['data level', 'model'])
+_to_plot[['metric_value', 'latent_dim', 'hidden_layers', 'text']] = _to_plot[['metric_value', 'latent_dim', 'hidden_layers', 'text']].fillna('-')
 
 _to_plot = _to_plot.loc[pd.IndexSlice[IDX_ORDER], :]
 _to_plot.to_csv(FOLDER / f"{fname}.csv")
 _to_plot.to_excel(FOLDER / f"{fname}.xlsx")
-_to_plot
+_to_plot[['metric_value', 'latent_dim', 'hidden_layers', 'text', 'N', 'n_params']]
 
 # %%
 fig = px.bar(_to_plot.reset_index(),
              x='data level',
              y='metric_value',
+             hover_data={'N': ':,d', 'n_params': ':,d'}, # format hover data
              color='model',
              barmode="group",
              text='text',
@@ -141,6 +232,8 @@ fig
 
 # %% [markdown]
 # ## Order by best model setup over all datasets
+#
+# - select best average model on validation data
 
 # %%
 group_by = ['model', 'latent_dim', 'hidden_layers']
@@ -163,16 +256,28 @@ best_on_average = best_on_average.groupby(group_by[0]).apply(
     lambda df: df.sort_values(by='metric_value').iloc[0]).set_index(group_by[1:], append=True)
 best_on_average
 
-# %%
-fname = 'average_performance_over_data_levels_best'
-to_plot = metrics_long_sel.reset_index().set_index(group_by).loc[best_on_average.index].reset_index().set_index(['model', 'data level']).loc[
-    pd.IndexSlice[order_categories['model'], order_categories['data level']], :]
-to_plot
+# %% [markdown]
+# ### Test split results
 
 # %%
+fname = 'average_performance_over_data_levels_best_test'
+data_split = 'test_fake_na'
+subset = 'NA interpolated'
+
+metrics_long_sel_test = metrics_long.query(f'data_split == "{data_split}"'
+                                      f' & subset == "{subset}"'
+                                      f' & metric_name == "{METRIC}"')
+
+to_plot = (metrics_long_sel_test
+ .reset_index().set_index(group_by)
+ .loc[best_on_average.index]
+ .reset_index().set_index(['model', 'data level'])
+ .loc[pd.IndexSlice[order_categories['model'], order_categories['data level']], :])
+
+
 to_plot = to_plot.reset_index()
 to_plot['model annotated'] = to_plot['model'] + ' - ' + to_plot['text']
-order_model = to_plot['model annotated'].drop_duplicates().to_list()
+order_model = to_plot['model annotated'].drop_duplicates().to_list() # model name with annotation
 
 to_plot = to_plot.drop_duplicates(subset=['model', 'data level', 'metric_value'])
 to_plot.to_csv(FOLDER /f"{fname}.csv")
@@ -202,21 +307,90 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right
 fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
 
+# %% [markdown]
+# plotly version with additional information
+
 # %%
-# ToDo
-# plot with annotation
 fig = px.bar(to_plot,
              x='model',
              y='metric_value',
              color='data level',
+             hover_data={'N': ':,d', 'n_params': ':,d'}, # format hover data
              barmode="group",
              color_discrete_sequence=px.colors.colorbrewer.Paired,
              # color_discrete_sequence=['#a6cee3', '#1f78b4', '#b2df8a'],
              text='text',
-             labels={'metric_value': f"{METRIC} (log2 intensities)", 'model': '',},
+             labels={'metric_value': f"{METRIC} (log2 intensities)"},
              category_orders=order_categories,
              template='none',
              height=600)
+fig.update_xaxes(title='')
+fig.write_image(FOLDER / f"{fname}_plotly.pdf")
+fig.update_layout(legend_title_text='')
+fig
+
+# %% [markdown]
+# ### Validation data results
+
+# %%
+fname = 'average_performance_over_data_levels_best_val'
+to_plot = (metrics_long_sel
+           .reset_index().set_index(group_by)
+           .loc[best_on_average.index].reset_index()
+           .set_index(['model', 'data level'])
+           .loc[pd.IndexSlice[order_categories['model'], order_categories['data level']], :]
+          )
+
+to_plot = to_plot.reset_index()
+to_plot['model annotated'] = to_plot['model'] + ' - ' + to_plot['text']
+order_model = to_plot['model annotated'].drop_duplicates().to_list() # model name with annotation
+
+to_plot = to_plot.drop_duplicates(subset=['model', 'data level', 'metric_value'])
+to_plot.to_csv(FOLDER /f"{fname}.csv")
+to_plot
+
+# %%
+figsize= (10,8) # None # (10,8)
+fig, ax = plt.subplots(figsize=figsize)
+to_plot.columns.name = ''
+ax = (to_plot
+      .set_index(['model annotated', 'data level'])['metric_value']
+      .unstack().rename_axis('', axis=1)
+      .loc[order_model, order_categories['data level']]
+      .plot.bar(
+          # xlabel="model with overall best performance for all datasets",
+          xlabel='',
+          ylabel="MAE (log2 intensity)",
+          rot=45,
+          width=.8,
+          ax=ax,
+          # colormap="Paired",
+          color = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']
+      )
+      )
+ax = vaep.plotting.add_height_to_barplot(ax, size=11)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
+fig.tight_layout()
+vaep.savefig(fig, fname, folder=FOLDER)
+
+# %% [markdown]
+# plotly version with additional information
+
+# %%
+fig = px.bar(to_plot,
+             x='model',
+             y='metric_value',
+             color='data level',
+             hover_data={'N': ':,d', 'n_params': ':,d'}, # format hover data
+             barmode="group",
+             color_discrete_sequence=px.colors.colorbrewer.Paired,
+             # color_discrete_sequence=['#a6cee3', '#1f78b4', '#b2df8a'],
+             text='text',
+             labels={'metric_value': f"{METRIC} (log2 intensities)"},
+             category_orders=order_categories,
+             template='none',
+             height=600)
+fig.update_xaxes(title='')
 fig.write_image(FOLDER / f"{fname}_plotly.pdf")
 fig.update_layout(legend_title_text='')
 fig
