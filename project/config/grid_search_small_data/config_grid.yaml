@@ -24,6 +24,7 @@ latent_dim:
 folder_grid_search: "runs/grid_search_small_data"
 folder_experiment2: "runs/grid_search_small_data/{{level}}"
 folder_experiment: "runs/grid_search_small_data/{level}"
+fn_rawfile_metadata: "data/files_selected_metadata.csv"
 levels:
 - proteinGroups
 - aggPeptides
