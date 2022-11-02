@@ -117,7 +117,8 @@ rule build_train_config:
     params:
         folder_data=f"{folder_experiment}/data/",
         batch_size=config['batch_size'],
-        cuda=config['cuda']
+        cuda=config['cuda'],
+        fn_rawfile_metadata= config["fn_rawfile_metadata"]
     run:
         from pathlib import PurePosixPath
         import yaml
@@ -125,6 +126,7 @@ rule build_train_config:
         config = {k: resolve_type(v) for k, v in config.items() if k != 'hidden_layers'}
         config['hidden_layers'] = wildcards['hidden_layers']
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
+        config['fn_rawfile_metadata'] = params.fn_rawfile_metadata
         config['folder_data'] = params.folder_data
         config['batch_size'] = params.batch_size
         config['cuda'] = params.cuda
@@ -138,14 +140,16 @@ rule build_train_config_collab:
     params:
         folder_data=f"{folder_experiment}/data/",
         batch_size_collab=config["batch_size_collab"],
-        cuda=config['cuda'] 
+        cuda=config['cuda'] ,
+        fn_rawfile_metadata= config["fn_rawfile_metadata"]
     run:
         from pathlib import PurePosixPath
         import yaml
         config = dict(wildcards) # copy dict
         config = {k: resolve_type(v) for k, v in config.items() if k != 'hidden_layers'}
         
-        config['folder_experiment'] = str(PurePosixPath(output.config_train).parent) 
+        config['folder_experiment'] = str(PurePosixPath(output.config_train).parent)
+        config['fn_rawfile_metadata'] = params.fn_rawfile_metadata 
         config['folder_data'] = params.folder_data
         config['batch_size_collab'] = params.batch_size_collab
         config['cuda'] = params.cuda
