@@ -197,7 +197,7 @@ fig, axes = plt.subplots(3, figsize=(10, 10), sharex=True)
 # axes = axes.ravel()
 bins = range(min_bin, max_bin+1, 1)
 ax = axes[0]
-ax = observed.hist(ax=ax, bins=bins)
+ax = observed.hist(ax=ax, bins=bins, color='grey')
 ax.set_title(f'observed measurments (N={len(observed):,d})')
 ax.set_ylabel('count measurments')
 
@@ -228,7 +228,7 @@ vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}_v2', folder=
 fig, axes = plt.subplots(3, figsize=(10, 10), sharex=True)
 
 ax = axes[0]
-ax = observed.hist(ax=ax, bins=bins)
+ax = observed.hist(ax=ax, bins=bins, color='grey')
 ax.set_title(f'observed measurments (N={len(observed):,d})')
 ax.set_ylabel('count measurments')
 
@@ -239,7 +239,7 @@ ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})
 ax.set_ylabel('count measurments')
 
 ax = axes[2]
-ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins)
+ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, color='C1')
 ax.set_title(f'real na imputed using shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
 ax.set_ylabel('count measurments')
 ax.set_xlabel(args.value_name)
