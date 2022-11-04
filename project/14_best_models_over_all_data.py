@@ -153,7 +153,8 @@ test_results = test_results.droplevel(['subset', 'metric_name']).reset_index().s
 test_results
 
 # %%
-test_results['text']
+text = test_results.loc[pd.IndexSlice[IDX_ORDER[1], IDX_ORDER[0]], 'text']
+text
 
 # %%
 _to_plot = test_results['metric_value'].unstack(0).loc[IDX_ORDER]
@@ -168,7 +169,7 @@ ax = _to_plot.plot.bar(rot=0,
                        ylabel=f"{METRIC} (log2 intensities)",
                        width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax, size=12)
-ax = vaep.plotting.add_text_to_barplot(ax, test_results['text'], size=12)
+ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
 fig.tight_layout()
 vaep.savefig(fig, fname, folder=FOLDER)
@@ -184,11 +185,11 @@ _to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fa
 _to_plot = _to_plot.set_index(['data level', 'model'])[['metric_value', 'text']]
 _to_plot = _to_plot.loc[IDX_ORDER,:]
 _to_plot.index.name = ''
-text = _to_plot['text'].unstack().loc[IDX_ORDER].unstack()
+# text = test_results['text'].unstack().loc[IDX_ORDER].unstack()
 _to_plot = _to_plot['metric_value'].unstack().loc[IDX_ORDER]
 _to_plot.to_csv(FOLDER / f'{fname}.csv')
 _to_plot.to_excel(FOLDER / f'{fname}.xlsx')
-display(text.to_frame('text'))
+# display(text.to_frame('text'))
 _to_plot
 
 # %%

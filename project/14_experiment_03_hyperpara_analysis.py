@@ -42,8 +42,6 @@ pd.options.display.multi_sparse = False
 
 logger = vaep.logging.setup_nb_logger()
 
-# %%
-
 # %% [markdown]
 # ## Papermill parameters
 
