@@ -53,15 +53,21 @@ FIGSIZE=(15,10)
 # ## Parameters
 
 # %% tags=["parameters"]
-DUMP: str = erda_dumps.FN_PROTEIN_GROUPS
-# DUMP: str = erda_dumps.FN_PEPTIDES
-# DUMP: str = erda_dumps.FN_EVIDENCE
-FOLDER_DATASETS: str = f'single_datasets/{DUMP.stem}'
 N_MIN_INSTRUMENT = 300
 META_DATA: str = 'data/files_selected_metadata.csv'
 FILE_EXT = 'pkl'
 SAMPLE_ID = 'Sample ID'
-OUT_INFO = 'dataset_info' # saved as tex, xlsx and json
+
+DUMP: str = erda_dumps.FN_PROTEIN_GROUPS
+OUT_NAME = 'protein group' # for legends labels
+# DUMP: str = erda_dumps.FN_PEPTIDES
+# OUT_NAME = 'aggregated peptide' # for legends labels
+# DUMP: str = erda_dumps.FN_EVIDENCE
+# OUT_NAME = 'charged peptide' # for legends labels
+
+FOLDER_DATASETS: str = f'single_datasets/{DUMP.stem}'
+
+INSTRUMENT_LEGEND_TITLE = 'Q Exactive HF-X Orbitrap'
 
 # %% [markdown]
 # Make sure output folder exists
@@ -201,8 +207,18 @@ selected_instruments.to_excel(f"{fname}.xlsx")
 logger.info(f"Save Information to: {fname} (as json, tex)")
 selected_instruments
 
+# %%
+# mask = pd.Series(False, index=df_meta.index)
+# for v in selected_instruments.index:
+#     mask = mask | (df_meta[selected_instruments.index.names] == v).all(axis=1)
+# mask.sum()
+
+# %%
+# df_meta = df_meta.loc[mask]
+# data = data.loc[df_meta.index]
+
 # %% [markdown]
-# ## Summary plot
+# ## Summary plot - UMAP
 
 # %%
 reducer = umap.UMAP(random_state=42)
@@ -213,7 +229,8 @@ data
 embedding = reducer.fit_transform(data.fillna(data.median()))
 embedding = pd.DataFrame(embedding, index=data.index, columns=['UMAP 1', 'UMAP 2'])
 embedding = embedding.join(df_meta[["Content Creation Date", "instrument serial number"]])
-embedding = embedding.join(counts_instrument['count'].reset_index(level=[0,1], drop=True), on='instrument serial number')
+d_instrument_counts = counts_instrument['count'].reset_index(level=[0,1], drop=True).to_dict()
+embedding["count"] = embedding["instrument serial number"].replace(d_instrument_counts)
 embedding
 
 # %%
@@ -232,10 +249,11 @@ embedding
 top_5 = counts_instrument["count"].nlargest(5)
 top_5 = top_5.index.levels[-1]
 embedding["instrument"] = embedding["instrument serial number"].apply(lambda x: x if x in top_5 else 'other')
+mask_top_5 = embedding["instrument"] != 'other'
 
 # %%
 embedding["Date (90 days intervals)"] = embedding["Content Creation Date"].dt.round("90D").astype(str)
-to_plot = embedding.loc[embedding["instrument"] != 'other']
+to_plot = embedding.loc[mask_top_5]
 print(f"N samples in plot: {len(to_plot):,d}")
 fig, ax = plt.subplots(figsize=(20,10))
 
@@ -252,7 +270,7 @@ vaep.plotting.make_large_descriptors()
 embedding["Content Creation Date"] = embedding["Content Creation Date"].dt.round("D")
 embedding["mdate"] = embedding["Content Creation Date"].apply(matplotlib.dates.date2num)
 
-to_plot = embedding.loc[embedding["instrument"] != 'other']
+to_plot = embedding.loc[mask_top_5]
 
 norm = matplotlib.colors.Normalize(embedding["mdate"].quantile(0.05), embedding["mdate"].quantile(0.95))
 cmap = sns.color_palette("cubehelix", as_cmap=True)
@@ -274,30 +292,38 @@ for k, _to_plot in to_plot.groupby('instrument with N'):
     
 cbar = vaep.analyzers.analyzers.add_date_colorbar(ax.collections[0], ax=ax, fig=fig)
 cbar.ax.set_ylabel("date of measurement", labelpad=-115, loc='center')
-ax.legend(ax.collections, groups, title='instrument serial number')
+ax.legend(ax.collections, groups, title=INSTRUMENT_LEGEND_TITLE, fontsize='xx-large')
 ax.set_xlabel('UMAP 1') #, fontdict={'size': 16})
 ax.set_ylabel('UMAP 2')
 vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 
+# %% [markdown]
+# ## Summary statistics plot 
+
 # %%
-fig,ax = plt.subplots(1,1, figsize=(8, 8))
-vaep.plotting.make_large_descriptors()
-to_plot = data.notna().sum(axis=0).reset_index(drop=True).to_frame('Feature prevalence')
-to_plot = to_plot.join(data.notna().sum(axis=1).reset_index(drop=True).to_frame('Features per sample'))
-to_plot = to_plot.join(counts_instrument.reset_index(drop=True)['count'].rename('Samples per instrument', axis='index'))
-ax = to_plot.plot(kind='box', ax = ax, ylabel='number of observations')
+fig,ax = plt.subplots(1,1, figsize=(6, 6))
+# boxplot: number of available sample for included features
+to_plot = data.loc[mask_top_5].notna().sum(axis=0).reset_index(drop=True).to_frame(f'{OUT_NAME.capitalize()} prevalence')
+# boxplot: number of features per sample
+to_plot = to_plot.join(data.loc[mask_top_5].notna().sum(axis=1).reset_index(drop=True).to_frame(f'{OUT_NAME.capitalize()}s per sample'))
+to_plot = to_plot.join(counts_instrument.reset_index([0,1], drop=True).loc[top_5, 'count'].reset_index(drop=True).rename('Samples per instrument', axis='index'))
+ax = to_plot.plot(kind='box', ax = ax, fontsize=16, )
+ax.set_ylabel('number of observations', 
+              fontdict={'fontsize': 14})
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 to_plot.to_csv(FOLDER_DATASETS/ 'summary_statistics_dump_data.csv')
 vaep.savefig(fig, name='summary_statistics_dump',
                       folder=FOLDER_DATASETS)
 
 
+# %% [markdown]
+# ## Dump single experiments
+#
+# from long-format
+
 # %%
 data = data.stack(idx_non_sample)
 data
-
-# %% [markdown]
-# ## Dump single experiments
 
 # %%
 cols = selected_instruments.index.names
