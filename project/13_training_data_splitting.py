@@ -47,7 +47,7 @@ FOLDER_DATA = defaults.FOLDER_DATA
 
 # %%
 vaep.plotting.make_large_descriptors()
-FIGSIZE=(15,10)
+FIGSIZE = (15, 10)
 
 # %% [markdown]
 # ## Parameters
@@ -59,7 +59,7 @@ FILE_EXT = 'pkl'
 SAMPLE_ID = 'Sample ID'
 
 DUMP: str = erda_dumps.FN_PROTEIN_GROUPS
-OUT_NAME = 'protein group' # for legends labels
+OUT_NAME = 'protein group'  # for legends labels
 # DUMP: str = erda_dumps.FN_PEPTIDES
 # OUT_NAME = 'aggregated peptide' # for legends labels
 # DUMP: str = erda_dumps.FN_EVIDENCE
@@ -73,7 +73,7 @@ INSTRUMENT_LEGEND_TITLE = 'Q Exactive HF-X Orbitrap'
 # Make sure output folder exists
 
 # %%
-DUMP = Path(DUMP) # set parameter from cli or yaml to Path
+DUMP = Path(DUMP)  # set parameter from cli or yaml to Path
 FOLDER_DATASETS = defaults.FOLDER_DATA / FOLDER_DATASETS
 FOLDER_DATASETS.mkdir(exist_ok=True, parents=True)
 logger.info(f"Folder for datasets to be created: {FOLDER_DATASETS.absolute()}")
@@ -87,9 +87,10 @@ logger.info(f"Folder for datasets to be created: {FOLDER_DATASETS.absolute()}")
 
 # %%
 data = pd.read_pickle(DUMP)
-data = data.squeeze() # In case it is a DataFrame, not a series (-> leads to MultiIndex)
+data = data.squeeze()  # In case it is a DataFrame, not a series (-> leads to MultiIndex)
 name_data = data.name
-logger.info(f"Number of rows (row = sample, feature, intensity): {len(data):,d}")
+logger.info(
+    f"Number of rows (row = sample, feature, intensity): {len(data):,d}")
 data
 
 # %% [markdown]
@@ -105,7 +106,8 @@ cat_columns = data.columns[data.dtypes == 'category']
 if not cat_columns.empty:
     data[cat_columns] = data[cat_columns].astype('object')
     print("non categorical: \n", data.memory_usage(deep=True))
-    logger.warning("if time allows, this should be investigate -> use of loc with data which is not categorical")
+    logger.warning(
+        "if time allows, this should be investigate -> use of loc with data which is not categorical")
 data = data.set_index(index_columns)
 
 # %% [markdown]
@@ -132,7 +134,7 @@ ax = (counts
             figsize=FIGSIZE,
             grid=True,
             ylabel='number of features in sample',
-            xlabel='Sample rank ordered by number of features', 
+            xlabel='Sample rank ordered by number of features',
             title=f'Support of {N:,d} samples features over {M} features ({", ".join(idx_non_sample)})',
             ))
 vaep.plotting.add_prop_as_second_yaxis(ax, M)
@@ -152,7 +154,7 @@ ax = (counts
             figsize=FIGSIZE,
             grid=True,
             ylabel='number of samples per feature',
-            xlabel='Feature rank ordered by number of samples', 
+            xlabel='Feature rank ordered by number of samples',
             title=f'Support of {len(counts):,d} features over {N} samples ({", ".join(idx_non_sample)})',
             ))
 vaep.plotting.add_prop_as_second_yaxis(ax, N)
@@ -178,7 +180,7 @@ vaep.plotting.savefig(fig, name='feat_per_sample_all',
 
 # %%
 # sample_ids = data.index.levels[0] # assume first index position is Sample ID?
-sample_ids = data.index.get_level_values(SAMPLE_ID).unique() # more explict
+sample_ids = data.index.get_level_values(SAMPLE_ID).unique()  # more explict
 sample_ids
 
 # %%
@@ -227,10 +229,14 @@ data
 
 # %%
 embedding = reducer.fit_transform(data.fillna(data.median()))
-embedding = pd.DataFrame(embedding, index=data.index, columns=['UMAP 1', 'UMAP 2'])
-embedding = embedding.join(df_meta[["Content Creation Date", "instrument serial number"]])
-d_instrument_counts = counts_instrument['count'].reset_index(level=[0,1], drop=True).to_dict()
-embedding["count"] = embedding["instrument serial number"].replace(d_instrument_counts)
+embedding = pd.DataFrame(embedding, index=data.index,
+                         columns=['UMAP 1', 'UMAP 2'])
+embedding = embedding.join(
+    df_meta[["Content Creation Date", "instrument serial number"]])
+d_instrument_counts = counts_instrument['count'].reset_index(
+    level=[0, 1], drop=True).to_dict()
+embedding["count"] = embedding["instrument serial number"].replace(
+    d_instrument_counts)
 embedding
 
 # %%
@@ -238,8 +244,10 @@ digits = int(np.ceil(np.log10(embedding["count"].max())))
 digits
 
 # %%
-embedding["instrument with N"] = embedding[["instrument serial number", "count"]].apply(lambda s: f"{s[0]} (N={s[1]:{digits}d})", axis=1)
-embedding["instrument with N"] = embedding["instrument with N"].str.replace('Exactive Series slot', 'Instrument')
+embedding["instrument with N"] = embedding[["instrument serial number",
+                                            "count"]].apply(lambda s: f"{s[0]} (N={s[1]:{digits}d})", axis=1)
+embedding["instrument with N"] = embedding["instrument with N"].str.replace(
+    'Exactive Series slot', 'Instrument')
 embedding
 
 # %% [markdown]
@@ -248,31 +256,38 @@ embedding
 # %%
 top_5 = counts_instrument["count"].nlargest(5)
 top_5 = top_5.index.levels[-1]
-embedding["instrument"] = embedding["instrument serial number"].apply(lambda x: x if x in top_5 else 'other')
+embedding["instrument"] = embedding["instrument serial number"].apply(
+    lambda x: x if x in top_5 else 'other')
 mask_top_5 = embedding["instrument"] != 'other'
 
 # %%
-embedding["Date (90 days intervals)"] = embedding["Content Creation Date"].dt.round("90D").astype(str)
+embedding["Date (90 days intervals)"] = embedding["Content Creation Date"].dt.round(
+    "90D").astype(str)
 to_plot = embedding.loc[mask_top_5]
 print(f"N samples in plot: {len(to_plot):,d}")
-fig, ax = plt.subplots(figsize=(20,10))
+fig, ax = plt.subplots(figsize=(20, 10))
 
-ax = sns.scatterplot(data=to_plot, x='UMAP 1', y='UMAP 2', style="instrument with N", hue="Date (90 days intervals)", ax=ax) #="Content Creation Date")
-vaep.savefig(fig, name='umap_interval90days_top5_instruments', folder=FOLDER_DATASETS)
+ax = sns.scatterplot(data=to_plot, x='UMAP 1', y='UMAP 2', style="instrument with N",
+                     hue="Date (90 days intervals)", ax=ax)  # ="Content Creation Date")
+vaep.savefig(fig, name='umap_interval90days_top5_instruments',
+             folder=FOLDER_DATASETS)
 
 # %%
 markers = ['o', 'x', 's', 'P', 'D', '.']
 alpha = 0.6
-fig, ax = plt.subplots(figsize=(12,8))
+fig, ax = plt.subplots(figsize=(12, 8))
 groups = list()
 
 vaep.plotting.make_large_descriptors()
-embedding["Content Creation Date"] = embedding["Content Creation Date"].dt.round("D")
-embedding["mdate"] = embedding["Content Creation Date"].apply(matplotlib.dates.date2num)
+embedding["Content Creation Date"] = embedding["Content Creation Date"].dt.round(
+    "D")
+embedding["mdate"] = embedding["Content Creation Date"].apply(
+    matplotlib.dates.date2num)
 
 to_plot = embedding.loc[mask_top_5]
 
-norm = matplotlib.colors.Normalize(embedding["mdate"].quantile(0.05), embedding["mdate"].quantile(0.95))
+norm = matplotlib.colors.Normalize(
+    embedding["mdate"].quantile(0.05), embedding["mdate"].quantile(0.95))
 cmap = sns.color_palette("cubehelix", as_cmap=True)
 
 
@@ -289,11 +304,13 @@ for k, _to_plot in to_plot.groupby('instrument with N'):
         norm=norm
     )
     groups.append(k)
-    
-cbar = vaep.analyzers.analyzers.add_date_colorbar(ax.collections[0], ax=ax, fig=fig)
+
+cbar = vaep.analyzers.analyzers.add_date_colorbar(
+    ax.collections[0], ax=ax, fig=fig)
 cbar.ax.set_ylabel("date of measurement", labelpad=-115, loc='center')
-ax.legend(ax.collections, groups, title=INSTRUMENT_LEGEND_TITLE, fontsize='xx-large')
-ax.set_xlabel('UMAP 1') #, fontdict={'size': 16})
+ax.legend(ax.collections, groups,
+          title=INSTRUMENT_LEGEND_TITLE, fontsize='xx-large')
+ax.set_xlabel('UMAP 1')  # , fontdict={'size': 16})
 ax.set_ylabel('UMAP 2')
 vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 
@@ -301,19 +318,23 @@ vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 # ## Summary statistics plot 
 
 # %%
-fig,ax = plt.subplots(1,1, figsize=(6, 6))
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 # boxplot: number of available sample for included features
-to_plot = data.loc[mask_top_5].notna().sum(axis=0).reset_index(drop=True).to_frame(f'{OUT_NAME.capitalize()} prevalence')
+to_plot = data.loc[mask_top_5].notna().sum(axis=0).reset_index(
+    drop=True).to_frame(f'{OUT_NAME.capitalize()} prevalence')
 # boxplot: number of features per sample
-to_plot = to_plot.join(data.loc[mask_top_5].notna().sum(axis=1).reset_index(drop=True).to_frame(f'{OUT_NAME.capitalize()}s per sample'))
-to_plot = to_plot.join(counts_instrument.reset_index([0,1], drop=True).loc[top_5, 'count'].reset_index(drop=True).rename('Samples per instrument', axis='index'))
-ax = to_plot.plot(kind='box', ax = ax, fontsize=16, )
-ax.set_ylabel('number of observations', 
+to_plot = to_plot.join(data.loc[mask_top_5].notna().sum(axis=1).reset_index(
+    drop=True).to_frame(f'{OUT_NAME.capitalize()}s per sample'))
+to_plot = to_plot.join(counts_instrument.reset_index([0, 1], drop=True).loc[top_5, 'count'].reset_index(
+    drop=True).rename('Samples per instrument', axis='index'))
+ax = to_plot.plot(kind='box', ax=ax, fontsize=16, )
+ax.set_ylabel('number of observations',
               fontdict={'fontsize': 14})
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-to_plot.to_csv(FOLDER_DATASETS/ 'summary_statistics_dump_data.csv')
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                   horizontalalignment='right')
+to_plot.to_csv(FOLDER_DATASETS / 'summary_statistics_dump_data.csv')
 vaep.savefig(fig, name='summary_statistics_dump',
-                      folder=FOLDER_DATASETS)
+             folder=FOLDER_DATASETS)
 
 
 # %% [markdown]
@@ -339,7 +360,8 @@ for values in selected_instruments.index:
     sample_ids = df_meta.loc[mask.all(axis=1)]
     display(sample_ids.sort_index())
     sample_ids = sample_ids.index
-    dataset = data.loc[sample_ids]  # which categorical this might need to be a categorical Index as well?
+    # which categorical this might need to be a categorical Index as well?
+    dataset = data.loc[sample_ids]
     dataset.index = dataset.index.remove_unused_levels()
 
     display(dataset
@@ -363,7 +385,8 @@ for values in selected_instruments.index:
     counts = dataset.groupby(SAMPLE_ID).count().squeeze()
     counts.to_json(FOLDER_DATASETS / f"{fname_support}.json", indent=4)
 
-    M = dataset.index.droplevel(SAMPLE_ID).nunique()  # very slow alternative, but 100% correct
+    # very slow alternative, but 100% correct
+    M = dataset.index.droplevel(SAMPLE_ID).nunique()
 
     # plot:
     fig, ax = plt.subplots()
