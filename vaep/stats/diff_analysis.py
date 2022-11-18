@@ -32,16 +32,7 @@ def ancova_pg(df_long: pd.DataFrame,
     covar : list, str
         Name(s) of column(s) containing the covariate, passed to pg.ancova
     fdr : float, optional
-        FDR treshold to apply. , by default 0.05
-    
-   , long data format,
-     multiple hypothesis testing corrected by Benjamini-Hochberg.
-    Note that column name of dv shouldn't contain '\t'
-    "data": 
-    "dv": Name of column containing the dependant variable.
-    "between": Name of column containing the between factor.
-    "covar": Name(s) of column(s) containing the covariate. 
-    More refer to: 
+        FDR treshold to apply, by default 0.05
 
 
     Returns
