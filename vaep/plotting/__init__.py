@@ -89,14 +89,19 @@ def select_dates(date_series: pd.Series, max_ticks=30) -> np.array:
         xticks
 
 
-def make_large_descriptors():
+def make_large_descriptors(size='xx-large'):
     """Helper function to have very large titles, labes and tick texts for 
-    matplotlib plots per default."""
-    plt.rcParams.update({'xtick.labelsize': 'xx-large',
-                         'ytick.labelsize': 'xx-large',
-                         'axes.titlesize':  'xx-large',
-                         'axes.labelsize':  'xx-large',
-                         'legend.fontsize': 'xx-large',
+    matplotlib plots per default.
+    
+    size: str
+        fontsize or allowed category. Change default if necessary, default 'xx-large'
+    """
+    plt.rcParams.update({k: size for k in ['xtick.labelsize',
+                                           'ytick.labelsize',
+                                           'axes.titlesize',
+                                           'axes.labelsize',
+                                           'legend.fontsize',
+                                           'legend.title_fontsize']
                          })
 
 
