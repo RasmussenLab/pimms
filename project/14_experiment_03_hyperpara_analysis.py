@@ -59,10 +59,10 @@ try:
 except AssertionError:
     metrics_json = snakemake.input.metrics
     configs_json = snakemake.input.config
-    print(f"{metrics_json = }", f"{configs_json = }", sep="\n")  
+    print(f"{metrics_json = }", f"{configs_json = }", sep="\n")
 
 # %%
-files_out=dict()
+files_out = dict()
 
 # %% [markdown]
 # ## Metrics of each run
@@ -81,7 +81,7 @@ configs_dict = vaep.io.load_json(path_configs_json)
 # %%
 key_sampled = vaep.utils.sample_iterable(metrics_dict, 1)[0]
 key_map = vaep.pandas.key_map(metrics_dict[key_sampled])
-key_map # keys of dictionary for a single run
+key_map  # keys of dictionary for a single run
 
 # %% [markdown]
 # Metrics a `pandas.DataFrame`:
@@ -117,8 +117,10 @@ print(f"{subset = }")
 
 # %%
 meta = pd.read_json(path_configs_json).T
-meta['hidden_layers'] = meta.loc[meta['hidden_layers'].notna() ,'hidden_layers'].apply(tuple) # make list a tuple
-meta['n_hidden_layers'] = meta.hidden_layers.loc[meta['hidden_layers'].notna()].apply(len).fillna(0)
+meta['hidden_layers'] = meta.loc[meta['hidden_layers'].notna(
+), 'hidden_layers'].apply(tuple)  # make list a tuple
+meta['n_hidden_layers'] = meta.hidden_layers.loc[meta['hidden_layers'].notna()
+                                                 ].apply(len).fillna(0)
 
 mask_collab = meta.index.str.contains('collab')
 meta.loc[mask_collab, 'batch_size'] = meta.loc[mask_collab, 'batch_size_collab']
@@ -139,7 +141,7 @@ meta
 # ```
 
 # %%
-cmap='cividis_r'
+cmap = 'cividis_r'
 
 # %%
 metrics_styled = metrics.unstack('model')
@@ -147,7 +149,8 @@ metrics_styled = metrics.unstack('model')
 metrics_styled = (
     metrics_styled.set_index(
         pd.MultiIndex.from_frame(
-            meta.loc[metrics_styled.index, ['latent_dim', 'hidden_layers', 'batch_size']]
+            meta.loc[metrics_styled.index, [
+                'latent_dim', 'hidden_layers', 'batch_size']]
         ))
     .sort_index()
     .stack('model')
@@ -157,7 +160,7 @@ metrics = metrics_styled.data
 metrics_styled
 
 # %%
-fname = FOLDER/ 'metrics_styled.xlsx'
+fname = FOLDER / 'metrics_styled.xlsx'
 files_out['metrics_styled.xlsx'] = fname
 metrics_styled.to_excel(fname)
 logger.info(f"Saved styled metrics: {fname}")
@@ -167,13 +170,14 @@ logger.info(f"Saved styled metrics: {fname}")
 
 # %%
 ax = metrics[subset]["valid_fake_na"].sort_values(
-    'MSE').iloc[:10,:-1].plot(rot=45,
-                          x_compat=False,
-                          xticks=list(range(10)),
-                          marker='o',
-                          linestyle='',
-                          )
-_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
+    'MSE').iloc[:10, :-1].plot(rot=45,
+                               x_compat=False,
+                               xticks=list(range(10)),
+                               marker='o',
+                               linestyle='',
+                               )
+_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                       horizontalalignment='right')
 fig = ax.get_figure()
 fig.tight_layout()
 vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
@@ -196,23 +200,26 @@ metrics_long.sample(5)
 # Combine with total number of simulated NAs the metric is based on (`N`) into single column
 
 # %%
-metrics_N = metrics_long.loc[:, pd.IndexSlice[:,:,:, 'N']]
-metrics_N = metrics_N.stack(['subset', 'data_split', 'model', 'metric_name']).unstack('metric_name').astype(int)
-metrics_N #.unstack(['subset', 'data_split', 'model',])
+metrics_N = metrics_long.loc[:, pd.IndexSlice[:, :, :, 'N']]
+metrics_N = metrics_N.stack(
+    ['subset', 'data_split', 'model', 'metric_name']).unstack('metric_name').astype(int)
+metrics_N  # .unstack(['subset', 'data_split', 'model',])
 
 # %% [markdown]
 # join total number of simulated NAs (`N`) used to compute metric
 
 # %%
-metrics_long=metrics_long.loc[:, pd.IndexSlice[:,:,:, metric_columns]]
-metrics_long = metrics_long.stack(metrics_long.columns.names).to_frame('metric_value').reset_index('metric_name').join(metrics_N)
+metrics_long = metrics_long.loc[:, pd.IndexSlice[:, :, :, metric_columns]]
+metrics_long = metrics_long.stack(metrics_long.columns.names).to_frame(
+    'metric_value').reset_index('metric_name').join(metrics_N)
 metrics_long
 
 # %% [markdown]
 # join metadata for each metric
 
 # %%
-metrics_long = metrics_long.reset_index(['subset', 'data_split', 'model']).join(meta)
+metrics_long = metrics_long.reset_index(
+    ['subset', 'data_split', 'model']).join(meta)
 metrics_long.index.name = 'id'
 metrics_long.sample(5)
 
@@ -223,19 +230,24 @@ metrics_long.sample(5)
 metrics_long['n_params'] = metrics_long['n_params_collab']
 for key in ['DAE', 'VAE']:
     mask = metrics_long.model == key
-    metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, f'n_params_{key.lower()}']
+    metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask,
+                                                          f'n_params_{key.lower()}']
 mask = metrics_long.model == 'interpolated'
-metrics_long.loc[mask, 'n_params'] = 1 # at least overall (and 1 for the number of replicates?)
+# at least overall (and 1 for the number of replicates?)
+metrics_long.loc[mask, 'n_params'] = 1
 mask = metrics_long.model == 'median'
-metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M'] # number of features to calculate median of
+# number of features to calculate median of
+metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M']
 
-metrics_long[[*columns_names, 'n_params', 'n_params_vae', 'n_params_dae', 'n_params_collab']]
+metrics_long[[*columns_names, 'n_params',
+              'n_params_vae', 'n_params_dae', 'n_params_collab']]
 
 # %% [markdown]
 # A a descriptive column describing the `subset` and the total number of simulated NAs in it.
 
 # %%
-metrics_long['subset_w_N'] = metrics_long['subset'].str[0:] + ' - N: ' + metrics_long['N'].apply(lambda x: f"{x:,d}")
+metrics_long['subset_w_N'] = metrics_long['subset'].str[0:] + \
+    ' - N: ' + metrics_long['N'].apply(lambda x: f"{x:,d}")
 metrics_long[['subset_w_N', 'subset']]
 
 # %% [markdown]
@@ -244,7 +256,7 @@ metrics_long[['subset_w_N', 'subset']]
 # %%
 fname = FOLDER / 'metrics_long_df.csv'
 files_out['metrics_long_df.csv'] = fname
-metrics_long.to_csv(fname) # Should all the plots be done without the metrics?
+metrics_long.to_csv(fname)  # Should all the plots be done without the metrics?
 logger.info(f"Saved metrics in long format: {fname}")
 
 # %% [markdown]
@@ -280,25 +292,26 @@ model = 'collab'
 fig = px.scatter(metrics_long.query(f'model == "{model}"'),
                  x="latent_dim",
                  y='metric_value',
-                 color="subset", # needs data in long format
+                 color="subset",  # needs data in long format
                  facet_row="metric_name",
                  facet_col="data_split",
                  title='Performance of collaborative filtering models',
                  labels={**labels_dict, 'data_split': 'data split'},
-                 category_orders={'data_split': ['valid_fake_na', 'test_fake_na']},
+                 category_orders={'data_split': [
+                     'valid_fake_na', 'test_fake_na']},
                  width=1600,
                  height=700,
                  template='none',
                  )
 fig.update_layout(
-        font={'size': 18},
-        xaxis={'title': {'standoff': 15}},
-        yaxis={'title': {'standoff': 15}})
+    font={'size': 18},
+    xaxis={'title': {'standoff': 15}},
+    yaxis={'title': {'standoff': 15}})
 fig.update_xaxes(dict(
-            tickmode='array',
-            tickvals=sorted(metrics_long["latent_dim"].unique()),
-        )
-    )
+    tickmode='array',
+    tickvals=sorted(metrics_long["latent_dim"].unique()),
+)
+)
 fname = FOLDER / 'collab_performance_overview.pdf'
 files_out['collab_performance_overview.pdf'] = fname
 fig.write_image(fname)
@@ -316,6 +329,7 @@ hover_data = {k: ':,d' for k in
                ]}
 hover_data['data_split'] = True
 hover_data['metric_value'] = ':.4f'
+
 
 def plot_by_params(data_split: str = '', subset: str = ''):
     selected = metrics_long
@@ -348,7 +362,8 @@ def plot_by_params(data_split: str = '', subset: str = ''):
 
 dataset = "valid_fake_na"
 fig = plot_by_params(dataset)
-files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"] = FOLDER / f"hyperpar_{dataset}_results_by_parameters_all.pdf"
+files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"] = (FOLDER /
+                                                                  f"hyperpar_{dataset}_results_by_parameters_all.pdf")
 fig.write_image(files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"])
 fig
 
@@ -358,7 +373,7 @@ fig
 # %%
 fig = plot_by_params('', subset='NA interpolated')
 fname = FOLDER / f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"
-files_out[ f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"] = fname
+files_out[f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(fname)
 fig
@@ -369,7 +384,8 @@ fig
 # %%
 dataset = "test_fake_na"
 fig = plot_by_params(dataset, 'NA interpolated')
-fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"
+fname = (FOLDER /
+         f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
 files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
@@ -378,7 +394,8 @@ fig
 # %%
 dataset = "valid_fake_na"
 fig = plot_by_params(dataset, 'NA interpolated')
-fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"
+fname = (FOLDER /
+         f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
 files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
@@ -388,10 +405,10 @@ fig
 # ## Select best model for each `latent_dim`
 
 # %%
-group_by = ['data_split','subset', 'latent_dim', 'metric_name', 'model']
+group_by = ['data_split', 'subset', 'latent_dim', 'metric_name', 'model']
 metrics_long_sel_min = metrics_long.reset_index(
-    ).groupby(by=group_by
-    ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]) 
+        ).groupby(by=group_by
+        ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
 metrics_long_sel_min
 
 
@@ -412,14 +429,14 @@ def get_plotly_figure(dataset: str, x='latent_dim'):
                      template='none',
                      )
     fig.update_xaxes(dict(
-            tickmode='array',
-            tickvals=sorted(metrics_long[x].unique()),
-        )
+        tickmode='array',
+        tickvals=sorted(metrics_long[x].unique()),
+    )
     )
     fig.update_layout(
-            font={'size': 18},
-            xaxis={'title': {'standoff': 15}},
-            yaxis={'title': {'standoff': 15}})
+        font={'size': 18},
+        xaxis={'title': {'standoff': 15}},
+        yaxis={'title': {'standoff': 15}})
     return fig
 
 
@@ -445,12 +462,13 @@ fig.show()
 
 # %%
 dataset = 'valid_fake_na'
-group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim' ]
+group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim']
 METRIC = 'MAE'
 selected = metrics_long.reset_index(
-    ).groupby(by=group_by
-    ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
-selected.to_csv(FOLDER / 'best_models_metrics_per_latent.csv')
+).groupby(by=group_by
+          ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
+files_out['best_models_metrics_per_latent.csv'] = FOLDER / 'best_models_metrics_per_latent.csv'
+selected.to_csv(files_out['best_models_metrics_per_latent.csv'])
 selected.sample(5)
 
 # %% [markdown]
@@ -475,18 +493,20 @@ min_latent = min_latent.index[0]
 print("Minimum latent value for average of models:", min_latent)
 
 # %%
-selected = selected.loc['NA interpolated'].loc['MAE'].loc[['collab', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
+selected = selected.loc['NA interpolated'].loc['MAE'].loc[[
+    'collab', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
 selected
 
 # %% [markdown]
 # load predictions (could be made better)
 
 # %%
-dataset = 'test_fake_na' # load test split predictions
+dataset = 'test_fake_na'  # load test split predictions
 selected['pred_to_load'] = (
     selected['out_preds']
     + ('/pred_val' if 'val' in dataset else '/pred_test')  # not good...
-    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x) for x in s) + '_' if s is not None else '_')
+    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
+                                      for x in s) + '_' if s is not None else '_')
     + selected.model.str.lower()
     + '.csv'
 )
@@ -498,12 +518,13 @@ selected
 # %%
 mapper = {k: f'{k} - ' + "HL: {}".format(
     str(selected.loc[k, 'hidden_layers'].to_list()[0]))
-          for k in selected.model
-         }
+    for k in selected.model
+}
 mapper
 
 # %%
-pred_split = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
+pred_split = compare_predictions.load_predictions(
+    selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
 pred_split = pred_split.rename(mapper, axis=1)
 category_orders['model'] = list(pred_split.columns[1:])
 pred_split
@@ -512,22 +533,26 @@ pred_split
 data = datasplits.DataSplits.from_folder(FOLDER / 'data', file_format='pkl')
 
 N_SAMPLES = int(data.train_X.index.levels[0].nunique())
-FREQ_MIN = int(N_SAMPLES * 0.25) # selection criteria # maybe to be set externally (depends on data selection)
+# selection criteria # maybe to be set externally (depends on data selection)
+FREQ_MIN = int(N_SAMPLES * 0.25)
 
-logger.info(f"N Samples: {N_SAMPLES:,d} - set minumum: {FREQ_MIN:,d} for plotting.")
+logger.info(
+    f"N Samples: {N_SAMPLES:,d} - set minumum: {FREQ_MIN:,d} for plotting.")
 
 # %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
 freq_feat.name = 'freq'
 # freq_feat = vaep.io.datasplits.load_freq(data_folder) # could be loaded from datafolder
-freq_feat.head() # training data
+freq_feat.head()  # training data
 
 # %%
-errors = vaep.pandas.calc_errors_per_feat(pred=pred_split, freq_feat=freq_feat, target_col='observed')
+errors = vaep.pandas.calc_errors_per_feat(
+    pred=pred_split, freq_feat=freq_feat, target_col='observed')
 errors
 
 # %%
-files_out[f'n_obs_error_counts_{dataset}.pdf'] = FOLDER / f'n_obs_error_counts_{dataset}.pdf'
+files_out[f'n_obs_error_counts_{dataset}.pdf'] = (FOLDER /
+                                                  f'n_obs_error_counts_{dataset}.pdf')
 ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
 vaep.savefig(ax.get_figure(),  files_out[f'n_obs_error_counts_{dataset}.pdf'])
 
@@ -546,7 +571,8 @@ window_size = int(M_feat / 50)
 # %%
 errors_smoothed = errors.copy()
 # errors_smoothed[errors.columns[:-1]] = errors[errors.columns[:-1]].rolling(window=window_size, min_periods=1).mean()
-errors_smoothed[category_orders['model']] = errors[category_orders['model']].rolling(window=window_size, min_periods=1).mean()
+errors_smoothed[category_orders['model']] = errors[category_orders['model']].rolling(
+    window=window_size, min_periods=1).mean()
 errors_smoothed
 
 # %%
@@ -555,22 +581,25 @@ errors_smoothed
 # %%
 mask = errors_smoothed[freq_feat.name] >= FREQ_MIN
 ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
-                                        xlabel='freq/feature prevalence (across samples)',
-                                        ylabel=f'rolling average error ({METRIC})',
-                                        xlim=(FREQ_MIN, errors_smoothed[freq_feat.name].max()),
-                                        # title=f'Rolling average error by feature frequency {msg_annotation}'
-                                       )
+                                                            xlabel='freq/feature prevalence (across samples)',
+                                                            ylabel=f'rolling average error ({METRIC})',
+                                                            xlim=(
+                                                                FREQ_MIN, errors_smoothed[freq_feat.name].max()),
+                                                            # title=f'Rolling average error by feature frequency {msg_annotation}'
+                                                            )
 
 msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size: {window_size})"
 print(msg_annotation)
 
-files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = FOLDER / f'best_models_ld_{min_latent}_rolling_errors_by_freq'
+files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = (FOLDER /
+                                                                    f'best_models_ld_{min_latent}_rolling_errors_by_freq')
 vaep.savefig(
     ax.get_figure(),
     name=files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'])
 
 # %%
-errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat)
+errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame(
+    'rolling error average').reset_index(-1).join(freq_feat)
 errors_smoothed_long
 
 # %% [markdown]
@@ -578,18 +607,20 @@ errors_smoothed_long
 
 # %% tags=[]
 fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].join(n_obs_error_is_based_on).sort_values(by='freq'),
-              x=freq_feat.name,
-              color='model',
-              y='rolling error average',
-              hover_data=['n_obs'],
-              # title=f'Rolling average error by feature frequency {msg_annotation}',
-              labels=labels_dict,
-              category_orders=category_orders,
-              )
+                   x=freq_feat.name,
+                   color='model',
+                   y='rolling error average',
+                   hover_data=['n_obs'],
+                   # title=f'Rolling average error by feature frequency {msg_annotation}',
+                   labels=labels_dict,
+                   category_orders=category_orders,
+                   )
 fig = px_vaep.apply_default_layout(fig)
-fig.update_layout(legend_title_text='') # remove legend title
-files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'
-fig.write_html(files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'])
+fig.update_layout(legend_title_text='')  # remove legend title
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = (FOLDER /
+                                                                        f'best_models_ld_{min_latent}_errors_by_freq_plotly.html')
+fig.write_html(
+    files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'])
 fig
 
 # %% [markdown]
@@ -601,18 +632,19 @@ fig
 errors_smoothed = errors.copy()
 
 ax = errors_smoothed.loc[errors_smoothed['freq'] >= FREQ_MIN].groupby(by='freq'
-                       ).mean(
-                       ).sort_index(
-                       ).rolling(window=3, min_periods=1
-                       ).mean(
-                       ).rename_axis('', axis=1
-                       ).plot(
+                                                                      ).mean(
+).sort_index(
+).rolling(window=3, min_periods=1
+          ).mean(
+).rename_axis('', axis=1
+              ).plot(
     xlabel='freq/ feature prevalence (across samples)',
     ylabel='rolling error average',
     # title='mean error for features averaged for each frequency'
     xlim=(FREQ_MIN, freq_feat.max())
 )
-files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged']  = FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_averaged'
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'] = (FOLDER /
+                                                                     f'best_models_ld_{min_latent}_errors_by_freq_averaged')
 vaep.savefig(
     ax.get_figure(),
     files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'])
@@ -630,12 +662,13 @@ order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
 order_models = order_categories['model']
 
 # %%
-dataset = 'valid_fake_na' # select on validation split
+dataset = 'valid_fake_na'  # select on validation split
 
 selected = metrics_long.reset_index(
-    ).groupby(by=group_by
-    ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
-selected = selected.loc[pd.IndexSlice['NA interpolated', 'MAE']].loc[order_models]
+).groupby(by=group_by
+          ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
+selected = selected.loc[pd.IndexSlice['NA interpolated',
+                                      'MAE']].loc[order_models]
 selected.to_csv(FOLDER / 'best_models_metrics.csv')
 selected
 
@@ -644,11 +677,12 @@ selected = selected.loc[['collab', 'DAE', 'VAE']]
 selected
 
 # %%
-dataset = 'test_fake_na' # load test split predictions
+dataset = 'test_fake_na'  # load test split predictions
 selected['pred_to_load'] = (
     selected['out_preds']
     + ('/pred_val' if 'val' in dataset else '/pred_test')  # not good..."
-    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x) for x in s) + '_' if s is not None else '_')
+    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
+                                      for x in s) + '_' if s is not None else '_')
     + selected.model.str.lower()
     + '.csv'
 )
@@ -657,17 +691,19 @@ selected['pred_to_load'].to_list()
 # %%
 mapper = {k: f'{k} - LD: {selected.loc[k, "latent_dim"]} - HL: {selected.loc[k, "hidden_layers"]} '
           for k in selected.model
-         }
+          }
 mapper
 
 # %%
-pred_split = compare_predictions.load_predictions(selected['pred_to_load'].to_list())[['observed', *order_models]]
+pred_split = compare_predictions.load_predictions(
+    selected['pred_to_load'].to_list())[['observed', *order_models]]
 pred_split = pred_split.rename(mapper, axis=1)
 order_models = list(pred_split.columns[1:])
 pred_split
 
 # %%
-feat_count=pred_split.groupby(by=pred_split.index.names[-1])[pred_split.columns[0]].count()
+feat_count = pred_split.groupby(
+    by=pred_split.index.names[-1])[pred_split.columns[0]].count()
 ax = feat_count.hist(legend=False)
 ax.set_xlabel('feat used for comparison (in split)')
 ax.set_ylabel('observations')
@@ -677,14 +713,17 @@ ax.set_ylabel('observations')
 freq_feat
 
 # %%
-errors = vaep.pandas.calc_errors_per_feat(pred=pred_split, freq_feat=freq_feat, target_col='observed')
+errors = vaep.pandas.calc_errors_per_feat(
+    pred=pred_split, freq_feat=freq_feat, target_col='observed')
 idx_name = errors.index.name
 errors
 
 # %%
-files_out[f'best_models_errors_counts_obs_{dataset}.pdf'] = FOLDER / f'n_obs_error_counts_{dataset}.pdf'
+files_out[f'best_models_errors_counts_obs_{dataset}.pdf'] = (FOLDER /
+                                                             f'n_obs_error_counts_{dataset}.pdf')
 ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
-vaep.savefig(ax.get_figure(),  files_out[f'best_models_errors_counts_obs_{dataset}.pdf'])
+vaep.savefig(ax.get_figure(),
+             files_out[f'best_models_errors_counts_obs_{dataset}.pdf'])
 
 # %%
 n_obs_error_is_based_on = errors['n_obs']
@@ -694,19 +733,22 @@ errors = errors.drop('n_obs', axis=1)
 # shoudl be the same
 M_feat = len(errors)
 window_size = int(M_feat / 50)
-print(f"Features in split: {M_feat}, set window size for smoothing: {window_size}")
+print(
+    f"Features in split: {M_feat}, set window size for smoothing: {window_size}")
 msg_annotation = f"(No. of feat: {M_feat}, window_size: {window_size})"
 
 # %%
 errors_smoothed = errors.copy()
-errors_smoothed[order_models] = errors[order_models].rolling(window=window_size, min_periods=1).mean()
+errors_smoothed[order_models] = errors[order_models].rolling(
+    window=window_size, min_periods=1).mean()
 mask = errors_smoothed[freq_feat.name] >= FREQ_MIN
 ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
-                                        ylabel='rolling error average',
-                                        xlabel='freq/feature prevalence (across samples)',
-                                        xlim=(FREQ_MIN,freq_feat.max()),
-                             # title=f'Rolling average error by feature frequency {msg_annotation}'
-                                       )
+                                                            ylabel='rolling error average',
+                                                            xlabel='freq/feature prevalence (across samples)',
+                                                            xlim=(
+                                                                FREQ_MIN, freq_feat.max()),
+                                                            # title=f'Rolling average error by feature frequency {msg_annotation}'
+                                                            )
 
 vaep.savefig(
     ax.get_figure(),
@@ -714,7 +756,8 @@ vaep.savefig(
     name=f'best_models_rolling_errors_{dataset}')
 
 # %%
-errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat).join(feat_count).reset_index()
+errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame(
+    'rolling error average').reset_index(-1).join(freq_feat).join(feat_count).reset_index()
 errors_smoothed_long
 
 # %% [markdown]
@@ -732,9 +775,11 @@ fig = px_vaep.line((errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name
                    hover_data=[feat_count.name, idx_name, 'n_obs'],
                    category_orders={'model': order_models})
 fig = px_vaep.apply_default_layout(fig)
-fig.update_layout(legend_title_text='') # remove legend title
-fig.write_image(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.pdf')
-fig.write_html(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.html')
+fig.update_layout(legend_title_text='')  # remove legend title
+files_out[f'best_models_errors_{dataset}_by_freq_plotly.html'] = (FOLDER /
+                                                                  f'best_models_errors_{dataset}_by_freq_plotly.html')
+# fig.write_image(FOLDER / f'best_models_errors_{dataset}_by_freq_plotly.pdf')
+fig.write_html(files_out[f'best_models_errors_{dataset}_by_freq_plotly.html'])
 fig
 
 # %% [markdown]
@@ -747,8 +792,10 @@ pred_split
 # ### by feature across samples
 
 # %%
-corr_per_feat = pred_split.groupby(idx_name).aggregate(lambda df: df.corr().loc['observed'])[order_models]
-corr_per_feat = corr_per_feat.join(pred_split.groupby(idx_name)['median'].count().rename('n_obs'))
+corr_per_feat = pred_split.groupby(idx_name).aggregate(
+    lambda df: df.corr().loc['observed'])[order_models]
+corr_per_feat = corr_per_feat.join(pred_split.groupby(idx_name)[
+                                   'median'].count().rename('n_obs'))
 too_few_obs = corr_per_feat['n_obs'] < 3
 corr_per_feat.describe()
 
@@ -759,15 +806,18 @@ corr_per_feat.loc[~too_few_obs].describe()
 corr_per_feat.loc[too_few_obs].dropna(thresh=3, axis=0)
 
 # %%
-figsize = 8,8 # None
+figsize = 8, 8  # None
 fig, ax = plt.subplots(figsize=figsize)
 
 kwargs = dict(rot=45,
               # title='Corr. betw. simulated NA and model pred. per feat',
               ylabel=f'correlation per feature ({idx_name})')
-ax = corr_per_feat.loc[~too_few_obs].drop('n_obs', axis=1).plot.box(**kwargs, ax=ax)
-_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-files_out[f'pred_corr_per_feat_{dataset}'] = FOLDER / f'pred_corr_per_feat_{dataset}'
+ax = corr_per_feat.loc[~too_few_obs].drop(
+    'n_obs', axis=1).plot.box(**kwargs, ax=ax)
+_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                       horizontalalignment='right')
+files_out[f'pred_corr_per_feat_{dataset}'] = (FOLDER /
+                                              f'pred_corr_per_feat_{dataset}')
 vaep.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_feat_{dataset}'])
 
 # %%
@@ -783,8 +833,10 @@ with pd.ExcelWriter(files_out[f'pred_corr_per_feat_{dataset}.xlsx']) as writer:
 # ### within sample
 
 # %%
-corr_per_sample = pred_split.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[order_models]
-corr_per_sample = corr_per_sample.join(pred_split.groupby('Sample ID')['median'].count().rename('n_obs'))
+corr_per_sample = pred_split.groupby('Sample ID').aggregate(
+    lambda df: df.corr().loc['observed'])[order_models]
+corr_per_sample = corr_per_sample.join(pred_split.groupby('Sample ID')[
+                                       'median'].count().rename('n_obs'))
 corr_per_sample.describe()
 
 # %%
@@ -794,9 +846,12 @@ kwargs = dict(ylim=(0.7, 1), rot=45,
               # title='Corr. betw. simulated NA and model pred. per sample',
               ylabel='correlation per sample')
 ax = corr_per_sample.drop('n_obs', axis=1).plot.box(**kwargs, ax=ax)
-_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-files_out[f'pred_corr_per_sample_{dataset}'] = FOLDER / f'pred_corr_per_sample_{dataset}'
-vaep.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_sample_{dataset}'] )
+_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                       horizontalalignment='right')
+files_out[f'pred_corr_per_sample_{dataset}'] = (FOLDER /
+                                                f'pred_corr_per_sample_{dataset}')
+vaep.savefig(ax.get_figure(),
+             name=files_out[f'pred_corr_per_sample_{dataset}'])
 
 # %%
 files_out[f'pred_corr_per_sample_{dataset}.xlsx'] = (FOLDER /
