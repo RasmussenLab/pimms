@@ -255,14 +255,14 @@ data
 
 # %%
 feat_name = scores_common.index.name
-annotations = pd.read_csv(args.f_annotations, usecols=[
+gene_to_PG = pd.read_csv(args.f_annotations, usecols=[
                           feat_name, args.annotaitons_gene_col])
-annotations = annotations.drop_duplicates().set_index(args.annotaitons_gene_col)
-annotations
+gene_to_PG = gene_to_PG.drop_duplicates().set_index(args.annotaitons_gene_col)
+gene_to_PG
 
 # %%
 disease_associations_all = data.join(
-    annotations).dropna().reset_index().set_index(feat_name)
+    gene_to_PG).dropna().reset_index().set_index(feat_name).join(annotations)
 disease_associations_all
 
 # %% [markdown]
@@ -293,6 +293,40 @@ mask = disease_assocications_new_rejected.loc[idx, 'score'] >= 2.0
 disease_assocications_new_rejected.loc[idx].loc[mask]
 
 # %% [markdown]
+# ## Shared which are only significant for by model
+
+# %% tags=[]
+mask = (scores_common[(args.model_key.upper(), 'rejected')] & mask_different)
+mask.sum()
+
+# %%
+idx = disease_associations_all.index.intersection(mask.index[mask])
+disease_assocications_shared_rejected_by_model = disease_associations_all.loc[idx].sort_values(
+    'score', ascending=False)
+disease_assocications_shared_rejected_by_model.head(20)
+
+# %%
+mask = disease_assocications_shared_rejected_by_model.loc[idx, 'score'] >= 2.0
+disease_assocications_shared_rejected_by_model.loc[idx].loc[mask]
+
+# %% [markdown]
+# ## Only significant by RSN
+
+# %% tags=[]
+mask = (scores_common[('RSN', 'rejected')] & mask_different)
+mask.sum()
+
+# %%
+idx = disease_associations_all.index.intersection(mask.index[mask])
+disease_assocications_shared_rejected_by_RSN = disease_associations_all.loc[idx].sort_values(
+    'score', ascending=False)
+disease_assocications_shared_rejected_by_RSN.head(20)
+
+# %%
+mask = disease_assocications_shared_rejected_by_RSN.loc[idx, 'score'] >= 2.0
+disease_assocications_shared_rejected_by_RSN.loc[idx].loc[mask]
+
+# %% [markdown]
 # ## Write to excel
 
 # %%
@@ -308,3 +342,5 @@ disease_assocications_new_rejected.to_excel(
 
 # %%
 files_out
+
+# %%
