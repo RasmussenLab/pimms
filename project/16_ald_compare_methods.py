@@ -58,6 +58,23 @@ args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment /
 args.update_from_dict(params)
 args
 
+# %%
+files_in = {'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
+            'diff_analysis_scores.pkl': args.out_folder / f'diff_analysis_scores.pkl'}
+files_in
+
+# %% [markdown]
+# ## Excel file for exports
+
+# %%
+files_out = dict()
+
+# %%
+writer_args = dict(float_format='%.3f')
+
+files_out['diff_analysis_compare_methods.xlsx'] = args.out_folder / f'diff_analysis_compare_methods.xlsx'
+writer = pd.ExcelWriter(files_out['diff_analysis_compare_methods.xlsx'])
+
 # %% [markdown]
 # # Load scores 
 
@@ -65,27 +82,27 @@ args
 [x for x in args.out_folder.iterdir() if 'scores' in str(x)]
 
 # %%
-fname = args.out_folder / f'diff_analysis_scores.pkl'
-fname
+scores = pd.read_pickle(files_in['diff_analysis_scores.pkl'])
+scores
 
 # %%
-scores = pd.read_pickle(fname)
-scores
+names = {'vae': 'VAE', 'random shifted_imputation': 'RSN'} # ToDo: change in library
+scores = scores.rename(names, axis=1)
+scores.head()
 
 # %%
 models = vaep.nb.Config.from_dict(vaep.pandas.index_to_dict(scores.columns.levels[0]))
 vars(models)
 
 # %%
-assert args.model_key in models.keys(), f"Missing model key which was expected: {args.model_key}"
+assert args.model_key.upper() in models.keys(), f"Missing model key which was expected: {args.model_key}"
 
 # %%
 scores.describe()
 
 # %%
 scores = scores.loc[pd.IndexSlice[:, args.target], :]
-fname = args.out_folder / f'diff_analysis_compare_methods.xlsx'
-scores.to_excel(fname)
+scores.to_excel(writer, 'scores', **writer_args)
 scores
 
 # %%
@@ -98,8 +115,7 @@ scores.describe(include=['bool', 'O'])
 # ## Load frequencies of observed features
 
 # %%
-fname = args.folder_experiment / 'freq_features_observed.csv'
-freq_feat = pd.read_csv(fname, index_col=0)
+freq_feat = pd.read_csv(files_in['freq_features_observed.csv'], index_col=0)
 freq_feat
 
 # %% [markdown]
@@ -112,19 +128,16 @@ scores_common
 
 
 # %%
-def annotate_decision(scores, model):
-    return scores[(model, 'rejected')].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
-
+def annotate_decision(scores, model, model_column):
+    return scores[(model_column, 'rejected')].replace({False: f'{model} (no) ', True: f'{model} (yes)'})
 
 annotations = None
 for model, model_column in models.items():
     if not annotations is None:
         annotations += ' - '
-        annotations += scores_common[(model_column, 'rejected')
-                                     ].replace({False: f'{model} ->  no', True: f'{model} -> yes'})
+        annotations += annotate_decision(scores_common, model=model, model_column=model_column)
     else:
-        annotations = scores_common[(model_column, 'rejected')].replace(
-            {False: f'{model} ->  no', True: f'{model} -> yes'})
+        annotations = annotate_decision(scores_common, model=model, model_column=model_column)
 annotations.name = 'Differential Analysis Comparison'
 annotations.value_counts()
 
@@ -136,9 +149,7 @@ mask_different = ((scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1
 scores_common.loc[mask_different]
 
 # %%
-fname = args.out_folder / f'diff_analysis_differences.xlsx'
-scores_common.loc[mask_different].to_excel(fname)
-fname
+scores_common.loc[mask_different].to_excel(writer, 'differences', **writer_args)
 
 # %%
 var = 'qvalue'
@@ -170,7 +181,8 @@ ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
 ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper right")
-fname = args.out_folder / f'diff_analysis_comparision_1_{args.model_key}'
+files_out[f'diff_analysis_comparision_1_{args.model_key}'] = args.out_folder /  f'diff_analysis_comparision_1_{args.model_key}'
+fname = files_out[f'diff_analysis_comparision_1_{args.model_key}']
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
@@ -197,7 +209,7 @@ scores_model_only = scores.reset_index(level=-1, drop=True)
 scores_model_only = (scores_model_only
                      .loc[
                          scores_model_only.index.difference(scores_common.index),
-                         args.model_key]
+                         args.model_key.upper()]
                      .sort_values(by='qvalue', ascending=True)
                      .join(freq_feat)
                      )
@@ -207,21 +219,23 @@ scores_model_only
 scores_model_only.rejected.value_counts()
 
 # %%
-fname = args.out_folder / 'diff_analysis_only_model.xlsx'
-scores_model_only.to_excel(fname)
-fname
+scores_model_only.to_excel(writer, 'only_model', **writer_args)
+
+# %%
+scores_model_only_rejected = scores_model_only.loc[scores_model_only.rejected]
+scores_model_only_rejected.to_excel(writer, 'only_model_rejected', **writer_args)
 
 # %% [markdown] tags=[]
 # # Feature lookup
-#
-# - [x] look-up ids and diseases, manually (uncomment)
-# - [x] automatically by querying `api.jensenlab.org`: see if disease (`DOID` needed) has associations to gene found
 
 # %%
 data = vaep.databases.diseases.get_disease_association(doid=args.disease_ontology, limit=10000)
 data = pd.DataFrame.from_dict(data, orient='index').rename_axis('ENSP', axis=0)
 data = data.rename(columns={'name': args.annotaitons_gene_col}).reset_index().set_index(args.annotaitons_gene_col)
 data
+
+# %% [markdown]
+# ## Shared features
 
 # %%
 feat_name = scores_common.index.name
@@ -233,6 +247,9 @@ annotations
 disease_associations_all = data.join(annotations).dropna().reset_index().set_index(feat_name)
 disease_associations_all
 
+# %% [markdown]
+# ## only by model
+
 # %%
 idx = disease_associations_all.index.intersection(scores_model_only.index)
 disease_assocications_new = disease_associations_all.loc[idx].sort_values('score', ascending=False)
@@ -242,9 +259,28 @@ disease_assocications_new.head(20)
 mask = disease_assocications_new.loc[idx, 'score'] >= 2.0
 disease_assocications_new.loc[idx].loc[mask]
 
+# %% [markdown]
+# ## Only by model which were significant
+
 # %%
-fname = args.out_folder / 'gene_disease_associations.xlsx'
-with pd.ExcelWriter(fname) as writer:
-    disease_associations_all.to_excel(writer, sheet_name='all')
-    disease_assocications_new.to_excel(writer, sheet_name='new')
-logger.info(f"Wrote gene-disease associations to file: {fname}")
+idx = disease_associations_all.index.intersection(scores_model_only_rejected.index)
+disease_assocications_new_rejected = disease_associations_all.loc[idx].sort_values('score', ascending=False)
+disease_assocications_new_rejected.head(20)
+
+# %%
+mask = disease_assocications_new_rejected.loc[idx, 'score'] >= 2.0
+disease_assocications_new_rejected.loc[idx].loc[mask]
+
+# %% [markdown]
+# ## Write to excel
+
+# %%
+disease_associations_all.to_excel(writer, sheet_name='disease_assoc_all', **writer_args)
+disease_assocications_new.to_excel(writer, sheet_name='disease_assoc_new', **writer_args)
+disease_assocications_new_rejected.to_excel(writer, sheet_name='disease_assoc_new_rejected', **writer_args)
+
+# %% [markdown]
+# # Outputs
+
+# %%
+files_out
