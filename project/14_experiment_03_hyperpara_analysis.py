@@ -61,6 +61,9 @@ except AssertionError:
     configs_json = snakemake.input.config
     print(f"{metrics_json = }", f"{configs_json = }", sep="\n")  
 
+# %%
+files_out=dict()
+
 # %% [markdown]
 # ## Metrics of each run
 
@@ -155,6 +158,7 @@ metrics_styled
 
 # %%
 fname = FOLDER/ 'metrics_styled.xlsx'
+files_out['metrics_styled.xlsx'] = fname
 metrics_styled.to_excel(fname)
 logger.info(f"Saved styled metrics: {fname}")
 
@@ -239,6 +243,7 @@ metrics_long[['subset_w_N', 'subset']]
 
 # %%
 fname = FOLDER / 'metrics_long_df.csv'
+files_out['metrics_long_df.csv'] = fname
 metrics_long.to_csv(fname) # Should all the plots be done without the metrics?
 logger.info(f"Saved metrics in long format: {fname}")
 
@@ -295,6 +300,7 @@ fig.update_xaxes(dict(
         )
     )
 fname = FOLDER / 'collab_performance_overview.pdf'
+files_out['collab_performance_overview.pdf'] = fname
 fig.write_image(fname)
 logger.info(fname)
 fig.show()
@@ -342,7 +348,8 @@ def plot_by_params(data_split: str = '', subset: str = ''):
 
 dataset = "valid_fake_na"
 fig = plot_by_params(dataset)
-fig.write_image(FOLDER / f"hyperpar_{dataset}_results_by_parameters_all.pdf")
+files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"] = FOLDER / f"hyperpar_{dataset}_results_by_parameters_all.pdf"
+fig.write_image(files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"])
 fig
 
 # %% [markdown]
@@ -351,6 +358,7 @@ fig
 # %%
 fig = plot_by_params('', subset='NA interpolated')
 fname = FOLDER / f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"
+files_out[ f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(fname)
 fig
@@ -362,6 +370,7 @@ fig
 dataset = "test_fake_na"
 fig = plot_by_params(dataset, 'NA interpolated')
 fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"
+files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig
@@ -370,6 +379,7 @@ fig
 dataset = "valid_fake_na"
 fig = plot_by_params(dataset, 'NA interpolated')
 fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"
+files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig
@@ -416,6 +426,7 @@ def get_plotly_figure(dataset: str, x='latent_dim'):
 dataset = 'test_fake_na'
 fig = get_plotly_figure(dataset)
 fname = FOLDER / f"hyperpar_{dataset}_results_best.pdf"
+files_out[f"hyperpar_{dataset}_results_best.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig.show()
@@ -424,6 +435,7 @@ fig.show()
 dataset = 'valid_fake_na'
 fig = get_plotly_figure(dataset)
 fname = FOLDER / f"hyperpar_{dataset}_results_best.pdf"
+files_out[f"hyperpar_{dataset}_results_best.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig.show()
@@ -515,6 +527,18 @@ errors = vaep.pandas.calc_errors_per_feat(pred=pred_split, freq_feat=freq_feat, 
 errors
 
 # %%
+files_out[f'n_obs_error_counts_{dataset}.pdf'] = FOLDER / f'n_obs_error_counts_{dataset}.pdf'
+ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
+vaep.savefig(ax.get_figure(),  files_out[f'n_obs_error_counts_{dataset}.pdf'])
+
+# %%
+ax = errors.plot.scatter('freq', 'n_obs')
+
+# %%
+n_obs_error_is_based_on = errors['n_obs']
+errors = errors.drop('n_obs', axis=1)
+
+# %%
 M_feat = len(errors)
 window_size = int(M_feat / 50)
 
@@ -523,6 +547,9 @@ window_size = int(M_feat / 50)
 errors_smoothed = errors.copy()
 # errors_smoothed[errors.columns[:-1]] = errors[errors.columns[:-1]].rolling(window=window_size, min_periods=1).mean()
 errors_smoothed[category_orders['model']] = errors[category_orders['model']].rolling(window=window_size, min_periods=1).mean()
+errors_smoothed
+
+# %%
 errors_smoothed
 
 # %%
@@ -537,27 +564,32 @@ ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
 msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size: {window_size})"
 print(msg_annotation)
 
+files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = FOLDER / f'best_models_ld_{min_latent}_rolling_errors_by_freq'
 vaep.savefig(
     ax.get_figure(),
-    folder=FOLDER,
-    name=f'best_models_ld_{min_latent}_rolling_errors_by_freq')
+    name=files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'])
 
 # %%
 errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat)
 errors_smoothed_long
 
+# %% [markdown]
+# Save html versin of curve with annotation of errors
+
 # %% tags=[]
-fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].sort_values(by='freq'),
+fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].join(n_obs_error_is_based_on).sort_values(by='freq'),
               x=freq_feat.name,
               color='model',
               y='rolling error average',
+              hover_data=['n_obs'],
               # title=f'Rolling average error by feature frequency {msg_annotation}',
               labels=labels_dict,
               category_orders=category_orders,
               )
 fig = px_vaep.apply_default_layout(fig)
 fig.update_layout(legend_title_text='') # remove legend title
-fig.write_image(FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.pdf')
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'
+fig.write_html(files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'])
 fig
 
 # %% [markdown]
@@ -580,11 +612,10 @@ ax = errors_smoothed.loc[errors_smoothed['freq'] >= FREQ_MIN].groupby(by='freq'
     # title='mean error for features averaged for each frequency'
     xlim=(FREQ_MIN, freq_feat.max())
 )
-
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged']  = FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_averaged'
 vaep.savefig(
     ax.get_figure(),
-    folder=FOLDER,
-    name=f'best_models_ld_{min_latent}_errors_by_freq_averaged')
+    files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'])
 
 # %% [markdown]
 # ### For best models per model class
@@ -651,6 +682,15 @@ idx_name = errors.index.name
 errors
 
 # %%
+files_out[f'best_models_errors_counts_obs_{dataset}.pdf'] = FOLDER / f'n_obs_error_counts_{dataset}.pdf'
+ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
+vaep.savefig(ax.get_figure(),  files_out[f'best_models_errors_counts_obs_{dataset}.pdf'])
+
+# %%
+n_obs_error_is_based_on = errors['n_obs']
+errors = errors.drop('n_obs', axis=1)
+
+# %%
 # shoudl be the same
 M_feat = len(errors)
 window_size = int(M_feat / 50)
@@ -677,14 +717,19 @@ vaep.savefig(
 errors_smoothed_long = errors_smoothed.drop('freq', axis=1).stack().to_frame('rolling error average').reset_index(-1).join(freq_feat).join(feat_count).reset_index()
 errors_smoothed_long
 
+# %% [markdown]
+# Save html versin of curve with annotation of errors
+
 # %%
-fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].sort_values(by='freq'),
+fig = px_vaep.line((errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
+                                        .join(n_obs_error_is_based_on)
+                                        .sort_values(by='freq')),
                    x=freq_feat.name,
                    color='model',
                    y='rolling error average',
                    title=f'Rolling average error by feature frequency {msg_annotation}',
                    labels=labels_dict,
-                   hover_data=[feat_count.name, idx_name],
+                   hover_data=[feat_count.name, idx_name, 'n_obs'],
                    category_orders={'model': order_models})
 fig = px_vaep.apply_default_layout(fig)
 fig.update_layout(legend_title_text='') # remove legend title
@@ -703,7 +748,15 @@ pred_split
 
 # %%
 corr_per_feat = pred_split.groupby(idx_name).aggregate(lambda df: df.corr().loc['observed'])[order_models]
+corr_per_feat = corr_per_feat.join(pred_split.groupby(idx_name)['median'].count().rename('n_obs'))
+too_few_obs = corr_per_feat['n_obs'] < 3
 corr_per_feat.describe()
+
+# %%
+corr_per_feat.loc[~too_few_obs].describe()
+
+# %%
+corr_per_feat.loc[too_few_obs].dropna(thresh=3, axis=0)
 
 # %%
 figsize = 8,8 # None
@@ -712,11 +765,18 @@ fig, ax = plt.subplots(figsize=figsize)
 kwargs = dict(rot=45,
               # title='Corr. betw. simulated NA and model pred. per feat',
               ylabel=f'correlation per feature ({idx_name})')
-ax = corr_per_feat.plot.box(**kwargs, ax=ax)
+ax = corr_per_feat.loc[~too_few_obs].drop('n_obs', axis=1).plot.box(**kwargs, ax=ax)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name=f'pred_corr_per_feat_{dataset}', folder=FOLDER)
-with pd.ExcelWriter(FOLDER/f'pred_corr_test_per_feat_{dataset}.xlsx') as writer:
-    corr_per_feat.describe().to_excel(writer, sheet_name='summary')
+files_out[f'pred_corr_per_feat_{dataset}'] = FOLDER / f'pred_corr_per_feat_{dataset}'
+vaep.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_feat_{dataset}'])
+
+# %%
+files_out[f'pred_corr_per_feat_{dataset}.xlsx'] = (FOLDER /
+                                                   f'pred_corr_per_feat_{dataset}.xlsx')
+with pd.ExcelWriter(files_out[f'pred_corr_per_feat_{dataset}.xlsx']) as writer:
+    corr_per_feat.loc[~too_few_obs].describe().to_excel(
+        writer, sheet_name='summary')  # excluded -1 and 1 version
+    # complete information
     corr_per_feat.to_excel(writer, sheet_name='correlations')
 
 # %% [markdown]
@@ -724,6 +784,7 @@ with pd.ExcelWriter(FOLDER/f'pred_corr_test_per_feat_{dataset}.xlsx') as writer:
 
 # %%
 corr_per_sample = pred_split.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[order_models]
+corr_per_sample = corr_per_sample.join(pred_split.groupby('Sample ID')['median'].count().rename('n_obs'))
 corr_per_sample.describe()
 
 # %%
@@ -732,9 +793,20 @@ fig, ax = plt.subplots(figsize=figsize)
 kwargs = dict(ylim=(0.7, 1), rot=45,
               # title='Corr. betw. simulated NA and model pred. per sample',
               ylabel='correlation per sample')
-ax = corr_per_sample.plot.box(**kwargs, ax=ax)
+ax = corr_per_sample.drop('n_obs', axis=1).plot.box(**kwargs, ax=ax)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name=f'pred_corr_per_sample_{dataset}', folder=FOLDER)
-with pd.ExcelWriter(FOLDER/f'pred_corr_per_sample_{dataset}.xlsx') as writer:
+files_out[f'pred_corr_per_sample_{dataset}'] = FOLDER / f'pred_corr_per_sample_{dataset}'
+vaep.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_sample_{dataset}'] )
+
+# %%
+files_out[f'pred_corr_per_sample_{dataset}.xlsx'] = (FOLDER /
+                                                     f'pred_corr_per_sample_{dataset}.xlsx')
+with pd.ExcelWriter(files_out[f'pred_corr_per_sample_{dataset}.xlsx']) as writer:
     corr_per_sample.describe().to_excel(writer, sheet_name='summary')
     corr_per_sample.to_excel(writer, sheet_name='correlations')
+
+# %% [markdown]
+# # Files written to disk
+
+# %%
+files_out
