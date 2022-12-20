@@ -220,7 +220,12 @@ pred_test_corr
 
 # %%
 corr_per_sample_test = pred_test.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+corr_per_sample_test = corr_per_sample_test.join(pred_test.groupby('Sample ID')[
+                                       'median'].count().rename('n_obs'))
+too_few_obs = corr_per_sample_test['n_obs'] < 3
+corr_per_sample_test.loc[~too_few_obs].describe()
 
+# %%
 kwargs = dict(ylim=(0.7,1), rot=90,
               # title='Corr. betw. fake NA and model predictions per sample on test data',
               ylabel='correlation per sample')
@@ -254,15 +259,25 @@ pred_test.loc[pd.IndexSlice[:, options[0]], :]
 
 # %%
 corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+corr_per_feat_test = corr_per_feat_test.join(pred_test.groupby(FEAT_NAME)[
+                                   'observed'].count().rename('n_obs'))
 
+too_few_obs = corr_per_feat_test['n_obs'] < 3
+corr_per_feat_test.loc[~too_few_obs].describe()
+
+# %%
+corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
+
+# %%
 kwargs = dict(rot=90,
               # title=f'Corr. per {FEAT_NAME} on test data',
               ylabel=f'correlation per {FEAT_NAME}')
-ax = corr_per_feat_test.plot.box(**kwargs)
+ax = corr_per_feat_test.loc[~too_few_obs].drop(
+    'n_obs', axis=1).plot.box(**kwargs)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 vaep.savefig(ax.get_figure(), name='pred_corr_test_per_feat', folder=args.out_figures)
 with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:
-    corr_per_feat_test.describe().to_excel(writer, sheet_name='summary')
+    corr_per_feat_test.loc[~too_few_obs].describe().to_excel(writer, sheet_name='summary')
     corr_per_feat_test.to_excel(writer, sheet_name='correlations')
 
 # %%
