@@ -341,6 +341,7 @@ disease_assocications_new_rejected.to_excel(
 # # Outputs
 
 # %%
-files_out
+writer.close()
 
 # %%
+files_out
