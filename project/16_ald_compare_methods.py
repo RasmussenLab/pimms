@@ -46,7 +46,7 @@ disease_ontology = 5082  # code from https://disease-ontology.org/
 f_annotations = 'data/single_datasets/ald_plasma_proteinGroups_annotations.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
-# %%
+# %% tags=[]
 params = vaep.nb.get_params(args, globals=globals())
 params
 
@@ -60,7 +60,8 @@ args
 
 # %%
 files_in = {'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
-            'diff_analysis_scores.pkl': args.out_folder / f'diff_analysis_scores.pkl'}
+            'diff_analysis_scores.pkl': args.out_folder / f'diff_analysis_scores.pkl',
+            'f_annotations_gene_to_pg': args.f_annotations}
 files_in
 
 # %% [markdown]
@@ -116,6 +117,16 @@ scores.describe()
 scores.describe(include=['bool', 'O'])
 
 # %% [markdown]
+# ## Load gene to protein groups mapped
+
+# %%
+feat_name = scores.index.names[0]
+gene_to_PG = pd.read_csv(files_in['f_annotations_gene_to_pg'], usecols=[
+                          feat_name, args.annotaitons_gene_col])
+gene_to_PG = gene_to_PG.drop_duplicates().set_index(feat_name)
+gene_to_PG
+
+# %% [markdown]
 # ## Load frequencies of observed features
 
 # %%
@@ -157,8 +168,12 @@ mask_different = ((scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1
 scores_common.loc[mask_different]
 
 # %%
-scores_common.loc[mask_different].to_excel(
-    writer, 'differences', **writer_args)
+gene_idx_diff = gene_to_PG.loc[scores_common.index].squeeze().loc[mask_different]
+(scores_common
+ .loc[mask_different]
+ .set_index(gene_idx_diff, append=True)
+ .to_excel(writer, 'differences', **writer_args)
+)
 
 # %%
 var = 'qvalue'
@@ -168,7 +183,17 @@ for s, k in zip(to_plot, models.keys()):
 to_plot.append(freq_feat.loc[scores_common.index])
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
+to_plot = to_plot.join(gene_to_PG)
 to_plot
+
+# %% [markdown] tags=[]
+# ## Plot of intensities for most extreme example
+
+# %%
+to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot['VAE']).abs()
+to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
+
+# %%
 
 # %% [markdown]
 # ## Differences plotted
@@ -240,7 +265,7 @@ scores_model_only_rejected.to_excel(
     writer, 'only_model_rejected', **writer_args)
 
 # %% [markdown] tags=[]
-# # Feature lookup
+# # DISEASES DB lookup
 
 # %%
 data = vaep.databases.diseases.get_disease_association(
@@ -254,11 +279,8 @@ data
 # ## Shared features
 
 # %%
-feat_name = scores_common.index.name
-gene_to_PG = pd.read_csv(args.f_annotations, usecols=[
-                          feat_name, args.annotaitons_gene_col])
-gene_to_PG = gene_to_PG.drop_duplicates().set_index(args.annotaitons_gene_col)
-gene_to_PG
+gene_to_PG = gene_to_PG.reset_index().set_index(args.annotaitons_gene_col)
+gene_to_PG.head()
 
 # %%
 disease_associations_all = data.join(
