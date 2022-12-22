@@ -391,19 +391,80 @@ params.used_samples = analysis.df.index.to_list()
 ax = analysis.df.notna().sum(axis=1).hist()
 ax.set_xlabel('features per eligable sample')
 ax.set_ylabel('observations')
-vaep.savefig(ax.get_figure(), 'hist_features_per_sample', folder=folder_figures)
+fname = folder_figures / 'hist_features_per_sample'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = analysis.df.notna().sum(axis=0).sort_values().plot()
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
-vaep.savefig(ax.get_figure(), 'feature_prevalence', folder=folder_figures)
+fname = folder_figures / 'feature_prevalence'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
 # ### Number off observations accross feature value
 
 # %%
-# ToDo
+def min_max(s: pd.Series):
+    min_bin, max_bin = (int(s.min()), (int(s.max())+1))
+    return min_bin, max_bin
+
+
+def plot_histogram_intensites(s: pd.Series, interval_bins=1, min_max=(15, 40), ax=None):
+
+    min_bin, max_bin = min_max
+    bins = range(min_bin, int(max_bin), 1)
+    ax = s.plot.hist(bins=bins, ax=ax)
+    return ax, bins
+
+
+min_intensity, max_intensity = min_max(analysis.df.stack())
+ax, bins = plot_histogram_intensites(
+    analysis.df.stack(), min_max=(min_intensity, max_intensity))
+ax.locator_params(axis='x', integer=True)
+
+fname = folder_figures / 'intensity_distribution_overall'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+missing_by_median = {'median feat value': analysis.df.median(
+), 'prop. missing': analysis.df.isna().mean()}
+missing_by_median = pd.DataFrame(missing_by_median)
+x_col, y_col = missing_by_median.columns
+
+bins = range(*min_max(missing_by_median['median feat value']), 1)
+
+missing_by_median['bins'] = pd.cut(
+    missing_by_median['median feat value'], bins=bins)
+missing_by_median['median feat value (rounded)'] = missing_by_median['median feat value'].round(decimals=0).astype(int)
+_counts = missing_by_median.groupby('median feat value (rounded)')['median feat value'].count().rename('count')
+missing_by_median = missing_by_median.join(_counts, on='median feat value (rounded)')
+missing_by_median['Intensity rounded (based on N observations)'] = missing_by_median.iloc[:,-2:].apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
+
+ax = missing_by_median.plot.scatter(x_col, y_col, ylim=(0, 1))
+
+
+fname = folder_figures / 'intensity_median_vs_prop_missing_scatter'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+y_col = 'prop. missing'
+x_col = 'Intensity rounded (based on N observations)'
+ax = missing_by_median[[x_col, y_col]].plot.box(by=x_col)
+ax = ax[0]
+_ = ax.set_title('')
+_ = ax.set_ylabel(y_col)
+_ = ax.set_xlabel(x_col)
+_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                       horizontalalignment='right')
+
+fname = folder_figures / 'intensity_median_vs_prop_missing_boxplot'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
 # ### Interactive and Single plots
@@ -432,9 +493,11 @@ fig, ax = plt.subplots(figsize=(18,10))
 analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col])
 
 # %%
-fig, ax = plt.subplots(figsize=(23,10))
+fig, ax = plt.subplots(figsize=(23, 10))
 analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[params.meta_date_col])
-vaep.savefig(fig, folder_figures / 'pca_sample_by_date')
+fname = folder_figures / 'pca_sample_by_date'
+figures[fname.stem] = fname
+vaep.savefig(fig, fname)
 
 # %% [markdown]
 # - software version: Does it make a difference?
@@ -451,7 +514,9 @@ fig = px.scatter(
     width=1200,
     height=600
 )
-fig.write_image(folder_figures / 'pca_identified_features.png')
+fname = folder_figures / 'pca_identified_features.png'
+figures[fname.stem] =  fname
+fig.write_image(fname)
 fig # stays interactive in html
 
 # %% [markdown]
@@ -470,9 +535,16 @@ df
 ax = df.boxplot(rot=80, figsize=(20, 10), fontsize='large', showfliers=False, showcaps=False)
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
-vaep.savefig(fig, folder_figures / 'median_boxplot')
-figures['median_boxplot'] = fig
+fname = folder_figures / 'median_boxplot'
+figures[fname.stem] =  fname
+vaep.savefig(fig, fname)
 
+
+# %% [markdown]
+# Percentiles of intensities in dataset
+
+# %%
+df.stack().describe(percentiles=np.linspace(0.05, 0.95, 10))
 
 # %% [markdown]
 # ### Plot sample median over time
@@ -495,8 +567,9 @@ ax = median_sample_intensity.plot.scatter(x='date', y='median intensity',
                                               median_sample_intensity['date'])
                                           )
 fig = ax.get_figure()
-vaep.savefig(fig, folder_figures / 'median_scatter')
-figures['median_scatter'] = fig
+figures['median_scatter'] = folder_figures / 'median_scatter'
+vaep.savefig(fig, figures['median_scatter'])
+
 
 
 # %% [markdown]
@@ -603,3 +676,10 @@ fname = folder_experiment/'data_config.yaml'
 with open(fname, 'w') as f:
     OmegaConf.save(params, f)
 fname
+
+# %% [markdown]
+# ## Saved Figures
+
+# %%
+# saved figures
+figures
