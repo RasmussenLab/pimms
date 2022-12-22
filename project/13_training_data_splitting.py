@@ -221,6 +221,9 @@ selected_instruments
 
 # %% [markdown]
 # ## Summary plot - UMAP
+#
+# - embedding based on all samples
+# - visualization of top 5 instruments
 
 # %%
 reducer = umap.UMAP(random_state=42)
@@ -315,7 +318,7 @@ ax.set_ylabel('UMAP 2')
 vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
 
 # %% [markdown]
-# ## Summary statistics plot 
+# ## Summary statistics for top 5 instruments 
 
 # %%
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -336,6 +339,20 @@ to_plot.to_csv(FOLDER_DATASETS / 'summary_statistics_dump_data.csv')
 vaep.savefig(fig, name='summary_statistics_dump',
              folder=FOLDER_DATASETS)
 
+
+# %%
+top_5_meta = df_meta.loc[mask_top_5] 
+top_5_meta[['injection volume setting', 'dilution factor']].describe()
+
+# %% [markdown]
+# ### Meta data stats for top 5
+
+# %%
+for _instrument, _df_meta_instrument in top_5_meta.groupby(by=thermo_raw_files.cols_instrument):
+    print('#'* 80, ' - '.join(_instrument), sep='\n')
+    display(_df_meta_instrument.describe())
+    display(_df_meta_instrument['injection volume setting'].value_counts())
+    break
 
 # %% [markdown]
 # ## Dump single experiments
