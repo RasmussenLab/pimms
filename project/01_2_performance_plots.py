@@ -59,7 +59,7 @@ fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed m
 
 # %%
 # # Parameters
-# fn_rawfile_metadata = "data/single_datasets/raw_meta.csv"
+# fn_rawfile_metadata = "data/ALD_study/processed/raw_meta.csv"
 # folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 
 # %%

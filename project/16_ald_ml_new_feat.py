@@ -48,7 +48,7 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 folder_data: str = ''  # specify data directory if needed
-fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
+fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 model_key = 'vae'
 target = 'kleiner'
@@ -56,7 +56,7 @@ sample_id_col = 'Sample ID'
 cutoff_target:int = 2 # => for binarization target >= cutoff_target
 file_format = "pkl"
 out_folder='diff_analysis'
-fn_qc_samples = 'data/single_datasets/qc_plasma_proteinGroups.pkl'
+fn_qc_samples = 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())

@@ -4,9 +4,15 @@
 
 # Single experiment
 
+Run a single comparison
+
 ```
 snakemake -n # uses workflow/Snakefile
 ```
+
+which executes the following rules
+
+![Rule graph for single experiment](rulegraphs/default.png)
 
 ## Grid Search for Hyperparameters
 
@@ -33,7 +39,7 @@ snakemake --snakefile workflow/Snakefile_grid.smk --configfile config/grid_searc
 
 rule graph is
 
-<img src="rulegraph_gridsearch.png" alt="Rule graph for grid search" width="500"/>
+<img src="rulegraphs/rulegraph_gridsearch.png" alt="Rule graph for grid search" width="500"/>
 
 
 ## Repeated training
@@ -62,3 +68,9 @@ Then the comparsion with the shifted normal distribution and the ald setup is do
 snakemake --configfile config\appl_ald_data\plasma\proteinGroups\config.yaml -p -c1 -n
 snakemake --snakefile workflow\Snakefile_ald_comparison.smk --configfile config/appl_ald_data/plasma/proteinGroups/comparison.yaml -p -c1 -n
 ```
+
+
+Rule graph for ALD comparison (after using single experiment)
+
+
+![Comparison after default](rulegraphs/rulegraph_ald_comparison.png)

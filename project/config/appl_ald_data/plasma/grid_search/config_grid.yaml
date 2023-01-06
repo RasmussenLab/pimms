@@ -21,7 +21,7 @@ latent_dim:
 folder_grid_search: "runs/appl_ald_data/plasma/grid_search"
 folder_experiment2: "runs/appl_ald_data/plasma/grid_search/{{level}}"
 folder_experiment: "runs/appl_ald_data/plasma/grid_search/{level}"
-fn_rawfile_metadata: 'data/single_datasets/raw_meta.csv'
+fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
 levels:
 - proteinGroups
 - aggPeptides
