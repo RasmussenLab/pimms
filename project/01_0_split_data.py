@@ -47,7 +47,7 @@ from vaep.analyzers.analyzers import  AnalyzePeptides
 
 from vaep.logging import setup_logger
 logger = vaep.logging.setup_nb_logger()
-logger.info("Experiment 03 - data")
+logger.info("Split data and make diagnostic plots")
 
 figures = {}  # collection of ax or figures
 
@@ -214,10 +214,16 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
 # %%
 df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
 df_meta = df_meta.loc[analysis.df.index.to_list()] # index is sample index
+if df_meta.index.name is None:
+    df_meta.index.name = params.index_col[0]
 df_meta
 
 # %%
-df_meta[params.meta_date_col] = pd.to_datetime(df_meta[params.meta_date_col])
+if params.meta_date_col:
+    df_meta[params.meta_date_col] = pd.to_datetime(df_meta[params.meta_date_col])
+else:
+    params.meta_date_col = 'PlaceholderTime'
+    df_meta[params.meta_date_col] = range(len(df_meta))
 df_meta
 
 # %%
@@ -242,7 +248,7 @@ if params.min_RT_time:
     logger.info(msg)
     df_meta = df_meta.loc[mask_RT]
 else:
-    logger.warning(f"Could not find retention time column in meta data: {col_max_rt}")
+    logger.warning(f"Retention time filtering deactivated.")
 
 # %%
 df_meta = df_meta.sort_values(params.meta_date_col)
@@ -316,8 +322,9 @@ assert analysis.df.index.is_unique, "Duplicates in index"
 # %% [markdown]
 # ## Select a subset of samples if specified (reduce the number of samples)
 #
+# - select features if `select_N` is specifed (for now)
 # - for interpolation to make sense, it is best to select a consecutive number of samples:
-#   - take N most recent samples
+#   - take N most recent samples (-> check that this makes sense for your case)
 
 # %%
 if params.select_N is not None:
@@ -338,19 +345,20 @@ if params.select_N is not None:
 
 # %% [markdown]
 # ## First Step: Select features by prevalence
-#
-# - select features if `select_N` is specifed (for now)
 # - `feat_prevalence` across samples
 
 # %% tags=[]
 freq_per_feature = analysis.df.notna().sum() # on wide format
 if isinstance(params.feat_prevalence, float):
-    logger.info(f"Current number of samples: {select_N}")
     N_samples = len(analysis.df_meta)
+    logger.info(f"Current number of samples: {N_samples}")
+    logger.info(f"Feature has to be present in at least {params.feat_prevalence:.2%} of samples")
     params.feat_prevalence = int(N_samples * params.feat_prevalence)
 assert isinstance(params.feat_prevalence, int)
+logger.info(f"Feature has to be present in at least {params.feat_prevalence} of samples")                
 # select features
 mask = freq_per_feature >= params.feat_prevalence
+logger.info(f"Drop {(~mask).sum()} features")
 freq_per_feature = freq_per_feature.loc[mask]
 analysis.df = analysis.df.loc[:, mask]
 analysis.N, analysis.M = analysis.df.shape
@@ -489,15 +497,20 @@ pcs
 pcs.describe(include='all', datetime_is_numeric=True).T
 
 # %%
-fig, ax = plt.subplots(figsize=(18,10))
-analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col])
+if params.meta_cat_col:
+    fig, ax = plt.subplots(figsize=(18,10))
+    analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
+    fname = folder_figures / f'pca_sample_by_{"_".join(params.meta_cat_col.split())}'
+    figures[fname.stem] = fname
+    vaep.savefig(fig, fname)
 
 # %%
-fig, ax = plt.subplots(figsize=(23, 10))
-analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[params.meta_date_col])
-fname = folder_figures / 'pca_sample_by_date'
-figures[fname.stem] = fname
-vaep.savefig(fig, fname)
+if params.meta_date_col != 'PlaceholderTime':
+    fig, ax = plt.subplots(figsize=(23, 10))
+    analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
+    fname = folder_figures / 'pca_sample_by_date'
+    figures[fname.stem] = fname
+    vaep.savefig(fig, fname)
 
 # %% [markdown]
 # - software version: Does it make a difference?
@@ -506,7 +519,7 @@ vaep.savefig(fig, fname)
 # %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
-    hover_name='Sample ID',
+    hover_name=params.index_col[0],
     # hover_data=analysis.df_meta,
     title=f'First two Principal Components of {analysis.M} most abundant peptides for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
@@ -528,8 +541,10 @@ analysis.df.head()
 # %%
 df = analysis.df
 df = df.join(df_meta[params.meta_date_col])
-df = df.set_index(params.meta_date_col).sort_index().to_period('min').T
-df
+df = df.set_index(params.meta_date_col).sort_index()
+if not params.meta_date_col == 'PlaceholderTime':
+    df.to_period('min')
+df = df.T
 
 # %%
 ax = df.boxplot(rot=80, figsize=(20, 10), fontsize='large', showfliers=False, showcaps=False)
@@ -552,25 +567,24 @@ df.stack().describe(percentiles=np.linspace(0.05, 0.95, 10))
 #   - the machine will be not use for intermediate periods
 
 # %%
-dates = df_meta[params.meta_date_col].sort_values()
-dates.name = 'date'
-median_sample_intensity = (analysis.df
-                           .median(axis=1)
-                           .to_frame('median intensity'))
-median_sample_intensity = median_sample_intensity.join(dates)
+if not params.meta_date_col == 'PlaceholderTime':
+    dates = df_meta[params.meta_date_col].sort_values()
+    # dates.name = 'date'
+    median_sample_intensity = (analysis.df
+                               .median(axis=1)
+                               .to_frame('median intensity'))
+    median_sample_intensity = median_sample_intensity.join(dates)
 
-ax = median_sample_intensity.plot.scatter(x='date', y='median intensity',
-                                          rot=90,
-                                          fontsize='large',
-                                          figsize=(20, 10),
-                                          xticks=vaep.plotting.select_dates(
-                                              median_sample_intensity['date'])
-                                          )
-fig = ax.get_figure()
-figures['median_scatter'] = folder_figures / 'median_scatter'
-vaep.savefig(fig, figures['median_scatter'])
-
-
+    ax = median_sample_intensity.plot.scatter(x=dates.name, y='median intensity',
+                                              rot=90,
+                                              fontsize='large',
+                                              figsize=(20, 10),
+                                              xticks=vaep.plotting.select_dates(
+                                                  median_sample_intensity[dates.name])
+                                              )
+    fig = ax.get_figure()
+    figures['median_scatter'] = folder_figures / 'median_scatter'
+    vaep.savefig(fig, figures['median_scatter'])
 
 # %% [markdown]
 # - the closer the labels are there denser the samples are measured around that time.
