@@ -80,6 +80,10 @@ meta_cat_col = 'Thermo Scientific instrument model'
 
 # %%
 # select_N = 50
+# fn_rawfile_metadata = ''
+# meta_date_col = ''
+# meta_cat_col = ''
+# min_RT_time = ''
 
 # %%
 # # peptides
@@ -111,7 +115,7 @@ class DataConfig:
     feat_prevalence: Union[int, float] = 0.25 # Minum number or fraction of feature prevalence across samples to be kept
     sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
     select_N:int = None # sample a certain number of samples
-    min_RT_time: Union[int, float] = 120
+    min_RT_time: Union[int, float] = None # set to None per default
     index_col: Union[
         str, int
     ] = "Sample ID"  # Can be either a string or position (typical 0 for first column)
@@ -212,7 +216,15 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
 # %%
-df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
+if params.fn_rawfile_metadata:
+    df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
+else:
+    logger.warning(f"No metadata for samples provided, create placeholder.")
+    if params.meta_date_col:
+        raise ValueError(f"No metadata provided, but data column set: {params.meta_date_col}")
+    if params.meta_cat_col:
+        raise ValueError(f"No metadata provided, but data column set: {params.meta_cat_col}")
+    df_meta = pd.DataFrame(index=analysis.df.index)
 df_meta = df_meta.loc[analysis.df.index.to_list()] # index is sample index
 if df_meta.index.name is None:
     df_meta.index.name = params.index_col[0]
@@ -261,7 +273,13 @@ meta_stats
 # subset with variation
 
 # %%
-meta_stats.loc[:, (meta_stats.loc['unique'] > 1) |  (meta_stats.loc['std'] > 0.1)]
+try:
+    display(meta_stats.loc[:, (meta_stats.loc['unique'] > 1) |  (meta_stats.loc['std'] > 0.1)])
+except KeyError:
+    if 'std' in meta_stats.index:
+        display(meta_stats.loc[:, (meta_stats.loc['std'] > 0.1)])
+    if 'unique' in meta_stats.index:
+        display(meta_stats.loc[:, (meta_stats.loc['std'] > 0.1)])
 
 # %% [markdown]
 # Optional, if using ThermoRawFileParser: check some columns describing settings
