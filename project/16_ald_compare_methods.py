@@ -43,7 +43,7 @@ target = 'kleiner'
 out_folder = 'diff_analysis'
 
 disease_ontology = 5082  # code from https://disease-ontology.org/
-f_annotations = 'data/single_datasets/ald_plasma_proteinGroups_annotations.csv' # snakemake -> copy to experiment folder
+f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
 # %% tags=[]
@@ -192,8 +192,6 @@ to_plot
 # %%
 to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot['VAE']).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
-
-# %%
 
 # %% [markdown]
 # ## Differences plotted

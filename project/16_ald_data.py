@@ -29,8 +29,9 @@ pd.options.display.max_columns = 50
 pd.options.display.max_rows = 100
 
 # %%
-folder_data = Path('data/applications/')
-folder_data_out = Path('data/single_datasets/')
+folder_data = Path('data/ALD_study/')
+folder_data_out = folder_data / 'processed'
+folder_data_out.mkdir(parents=True, exist_ok=True)
 folder_run = Path('runs/appl_ald_data')
 folder_run.mkdir(parents=True, exist_ok=True)
 

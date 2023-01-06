@@ -1,4 +1,4 @@
-fn_rawfile_metadata: 'data/single_datasets/raw_meta.csv'
+fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
 file_format: pkl
 latent_dim: 10
 hidden_layers: "64"

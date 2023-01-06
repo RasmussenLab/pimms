@@ -54,8 +54,8 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
-fn_clinical_data = "data/single_datasets/ald_metadata_cli.csv"
-fn_qc_samples = 'data/single_datasets/qc_plasma_proteinGroups.pkl'
+fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
+fn_qc_samples = 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 
 
 target: str = 'kleiner'

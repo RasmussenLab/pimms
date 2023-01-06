@@ -46,11 +46,6 @@ target = 'kleiner'
 out_folder = 'diff_analysis'
 file_format='pkl'
 
-disease_ontology = 5082  # code from https://disease-ontology.org/
-# snakemake -> copy to experiment folder
-f_annotations = 'data/single_datasets/ald_plasma_proteinGroups_annotations.csv'
-annotaitons_gene_col = 'PG.Genes'
-
 # %% tags=[]
 params = vaep.nb.get_params(args, globals=globals())
 params
@@ -76,8 +71,6 @@ differences = pd.read_excel(files_in['diff_analysis'], sheet_name='differences',
 differences[('comp','diff_qvalue')]  = (differences[('RSN', 'qvalue')] - differences[('VAE', 'qvalue')]).abs()
 differences = differences.sort_values(('comp','diff_qvalue'), ascending=False)
 differences
-
-# %%
 
 # %% [markdown]
 # ## Measurments
@@ -108,18 +101,6 @@ pg_selected, gene_selected
 
 # %%
 feat_observed = data[pg_selected].dropna()
-
-# %%
-
-
-
-# min_bin, max_bin = map(int,
-#                        ( min(map(lambda df: df.min(), dfs)),
-#                          max(map(lambda df: df.max(), dfs))
-#                    ))
-
-# bins = range(min_bin, max_bin+1, 1)
-# min_bin, max_bin
 
 # %%
 # axes = axes.ravel()

@@ -57,7 +57,7 @@ nb='16_ald_ml_new_feat.ipynb'
 rule ml_comparison:
     input:
         nb=nb,
-        fn_clinical_data="data/single_datasets/ald_metadata_cli.csv",
+        fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
     output:
         sel_feat=stem+'mrmr_feat_by_model.xlsx',
         nb=stem+nb,
