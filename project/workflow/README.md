@@ -42,14 +42,14 @@ rule graph is
 - see if model trains stable on one dataset
 
 ```bash
-snakemake --snakefile workflow/SnakefileRepeatBest.smk -n -p
+snakemake --snakefile workflow/Snakefile_best_repeated.smk -n -p
 ```
 
 ### Repeated training of models across machine datasets
 - see how model perform across similar datasets
 
 ```
-snakemake --snakefile workflow\Snakefile_across_datasets.smk -p -c1 -n
+snakemake --snakefile workflow\Snakefile_best_across_datasets.smk -p -c1 -n
 ```
 
 ## ALD data

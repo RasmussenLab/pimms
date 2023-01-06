@@ -221,10 +221,6 @@ val_pred_fake_na
 test_pred_fake_na = data.test_y.to_frame(name='observed')
 test_pred_fake_na.describe()
 
-# %% [markdown]
-# ### PCA plot of training data
-#
-#  > moved to data selection notebook (`14_experiment_03_data.ipynb`)
 
 # %% [markdown]
 # ## Collaborative Filtering

@@ -171,7 +171,7 @@ vaep.plotting.savefig(fig, name='feat_per_sample_all',
 # - CV
 
 # %%
-# see 02_data_exploration_peptides
+# see misc_data_exploration_peptides
 
 # %% [markdown]
 # ## Meta Data

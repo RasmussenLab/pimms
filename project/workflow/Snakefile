@@ -15,15 +15,15 @@ rule all:
     input: 
         f"{folder_experiment}/figures/performance_methods_by_completness.pdf"
 
-nb= '14_performance_plots.ipynb'
+nb= '01_2_performance_plots.ipynb'
 rule comparison:
     input:
         nb=nb,
         runs=expand("{folder_experiment}/{nb}",
             folder_experiment=config['folder_experiment'],
-            nb=['14_experiment_03_train_collab.ipynb',
-                '14_experiment_03_train_dae.ipynb',
-                '14_experiment_03_train_vae.ipynb'
+            nb=['01_1_train_collab.ipynb',
+                '01_1_train_dae.ipynb',
+                '01_1_train_vae.ipynb'
                 ])
     output:
         pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
@@ -37,7 +37,7 @@ rule comparison:
         " && jupyter nbconvert --to html {output.nb}"
 
 # separate workflow by level -> provide custom configs
-nb = '14_experiment_03_data.ipynb'
+nb = '01_0_split_data.ipynb'
 rule create_splits:
     input:
         nb=nb,

@@ -1,25 +1,25 @@
 notebookes = [
-    "01_FASTA_data_agg_by_gene.ipynb",
-    "01_FASTA_tryptic_digest.ipynb",
+    "misc_FASTA_data_agg_by_gene.ipynb",
+    "misc_FASTA_tryptic_digest.ipynb",
     # "2_clustering_proteins.ipynb", # Reference Annelaura
-    "02_data_available.ipynb",
-    "02_data_exploration_peptides.ipynb",
-    "02_data_exploration_proteins.ipynb",
-    "02_metadata_rawfiles.ipynb",
-    "02_summaries.ipynb",
-    "04_all_raw_files.ipynb",
-    "11_select_data.ipynb",
-    "11_training_data_exploration_peptides.ipynb",
-    "14_experiment_03_data_support.ipynb",         
-    "14_experiment_03_data.ipynb",                 
+    "erda_data_available.ipynb",
+    "misc_data_exploration_peptides.ipynb",
+    "misc_data_exploration_proteins.ipynb",
+    "00_0_hela_metadata_rawfiles.ipynb",
+    "00_1_hela_MQ_summaries.ipynb",
+    "00_2_hela_all_raw_files.ipynb",
+    "misc_protein_support.ipynb",
+    "00_5_training_data_exploration.ipynb",
+    "00_4_development_dataset_support.ipynb",         
+    "01_0_split_data.ipynb",                 
     "14_experiment_03_dataloaders.ipynb",          
     "14_experiment_03_dataset.ipynb",              
-    # "14_experiment_03_hyperpara_analysis.ipynb",   # needs parametrization for testing
+    # "02_3_grid_search_analysis.ipynb",   # needs parametrization for testing
     "14_experiment_03_latent_space_analysis.ipynb",
-    "15_embeddings.ipynb",
-    "15_illustrations.ipynb",
-    "15_pytorch_fastai_dataloaders.ipynb",
-    "15_pytorch_fastai_dataset.ipynb",
+    "misc_embeddings.ipynb",
+    "misc_illustrations.ipynb",
+    "misc_pytorch_fastai_dataloaders.ipynb",
+    "misc_pytorch_fastai_dataset.ipynb",
     "erda_00_maxquant_file_reader.ipynb",
     "erda_01_mq_aggregate_summaries.ipynb",
     "erda_02_mq_count_peptides.ipynb",
@@ -27,7 +27,7 @@ notebookes = [
     # "erda_11_select_training_data.ipynb",
     # "erda_12_explore_raw_MQ_data.ipynb",
     # "VAEP_POC.ipynb", # to discard
-    # "id_mapper.ipynb", # to discard
+    # "misc_id_mapper.ipynb", # to discard
 ]
 
 rule run:
