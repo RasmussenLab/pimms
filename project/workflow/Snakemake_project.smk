@@ -14,13 +14,13 @@ rule all:
         'data/files_selected_metadata.csv',
         'data/files_selected_per_instrument.yaml',
         'data/files_selected_per_instrument_counts.csv', # counts
-        f'{nb_outfolder}/{"04_all_raw_files.ipynb"}',
+        f'{nb_outfolder}/{"00_2_hela_all_raw_files.ipynb"}',
         'data/samples_selected.yaml',
         expand('data/single_datasets/{dataset}/{OUT_INFO}.json',
         dataset=DATASETS,
         OUT_INFO=OUT_INFO)
 
-nb='04_all_raw_files.ipynb'
+nb='00_2_hela_all_raw_files.ipynb'
 rule metadata:
     input:
         nb=nb,
@@ -46,7 +46,7 @@ rule metadata:
         " -p FN_PEPTIDE_INTENSITIES {input.intensities}"
         " && jupyter nbconvert --to html {output.nb}"
 
-nb = "02_summaries.ipynb"
+nb = "00_1_hela_MQ_summaries.ipynb"
 rule summaries:
     input:
         nb=nb,
@@ -59,7 +59,7 @@ rule summaries:
         " -r FN_ALL_SUMMARIES {input.summaries}"
         " && jupyter nbconvert --to html {output.nb}"
 
-nb = "02_metadata_rawfiles.ipynb"
+nb = "00_0_hela_metadata_rawfiles.ipynb"
 rule metadata_rawfiles:
     input:
         'data/rawfile_metadata.csv',
@@ -77,7 +77,7 @@ rule metadata_rawfiles:
 
 
 
-nb='13_training_data_splitting.ipynb'
+nb='00_3_13_hela_development_dataset_splitting.ipynb'
 outfolder=f'single_datasets'
 ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
 rule split_data:

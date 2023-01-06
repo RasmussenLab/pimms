@@ -23,9 +23,9 @@ rule plot:
     params:
         repitition_name=config['repitition_name']
     log:
-        notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
+        notebook=f"{config['folder']}/03_1_best_models_comparison.ipynb"
     notebook:
-        "../14_best_models_repeated.ipynb"
+        "../03_1_best_models_comparison.ipynb"
 
 
 rule collect_metrics:
@@ -80,7 +80,7 @@ def get_fn_intensities(wildcards):
     return ret
 
 
-nb='14_experiment_03_data.ipynb'
+nb='01_0_split_data.ipynb'
 rule create_splits:
     input:
         nb=nb,
@@ -101,11 +101,11 @@ rule create_splits:
 
 rule train_models:
     input:
-        nb="14_experiment_03_train_{model}.ipynb",
+        nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/{{dataset}}/data/train_X.pkl",
         configfile=f"{config_folder}/{{model}}.yaml"
     output:
-        nb=f"{folder_experiment}/{{dataset}}/14_experiment_03_train_{{model}}.ipynb",
+        nb=f"{folder_experiment}/{{dataset}}/01_1_train_{{model}}.ipynb",
         metric=f"{folder_experiment}/{{dataset}}/metrics/metrics_{{model}}.json",
         config=f"{folder_experiment}/{{dataset}}/models/model_config_{{model}}.yaml"
     params:

@@ -21,7 +21,7 @@ files:
 - remote/path/file2.raw
 ```
 
-The list of files is fetched from [`project/04_all_raw_files.ipynb`](../../project/04_all_raw_files.ipynb) notebook.
+The list of files is fetched from [`project/00_2_hela_all_raw_files.ipynb`](../../project/00_2_hela_all_raw_files.ipynb) notebook.
 
 
 Then invoke the workflow with the list of config files

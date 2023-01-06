@@ -7,6 +7,7 @@ levels:
 - proteinGroups
 - aggPeptides
 - evidence 
+fn_rawfile_metadata: data/files_selected_metadata.csv
 config_split: 'config/{level}_split.yaml'
 config_train: 'config/{level}_train.yaml'
 repitition_name: 'repeat'

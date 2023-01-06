@@ -25,9 +25,9 @@ rule plot:
     params:
         repitition_name=config['repitition_name']
     log:
-        notebook=f"{config['folder']}/14_best_models_repeated.ipynb"
+        notebook=f"{config['folder']}/03_1_best_models_comparison.ipynb"
     notebook:
-        "../14_best_models_repeated.ipynb"
+        "../03_1_best_models_comparison.ipynb"
 
 rule collect_metrics:
     input:
@@ -88,7 +88,7 @@ rule collect_metrics:
         metrics.to_excel(FOLDER/ "metrics.xlsx")
         metrics.to_pickle(FOLDER/ "metrics.pkl")
 
-nb='14_experiment_03_data.ipynb'
+nb='01_0_split_data.ipynb'
 use rule create_splits from single_experiment as splits with:
     input:
         nb=nb,
@@ -102,11 +102,11 @@ use rule create_splits from single_experiment as splits with:
 
 rule train_models:
     input:
-        nb="14_experiment_03_train_{model}.ipynb",
+        nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
         configfile=f"{config_folder}/{{model}}.yaml"
     output:
-        nb=f"{folder_experiment}/14_experiment_03_train_{{model}}_{{repeat}}.ipynb",
+        nb=f"{folder_experiment}/01_1_train_{{model}}_{{repeat}}.ipynb",
         metric=f"{folder_experiment}/metrics/metrics_{{model}}_{{repeat}}.json",
         config=f"{folder_experiment}/models/model_config_{{model}}_{{repeat}}.yaml"
     params:

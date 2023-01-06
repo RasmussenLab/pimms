@@ -46,9 +46,9 @@ rule results:
             ),
         f'{folder_experiment}/metrics_long_df.csv'
     log:
-        notebook=f"{folder_experiment}/14_experiment_03_hyperpara_analysis.ipynb"
+        notebook=f"{folder_experiment}/02_3_grid_search_analysis.ipynb"
     notebook:
-        "../14_experiment_03_hyperpara_analysis.ipynb"
+        "../02_3_grid_search_analysis.ipynb"
 
 rule compare_search_by_dataset:
     input:
@@ -61,7 +61,7 @@ rule compare_search_by_dataset:
     notebook:
         "../14_best_models_over_all_data.ipynb"
 
-nb='14_experiment_03_data.ipynb'
+nb='01_0_split_data.ipynb'
 use rule create_splits from single_experiment as splits with:
     input:
         nb=nb,
@@ -76,12 +76,12 @@ use rule create_splits from single_experiment as splits with:
 # use rule train_models from single_experiment as train_ae_models with:
 rule train_ae_models:
     input:
-        nb="14_experiment_03_train_{ae_model}.ipynb",
+        nb="01_1_train_{ae_model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
         configfile=f"{folder_experiment}/"
                    f"{name_template}/config_train_HL_{{hidden_layers}}.yaml"
     output:
-        nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_HL_{{hidden_layers}}_{{ae_model}}.ipynb",
+        nb=f"{folder_experiment}/{name_template}/01_1_train_HL_{{hidden_layers}}_{{ae_model}}.ipynb",
         metric=f"{folder_experiment}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
         config=f"{folder_experiment}/{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml"
     params:
@@ -97,12 +97,12 @@ rule train_ae_models:
 
 use rule train_models from single_experiment as train_collab_model with:
     input:
-        nb="14_experiment_03_train_{collab_model}.ipynb",
+        nb="01_1_train_{collab_model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
         configfile=f"{folder_experiment}/"
                    f"{name_template}/config_train_collab.yaml"
     output:
-        nb=f"{folder_experiment}/{name_template}/14_experiment_03_train_{{collab_model}}.ipynb",
+        nb=f"{folder_experiment}/{name_template}/01_1_train_{{collab_model}}.ipynb",
         metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{collab_model}}.json",
         config=f"{folder_experiment}/{name_template}/models/model_config_{{collab_model}}.yaml"
     threads: 10
@@ -169,9 +169,9 @@ rule collect_all_configs:
     output:
         out = f"{folder_experiment}/all_configs.json",
     log:
-        notebook=f"{folder_experiment}/14_aggregate_configs.ipynb"
+        notebook=f"{folder_experiment}/02_2_aggregate_configs.ipynb"
     notebook:
-        "../14_aggregate_configs.py.ipynb"
+        "../02_2_aggregate_configs.py.ipynb"
 
 
 rule collect_metrics:
@@ -185,6 +185,6 @@ rule collect_metrics:
     output:
         out = f"{folder_experiment}/all_metrics.json",
     log:
-        notebook=f"{folder_experiment}/14_collect_all_metrics.ipynb"
+        notebook=f"{folder_experiment}/02_1_aggregate_metrics.ipynb"
     notebook:
-        "../14_collect_all_metrics.py.ipynb"
+        "../02_1_aggregate_metrics.py.ipynb"
