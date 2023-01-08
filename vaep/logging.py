@@ -46,7 +46,6 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     >>> _ = setup_logger_w_file() # 
 
     """
-    logger = logging.getLogger()
     logger.setLevel(level)
     logger.handlers = []  # remove any handler in case you reexecute the cell
 

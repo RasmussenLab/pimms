@@ -481,7 +481,6 @@ vaep.savefig(ax.get_figure(), fname)
 y_col = 'prop. missing'
 x_col = 'Intensity rounded (based on N observations)'
 ax = missing_by_median[[x_col, y_col]].plot.box(by=x_col)
-ax = ax[0]
 _ = ax.set_title('')
 _ = ax.set_ylabel(y_col)
 _ = ax.set_xlabel(x_col)
