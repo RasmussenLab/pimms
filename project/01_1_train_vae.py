@@ -62,13 +62,17 @@ from vaep.io import datasplits
 # from vaep.io.dataloaders import get_dls, get_test_dl
 from vaep import sampling
 
-
 import vaep.nb as config
-from vaep.logging import setup_logger
-logger = setup_logger(logger=logging.getLogger('vaep'))
+logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
+
+
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
 
 # %% [markdown]
 # Papermill script parameters:
@@ -91,33 +95,43 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'VAE'
 save_pred_real_na:bool=False # Save all predictions for real na
+# metadata -> defaults for metadata extracted from machine data
+meta_date_col = 'Content Creation Date'
+meta_cat_col = 'Thermo Scientific instrument model'
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # latent_dim = 30
-# # epochs_max = 2
+epochs_max = 2
 # # force_train = False
 
 # %% [markdown]
 # Some argument transformations
 
+
 # %%
-args = config.Config()
-args.fn_rawfile_metadata = fn_rawfile_metadata
-del fn_rawfile_metadata
-args.folder_experiment = Path(folder_experiment)
-del folder_experiment
+args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
+for k in args.keys():
+    try:
+        del globals()[k]
+    except KeyError:
+        logger.warning(f"Key not found in globals(): {k}")
+args
+
+# %%
+# #ToDo: update caching automatically
+args = config.Config().from_dict(args)
+
+args.overwrite_entry('folder_experiment', Path(args.folder_experiment))
 args.folder_experiment.mkdir(exist_ok=True, parents=True)
-args.file_format = file_format
-del file_format
-args.out_folder = args.folder_experiment
-if folder_data:
+
+if args.folder_data:
     args.data = Path(folder_data)
 else:
     args.data = args.folder_experiment / 'data'
 assert args.data.exists(), f"Directory not found: {args.data}"
-del folder_data
+# del folder_data
 args.out_figures = args.folder_experiment / 'figures'
 args.out_figures.mkdir(exist_ok=True)
 args.out_metrics = args.folder_experiment / 'metrics'
@@ -126,29 +140,14 @@ args.out_models = args.folder_experiment / 'models'
 args.out_models.mkdir(exist_ok=True)
 args.out_preds = args.folder_experiment / 'preds'
 args.out_preds.mkdir(exist_ok=True)
-# args.n_training_samples_max = n_training_samples_max; del n_training_samples_max
-args.epochs_max = epochs_max
-del epochs_max
-args.batch_size = batch_size
-del batch_size
-args.cuda = cuda
-del cuda
-args.latent_dim = latent_dim
-del latent_dim
-args.force_train = force_train
-del force_train
-args.sample_idx_position = sample_idx_position
-del sample_idx_position
-args.save_pred_real_na = save_pred_real_na
-del save_pred_real_na
 
-print(hidden_layers)
-if isinstance(hidden_layers, str):
-    args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
+if isinstance(args.hidden_layers, str):
+    args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
 else:
-    raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
-del hidden_layers
+    raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
+
 args
+
 
 # %% [markdown]
 # Some naming conventions
@@ -190,8 +189,11 @@ else:
 # load meta data for splits
 
 # %%
-df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
-df_meta.loc[data.train_X.index.levels[0]]
+if args.fn_rawfile_metadata:
+    df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
+    display(df_meta.loc[data.train_X.index.levels[0]])
+else:
+    df_meta = None
 
 # %% [markdown]
 # ## Initialize Comparison
@@ -341,7 +343,7 @@ vaep.io.dump_json(
         ana_vae.params, types=[
             (torch.nn.modules.module.Module, lambda m: str(m))
         ]),
-    args.out_models / TEMPLATE_MODEL_PARAMS.format(model_key.lower()))
+    args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key.lower()))
 
 # restore original value
 ana_vae.params['last_decoder_activation'] = Sigmoid
@@ -367,7 +369,7 @@ args.epoch_vae
 # %% tags=[]
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_vae.learn, model_key, folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
+fig = models.plot_training_losses(ana_vae.learn, args.model_key, folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
 
 # %% [markdown]
 # ### Predictions
@@ -417,17 +419,19 @@ df_vae_latent = vaep.model.get_latent_space(ana_vae.model.get_mu_and_logvar,
 df_vae_latent
 
 # %%
-ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
-                                          df_meta,
-                                          model_key,
-                                          folder=args.out_figures)
-figures[f'latent_{model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
-    'Content Creation Date')
+if args.meta_date_col and df_meta is not None:
+    ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
+                                            df_meta,
+                                            args.model_key,
+                                            folder=args.out_figures)
+    figures[f'latent_{args.model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
+        args.meta_date_col)
 
 # %%
 # Could be created in data as an ID from three instrument variables
-_cat = 'ms_instrument'
-figures[f'latent_{model_key.lower()}_by_{_cat}'], ax = ana_latent_vae.plot_by_category('instrument serial number')
+if args.meta_cat_col and df_meta is not None:
+    figures[f'latent_{args.model_key.lower()}_by_{"_".join(args.meta_cat_col.split())}'], ax = ana_latent_vae.plot_by_category(
+        args.meta_cat_col)
 
 # %%
 feat_freq_val = val_pred_fake_na['observed'].groupby(level=-1).count()
@@ -498,7 +502,7 @@ added_metrics
 # ### Save all metrics as json
 
 # %% tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key.lower()}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key.lower()}.json')
 d_metrics
 
 
@@ -586,11 +590,10 @@ fig.show()
 # ## Save predictions
 
 # %%
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key.lower()}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key.lower()}.csv")
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
+args.dump(fname=args.out_models/ f"model_config_{args.model_key.lower()}.yaml")
 args.model_type = 'VAE'
-args.model_key = model_key
 args
