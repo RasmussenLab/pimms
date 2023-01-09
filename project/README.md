@@ -64,10 +64,11 @@ run  | 01_0_split_data.ipynb               | Create train, validation and test d
 run  | 01_1_train_<model>.ipynb            | Train a single model e.g. (VAE, DAE, CF)
 run  | 01_2_performance_plots.ipynb        | Performance of single model run
 Grid search and best model analysis |
-grid | 02_1_aggregate_metrics.py.ipynb              | Aggregate metrics
-grid | 02_2_aggregate_configs.py.ipynb                | Aggregate model configurations
+grid | 02_1_aggregate_metrics.py.ipynb    | Aggregate metrics
+grid | 02_2_aggregate_configs.py.ipynb    | Aggregate model configurations
 grid | 02_3_grid_search_analysis.ipynb    | Analyze different runs with varying hyperparameters on a dataset
-best | 03_1_best_models_comparison.ipynb                | best model trained repeatedly or across datasets
+grid | 02_4_best_models_over_all_data     | Show best models and best models across data types
+best | 03_1_best_models_comparison.ipynb  | best model trained repeatedly or across datasets
 Applications |
 ald | 16_ald_data.ipynb               | preprocess data -> could be move to data folder
 ald | 16_ald_diff_analysis.ipynb      | differential analysis (DA), dump scores 
