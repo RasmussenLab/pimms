@@ -378,7 +378,7 @@ if args.save_pred_real_na:
     # remove fake_na idx
     idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
     pred_real_na = pred.loc[idx_real_na]
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key.lower()}.csv")
     del mask, idx_real_na, pred_real_na, pred
 
 # %% [markdown]
@@ -567,6 +567,9 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key.lower()}.c
 
 # %% [markdown] tags=[]
 # ## Config
+
+# %%
+figures # switch to fnames?
 
 # %%
 args.dump(fname=args.out_models/ f"model_config_{args.model_key.lower()}.yaml")
