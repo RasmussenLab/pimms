@@ -103,7 +103,7 @@ meta_cat_col = 'Thermo Scientific instrument model'
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # latent_dim = 30
-epochs_max = 2
+# epochs_max = 2
 # # force_train = False
 
 # %% [markdown]
@@ -111,41 +111,16 @@ epochs_max = 2
 
 
 # %%
-args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
-for k in args.keys():
-    try:
-        del globals()[k]
-    except KeyError:
-        logger.warning(f"Key not found in globals(): {k}")
+args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
-# #ToDo: update caching automatically
-args = config.Config().from_dict(args)
-
-args.overwrite_entry('folder_experiment', Path(args.folder_experiment))
-args.folder_experiment.mkdir(exist_ok=True, parents=True)
-
-if args.folder_data:
-    args.data = Path(folder_data)
-else:
-    args.data = args.folder_experiment / 'data'
-assert args.data.exists(), f"Directory not found: {args.data}"
-# del folder_data
-args.out_figures = args.folder_experiment / 'figures'
-args.out_figures.mkdir(exist_ok=True)
-args.out_metrics = args.folder_experiment / 'metrics'
-args.out_metrics.mkdir(exist_ok=True)
-args.out_models = args.folder_experiment / 'models'
-args.out_models.mkdir(exist_ok=True)
-args.out_preds = args.folder_experiment / 'preds'
-args.out_preds.mkdir(exist_ok=True)
+args = vaep.nb.args_from_dict(args)
 
 if isinstance(args.hidden_layers, str):
     args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
 else:
     raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
-
 args
 
 
@@ -583,15 +558,15 @@ fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('
                  )
 fig.show()
 
-# %% [markdown] tags=[]
-# ## Config
-
 # %% [markdown]
 # ## Save predictions
 
 # %%
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key.lower()}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key.lower()}.csv")
+
+# %% [markdown] tags=[]
+# ## Config
 
 # %%
 args.dump(fname=args.out_models/ f"model_config_{args.model_key.lower()}.yaml")

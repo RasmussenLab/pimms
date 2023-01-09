@@ -71,13 +71,17 @@ def get_params(args:dict.keys, globals, remove=True) -> dict:
     params = {k: v for k, v in globals.items() if k not in args and k[0] != '_'}
     if not remove:
         return params
-    for k in params.keys():
+    remove_keys_from_globals(params.keys(), globals=globals)
+    return params
+
+
+def remove_keys_from_globals(keys: dict.keys, globals: dict):
+    for k in keys:
         try:
             del globals[k]
             logger.info(f"Removed from global namespace: {k}")
         except KeyError:
-            pass
-    return params
+            logger.warning(f"Key not found in globals(): {k}")
 
 
 def add_default_paths(cfg: Config, folder_data='', out_root=None):
@@ -102,3 +106,13 @@ def add_default_paths(cfg: Config, folder_data='', out_root=None):
     cfg.out_preds = cfg.folder_experiment / 'preds'
     cfg.out_preds.mkdir(exist_ok=True)
     return cfg
+
+
+def args_from_dict(args: dict) -> Config:
+    assert 'folder_experiment' in args, f'Specify "folder_experiment" in {args}.'
+    args['folder_experiment'] = Path(args['folder_experiment'])
+    args = Config().from_dict(args)
+    args.folder_experiment.mkdir(exist_ok=True, parents=True)
+    add_default_paths(args, folder_data=args.__dict__.get('folder_data', ''),
+                      out_root=args.__dict__.get('out_root', None))
+    return args
