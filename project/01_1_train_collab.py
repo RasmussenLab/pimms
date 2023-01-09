@@ -74,6 +74,11 @@ figures = {}  # collection of ax or figures
 # %% [markdown]
 # Papermill script parameters:
 
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
+
 # %% tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
@@ -96,59 +101,25 @@ save_pred_real_na:bool=False # Save all predictions for real na
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
+# epochs_max = 2
 
 # %% [markdown]
 # Some argument transformations
 
 # %%
-args = config.Config()
-args.fn_rawfile_metadata = fn_rawfile_metadata
-del fn_rawfile_metadata
-args.folder_experiment = Path(folder_experiment)
-del folder_experiment
-args.folder_experiment.mkdir(exist_ok=True, parents=True)
-args.file_format = file_format
-del file_format
-args.out_folder = args.folder_experiment
-if folder_data:
-    args.data = Path(folder_data)
-else:
-    args.data = args.folder_experiment / 'data'
-assert args.data.exists(), f"Directory not found: {args.data}"
-del folder_data
-args.out_figures = args.folder_experiment / 'figures'
-args.out_figures.mkdir(exist_ok=True)
-args.out_metrics = args.folder_experiment / 'metrics'
-args.out_metrics.mkdir(exist_ok=True)
-args.out_models = args.folder_experiment / 'models'
-args.out_models.mkdir(exist_ok=True)
-args.out_preds = args.folder_experiment / 'preds'
-args.out_preds.mkdir(exist_ok=True)
-# args.n_training_samples_max = n_training_samples_max; del n_training_samples_max
-args.epochs_max = epochs_max
-del epochs_max
-args.batch_size_collab = batch_size_collab
-del batch_size_collab
-args.cuda = cuda
-del cuda
-args.latent_dim = latent_dim
-del latent_dim
-args.force_train = force_train
-del force_train
-args.sample_idx_position = sample_idx_position
-del sample_idx_position
-args.save_pred_real_na = save_pred_real_na
-del save_pred_real_na
+args = vaep.nb.get_params(args, globals=globals())
+args
+
+# %%
+args = vaep.nb.args_from_dict(args)
 
 # # Currently not needed -> DotProduct used, not a FNN
-# print(hidden_layers)
-# if isinstance(hidden_layers, str):
-#     args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
-#     # list(map(int, hidden_layers.split()))
+# if isinstance(args.hidden_layers, str):
+#     args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
 # else:
-#     raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
-# del hidden_layers
+#     raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
 args
+
 
 # %% [markdown]
 # Some naming conventions
@@ -246,6 +217,7 @@ ana_collab = models.collab.CollabAnalysis(datasplits=data,
 print("Args:")
 pprint(ana_collab.model_kwargs)
 
+
 # %%
 ana_collab.model = EmbeddingDotBias.from_classes(
     classes=ana_collab.dls.classes,
@@ -326,7 +298,7 @@ if args.save_pred_real_na:
     dl_real_na = ana_collab.dls.test_dl(idx_real_na.to_frame())
     pred_real_na, _ = ana_collab.learn.get_preds(dl=dl_real_na)
     pred_real_na = pd.Series(pred_real_na, idx_real_na)
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key.lower()}.csv")
     del mask, idx_real_na, pred_real_na, dl_real_na
     # use indices of test and val to drop fake_na
     # get remaining predictions
@@ -390,7 +362,7 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
 
 
 # %% tags=[]
@@ -474,12 +446,15 @@ fig.show()
 # ## Save predictions
 
 # %%
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 
 # %% [markdown] tags=[]
 # ## Config
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{model_key}.yaml")
+args.model_type = 'collab'
+args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
 args
+
+# %%

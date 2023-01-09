@@ -74,6 +74,12 @@ figures = {}  # collection of ax or figures
 # %% [markdown]
 # Papermill script parameters:
 
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
+
+
 # %% tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
@@ -92,6 +98,9 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'DAE'
 save_pred_real_na:bool=False # Save all predictions for real na
+# metadata -> defaults for metadata extracted from machine data
+meta_date_col = 'Content Creation Date'
+meta_cat_col = 'Thermo Scientific instrument model'
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -103,54 +112,20 @@ save_pred_real_na:bool=False # Save all predictions for real na
 # %% [markdown]
 # Some argument transformations
 
-# %%
-args = config.Config()
-args.fn_rawfile_metadata = fn_rawfile_metadata
-del fn_rawfile_metadata
-args.folder_experiment = Path(folder_experiment)
-del folder_experiment
-args.folder_experiment.mkdir(exist_ok=True, parents=True)
-args.file_format = file_format
-del file_format
-args.out_folder = args.folder_experiment
-if folder_data:
-    args.data = Path(folder_data)
-else:
-    args.data = args.folder_experiment / 'data'
-assert args.data.exists(), f"Directory not found: {args.data}"
-del folder_data
-args.out_figures = args.folder_experiment / 'figures'
-args.out_figures.mkdir(exist_ok=True)
-args.out_metrics = args.folder_experiment / 'metrics'
-args.out_metrics.mkdir(exist_ok=True)
-args.out_models = args.folder_experiment / 'models'
-args.out_models.mkdir(exist_ok=True)
-args.out_preds = args.folder_experiment / 'preds'
-args.out_preds.mkdir(exist_ok=True)
-# args.n_training_samples_max = n_training_samples_max; del n_training_samples_max
-args.epochs_max = epochs_max
-del epochs_max
-args.batch_size = batch_size
-del batch_size
-args.cuda = cuda
-del cuda
-args.latent_dim = latent_dim
-del latent_dim
-args.force_train = force_train
-del force_train
-args.sample_idx_position = sample_idx_position
-del sample_idx_position
-args.save_pred_real_na = save_pred_real_na
-del save_pred_real_na
 
-print(hidden_layers)
-if isinstance(hidden_layers, str):
-    args.hidden_layers = [int(x) for x in hidden_layers.split('_')]
-    # list(map(int, hidden_layers.split()))
-else:
-    raise ValueError(f"hidden_layers is of unknown type {type(hidden_layers)}")
-del hidden_layers
+# %%
+args = vaep.nb.get_params(args, globals=globals())
 args
+
+# %%
+args = vaep.nb.args_from_dict(args)
+
+if isinstance(args.hidden_layers, str):
+    args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
+else:
+    raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
+args
+
 
 # %% [markdown]
 # Some naming conventions
@@ -316,7 +291,7 @@ ana_dae.params['suggested_inital_lr'] = suggested_lr.valley
 suggested_lr
 
 # %%
-vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(model_key.lower()))
+vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key.lower()))
 
 # %% [markdown]
 # ### Training
@@ -332,7 +307,7 @@ ana_dae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 # - differences in number of total measurements not changed
 
 # %%
-fig = models.plot_training_losses(learner=ana_dae.learn, name=model_key, folder=args.out_figures)
+fig = models.plot_training_losses(learner=ana_dae.learn, name=args.model_key, folder=args.out_figures)
 
 # %% [markdown]
 # #### Loss normalized by total number of measurements
@@ -340,7 +315,7 @@ fig = models.plot_training_losses(learner=ana_dae.learn, name=model_key, folder=
 # %%
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_dae.learn, model_key,
+fig = models.plot_training_losses(ana_dae.learn, args.model_key,
                                   folder=args.out_figures,
                                   norm_factors=[N_train_notna, N_val_notna])  # non-normalized plot of total loss
 # %% [markdown]
@@ -387,7 +362,7 @@ if args.save_pred_real_na:
     # remove fake_na idx
     idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
     pred_real_na = pred.loc[idx_real_na]
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{model_key.lower()}.csv")
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key.lower()}.csv")
     del mask, idx_real_na, pred_real_na, pred
 
 
@@ -409,7 +384,7 @@ df_dae_latent
 df_meta
 
 # %%
-ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, model_key, folder=args.out_figures)
+ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, args.model_key, folder=args.out_figures)
 figures['latent_DAE_by_date'], ax = ana_latent_dae.plot_by_date('Content Creation Date')
 
 # %%
@@ -454,7 +429,7 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{model_key.lower()}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key.lower()}.json')
 
 
 # %% tags=[]
@@ -541,18 +516,13 @@ fig.show()
 # ## Save predictions
 
 # %%
-# prediction_dumps = {'val': args.out_preds / f"pred_val_{model_key.lower()}.csv",
-#                     'test': args.out_preds / f"pred_test_{model_key.lower()}.csv"
-#                     }
-# args.prediction_dump_val =  args.out_preds / f"pred_val_{model_key.lower()}.csv"
-# args.prediction_dump_test = args.out_preds / f"pred_test_{model_key.lower()}.csv"
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{model_key.lower()}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{model_key.lower()}.csv")
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key.lower()}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key.lower()}.csv")
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{model_key.lower()}.yaml")
+args.model_type = 'DAE'
+args.dump(fname=args.out_models/ f"model_config_{args.model_key.lower()}.yaml")
 args
 
 # %%
-figures # show save figures 
-
+figures # switch to fnames?
