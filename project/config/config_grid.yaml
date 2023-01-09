@@ -29,7 +29,7 @@ levels:
 - proteinGroups
 - aggPeptides
 - evidence 
-config_split: 'config/{level}_split.yaml'
+config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
 cuda: True

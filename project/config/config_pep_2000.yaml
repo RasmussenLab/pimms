@@ -1,3 +1,0 @@
-QUERY_SUBSET: ms_instrument in ['QE4', ]
-FOLDER: runs/hyperparameters_2000_peptides
-M: 2000
