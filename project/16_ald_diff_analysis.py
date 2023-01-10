@@ -55,7 +55,7 @@ args = dict(globals()).keys()
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
-fn_qc_samples = 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+fn_qc_samples = '' #'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 
 
 target: str = 'kleiner'
@@ -141,16 +141,18 @@ ald_study
 
 # %%
 if args.fn_qc_samples:
+    # Move this to data-preprocessing
     qc_samples = pd.read_pickle(args.fn_qc_samples)
-    qc_samples = qc_samples[ald_study.columns]
     qc_cv_feat = qc_samples.std() / qc_samples.mean()
     qc_cv_feat = qc_cv_feat.rename(qc_samples.columns.name)
     fig, ax = plt.subplots(figsize=(4,7))
     ax = qc_cv_feat.plot.box(ax=ax)
     ax.set_ylabel('Coefficient of Variation')
-    print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
-    ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples)]
     vaep.savefig(fig, name='cv_qc_samples', folder=args.out_figures)
+    print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
+    # only to ald_study data
+    ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples[ald_study.columns])]
+    
 ald_study
 
 # %%

@@ -16,19 +16,19 @@ def select_raw_data(df: pd.DataFrame,
     msg = 'N samples: {}, M feat: {}'
     N, M = df.shape
     logger.info("Initally: " + msg.format(N, M))
-    treshold_completeness = int(M * data_completeness)
-    df = df.dropna(axis=1, thresh=treshold_completeness)
+    min_sample_for_feat = int(N * data_completeness)
+    df = df.dropna(axis=1, thresh=min_sample_for_feat)
     logger.info(
-        f"Dropped features quantified in less than {int(treshold_completeness)} samples.")
+        f"Dropped features quantified in less than {int(min_sample_for_feat)} samples.")
     N, M = df.shape
     logger.info("After feat selection: " + msg.format(N, M))
-    min_n_protein_groups = int(M * frac_protein_groups)
+    min_feat_per_sample = int(M * frac_protein_groups)
     logger.info(
-        f"Min No. of Protein-Groups in single sample: {min_n_protein_groups}")
-    df = df.dropna(axis=0, thresh=min_n_protein_groups)
+        f"Min No. of Protein-Groups in single sample: {min_feat_per_sample}")
+    df = df.dropna(axis=0, thresh=min_feat_per_sample)
     logger.info("Finally: " + msg.format(*df.shape))
 
-    return df, Cutoffs(treshold_completeness, min_n_protein_groups)
+    return df, Cutoffs(min_sample_for_feat, min_feat_per_sample)
 
 
 def select_feat(df_qc:pd.DataFrame, threshold:float=0.4, axis:int=0):
