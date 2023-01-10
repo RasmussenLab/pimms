@@ -89,7 +89,13 @@ scores
 
 # %%
 # ToDo: change in library
-names = {'vae': 'VAE', 'random shifted_imputation': 'RSN'}
+names = {'vae': 'VAE', 'random shifted_imputation': 'RSN', 'collab': 'CF', 'dae': 'DAE'}
+
+assert args.model_key in names.keys(
+), f"Missing model key which was expected: {args.model_key}, to be among {', '.join(names.keys())}"
+
+new_model_key = names[args.model_key]
+
 scores = scores.rename(names, axis=1)
 scores.head()
 
@@ -97,10 +103,6 @@ scores.head()
 models = vaep.nb.Config.from_dict(
     vaep.pandas.index_to_dict(scores.columns.levels[0]))
 vars(models)
-
-# %%
-assert args.model_key.upper() in models.keys(
-), f"Missing model key which was expected: {args.model_key}"
 
 # %%
 scores.describe()
@@ -190,7 +192,8 @@ to_plot
 # ## Plot of intensities for most extreme example
 
 # %%
-to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot['VAE']).abs()
+# should it be possible to run not only RSN?
+to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot[new_model_key]).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 
 # %% [markdown]
@@ -245,7 +248,7 @@ scores_model_only = (scores_model_only
                      .loc[
                          scores_model_only.index.difference(
                              scores_common.index),
-                         args.model_key.upper()]
+                        new_model_key]
                      .sort_values(by='qvalue', ascending=True)
                      .join(freq_feat)
                      )
@@ -316,7 +319,7 @@ disease_assocications_new_rejected.loc[idx].loc[mask]
 # ## Shared which are only significant for by model
 
 # %% tags=[]
-mask = (scores_common[(args.model_key.upper(), 'rejected')] & mask_different)
+mask = (scores_common[(new_model_key, 'rejected')] & mask_different)
 mask.sum()
 
 # %%
