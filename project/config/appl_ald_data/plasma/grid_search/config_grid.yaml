@@ -1,0 +1,32 @@
+epochs_max:
+- 100
+batch_size: 64
+batch_size_collab: 1024
+hidden_layers:
+- '16'
+- '32'
+- '64'
+- '128'
+- '256'
+- '512'
+- '16_16'
+# - '256_256_128_128'
+latent_dim:
+- 5
+- 10
+- 15
+- 25
+- 50
+- 75
+folder_grid_search: "runs/appl_ald_data/plasma/grid_search"
+folder_experiment2: "runs/appl_ald_data/plasma/grid_search/{{level}}"
+folder_experiment: "runs/appl_ald_data/plasma/grid_search/{level}"
+fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+levels:
+- proteinGroups
+- aggPeptides
+# - evidence 
+config_split: 'config/appl_ald_data/plasma/{level}/split.yaml'
+config_train: 'placeholder.yaml'
+name_template: run_LD_{latent_dim}_E_{epochs_max}
+cuda: True

@@ -2,9 +2,10 @@ import logging
 from collections import Counter, namedtuple
 from pathlib import Path
 from typing import Iterable
-
+import omegaconf
 
 import pandas as pd
+from pandas import Int64Dtype, StringDtype, Float64Dtype
 
 import vaep.io
 
@@ -29,10 +30,175 @@ mq_col = MqColumnsUsed(*mq_use_columns)
 
 FASTA_KEYS = ["Proteins", "Gene names"]
 
+mq_evidence_cols = {'Sequence': 'Sequence',
+                    'Length': 'Length',
+                    'Modifications': 'Modifications',
+                    'Modified_sequence': 'Modified sequence',
+                    'Oxidation_M_Probabilities': 'Oxidation (M) Probabilities',
+                    'Oxidation_M_Score_Diffs': 'Oxidation (M) Score Diffs',
+                    'Acetyl_Protein_N-term': 'Acetyl (Protein N-term)',
+                    'Oxidation_M': 'Oxidation (M)',
+                    'Missed_cleavages': 'Missed cleavages',
+                    'Proteins': 'Proteins',
+                    'Leading_proteins': 'Leading proteins',
+                    'Leading_razor_protein': 'Leading razor protein',
+                    'Gene_names': 'Gene names',
+                    'Protein_names': 'Protein names',
+                    'Type': 'Type',
+                    'Raw_file': 'Raw file',
+                    'MSMS_mz': 'MS/MS m/z',
+                    'Charge': 'Charge',
+                    'mz': 'm/z',
+                    'Mass': 'Mass',
+                    'Uncalibrated_-_Calibrated_mz_[ppm]': 'Uncalibrated - Calibrated m/z [ppm]',
+                    'Uncalibrated_-_Calibrated_mz_[Da]': 'Uncalibrated - Calibrated m/z [Da]',
+                    'Mass_error_[ppm]': 'Mass error [ppm]',
+                    'Mass_error_[Da]': 'Mass error [Da]',
+                    'Uncalibrated_mass_error_[ppm]': 'Uncalibrated mass error [ppm]',
+                    'Uncalibrated_mass_error_[Da]': 'Uncalibrated mass error [Da]',
+                    'Max_intensity_mz_0': 'Max intensity m/z 0',
+                    'Retention_time': 'Retention time',
+                    'Retention_length': 'Retention length',
+                    'Calibrated_retention_time': 'Calibrated retention time',
+                    'Calibrated_retention_time_start':
+                    'Calibrated retention time start',
+                    'Calibrated_retention_time_finish': 'Calibrated retention time finish',
+                    'Retention_time_calibration': 'Retention time calibration',
+                    'Match_time_difference': 'Match time difference',
+                    'Match_mz_difference': 'Match m/z difference',
+                    'Match_q-value': 'Match q-value',
+                    'Match_score': 'Match score',
+                    'Number_of_data_points': 'Number of data points',
+                    'Number_of_scans': 'Number of scans',
+                    'Number_of_isotopic_peaks': 'Number of isotopic peaks',
+                    'PIF': 'PIF',
+                    'Fraction_of_total_spectrum': 'Fraction of total spectrum',
+                    'Base_peak_fraction': 'Base peak fraction',
+                    'PEP': 'PEP',
+                    'MSMS_count': 'MS/MS count',
+                    'MSMS_scan_number': 'MS/MS scan number',
+                    'Score': 'Score',
+                    'Delta_score': 'Delta score',
+                    'Combinatorics': 'Combinatorics',
+                    'Intensity': 'Intensity',
+                    'Reverse': 'Reverse',
+                    'Potential_contaminant': 'Potential contaminant',
+                    'id': 'id',
+                    'Protein_group_IDs': 'Protein group IDs',
+                    'Peptide_ID': 'Peptide ID',
+                    'Mod._peptide_ID': 'Mod. peptide ID',
+                    'MSMS_IDs': 'MS/MS IDs',
+                    'Best_MSMS': 'Best MS/MS',
+                    'Oxidation_M_site_IDs': 'Oxidation (M) site IDs',
+                    'Taxonomy_IDs': 'Taxonomy IDs'}
+
+mq_evidence_cols = omegaconf.OmegaConf.create(mq_evidence_cols)
+
+
+mq_evidence_dtypes = {'Length': Int64Dtype(),
+                      'Modifications': StringDtype,
+                      'Modified sequence': StringDtype,
+                      'Oxidation (M) Probabilities': StringDtype,
+                      'Oxidation (M) Score Diffs': StringDtype,
+                      'Acetyl (Protein N-term)': Int64Dtype(),
+                      'Oxidation (M)': Int64Dtype(),
+                      'Missed cleavages': Int64Dtype(),
+                      'Proteins': StringDtype,
+                      'Leading proteins': StringDtype,
+                      'Leading razor protein': StringDtype,
+                      'Gene names': StringDtype,
+                      'Protein names': StringDtype,
+                      'Type': StringDtype,
+                      'Raw file': StringDtype,
+                      'MS/MS m/z': Float64Dtype(),
+                      'm/z': Float64Dtype(),
+                      'Mass': Float64Dtype(),
+                      'Uncalibrated - Calibrated m/z [ppm]': Float64Dtype(),
+                      'Uncalibrated - Calibrated m/z [Da]': Float64Dtype(),
+                      'Mass error [ppm]': Float64Dtype(),
+                      'Mass error [Da]': Float64Dtype(),
+                      'Uncalibrated mass error [ppm]': Float64Dtype(),
+                      'Uncalibrated mass error [Da]': Float64Dtype(),
+                      'Max intensity m/z 0': Float64Dtype(),
+                      'Retention time': Float64Dtype(),
+                      'Retention length': Float64Dtype(),
+                      'Calibrated retention time': Float64Dtype(),
+                      'Calibrated retention time start': Float64Dtype(),
+                      'Calibrated retention time finish': Float64Dtype(),
+                      'Retention time calibration': Float64Dtype(),
+                      'Match time difference': Int64Dtype(),
+                      'Match m/z difference': Int64Dtype(),
+                      'Match q-value': Int64Dtype(),
+                      'Match score': Int64Dtype(),
+                      'Number of data points': Int64Dtype(),
+                      'Number of scans': Int64Dtype(),
+                      'Number of isotopic peaks': Int64Dtype(),
+                      'PIF': Int64Dtype(),
+                      'Fraction of total spectrum': Int64Dtype(),
+                      'Base peak fraction': Int64Dtype(),
+                      'PEP': Float64Dtype(),
+                      'MS/MS count': Int64Dtype(),
+                      'MS/MS scan number': Int64Dtype(),
+                      'Score': Float64Dtype(),
+                      'Delta score': Float64Dtype(),
+                      'Combinatorics': Int64Dtype(),
+                      'Intensity': Int64Dtype(),
+                      'Reverse': Int64Dtype(),
+                      'Potential contaminant': Int64Dtype(),
+                      'id': Int64Dtype(),
+                      'Protein group IDs': StringDtype,
+                      'Peptide ID': Int64Dtype(),
+                      'Mod. peptide ID': Int64Dtype(),
+                      'MS/MS IDs': StringDtype,
+                      'Best MS/MS': Int64Dtype(),
+                      'Oxidation (M) site IDs': StringDtype,
+                      'Taxonomy IDs': StringDtype,
+                      }
+
+
+mq_protein_groups_cols = {'Protein_IDs': 'Protein IDs',
+                          'Majority_protein_IDs': 'Majority protein IDs',
+                          'Peptide_counts_all': 'Peptide counts (all)',
+                          'Peptide_counts_razor+unique': 'Peptide counts (razor+unique)',
+                          'Peptide_counts_unique': 'Peptide counts (unique)',
+                          'Protein_names': 'Protein names',
+                          'Gene_names': 'Gene names',
+                          'Fasta_headers': 'Fasta headers',
+                          'Number_of_proteins': 'Number of proteins',
+                          'Peptides': 'Peptides',
+                          'Razor_+_unique_peptides': 'Razor + unique peptides',
+                          'Unique_peptides': 'Unique peptides',
+                          'Sequence_coverage_[%]': 'Sequence coverage [%]',
+                          'Unique_+_razor_sequence_coverage_[%]': 'Unique + razor sequence coverage [%]',
+                          'Unique_sequence_coverage_[%]': 'Unique sequence coverage [%]',
+                          'Mol._weight_[kDa]': 'Mol. weight [kDa]',
+                          'Sequence_length': 'Sequence length',
+                          'Sequence_lengths': 'Sequence lengths',
+                          'Q_value': 'Q-value',
+                          'Score': 'Score',
+                          'Intensity': 'Intensity',
+                          'MSMS_count': 'MS/MS count',
+                          'Only_identified_by_site': 'Only identified by site',
+                          'Reverse': 'Reverse',
+                          'Potential_contaminant': 'Potential contaminant',
+                          'id': 'id',
+                          'Peptide_IDs': 'Peptide IDs',
+                          'Peptide_is_razor': 'Peptide is razor',
+                          'Mod._peptide_IDs': 'Mod. peptide IDs',
+                          'Evidence_IDs': 'Evidence IDs',
+                          'MSMS_IDs': 'MS/MS IDs',
+                          'Best_MSMS': 'Best MS/MS',
+                          'Oxidation_M_site_IDs': 'Oxidation (M) site IDs',
+                          'Oxidation_M_site_positions': 'Oxidation (M) site positions',
+                          'Taxonomy_IDs': 'Taxonomy IDs'}
+
+mq_protein_groups_cols = omegaconf.OmegaConf.create(mq_protein_groups_cols)
 
 ##########################################################################################
 ##########################################################################################
 # import abc # abc.ABCMeta ?
+
+
 class MaxQuantOutput():
     """Class assisting with MaxQuant txt output folder.
 
@@ -120,15 +286,12 @@ class MaxQuantOutput():
         folder.mkdir(exist_ok=True)
         fname = folder / f"{self.folder.stem}.json"
         vaep.io.dump_json(
-            data_dict=self.peptides.Intensity.dropna().to_dict(), 
+            data_dict=self.peptides.Intensity.dropna().to_dict(),
             filename=fname)
         logger.info(f'Dumped intensities in peptides.txt: {fname}.')
 
-
     # needed to reset attributes on instance creation.
     _inital_attritubutes = [x for x in dir() if not x.startswith('__')]
-
-
 
 
 # register all properties
@@ -297,7 +460,7 @@ def count_genes_in_sets(gene_sets, sep=';'):
     -------
     collections.Counter
         Counter with keys as genes and counts as value.
-    """    
+    """
     genes_counted_each_in_unique_sets = Counter()
 
     for gene in pd.Series(gene_sets).dropna():
@@ -364,7 +527,7 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
         was set.
     KeyError
         If no protein could be found in fasta_db for specified gene.
-    """    
+    """
     # ToDo: Replace with config from package
     KEY_PEPTIDES = 'peptides'
 
@@ -402,21 +565,25 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
         # assert len(gene_data[mq_col.PROTEINS].unique()) == 1, f"{gene_data[mq_col.PROTEINS].unique()}"
         protein_sets = gene_data[mq_col.PROTEINS].unique()
         if len(protein_sets) > 1:
-            logger.warning(f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
+            logger.warning(
+                f"More than one set of genes: {gene_data[mq_col.PROTEINS].unique()}")
             # ToDo: find intersection of proteins between all sequences.
-        
+
         # Enforce: proteins have to be share between all peptides
         protein_sets = [set.split(';') for set in protein_sets]
         # ToDo: Check if ordering is relevant (if not all proteins are checked)
-        proteins_shared_by_all = set(protein_sets.pop()).intersection(*protein_sets)
+        proteins_shared_by_all = set(
+            protein_sets.pop()).intersection(*protein_sets)
         # ToDo: Some CON_ proteins are also present in the fasta and appear twice.
         #       Remove all CON__ proteins from data globally, including their fasta
         #       pendants (e.g. Keratin: Q04695;CON__Q04695)
         # exclude potential other contaminents
-        protein_sets = [x for x in proteins_shared_by_all if not 'CON__' in x] #.sorted()
+        protein_sets = [
+            x for x in proteins_shared_by_all if not 'CON__' in x]  # .sorted()
         if len(protein_sets) == 0:
             # raise KeyError("No other overall protein found for sequences.")
-            logger.warning(f'No good protein found for gene ({gene_id:8}). Return empty list.')
+            logger.warning(
+                f'No good protein found for gene ({gene_id:8}). Return empty list.')
             return []
         if len(protein_sets) > 1:
             logger.warning(
@@ -446,10 +613,10 @@ def calculate_completness_for_sample(
     -------
     float
         proportion of exact peptides for which some evidence was found.
-    """    
+    """
     c = 0
     if not peps_exact_cleaved:
-        return 0 # no exact peptides
+        return 0  # no exact peptides
     for i, _pep in enumerate(peps_exact_cleaved):
         logger.debug(f"Check if exact peptide matches: {_pep}")
         for _found_pep in peps_in_data:
@@ -487,7 +654,7 @@ class ExtractFromPeptidesTxt():
 
     def __call__(self):
         """Dump valid cases to file.
-        
+
         Returns:
         collections.Counter
             Counter with gene IDs as key and completeness as value.

@@ -1,0 +1,4 @@
+config_split: config/appl_ald_data/plasma/split.yaml
+config_train: config/appl_ald_data/plasma/train.yaml
+folder_experiment: runs/appl_ald_data/plasma/aggPeptides
+fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'

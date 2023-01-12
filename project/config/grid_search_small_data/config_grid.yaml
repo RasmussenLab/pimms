@@ -1,0 +1,35 @@
+epochs_max:
+- 100
+batch_size: 10
+batch_size_collab: 4096
+hidden_layers:
+- '256'
+- '512'
+- '1024'
+- '2056'
+- '128_64'
+- '256_128'
+- '512_256'
+- '512_512'
+- '512_256_128'
+- '1024_512_256'
+# - '128_128_128'
+# - '256_256_128_128'
+latent_dim:
+- 10
+- 25
+- 50
+- 75
+- 100
+folder_grid_search: "runs/grid_search_small_data"
+folder_experiment2: "runs/grid_search_small_data/{{level}}"
+folder_experiment: "runs/grid_search_small_data/{level}"
+fn_rawfile_metadata: "data/files_selected_metadata.csv"
+levels:
+- proteinGroups
+- aggPeptides
+- evidence 
+config_split: 'config/grid_search_small_data/{level}_split.yaml'
+config_train: 'placeholder.yaml'
+name_template: run_LD_{latent_dim}_E_{epochs_max}
+cuda: True

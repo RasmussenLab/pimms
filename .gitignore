@@ -5,25 +5,41 @@
 *.pyc
 
 #folders
+project/_archiv
 project/data/*
+!project\data\all_raw_files_dump.txt
 project/tutorials/
 project/tex/
+project/logs/
+project/runs/
+project/test_nb
+
+# exclude builds
+docs/_* 
+
 
 !project/data/README.md
 project/Figures/
 imputeLCMD_*
-workflows/maxquant/.snakemake/
-workflows/maxquant/mqpar_xmls/
-workflows/maxquant/out/
+*.snakemake/
+
+#
 *snakemake.log
 *.tfevents.*
-#
 *.pdf
 *.html
 
-workflows/maxquant/.snakemake/
 workflows/maxquant/mqpar_xmls/
-workflows/maxquant/.out/
+workflows/maxquant/template_scripts/
+workflows/maxquant/out/
+*.moab
+*.moab.e
+*.moab.o
+*.e
+*.o
+
+# remove temp/hidden folders
+.*/
 
 # builds
 docs/_*

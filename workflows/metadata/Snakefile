@@ -1,0 +1,85 @@
+from pathlib import Path, PurePosixPath
+configfile: "config/other.yaml"
+configfile: "config/excluded.yaml"
+
+files = [PurePosixPath(p) for p in config['files'] if p not in config['excluded']]
+files = [p.parent/ p.stem for p in files]
+
+CSV_OUT = config['out_csv']
+
+rule all:
+    input:
+        #  config['out_folder'] + "/rawfile_metadata.json"
+        CSV_OUT
+
+rule build_csv:
+    input:
+        data = config['out_folder'] + "/rawfile_metadata.json",
+        nb = 'read_metadata.ipynb'
+    output:
+        csv = CSV_OUT,
+        nb = config['out_folder'] + '/read_metadata_executed.ipynb'
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -p rawfile_metadata_in {input.data}"
+        " -p rawfile_metadata_out {output.csv}"
+
+
+rule combine_json:
+    input:
+        expand(
+        config['out_folder'] + "/jsons/{file}-metadata.json",
+        file=files
+        )
+    output:
+        out = config['out_folder'] + "/rawfile_metadata.json"
+    threads:
+        1
+    resources:
+        load=1 # multiplexing
+    run:
+        import json
+        import yaml
+        from pathlib import Path
+        metadata = {}
+        for fname in input:
+            key = Path(fname).name.split('-metadata.json')[0]
+            with open(fname) as f:
+                metadata[key] = json.load(f)
+                # metadata[key] = yaml.safe_load(f) # yaml can also read json (but add. dependency)
+        with open(output.out, 'w') as f:
+            json.dump(metadata, f)
+
+
+rule parse_rawfile_metadata:
+    input:
+        raw = config['folder_raw'] + '{file}.raw'
+    output:
+        json = config['out_folder'] + "/jsons/{file}-metadata.json",
+        txt = config['out_folder'] + "/txts/{file}-metadata.txt"
+    params:
+        thermo_exe = config['thermo_raw_file_parser_exe']
+    threads:
+        1
+    resources:
+        load=1 
+    shell:
+        # multiline does not work on windows workstation. ("""....""")
+        "{params.thermo_exe} -i {input.raw:q} -m 0 -b {output.json:q}"
+        " & {params.thermo_exe} -i {input.raw:q} -m 1 -b {output.txt:q}"
+
+
+rule download:
+    output:
+        raw_local = temp(config['folder_raw'] + '/{file}.raw')
+    params:
+        remote = config['remote_in'],
+        raw_remote = '{file}.raw'
+    threads:
+        1
+    resources:
+        load=10 # erda: multiplexing allows 10 max concurrent sessions
+    shell:
+        """
+        sftp -B 258048 {params.remote} <<< 'get "{params.raw_remote}" "{output.raw_local}"' 
+        """

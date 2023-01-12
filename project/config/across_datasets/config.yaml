@@ -1,0 +1,21 @@
+epochs_max:
+- 100
+batch_size: 64
+datasets:
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6071
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6078
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6096
+- Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6101
+folder: "runs/across_datasets"
+levels:
+- proteinGroups
+- aggPeptides
+- evidence 
+config_split: 'shared_splits.yaml'
+data_folders:
+    evidence: df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321
+    aggPeptides: df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725
+    proteinGroups: df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547
+repitition_name: dataset
