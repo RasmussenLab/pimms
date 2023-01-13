@@ -81,23 +81,22 @@ args = dict(globals()).keys()
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
-file_format: str = 'pkl' # change default to pickled files
+file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
 epochs_max:int = 50  # Maximum number of epochs
-# early_stopping:bool = True # Wheather to use early stopping or not
 batch_size:int = 64 # Batch size for training (and evaluation)
-cuda:bool=True # Use the GPU for training?
+cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:Union[int,str] = '256_128' # A underscore separated string of layers, '128_128' for the encoder, reverse will be use for decoder
+hidden_layers:Union[int,str] = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key = 'VAE'
-save_pred_real_na:bool=False # Save all predictions for real na
+model_key: str = 'VAE' # model key (lower cased version will be used for file names)
+save_pred_real_na: bool = False # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col = 'Content Creation Date'
-meta_cat_col = 'Thermo Scientific instrument model'
+meta_date_col: str = None # date column in meta data
+meta_cat_col: str = None # category column in meta data
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
