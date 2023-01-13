@@ -5,6 +5,8 @@
 - adapted scripts from Annelaura are under `vaep/imputation.py`
 
 ## Transform
+- transformation of intensity data is in `vaep/transfrom.py`
+
 
 ## Utils
 

@@ -60,23 +60,19 @@ args = None
 args = dict(globals()).keys()
 
 # %% tags=["parameters"]
-FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-# FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
-fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
-# M: int = 5000 # M most common features
-feat_prevalence: Union[int, float] = 0.25 # Minum number or fraction of feature prevalence across samples to be kept
+FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'   # Sample (rows) intensiites for features (columns)
+fn_rawfile_metadata: str = 'data/files_selected_metadata.csv'  # Machine parsed metadata from raw file (see workflows/metadata)
+feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
-select_N = None # sample a certain number of samples
-min_RT_time: Union[int, float] = 120 # Minum retention time (RT) in minutes
-index_col: Union[str,int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column)
-# query expression for subsetting
-# query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options
+select_N: int = None # only use latest N samples
+min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
+index_col: Union[str, int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column), or a list of these
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-column_names: List = None # Manuelly set column names
-# metadata -> defaults for metadata extracted from machine data
-meta_date_col = 'Content Creation Date'
-meta_cat_col = 'Thermo Scientific instrument model'
+column_names: List[str] = None # Manuelly set column names (of Index object in columns)
+# metadata -> defaults for metadata extracted from machine data, used for plotting
+meta_date_col: str = None # date column in meta data
+meta_cat_col: str = None # category column in meta data
 
 # %%
 # select_N = 50
@@ -107,26 +103,19 @@ args
 @dataclass
 class DataConfig:
     """Documentation. Copy parameters one-to-one to a dataclass."""
-    FN_INTENSITIES: str  # Samples metadata extraced from erda
-    # file_ext: str # file extension
-    # FN_PEPTIDE_FREQ: str # Peptide counts for all parsed files on erda (for data selection)
-    fn_rawfile_metadata: str  # Machine parsed metadata from rawfile workflow
-    # M: int # M most common features
-    feat_prevalence: Union[int, float] = 0.25 # Minum number or fraction of feature prevalence across samples to be kept
+    FN_INTENSITIES: str = '' # Sample (rows) intensiites for features (columns)
+    fn_rawfile_metadata: str = ''  # Machine parsed metadata from raw file (see workflows/metadata)
+    feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
     sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
-    select_N:int = None # sample a certain number of samples
-    min_RT_time: Union[int, float] = None # set to None per default
-    index_col: Union[
-        str, int
-    ] = "Sample ID"  # Can be either a string or position (typical 0 for first column)
-    # query expression for subsetting
-    # query_subset_meta: str = "`instrument serial number` in ['Exactive Series slot #6070',]" # query for metadata, see files_selected_per_instrument_counts.csv for options
+    select_N:int = None # only use latest N samples
+    min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
+    index_col: Union[str, int] = 'Sample ID' # Can be either a string or position (typical 0 for first column), or a list of these
     logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
     folder_experiment: str = 'runs/experiment_03'
-    column_names: str = None # Manuelly set column names
-    # metadata -> defaults for metadata extracted from machine data
-    meta_date_col: str = None
-    meta_cat_col: str = None
+    column_names: str = None # Manuelly set column names (of Index object in columns)
+    # metadata -> defaults for metadata extracted from machine data, used for plotting
+    meta_date_col: str = None # date column in meta data
+    meta_cat_col: str = None # category column in meta data
 
 params = DataConfig(**args) # catches if non-specified arguments were passed
 
