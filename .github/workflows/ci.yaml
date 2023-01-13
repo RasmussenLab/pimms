@@ -1,25 +1,21 @@
 name: Run tests
 on:
   push:
-    # branches: [master, dev]
+    branches: [main, dev]
   pull_request:
-    branches: [master, dev]
+    branches: [main, dev]
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  run-tests:
+    runs-on: ubuntu-20.04
     defaults:
       run:
-        shell: bash -l {0}
-    # strategy:
-    #   fail-fast: true
-      # matrix:
+        shell: bash -el {0}
+    strategy:
+      fail-fast: false
+      matrix:
       #   os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-      #   python-version: ["3.7", "2.7"]
+        python-version: ["3.8"]
     steps:
-      # - name: test
-      # - run: | 
-      #    ls
-
     - name: Checkout
       uses: actions/checkout@v2
     - name: check files
@@ -33,10 +29,20 @@ jobs:
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
-        activate-environment: vaep
-        environment-file: environment.yml
-        auto-activate-base: false
-
+        miniconda-version: "latest"
+        # python-version: ${{ matrix.python-version }}
+        # environment-file: environment.yml
+        # activate-environment: vaep
+        # auto-activate-base: true
+        # auto-update-conda: true
+    - name: setup-env-manuelly
+      run: |
+        conda info
+        conda list
+        conda env create -n pimms -f environment.yml
+        conda activate pimms
+        conda list
+    # # currently part of environment
     - name: Install package and install library
       run: |
         pip install pytest
