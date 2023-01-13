@@ -21,31 +21,23 @@ jobs:
     - name: check files
       run: |
         ls ${{ github.workspace }}
-
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: 3.8
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v2
-      with:
-        miniconda-version: "latest"
-        # python-version: ${{ matrix.python-version }}
-        # environment-file: environment.yml
-        # activate-environment: vaep
-        # auto-activate-base: true
+      with: 
+        miniforge-variant: Mambaforge
+        # miniforge-version: latest
+        use-mamba: true
+        python-version: ${{ matrix.python-version }}
+        environment-file: environment.yml
+        activate-environment: vaep
+        auto-activate-base: true
         # auto-update-conda: true
     - name: setup-env-manuelly
       run: |
         conda info
-        conda list
-        conda env create -n pimms -f environment.yml
-        conda activate pimms
-        conda list
     # # currently part of environment
-    - name: Install package and install library
-      run: |
-        pip install pytest
-
+    # - name: Install package and install library
+    #   run: |
+    #     pip install pytest
     - name: Run Tests on installed package
       run: pytest . 
