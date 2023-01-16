@@ -5,6 +5,8 @@ and is a hommage to our dear British friends
 who are missing as part of the EU for far too long already.
 (Pimms is also a british summer drink)
 
+The pre-print is available [on biorxiv](https://www.biorxiv.org/content/10.1101/2023.01.12.523792v1).
+
 
 > `PIMMS`was called `vaep` during development.  
 > Before entire refactoring has to been completed the imported package will be
