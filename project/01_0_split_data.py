@@ -138,6 +138,11 @@ folder_figures = folder_experiment / 'figures'
 folder_figures.mkdir(exist_ok=True)
 logger.info(f'Folder for figures: {folder_figures = }')
 
+# %%
+if isinstance(params.index_col, str) or isinstance(params.index_col, int):
+    params.index_col = [params.index_col]
+params.index_col  # make sure it is an iterable
+
 # %% [markdown] tags=[]
 # ## Raw data
 
@@ -157,13 +162,9 @@ FILE_EXT = Path(FN_INTENSITIES).suffix[1:]
 logger.info(f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
 # %% tags=[]
-# %%time
-params.used_features = None # sorted(selected_peptides)
-if isinstance(params.index_col, str) and params.used_features: params.used_features.insert(0, params.index_col)
 constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT]) #AnalyzePeptides.from_csv 
 analysis = constructor(fname=params.FN_INTENSITIES,
                                      index_col=index_col,
-                                     usecols=params.used_features
                                     )
 
 if params.column_names:
@@ -497,6 +498,7 @@ pcs = analysis.get_PCA(n_components=K) # should be renamed to get_PCs
 pcs = pcs.iloc[:,:K].join(analysis.df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
+pcs_index_name = pcs.index.name
 pcs = pcs.reset_index()
 pcs
 
@@ -526,7 +528,7 @@ if params.meta_date_col != 'PlaceholderTime':
 # %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
-    hover_name=params.index_col[0],
+    hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
     title=f'First two Principal Components of {analysis.M} most abundant peptides for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
