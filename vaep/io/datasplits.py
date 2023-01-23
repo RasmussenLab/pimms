@@ -23,6 +23,8 @@ def long_format(df: pd.DataFrame,
                 ) -> pd.DataFrame:
     # ToDo: Docstring as in class when finalized
     names = df.columns.names
+    if None in names:
+        raise ValueError(f"Column names must not be None: {names}")
     df_long = df.stack(names).to_frame(colname_values)
     return df_long
 
