@@ -393,11 +393,11 @@ df_vae_latent = vaep.model.get_latent_space(ana_vae.model.get_mu_and_logvar,
 df_vae_latent
 
 # %%
+ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
+                                        df_meta,
+                                        args.model_key,
+                                        folder=args.out_figures)
 if args.meta_date_col and df_meta is not None:
-    ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
-                                            df_meta,
-                                            args.model_key,
-                                            folder=args.out_figures)
     figures[f'latent_{args.model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
         args.meta_date_col)
 
