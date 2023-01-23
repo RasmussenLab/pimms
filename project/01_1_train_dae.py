@@ -99,8 +99,8 @@ sample_idx_position: int = 0 # position of index which is sample ID
 model_key = 'DAE'
 save_pred_real_na:bool=False # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col = 'Content Creation Date'
-meta_cat_col = 'Thermo Scientific instrument model'
+meta_date_col = None
+meta_cat_col = None
 
 # %%
 # # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -375,21 +375,24 @@ if args.save_pred_real_na:
 # %%
 # could also be a method
 ana_dae.model.cpu()
-df_dae_latent = vaep.model.get_latent_space(ana_dae.model.encoder,
+df_latent = vaep.model.get_latent_space(ana_dae.model.encoder,
                                             dl=ana_dae.dls.valid,
                                             dl_index=ana_dae.dls.valid.data.index)
-df_dae_latent
+df_latent
 
 # %%
-df_meta
+ana_latent = analyzers.LatentAnalysis(df_latent,
+                                        df_meta,
+                                        args.model_key,
+                                        folder=args.out_figures)
+if args.meta_date_col and df_meta is not None:
+    figures[f'latent_{args.model_key.lower()}_by_date'], ax = ana_latent.plot_by_date(
+        args.meta_date_col)
 
 # %%
-ana_latent_dae = analyzers.LatentAnalysis(df_dae_latent, df_meta, args.model_key, folder=args.out_figures)
-figures['latent_DAE_by_date'], ax = ana_latent_dae.plot_by_date('Content Creation Date')
-
-# %%
-figures['latent_DAE_by_ms_instrument'], ax = ana_latent_dae.plot_by_category('instrument serial number')
-
+if args.meta_cat_col and df_meta is not None:
+    figures[f'latent_{args.model_key.lower()}_by_{"_".join(args.meta_cat_col.split())}'], ax = ana_latent.plot_by_category(
+        args.meta_cat_col)
 # %% [markdown]
 # ## Comparisons
 #
