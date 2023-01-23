@@ -107,7 +107,7 @@ vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 # %%
 # freq_feat = sampling.frequency_by_index(data.train_X, 0)
 # freq_feat.name = 'freq'
-freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_train.json')   # needs to be pickle -> index.name needed
+freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')   # needs to be pickle -> index.name needed
 
 freq_feat.head() # training data
 
