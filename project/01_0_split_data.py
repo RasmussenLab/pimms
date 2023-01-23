@@ -166,7 +166,6 @@ constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT]) #An
 analysis = constructor(fname=params.FN_INTENSITIES,
                                      index_col=index_col,
                                     )
-
 if params.column_names:
     analysis.df.columns.names = params.column_names
 
@@ -682,11 +681,11 @@ splits.train_X
 # - no missing values kept
 
 # %%
-splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-format
+splits.dump(folder=folder_data, file_format='pkl')  # dumps data in long-format
 
 # %%
 # # Reload from disk
-splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
+splits = DataSplits.from_folder(folder_data, file_format='pkl')
 
 # %% [markdown]
 # ## Save parameters
