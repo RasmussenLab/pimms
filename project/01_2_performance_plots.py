@@ -17,7 +17,6 @@
 # # Compare models
 
 # %%
-import logging
 import random
 from pathlib import Path
 
@@ -27,20 +26,17 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-pd.options.display.max_rows = 120
-pd.options.display.min_rows = 50
-
 import vaep
 import vaep.imputation
-from vaep import sampling
 import vaep.models
 from vaep.io import datasplits
 from vaep.analyzers import compare_predictions
-
-
 import vaep.nb
-matplotlib.rcParams['figure.figsize'] = [10.0, 8.0]
 
+matplotlib.rcParams['figure.figsize'] = [10.0, 8.0]
+pd.options.display.max_rows = 120
+pd.options.display.min_rows = 50
+pd.options.display.max_colwidth = 100
 
 logger = vaep.logging.setup_nb_logger()
 
@@ -57,10 +53,6 @@ folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 
-# %%
-# # Parameters
-# fn_rawfile_metadata = "data/ALD_study/processed/raw_meta.csv"
-# folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 
 # %%
 args = vaep.nb.Config()
@@ -105,8 +97,6 @@ vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
 # ## Across data completeness
 
 # %%
-# freq_feat = sampling.frequency_by_index(data.train_X, 0)
-# freq_feat.name = 'freq'
 freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')   # needs to be pickle -> index.name needed
 
 freq_feat.head() # training data
@@ -135,7 +125,7 @@ mean = data.train_X.mean()
 std = data.train_X.std()
 
 imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
-imputed_shifted_normal
+imputed_shifted_normal.to_frame('intensity')
 
 # %%
 medians_train = data.train_X.median()
@@ -145,43 +135,18 @@ medians_train.name = 'median'
 # # Model specifications
 
 # %%
-import yaml 
-def select_content(s:str, stub='metrics_'):
-    s = s.split(stub)[1]
-    assert isinstance(s, str), f"More than one split: {s}"
-    entries = s.split('_')
-    if len(entries) > 1:
-        s = '_'.join(entries[:-1])
-    return s
+import yaml
+from vaep.models.collect_dumps import collect, select_content
 
-from functools import partial
-
-
-all_configs = {}
-for fname in args.out_models.iterdir():
-    fname = Path(fname)
-    if fname.suffix != '.yaml':
-        continue
-    # "grandparent" directory gives name beside name of file
-    key = f"{select_content(fname.stem, 'config_')}"
-    print(f"{key = }")
+def load_config_file(fname: Path, first_split='config_') -> dict:
     with open(fname) as f:
-        loaded = yaml.safe_load(f)   
-    if key not in all_configs:
-        all_configs[key] = loaded
-        continue
-    for k, v in loaded.items():
-        if k in all_configs[key]:
-            if not all_configs[key][k] == v:
-                print(
-                    "Diverging values for {k}: {v1} vs {v2}".format(
-                k=k,
-                v1=all_configs[key][k],
-                v2=v)
-                )
-        else:
-            all_configs[key][k] = v
+        loaded = yaml.safe_load(f)
+    key = f"{select_content(fname.stem, first_split=first_split)}"
+    return key, loaded
 
+
+all_configs = collect(paths=(fname for fname in args.out_models.iterdir() if fname.suffix == '.yaml'),
+load_fn=load_config_file)
 model_configs = pd.DataFrame(all_configs).T
 model_configs.T
 
