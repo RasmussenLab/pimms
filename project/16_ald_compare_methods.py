@@ -43,7 +43,8 @@ target = 'kleiner'
 out_folder = 'diff_analysis'
 
 disease_ontology = 5082  # code from https://disease-ontology.org/
-f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
+# f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
+f_annotations = None #'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
 # %% tags=[]
@@ -123,10 +124,13 @@ scores.describe(include=['bool', 'O'])
 
 # %%
 feat_name = scores.index.names[0]
-gene_to_PG = pd.read_csv(files_in['f_annotations_gene_to_pg'], usecols=[
-                          feat_name, args.annotaitons_gene_col])
-gene_to_PG = gene_to_PG.drop_duplicates().set_index(feat_name)
-gene_to_PG
+if args.f_annotations:
+    gene_to_PG = pd.read_csv(files_in['f_annotations_gene_to_pg'], usecols=[
+                            feat_name, args.annotaitons_gene_col])
+    gene_to_PG = gene_to_PG.drop_duplicates().set_index(feat_name)
+    gene_to_PG
+else:
+    gene_to_PG = None
 
 # %% [markdown]
 # ## Load frequencies of observed features
@@ -170,13 +174,11 @@ mask_different = ((scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1
 scores_common.loc[mask_different]
 
 # %%
-gene_idx_diff = gene_to_PG.loc[scores_common.index].squeeze().loc[mask_different]
-(scores_common
- .loc[mask_different]
- .set_index(gene_idx_diff, append=True)
- .to_excel(writer, 'differences', **writer_args)
-)
-
+_to_write = scores_common.loc[mask_different]
+if gene_to_PG is not None:
+    gene_idx_diff = gene_to_PG.loc[scores_common.index].squeeze().loc[mask_different]
+    _to_write = _to_write.set_index(gene_idx_diff, append=True)    
+_to_write.to_excel(writer, 'differences', **writer_args)
 # %%
 var = 'qvalue'
 to_plot = [scores_common[v][var] for k, v in models.items()]
@@ -185,7 +187,7 @@ for s, k in zip(to_plot, models.keys()):
 to_plot.append(freq_feat.loc[scores_common.index])
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
-to_plot = to_plot.join(gene_to_PG)
+to_plot = to_plot.join(gene_to_PG) if gene_to_PG is not None else to_plot
 to_plot
 
 # %% [markdown] tags=[]
@@ -278,6 +280,12 @@ data
 
 # %% [markdown]
 # ## Shared features
+# ToDo: new script -> DISEASES DB lookup
+
+# %%
+if gene_to_PG is None:
+    logger.warning('No gene to PG mapping provided. Exiting.')
+    exit(0)
 
 # %%
 gene_to_PG = gene_to_PG.reset_index().set_index(args.annotaitons_gene_col)
