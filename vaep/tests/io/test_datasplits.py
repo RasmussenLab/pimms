@@ -7,9 +7,11 @@ import numpy.testing as npt
 N, M = 10, 4
 
 X = np.random.rand(N, M)
-df = pd.DataFrame(X,
+df = (pd.DataFrame(X,
                   index=[f'sample_{i}' for i in range(N)],
                   columns=(f'feat_{i}' for i in range(M)))
+        .rename_axis('Sample ID')
+        .rename_axis('Feature Name', axis=1))
 
 _splits = {'train_X': df.iloc[:int(N*0.6)],
            'val_y': df.iloc[int(N*0.6):int(N*0.8)],
