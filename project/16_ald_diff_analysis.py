@@ -105,8 +105,7 @@ observed
 # %%
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
-df_clinic['abstinent_num'] = (df_clinic["currentalc"] == 0.00).astype(int)
-cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
+cols_clinic = vaep.pandas.get_columns_accessor(df_clinic) # pick Berlin as reference?
 df_clinic[[args.target, *args.covar]].describe()
 
 # %% [markdown]

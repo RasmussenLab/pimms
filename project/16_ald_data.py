@@ -135,6 +135,10 @@ idx_overlap_plasma = clinic.index.intersection(sel_plasma_samples)
 # %%
 clinic.loc[idx_overlap_plasma]
 
+# %%
+clinic['abstinent_num'] = (clinic["currentalc"] == 0.00).astype(int)
+clinic[['abstinent_num', 'currentalc']].describe()
+
 # %% [markdown]
 # Kleiner score of 0.5 was assigned as value of 0-1 without biopsy. Is set to NA.
 
