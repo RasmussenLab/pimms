@@ -39,7 +39,7 @@ class DotProductBias(Module):
 
 def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
     """Helper function to combine training and validation data in long-format. The 
-    training and validation data will be mixed up in Collab training as the sample
+    training and validation data will be mixed up in CF training as the sample
     embeddings have to be trained for all samples. The returned frac can be used to have
     the same number of (non-missing) validation samples as before.
 
@@ -71,7 +71,7 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
 def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tensor,
                        feat_embeddings: Embedding, feat_bias: Embedding, items: torch.tensor,
                        y_range=None) -> torch.tensor:
-    """Collab dot product for a single sample using a set of feature items.
+    """CF dot product for a single sample using a set of feature items.
 
     Parameters
     ----------
@@ -95,7 +95,7 @@ def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tenso
 
     Example
     -------
-    # learn is a Collab Learner
+    # learn is a CF Learner
     idx = learn.classes['Sample ID'].map_objs(['sample1', 'sample2'])
     idx = torch.tensor(idx)
     collab_dot_product(learn.u_weight(idx), learn.u_bias(idx),
@@ -113,7 +113,7 @@ def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tenso
 def collab_prediction(idx_samples: torch.tensor,
                       learn: fastai.learner.Learner,
                       index_samples: pd.Index = None) -> pd.DataFrame:
-    """Based on a Collab model Learner, calculate all out of sample predicitons
+    """Based on a CF model Learner, calculate all out of sample predicitons
     for all features trained.
 
     Parameters
@@ -192,3 +192,5 @@ class CollabAnalysis(analysis.ModelAnalysis):
 
         self.transform = None  # No data transformation needed
         self.learn = None
+
+    

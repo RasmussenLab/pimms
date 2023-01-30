@@ -19,21 +19,20 @@ nb= '01_2_performance_plots.ipynb'
 rule comparison:
     input:
         nb=nb,
-        runs=expand("{folder_experiment}/{nb}",
+        runs=expand("{folder_experiment}/01_1_train_{model}.ipynb",
             folder_experiment=config['folder_experiment'],
-            nb=['01_1_train_collab.ipynb',
-                '01_1_train_dae.ipynb',
-                '01_1_train_vae.ipynb'
-                ])
+            model=config['models'])
     output:
         pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
         nb="{folder_experiment}" f"/{nb}"
     params:
-        meta_data=config["fn_rawfile_metadata"]
+        meta_data=config["fn_rawfile_metadata"],
+        models=",".join(config["models"])
     shell:
         "papermill {input.nb} {output.nb}"
-        " -r fn_rawfile_metadata {params.meta_data}"
-        " -r folder_experiment {wildcards.folder_experiment}"
+        " -r fn_rawfile_metadata {params.meta_data:q}"
+        " -r folder_experiment {wildcards.folder_experiment:q}"
+        " -r models {params.models:q}"
         " && jupyter nbconvert --to html {output.nb}"
 
 # separate workflow by level -> provide custom configs
@@ -56,17 +55,18 @@ rule create_splits:
 
 rule train_models:
     input:
-        nb="{nb}",
+        nb="01_1_train_{model}.ipynb",
         train_split="{folder_experiment}/data/train_X.pkl",
         configfile=config['config_train']
     output:
-        nb="{folder_experiment}/{nb}",
+        nb="{folder_experiment}/01_1_train_{model}.ipynb",
     params:
         folder_experiment="{folder_experiment}"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
+        " -r model_key {wildcards.model}"
         " && jupyter nbconvert --to html {output.nb}"
 
 
