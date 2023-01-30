@@ -9,14 +9,14 @@ labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
                }
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
+                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
 
 IDX_ORDER = (['proteinGroups', 'aggPeptides', 'evidence'],
-             ['median', 'interpolated', 'collab', 'DAE', 'VAE'])
+             ['median', 'interpolated', 'CF', 'DAE', 'VAE'])
 
 
-ORDER_MODELS = ['random shifted normal', 'median', 'interpolated',
-                'collab', 'DAE', 'VAE',
+ORDER_MODELS = ['RSN', 'median', 'interpolated',
+                'CF', 'DAE', 'VAE',
                 ]
 
 l_colors_to_use_hex = ['#937860', #seaborn brown

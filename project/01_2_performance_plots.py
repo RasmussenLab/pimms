@@ -41,10 +41,7 @@ pd.options.display.max_colwidth = 100
 logger = vaep.logging.setup_nb_logger()
 
 # %%
-models = ['collab', 'DAE', 'VAE']
-ORDER_MODELS = ['random shifted normal', 'median', 'interpolated',
-                'collab', 'DAE', 'VAE',
-                ]
+
 
 # %% tags=["parameters"]
 # files and folders
@@ -52,7 +49,7 @@ folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_20
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
-
+models = 'CF,DAE,VAE'
 
 # %%
 args = vaep.nb.Config()
@@ -71,6 +68,10 @@ args = vaep.nb.add_default_paths(args, folder_data=folder_data)
 del folder_data
 
 args
+
+# %%
+MODELS = models.split(',')
+ORDER_MODELS = ['RSN', 'median', 'interpolated', *MODELS]
 
 # %%
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
@@ -108,8 +109,7 @@ prop.to_frame()
 # %% [markdown]
 # # reference methods
 #
-# - drawing from shifted normal distribution
-# - drawing from (-) normal distribution?
+# - drawing from shifted normal distribution (RSN imputation)
 # - median imputation
 
 # %%
@@ -166,7 +166,7 @@ split = 'test'
 pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_test = compare_predictions.load_predictions(pred_files)
 # pred_test = pred_test.join(medians_train, on=prop.index.name)
-pred_test['random shifted normal'] = imputed_shifted_normal
+pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
 pred_test
@@ -205,8 +205,8 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer
 # identify samples which are below lower whisker for models
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[models]).min()
-mask = (corr_per_sample_test[models] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[MODELS]).min()
+mask = (corr_per_sample_test[MODELS] < treshold).any(axis=1)
 corr_per_sample_test.loc[mask].style.highlight_min(axis=1)
 
 # %%
@@ -251,8 +251,8 @@ feat_count_test.name = 'count'
 feat_count_test.head()
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_feat_test[models]).min()
-mask = (corr_per_feat_test[models] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_feat_test[MODELS]).min()
+mask = (corr_per_feat_test[MODELS] < treshold).any(axis=1)
 
 def highlight_min(s, color, tolerence=0.00001):
     return np.where((s - s.min()).abs() < tolerence, f"background-color: {color};", None)
@@ -288,7 +288,7 @@ _to_plot
 # %%
 colors_to_use = [sns.color_palette()[5] ,*sns.color_palette()[:5]]
 # list(sns.color_palette().as_hex()) # string representation of colors
-sns.color_palette() # select colors for comparibility with grid search (where random shifted was omitted)
+sns.color_palette() # select colors for comparibility with grid search (where RSN was omitted)
 
 # %%
 fig, ax = plt.subplots(figsize=(10,8))
@@ -338,7 +338,7 @@ split = 'val'
 pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_val = compare_predictions.load_predictions(pred_files)
 # pred_val = pred_val.join(medians_train, on=freq_feat.index.name)
-pred_val['random shifted normal'] = imputed_shifted_normal
+pred_val['RSN'] = imputed_shifted_normal
 # pred_val = pred_val.join(freq_feat, on=freq_feat.index.name)
 pred_val_corr = pred_val.corr()
 ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
@@ -366,8 +366,8 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as write
 # identify samples which are below lower whisker for models
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[models]).min()
-mask = (corr_per_sample_val[models] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[MODELS]).min()
+mask = (corr_per_sample_val[MODELS] < treshold).any(axis=1)
 corr_per_sample_val.loc[mask].style.highlight_min(axis=1)
 
 # %% [markdown]
@@ -385,7 +385,7 @@ errors_val.abs().describe() # over all samples, and all features
 
 # %%
 c_error_min = 4.5
-mask = (errors_val[models].abs() > c_error_min).any(axis=1)
+mask = (errors_val[MODELS].abs() > c_error_min).any(axis=1)
 errors_val.loc[mask].sort_index(level=1)
 
 # %%
@@ -402,7 +402,7 @@ errors_val.describe()  # mean of means
 
 # %%
 c_avg_error = 2
-mask = (errors_val[models] >= c_avg_error).any(axis=1)
+mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
 errors_val.loc[mask]
 
 # %%
@@ -426,7 +426,7 @@ vaep.savefig(
 
 # %%
 # scatter plots to see spread
-model = models[0]
+model = MODELS[0]
 ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
   # title=f"Average error per feature on validation data for {model}",
   ylabel=f'average error ({METRIC}) for {model} on valid. data')
