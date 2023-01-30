@@ -278,11 +278,11 @@ def plot_cutoffs(df: pd.DataFrame,
     ax = axes[0]
     notna.sum(axis=0).sort_values().plot(rot=90, ax=ax,
                                          ylabel='count samples', xlabel='feature name')
-    if min_feat_in_sample is not None:
-        ax.axhline(min_feat_in_sample)
+    if feat_completness_over_samples is not None:
+        ax.axhline(feat_completness_over_samples)
     ax = axes[1]
     notna.sum(axis=1).sort_values().plot(rot=90, ax=ax,
                                          ylabel='count features', xlabel='sample name')
-    if feat_completness_over_samples is not None:
-        ax.axhline(feat_completness_over_samples)
+    if min_feat_in_sample is not None:
+        ax.axhline(min_feat_in_sample)
     return fig, axes
