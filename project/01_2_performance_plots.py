@@ -33,7 +33,6 @@ from vaep.io import datasplits
 from vaep.analyzers import compare_predictions
 import vaep.nb
 
-matplotlib.rcParams['figure.figsize'] = [10.0, 8.0]
 pd.options.display.max_rows = 120
 pd.options.display.min_rows = 50
 pd.options.display.max_colwidth = 100
@@ -41,7 +40,12 @@ pd.options.display.max_colwidth = 100
 logger = vaep.logging.setup_nb_logger()
 
 # %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
 
+# %% [markdown]
+# Papermill script parameters:
 
 # %% tags=["parameters"]
 # files and folders
@@ -51,26 +55,24 @@ file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 models = 'CF,DAE,VAE'
 
+
+# %% [markdown]
+# Some argument transformations
+
 # %%
-args = vaep.nb.Config()
-
-args.fn_rawfile_metadata = fn_rawfile_metadata
-del fn_rawfile_metadata
-
-args.folder_experiment = Path(folder_experiment)
-del folder_experiment
-args.folder_experiment.mkdir(exist_ok=True, parents=True)
-
-args.file_format = file_format
-del file_format
-
-args = vaep.nb.add_default_paths(args, folder_data=folder_data)
-del folder_data
-
+args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
-MODELS = models.split(',')
+args = vaep.nb.args_from_dict(args)
+args
+
+# %%
+figures = {}
+
+
+# %%
+MODELS = args.models.split(',')
 ORDER_MODELS = ['RSN', 'median', 'interpolated', *MODELS]
 
 # %%
@@ -90,9 +92,12 @@ ax = axes[1]
 _ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
         ax=ax,
         title='Test data')
-fig.suptitle("Fake NAs per sample availability.", size=24)
+fig.suptitle("Fake NAs per sample availability.", size=20)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(fig, name='fake_na_val_test_splits', folder=args.out_figures)
+
+fname = args.out_figures / 'fake_na_val_test_splits.png'
+figures[fname.stem] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # ## Across data completeness
@@ -144,9 +149,12 @@ def load_config_file(fname: Path, first_split='config_') -> dict:
     key = f"{select_content(fname.stem, first_split=first_split)}"
     return key, loaded
 
-
-all_configs = collect(paths=(fname for fname in args.out_models.iterdir() if fname.suffix == '.yaml'),
-load_fn=load_config_file)
+# model_key could be used as key from config file
+# load only specified configs?
+all_configs = collect(
+    paths=(fname for fname in args.out_models.iterdir() if fname.suffix == '.yaml'),
+    load_fn=load_config_file
+)
 model_configs = pd.DataFrame(all_configs).T
 model_configs.T
 
@@ -159,13 +167,14 @@ model_configs.T
 # ## test data
 
 # %%
+# index name
 freq_feat.index.name = data.train_X.columns.name
 
 # %%
 split = 'test'
 pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
 pred_test = compare_predictions.load_predictions(pred_files)
-# pred_test = pred_test.join(medians_train, on=prop.index.name)
+# pred_test = pred_test.join(medians_train, on=prop.index.name) # ToDo: median implicit
 pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
@@ -184,8 +193,12 @@ vaep.savefig(ax.get_figure(), name='pred_corr_test_overall', folder=args.out_fig
 pred_test_corr
 
 # %%
-corr_per_sample_test = pred_test.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
-corr_per_sample_test = corr_per_sample_test.join(pred_test.groupby('Sample ID')[
+# index name
+sample_index_name = data.train_X.index.name
+
+# %%
+corr_per_sample_test = pred_test.groupby(sample_index_name).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+corr_per_sample_test = corr_per_sample_test.join(pred_test.groupby(sample_index_name)[
                                        'median'].count().rename('n_obs'))
 too_few_obs = corr_per_sample_test['n_obs'] < 3
 corr_per_sample_test.loc[~too_few_obs].describe()
@@ -196,7 +209,9 @@ kwargs = dict(ylim=(0.7,1), rot=90,
               ylabel='correlation per sample')
 ax = corr_per_sample_test.plot.box(**kwargs)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name='pred_corr_test_per_sample', folder=args.out_figures)
+fname = args.out_figures / 'pred_corr_test_per_sample.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer:   
     corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
     corr_per_sample_test.to_excel(writer, sheet_name='correlations')
@@ -240,7 +255,9 @@ kwargs = dict(rot=90,
 ax = corr_per_feat_test.loc[~too_few_obs].drop(
     'n_obs', axis=1).plot.box(**kwargs)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name='pred_corr_test_per_feat', folder=args.out_figures)
+fname = args.out_figures / 'pred_corr_test_per_feat.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(writer, sheet_name='summary')
     corr_per_feat_test.to_excel(writer, sheet_name='correlations')
@@ -301,7 +318,9 @@ ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=16)
 ax.set_xticklabels([])
-vaep.savefig(fig, "performance_models_test", folder=args.out_figures)
+fname = args.out_figures / 'performance_test.pdf'
+figures[fname.stem] = fname
+vaep.savefig(fig, name=fname)
 
 # %%
 errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*ORDER_MODELS, 'freq']]
@@ -309,26 +328,16 @@ errors_test
 
 
 # %%
-def plot_rolling_error(errors: pd.DataFrame, metric_name, window: int = 200,
-                       min_freq=None, freq_col: str = 'freq', 
-                       ax=None):
-    errors_smoothed = errors.drop(freq_col, axis=1).rolling(window=window, min_periods=1).mean()
-    errors_smoothed_max = errors_smoothed.max().max()
-    errors_smoothed[freq_col] = errors[freq_col]
-    if min_freq is None:
-        min_freq=errors_smoothed[freq_col].min()
-    else:
-        errors_smoothed = errors_smoothed.loc[errors_smoothed[freq_col] > min_freq]
-    ax = errors_smoothed.plot(x=freq_col, ylabel=f'rolling average error ({metric_name})',
-                              color=colors_to_use,
-                              xlim=(min_freq, errors_smoothed[freq_col].max()),
-                              ylim=(0, min(errors_smoothed_max, 5)), 
-                              ax=None)
-    return ax
-
 min_freq = None
-ax = plot_rolling_error(errors_test, metric_name=METRIC, window=int(len(errors_test)/15), min_freq=min_freq)
-vaep.savefig(ax.get_figure(), name='errors_rolling_avg_test', folder=args.out_figures)
+ax = vaep.plotting.plot_rolling_error(
+    errors_test,
+    metric_name=METRIC,
+    window=int(len(errors_test)/15),
+    min_freq=min_freq, 
+    colors_to_use=colors_to_use)
+fname = args.out_figures / 'errors_rolling_avg_test.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 
 # %% [markdown]
 # ## Validation data
@@ -346,18 +355,22 @@ ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
     ylabel='correlation overall')
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name='pred_corr_val_overall', folder=args.out_figures)
+fname = args.out_figures / 'pred_corr_val_overall.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 pred_val_corr
 
 # %%
-corr_per_sample_val = pred_val.groupby('Sample ID').aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+corr_per_sample_val = pred_val.groupby(sample_index_name).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
 
 kwargs = dict(ylim=(0.7,1), rot=90,
               # title='Corr. betw. fake NA and model pred. per sample on validation data',
               ylabel='correlation per sample')
 ax = corr_per_sample_val.plot.box(**kwargs)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name='pred_corr_valid_per_sample', folder=args.out_figures)
+fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as writer:   
     corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
     corr_per_sample_test.to_excel(writer, sheet_name='correlations')
@@ -407,17 +420,25 @@ errors_val.loc[mask]
 
 # %%
 errors_val_smoothed = errors_val.copy()
-errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
-ax = plot_rolling_error(errors_test, metric_name=METRIC, window=int(len(errors_test)/15), min_freq=min_freq)
+errors_val_smoothed[errors_val.columns[:-1]] = (errors_val
+                                                [errors_val.columns[:-1]]
+                                                .rolling(window=200, min_periods=1)
+                                                .mean())
+ax = vaep.plotting.plot_rolling_error(errors_test,
+                                      metric_name=METRIC,
+                                      window=int(len(errors_test)/15),
+                                      min_freq=min_freq,
+                                      colors_to_use=colors_to_use)
 
 # %%
 errors_val_smoothed.describe()
 
 # %%
+fname = args.out_figures / 'performance_methods_by_completness.pdf'
+figures[fname.stem] = fname
 vaep.savefig(
     ax.get_figure(),
-    folder=args.out_figures,
-    name='performance_methods_by_completness')
+    name=fname)
 
 # %% [markdown]
 # # Average errors per feature - example scatter for collab
@@ -430,12 +451,17 @@ model = MODELS[0]
 ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
   # title=f"Average error per feature on validation data for {model}",
   ylabel=f'average error ({METRIC}) for {model} on valid. data')
-
+fname = args.out_figures / 'performance_methods_by_completness_scatter.pdf'
+figures[fname.stem] = fname
 vaep.savefig(
     ax.get_figure(),
-    folder=args.out_figures,
-    name='performance_methods_by_completness_scatter',
+    name=fname
 )
 
 # %% [markdown]
 # - [ ] plotly plot with number of observations the mean for each feature is based on
+
+# %% [markdown]
+# ## Figures dumped to disk
+# %%
+figures
