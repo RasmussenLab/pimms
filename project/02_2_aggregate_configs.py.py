@@ -13,6 +13,7 @@
 # ---
 
 # %%
+from pathlib import Path
 import pandas as pd
 pd.options.display.max_columns = 30 
 
@@ -21,12 +22,16 @@ from vaep.logging import setup_nb_logger
 logger = setup_nb_logger()
 
 # %%
+snakemake.input[:10]
 
+# %%
 all_configs = collect_configs(snakemake.input)
-all_config = pd.DataFrame(all_configs)
-all_config.T
+all_config = pd.DataFrame(all_configs).set_index('id')
+all_config
 
 # %%
-all_config.to_json(snakemake.output.out)
-
-# %%
+fname = Path(snakemake.output.out)
+all_config.reset_index().to_json()
+all_config = all_config.set_index('model', append=True)
+all_config.to_csv(fname.with_suffix('.csv'))
+all_config

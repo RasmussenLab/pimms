@@ -19,7 +19,6 @@ scatter_defaults = dict(x='data_split',
                         hover_data=['n_hidden_layers',
                                     'hidden_layers',
                                     'batch_size',
-                                    'batch_size_collab',
                                     'n_params'],
                         )
 

@@ -38,8 +38,8 @@ rule all:
 
 rule results:
     input:     
-        metrics=f"{folder_experiment}/all_metrics.json",
-        config=f"{folder_experiment}/all_configs.json"
+        metrics=f"{folder_experiment}/all_metrics.csv",
+        config=f"{folder_experiment}/all_configs.csv"
     output:
         expand(f"{folder_experiment2}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
             split=["test_fake_na", "valid_fake_na"],
@@ -97,14 +97,14 @@ rule train_ae_models:
 
 use rule train_models from single_experiment as train_collab_model with:
     input:
-        nb="01_1_train_{collab_model}.ipynb",
+        nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
         configfile=f"{folder_experiment}/"
                    f"{name_template}/config_train_collab.yaml"
     output:
-        nb=f"{folder_experiment}/{name_template}/01_1_train_{{collab_model}}.ipynb",
-        metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{collab_model}}.json",
-        config=f"{folder_experiment}/{name_template}/models/model_config_{{collab_model}}.yaml"
+        nb=f"{folder_experiment}/{name_template}/01_1_train_{{model}}.ipynb",
+        metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{model}}.json",
+        config=f"{folder_experiment}/{name_template}/models/model_config_{{model}}.yaml"
     threads: 10
     params:
         folder_experiment=f"{folder_experiment}/{name_template}"
@@ -151,7 +151,7 @@ rule build_train_config_collab:
         config['folder_experiment'] = str(PurePosixPath(output.config_train).parent)
         config['fn_rawfile_metadata'] = params.fn_rawfile_metadata 
         config['folder_data'] = params.folder_data
-        config['batch_size_collab'] = params.batch_size_collab
+        config['batch_size'] = params.batch_size_collab
         config['cuda'] = params.cuda
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
@@ -162,12 +162,12 @@ rule collect_all_configs:
         expand(f"{folder_experiment2}/"
               f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml",
                 **GRID,
-                ae_model=['dae', 'vae']),
+                ae_model=['DAE', 'VAE']),
         expand(f"{folder_experiment2}/{name_template}/models/model_config_{{collab_model}}.yaml",
                 **GRID,
-                collab_model='collab')
+                collab_model='CF')
     output:
-        out = f"{folder_experiment}/all_configs.json",
+        out = f"{folder_experiment}/all_configs.csv",
     log:
         notebook=f"{folder_experiment}/02_2_aggregate_configs.ipynb"
     notebook:
@@ -177,13 +177,13 @@ rule collect_all_configs:
 rule collect_metrics:
     input:
         expand(f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
-            ae_model=['dae', 'vae'],
+            ae_model=['DAE', 'VAE'],
             **GRID),
         expand(f"{folder_experiment2}/{name_template}/metrics/metrics_{{collab_model}}.json",
-                  collab_model=['collab'],
+                  collab_model=['CF'],
                   **GRID)
     output:
-        out = f"{folder_experiment}/all_metrics.json",
+        out = f"{folder_experiment}/all_metrics.csv",
     log:
         notebook=f"{folder_experiment}/02_1_aggregate_metrics.ipynb"
     notebook:

@@ -84,14 +84,14 @@ group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
 selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
+                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
 
 _unique = metrics_long["data level"].unique()
 order_categories['data level'] = [l for l in order_categories['data level'] if l in _unique] #ensure predefined order
 _unique = metrics_long['model'].unique()
 order_categories['model'] = [m for m in order_categories['model'] if m in _unique] #ensure predefined order
 
-semi_supervised = [m for m in ['collab', 'DAE', 'VAE'] if m in _unique]
+semi_supervised = [m for m in ['CF', 'DAE', 'VAE'] if m in _unique]
 reference = [m for m in ['median', 'interpolated'] if m in _unique]
 
 IDX_ORDER = (order_categories['data level'],

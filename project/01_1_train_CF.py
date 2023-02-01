@@ -67,14 +67,15 @@ fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed m
 # training
 epochs_max:int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
-batch_size_collab:int = 32_768 # Batch size for training (and evaluation)
+batch_size:int = 32_768 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
 # hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key = 'CF'
+model: str = 'CF' # model name
+model_key: str = 'CF' # potentially alternative key for model (grid search)
 save_pred_real_na:bool=False # Save all predictions for real na
 
 # %%
@@ -180,8 +181,6 @@ test_pred_fake_na.describe()
 
 # %%
 # larger mini-batches speed up training
-# args.batch_size_collab = args.batch_size
-
 ana_collab = models.collab.CollabAnalysis(
     datasplits=data,
     sample_column=sample_id,
@@ -191,7 +190,7 @@ ana_collab = models.collab.CollabAnalysis(
                     y_range=(int(data.train_X.min()),
                                 int(data.train_X.max())+1)
                     ),
-    batch_size=args.batch_size_collab)
+    batch_size=args.batch_size)
 
 # %%
 print("Args:")
@@ -270,18 +269,18 @@ test_pred_fake_na['CF'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
 test_pred_fake_na
 
 # %%
-if args.save_pred_real_na:
-    # missing values in train data
-    mask = data.train_X.unstack().isna().stack()
-    idx_real_na = mask.loc[mask].index
-    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-    dl_real_na = ana_collab.dls.test_dl(idx_real_na.to_frame())
-    pred_real_na, _ = ana_collab.learn.get_preds(dl=dl_real_na)
-    pred_real_na = pd.Series(pred_real_na, idx_real_na)
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-    del mask, idx_real_na, pred_real_na, dl_real_na
-    # use indices of test and val to drop fake_na
-    # get remaining predictions
+# if args.save_pred_real_na:
+#     # missing values in train data
+#     mask = data.train_X.unstack().isna().stack()
+#     idx_real_na = mask.loc[mask].index
+#     idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+#     dl_real_na = ana_collab.dls.test_dl(idx_real_na.to_frame())
+#     pred_real_na, _ = ana_collab.learn.get_preds(dl=dl_real_na)
+#     pred_real_na = pd.Series(pred_real_na, idx_real_na)
+#     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+#     del mask, idx_real_na, pred_real_na, dl_real_na
+#     # use indices of test and val to drop fake_na
+#     # get remaining predictions
 
 # %% [markdown]
 # ## Data in wide format
@@ -413,6 +412,7 @@ fig.show()
 # ## Save predictions
 
 # %%
+# if args.save_pred_real_na:
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 
