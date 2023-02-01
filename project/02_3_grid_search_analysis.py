@@ -49,63 +49,43 @@ logger = vaep.logging.setup_nb_logger()
 # papermill parameters:
 
 # %% tags=["parameters"]
-metrics_json:str = "path/to/all_metrics.json" # file path to metrics json
-configs_json:str = "path/to/all_configs.json" # file path to configs json ("meta data")
+metrics_csv:str = "path/to/all_metrics.csv" # file path to metrics
+configs_csv:str = "path/to/all_configs.csv" # file path to configs ("meta data")
 
 # %%
 try:
-    assert pathlib.Path(metrics_json).exists()
-    assert pathlib.Path(configs_json).exists()
+    assert pathlib.Path(metrics_csv).exists()
+    assert pathlib.Path(configs_csv).exists()
 except AssertionError:
-    metrics_json = snakemake.input.metrics
-    configs_json = snakemake.input.config
-    print(f"{metrics_json = }", f"{configs_json = }", sep="\n")
+    metrics_csv = snakemake.input.metrics
+    configs_csv = snakemake.input.config
+    print(f"{metrics_csv = }", f"{configs_csv = }", sep="\n")
+
+# %%
+path_metrics = pathlib.Path(metrics_csv)
+path_configs = pathlib.Path(configs_csv)
+FOLDER = path_metrics.parent
 
 # %%
 files_out = dict()
 
+
 # %% [markdown]
 # ## Metrics of each run
-
-# %%
-path_metrics_json = pathlib.Path(metrics_json)
-path_configs_json = pathlib.Path(configs_json)
-FOLDER = path_metrics_json.parent
-
-metrics_dict = vaep.io.load_json(path_metrics_json)
-configs_dict = vaep.io.load_json(path_configs_json)
-
-# %% [markdown]
-# Random sample metric schema (all should be the same)
-
-# %%
-key_sampled = vaep.utils.sample_iterable(metrics_dict, 1)[0]
-key_map = vaep.pandas.key_map(metrics_dict[key_sampled])
-key_map  # keys of dictionary for a single run
-
-# %% [markdown]
+#
 # Metrics a `pandas.DataFrame`:
 
-# %% tags=[]
-metrics_dict_multikey = {}
-for k, run_metrics in metrics_dict.items():
-    metrics_dict_multikey[k] = {eval(k): v for k, v in run_metrics.items()}
-
-metrics = pd.DataFrame.from_dict(metrics_dict_multikey, orient='index')
-metrics.columns.names = ['subset', 'data_split', 'model', 'metric_name']
-metrics.index.name = 'id'
-metrics = metrics.dropna(axis=1, how='all')
-metrics = metrics.stack('model')
-metrics = metrics.drop_duplicates()
-metrics
+# %%
+metrics = pd.read_csv(path_metrics, index_col=0, header=[0, 1, 2, 3])
+metrics.head()
 
 # %%
-metrics.sort_values(by=('NA interpolated', 'valid_fake_na', 'MAE'))
+metrics.stack('model')
 
 # %%
-# sort_by = 'MAE'
+# ToDo: integrate as parameters
 metric_columns = ['MSE', 'MAE']
-model_keys = ['collab', 'dae', 'vae']
+model_keys = ['CF', 'DAE', 'VAE']
 subset = metrics.columns.levels[0][0]
 print(f"{subset = }")
 
@@ -116,16 +96,22 @@ print(f"{subset = }")
 # Experiment metadata from configs
 
 # %%
-meta = pd.read_json(path_configs_json).T
-meta['hidden_layers'] = meta.loc[meta['hidden_layers'].notna(
-), 'hidden_layers'].apply(tuple)  # make list a tuple
-meta['n_hidden_layers'] = meta.hidden_layers.loc[meta['hidden_layers'].notna()
-                                                 ].apply(len).fillna(0)
-
-mask_collab = meta.index.str.contains('collab')
-meta.loc[mask_collab, 'batch_size'] = meta.loc[mask_collab, 'batch_size_collab']
-meta.loc[mask_collab, 'hidden_layers'] = None
-
+meta = pd.read_csv(path_configs)
+meta['hidden_layers'] = (meta
+                         .loc[meta['hidden_layers'].notna(), 'hidden_layers']
+                         .apply(lambda x: tuple(eval(x)))
+)
+meta['n_hidden_layers'] = (meta
+                           .loc[meta['hidden_layers'].notna(), 'hidden_layers']
+                           .apply(len)
+)
+meta['n_hidden_layers'] = (meta
+                           ['n_hidden_layers']
+                           .fillna(0)
+                           .astype(int)
+)
+meta.loc[meta['hidden_layers'].isna(), 'hidden_layers'] = None
+meta = meta.set_index('id')
 meta
 
 # %% [markdown]
@@ -135,27 +121,28 @@ meta
 # ## Colorcoded metrics
 #
 # - can be one of the [matplotlib color maps](https://matplotlib.org/stable/tutorials/colors/colormaps.html), which also have reversed version indicated by `*_r`
-#
-# ``` python
-# ['Accent', 'Accent_r', 'Blues', 'Blues_r', 'BrBG', 'BrBG_r', 'BuGn', 'BuGn_r', 'BuPu', 'BuPu_r', 'CMRmap', 'CMRmap_r', 'Dark2', 'Dark2_r', 'GnBu', 'GnBu_r', 'Greens', 'Greens_r', 'Greys', 'Greys_r', 'OrRd', 'OrRd_r', 'Oranges', 'Oranges_r', 'PRGn', 'PRGn_r', 'Paired', 'Paired_r', 'Pastel1', 'Pastel1_r', 'Pastel2', 'Pastel2_r', 'PiYG', 'PiYG_r', 'PuBu', 'PuBuGn', 'PuBuGn_r', 'PuBu_r', 'PuOr', 'PuOr_r', 'PuRd', 'PuRd_r', 'Purples', 'Purples_r', 'RdBu', 'RdBu_r', 'RdGy', 'RdGy_r', 'RdPu', 'RdPu_r', 'RdYlBu', 'RdYlBu_r', 'RdYlGn', 'RdYlGn_r', 'Reds', 'Reds_r', 'Set1', 'Set1_r', 'Set2', 'Set2_r', 'Set3', 'Set3_r', 'Spectral', 'Spectral_r', 'Wistia', 'Wistia_r', 'YlGn', 'YlGnBu', 'YlGnBu_r', 'YlGn_r', 'YlOrBr', 'YlOrBr_r', 'YlOrRd', 'YlOrRd_r', 'afmhot', 'afmhot_r', 'autumn', 'autumn_r', 'binary', 'binary_r', 'bone', 'bone_r', 'brg', 'brg_r', 'bwr', 'bwr_r', 'cividis', 'cividis_r', 'cool', 'cool_r', 'coolwarm', 'coolwarm_r', 'copper', 'copper_r', 'cubehelix', 'cubehelix_r', 'flag', 'flag_r', 'gist_earth', 'gist_earth_r', 'gist_gray', 'gist_gray_r', 'gist_heat', 'gist_heat_r', 'gist_ncar', 'gist_ncar_r', 'gist_rainbow', 'gist_rainbow_r', 'gist_stern', 'gist_stern_r', 'gist_yarg', 'gist_yarg_r', 'gnuplot', 'gnuplot2', 'gnuplot2_r', 'gnuplot_r', 'gray', 'gray_r', 'hot', 'hot_r', 'hsv', 'hsv_r', 'inferno', 'inferno_r', 'jet', 'jet_r', 'magma', 'magma_r', 'nipy_spectral', 'nipy_spectral_r', 'ocean', 'ocean_r', 'pink', 'pink_r', 'plasma', 'plasma_r', 'prism', 'prism_r', 'rainbow', 'rainbow_r', 'seismic', 'seismic_r', 'spring', 'spring_r', 'summer', 'summer_r', 'tab10', 'tab10_r', 'tab20', 'tab20_r', 'tab20b', 'tab20b_r', 'tab20c', 'tab20c_r', 'terrain', 'terrain_r', 'turbo', 'turbo_r', 'twilight', 'twilight_r', 'twilight_shifted', 'twilight_shifted_r', 'viridis', 'viridis_r', 'winter', 'winter_r']
-# ```
 
 # %%
 cmap = 'cividis_r'
 
 # %%
-metrics_styled = metrics.unstack('model')
-
-metrics_styled = (
-    metrics_styled.set_index(
-        pd.MultiIndex.from_frame(
-            meta.loc[metrics_styled.index, [
-                'latent_dim', 'hidden_layers', 'batch_size']]
-        ))
-    .sort_index()
-    .stack('model')
-    .style.background_gradient(cmap)
+# ToDo: To make it cleaner: own config for each model (interpolated and median)
+metrics_styled = (metrics
+                 .set_index(
+                     pd.MultiIndex
+                     .from_frame(
+                         meta
+                        .loc[metrics.index, ['latent_dim', 'hidden_layers', 'batch_size']]
+                        .drop_duplicates()
+                        .loc[metrics.index]
+                     )
+                 )
+                .sort_index()
+                .stack('model')
+                .drop_duplicates()
+                .style.background_gradient(cmap)
 )
+
 metrics = metrics_styled.data
 metrics_styled
 
@@ -190,48 +177,64 @@ vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
 # Rebuild metrics from dictionary
 
 # %%
-metrics_long = pd.DataFrame.from_dict(metrics_dict_multikey, orient='index')
-columns_names = ['subset', 'data_split', 'model', 'metric_name']
-metrics_long.columns.names = columns_names
-metrics_long.index.name = 'id'
-metrics_long.sample(5)
+metrics_long = pd.read_csv(path_metrics, index_col=[0], header=[0,1,2,3])
+# columns_names = ['subset', 'data_split', 'model', 'metric_name']
+columns_names = list(metrics_long.columns.names)
+metrics_long.sample(5) if len(metrics_long) > 15 else metrics_long
 
 # %% [markdown]
 # Combine with total number of simulated NAs the metric is based on (`N`) into single column
 
 # %%
-metrics_N = metrics_long.loc[:, pd.IndexSlice[:, :, :, 'N']]
-metrics_N = metrics_N.stack(
-    ['subset', 'data_split', 'model', 'metric_name']).unstack('metric_name').astype(int)
-metrics_N  # .unstack(['subset', 'data_split', 'model',])
+metrics_N = (metrics_long
+             .loc[:, pd.IndexSlice[:, :, :, 'N']]
+             .stack(['subset', 'data_split', 'model'])
+             .reset_index()
+             .drop_duplicates()
+             .set_index(['id', 'subset', 'data_split', 'model'])
+             .astype(int)
+)
+metrics_N
 
 # %% [markdown]
 # join total number of simulated NAs (`N`) used to compute metric
 
 # %%
-metrics_long = metrics_long.loc[:, pd.IndexSlice[:, :, :, metric_columns]]
-metrics_long = metrics_long.stack(metrics_long.columns.names).to_frame(
-    'metric_value').reset_index('metric_name').join(metrics_N)
+metrics_long = (metrics_long
+                .loc[:, pd.IndexSlice[:, :, :, metric_columns]]
+                .stack(metrics_long.columns.names)
+                .to_frame('metric_value')
+                .reset_index('metric_name')
+                .join(metrics_N)
+)
 metrics_long
 
 # %% [markdown]
 # join metadata for each metric
 
 # %%
-metrics_long = metrics_long.reset_index(
-    ['subset', 'data_split', 'model']).join(meta)
-metrics_long.index.name = 'id'
+metrics_long = (metrics_long
+                .reset_index(['subset', 'data_split'])
+                .join(meta.set_index('model', append=True))
+               ).reset_index('model')
+# metrics_long.index.name = 'id'
 metrics_long.sample(5)
 
 # %% [markdown]
 # Combine number of parameters into one columns (they are mutually exclusive)
 
 # %%
-metrics_long['n_params'] = metrics_long['n_params_collab']
-for key in ['DAE', 'VAE']:
-    mask = metrics_long.model == key
-    metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask,
-                                                          f'n_params_{key.lower()}']
+# ToDo: Still hacky: every model needs a config file (add prop. imputed)
+# groupby 'id'
+cols = ['M', 'data', 'file_format', 'fn_rawfile_metadata',
+        'folder_data', 'folder_experiment',
+        'level', 'meta_cat_col', 'meta_date_col', 
+        'out_figures', 'out_folder', 'out_metrics', 'out_models', 'out_preds',
+        'sample_idx_position', 'save_pred_real_na']
+metrics_long[cols] = metrics_long.groupby(level=0)[cols].fillna(method='pad')
+metrics_long.sample(5)
+
+# %%
 mask = metrics_long.model == 'interpolated'
 # at least overall (and 1 for the number of replicates?)
 metrics_long.loc[mask, 'n_params'] = 1
@@ -240,7 +243,8 @@ mask = metrics_long.model == 'median'
 metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M']
 
 metrics_long[[*columns_names, 'n_params',
-              'n_params_vae', 'n_params_dae', 'n_params_collab']]
+             #'n_params_vae', 'n_params_dae', 'n_params_collab'
+              ]]
 
 # %% [markdown]
 # A a descriptive column describing the `subset` and the total number of simulated NAs in it.
@@ -255,7 +259,7 @@ metrics_long[['subset_w_N', 'subset']]
 
 # %%
 fname = FOLDER / 'metrics_long_df.csv'
-files_out['metrics_long_df.csv'] = fname
+files_out[fname.stem] = fname
 metrics_long.to_csv(fname)  # Should all the plots be done without the metrics?
 logger.info(f"Saved metrics in long format: {fname}")
 
@@ -268,7 +272,7 @@ logger.info(f"Saved metrics in long format: {fname}")
 
 # %%
 labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
-               'batch_size_collab': 'bs',
+               'batch_size': 'bs',
                'n_hidden_layers': "No. of hidden layers",
                'latent_dim': 'hidden layer dimension',
                'subset_w_N': 'subset',
@@ -282,13 +286,13 @@ labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
 
 # %%
 # not robust
-category_orders = {'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE'],
+category_orders = {'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE'],
                    }
 
 # %%
 col = "NA interpolated valid_fake_na collab MAE"
-model = 'collab'
-# col = ("NA interpolated","valid_fake_na","collab","MSE")
+model = 'CF'
+# col = ("NA interpolated","valid_fake_na",'CF',"MSE")
 fig = px.scatter(metrics_long.query(f'model == "{model}"'),
                  x="latent_dim",
                  y='metric_value',
@@ -481,7 +485,7 @@ selected.sample(5)
 
 # %%
 min_latent = (selected.loc['NA interpolated']
-                      .loc[METRIC].loc[['DAE', 'VAE', 'collab']]
+                      .loc[METRIC].loc[['DAE', 'VAE', 'CF']]
                       .groupby(level='latent_dim')
                       .mean()
                       .sort_values('metric_value')
@@ -494,7 +498,7 @@ print("Minimum latent value for average of models:", min_latent)
 
 # %%
 selected = selected.loc['NA interpolated'].loc['MAE'].loc[[
-    'collab', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
+    'CF', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
 selected
 
 # %% [markdown]
@@ -658,7 +662,7 @@ vaep.savefig(
 group_by = ['data_split', 'subset', 'metric_name', 'model']
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'collab', 'DAE', 'VAE']}
+                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
 order_models = order_categories['model']
 
 # %%
@@ -673,7 +677,7 @@ selected.to_csv(FOLDER / 'best_models_metrics.csv')
 selected
 
 # %%
-selected = selected.loc[['collab', 'DAE', 'VAE']]
+selected = selected.loc[['CF', 'DAE', 'VAE']]
 selected
 
 # %%

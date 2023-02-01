@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = [16.0, 7.0]
 
 # %%
 IDX =[['proteinGroups', 'aggPeptides', 'evidence'],
-      ['median', 'interpolated', 'collab', 'DAE', 'VAE']]
+      ['median', 'interpolated', 'CF', 'DAE', 'VAE']]
 
 REPITITION_NAME = snakemake.params.repitition_name # 'dataset', 'repeat'
 

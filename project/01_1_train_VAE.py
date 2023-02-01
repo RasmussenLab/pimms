@@ -91,7 +91,8 @@ latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of mode
 hidden_layers:Union[int,str] = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key: str = 'VAE' # model key (lower cased version will be used for file names)
+model: str = 'VAE' # model name
+model_key: str = 'VAE' # potentially alternative key for model (grid search)
 save_pred_real_na: bool = False # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
 meta_date_col: str = None # date column in meta data
@@ -342,7 +343,9 @@ args.epoch_trained
 # %% tags=[]
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_vae.learn, args.model_key, folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
+fig = models.plot_training_losses(ana_vae.learn, args.model_key,
+                                  folder=args.out_figures,
+                                  norm_factors=[N_train_notna, N_val_notna])
 
 # %% [markdown]
 # ### Predictions
@@ -369,15 +372,15 @@ test_pred_fake_na
 # %% [markdown]
 # save real na predictions
 # %%
-if args.save_pred_real_na:
-    # all idx missing in training data
-    mask = data.train_X.isna().stack()
-    idx_real_na = mask.index[mask]
-    # remove fake_na idx
-    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-    pred_real_na = pred.loc[idx_real_na]
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-    del mask, idx_real_na, pred_real_na, pred
+# if args.save_pred_real_na:
+#     # all idx missing in training data
+#     mask = data.train_X.isna().stack()
+#     idx_real_na = mask.index[mask]
+#     # remove fake_na idx
+#     idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+#     pred_real_na = pred.loc[idx_real_na]
+#     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+#     del mask, idx_real_na, pred_real_na, pred
 
 # %% [markdown]
 # ### Plots
