@@ -17,7 +17,7 @@ GRID = {k:config[k]
         for k 
         in ['epochs_max',
             'latent_dim',
-            'hidden_layers', # collab does not change based on #hidden layers -> repeated computation
+            'hidden_layers',
             ]
         }
 
@@ -26,6 +26,11 @@ name_template= config['name_template']
 folder_grid_search = config['folder_grid_search']
 folder_experiment = config['folder_experiment']
 folder_experiment2 = config['folder_experiment2'] # expand fct, replaces single {} by double {{}}
+
+
+AE_MODELS = ['DAE', 'VAE']
+CF_MODEL = 'CF'
+MODELS = ['median', 'interpolated', CF_MODEL, *AE_MODELS]
 
 rule all:
     input:
@@ -45,10 +50,14 @@ rule results:
             split=["test_fake_na", "valid_fake_na"],
             ),
         f'{folder_experiment}/metrics_long_df.csv'
+    params:
+        models=MODELS
     log:
         notebook=f"{folder_experiment}/02_3_grid_search_analysis.ipynb"
     notebook:
         "../02_3_grid_search_analysis.ipynb"
+
+
 
 rule compare_search_by_dataset:
     input:
@@ -58,6 +67,8 @@ rule compare_search_by_dataset:
         f'{folder_grid_search}/average_performance_over_data_levels_best_test.pdf'
     log:
         notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb"
+    params:
+        models=config['models']
     notebook:
         "../02_4_best_models_over_all_data.ipynb"
 
@@ -156,16 +167,15 @@ rule build_train_config_collab:
         with open(output.config_train, 'w') as f:
             yaml.dump(config, f)
 
-
 rule collect_all_configs:
     input:
         expand(f"{folder_experiment2}/"
               f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml",
                 **GRID,
-                ae_model=['DAE', 'VAE']),
+                ae_model=AE_MODELS),
         expand(f"{folder_experiment2}/{name_template}/models/model_config_{{collab_model}}.yaml",
                 **GRID,
-                collab_model='CF')
+                collab_model=CF_MODEL)
     output:
         out = f"{folder_experiment}/all_configs.csv",
     log:
@@ -173,14 +183,13 @@ rule collect_all_configs:
     notebook:
         "../02_2_aggregate_configs.py.ipynb"
 
-
 rule collect_metrics:
     input:
         expand(f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
-            ae_model=['DAE', 'VAE'],
+            ae_model=AE_MODELS,
             **GRID),
         expand(f"{folder_experiment2}/{name_template}/metrics/metrics_{{collab_model}}.json",
-                  collab_model=['CF'],
+                  collab_model=CF_MODEL,
                   **GRID)
     output:
         out = f"{folder_experiment}/all_metrics.csv",

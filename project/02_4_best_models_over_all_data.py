@@ -57,6 +57,21 @@ metrics_long = metrics_long.set_index('id')
 metrics_long
 
 # %%
+# snakemake.params.folder
+models = snakemake.params.models # snakefile would need to be
+
+# %%
+group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
+
+selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
+
+order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
+
+order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+                    'model': ['median', 'interpolated', *models]}
+
+# %%
 FOLDER = fname.parent.parent
 print(f"{FOLDER =}")
 
@@ -79,13 +94,6 @@ metrics_long[['latent_dim', 'hidden_layers', 'model', 'text', ]]
 # ## Settings
 
 # %%
-group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
-
-selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
-
-order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
-
 _unique = metrics_long["data level"].unique()
 order_categories['data level'] = [l for l in order_categories['data level'] if l in _unique] #ensure predefined order
 _unique = metrics_long['model'].unique()
@@ -119,7 +127,7 @@ sel_on_val = selected.loc[
 sel_on_val
 
 # %% [markdown]
-# Retrieve test data values (so far this was always the same as the minimum on the test data)
+# Retrieve test data values
 
 # %%
 sel_on_val = sel_on_val.set_index(['latent_dim', 'hidden_layers', 'id'], append=True)
@@ -134,14 +142,6 @@ test_results = ( metrics_long
  .set_index('data_split', append=True)
 )[selected_cols]
 test_results
-
-# %% [markdown]
-# compare to best result on test split
-
-# %%
-selected.loc[
-    pd.IndexSlice['test_fake_na', IDX_ORDER[0], 'NA interpolated', 'MAE', IDX_ORDER[1]],
-    selected_cols]
 
 # %% [markdown]
 # ### test data results
