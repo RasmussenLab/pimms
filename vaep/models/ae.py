@@ -495,8 +495,8 @@ def loss_fct_vae(pred, y, reduction='sum'):
 class AutoEncoderAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
-                train_df:pd.DataFrame,
-                val_df:pd.DataFrame, # values to use for validation
+                 train_df:pd.DataFrame,
+                 val_df:pd.DataFrame, # values to use for validation
                  model:torch.nn.modules.module.Module,
                  model_kwargs:dict,
                  transform: sklearn.pipeline.Pipeline,
