@@ -22,7 +22,6 @@ from pathlib import Path
 from pprint import pprint
 from typing import Union, List
 
-
 import plotly.express as px
 
 # from fastai.losses import MSELossFlat
@@ -63,33 +62,31 @@ from vaep.io import datasplits
 # from vaep.io.dataloaders import get_dls, get_test_dl
 from vaep import sampling
 
-
 import vaep.nb as config
-from vaep.logging import setup_logger
-logger = setup_logger(logger=logging.getLogger('vaep'))
+logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
 
-# %% [markdown]
-# Papermill script parameters:
 
 # %%
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
 
+# %% [markdown]
+# Papermill script parameters:
 
 # %% tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
-file_format: str = 'pkl' # change default to pickled files
+file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
 # training
-epochs_max:int = 20  # Maximum number of epochs
+epochs_max:int = 50  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
 batch_size:int = 64 # Batch size for training (and evaluation)
-cuda:bool=True # Use the GPU for training?
+cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:str = '512' # A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
@@ -97,16 +94,16 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'DAE' # model name
 model_key: str = 'DAE' # potentially alternative key for model (grid search)
-save_pred_real_na:bool=False # Save all predictions for real na
+save_pred_real_na: bool = False # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col = None
-meta_cat_col = None
+meta_date_col: str = None # date column in meta data
+meta_cat_col: str = None # category column in meta data
 
 # %%
-# # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
+# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # latent_dim = 30
-# # epochs_max = 2
+# epochs_max = 2
 # # force_train = False
 
 # %% [markdown]
@@ -167,9 +164,11 @@ else:
 # load meta data for splits
 
 # %%
-df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
-df_meta.loc[data.train_X.index.levels[0]]
-
+if args.fn_rawfile_metadata:
+    df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
+    display(df_meta.loc[data.train_X.index.levels[0]])
+else:
+    df_meta = None
 
 # %% [markdown]
 # ## Initialize Comparison
@@ -181,8 +180,8 @@ df_meta.loc[data.train_X.index.levels[0]]
 #     - [x] add some additional NAs based on distribution of data
 
 # %%
-freq_peptides = sampling.frequency_by_index(data.train_X, 0)
-freq_peptides.head() # training data
+freq_feat = sampling.frequency_by_index(data.train_X, 0)
+freq_feat.head() # training data
 
 # %% [markdown]
 # ### Produce some addional fake samples
@@ -230,6 +229,7 @@ data.val_y # potentially has less features
 
 # %%
 data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.columns).fillna(data.val_y)
+data.val_y
 
 # %% [markdown]
 # ## Denoising Autoencoder
@@ -238,46 +238,41 @@ data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.
 # ### Analysis: DataLoaders, Model, transform
 
 # %%
-data.train_X
-
-# %%
-data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.columns).fillna(data.val_y)
-
-# %%
-dae_default_pipeline = sklearn.pipeline.Pipeline(
+default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
         ('impute', SimpleImputer(add_indicator=False))
     ])
 
-ana_dae = ae.AutoEncoderAnalysis(train_df=data.train_X,
-                                 val_df=data.val_y,
-                                 model=ae.Autoencoder,
-                                 transform=dae_default_pipeline,
-                                 decode=['normalize'],
-                                 model_kwargs=dict(n_features=data.train_X.shape[-1],
-                                                   n_neurons=args.hidden_layers,
-                                                   last_decoder_activation=None,
-                                                   dim_latent=args.latent_dim),
-                                 bs=args.batch_size)
-args.n_params = ana_dae.n_params_ae
+analysis = ae.AutoEncoderAnalysis(
+    train_df=data.train_X,
+    val_df=data.val_y,
+    model=ae.Autoencoder,
+    transform=default_pipeline,
+    decode=['normalize'],
+    model_kwargs=dict(n_features=data.train_X.shape[-1],
+                      n_neurons=args.hidden_layers,
+                      last_decoder_activation=None,
+                      dim_latent=args.latent_dim),
+    bs=args.batch_size)
+args.n_params = analysis.n_params_ae
 
 if args.cuda:
-    ana_dae.model = ana_dae.model.cuda()
-ana_dae.model
+    analysis.model = analysis.model.cuda()
+analysis.model
 
 # %% [markdown]
-# ### Learner
+# ### Training
 
 # %%
-ana_dae.learn = Learner(dls=ana_dae.dls, model=ana_dae.model,
+analysis.learn = Learner(dls=analysis.dls,
+                        model=analysis.model,
                         loss_func=MSELossFlat(reduction='sum'),
                         cbs=[EarlyStoppingCallback(patience=5),
                              ae.ModelAdapter(p=0.2)]
                         )
 
-# %%
-ana_dae.learn.show_training_loop()
+analysis.learn.show_training_loop()
 
 # %% [markdown]
 # Adding a `EarlyStoppingCallback` results in an error.  Potential fix in [PR3509](https://github.com/fastai/fastai/pull/3509) is not yet in current version. Try again later
@@ -286,28 +281,28 @@ ana_dae.learn.show_training_loop()
 # learn.summary()
 
 # %%
-suggested_lr = ana_dae.learn.lr_find()
-ana_dae.params['suggested_inital_lr'] = suggested_lr.valley
+suggested_lr = analysis.learn.lr_find()
+analysis.params['suggested_inital_lr'] = suggested_lr.valley
 suggested_lr
 
+# %% [markdown]
+# dump model config
+
 # %%
-vaep.io.dump_json(ana_dae.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key))
+vaep.io.dump_json(analysis.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key))
+
+
+
+# %%
+# papermill_description=train
+analysis.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 
 # %% [markdown]
-# ### Training
-#
+# Save number of actually trained epochs
 
 # %%
-# papermill_description=train_dae
-ana_dae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
-
-# %% [markdown]
-# #### Loss unnormalized
-#
-# - differences in number of total measurements not changed
-
-# %%
-fig = models.plot_training_losses(learner=ana_dae.learn, name=args.model_key, folder=args.out_figures)
+args.epoch_trained = analysis.learn.epoch + 1
+args.epoch_trained
 
 # %% [markdown]
 # #### Loss normalized by total number of measurements
@@ -315,15 +310,10 @@ fig = models.plot_training_losses(learner=ana_dae.learn, name=args.model_key, fo
 # %%
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_dae.learn, args.model_key,
+fig = models.plot_training_losses(analysis.learn, args.model_key,
                                   folder=args.out_figures,
                                   norm_factors=[N_train_notna, N_val_notna])
-# %% [markdown]
-# Save number of actually trained epochs
 
-# %%
-args.epoch_trained = ana_dae.learn.epoch + 1
-args.epoch_trained
 
 # %% [markdown]
 # Why is the validation loss better then the training loss?
@@ -341,43 +331,43 @@ args.epoch_trained
 # create predictiona and select for validation data
 
 # %%
-ana_dae.model.eval()
-pred, target = ana_dae.get_preds_from_df(df_wide=data.train_X)  # train_X
+analysis.model.eval()
+pred, target = analysis.get_preds_from_df(df_wide=data.train_X)  # train_X
 pred = pred.stack()
+pred
+# %%
 val_pred_fake_na['DAE'] = pred # model_key ?
 val_pred_fake_na
 
-# %% [markdown]
-# select predictions for test dataset
 
-# %% tags=[]
+# %%
 test_pred_fake_na['DAE'] = pred # model_key?
 test_pred_fake_na
 
+# %% [markdown]
+# save real na predictions
+
 # %%
 # if args.save_pred_real_na:
-    # # all idx missing in training data
-    # mask = data.train_X.isna().stack()
-    # idx_real_na = mask.index[mask]
-    # # remove fake_na idx
-    # idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-    # pred_real_na = pred.loc[idx_real_na]
-    # pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-    # del mask, idx_real_na, pred_real_na, pred
-
+# # all idx missing in training data
+# mask = data.train_X.isna().stack()
+# idx_real_na = mask.index[mask]
+# # remove fake_na idx
+# idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
+# pred_real_na = pred.loc[idx_real_na]
+# pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+# del mask, idx_real_na, pred_real_na, pred
 
 # %% [markdown]
 # ### Plots
 #
 # - validation data
-# - [ ] add test data
 
 # %%
-# could also be a method
-ana_dae.model.cpu()
-df_latent = vaep.model.get_latent_space(ana_dae.model.encoder,
-                                            dl=ana_dae.dls.valid,
-                                            dl_index=ana_dae.dls.valid.data.index)
+analysis.model.cpu()
+df_latent = vaep.model.get_latent_space(analysis.model.encoder,
+                                            dl=analysis.dls.valid,
+                                            dl_index=analysis.dls.valid.data.index)
 df_latent
 
 # %%
@@ -415,27 +405,27 @@ d_metrics = models.Metrics(no_na_key='NA interpolated', with_na_key='NA not inte
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
 
-# %% tags=[]
+# %%
 added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
 added_metrics
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ### Test Datasplit
 #
 # Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
 
-# %% tags=[]
+# %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
 added_metrics
 
 # %% [markdown]
 # Save all metrics as json
 
-# %% tags=[]
+# %%
 vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
+d_metrics
 
-
-# %% tags=[]
+# %%
 metrics_df = models.get_df_from_nested_dict(d_metrics.metrics).T
 metrics_df
 
@@ -499,9 +489,6 @@ fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('
                  )
 fig.show()
 
-# %% [markdown] tags=[]
-# ## Config
-
 # %% [markdown]
 # ## Save predictions
 
@@ -509,10 +496,12 @@ fig.show()
 # if args.save_pred_real_na:
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+# %% [markdown]
+# ## Config
+
+# %%
+figures # switch to fnames?
 
 # %%
 args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
 args
-
-# %%
-figures # switch to fnames?
