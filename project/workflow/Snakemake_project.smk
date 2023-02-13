@@ -16,7 +16,7 @@ rule all:
         'data/files_selected_per_instrument_counts.csv', # counts
         f'{nb_outfolder}/{"00_2_hela_all_raw_files.ipynb"}',
         'data/samples_selected.yaml',
-        expand('data/single_datasets/{dataset}/{OUT_INFO}.json',
+        expand('data/dev_datasets/{dataset}/{OUT_INFO}.json',
         dataset=DATASETS,
         OUT_INFO=OUT_INFO)
 
@@ -78,17 +78,17 @@ rule metadata_rawfiles:
 
 
 nb='00_3_13_hela_development_dataset_splitting.ipynb'
-outfolder=f'single_datasets'
+outfolder=f'dev_datasets'
 ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
 rule split_data:
     input:
         nb=nb,
         data=f'{ROOT_DUMPS}/{{dataset}}.pkl'
     output:
-        nb=f"data/single_datasets/{{dataset}}/{nb}",
-        json=f'data/single_datasets/{{dataset}}/{OUT_INFO}.json'
+        nb=f"data/dev_datasets/{{dataset}}/{nb}",
+        json=f'data/dev_datasets/{{dataset}}/{OUT_INFO}.json'
     params:
-        folder_datasets = "single_datasets/{dataset}"
+        folder_datasets = "dev_datasets/{dataset}"
     shell:
         # papermill parameters with whitespaces > 
        'papermill {input.nb} {output.nb}'

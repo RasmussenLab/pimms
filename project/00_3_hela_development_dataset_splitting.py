@@ -65,7 +65,8 @@ OUT_NAME = 'protein group'  # for legends labels
 # DUMP: str = erda_dumps.FN_EVIDENCE
 # OUT_NAME = 'charged peptide' # for legends labels
 
-FOLDER_DATASETS: str = f'single_datasets/{DUMP.stem}'
+
+FOLDER_DATASETS: str = f'dev_datasets/{DUMP.stem}'
 
 INSTRUMENT_LEGEND_TITLE = 'Q Exactive HF-X Orbitrap'
 

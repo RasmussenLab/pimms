@@ -60,7 +60,7 @@ args = None
 args = dict(globals()).keys()
 
 # %% tags=["parameters"]
-FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'   # Sample (rows) intensiites for features (columns)
+FN_INTENSITIES: str =  'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'   # Sample (rows) intensiites for features (columns)
 fn_rawfile_metadata: str = 'data/files_selected_metadata.csv'  # Machine parsed metadata from raw file (see workflows/metadata)
 feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
@@ -83,12 +83,12 @@ meta_cat_col: str = None # category column in meta data
 
 # %%
 # # peptides
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+# FN_INTENSITIES: str = 'data/dev_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 # %%
 # # # evidence
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
+# FN_INTENSITIES: str = 'data/dev_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
 # index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
 # folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 
