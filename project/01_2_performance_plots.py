@@ -48,10 +48,10 @@ ORDER_MODELS = ['random shifted normal', 'median', 'interpolated',
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
-fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 
 
 # %%
@@ -256,8 +256,19 @@ mask = (corr_per_feat_test[models] < treshold).any(axis=1)
 
 def highlight_min(s, color, tolerence=0.00001):
     return np.where((s - s.min()).abs() < tolerence, f"background-color: {color};", None)
-corr_per_feat_test.join(feat_count_test).loc[mask].sort_values('count').style.apply(highlight_min, color='yellow', axis=1, subset=corr_per_feat_test.columns) 
 
+view = (corr_per_feat_test
+  .join(feat_count_test)
+  .loc[mask]
+  .sort_values('count'))
+
+if not view.empty:
+    display(view
+        .style.
+        apply(highlight_min, color='yellow', axis=1, subset=corr_per_feat_test.columns)
+    )
+else:
+    print("None found")
 # %%
 metrics = vaep.models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
 test_metrics = metrics.add_metrics(pred_test.drop('freq', axis=1), key='test data')
@@ -439,3 +450,5 @@ vaep.savefig(
 
 # %% [markdown]
 # - [ ] plotly plot with number of observations the mean for each feature is based on
+
+# %%

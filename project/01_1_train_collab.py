@@ -81,10 +81,10 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
-fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # training
 epochs_max:int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not

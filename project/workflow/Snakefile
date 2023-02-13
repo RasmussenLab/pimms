@@ -3,7 +3,7 @@ Document how all the notebooks for a single experiment are connected.
 """
 from snakemake.logging import logger
 
-configfile: "config/single_dev_dataset/proteinGroups/config.yaml"
+configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
 folder_experiment = config['folder_experiment']
 
@@ -20,6 +20,7 @@ rule comparison:
     input:
         nb=nb,
         runs=expand("{folder_experiment}/{nb}",
+            # ToDo: Base on model
             folder_experiment=config['folder_experiment'],
             nb=['01_1_train_collab.ipynb',
                 '01_1_train_dae.ipynb',
