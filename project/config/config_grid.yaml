@@ -33,3 +33,8 @@ config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
 cuda: True
+models:
+  - CF
+  - DAE
+  - VAE
+  - median

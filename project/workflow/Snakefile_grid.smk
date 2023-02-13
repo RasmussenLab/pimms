@@ -39,8 +39,11 @@ folder_experiment2 = config[
 
 AE_MODELS = ["DAE", "VAE"]
 CF_MODEL = "CF"
-MODELS = ["median", "interpolated", CF_MODEL, *AE_MODELS]
+# MODELS = ["median", "interpolated", CF_MODEL, *AE_MODELS]
+MODELS = config['models']
 
+wildcard_constraints:
+    level="|".join(config["levels"])
 
 rule all:
     input:
@@ -69,7 +72,7 @@ rule results:
     notebook:
         "../02_3_grid_search_analysis.ipynb"
 
-
+# per model per dataset -> one metrics_long_df.csv # decide on format
 rule compare_search_by_dataset:
     input:
         expand(f"{folder_experiment}/metrics_long_df.csv", level=config["levels"]),
@@ -81,7 +84,6 @@ rule compare_search_by_dataset:
         models=config["models"],
     notebook:
         "../02_4_best_models_over_all_data.ipynb"
-
 
 nb = "01_0_split_data.ipynb"
 
@@ -124,7 +126,7 @@ use rule train_models from single_experiment as train_collab_model with:
     input:
         nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
-        configfile=f"{folder_experiment}/" f"{name_template}/config_train_collab.yaml",
+        configfile=f"{folder_experiment}/" f"{name_template}/config_train_CF.yaml",
     output:
         nb=f"{folder_experiment}/{name_template}/01_1_train_{{model}}.ipynb",
         metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{model}}.json",
@@ -161,7 +163,7 @@ rule build_train_config:
 
 rule build_train_config_collab:
     output:
-        config_train=f"{folder_experiment}/" f"{name_template}/config_train_collab.yaml",
+        config_train=f"{folder_experiment}/" f"{name_template}/config_train_CF.yaml",
     params:
         folder_data=f"{folder_experiment}/data/",
         batch_size_collab=config["batch_size_collab"],
@@ -183,38 +185,184 @@ rule build_train_config_collab:
             yaml.dump(config, f)
 
 
-rule collect_all_configs:
+rule collect_VAE_configs:
     input:
         expand(
             f"{folder_experiment2}/"
-            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{ae_model}}.yaml",
+            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
             **GRID,
-            ae_model=AE_MODELS,
-        ),
-        expand(
-            f"{folder_experiment2}/{name_template}/models/model_config_{{collab_model}}.yaml",
-            **GRID,
-            collab_model=CF_MODEL,
+            model='VAE',
         ),
     output:
-        out=f"{folder_experiment}/all_configs.csv",
+        out=f"{folder_experiment}/{'VAE'}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{'VAE'}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+rule collect_DAE_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/"
+            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
+            **GRID,
+            model='DAE',
+        ),
+    output:
+        out=f"{folder_experiment}/{'DAE'}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{'DAE'}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+### Median imputation
+_model = 'median'
+
+rule build_train_config_median:
+    output:
+        config_train=f"{folder_experiment}/models/model_config_{_model}.yaml",
+    params:
+        folder_data=f"{folder_experiment}/data/",
+        fn_rawfile_metadata=config["fn_rawfile_metadata"],
+    run:
+        from pathlib import PurePosixPath
+        import yaml
+
+        config = dict(wildcards)  # copy dict
+        config = {k: resolve_type(v) for k, v in config.items() if k != "hidden_layers"}
+
+        config["folder_experiment"] = str(PurePosixPath(output.config_train).parent)
+        config["fn_rawfile_metadata"] = params.fn_rawfile_metadata
+        config["folder_data"] = params.folder_data
+        with open(output.config_train, "w") as f:
+            yaml.dump(config, f)
+
+
+rule median_model:
+    input:
+        nb="01_1_train_{model}.ipynb",
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        configfile=f"{folder_experiment}/models/model_config_{{model}}.yaml",
+    output:
+        nb=f"{folder_experiment}/01_1_train_{{model}}.ipynb",
+        metric=f"{folder_experiment}/metrics/metrics_{{model}}.json",
+        config=f"{folder_experiment}/models/model_config_{{model}}.yaml",
+    threads: 10
+    params:
+        folder_experiment=f"{folder_experiment}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -f {input.configfile}"
+        " -r folder_experiment {params.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+
+rule collect_median_configs:
+    input:
+        f"{folder_experiment}/models/model_config_{_model}.yaml",
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+
+### 
+
+_model = 'CF'
+rule collect_CF_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/"
+            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
+            **GRID,
+            model=_model,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+rule collect_all_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/{{model}}/all_configs.csv",
+            # levels=config["levels"],
+            model=MODELS,
+        ),
+    output:
+        f"{folder_experiment}/all_configs.csv"
     log:
         notebook=f"{folder_experiment}/02_2_aggregate_configs.ipynb",
     notebook:
         "../02_2_aggregate_configs.py.ipynb"
 
 
-rule collect_metrics:
+_model = 'VAE'
+rule collect_metrics_vae:
     input:
         expand(
-            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{ae_model}}.json",
-            ae_model=AE_MODELS,
+            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
+            model=_model,
             **GRID,
         ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+_model = 'DAE'
+rule collect_metrics_dae:
+    input:
         expand(
-            f"{folder_experiment2}/{name_template}/metrics/metrics_{{collab_model}}.json",
-            collab_model=CF_MODEL,
+            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
+            model=_model,
             **GRID,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+_model = 'CF'
+rule collect_metrics_cf:
+    input:
+        expand(
+            f"{folder_experiment2}/{name_template}/metrics/metrics_{{model}}.json",
+            model=_model,
+            **GRID,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+_model = 'median'
+rule collect_metrics_median:
+    input:
+        f"{folder_experiment}/metrics/metrics_{_model}.json",
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_metrics.ipynb",
+    notebook:
+        "../02_2_aggregate_metrics.py.ipynb"
+
+
+rule collect_all_metrics:
+    input:
+        expand(
+            f"{folder_experiment2}/{{model}}/all_metrics.csv",
+            model=MODELS,
         ),
     output:
         out=f"{folder_experiment}/all_metrics.csv",
