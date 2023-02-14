@@ -2,4 +2,4 @@ config_split: config/single_dev_dataset/proteinGroups_N50/split.yaml
 config_train: config/single_dev_dataset/proteinGroups_N50/train.yaml
 folder_experiment: runs/example
 fn_rawfile_metadata: data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv
-cuda: True
+cuda: False
