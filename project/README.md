@@ -18,8 +18,10 @@ Execute example data (50 runs of HeLa lysate on protein groups level):
 
 ```
 # in ./project
-snakemake -c1 -p -n
+snakemake -c1 -p -n # remove -n to execute
 ```
+
+The example workflow runs in 3-5 mins on default setup (no GPU, no paralleziation).
 
 ### Setup development data
 

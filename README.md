@@ -13,7 +13,7 @@ The pre-print is available [on biorxiv](https://www.biorxiv.org/content/10.1101/
 `vaep`.
 
 We provide functionality as a python package and excutable workflows and notebooks 
-under the [`project`](project) folder.
+under the [`project`](project) folder, inclduing an example.
 
 The [`workflows`](workflows) folder contains snakemake workflows used for rawfile data processing, 
 both for [running MaxQuant](workflows\maxquant) over a large set of HeLa raw files 
@@ -48,7 +48,7 @@ Using conda (or mamba), install the dependencies and the package in editable mod
 ```
 # from main folder of repository (containing environment.yml)
 conda create env -n pimms -f environment.yml # slower
-mamba create env -n pimms -f environment.yml # faster
+mamba create env -n pimms -f environment.yml # faster, less then 5mins
 ```
 
 For a detailed description of a setup using conda, see [docs](docs/venv_setup.md)
@@ -58,6 +58,8 @@ For a detailed description of a setup using conda, see [docs](docs/venv_setup.md
 > then be imported using `import vaep`. See `vaep/README.md`
 
 ### Setup using pip
+
+> Dependecies are currently provided through `environment.yml`, see above
 
 From GitHub
 ```
