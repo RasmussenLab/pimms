@@ -54,4 +54,4 @@ dependencies:
   - jupytext
   - pip:
     - -e .
-    - mrmr_selection
+    - git+https://github.com/smazzanti/mrmr.git
