@@ -11,7 +11,7 @@ dependencies:
   - biopython # Aligner
   - python=3.8
   - numpy=1.20
-  - pandas
+  - pandas>=1.4
   - pandas-profiling
   - scipy>=1.6
   # plotting
