@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-      #   os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         python-version: ["3.8"]
     steps:
     - name: Checkout
@@ -41,3 +41,8 @@ jobs:
     #     pip install pytest
     - name: Run Tests on installed package
       run: pytest . 
+    - name: Run demo workflow
+      run: | 
+       cd project
+       snakemake -p -c1 -n
+       snakemake -p -c1
