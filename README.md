@@ -70,8 +70,6 @@ Change to the [`project` folder](./project) and see it's [README](project/README
 
 ```
 conda activate pimms # activate 
-cd project
-pwd # so be in ./pimms/project
 ```
 
 The demo will run an example on a small data set of 50 HeLa samples (protein groups):
@@ -79,14 +77,36 @@ The demo will run an example on a small data set of 50 HeLa samples (protein gro
   2. it runs the three semi-supervised models next to some default heuristic methods
   3. it creates an comparison
 
-The results are written to `./pimms/project/runs/example`, including html version of the 
+The results are written to `./pimms/project/runs/example`, including `html` versions of the 
 notebooks for inspection.
 
 ```
 cd project
+pwd # so be in ./pimms/project
 snakemake -c1 -p -n # dryrun
 snakemake -c1 -p
 ```
+
+The predictions of the three semi-supervised models can be found under `./pimms/project/runs/example/preds`.
+To combine them with the observed data you can run
+
+```python
+# ipython or python session
+# be in ./pimms/project
+folder_data = 'runs/example/data'
+data = vaep.io.datasplits.DataSplits.from_folder(
+    folder_data, file_format='pkl')
+observed = pd.concat([data.train_X, data.val_y, data.test_y])
+# load predictions for missing values of a certain model
+model = 'vae'
+fpath_pred = f'runs/example/preds/pred_real_na_{model}.csv '
+pred = pd.read_csv(fpath_pred, index_col=[0, 1]).squeeze()
+df_imputed = pd.concat([observed, pred]).unstack()
+# assert no missing values for retained features
+assert df_imputed.isna().sum().sum() == 0
+df_imputed
+```
+
 
 <!-- ### Setup using pip
 
