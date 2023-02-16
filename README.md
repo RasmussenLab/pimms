@@ -38,26 +38,57 @@ papermill 01_1_train_vae.ipynb --help-notebook
 We also plan to provide functionality and examples to interactive use of the 
 models developed in PIMMS.
 
-
-## Setup for Development
+## Setup
 The package is not yet available as a standalone software on pypi. Currently we use 
-conda and pip to setup the environment. 
+conda and pip to setup the environment. For a detailed description of a setup using conda,
+see [instructions on setting up a virtual environment](docs/venv_setup.md).
+
+Download the repository
+
+```
+git clone git@github.com:RasmussenLab/pimms.git
+cd pimms
+```
 
 Using conda (or mamba), install the dependencies and the package in editable mode
 
 ```
 # from main folder of repository (containing environment.yml)
-conda create env -n pimms -f environment.yml # slower
-mamba create env -n pimms -f environment.yml # faster, less then 5mins
+conda env create -n pimms -f environment.yml # slower
+mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-For a detailed description of a setup using conda, see [docs](docs/venv_setup.md)
+> If on Mac M1: use  `environment_m1.yaml` where cudatoolkit is removed.
+
+## Run Demo
+
+Change to the [`project` folder](./project) and see it's [README](project/README.md)
 
 > Currently there are only notebooks and scripts under `project`, 
 > but shared functionality will be added under `vaep` folder-package: This can 
-> then be imported using `import vaep`. See `vaep/README.md`
+> then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
 
-### Setup using pip
+```
+conda activate pimms # activate 
+cd project
+pwd # so be in ./pimms/project
+```
+
+The demo will run an example on a small data set of 50 HeLa samples (protein groups):
+  1. it describes the data and does create the splits based on the [example data](project/data/dev_datasets/HeLa_6070/README.md)
+  2. it runs the three semi-supervised models next to some default heuristic methods
+  3. it creates an comparison
+
+The results are written to `./pimms/project/runs/example`, including html version of the 
+notebooks for inspection.
+
+```
+cd project
+snakemake -c1 -p -n # dryrun
+snakemake -c1 -p
+```
+
+<!-- ### Setup using pip
 
 > Dependecies are currently provided through `environment.yml`, see above
 
@@ -76,6 +107,6 @@ And using the cloned repository for an editable installation
 pip install -e /path/to/cloned/folder 
 ```
 
-## Overview vaep package
+## Overview vaep package -->
 
 
