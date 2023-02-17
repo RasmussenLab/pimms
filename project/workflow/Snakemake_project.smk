@@ -1,9 +1,9 @@
 """Workflow to produce global analysis for the project."""
 nb_outfolder = 'runs'
 
-DATASETS=[ "df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547",
-           "df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725",
-           "df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321"
+DATASETS=[ "df_intensities_proteinGroups_long",
+           "df_intensities_peptides_long",
+           "df_intensities_evidence_long"
            ]
 
 OUT_INFO = "dataset_info"
@@ -16,7 +16,7 @@ rule all:
         'data/files_selected_per_instrument_counts.csv', # counts
         f'{nb_outfolder}/{"00_2_hela_all_raw_files.ipynb"}',
         'data/samples_selected.yaml',
-        expand('data/dev_datasets/{dataset}/{OUT_INFO}.json',
+        expand('data/dev_datasets/{dataset}/{OUT_INFO}.xlsx',
         dataset=DATASETS,
         OUT_INFO=OUT_INFO)
 
@@ -77,7 +77,7 @@ rule metadata_rawfiles:
 
 
 
-nb='00_3_13_hela_development_dataset_splitting.ipynb'
+nb='00_3_hela_development_dataset_splitting.ipynb'
 outfolder=f'dev_datasets'
 ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
 rule split_data:
@@ -86,7 +86,7 @@ rule split_data:
         data=f'{ROOT_DUMPS}/{{dataset}}.pkl'
     output:
         nb=f"data/dev_datasets/{{dataset}}/{nb}",
-        json=f'data/dev_datasets/{{dataset}}/{OUT_INFO}.json'
+        json=f'data/dev_datasets/{{dataset}}/{OUT_INFO}.xlsx'
     params:
         folder_datasets = "dev_datasets/{dataset}"
     shell:
