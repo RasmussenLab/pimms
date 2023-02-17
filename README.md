@@ -40,8 +40,8 @@ models developed in PIMMS.
 
 ## Setup
 The package is not yet available as a standalone software on pypi. Currently we use 
-conda and pip to setup the environment. For a detailed description of a setup using conda,
-see [instructions on setting up a virtual environment](docs/venv_setup.md).
+conda (or mamba) and pip to setup the environment. For a detailed description of setting up
+conda (or mamba), see [instructions on setting up a virtual environment](docs/venv_setup.md).
 
 Download the repository
 
@@ -69,22 +69,42 @@ Change to the [`project` folder](./project) and see it's [README](project/README
 > then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
 
 ```
-conda activate pimms # activate 
+conda activate pimms # activate virtual environment
+cd project # go to project folder
+pwd # so be in ./pimms/project
+snakemake -c1 -p -n # dryrun demo workflow
+snakemake -c1 -p
 ```
 
 The demo will run an example on a small data set of 50 HeLa samples (protein groups):
   1. it describes the data and does create the splits based on the [example data](project/data/dev_datasets/HeLa_6070/README.md)
+     - see `01_0_split_data.ipynb`
   2. it runs the three semi-supervised models next to some default heuristic methods
+     - see `01_1_train_collab.ipynb`, `01_1_train_dae.ipynb`, `01_1_train_vae.ipynb`
   3. it creates an comparison
+     - see `01_2_performance_plots.ipynb`
 
 The results are written to `./pimms/project/runs/example`, including `html` versions of the 
-notebooks for inspection.
+notebooks for inspection, having the following structure:
 
 ```
-cd project
-pwd # so be in ./pimms/project
-snakemake -c1 -p -n # dryrun
-snakemake -c1 -p
+│   01_0_split_data.html
+│   01_0_split_data.ipynb
+│   01_1_train_collab.html
+│   01_1_train_collab.ipynb
+│   01_1_train_dae.html
+│   01_1_train_dae.ipynb
+│   01_1_train_vae.html
+│   01_1_train_vae.ipynb
+│   01_2_performance_plots.html
+│   01_2_performance_plots.ipynb
+│   data_config.yaml
+│   tree_folder.txt
+|---data
+|---figures
+|---metrics
+|---models
+|---preds
 ```
 
 The predictions of the three semi-supervised models can be found under `./pimms/project/runs/example/preds`.
