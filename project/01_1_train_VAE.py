@@ -93,7 +93,7 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'VAE' # model name
 model_key: str = 'VAE' # potentially alternative key for model (grid search)
-save_pred_real_na: bool = False # Save all predictions for real na
+save_pred_real_na: bool = True # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
@@ -374,7 +374,7 @@ test_pred_fake_na['VAE'] = pred # model_key?
 test_pred_fake_na
 
 # %% [markdown]
-# save real na predictions
+# save missing values predictions
 
 # %%
 # if args.save_pred_real_na:
@@ -553,7 +553,7 @@ fig.show()
 # ## Save predictions
 
 # %%
-# if args.save_pred_real_na:
+# save simulated missing values for both splits
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # %% [markdown]

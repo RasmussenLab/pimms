@@ -76,7 +76,7 @@ force_train:bool = True # Force training when saved model could be used. Per def
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'CF' # model name
 model_key: str = 'CF' # potentially alternative key for model (grid search)
-save_pred_real_na:bool=False # Save all predictions for real na
+save_pred_real_na:bool=False # Save all predictions for missing values
 
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -412,7 +412,7 @@ fig.show()
 # ## Save predictions
 
 # %%
-# if args.save_pred_real_na:
+# save simulated missing values for both splits
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 

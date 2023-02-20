@@ -43,7 +43,7 @@ target = 'kleiner'
 out_folder = 'diff_analysis'
 
 disease_ontology = 5082  # code from https://disease-ontology.org/
-# f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
+# split diseases notebook? Query gene names for proteins in file from uniprot?
 f_annotations = None #'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
@@ -90,7 +90,7 @@ scores
 
 # %%
 # ToDo: change in library
-names = {'vae': 'VAE', 'random shifted_imputation': 'RSN', 'collab': 'CF', 'dae': 'DAE'}
+names = {'vae': 'VAE', 'random shifted_imputation': 'RSN', 'CF': 'CF', 'dae': 'DAE'}
 
 assert args.model_key in names.keys(
 ), f"Missing model key which was expected: {args.model_key}, to be among {', '.join(names.keys())}"
