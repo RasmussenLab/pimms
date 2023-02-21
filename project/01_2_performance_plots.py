@@ -20,7 +20,6 @@
 import random
 from pathlib import Path
 
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np 
 import pandas as pd
@@ -79,25 +78,27 @@ ORDER_MODELS = ['RSN', 'median', 'interpolated', *MODELS]
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %%
+vaep.plotting.make_large_descriptors('large')
 fig, axes = plt.subplots(1, 2, sharey=True)
 
 ax = axes[0]
 _ = data.val_y.unstack().notna().sum(axis=1).sort_values().plot(
         ax=ax,
-        title='Validation data',
+        title='Validation split',
         ylabel='number of feat')
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
 ax = axes[1]
 _ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
         ax=ax,
-        title='Test data')
-fig.suptitle("Fake NAs per sample availability.", size=20)
+        title='Test split')
+fig.suptitle("Simulated missing values per sample", size=20)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
 fname = args.out_figures / 'fake_na_val_test_splits.png'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
+vaep.plotting.make_large_descriptors('xx-large')
 
 # %% [markdown]
 # ## Across data completeness
@@ -155,7 +156,7 @@ all_configs = collect(
     paths=(fname for fname in args.out_models.iterdir() if fname.suffix == '.yaml'),
     load_fn=load_config_file
 )
-model_configs = pd.DataFrame(all_configs).T
+model_configs = pd.DataFrame(all_configs)
 model_configs.T
 
 # %% [markdown]
@@ -207,7 +208,7 @@ corr_per_sample_test.loc[~too_few_obs].describe()
 kwargs = dict(ylim=(0.7,1), rot=90,
               # title='Corr. betw. fake NA and model predictions per sample on test data',
               ylabel='correlation per sample')
-ax = corr_per_sample_test.plot.box(**kwargs)
+ax = corr_per_sample_test.drop('n_obs', axis=1).plot.box(**kwargs)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fname = args.out_figures / 'pred_corr_test_per_sample.pdf'
 figures[fname.stem] = fname
