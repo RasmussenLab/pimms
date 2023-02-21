@@ -83,7 +83,7 @@ rule collect_metrics:
 
 def get_fn_intensities(wildcards):
     """Some metadata is stored in folder name which leads to the need for a lookup of names"""
-    ret = f'data/single_datasets/{config["data_folders"][wildcards.level]}/{wildcards.dataset}.pkl'
+    ret = f'data/dev_datasets/{config["data_folders"][wildcards.level]}/{wildcards.dataset}.pkl'
     return ret
 
 

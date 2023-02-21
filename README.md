@@ -13,7 +13,7 @@ The pre-print is available [on biorxiv](https://www.biorxiv.org/content/10.1101/
 `vaep`.
 
 We provide functionality as a python package and excutable workflows and notebooks 
-under the [`project`](project) folder.
+under the [`project`](project) folder, inclduing an example.
 
 The [`workflows`](workflows) folder contains snakemake workflows used for rawfile data processing, 
 both for [running MaxQuant](workflows\maxquant) over a large set of HeLa raw files 
@@ -38,26 +38,99 @@ papermill 01_1_train_vae.ipynb --help-notebook
 We also plan to provide functionality and examples to interactive use of the 
 models developed in PIMMS.
 
-
-## Setup for Development
+## Setup
 The package is not yet available as a standalone software on pypi. Currently we use 
-conda and pip to setup the environment. 
+conda (or mamba) and pip to setup the environment. For a detailed description of setting up
+conda (or mamba), see [instructions on setting up a virtual environment](docs/venv_setup.md).
+
+Download the repository
+
+```
+git clone git@github.com:RasmussenLab/pimms.git
+cd pimms
+```
 
 Using conda (or mamba), install the dependencies and the package in editable mode
 
 ```
 # from main folder of repository (containing environment.yml)
-conda create env -n pimms -f environment.yml # slower
-mamba create env -n pimms -f environment.yml # faster
+conda env create -n pimms -f environment.yml # slower
+mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-For a detailed description of a setup using conda, see [docs](docs/venv_setup.md)
+> If on Mac M1: use  `environment_m1.yaml` where cudatoolkit is removed.
+
+## Run Demo
+
+Change to the [`project` folder](./project) and see it's [README](project/README.md)
 
 > Currently there are only notebooks and scripts under `project`, 
 > but shared functionality will be added under `vaep` folder-package: This can 
-> then be imported using `import vaep`. See `vaep/README.md`
+> then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
 
-### Setup using pip
+```
+conda activate pimms # activate virtual environment
+cd project # go to project folder
+pwd # so be in ./pimms/project
+snakemake -c1 -p -n # dryrun demo workflow
+snakemake -c1 -p
+```
+
+The demo will run an example on a small data set of 50 HeLa samples (protein groups):
+  1. it describes the data and does create the splits based on the [example data](project/data/dev_datasets/HeLa_6070/README.md)
+     - see `01_0_split_data.ipynb`
+  2. it runs the three semi-supervised models next to some default heuristic methods
+     - see `01_1_train_collab.ipynb`, `01_1_train_dae.ipynb`, `01_1_train_vae.ipynb`
+  3. it creates an comparison
+     - see `01_2_performance_plots.ipynb`
+
+The results are written to `./pimms/project/runs/example`, including `html` versions of the 
+notebooks for inspection, having the following structure:
+
+```
+│   01_0_split_data.html
+│   01_0_split_data.ipynb
+│   01_1_train_collab.html
+│   01_1_train_collab.ipynb
+│   01_1_train_dae.html
+│   01_1_train_dae.ipynb
+│   01_1_train_vae.html
+│   01_1_train_vae.ipynb
+│   01_2_performance_plots.html
+│   01_2_performance_plots.ipynb
+│   data_config.yaml
+│   tree_folder.txt
+|---data
+|---figures
+|---metrics
+|---models
+|---preds
+```
+
+The predictions of the three semi-supervised models can be found under `./pimms/project/runs/example/preds`.
+To combine them with the observed data you can run
+
+```python
+# ipython or python session
+# be in ./pimms/project
+folder_data = 'runs/example/data'
+data = vaep.io.datasplits.DataSplits.from_folder(
+    folder_data, file_format='pkl')
+observed = pd.concat([data.train_X, data.val_y, data.test_y])
+# load predictions for missing values of a certain model
+model = 'vae'
+fpath_pred = f'runs/example/preds/pred_real_na_{model}.csv '
+pred = pd.read_csv(fpath_pred, index_col=[0, 1]).squeeze()
+df_imputed = pd.concat([observed, pred]).unstack()
+# assert no missing values for retained features
+assert df_imputed.isna().sum().sum() == 0
+df_imputed
+```
+
+
+<!-- ### Setup using pip
+
+> Dependecies are currently provided through `environment.yml`, see above
 
 From GitHub
 ```
@@ -74,6 +147,6 @@ And using the cloned repository for an editable installation
 pip install -e /path/to/cloned/folder 
 ```
 
-## Overview vaep package
+## Overview vaep package -->
 
 

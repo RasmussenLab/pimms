@@ -10,7 +10,7 @@ channels:
 dependencies:
   - biopython # Aligner
   - python=3.8
-  - numpy=1.20
+  - numpy
   - pandas>=1.4
   - pandas-profiling
   - scipy>=1.6
@@ -25,7 +25,7 @@ dependencies:
   - scikit-learn=1.0.*
   - fastai
   - torchvision
-  - cudatoolkit=10.2
+  # - cudatoolkit=10.2
   - tensorboard
   - umap-learn
   # stats
@@ -37,7 +37,7 @@ dependencies:
   - openpyxl # xml
   - omegaconf
   # snakemake
-  - snakemake-minimal=7.12.0
+  - snakemake-minimal
   # jupyter
   - ipykernel=5.3
   - ipython=7.22
@@ -56,4 +56,3 @@ dependencies:
     - -e .
     - mrmr-selection
     # - git+https://github.com/smazzanti/mrmr.git
-    
