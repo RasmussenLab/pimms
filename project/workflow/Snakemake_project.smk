@@ -1,14 +1,12 @@
 """Workflow to produce global analysis for the project."""
 nb_outfolder = "runs"
 
-DATASETS = [
-    "df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547",
-    "df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725",
-    "df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321",
-]
+DATASETS=[ "df_intensities_proteinGroups_long",
+           "df_intensities_peptides_long",
+           "df_intensities_evidence_long"
+           ]
 
 OUT_INFO = "dataset_info"
-
 
 rule all:
     input:
@@ -89,8 +87,9 @@ rule metadata_rawfiles:
         " && jupyter nbconvert --to html {output.nb}"  # run with defaults
 
 
-nb = "00_3_13_hela_development_dataset_splitting.ipynb"
-outfolder = f"single_datasets"
+
+nb='00_3_hela_development_dataset_splitting.ipynb'
+outfolder=f'dev_datasets'
 ROOT_DUMPS = "C:/Users/kzl465/OneDrive - University of Copenhagen/vaep/project/data"
 
 
@@ -99,8 +98,8 @@ rule split_data:
         nb=nb,
         data=f"{ROOT_DUMPS}/{{dataset}}.pkl",
     output:
-        nb=f"data/single_datasets/{{dataset}}/{nb}",
-        json=f"data/single_datasets/{{dataset}}/{OUT_INFO}.json",
+        nb=f"data/dev_datasets/{{dataset}}/{nb}",
+        json=f'data/dev_datasets/{{dataset}}/{OUT_INFO}.xlsx'
     params:
         folder_datasets="single_datasets/{dataset}",
     shell:

@@ -121,6 +121,9 @@ df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
 idx_complete_data = df_clinic[[args.target, *args.covar]].dropna().index
 df_clinic.loc[idx_complete_data, [args.target, *args.covar]].describe()
 
+# %%
+df_clinic.loc[idx_complete_data, args.target].value_counts()
+
 # %% [markdown]
 # ## ALD study approach using all measurments
 

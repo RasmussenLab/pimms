@@ -1,5 +1,5 @@
 # models_training:
-folder_experiment:  'runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070'
+folder_experiment:  'runs/experiment_03/df_intensities_evidence_long/Q_Exactive_HF_X_Orbitrap_6070'
 file_format: pkl
 latent_dim: 20
 hidden_layers: "512"
