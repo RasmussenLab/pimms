@@ -44,7 +44,7 @@ snakemake --configfile config/single_dev_dataset/aggpeptides/config.yaml -p -n
 
 execute single notebooks
 ```cmd
-set DATASET=df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070 
+set DATASET=df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070 
 papermill  01_0_split_data.ipynb --help-notebook # check parameters
 papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data.ipynb -p MIN_SAMPLE 0.5 -p fn_rawfile_metadata data/dev_datasets/%DATASET%.csv -p index_col "Sample ID" -p columns_name peptide
 ```

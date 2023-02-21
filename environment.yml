@@ -12,7 +12,6 @@ dependencies:
   - python=3.8
   - numpy=1.20
   - pandas>=1.4
-  - pandas-profiling
   - scipy>=1.6
   # plotting
   - matplotlib=3.3
@@ -55,5 +54,4 @@ dependencies:
   - pip:
     - -e .
     - mrmr-selection
-    # - git+https://github.com/smazzanti/mrmr.git
     
