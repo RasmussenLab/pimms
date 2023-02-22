@@ -32,18 +32,17 @@ name_template = config["name_template"]
 
 folder_grid_search = config["folder_grid_search"]
 folder_experiment = config["folder_experiment"]
+#root_model = f"{folder_experiment}/{model}"
 folder_experiment2 = config[
     "folder_experiment2"
 ]  # expand fct, replaces single {} by double {{}}
 
 
-AE_MODELS = ["DAE", "VAE"]
-CF_MODEL = "CF"
-# MODELS = ["median", "interpolated", CF_MODEL, *AE_MODELS]
 MODELS = config['models']
 
 wildcard_constraints:
-    level="|".join(config["levels"])
+    level="|".join(config["levels"]),
+    ae_model="|".join(['DAE', 'VAE'])
 
 rule all:
     input:
@@ -122,7 +121,7 @@ rule train_ae_models:
         " && jupyter nbconvert --to html {output.nb}"
 
 
-use rule train_models from single_experiment as train_collab_model with:
+use rule train_models from single_experiment as train_CF_model with:
     input:
         nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
@@ -220,7 +219,7 @@ _model = 'median'
 
 rule build_train_config_median:
     output:
-        config_train=f"{folder_experiment}/models/model_config_{_model}.yaml",
+        config_train=f"{folder_experiment}/{_model}/config/model_config_{_model}.yaml",
     params:
         folder_data=f"{folder_experiment}/data/",
         fn_rawfile_metadata=config["fn_rawfile_metadata"],
@@ -238,28 +237,27 @@ rule build_train_config_median:
             yaml.dump(config, f)
 
 
-rule median_model:
+rule use_median_model:
     input:
         nb="01_1_train_{model}.ipynb",
         train_split=f"{folder_experiment}/data/train_X.pkl",
-        configfile=f"{folder_experiment}/models/model_config_{{model}}.yaml",
+        config_train=f"{folder_experiment}/{{model}}/config/model_config_{{model}}.yaml",
     output:
-        nb=f"{folder_experiment}/01_1_train_{{model}}.ipynb",
-        metric=f"{folder_experiment}/metrics/metrics_{{model}}.json",
-        config=f"{folder_experiment}/models/model_config_{{model}}.yaml",
-    threads: 10
+        nb=f"{folder_experiment}/{{model}}/01_1_train_{{model}}.ipynb",
+        metric=f"{folder_experiment}/{{model}}/metrics/metrics_{{model}}.json",
+        config=f"{folder_experiment}/{{model}}/models/model_config_{{model}}.yaml",
     params:
-        folder_experiment=f"{folder_experiment}",
+        folder_experiment=f"{folder_experiment}/{{model}}",
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f {input.configfile}"
+        " -f {input.config_train}"
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
 
 
 rule collect_median_configs:
     input:
-        f"{folder_experiment}/models/model_config_{_model}.yaml",
+        f"{folder_experiment}/{_model}/models/model_config_{_model}.yaml",
     output:
         out=f"{folder_experiment}/{_model}/all_configs.csv",
     log:
@@ -275,7 +273,7 @@ rule collect_CF_configs:
     input:
         expand(
             f"{folder_experiment2}/"
-            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
+            f"{name_template}/models/model_config_{{model}}.yaml",
             **GRID,
             model=_model,
         ),
@@ -296,9 +294,9 @@ rule collect_all_configs:
     output:
         f"{folder_experiment}/all_configs.csv"
     log:
-        notebook=f"{folder_experiment}/02_2_aggregate_configs.ipynb",
+        notebook=f"{folder_experiment}/02_2_join_configs.ipynb",
     notebook:
-        "../02_2_aggregate_configs.py.ipynb"
+        "../02_2_join_configs.py.ipynb"
 
 
 _model = 'VAE'
@@ -349,13 +347,13 @@ rule collect_metrics_cf:
 _model = 'median'
 rule collect_metrics_median:
     input:
-        f"{folder_experiment}/metrics/metrics_{_model}.json",
+        f"{folder_experiment}/{_model}/metrics/metrics_{_model}.json",
     output:
         out=f"{folder_experiment}/{_model}/all_metrics.csv",
     log:
         notebook=f"{folder_experiment}/{_model}/02_2_aggregate_metrics.ipynb",
     notebook:
-        "../02_2_aggregate_metrics.py.ipynb"
+        "../02_1_aggregate_metrics.py.ipynb"
 
 
 rule collect_all_metrics:
@@ -367,6 +365,6 @@ rule collect_all_metrics:
     output:
         out=f"{folder_experiment}/all_metrics.csv",
     log:
-        notebook=f"{folder_experiment}/02_1_aggregate_metrics.ipynb",
+        notebook=f"{folder_experiment}/02_1_join_metrics.ipynb",
     notebook:
-        "../02_1_aggregate_metrics.py.ipynb"
+        "../02_1_join_metrics.py.ipynb"
