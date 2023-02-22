@@ -53,7 +53,36 @@ rule all:
         ),
         f"{folder_grid_search}/average_performance_over_data_levels_best_test.pdf",
 
+##########################################################################################
+# per model per dataset -> one metrics_long_df.csv # decide on format
+rule compare_search_by_dataset:
+    input:
+        expand(f"{folder_experiment}/metrics_long_df.csv", level=config["levels"]),
+    output:
+        f"{folder_grid_search}/average_performance_over_data_levels_best_test.pdf",
+    log:
+        notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb",
+    params:
+        models=config["models"],
+    notebook:
+        "../02_4_best_models_over_all_data.ipynb"
 
+
+
+# split once for each dataset
+nb = "01_0_split_data.ipynb"
+
+use rule create_splits from single_experiment as splits with:
+    input:
+        nb=nb,
+        configfile=config["config_split"],
+    output:
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        nb=f"{folder_experiment}/{nb}",
+    params:
+        folder_experiment=f"{folder_experiment}",
+
+##########################################################################################
 rule results:
     input:
         metrics=f"{folder_experiment}/all_metrics.csv",
@@ -71,34 +100,100 @@ rule results:
     notebook:
         "../02_3_grid_search_analysis.ipynb"
 
-# per model per dataset -> one metrics_long_df.csv # decide on format
-rule compare_search_by_dataset:
+
+rule collect_all_metrics:
     input:
-        expand(f"{folder_experiment}/metrics_long_df.csv", level=config["levels"]),
+        expand(
+            f"{folder_experiment2}/{{model}}/all_metrics.csv",
+            model=MODELS,
+        ),
     output:
-        f"{folder_grid_search}/average_performance_over_data_levels_best_test.pdf",
+        out=f"{folder_experiment}/all_metrics.csv",
     log:
-        notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb",
-    params:
-        models=config["models"],
+        notebook=f"{folder_experiment}/02_1_join_metrics.ipynb",
     notebook:
-        "../02_4_best_models_over_all_data.ipynb"
-
-nb = "01_0_split_data.ipynb"
+        "../02_1_join_metrics.py.ipynb"
 
 
-use rule create_splits from single_experiment as splits with:
+rule collect_all_configs:
     input:
-        nb=nb,
-        configfile=config["config_split"],
+        expand(
+            f"{folder_experiment2}/{{model}}/all_configs.csv",
+            model=MODELS,
+        )
     output:
-        train_split=f"{folder_experiment}/data/train_X.pkl",
-        nb=f"{folder_experiment}/{nb}",
-    params:
-        folder_experiment=f"{folder_experiment}",
+        f"{folder_experiment}/all_configs.csv"
+    log:
+        notebook=f"{folder_experiment}/02_2_join_configs.ipynb",
+    notebook:
+        "../02_2_join_configs.py.ipynb"
+
+##########################################################################################
+
+### AE based models
+_model = 'VAE'
+rule collect_VAE_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/"
+            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
+            **GRID,
+            model=_model,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
 
 
-# use rule train_models from single_experiment as train_AE_MODELS with:
+rule collect_metrics_vae:
+    input:
+        expand(
+            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
+            model=_model,
+            **GRID,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+
+_model = 'DAE'
+rule collect_DAE_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/"
+            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
+            **GRID,
+            model=_model,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+
+rule collect_metrics_dae:
+    input:
+        expand(
+            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
+            model=_model,
+            **GRID,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
 rule train_ae_models:
     input:
         nb="01_1_train_{ae_model}.ipynb",
@@ -121,21 +216,7 @@ rule train_ae_models:
         " && jupyter nbconvert --to html {output.nb}"
 
 
-use rule train_models from single_experiment as train_CF_model with:
-    input:
-        nb="01_1_train_{model}.ipynb",
-        train_split=f"{folder_experiment}/data/train_X.pkl",
-        configfile=f"{folder_experiment}/" f"{name_template}/config_train_CF.yaml",
-    output:
-        nb=f"{folder_experiment}/{name_template}/01_1_train_{{model}}.ipynb",
-        metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{model}}.json",
-        config=f"{folder_experiment}/{name_template}/models/model_config_{{model}}.yaml",
-    threads: 10
-    params:
-        folder_experiment=f"{folder_experiment}/{name_template}",
-
-
-rule build_train_config:
+rule build_train_config_ae:
     output:
         config_train=f"{folder_experiment}/"
         f"{name_template}/config_train_HL_{{hidden_layers}}.yaml",
@@ -158,6 +239,53 @@ rule build_train_config:
         config["cuda"] = params.cuda
         with open(output.config_train, "w") as f:
             yaml.dump(config, f)
+
+
+### Collaborative Filtering (CF)
+_model = 'CF'
+rule collect_CF_configs:
+    input:
+        expand(
+            f"{folder_experiment2}/"
+            f"{name_template}/models/model_config_{{model}}.yaml",
+            **GRID,
+            model=_model,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
+
+rule collect_metrics_cf:
+    input:
+        expand(
+            f"{folder_experiment2}/{name_template}/metrics/metrics_{{model}}.json",
+            model=_model,
+            **GRID,
+        ),
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+
+use rule train_models from single_experiment as train_CF_model with:
+    input:
+        nb="01_1_train_{model}.ipynb",
+        train_split=f"{folder_experiment}/data/train_X.pkl",
+        configfile=f"{folder_experiment}/" f"{name_template}/config_train_CF.yaml",
+    output:
+        nb=f"{folder_experiment}/{name_template}/01_1_train_{{model}}.ipynb",
+        metric=f"{folder_experiment}/{name_template}/metrics/metrics_{{model}}.json",
+        config=f"{folder_experiment}/{name_template}/models/model_config_{{model}}.yaml",
+    threads: 10
+    params:
+        folder_experiment=f"{folder_experiment}/{name_template}",
 
 
 rule build_train_config_collab:
@@ -184,38 +312,31 @@ rule build_train_config_collab:
             yaml.dump(config, f)
 
 
-rule collect_VAE_configs:
-    input:
-        expand(
-            f"{folder_experiment2}/"
-            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
-            **GRID,
-            model='VAE',
-        ),
-    output:
-        out=f"{folder_experiment}/{'VAE'}/all_configs.csv",
-    log:
-        notebook=f"{folder_experiment}/{'VAE'}/02_2_aggregate_configs.ipynb",
-    notebook:
-        "../02_2_aggregate_configs.py.ipynb"
-
-rule collect_DAE_configs:
-    input:
-        expand(
-            f"{folder_experiment2}/"
-            f"{name_template}/models/model_config_hl_{{hidden_layers}}_{{model}}.yaml",
-            **GRID,
-            model='DAE',
-        ),
-    output:
-        out=f"{folder_experiment}/{'DAE'}/all_configs.csv",
-    log:
-        notebook=f"{folder_experiment}/{'DAE'}/02_2_aggregate_configs.ipynb",
-    notebook:
-        "../02_2_aggregate_configs.py.ipynb"
-
 ### Median imputation
 _model = 'median'
+
+_model = 'median'
+rule collect_metrics_median:
+    input:
+        f"{folder_experiment}/{_model}/metrics/metrics_{_model}.json",
+    output:
+        out=f"{folder_experiment}/{_model}/all_metrics.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_metrics.ipynb",
+    notebook:
+        "../02_1_aggregate_metrics.py.ipynb"
+
+
+rule collect_median_configs:
+    input:
+        f"{folder_experiment}/{_model}/models/model_config_{_model}.yaml",
+    output:
+        out=f"{folder_experiment}/{_model}/all_configs.csv",
+    log:
+        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
+    notebook:
+        "../02_2_aggregate_configs.py.ipynb"
+
 
 rule build_train_config_median:
     output:
@@ -255,116 +376,3 @@ rule use_median_model:
         " && jupyter nbconvert --to html {output.nb}"
 
 
-rule collect_median_configs:
-    input:
-        f"{folder_experiment}/{_model}/models/model_config_{_model}.yaml",
-    output:
-        out=f"{folder_experiment}/{_model}/all_configs.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
-    notebook:
-        "../02_2_aggregate_configs.py.ipynb"
-
-
-### 
-
-_model = 'CF'
-rule collect_CF_configs:
-    input:
-        expand(
-            f"{folder_experiment2}/"
-            f"{name_template}/models/model_config_{{model}}.yaml",
-            **GRID,
-            model=_model,
-        ),
-    output:
-        out=f"{folder_experiment}/{_model}/all_configs.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_configs.ipynb",
-    notebook:
-        "../02_2_aggregate_configs.py.ipynb"
-
-rule collect_all_configs:
-    input:
-        expand(
-            f"{folder_experiment2}/{{model}}/all_configs.csv",
-            # levels=config["levels"],
-            model=MODELS,
-        ),
-    output:
-        f"{folder_experiment}/all_configs.csv"
-    log:
-        notebook=f"{folder_experiment}/02_2_join_configs.ipynb",
-    notebook:
-        "../02_2_join_configs.py.ipynb"
-
-
-_model = 'VAE'
-rule collect_metrics_vae:
-    input:
-        expand(
-            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
-            model=_model,
-            **GRID,
-        ),
-    output:
-        out=f"{folder_experiment}/{_model}/all_metrics.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
-    notebook:
-        "../02_1_aggregate_metrics.py.ipynb"
-
-_model = 'DAE'
-rule collect_metrics_dae:
-    input:
-        expand(
-            f"{folder_experiment2}/{name_template}/metrics/metrics_hl_{{hidden_layers}}_{{model}}.json",
-            model=_model,
-            **GRID,
-        ),
-    output:
-        out=f"{folder_experiment}/{_model}/all_metrics.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
-    notebook:
-        "../02_1_aggregate_metrics.py.ipynb"
-
-_model = 'CF'
-rule collect_metrics_cf:
-    input:
-        expand(
-            f"{folder_experiment2}/{name_template}/metrics/metrics_{{model}}.json",
-            model=_model,
-            **GRID,
-        ),
-    output:
-        out=f"{folder_experiment}/{_model}/all_metrics.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_1_aggregate_metrics.ipynb",
-    notebook:
-        "../02_1_aggregate_metrics.py.ipynb"
-
-_model = 'median'
-rule collect_metrics_median:
-    input:
-        f"{folder_experiment}/{_model}/metrics/metrics_{_model}.json",
-    output:
-        out=f"{folder_experiment}/{_model}/all_metrics.csv",
-    log:
-        notebook=f"{folder_experiment}/{_model}/02_2_aggregate_metrics.ipynb",
-    notebook:
-        "../02_1_aggregate_metrics.py.ipynb"
-
-
-rule collect_all_metrics:
-    input:
-        expand(
-            f"{folder_experiment2}/{{model}}/all_metrics.csv",
-            model=MODELS,
-        ),
-    output:
-        out=f"{folder_experiment}/all_metrics.csv",
-    log:
-        notebook=f"{folder_experiment}/02_1_join_metrics.ipynb",
-    notebook:
-        "../02_1_join_metrics.py.ipynb"
