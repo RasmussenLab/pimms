@@ -557,7 +557,13 @@ errors
 # %%
 files_out[f'n_obs_error_counts_{dataset}.pdf'] = (FOLDER /
                                                   f'n_obs_error_counts_{dataset}.pdf')
-ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
+ax = (errors['n_obs']
+      .value_counts()
+      .sort_index()
+      .plot(style='.',
+       xlabel='number of samples',
+       ylabel='observations')
+)
 vaep.savefig(ax.get_figure(),  files_out[f'n_obs_error_counts_{dataset}.pdf'])
 
 # %%
