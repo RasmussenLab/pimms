@@ -41,6 +41,7 @@ rule graph is
 
 <img src="rulegraphs/rulegraph_gridsearch.png" alt="Rule graph for grid search" width="500"/>
 
+Command: `snakemake --snakefile workflow/Snakefile_grid.smk --rulegraph | dot -Tpng > rulegraph_gridsearch.png`
 
 ## Repeated training
 

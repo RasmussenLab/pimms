@@ -65,11 +65,11 @@ group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
 
 selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
 
-order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
+# order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+#                     'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', *models]}
+                    'model': ['interpolated', *models]}
 
 # %%
 FOLDER = fname.parent.parent

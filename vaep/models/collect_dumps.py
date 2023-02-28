@@ -21,7 +21,7 @@ def select_content(s: str, first_split):
 def load_config_file(fname: Path, first_split='config_') -> dict:
     with open(fname) as f:
         loaded = yaml.safe_load(f)
-    key = f"{fname.parents[1].name}_{select_content(fname.stem, first_split=first_split)}"
+    key = f"{fname.parent.name}_{select_content(fname.stem, first_split=first_split)}"
     return key, loaded
 
 
@@ -29,7 +29,7 @@ def load_metric_file(fname: Path, first_split='metrics_') -> dict:
     with open(fname) as f:
         loaded = json.load(f)
     loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
-    key = f"{fname.parents[1].name}_{select_content(fname.stem, first_split=first_split)}"
+    key = f"{fname.parent.name}_{select_content(fname.stem, first_split=first_split)}"
     return key, loaded
 
 

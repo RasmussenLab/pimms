@@ -123,6 +123,12 @@ meta
 # - can be one of the [matplotlib color maps](https://matplotlib.org/stable/tutorials/colors/colormaps.html), which also have reversed version indicated by `*_r`
 
 # %%
+sel_meta = (meta
+            .loc[metrics.index, ['latent_dim', 'hidden_layers', 'batch_size']]
+            )
+sel_meta
+
+# %%
 cmap = 'cividis_r'
 
 # %%
@@ -133,8 +139,7 @@ metrics_styled = (metrics
                      .from_frame(
                          meta
                         .loc[metrics.index, ['latent_dim', 'hidden_layers', 'batch_size']]
-                        .drop_duplicates()
-                        .loc[metrics.index]
+                        # .loc[metrics.index]
                      )
                  )
                 .sort_index()
@@ -508,10 +513,10 @@ selected
 dataset = 'test_fake_na'  # load test split predictions
 selected['pred_to_load'] = (
     selected['out_preds']
-    + ('/pred_val' if 'val' in dataset else '/pred_test')  # not good...
-    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
-                                      for x in s) + '_' if s is not None else '_')
-    + selected.model.str.lower()
+    + ('/pred_val_' if 'val' in dataset else '/pred_test_')  # not good...
+    # + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
+    #                                   for x in s) + '_' if s is not None else '_')
+    + selected.model
     + '.csv'
 )
 selected['pred_to_load'].to_list()
@@ -690,10 +695,10 @@ selected
 dataset = 'test_fake_na'  # load test split predictions
 selected['pred_to_load'] = (
     selected['out_preds']
-    + ('/pred_val' if 'val' in dataset else '/pred_test')  # not good..."
-    + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
-                                      for x in s) + '_' if s is not None else '_')
-    + selected.model.str.lower()
+    + ('/pred_val_' if 'val' in dataset else '/pred_test_')  # not good..."
+    # + selected['hidden_layers'].apply(lambda s: '_hl_' + '_'.join(str(x)
+    #                                   for x in s) + '_' if s is not None else '_')
+    + selected.model
     + '.csv'
 )
 selected['pred_to_load'].to_list()
@@ -875,3 +880,5 @@ with pd.ExcelWriter(files_out[f'pred_corr_per_sample_{dataset}.xlsx']) as writer
 
 # %%
 files_out
+
+# %%
