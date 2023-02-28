@@ -378,15 +378,14 @@ test_pred_fake_na
 # save missing values predictions
 
 # %%
-# if args.save_pred_real_na:
-# # all idx missing in training data
-# mask = data.train_X.isna().stack()
-# idx_real_na = mask.index[mask]
-# # remove fake_na idx
-# idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-# pred_real_na = pred.loc[idx_real_na]
-# pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-# del mask, idx_real_na, pred_real_na, pred
+if args.save_pred_real_na:
+    pred_real_na = ae.get_missing_values(df_train_wide=data.train_X,
+                                         val_idx=val_pred_fake_na.index,
+                                         test_idx=test_pred_fake_na.index,
+                                         pred=pred)
+    display(pred_real_na)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+
 
 # %% [markdown]
 # ### Plots

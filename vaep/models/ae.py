@@ -223,6 +223,40 @@ class Autoencoder(nn.Module):
         return x
 
 
+def get_missing_values(df_train_wide: pd.DataFrame,
+                       val_idx: pd.Index,
+                       test_idx: pd.Index,
+                       pred: pd.Series) -> pd.Series:
+    """Build missing value predictions based on a set of prediction and splits.
+
+    Parameters
+    ----------
+    df_train_wide : pd.DataFrame
+        Training data in wide format. 
+    val_idx : pd.Index
+        Indices (MultiIndex of Sample and Feature) of validation split
+    test_idx : pd.Index
+        Indices (MultiIndex of Sample and Feature) of test split
+    pred : pd.Series
+        Mulitindexed Series of all predictions.
+
+    Returns
+    -------
+    pd.Series
+        Multiindex series of missing values in training data which are not 
+        in validiation and test split.
+    """
+    # all idx missing in training data
+    mask = df_train_wide.isna().stack()
+    idx_real_na = mask.index[mask]
+    # remove fake_na idx
+    idx_real_na = (idx_real_na
+                   .drop(val_idx)
+                   .drop(test_idx))
+    pred_real_na = pred.loc[idx_real_na]
+    return pred_real_na
+
+
 # class VAE(nn.Module):
 #     """Variational Autoencoder. Latent dimension is composed of mean and log variance,
 #     so effecively the number of neurons are duplicated.

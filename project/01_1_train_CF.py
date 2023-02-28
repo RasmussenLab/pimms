@@ -73,11 +73,10 @@ cuda:bool=True # Use the GPU for training?
 # model
 latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
 # hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
-force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'CF' # model name
 model_key: str = 'CF' # potentially alternative key for model (grid search)
-save_pred_real_na:bool=False # Save all predictions for missing values
+save_pred_real_na:bool=True # Save all predictions for missing values
 
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
@@ -217,35 +216,25 @@ if args.cuda:
 
 # %%
 # papermill_description=train_collab
-try:
-    if args.force_train:
-        raise FileNotFoundError
-    ana_collab.learn = ana_collab.learn.load('collab_model')
-    logger.info("Loaded saved model")
-    recorder_loaded = RecorderDump.load(args.out_figures, 'CF')
-    logger.info("Loaded dumped figure data.")
-    recorder_loaded.plot_loss()
-    del recorder_loaded
-except FileNotFoundError:
-    suggested_lr = ana_collab.learn.lr_find()
-    print(f"{suggested_lr.valley = :.5f}")
-    ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
-    args.epoch_trained = ana_collab.learn.epoch + 1
-    # ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=1e-3)
-    ana_collab.model_kwargs['suggested_inital_lr'] = suggested_lr.valley
-    ana_collab.learn.save('collab_model')
-    fig, ax = plt.subplots(figsize=(15, 8))
-    ax.set_title('CF loss: Reconstruction loss')
-    ana_collab.learn.recorder.plot_loss(skip_start=5, ax=ax)
-    recorder_dump = RecorderDump(
-        recorder=ana_collab.learn.recorder, name='CF')
-    recorder_dump.save(args.out_figures)
-    del recorder_dump
-    vaep.savefig(fig, name='collab_training',
-                 folder=args.out_figures)
-    ana_collab.model_kwargs['batch_size'] = ana_collab.batch_size
-    vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
-                      TEMPLATE_MODEL_PARAMS.format('CF'))
+suggested_lr = ana_collab.learn.lr_find()
+print(f"{suggested_lr.valley = :.5f}")
+ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
+args.epoch_trained = ana_collab.learn.epoch + 1
+# ana_collab.learn.fit_one_cycle(args.epochs_max, lr_max=1e-3)
+ana_collab.model_kwargs['suggested_inital_lr'] = suggested_lr.valley
+ana_collab.learn.save('collab_model')
+fig, ax = plt.subplots(figsize=(15, 8))
+ax.set_title('CF loss: Reconstruction loss')
+ana_collab.learn.recorder.plot_loss(skip_start=5, ax=ax)
+recorder_dump = RecorderDump(
+    recorder=ana_collab.learn.recorder, name='CF')
+recorder_dump.save(args.out_figures)
+del recorder_dump
+vaep.savefig(fig, name='collab_training',
+                folder=args.out_figures)
+ana_collab.model_kwargs['batch_size'] = ana_collab.batch_size
+vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
+                    TEMPLATE_MODEL_PARAMS.format('CF'))
 
 # %% [markdown] tags=[]
 # ### Predictions
@@ -270,18 +259,14 @@ test_pred_fake_na['CF'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
 test_pred_fake_na
 
 # %%
-# if args.save_pred_real_na:
-#     # missing values in train data
-#     mask = data.train_X.unstack().isna().stack()
-#     idx_real_na = mask.loc[mask].index
-#     idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-#     dl_real_na = ana_collab.dls.test_dl(idx_real_na.to_frame())
-#     pred_real_na, _ = ana_collab.learn.get_preds(dl=dl_real_na)
-#     pred_real_na = pd.Series(pred_real_na, idx_real_na)
-#     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-#     del mask, idx_real_na, pred_real_na, dl_real_na
-#     # use indices of test and val to drop fake_na
-#     # get remaining predictions
+if args.save_pred_real_na:
+    pred_real_na = models.collab.get_missing_values(
+        df_train_long=data.train_X,
+        val_idx=data.val_y.index,
+        test_idx=data.test_y.index, 
+        analysis_collab=ana_collab)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+
 
 # %% [markdown]
 # ## Data in wide format

@@ -55,7 +55,7 @@ file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key: str = 'Median' # model key (lower cased version will be used for file names)
+model_key: str = 'median' # model key (lower cased version will be used for file names)
 model: str = 'Median' # model name
 save_pred_real_na: bool = True # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
@@ -150,6 +150,7 @@ test_pred_fake_na = data.test_y.to_frame(name='observed')
 test_pred_fake_na.describe()
 
 
+
 # %% [markdown]
 # ## Data in wide format
 #
@@ -182,19 +183,21 @@ test_pred_fake_na = test_pred_fake_na.join(medians_train)
 val_pred_fake_na
 
 
-# # %%
-# pred = pd.concat([val_pred_fake_na, test_pred_fake_na])[args.model]
-# pred
+# %%
+if args.save_pred_real_na:
+    mask = data.train_X.isna().stack()
+    idx_real_na = mask.index[mask]
+    idx_real_na = (idx_real_na
+                   .drop(val_pred_fake_na.index)
+                   .drop(test_pred_fake_na.index))
+    # hacky, but works:
+    pred_real_na = (pd.Series(0, index=idx_real_na, name='placeholder')
+                    .to_frame()
+                    .join(medians_train)
+                    .drop('placeholder', axis=1))
+    display(pred_real_na)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
 
-# if args.save_pred_real_na:
-    # # all idx missing in training data
-    # mask = data.train_X.isna().stack()
-    # idx_real_na = mask.index[mask]
-    # # remove fake_na idx
-    # idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-    # pred_real_na = pred.loc[idx_real_na]
-    # pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
-    # del mask, idx_real_na, pred_real_na, pred
 
 # %% [markdown]
 # ### Plots
@@ -358,3 +361,5 @@ figures # switch to fnames?
 # %%
 args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
 args
+
+# %%
