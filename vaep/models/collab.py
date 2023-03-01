@@ -58,13 +58,6 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
     """
     X = train_df.append(val_df).reset_index()
     frac = len(val_df) / (len(train_df)+len(val_df))
-
-    # idx_splitter = IndexSplitter(list(range(len(data.train_X), len(data.train_X)+ len(data.val_X) )))
-    # splits = idx_splitter(ana_collab.X)
-    #N_train, N_valid = len(train_df), len(val_df)
-    #splits = [list(range(0, N_train)), list(range(N_train, N_train + N_valid))]
-    # List of list of indices belonging to training data and list of indices belonging
-    # to validation data.
     return X, frac
 
 

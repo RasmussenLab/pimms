@@ -47,9 +47,7 @@ def wide_format(df: pd.DataFrame,
 class DataSplits():
     is_wide_format: bool = field(init=True, repr=False)
     train_X: pd.DataFrame = None
-    # val_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
-    # test_X: pd.DataFrame = None
     test_y: pd.DataFrame = None
     
 

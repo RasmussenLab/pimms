@@ -13,7 +13,6 @@ import math
 from torch import nn
 import torch.nn.functional as F
 
-from vaep.models.ae import build_encoder_units
 
 
 class VAE(nn.Module):

@@ -729,5 +729,3 @@ fname
 # %%
 # saved figures
 figures
-
-# %%
