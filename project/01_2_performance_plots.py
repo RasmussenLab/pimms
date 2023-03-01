@@ -150,10 +150,13 @@ def load_config_file(fname: Path, first_split='config_') -> dict:
     key = f"{select_content(fname.stem, first_split=first_split)}"
     return key, loaded
 
+
 # model_key could be used as key from config file
 # load only specified configs?
 all_configs = collect(
-    paths=(fname for fname in args.out_models.iterdir() if fname.suffix == '.yaml'),
+    paths=(fname for fname in args.out_models.iterdir()
+           if fname.suffix == '.yaml'
+           and 'model_config' in fname.name),
     load_fn=load_config_file
 )
 model_configs = pd.DataFrame(all_configs)
@@ -477,3 +480,5 @@ vaep.savefig(
 # ## Figures dumped to disk
 # %%
 figures
+
+# %%
