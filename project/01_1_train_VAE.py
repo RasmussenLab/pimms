@@ -218,15 +218,6 @@ test_pred_fake_na['interpolated'] = interpolated
 del interpolated
 test_pred_fake_na
 
-# %%
-# Add median pred performance
-medians_train = data.train_X.median()
-medians_train.name = 'median'
-
-val_pred_fake_na = val_pred_fake_na.join(medians_train)
-test_pred_fake_na = test_pred_fake_na.join(medians_train)
-val_pred_fake_na
-
 # %% [markdown]
 # ### Fill Validation data with potentially missing features
 

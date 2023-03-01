@@ -20,7 +20,7 @@ config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
 cuda: True
 models:
+  - median
   - CF
   - DAE
   - VAE
-  - median

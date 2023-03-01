@@ -72,7 +72,7 @@ figures = {}
 
 # %%
 MODELS = args.models.split(',')
-ORDER_MODELS = ['RSN', 'median', 'interpolated', *MODELS]
+ORDER_MODELS = ['RSN', 'interpolated', *MODELS]
 
 # %%
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
@@ -203,7 +203,7 @@ sample_index_name = data.train_X.index.name
 # %%
 corr_per_sample_test = pred_test.groupby(sample_index_name).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
 corr_per_sample_test = corr_per_sample_test.join(pred_test.groupby(sample_index_name)[
-                                       'median'].count().rename('n_obs'))
+                                       'observed'].count().rename('n_obs'))
 too_few_obs = corr_per_sample_test['n_obs'] < 3
 corr_per_sample_test.loc[~too_few_obs].describe()
 
