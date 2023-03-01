@@ -226,7 +226,7 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer
 # %%
 treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[MODELS]).min()
 mask = (corr_per_sample_test[MODELS] < treshold).any(axis=1)
-corr_per_sample_test.loc[mask].style.highlight_min(axis=1)
+corr_per_sample_test.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
 
 # %%
 feature_names = pred_test.index.levels[-1]
@@ -396,7 +396,7 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as write
 # %%
 treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[MODELS]).min()
 mask = (corr_per_sample_val[MODELS] < treshold).any(axis=1)
-corr_per_sample_val.loc[mask].style.highlight_min(axis=1)
+corr_per_sample_val.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
 
 # %% [markdown]
 # ### Error plot
