@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -85,7 +85,7 @@ metrics.stack('model')
 # %%
 # ToDo: integrate as parameters
 metric_columns = ['MSE', 'MAE']
-model_keys = ['CF', 'DAE', 'VAE']
+model_keys = metrics.stack('model').index.levels[-1].unique().to_list() # not used
 subset = metrics.columns.levels[0][0]
 print(f"{subset = }")
 
@@ -157,7 +157,7 @@ files_out['metrics_styled.xlsx'] = fname
 metrics_styled.to_excel(fname)
 logger.info(f"Saved styled metrics: {fname}")
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Plot Top 10 for simulated Na validation data
 
 # %%
@@ -243,7 +243,7 @@ metrics_long.sample(5)
 mask = metrics_long.model == 'interpolated'
 # at least overall (and 1 for the number of replicates?)
 metrics_long.loc[mask, 'n_params'] = 1
-mask = metrics_long.model == 'median'
+mask = metrics_long.model == 'Median'
 # number of features to calculate median of
 metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M']
 
@@ -473,12 +473,19 @@ fig.show()
 dataset = 'valid_fake_na'
 group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim']
 METRIC = 'MAE'
-selected = metrics_long.reset_index(
-).groupby(by=group_by
-          ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
-files_out['best_models_metrics_per_latent.csv'] = FOLDER / 'best_models_metrics_per_latent.csv'
-selected.to_csv(files_out['best_models_metrics_per_latent.csv'])
+selected = (metrics_long
+            .reset_index()
+            .groupby(by=group_by)
+            .apply(lambda df: df.sort_values(by='metric_value').iloc[0])
+            .loc[dataset])
+fname = FOLDER / 'best_models_metrics_per_latent.csv'
+files_out['best_models_metrics_per_latent.csv'] = fname
+selected.to_csv(fname)
 selected.sample(5)
+
+# %%
+model_with_latent = list(selected['model'].unique())
+model_with_latent
 
 # %% [markdown]
 # ### For best latent dimension (on average)
@@ -490,9 +497,10 @@ selected.sample(5)
 
 # %%
 min_latent = (selected.loc['NA interpolated']
-                      .loc[METRIC].loc[['DAE', 'VAE', 'CF']]
+                      .loc[METRIC]
+                      .loc[model_with_latent]
                       .groupby(level='latent_dim')
-                      .mean()
+                      .agg({'metric_value': 'mean'})
                       .sort_values('metric_value')
               )
 min_latent
@@ -502,8 +510,12 @@ min_latent = min_latent.index[0]
 print("Minimum latent value for average of models:", min_latent)
 
 # %%
-selected = selected.loc['NA interpolated'].loc['MAE'].loc[[
-    'CF', 'DAE', 'VAE']].loc[pd.IndexSlice[:, min_latent], :]
+selected = (selected
+            .loc['NA interpolated']
+            .loc['MAE']
+            .loc[model_with_latent]
+            .loc[pd.IndexSlice[:, min_latent], :]
+            )
 selected
 
 # %% [markdown]
@@ -532,8 +544,12 @@ mapper = {k: f'{k} - ' + "HL: {}".format(
 mapper
 
 # %%
+_order = ['observed'] + [m for m in category_orders['model'] if m in selected['model']]
+_order
+
+# %%
 pred_split = compare_predictions.load_predictions(
-    selected['pred_to_load'].to_list())[['observed', *category_orders['model']]]
+    selected['pred_to_load'].to_list())[[*_order]]
 pred_split = pred_split.rename(mapper, axis=1)
 category_orders['model'] = list(pred_split.columns[1:])
 pred_split
@@ -620,7 +636,7 @@ errors_smoothed_long
 # %% [markdown]
 # Save html versin of curve with annotation of errors
 
-# %% tags=[]
+# %%
 fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].join(n_obs_error_is_based_on).sort_values(by='freq'),
                    x=freq_feat.name,
                    color='model',
@@ -673,7 +689,7 @@ vaep.savefig(
 group_by = ['data_split', 'subset', 'metric_name', 'model']
 
 order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
+                    'model': ['Median', 'interpolated', 'CF', 'DAE', 'VAE']}
 order_models = order_categories['model']
 
 # %%
@@ -688,7 +704,8 @@ selected.to_csv(FOLDER / 'best_models_metrics.csv')
 selected
 
 # %%
-selected = selected.loc[['CF', 'DAE', 'VAE']]
+order_models = [m for m in order_models if m in selected['model']]
+selected = selected.loc[order_models]
 selected
 
 # %%
@@ -704,6 +721,17 @@ selected['pred_to_load'] = (
 selected['pred_to_load'].to_list()
 
 # %%
+sel_pred_to_load = []
+
+for fname in selected['pred_to_load']:
+    fname = pathlib.Path(fname)
+    if fname.exists():
+        sel_pred_to_load.append(fname.as_posix())
+    else:
+        logger.warning(f"Missing prediction file: {fname}")
+sel_pred_to_load
+
+# %%
 mapper = {k: f'{k} - LD: {selected.loc[k, "latent_dim"]} - HL: {selected.loc[k, "hidden_layers"]} '
           for k in selected.model
           }
@@ -711,7 +739,7 @@ mapper
 
 # %%
 pred_split = compare_predictions.load_predictions(
-    selected['pred_to_load'].to_list())[['observed', *order_models]]
+    sel_pred_to_load)[['observed', *order_models]]
 pred_split = pred_split.rename(mapper, axis=1)
 order_models = list(pred_split.columns[1:])
 pred_split
@@ -810,7 +838,7 @@ pred_split
 corr_per_feat = pred_split.groupby(idx_name).aggregate(
     lambda df: df.corr().loc['observed'])[order_models]
 corr_per_feat = corr_per_feat.join(pred_split.groupby(idx_name)[
-                                   'median'].count().rename('n_obs'))
+                                   'observed'].count().rename('n_obs'))
 too_few_obs = corr_per_feat['n_obs'] < 3
 corr_per_feat.describe()
 
@@ -851,7 +879,7 @@ with pd.ExcelWriter(files_out[f'pred_corr_per_feat_{dataset}.xlsx']) as writer:
 corr_per_sample = pred_split.groupby('Sample ID').aggregate(
     lambda df: df.corr().loc['observed'])[order_models]
 corr_per_sample = corr_per_sample.join(pred_split.groupby('Sample ID')[
-                                       'median'].count().rename('n_obs'))
+                                       'observed'].count().rename('n_obs'))
 corr_per_sample.describe()
 
 # %%
@@ -880,5 +908,3 @@ with pd.ExcelWriter(files_out[f'pred_corr_per_sample_{dataset}.xlsx']) as writer
 
 # %%
 files_out
-
-# %%
