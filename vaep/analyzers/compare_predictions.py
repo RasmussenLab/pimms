@@ -6,7 +6,7 @@ import pandas as pd
 from typing import List
 
 
-def load_predictions(pred_files: List, shared_columns=['observed', 'interpolated']):
+def load_predictions(pred_files: List, shared_columns=['observed']):
 
     pred_files = iter(pred_files)
     fname = next(pred_files)

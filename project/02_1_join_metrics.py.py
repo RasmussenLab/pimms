@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -13,10 +13,13 @@
 # ---
 
 # %% [markdown]
-# # Join aggregated configs from each model
+# # Join aggregated metrics from each model
 
 # %%
 import pandas as pd
+
+N_HEADER_COLS = 3
+POS_INDEX_COL = 0
 
 # %%
 filepaths_in = snakemake.input
@@ -33,24 +36,27 @@ filepath_out
 
 # %%
 def process(fpath: str) -> pd.DataFrame:
-    df = pd.read_csv(fpath, index_col=0, header=list(range(4)))
+    df = pd.read_csv(fpath, index_col=POS_INDEX_COL, header=list(range(N_HEADER_COLS)))
     return df
 
 
 process(filepaths_in[0])
 
 # %% [markdown]
-# ## Load all model configs
+# ## Load all model metrics
 
 # %%
-configs = pd.concat([
+metrics = pd.concat([
     process(fpath) for fpath in filepaths_in
 ])
-configs
+metrics.stack('model')
+
+# %%
+metrics
 
 # %% [markdown]
 # ## Dump combined to disk
 
 # %%
-_ = configs.to_csv(filepath_out)
+_ = metrics.to_csv(filepath_out)
 filepath_out

@@ -9,18 +9,18 @@ hidden_layers:
 latent_dim:
 - 50
 folder_grid_search: "runs/optimize"
-folder_experiment2: "runs/optimize/{{level}}"
-folder_experiment: "runs/optimize/{level}"
+# folder_experiment2: "runs/optimize/{{level}}"
+folder_experiment: "runs/optimize/{level}" # used by Snakefile of single experiment
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
 levels:
 - proteinGroups
-# - aggPeptides
+- aggPeptides
 # - evidence 
 config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
 cuda: True
 models:
-  - median
+  - Median
   - CF
   - DAE
   - VAE

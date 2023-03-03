@@ -2,3 +2,4 @@ FN_INTENSITIES: data/dev_datasets/df_intensities_peptides_long/Q_Exactive_HF_X_O
 fn_rawfile_metadata: data/dev_datasets/df_intensities_peptides_long/metadata.csv
 sample_completeness: 0.5
 min_RT_time: 120
+column_names: null

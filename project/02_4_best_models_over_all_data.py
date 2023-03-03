@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -58,10 +58,14 @@ metrics_long
 
 # %%
 # snakemake.params.folder
-models = snakemake.params.models # snakefile would need to be
+try:
+    models = snakemake.params.models # snakefile would need to be
+except AttributeError:
+    models = ['Median', 'interpolated', 'CF', 'DAE', 'VAE']
+models
 
 # %%
-group_by = ['data_split', 'data level', 'subset', 'metric_name', 'model']
+group_by = ['data_split', 'data level', 'metric_name', 'model']
 
 selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
 
@@ -122,7 +126,7 @@ selected = metrics_long.reset_index(
     ).groupby(by=group_by
               ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
 sel_on_val = selected.loc[
-    pd.IndexSlice[dataset, IDX_ORDER[0], 'NA interpolated', 'MAE', IDX_ORDER[1]],
+    pd.IndexSlice[dataset, IDX_ORDER[0], 'MAE', IDX_ORDER[1]],
     selected_cols]
 sel_on_val
 
@@ -149,7 +153,7 @@ test_results
 # - selected on validation data
 
 # %%
-test_results = test_results.droplevel(['subset', 'metric_name']).reset_index().set_index(['model', 'data level'])
+test_results = test_results.droplevel(['metric_name']).reset_index().set_index(['model', 'data level'])
 test_results
 
 # %%
@@ -180,7 +184,7 @@ vaep.savefig(fig, fname, folder=FOLDER)
 # %%
 fname = 'best_models_1_val_mpl'
 
-_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
+_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', METRIC), ]]
 
 _to_plot = _to_plot.set_index(['data level', 'model'])[['metric_value', 'text']]
 _to_plot = _to_plot.loc[IDX_ORDER,:]
@@ -206,7 +210,7 @@ vaep.savefig(fig, fname, folder=FOLDER)
 
 # %%
 fname = 'best_models_1_val_plotly'
-_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', 'NA interpolated', METRIC), ]]
+_to_plot = sel_on_val.reset_index(level=['data level', 'model']).loc[[('valid_fake_na', METRIC), ]]
 _to_plot = _to_plot.set_index(['data level', 'model'])
 _to_plot[['metric_value', 'latent_dim', 'hidden_layers', 'text']] = _to_plot[['metric_value', 'latent_dim', 'hidden_layers', 'text']].fillna('-')
 
@@ -228,7 +232,7 @@ fig = px.bar(_to_plot.reset_index(),
              template='none',
              height=600)
 fig.update_layout(legend_title_text='')
-fig.write_image(FOLDER / f"{fname}.pdf")
+fig.write_html(FOLDER / f"{fname}.html")
 fig
 
 # %% [markdown]
@@ -238,12 +242,9 @@ fig
 
 # %%
 group_by = ['model', 'latent_dim', 'hidden_layers']
-
 data_split = 'valid_fake_na'
-subset = 'NA interpolated'
 
 metrics_long_sel = metrics_long.query(f'data_split == "{data_split}"'
-                                      f' & subset == "{subset}"'
                                       f' & metric_name == "{METRIC}"')
 
 best_on_average = metrics_long_sel.reset_index(
@@ -263,10 +264,8 @@ best_on_average
 # %%
 fname = 'average_performance_over_data_levels_best_test'
 data_split = 'test_fake_na'
-subset = 'NA interpolated'
 
 metrics_long_sel_test = metrics_long.query(f'data_split == "{data_split}"'
-                                      f' & subset == "{subset}"'
                                       f' & metric_name == "{METRIC}"')
 
 to_plot = (metrics_long_sel_test

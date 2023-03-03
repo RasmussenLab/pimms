@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -210,13 +210,6 @@ data.train_X.head()
 
 # %% [markdown]
 # ### Add interpolation performance
-
-# %%
-interpolated = vaep.pandas.interpolate(wide_df = data.train_X) 
-val_pred_fake_na['interpolated'] = interpolated
-test_pred_fake_na['interpolated'] = interpolated
-del interpolated
-test_pred_fake_na
 
 # %% [markdown]
 # ### Fill Validation data with potentially missing features
@@ -451,7 +444,8 @@ errors_val
 
 # %%
 # papermill_description=metrics
-d_metrics = models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
+# d_metrics = models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
+d_metrics = models.Metrics()
 
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
@@ -477,68 +471,13 @@ vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_ke
 d_metrics
 
 # %%
-metrics_df = models.get_df_from_nested_dict(d_metrics.metrics).T
+metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
 # %% [markdown]
 # ### Plot metrics
-
-# %%
-plotly_view = metrics_df.stack().unstack(-2).set_index('N', append=True)
-plotly_view.head()
-
-# %% [markdown]
-# #### Fake NA which could be interpolated
 #
-# - bulk of validation and test data
 
-# %%
-plotly_view.loc[pd.IndexSlice[:, :, 'NA interpolated']]
-
-# %%
-subset = 'NA interpolated'
-fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('metric_value').reset_index(),
-                 x="data_split",
-                 y='metric_value',
-                 color="model",
-                 facet_row="metric_name",
-                 # facet_col="subset",
-                 hover_data='N',
-                 title=f'Performance for {subset}',
-                 labels={"data_split": "data",
-                         "metric_value": '', 'metric_name': 'metric'},
-                 height=500,
-                 width=300,
-                 )
-fig.show()
-
-# %% [markdown]
-# #### Fake NA which could not be interpolated
-#
-# - small fraction of total validation and test data
-#
-# > not interpolated fake NA values are harder to predict for models  
-# > Note however: fewer predicitons might mean more variability of results
-
-# %%
-plotly_view.loc[pd.IndexSlice[:, :, 'NA not interpolated']]
-
-# %%
-subset = 'NA not interpolated'
-fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('metric_value').reset_index(),
-                 x="data_split",
-                 y='metric_value',
-                 color="model",
-                 facet_row="metric_name",
-                 # facet_col="subset",
-                 hover_data='N',
-                 title=f'Performance for {subset}',
-                 labels={"data_split": "data",
-                         "metric_value": '', 'metric_name': 'metric'},
-                 height=500,
-                 width=300,
-                 )
-fig.show()
 
 # %% [markdown]
 # ## Save predictions

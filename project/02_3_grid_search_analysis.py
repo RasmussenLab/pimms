@@ -62,6 +62,13 @@ except AssertionError:
     print(f"{metrics_csv = }", f"{configs_csv = }", sep="\n")
 
 # %%
+# not robust
+try:
+    ORDER = {'model': snakemake.params.models}
+except AttributeError:
+    ORDER = {'model': ['Median', 'interpolated', 'CF', 'DAE', 'VAE']}
+
+# %%
 path_metrics = pathlib.Path(metrics_csv)
 path_configs = pathlib.Path(configs_csv)
 FOLDER = path_metrics.parent
@@ -76,7 +83,7 @@ files_out = dict()
 # Metrics a `pandas.DataFrame`:
 
 # %%
-metrics = pd.read_csv(path_metrics, index_col=0, header=[0, 1, 2, 3])
+metrics = pd.read_csv(path_metrics, index_col=0, header=[0, 1, 2])
 metrics.head()
 
 # %%
@@ -161,8 +168,8 @@ logger.info(f"Saved styled metrics: {fname}")
 # ## Plot Top 10 for simulated Na validation data
 
 # %%
-ax = metrics[subset]["valid_fake_na"].sort_values(
-    'MSE').iloc[:10, :-1].plot(rot=45,
+ax = metrics["valid_fake_na"].sort_values(
+    'MSE').iloc[:10, :-2].plot(rot=45,
                                x_compat=False,
                                xticks=list(range(10)),
                                marker='o',
@@ -182,7 +189,7 @@ vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
 # Rebuild metrics from dictionary
 
 # %%
-metrics_long = pd.read_csv(path_metrics, index_col=[0], header=[0,1,2,3])
+metrics_long = pd.read_csv(path_metrics, index_col=[0], header=[0,1,2])
 # columns_names = ['subset', 'data_split', 'model', 'metric_name']
 columns_names = list(metrics_long.columns.names)
 metrics_long.sample(5) if len(metrics_long) > 15 else metrics_long
@@ -192,21 +199,32 @@ metrics_long.sample(5) if len(metrics_long) > 15 else metrics_long
 
 # %%
 metrics_N = (metrics_long
-             .loc[:, pd.IndexSlice[:, :, :, 'N']]
-             .stack(['subset', 'data_split', 'model'])
+             .loc[:, pd.IndexSlice[:, :, 'N']]
+             .stack(['data_split', 'model'])
              .reset_index()
              .drop_duplicates()
-             .set_index(['id', 'subset', 'data_split', 'model'])
+             .set_index(['id', 'data_split', 'model'])
              .astype(int)
-)
+             )
 metrics_N
+
+# %%
+metrics_prop = (metrics_long
+             .loc[:, pd.IndexSlice[:, :, 'prop']]
+             .stack(['data_split', 'model'])
+             .reset_index()
+             .drop_duplicates()
+             .set_index(['id', 'data_split', 'model'])
+             .astype(int)
+             )
+metrics_prop
 
 # %% [markdown]
 # join total number of simulated NAs (`N`) used to compute metric
 
 # %%
 metrics_long = (metrics_long
-                .loc[:, pd.IndexSlice[:, :, :, metric_columns]]
+                .loc[:, pd.IndexSlice[:, :, metric_columns]]
                 .stack(metrics_long.columns.names)
                 .to_frame('metric_value')
                 .reset_index('metric_name')
@@ -219,7 +237,7 @@ metrics_long
 
 # %%
 metrics_long = (metrics_long
-                .reset_index(['subset', 'data_split'])
+                .reset_index(['data_split'])
                 .join(meta.set_index('model', append=True))
                ).reset_index('model')
 # metrics_long.index.name = 'id'
@@ -233,13 +251,14 @@ metrics_long.sample(5)
 # groupby 'id'
 cols = ['M', 'data', 'file_format', 'fn_rawfile_metadata',
         'folder_data', 'folder_experiment',
-        'level', 'meta_cat_col', 'meta_date_col', 
+        'level', 'meta_cat_col', 'meta_date_col',
         'out_figures', 'out_folder', 'out_metrics', 'out_models', 'out_preds',
         'sample_idx_position', 'save_pred_real_na']
 metrics_long[cols] = metrics_long.groupby(level=0)[cols].fillna(method='pad')
 metrics_long.sample(5)
 
 # %%
+# ToDo: Ensure each model configuration saves a "n_params" argument
 mask = metrics_long.model == 'interpolated'
 # at least overall (and 1 for the number of replicates?)
 metrics_long.loc[mask, 'n_params'] = 1
@@ -255,9 +274,8 @@ metrics_long[[*columns_names, 'n_params',
 # A a descriptive column describing the `subset` and the total number of simulated NAs in it.
 
 # %%
-metrics_long['subset_w_N'] = metrics_long['subset'].str[0:] + \
-    ' - N: ' + metrics_long['N'].apply(lambda x: f"{x:,d}")
-metrics_long[['subset_w_N', 'subset']]
+metrics_long['subset_w_N'] = 'N: ' + metrics_long['N'].apply(lambda x: f"{x:,d}")
+metrics_long[['subset_w_N']]
 
 # %% [markdown]
 # Save for later inspection
@@ -287,47 +305,6 @@ labels_dict = {"NA not interpolated valid_collab collab MSE": 'MSE',
                'freq': 'freq/feature prevalence (across samples)'}
 
 # %% [markdown]
-# ## Plot result of hyperparameter search for collaborative Filtering
-
-# %%
-# not robust
-category_orders = {'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE'],
-                   }
-
-# %%
-col = "NA interpolated valid_fake_na collab MAE"
-model = 'CF'
-# col = ("NA interpolated","valid_fake_na",'CF',"MSE")
-fig = px.scatter(metrics_long.query(f'model == "{model}"'),
-                 x="latent_dim",
-                 y='metric_value',
-                 color="subset",  # needs data in long format
-                 facet_row="metric_name",
-                 facet_col="data_split",
-                 title='Performance of collaborative filtering models',
-                 labels={**labels_dict, 'data_split': 'data split'},
-                 category_orders={'data_split': [
-                     'valid_fake_na', 'test_fake_na']},
-                 width=1600,
-                 height=700,
-                 template='none',
-                 )
-fig.update_layout(
-    font={'size': 18},
-    xaxis={'title': {'standoff': 15}},
-    yaxis={'title': {'standoff': 15}})
-fig.update_xaxes(dict(
-    tickmode='array',
-    tickvals=sorted(metrics_long["latent_dim"].unique()),
-)
-)
-fname = FOLDER / 'collab_performance_overview.pdf'
-files_out['collab_performance_overview.pdf'] = fname
-fig.write_image(fname)
-logger.info(fname)
-fig.show()
-
-# %% [markdown]
 # ## Plot hyperparameter search results - overview
 
 # %%
@@ -351,12 +328,12 @@ def plot_by_params(data_split: str = '', subset: str = ''):
                      y='metric_value',
                      color="model",
                      facet_row="metric_name",
-                     facet_col="subset_w_N",
+                     # facet_col="subset_w_N", "N", "prop"
                      hover_data=hover_data,
                      title=f'Performance by number of parameters for {data_split.replace("_", " ")} data'.replace(
                          "  ", " "),
                      labels=labels_dict,
-                     category_orders=category_orders,
+                     category_orders=ORDER,
                      width=1600,
                      height=700,
                      template='none',
@@ -369,43 +346,29 @@ def plot_by_params(data_split: str = '', subset: str = ''):
     return fig
 
 
-dataset = "valid_fake_na"
-fig = plot_by_params(dataset)
-files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"] = (FOLDER /
-                                                                  f"hyperpar_{dataset}_results_by_parameters_all.pdf")
-fig.write_image(files_out[f"hyperpar_{dataset}_results_by_parameters_all.pdf"])
+data_split = "valid_fake_na"
+fig = plot_by_params(data_split)
+files_out[f"hyperpar_{data_split}_results_by_parameters_all.pdf"] = (FOLDER /
+                                                                  f"hyperpar_{data_split}_results_by_parameters_all.pdf")
+fig.write_image(files_out[f"hyperpar_{data_split}_results_by_parameters_all.pdf"])
 fig
-
-# %% [markdown]
-# Only for NA which could also be interpolated for both test and validation data
-
-# %%
-fig = plot_by_params('', subset='NA interpolated')
-fname = FOLDER / f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"
-files_out[f"hyperpar_test_and_valid_fake_na_by_parameters_na_interpolated.pdf"] = fname
-fig.write_image(fname)
-logger.info(fname)
-fig
-
-# %% [markdown]
-# Only for NA which could also be interpolated for both test and validation data
 
 # %%
 dataset = "test_fake_na"
-fig = plot_by_params(dataset, 'NA interpolated')
+fig = plot_by_params(dataset)
 fname = (FOLDER /
-         f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
-files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
+         f"hyperpar_{dataset}_results_by_parameters.pdf")
+files_out[f"hyperpar_{dataset}_results_by_parameters.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig
 
 # %%
 dataset = "valid_fake_na"
-fig = plot_by_params(dataset, 'NA interpolated')
+fig = plot_by_params(dataset)
 fname = (FOLDER /
-         f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf")
-files_out[f"hyperpar_{dataset}_results_by_parameters_na_interpolated.pdf"] = fname
+         f"hyperpar_{dataset}_results_by_parameters.pdf")
+files_out[f"hyperpar_{dataset}_results_by_parameters.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
 fig
@@ -414,7 +377,7 @@ fig
 # ## Select best model for each `latent_dim`
 
 # %%
-group_by = ['data_split', 'subset', 'latent_dim', 'metric_name', 'model']
+group_by = ['data_split', 'latent_dim', 'metric_name', 'model']
 metrics_long_sel_min = metrics_long.reset_index(
         ).groupby(by=group_by
         ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
@@ -428,11 +391,11 @@ def get_plotly_figure(dataset: str, x='latent_dim'):
                      y='metric_value',
                      color="model",
                      facet_row="metric_name",
-                     facet_col="subset_w_N",
+                     # facet_col="subset_w_N",
                      hover_data=hover_data,
                      title=f'Performance on {dataset.replace("_", " ")} data',
                      labels=labels_dict,
-                     category_orders=category_orders,
+                     category_orders=ORDER,
                      width=1600,
                      height=700,
                      template='none',
@@ -471,7 +434,7 @@ fig.show()
 
 # %%
 dataset = 'valid_fake_na'
-group_by = ['data_split', 'subset', 'metric_name', 'model', 'latent_dim']
+group_by = ['data_split', 'metric_name', 'model', 'latent_dim']
 METRIC = 'MAE'
 selected = (metrics_long
             .reset_index()
@@ -481,7 +444,7 @@ selected = (metrics_long
 fname = FOLDER / 'best_models_metrics_per_latent.csv'
 files_out['best_models_metrics_per_latent.csv'] = fname
 selected.to_csv(fname)
-selected.sample(5)
+selected.sample(5) if len(selected) > 5 else selected
 
 # %%
 model_with_latent = list(selected['model'].unique())
@@ -496,7 +459,7 @@ model_with_latent
 #  2. Choose the on average best model
 
 # %%
-min_latent = (selected.loc['NA interpolated']
+min_latent = (selected
                       .loc[METRIC]
                       .loc[model_with_latent]
                       .groupby(level='latent_dim')
@@ -511,7 +474,6 @@ print("Minimum latent value for average of models:", min_latent)
 
 # %%
 selected = (selected
-            .loc['NA interpolated']
             .loc['MAE']
             .loc[model_with_latent]
             .loc[pd.IndexSlice[:, min_latent], :]
@@ -544,14 +506,14 @@ mapper = {k: f'{k} - ' + "HL: {}".format(
 mapper
 
 # %%
-_order = ['observed'] + [m for m in category_orders['model'] if m in selected['model']]
-_order
+order = ['observed'] + [m for m in ORDER['model'] if m in selected['model']]
+order
 
 # %%
 pred_split = compare_predictions.load_predictions(
-    selected['pred_to_load'].to_list())[[*_order]]
+    selected['pred_to_load'].to_list())[[*order]]
 pred_split = pred_split.rename(mapper, axis=1)
-category_orders['model'] = list(pred_split.columns[1:])
+order = list(pred_split.columns[1:])
 pred_split
 
 # %%
@@ -602,7 +564,7 @@ window_size = int(M_feat / 50)
 # %%
 errors_smoothed = errors.copy()
 # errors_smoothed[errors.columns[:-1]] = errors[errors.columns[:-1]].rolling(window=window_size, min_periods=1).mean()
-errors_smoothed[category_orders['model']] = errors[category_orders['model']].rolling(
+errors_smoothed[order] = errors[order].rolling(
     window=window_size, min_periods=1).mean()
 errors_smoothed
 
@@ -644,7 +606,7 @@ fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name]
                    hover_data=['n_obs'],
                    # title=f'Rolling average error by feature frequency {msg_annotation}',
                    labels=labels_dict,
-                   category_orders=category_orders,
+                   category_orders={'model': order},
                    )
 fig = px_vaep.apply_default_layout(fig)
 fig.update_layout(legend_title_text='')  # remove legend title
@@ -686,20 +648,23 @@ vaep.savefig(
 # - select on validation data, report on prediction on test data
 
 # %%
-group_by = ['data_split', 'subset', 'metric_name', 'model']
-
-order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['Median', 'interpolated', 'CF', 'DAE', 'VAE']}
-order_models = order_categories['model']
-
-# %%
+group_by = ['data_split', 'metric_name', 'model']
 dataset = 'valid_fake_na'  # select on validation split
+
 
 selected = metrics_long.reset_index(
 ).groupby(by=group_by
           ).apply(lambda df: df.sort_values(by='metric_value').iloc[0]).loc[dataset]
-selected = selected.loc[pd.IndexSlice['NA interpolated',
-                                      'MAE']].loc[order_models]
+
+selected
+
+# %%
+order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+                    'model': ORDER['model']}
+order_models = set(selected['model'])
+order_models = [m for m in ORDER['model'] if m in order_models]
+
+selected = selected.loc['MAE'].loc[order_models]
 selected.to_csv(FOLDER / 'best_models_metrics.csv')
 selected
 
@@ -739,7 +704,7 @@ mapper
 
 # %%
 pred_split = compare_predictions.load_predictions(
-    sel_pred_to_load)[['observed', *order_models]]
+    sel_pred_to_load, shared_columns=['observed'])[['observed', *order_models]]
 pred_split = pred_split.rename(mapper, axis=1)
 order_models = list(pred_split.columns[1:])
 pred_split

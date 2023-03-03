@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -72,7 +72,7 @@ figures = {}
 
 # %%
 MODELS = args.models.split(',')
-ORDER_MODELS = ['RSN', 'interpolated', *MODELS]
+ORDER_MODELS = ['RSN', *MODELS]
 
 # %%
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
@@ -134,8 +134,8 @@ imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mea
 imputed_shifted_normal.to_frame('intensity')
 
 # %%
-medians_train = data.train_X.median()
-medians_train.name = 'median'
+# medians_train = data.train_X.median()
+# medians_train.name = 'median'
 
 # %% [markdown]
 # # Model specifications
@@ -159,7 +159,7 @@ all_configs = collect(
            and 'model_config' in fname.name),
     load_fn=load_config_file
 )
-model_configs = pd.DataFrame(all_configs)
+model_configs = pd.DataFrame(all_configs).set_index('model')
 model_configs.T
 
 # %% [markdown]
@@ -176,8 +176,8 @@ freq_feat.index.name = data.train_X.columns.name
 
 # %%
 split = 'test'
-pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
-pred_test = compare_predictions.load_predictions(pred_files)
+pred_files = [f for f in args.out_preds.iterdir() if split in f.name] # ToDo -> requested MODELS
+pred_test = compare_predictions.load_predictions(pred_files, shared_columns=['observed',])
 # pred_test = pred_test.join(medians_train, on=prop.index.name) # ToDo: median implicit
 pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
@@ -291,9 +291,9 @@ if not view.empty:
 else:
     print("None found")
 # %%
-metrics = vaep.models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
+metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(pred_test.drop('freq', axis=1), key='test data')
-test_metrics = pd.DataFrame(test_metrics["NA interpolated"])[ORDER_MODELS]
+test_metrics = pd.DataFrame(test_metrics)[ORDER_MODELS]
 test_metrics
 
 # %%
@@ -360,7 +360,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 # %%
 split = 'val'
 pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
-pred_val = compare_predictions.load_predictions(pred_files)
+pred_val = compare_predictions.load_predictions(pred_files, shared_columns=['observed'])
 # pred_val = pred_val.join(medians_train, on=freq_feat.index.name)
 pred_val['RSN'] = imputed_shifted_normal
 # pred_val = pred_val.join(freq_feat, on=freq_feat.index.name)
@@ -462,7 +462,7 @@ vaep.savefig(
 
 # %%
 # scatter plots to see spread
-model = MODELS[0]
+model = MODELS[-1]
 ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
   # title=f"Average error per feature on validation data for {model}",
   ylabel=f'average error ({METRIC}) for {model} on valid. data')

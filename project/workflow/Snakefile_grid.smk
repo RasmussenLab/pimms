@@ -48,14 +48,8 @@ wildcard_constraints:
 
 rule all:
     input:
-        # expand(f'{root_model}/all_metrics.csv',
-        #  level=config['levels'],
-        #  model=MODELS),
-        # expand(f'{root_model}/all_configs.csv',
-        #  level=config['levels'],
-        #  model=MODELS)
         expand(
-            f"{folder_dataset}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
+            f"{folder_dataset}/hyperpar_{{split}}_results_by_parameters.pdf",
             level=config["levels"],
             split=["test_fake_na", "valid_fake_na"],
         ),
@@ -64,7 +58,7 @@ rule all:
 
 ##########################################################################################
 # per model per dataset -> one metrics_long_df.csv # decide on format
-rule compare_search_by_dataset:
+rule compare_all:
     input:
         expand(f"{folder_dataset}/metrics_long_df.csv", level=config["levels"]),
     output:
@@ -72,7 +66,7 @@ rule compare_search_by_dataset:
     log:
         notebook=f"{folder_grid_search}/best_models_over_all_data.ipynb",
     params:
-        models=config["models"],
+        models=MODELS,
     notebook:
         "../02_4_best_models_over_all_data.ipynb"
 
@@ -93,13 +87,13 @@ use rule create_splits from single_experiment as splits with:
 
 
 ##########################################################################################
-rule results:
+rule results_dataset:
     input:
         metrics=f"{folder_dataset}/all_metrics.csv",
         config=f"{folder_dataset}/all_configs.csv",
     output:
         expand(
-            f"{folder_dataset2}/hyperpar_{{split}}_results_by_parameters_na_interpolated.pdf",
+            f"{folder_dataset2}/hyperpar_{{split}}_results_by_parameters.pdf",
             split=["test_fake_na", "valid_fake_na"],
         ),
         f"{folder_dataset}/metrics_long_df.csv",
@@ -343,7 +337,7 @@ rule build_train_config_collab:
 
 
 ### Median imputation
-_model = "median"
+_model = "Median"
 root_model = f"{folder_dataset}/models/{_model}"
 
 

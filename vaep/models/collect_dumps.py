@@ -49,10 +49,10 @@ def collect(paths: Iterable,
 
 collect_metrics = partial(collect,
                           load_fn=load_metric_file,
-                          #   select_content=partial(
-                          #       select_content, first_split='metrics_')
                           )
-# update_wrapper(collect_metrics, collect)
+collect_metrics = update_wrapper(collect_metrics, collect)
+
 collect_configs = partial(collect,
                           load_fn=load_config_file,
                           )
+collect_configs = update_wrapper(collect_configs, collect)
