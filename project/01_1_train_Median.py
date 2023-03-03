@@ -189,6 +189,7 @@ if args.save_pred_real_na:
                     .to_frame()
                     .join(medians_train)
                     .drop('placeholder', axis=1))
+    # pred_real_na.name = 'intensity'
     display(pred_real_na)
     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
 

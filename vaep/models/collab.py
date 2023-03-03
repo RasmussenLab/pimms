@@ -198,5 +198,5 @@ def get_missing_values(df_train_long: pd.DataFrame,
                    .drop(test_idx))
     dl_real_na = analysis_collab.dls.test_dl(idx_real_na.to_frame())
     pred_real_na, _ = analysis_collab.learn.get_preds(dl=dl_real_na)
-    pred_real_na = pd.Series(pred_real_na, idx_real_na)
+    pred_real_na = pd.Series(pred_real_na, idx_real_na, name='intensity')
     return pred_real_na

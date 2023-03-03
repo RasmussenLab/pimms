@@ -181,6 +181,7 @@ def get_missing_values(df_train_wide: pd.DataFrame,
                    .drop(val_idx)
                    .drop(test_idx))
     pred_real_na = pred.loc[idx_real_na]
+    pred_real_na.name = 'intensity'
     return pred_real_na
 
 
