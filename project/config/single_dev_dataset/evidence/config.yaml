@@ -2,3 +2,8 @@ config_split: config/single_dev_dataset/evidence/split.yaml
 config_train: config/single_dev_dataset/evidence/train.yaml
 folder_experiment: runs/experiment_03/df_intensities_evidence_long/Q_Exactive_HF_X_Orbitrap_6070
 fn_rawfile_metadata: data/files_selected_metadata.csv
+models:
+ - CF
+ - DAE
+ - VAE
+

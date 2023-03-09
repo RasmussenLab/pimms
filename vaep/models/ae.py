@@ -28,12 +28,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def transform_preds(pred: torch.Tensor, reference: pd.DataFrame, normalizer) -> pd.Series:
-    pred = pd.DataFrame(pred, index=reference.index, columns=reference.columns)
-    pred = TabularPandas(pred, cont_names=list(pred.columns))
-    _ = normalizer.decode(pred)
-    pred = pred.items.stack()
-    return pred
 
 
 def get_preds_from_df(df: pd.DataFrame,
@@ -75,74 +69,7 @@ def get_preds_from_df(df: pd.DataFrame,
     return res
 
 
-class NormalizeShiftedMean(Normalize):
-    "Normalize/denorm batch of `TensorImage` with shifted mean and scaled variance."
 
-    def __init__(self, mean=None, std=None, axes=(0, 2, 3),
-                 shift_mu=0.5, scale_var=2):
-        store_attr()
-
-    def setups(self, to: Tabular):
-        store_attr(but='to', means=dict(getattr(to, 'train', to).conts.mean()),
-                   stds=dict(getattr(to, 'train', to).conts.std(ddof=0)+1e-7))
-        self.shift_mu = 0.5
-        self.scale_var = 2
-        return self(to)
-
-    def encodes(self, to: Tabular):
-        to.conts = (to.conts-self.means) / self.stds
-        to.conts = to.conts / self.scale_var + self.shift_mu
-        return to
-
-    def decodes(self, to: Tabular):
-        to.conts = (to.conts - self.shift_mu) * self.scale_var
-        to.conts = (to.conts*self.stds) + self.means
-        return to
-
-    _docs = dict(encodes="Normalize batch with shifted mean and scaled variance",
-                 decodes="Normalize batch with shifted mean and scaled variance")
-
-
-def get_funnel_layers(dim_in:int, dim_latent:int, n_layers:int) -> List[int]:
-    """Create a list of layer with a funnel of dimensions. 
-
-    Parameters
-    ----------
-    dim_in : int
-        Input dimension
-    dim_latent : int
-        target latent dimension
-    n_layers : int
-        number of layers between input and target latent dimension        
-
-    Returns
-    -------
-    List[int]
-        List of layer dimensions between input and target latent dimension.
-    """    
-    hidden_layer_dimensions = np.linspace(dim_latent,
-                dim_in,
-                2+n_layers,
-                endpoint=True
-                )
-    return hidden_layer_dimensions.astype(int)[-2:0:-1].tolist()
-
-
-def build_encoder_units(layers: list, dim_latent: int,
-                        activation,
-                        last_encoder_activation,
-                        factor_latent:int=1):
-    encoder = []
-    for i in range(len(layers)-1):
-        in_feat, out_feat = layers[i:i+2]
-        encoder.append(nn.Linear(in_feat, out_feat))
-        encoder.append(nn.Dropout(0.2))
-        encoder.append(nn.BatchNorm1d(out_feat))
-        encoder.append(activation)
-    encoder.append(nn.Linear(out_feat, dim_latent*factor_latent))
-    if last_encoder_activation:
-        encoder.append(last_encoder_activation)
-    return encoder, out_feat
 
 
 class Autoencoder(nn.Module):
@@ -221,6 +148,41 @@ class Autoencoder(nn.Module):
         x = self.encoder(x)
         x = self.decoder(x)
         return x
+
+
+def get_missing_values(df_train_wide: pd.DataFrame,
+                       val_idx: pd.Index,
+                       test_idx: pd.Index,
+                       pred: pd.Series) -> pd.Series:
+    """Build missing value predictions based on a set of prediction and splits.
+
+    Parameters
+    ----------
+    df_train_wide : pd.DataFrame
+        Training data in wide format. 
+    val_idx : pd.Index
+        Indices (MultiIndex of Sample and Feature) of validation split
+    test_idx : pd.Index
+        Indices (MultiIndex of Sample and Feature) of test split
+    pred : pd.Series
+        Mulitindexed Series of all predictions.
+
+    Returns
+    -------
+    pd.Series
+        Multiindex series of missing values in training data which are not 
+        in validiation and test split.
+    """
+    # all idx missing in training data
+    mask = df_train_wide.isna().stack()
+    idx_real_na = mask.index[mask]
+    # remove fake_na idx
+    idx_real_na = (idx_real_na
+                   .drop(val_idx)
+                   .drop(test_idx))
+    pred_real_na = pred.loc[idx_real_na]
+    pred_real_na.name = 'intensity'
+    return pred_real_na
 
 
 # class VAE(nn.Module):
@@ -394,109 +356,14 @@ class ModelAdapterVAE(ModelAdapterVAEFlat):
             self.learn.yb = (self._all_y,)
 
 
-# from fastai.losses import CrossEntropyLossFlat
-def loss_function(recon_batch: torch.tensor,
-                  batch: torch.tensor,
-                  mu: torch.tensor,
-                  logvar: torch.tensor,
-                  reconstruction_loss=F.mse_loss,
-                  reduction='sum',
-                  t: float = 0.9):
-    """Loss function only considering the observed values in the reconstruction loss.
-
-    Reconstruction + KL divergence losses summed over all *non-masked* elements and batch.
-
-
-    Parameters
-    ----------
-    recon_batch : torch.tensor
-        Model output
-    batch : Union[tuple, torch.tensor]
-        Batch from dataloader. Either only data or tuple of (data, mask)
-    mu : torch.tensor
-        [description]
-    logvar : [type]
-        [description]
-    t : float, optional
-        [description], by default 0.9
-
-    Returns
-    -------
-    dict
-        Containing: {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
-                    # {total: loss, recon: loss, kld: loss}
-
-        total: float
-            Total, weighted average loss for provided input and mask
-        reconstruction_loss: float
-            reconstruction loss for non-masked inputs
-        kld: float
-            unweighted Kullback-Leibler divergence between prior and empirical
-            normal distribution (defined by encoded moments) on latent representation.
-    """
-    try:
-        if isinstance(batch, torch.Tensor):
-            raise ValueError
-        X, mask = batch
-        recon_batch = recon_batch*mask.float()  # recon_x.mask_select(mask)
-        X = X*mask.float()  # x.mask_select(mask)
-    except ValueError:
-        X = batch
-    recon_loss = reconstruction_loss(
-        input=recon_batch, target=X, reduction=reduction)
-
-    # KL-divergence
-    # see Appendix B from VAE paper:
-    # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
-    # https://arxiv.org/abs/1312.6114
-    # # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
-    # there might be an error in the paper log(sigma^2) -> log(sigma)
-    # KLD =  (-0.5*(1+logvar - mu**2- torch.exp(logvar)).sum(dim = 1)).mean(dim =0)  
-    # KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    
-    # ## freebits
-    freebits = 0.1
-    KLD = torch.sum(F.relu(-0.5 *
-                           torch.sum(1
-                                     + logvar
-                                     - mu.pow(2)
-                                     - logvar.exp()
-                                     - freebits*0.6931471805599453))
-                    + freebits*0.6931471805599453)
-
-
-    # KLD = - 0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    total = recon_loss + t*KLD
-    return {'loss': total, 'recon_loss': recon_loss, 'KLD': KLD}
-
-
-def log_mse(input, target, reduction='sum'):
-    res = F.mse_loss(input, target, reduction=reduction)
-    res = res.log()
-    return res
-
-#self.loss_func(self.pred, *self.yb)
-def loss_fct_vae(pred, y, reduction='sum'):
-    recon_batch, mu, logvar = pred
-    batch = y
-    res = loss_function(recon_batch=recon_batch,
-                        batch=batch,
-                        mu=mu,
-                        logvar=logvar,
-                        # reconstruction_loss=F.binary_cross_entropy,
-                        # reconstruction_loss=log_mse,
-                        reconstruction_loss=F.mse_loss,
-                        t=1.0
-                        )
-    return res['loss']
 
 
 
 class AutoEncoderAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
-                train_df:pd.DataFrame,
-                val_df:pd.DataFrame, # values to use for validation
+                 train_df:pd.DataFrame,
+                 val_df:pd.DataFrame, # values to use for validation
                  model:torch.nn.modules.module.Module,
                  model_kwargs:dict,
                  transform: sklearn.pipeline.Pipeline,

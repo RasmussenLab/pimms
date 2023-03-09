@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -102,7 +102,6 @@ meta_cat_col: str = None # category column in meta data
 # column_names = None
 # select_N = 50
 
-
 # %%
 # # peptides
 # FN_INTENSITIES = 'data/dev_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
@@ -171,7 +170,7 @@ if isinstance(params.index_col, str) or isinstance(params.index_col, int):
     params.index_col = [params.index_col]
 params.index_col  # make sure it is an iterable
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Raw data
 
 # %% [markdown]
@@ -189,7 +188,7 @@ FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
 FILE_EXT = Path(FN_INTENSITIES).suffix[1:]
 logger.info(f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
-# %% tags=[]
+# %%
 constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT]) #AnalyzePeptides.from_csv 
 analysis = constructor(fname=params.FN_INTENSITIES,
                                      index_col=index_col,
@@ -227,7 +226,7 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
     analysis.df.columns.name = _new_name
     logger.warning(f"New name: {analysis.df.columns.names = }")
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Machine metadata
 #
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
@@ -348,7 +347,7 @@ def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
 
 analysis = add_meta_data(analysis, df_meta=df_meta)
 
-# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# %% [markdown]
 # Ensure unique indices
 
 # %%
@@ -379,7 +378,7 @@ if params.select_N is not None:
 # ## First Step: Select features by prevalence
 # - `feat_prevalence` across samples
 
-# %% tags=[]
+# %%
 freq_per_feature = analysis.df.notna().sum() # on wide format
 if isinstance(params.feat_prevalence, float):
     N_samples = len(analysis.df_meta)
@@ -398,7 +397,7 @@ analysis.N, analysis.M = analysis.df.shape
 # # potentially create freq based on DataFrame
 analysis.df
 
-# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# %% [markdown]
 # ## Second step - Sample selection
 
 # %% [markdown]
@@ -442,6 +441,7 @@ ax.set_ylabel('observations')
 fname = folder_figures / 'feature_prevalence'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+
 
 # %% [markdown]
 # ### Number off observations accross feature value
@@ -587,7 +587,6 @@ fname = folder_figures / 'median_boxplot'
 figures[fname.stem] =  fname
 vaep.savefig(fig, fname)
 
-
 # %% [markdown]
 # Percentiles of intensities in dataset
 
@@ -699,7 +698,7 @@ splits.val_y
 # %%
 splits.train_X
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ### Save in long format
 #
 # - Data in long format: (peptide, sample_id, intensity)
@@ -730,5 +729,3 @@ fname
 # %%
 # saved figures
 figures
-
-# %%

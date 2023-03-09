@@ -15,13 +15,12 @@
 # %% [markdown]
 # # Differential Analysis - Compare model imputation with standard imputation
 #
-# - load real NA predictions
+# - load missing values predictions
 # - leave all other values as they were
-# - compare real NA predicition by model with standard method (draw from shifted normal distribution)
+# - compare missing values predicition by model with standard method (draw from shifted normal distribution. short RSN)
 
 # %%
 from pathlib import Path
-import yaml
 from collections import namedtuple
 
 import matplotlib.pyplot as plt
@@ -29,8 +28,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pingouin as pg
-
-import statsmodels.stats.multitest
 
 
 import vaep
@@ -166,7 +163,8 @@ freq_feat.to_csv(fname)
 freq_feat
 
 # %%
-fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(), feat_completness_over_samples=cutoffs.feat_completness_over_samples,
+fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
+             feat_completness_over_samples=cutoffs.feat_completness_over_samples,
              min_feat_in_sample=cutoffs.min_feat_in_sample)
 vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 
@@ -187,7 +185,7 @@ fname
 
 # %%
 pred_real_na = vaep.analyzers.compare_predictions.load_single_csv_pred_file(fname)
-pred_real_na.sample(3)
+pred_real_na.sample(3).to_frame()
 
 
 # %%
@@ -207,7 +205,7 @@ ax.set_ylabel('count measurments')
 
 ax = axes[1]
 ax = pred_real_na.hist(ax=ax,bins=bins, label=f'all (N={len(pred_real_na):,d})')
-ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
+ax.set_title(f'Missing values imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
 
 idx_new_model = pred_real_na.index.difference(pred_real_na_imputed_normal.index)
@@ -216,9 +214,9 @@ ax.legend()
 
 ax = axes[2]
 ax = pred_real_na.loc[pred_real_na_imputed_normal.index].hist(ax=ax,bins=bins, label=args.model_key)
-ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, label='shifted normal')
+ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, label='RSN')
 
-ax.set_title(f'real na imputed by shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
+ax.set_title(f'missing values imputed by RSN (N={len(pred_real_na_imputed_normal):,d})')
 ax.set_ylabel('count measurments')
 ax.set_xlabel(args.value_name)
 ax.legend(fontsize='xx-large')
@@ -239,12 +237,12 @@ ax.set_ylabel('count measurments')
 ax = axes[1]
 bins = range(min_bin, max_bin+1, 1)
 ax = pred_real_na.hist(ax=ax,bins=bins)
-ax.set_title(f'real na imputed using {args.model_key} (N={len(pred_real_na):,d})')
+ax.set_title(f'Missing values imputed using {args.model_key} (N={len(pred_real_na):,d})')
 ax.set_ylabel('count measurments')
 
 ax = axes[2]
 ax = pred_real_na_imputed_normal.hist(ax=ax, bins=bins, color='C1')
-ax.set_title(f'real na imputed using shifted normal distribution (N={len(pred_real_na_imputed_normal):,d})')
+ax.set_title(f'Missing values imputed using RSN (N={len(pred_real_na_imputed_normal):,d})')
 ax.set_ylabel('count measurments')
 ax.set_xlabel(args.value_name)
 
@@ -257,7 +255,7 @@ vaep.savefig(fig, name=f'real_na_obs_vs_default_vs_{args.model_key}', folder=arg
 observed.mean(), observed.std(), pred_real_na.mean(), pred_real_na.std(), pred_real_na_imputed_normal.mean(), pred_real_na_imputed_normal.std()
 
 # %%
-shifts = vaep.imputation.compute_moments_shift(observed, pred_real_na_imputed_normal, names=('observed', 'shifted normal'))
+shifts = vaep.imputation.compute_moments_shift(observed, pred_real_na_imputed_normal, names=('observed', 'RSN'))
 shifts.update(vaep.imputation.compute_moments_shift(observed, pred_real_na, names=('observed', args.model_key)))
 pd.DataFrame(shifts).T
 
@@ -265,14 +263,19 @@ pd.DataFrame(shifts).T
 # Or by averaging over the calculation by sample
 
 # %%
-index_level = 0 # per sample
+index_level = 0  # per sample
 mean_by_sample = {}
-mean_by_sample['observed'] = vaep.imputation.stats_by_level(observed, index_level=index_level)
-mean_by_sample['shifted normal'] = vaep.imputation.stats_by_level(pred_real_na_imputed_normal, index_level=index_level)
-mean_by_sample['vae'] = vaep.imputation.stats_by_level(pred_real_na, index_level=index_level)
+mean_by_sample['observed'] = vaep.imputation.stats_by_level(
+    observed, index_level=index_level)
+mean_by_sample['RSN'] = vaep.imputation.stats_by_level(
+    pred_real_na_imputed_normal, index_level=index_level)
+mean_by_sample['vae'] = vaep.imputation.stats_by_level(
+    pred_real_na, index_level=index_level)
 mean_by_sample = pd.DataFrame(mean_by_sample)
-mean_by_sample.loc['mean_shift'] = (mean_by_sample.loc['mean', 'observed'] - mean_by_sample.loc['mean']).abs() / mean_by_sample.loc['std', 'observed']
-mean_by_sample.loc['std shrinkage'] = mean_by_sample.loc['std'] / mean_by_sample.loc['std', 'observed']
+mean_by_sample.loc['mean_shift'] = (mean_by_sample.loc['mean', 'observed'] -
+                                    mean_by_sample.loc['mean']).abs() / mean_by_sample.loc['std', 'observed']
+mean_by_sample.loc['std shrinkage'] = mean_by_sample.loc['std'] / \
+    mean_by_sample.loc['std', 'observed']
 mean_by_sample
 
 # %% [markdown]

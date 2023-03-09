@@ -4,7 +4,7 @@ from operator import mul
 from pathlib import Path
 import pickle
 import pprint
-from typing import Tuple, List, Callable
+from typing import Tuple, List, Callable, Union
 import json
 
 import matplotlib.pyplot as plt
@@ -229,10 +229,9 @@ def collect_metrics(metrics_jsons:List, key_fct: Callable) -> dict:
     return all_metrics
 
 
-
 def calculte_metrics(pred_df: pd.DataFrame,
-                   true_col: List[str] = None,
-                   scoring: List[Tuple[str, Callable]] = scoring) -> dict:
+                     true_col: List[str] = None,
+                     scoring: List[Tuple[str, Callable]] = scoring) -> dict:
     """Create metrics based on predictions, a truth reference and a
     list of scoring function with a name.
 
@@ -274,13 +273,7 @@ def calculte_metrics(pred_df: pd.DataFrame,
     if y_true.isna().any():
         raise ValueError(f"Ground truth column '{y_true.name}' contains missing values. "
                          "Drop these rows first.")
-    # # If NAs in y_true should be allowed, the intersection between pred columns
-    # # and y_true has to be added in the for loop below.
-    # if y_true.isna().any():
-        # logger.info(f"Remove {y_true.isna().sum()} from true_col {y_true.name}")
-        # y_true = y_true.dropna()
-        # assert len(y_true)
-        
+
     metrics = {}
     for model_key in y_pred:
         model_pred = y_pred[model_key]
@@ -298,29 +291,29 @@ def calculte_metrics(pred_df: pd.DataFrame,
              for k, f in scoring]
         )
         metrics[model_key]['N'] = int(len(model_pred_no_na))
-    # metrics = pd.DataFrame(metrics)
+        metrics[model_key]['prop'] = len(model_pred_no_na) / len(model_pred)
     return metrics
 
 
 class Metrics():
 
-    def __init__(self, no_na_key='no_na', with_na_key='with_na', na_column_to_drop=['interpolated']):
-        self.no_na_key, self.with_na_key = no_na_key, with_na_key
-        self.na_column_to_drop = na_column_to_drop
-        self.metrics = {self.no_na_key: {}, self.with_na_key: {}}
+    def __init__(self):
+        self.metrics = {}
 
     def add_metrics(self, pred, key):
-        self.metrics[self.no_na_key][key] = calculte_metrics(
-            pred_df=pred.dropna())
-        mask_na = pred.isna().any(axis=1)
-        # assert (~mask_na).sum() + mask_na.sum() == len(pred)
-        if mask_na.sum():
-            self.metrics[self.with_na_key][key] = calculte_metrics(
-                pred_df=pred.loc[mask_na].drop(self.na_column_to_drop, axis=1))
-        else:
-            self.metrics[self.with_na_key][key] = None
-        return {self.no_na_key: self.metrics[self.no_na_key][key],
-                self.with_na_key:  self.metrics[self.with_na_key][key]}
+        self.metrics[key] = calculte_metrics(pred_df=pred.dropna())
+        return self.metrics[key]
 
     def __repr__(self):
         return pprint.pformat(self.metrics, indent=2, compact=True)
+
+
+def get_df_from_nested_dict(nested_dict, column_levels=['data_split', 'model', 'metric_name']):
+    metrics = {}
+    for k, run_metrics in nested_dict.items():
+        metrics[k] = vaep.pandas.flatten_dict_of_dicts(run_metrics)
+
+    metrics = pd.DataFrame.from_dict(metrics, orient='index')
+    metrics.columns.names = column_levels
+    metrics.index.name = 'subset'
+    return metrics

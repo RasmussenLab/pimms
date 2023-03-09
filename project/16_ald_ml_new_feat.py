@@ -129,7 +129,7 @@ ald_study
 # %%
 template = 'pred_real_na_{}.csv'
 fname = args.out_preds / template.format(args.model_key)
-print(f"REAL NA pred. by {args.model_key}: {fname}")
+print(f"missing values pred. by {args.model_key}: {fname}")
 pred_real_na = vaep.analyzers.compare_predictions.load_single_csv_pred_file(fname).loc[in_both]
 pred_real_na.sample(3)
 

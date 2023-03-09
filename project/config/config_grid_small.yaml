@@ -1,40 +1,26 @@
+# runs in ~30 mins
 epochs_max:
-- 100
+- 15
 batch_size: 64
 batch_size_collab: 32768
 hidden_layers:
-- '256'
 - '512'
-- '1024'
-- '2056'
-- '128_64'
 - '256_128'
-- '512_256'
-- '512_512'
-- '512_256_128'
-- '1024_512_256'
-- '128_128_128'
-- '256_256_128_128'
 latent_dim:
-- 10
-- 25
 - 50
-- 75
-- 100
-folder_grid_search: "runs/grid_search"
-folder_experiment2: "runs/grid_search/{{level}}"
-folder_experiment: "runs/grid_search/{level}"
+folder_grid_search: "runs/optimize"
+# folder_experiment2: "runs/optimize/{{level}}"
+folder_experiment: "runs/optimize/{level}" # used by Snakefile of single experiment
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
 levels:
 - proteinGroups
 - aggPeptides
-- evidence 
+# - evidence 
 config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
-name_template: run/LD_{latent_dim}_E_{epochs_max}
 cuda: True
 models:
+  - Median
   - CF
   - DAE
   - VAE
-  - median
