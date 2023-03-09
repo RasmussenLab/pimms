@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -32,8 +32,6 @@ import vaep.pandas
 # ## Arguments
 
 # %% tags=["parameters"]
-# FN_PEPTIDE_INTENSITIES: str = 'data/df_intensities_N07813_M10000.csv'  # Samples metadata extraced from erda
-# FN_PEPTIDE_FREQ: str = 'data/processed/count_all_peptides.json' # Peptide counts for all parsed files on erda (for data selection)
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv' # Machine parsed metadata from rawfile workflow
 fn_files_per_instrument: str = 'data/files_per_instrument.yaml' # All parsed raw files nested by instrument (model, attribute, serial number)
 fn_files_selected: str = 'data/samples_selected.yaml' # selected files based on threshold of identified peptides
@@ -45,8 +43,8 @@ out_folder: str = 'data'
 #
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
-# %% tags=[]
-df_meta_rawfiles = pd.read_csv(fn_rawfile_metadata, header=[0, 1], index_col=0)
+# %%
+df_meta_rawfiles = pd.read_csv(fn_rawfile_metadata, header=[0, 1], index_col=0, low_memory=False)
 date_col = ('FileProperties', 'Content Creation Date')
 df_meta_rawfiles[date_col] = pd.to_datetime(
     df_meta_rawfiles[date_col])
@@ -56,13 +54,13 @@ msg = f"A total of {len(df_meta_rawfiles)} raw files could be read using the The
 
 # %%
 meta_stats = df_meta_rawfiles.describe(include='all', datetime_is_numeric=True)
-meta_stats
+meta_stats.T
 
 # %% [markdown]
 # subset with variation
 
 # %%
-meta_stats.loc[:, (meta_stats.loc['unique'] > 1) |  (meta_stats.loc['std'] > 0.1)]
+meta_stats.loc[:, (meta_stats.loc['unique'] > 1) |  (meta_stats.loc['std'] > 0.1)].T
 
 # %%
 df_meta_rawfiles_columns = df_meta_rawfiles.columns # needs to go to Config which is not overwriteable by attribute selection
@@ -147,7 +145,7 @@ df_meta_rawfiles.groupby([meta_raw_settings.ms_model, meta_raw_settings.ms_firmw
 # %% [markdown]
 # Ignoring instrument software
 
-# %% tags=[]
+# %%
 grouping = df_meta_rawfiles.groupby(list(meta_raw_settings[:3]))
 instrument_counts = grouping[meta_raw_settings.ms_model].count().sort_values()
 msg += (f" There are a total of {len(instrument_counts)} unique instruments in the entire dataset (based on the instrument name, attributs and serial number)"
