@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3.8.12 ('vaep')
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---

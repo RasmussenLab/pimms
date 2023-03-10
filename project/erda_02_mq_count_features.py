@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -63,6 +63,16 @@ folders = [Path(folders_dict[folder]) for folder in files]
 assert len(files) == len(folders_dict) == len(folders)
 
 # %%
+fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
+df_ids = pd.read_csv(fn_id_old_new)
+df_ids
+
+# %%
+folders_dict = { sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in df_ids['Sample ID']}
+# folders_dict = {p.stem : p.parent / p.stem for p in folders_dict}
+# folders_dict
+
+# %%
 OVERWRITE = False
 
 from config import FNAME_C_PEPTIDES, FNAME_C_EVIDENCE, FNAME_C_PG, FNAME_C_GENES
@@ -74,7 +84,7 @@ FNAME_C_PEPTIDES, FNAME_C_EVIDENCE, FNAME_C_PG, FNAME_C_GENES
 
 # %%
 import random
-pd.set_option('max_columns', 60)
+pd.set_option('display.max_columns', 60)
 random_folder, random_path = random.sample(folders_dict.items(), 1)[0]
 mq_output = MaxQuantOutputDynamic(random_path)
 print(f"peptides.txt from {random_folder!s}")

@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -16,6 +16,8 @@
 # # Build a set of training data
 #
 # Use a set of (most) common peptides to create inital data sets
+#
+# - based on `Counter` over all outputs from search (here: MaxQuant)
 
 # %%
 import yaml
@@ -24,10 +26,14 @@ import random  # shuffle, seed
 import functools
 from pathlib import Path
 import logging
+import multiprocessing
 
+import numpy as np
 import pandas as pd
-from tqdm.notebook import tqdm
 
+from tqdm.notebook import tqdm_notebook
+
+import vaep
 from vaep.io import data_objects
 
 import config as config
@@ -47,12 +53,12 @@ def select_files_by_parent_folder(fpaths:List, years:List):
 
 # %%
 RANDOM_SEED: int = 42  # Random seed for reproducibility
-
 FEAT_COMPLETNESS_CUTOFF = 0.25 # Minimal proportion of samples which have to share a feature
-
 YEARS = ['2017','2018', '2019', '2020']
-
 SAMPLE_COL = 'Sample ID'
+
+
+# %%
 
 # %% [markdown]
 # Select a specific config file
@@ -64,6 +70,11 @@ from config.training_data import peptides as cfg
 # from config.training_data import proteinGroups as cfg
 
 {k: getattr(cfg, k) for k in dir(cfg) if not k.startswith('_')}
+
+# %%
+out_folder = 'data/selected/'
+out_folder = Path(out_folder) / cfg.NAME
+out_folder.mkdir(exist_ok=True, parents=True)
 
 # %% [markdown]
 # Set defaults from file (allows to potentially overwrite parameters)
@@ -84,22 +95,184 @@ CounterClass = cfg.CounterClass
 FNAME_COUNTER = cfg.FNAME_COUNTER
 
 # %% [markdown]
+# ## Selected IDs
+#
+# - currently only `Sample ID` is used
+# - path are to `.raw` raw files, not the output folder (could be changed)
+
+# %%
+fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
+df_ids = pd.read_csv(fn_id_old_new)
+df_ids
+
+# %% [markdown]
 # ## Counter
 
 # %%
 counter = CounterClass(FNAME_COUNTER)
 counts = counter.get_df_counts()
+counts
 
+# %%
 if TYPES_COUNT:
     counts = counts.convert_dtypes().astype({'Charge': int}) #
 mask = counts['proportion'] >= FEAT_COMPLETNESS_CUTOFF
 counts.loc[mask]
 
 # %% [markdown]
+# Based on selected samples, retain features that potentially could be in the subset
+#
+# - if 1000 samples are selected, and given at treshold of 25%, one would need at least 250 observations
+
+# %%
+treshold_counts = int(len(df_ids) * FEAT_COMPLETNESS_CUTOFF)
+mask = counts['counts'] >= treshold_counts
+counts.loc[mask]
+
+# %%
+IDX_selected = counts.loc[mask].set_index('Sequence').index
+IDX_selected
+
+# %% [markdown]
+# ### Collect in parallel
+
+# %%
+selected_dumps = df_ids["Sample ID"]
+selected_dumps = {k: counter.dumps[k] for k in selected_dumps}
+selected_dumps = list(selected_dumps.items())
+selected_dumps[:10]
+
+# %%
+N_WORKERS = 8
+IDX = IDX_selected
+
+def load_fct(path):
+    s = (
+    pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
+    .notna()
+    .squeeze()
+    .astype(pd.Int8Dtype())
+    )
+    return s
+
+
+def collect(folders, index=IDX, load_fct=load_fct):
+    current = multiprocessing.current_process()
+    i = current._identity[0] % N_WORKERS + 1
+    print(" ", end="", flush=True)
+
+    failed = []
+    all = pd.DataFrame(index=index)
+
+    with tqdm_notebook(total=len(folders), position=i) as pbar:
+        for id, path in folders:
+            try:
+                s = load_fct(path)
+                s.name = id
+                all = all.join(s, how='left')
+            except FileNotFoundError:
+                logging.warning(f"File not found: {path}")
+                failed.append((id, path))
+            except pd.errors.EmptyDataError:
+                logging.warning(f"Empty file: {path}")
+                failed.append((id, path))
+            pbar.update(1)
+            
+    return all
+
+
+# %%
+with multiprocessing.Pool(N_WORKERS) as p:
+    all = list(
+        tqdm_notebook(
+            p.imap(collect, np.array_split(selected_dumps, N_WORKERS)),
+            total=N_WORKERS,
+        )
+    )
+    
+all = pd.concat(all, axis=1)
+all
+
+# %%
+count_samples = all.sum()
+
+# %%
+fname = out_folder / 'count_samples.json'
+count_samples.to_json(fname)
+
+vaep.plotting.make_large_descriptors(size='medium')
+
+ax = count_samples.sort_values().plot(rot=90, ylabel='observations')
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+# %%time
+all = all.T
+all
+
+# %%
+fname = out_folder / config.insert_shape(all,  'absent_present_pattern_selected{}.pkl')
+all.to_pickle(fname)
+
+# %%
+count_features = all.sum()
+fname = out_folder / 'count_feat.json'
+count_features.to_json(fname)
+
+ax = count_features.sort_values().plot(rot=90, ylabel='observations') 
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+# %%time
+all.to_csv(fname.with_suffix('.csv'), chunksize=1_000)
+
+
+# %% [markdown]
 # ## Selected Features
 #
 # - index names should also match!
 # - if not-> rather use a list?
+
+# %%
+def load_fct(path):
+    s = (
+    pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
+    .squeeze()
+    .astype(pd.Int64Dtype())
+    )
+    return s
+
+all = None
+
+from functools import partial
+
+collect_intensities = partial(collect, index=IDX, load_fct=load_fct)
+
+with multiprocessing.Pool(N_WORKERS) as p:
+    all = list(
+        tqdm_notebook(
+            p.imap(collect_intensities, np.array_split(selected_dumps, N_WORKERS)),
+            total=N_WORKERS,
+        )
+    )  
+    
+all = pd.concat(all, axis=1)
+all
+
+# %%
+all.memory_usage(deep=True).sum() / (2**20)
+
+# %%
+fname = out_folder / config.insert_shape(all,  'intensities_wide_selected{}.pkl') 
+all.to_pickle(fname)
+
+# %%
+# # %%time
+# all = all.T
+# all
+
+# %%
+all.to_pickle(fname)
 
 # %%
 selected_features = counts.loc[mask].set_index(counter.idx_names).sort_index().index
@@ -128,10 +301,15 @@ LOAD_DUMP(selected_dumps[0])
 #
 # - potentially in parallel, aggregating results
 # - if needed: debug using two samples
+#
+# Design decisions
+# - long format of data with categorical features (to save memory)
+#
 
 # %%
 from typing import List, Callable
 from pandas.errors import EmptyDataError
+
 def process_folders(fpaths: List[Path],
                     selected_features: pd.Index,
                     load_folder: Callable,
@@ -145,6 +323,7 @@ def process_folders(fpaths: List[Path],
         if not i % 10: print(f"File ({i}): {fpath}")
         sample_name = fpath.stem
         try:
+            # does some filtering
             dump = load_folder(fpath)
         except EmptyDataError:
             logging.warning(f'Empty dump: {fpath}')
@@ -152,6 +331,8 @@ def process_folders(fpaths: List[Path],
         except FileNotFoundError:
             logging.warning(f'Missing dump: {fpath}')
             continue
+        
+        # long data format
         sequences_available = dump.index.intersection(selected_features)
         dump = dump.loc[sequences_available, 'Intensity'].reset_index()
         dump[id_col] = sample_name
@@ -172,7 +353,6 @@ def process_folders(fpaths: List[Path],
 
 # %%
 # %%time
-
 process_folders_peptides = functools.partial(process_folders,
                                              selected_features=selected_features,
                                              load_folder=LOAD_DUMP,
@@ -221,15 +401,3 @@ df_intensities.to_pickle(fname)
 # %% [markdown]
 # - Only binary pickle format works for now
 # - csv and reshaping the data needs to much memory for a single erda instance with many samples
-
-# %%
-# df_intensities = df_intensities.unstack(['Sample ID'])
-# df_intensities
-
-# %%
-# df_intensities.sort_index(inplace=True)
-# base_name = "df_intensities_evidence_long" + '_'.join(YEARS)
-# fname = config.FOLDER_DATA / config.insert_shape(df_intensities, base_name + '{}.csv', shape=(N,M))
-# print(f"{fname = }")
-# df_intensities.to_csv(fname)
-# df_intensities

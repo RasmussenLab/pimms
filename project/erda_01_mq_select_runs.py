@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -238,4 +238,4 @@ ax = mq_all_summaries.df.loc[mask, col_summary.peptides_identified].plot(kind='h
 ax = axes[1,1]
 _ = mq_all_summaries.df.loc[mask, col_summary.peptides_identified].astype(float).plot.kde(ax=ax, title=f"Density plot including samples with {threshold_m2_identified:,d} and more identified peptides.", xlim=xlim_dens)
 
-plotting._savefig(fig, name='distribution_peptides_in_samples', folder=src.config.FIGUREFOLDER)
+plotting._savefig(fig, name='distribution_peptides_in_samples', folder=config.FIGUREFOLDER)
