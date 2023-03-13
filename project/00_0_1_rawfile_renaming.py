@@ -7,7 +7,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -19,26 +19,26 @@
 # - all raw files collected ~50,000
 
 # %%
-from collections import namedtuple
-from collections import defaultdict
-
-import yaml
-from pathlib import PurePosixPath, Path
+from collections import defaultdict, namedtuple
+from pathlib import Path, PurePosixPath
 
 import numpy as np
 import pandas as pd
-
 import vaep.pandas
+import yaml
 
 
-def rename(fname, new_sample_id, ext=None):
+def rename(fname, new_sample_id, new_folder=None, ext=None):
     fname = PurePosixPath(fname)
     if ext is None:
         ext = fname.suffix
-    fname = fname.parent / new_sample_id
+    if new_folder is None:
+        new_folder = fname.parent
+    else:
+        new_folder = PurePosixPath(new_folder)
+    fname = new_folder / new_sample_id
     fname = fname.with_suffix(ext)
-    return fname
-
+    return fname.as_posix()
 
 
 # %% [markdown]
@@ -46,9 +46,7 @@ def rename(fname, new_sample_id, ext=None):
 
 # %% tags=["parameters"]
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv' # Machine parsed metadata from rawfile workflow
-fn_files_per_instrument: str = 'data/files_per_instrument.yaml' # All parsed raw files nested by instrument (model, attribute, serial number)
 fn_files_selected: str = 'data/samples_selected.yaml' # selected files based on threshold of identified peptides
-fn_filer_per_instrument_selected: str = 'data/files_selected_per_instrument.yaml' # Selected parsed raw files nested by instrument (model, attribute, serial number)
 out_folder: str = 'data/rename'
 
 # %%
@@ -63,7 +61,7 @@ files_out = dict()
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
 # %%
-df_meta = pd.read_csv(fn_rawfile_metadata, header=[0, 1], index_col=0)
+df_meta = pd.read_csv(fn_rawfile_metadata, header=[0, 1], index_col=0, low_memory=False)
 date_col = ('FileProperties', 'Content Creation Date')
 df_meta[date_col] = pd.to_datetime(
     df_meta[date_col])
@@ -99,15 +97,24 @@ df_meta
 # %%
 df_meta['Pathname'] = df_meta['Pathname'].str.replace('tmp/', './')
 
+# %%
+df_meta["Instrument_name"] = (
+    df_meta["Thermo Scientific instrument model"].str.replace(' ', '-')
+    + '_'
+    + df_meta["instrument serial number"].str.split('#').str[-1]
+).str.replace(' ', '-')
+
+df_meta["Instrument_name"].value_counts().index
+
 # %% [markdown]
 # Create new sample identifier
 
 # %%
-idx_all = (pd.to_datetime(df_meta["Content Creation Date"]).dt.strftime("%Y_%m_%d_%H_%M")
+date_col = "Content Creation Date"
+idx_all = (pd.to_datetime(df_meta[date_col]).dt.strftime("%Y_%m_%d_%H_%M")
         + '_'
-        + df_meta["Thermo Scientific instrument model"].str.replace(' ', '-')
-        + '_'
-        + df_meta["instrument serial number"].str.split('#').str[-1]).str.replace(' ', '-')
+        + df_meta["Instrument_name"]
+).str.replace(' ', '-')
 
 mask = idx_all.duplicated(keep=False)
 duplicated_sample_idx = idx_all.loc[mask].sort_values()  # duplicated dumps
@@ -117,7 +124,7 @@ duplicated_sample_idx
 df_meta['new_sample_id'] =  idx_all
 
 
-df_meta["Path_new"] = df_meta[["Pathname", "new_sample_id"]].apply(lambda s: rename(*s), axis=1)
+df_meta["Path_new"] = df_meta[["Pathname", "new_sample_id", "Instrument_name"]].apply(lambda s: rename(*s), axis=1)
 
 
 _n = df_meta.groupby("new_sample_id").cumcount().astype('string').str.replace('0', '')
@@ -148,6 +155,9 @@ df_meta["Path_old"] = df_meta["Pathname"]
 
 df_meta[["Path_old", "Path_new", "new_sample_id"]]
 
+# %%
+df_meta
+
 # %% [markdown]
 # ## Selected Files
 
@@ -155,7 +165,6 @@ df_meta[["Path_old", "Path_new", "new_sample_id"]]
 with open(fn_files_selected) as f:
     files_selected = yaml.safe_load(f)
 print(f'Threshold: {files_selected["threshold"]:,d}')
-
 
 # %%
 df_meta.loc[files_selected["files"]]
@@ -165,9 +174,39 @@ mask = idx_all.duplicated()
 selected = df_meta.loc[~mask].index.intersection(files_selected["files"])
 df_meta.loc[selected]
 
+
+# %%
+def build_instrument_name(s):
+    """Process in order, only keep one name"""
+    ret = ''
+    used_before = set()
+    for string_w_withspaces in s:
+        strings_ = string_w_withspaces.split()
+        for string_ in strings_:
+            if string_ not in used_before:
+                ret += f'_{string_}'
+        used_before |= set(strings_)
+    ret = (ret[1:] # remove _ from start
+           .replace('Slot_#', '')
+           .replace('slot_#', '')
+          )
+    return ret
+
+
+(df_meta[
+        [
+            "Thermo Scientific instrument model",
+            "instrument attribute",
+            "instrument serial number",
+        ]
+    ]
+    .sample(20)
+    .apply(build_instrument_name, axis=1)
+)
+
 # %%
 fname = out_folder / 'selected_old_new_id_mapping.csv'
-files_out[fname.name] = fname
+files_out[fname.name] = fname.as_posix()
 df_meta.loc[selected, ["Path_old", "Path_new", "new_sample_id"]].to_csv(fname)
 fname
 
@@ -178,47 +217,66 @@ fname
 # df_meta["Path_old"] = df_meta["Pathname"]
 df_meta.loc[selected][["Path_old", "Path_new", "new_sample_id"]]
 
-# %%
-import os
-
-# %%
-# For all file names?
-# os.rename?
-
-# %%
-# For MQ output?
-# os.renames?
+# %% [markdown]
+# ## Put files on PRIDE FTP server
+#
+# rename using `new_sample_id`
 
 # %% [markdown]
-# Selected path_old -> path_new
-
-# %% [markdown]
-# ### SFTP command
+# ### LFTP commands - raw files
+#
+# `-c` option allows providing several semi-colon separated commands
 
 # %%
 commands = df_meta.loc[selected]
-commands = '!put ' + commands['Path_old'].astype('string') + ' ' + commands['Path_new'].astype('string')
+commands = (
+    'put mq_out' 
+    + commands['Path_old'].astype('string').str[1:]
+    + ' ' 
+    + pd.to_datetime(commands[date_col]).dt.strftime("%Y")
+    + '/'
+    + commands['Path_new'].astype('string')
+)
 print(commands.sample(10).to_csv(sep=' ', header=False, index=False))
 
 # %% [markdown]
 # write all
 
 # %%
-fname = out_folder / 'sftp_commands_rawfiles'
-commands.to_csv(fname, sep=' ', header=False, index=False)
+fname = out_folder / 'lftp_commands_rawfiles'
+
+commands = '; '.join(commands.to_list()) 
+
+with open(fname, 'w') as f:
+    f.write(commands)
 
 # %% [markdown]
-# ## Put output files on PRIDE
+# ### LFTP commands - MaxQuant output
+
+# %% [markdown]
+#
 #
 # - `mq_out` folder
 # - move from `Sample ID` folder into `new_sample_id` on erda
 
 # %%
 commands = df_meta.loc[selected]
-commands = '!put ' + commands.index + '/* ' + commands["new_sample_id"] + '/*'
-  
-print(commands.sample(10).to_csv(sep=' ', header=False, index=False))
+commands = (
+    "mirror -R --only-missing -P 8 --exclude-glob *.pdf " # command
+    + "mq_out/" + commands.index # source
+    # + "./" + pd.to_datetime(commands[date_col]).dt.strftime("%Y") + "/" + commands["new_sample_id"] # dest
+    + " ./MQ_tables/" + commands["Instrument_name"]+ "/" + commands["new_sample_id"] # dest
+)
+
+print(commands.sample(10).to_csv(header=False, index=False))
 
 # %%
-fname = out_folder / 'sftp_commands_mq_output'
-commands.to_csv(fname, sep=' ', header=False, index=False)
+'; '.join(commands.sample(20).to_list())
+
+# %%
+fname = out_folder / 'lftp_commands_mq_output'
+
+commands = '; '.join(commands.to_list()) 
+
+with open(fname, 'w') as f:
+    f.write(commands)
