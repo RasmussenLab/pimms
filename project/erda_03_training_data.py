@@ -59,11 +59,6 @@ OUT_FOLDER = 'data/selected/'
 FN_ID_OLD_NEW: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
 
 
-# %%
-out_folder = Path(OUT_FOLDER) / cfg.NAME
-out_folder.mkdir(exist_ok=True, parents=True)
-
-
 # %% [markdown]
 # Select a specific config file
 
@@ -94,6 +89,11 @@ LOAD_DUMP = cfg.LOAD_DUMP
 
 CounterClass = cfg.CounterClass
 FNAME_COUNTER = cfg.FNAME_COUNTER
+
+# %%
+out_folder = Path(OUT_FOLDER) / cfg.NAME
+out_folder.mkdir(exist_ok=True, parents=True)
+
 
 # %% [markdown]
 # ## Selected IDs
@@ -151,23 +151,20 @@ selected_dumps[:10]
 # selected_dumps[-10:]
 
 # %% [markdown]
-# ## Collect present abesent pattern in parallel
+# ## Collect in parallel
 
 # %%
-N_WORKERS = 8
-IDX = IDX_selected
-
-def load_fct(path):
-    s = (
-    pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
-    .notna()
-    .squeeze()
-    .astype(pd.Int8Dtype())
-    )
-    return s
+# def load_fct(path):
+#     s = (
+#     pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
+#     .notna()
+#     .squeeze()
+#     .astype(pd.Int8Dtype())
+#     )
+#     return s
 
 
-def collect(folders, index=IDX, load_fct=load_fct):
+def collect(folders, index, load_fct):
     current = multiprocessing.current_process()
     i = current._identity[0] % N_WORKERS + 1
     print(" ", end="", flush=True)
@@ -192,52 +189,6 @@ def collect(folders, index=IDX, load_fct=load_fct):
     return all
 
 
-# %%
-with multiprocessing.Pool(N_WORKERS) as p:
-    all = list(
-        tqdm_notebook(
-            p.imap(collect, np.array_split(selected_dumps, N_WORKERS)),
-            total=N_WORKERS,
-        )
-    )
-    
-all = pd.concat(all, axis=1)
-all
-
-# %%
-count_samples = all.sum()
-
-# %%
-fname = out_folder / 'count_samples.json'
-count_samples.to_json(fname)
-
-vaep.plotting.make_large_descriptors(size='medium')
-
-ax = count_samples.sort_values().plot(rot=90, ylabel='observations')
-vaep.savefig(ax.get_figure(), fname)
-
-# %%
-# %%time
-all = all.T
-all
-
-# %%
-fname = out_folder / config.insert_shape(all,  'absent_present_pattern_selected{}.pkl')
-all.to_pickle(fname)
-
-# %%
-count_features = all.sum()
-fname = out_folder / 'count_feat.json'
-count_features.to_json(fname)
-
-ax = count_features.sort_values().plot(rot=90, ylabel='observations') 
-vaep.savefig(ax.get_figure(), fname)
-
-# %%
-# %%time
-all.to_csv(fname.with_suffix('.csv'), chunksize=1_000)
-
-
 # %% [markdown]
 # ## Collect intensities in parallel
 
@@ -252,7 +203,9 @@ def load_fct(path):
 
 all = None # free memory
 
-collect_intensities = partial(collect, index=IDX, load_fct=load_fct)
+collect_intensities = partial(collect, index=IDX_selected, load_fct=load_fct)
+
+N_WORKERS = 8
 
 with multiprocessing.Pool(N_WORKERS) as p:
     all = list(
@@ -270,8 +223,24 @@ all
 all.memory_usage(deep=True).sum() / (2**20)
 
 # %%
+# %%time
 fname = out_folder / config.insert_shape(all,  'intensities_wide_selected{}.pkl') 
 all.to_pickle(fname)
+fname
 
 # %%
+# %%time
 all.to_csv(fname.with_suffix('.csv'), chunksize=1_000)
+
+# %% [markdown]
+# Samples as rows, feature columns as columns
+#
+# - can fail due to memory
+
+# %%
+# all = all.T # 
+
+# %%
+# # %%time
+# fname = out_folder / config.insert_shape(all,  template='intensities_wide_selected{}.pkl', shape=(N, M)) 
+# all.to_pickle(fname)
