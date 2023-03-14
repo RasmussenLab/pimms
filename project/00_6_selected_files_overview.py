@@ -225,7 +225,14 @@ mask = ((df_meta[cols[0]] < 20_000) & (df_meta[cols[1]] > 3.5)
 
 cols = ['Peptide Sequences Identified', 'size_gb']
 ax = df_meta.loc[~mask, cols].plot.scatter(cols[0], cols[1], label='not selected')
-ax = df_meta.loc[mask, cols].plot.scatter(cols[0],  cols[1], color='orange', label='selected', ax=ax)
+ax = df_meta.loc[mask, cols].plot.scatter(cols[0],  cols[1], color='orange',
+                                          label='selected',
+                                          ylabel='filesize (in GB)', ax=ax)
+
+fname = out_folder / 'filesize_vs_iden_peptides.pdf'
+files_out[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
+
 
 view = df_meta.loc[mask, thermo_raw_files.cols_instrument + cols].sort_values(by=cols)
 view.to_excel(excel_writer, sheet_name='instrument_outliers', **writer_args)
@@ -269,6 +276,10 @@ ax = view.plot.scatter(x=cols.Peptide_Sequences_Identified,
                           label=cols.Number_of_MS2_spectra,
                           ylabel='# spectra',
                           ax=ax)
+
+fname = out_folder / 'ms1_vs_ms2.pdf'
+files_out[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
 # ## run length to number of identified peptides
