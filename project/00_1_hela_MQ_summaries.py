@@ -31,7 +31,7 @@ from config import FN_ALL_SUMMARIES
 print(f"{FN_ALL_SUMMARIES = }")
 
 # %% tags=["parameters"]
-FN_ALL_SUMMARIES: str = data/processed/all_summaries.json # MqAllSummaries json
+FN_ALL_SUMMARIES: str = 'data/processed/all_summaries.json' # MqAllSummaries json
 
 # %%
 FN_ALL_SUMMARIES = FN_ALL_SUMMARIES
