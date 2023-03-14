@@ -62,15 +62,16 @@ tag | notebook  | Description
 --- | ---  |  --- 
 Development data related 
 erda | erda_01_mq_select_runs.ipynb         | Aggregate current summary files from MQ runs into table
-erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (`erda_03_training_data.ipynb`)
-erda | erda_03_training_data.ipynb          | ERDA: Build training data dump (run for each data level)
+erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (Counters used in `erda_03_training_data.ipynb`)
+erda | erda_03_training_data.ipynb          | Build training data dump (run for each data level) in wide format
+erda | erda_04_transpose_data.ipynb         | Transpose dataset (row: a sample), separate as erda has memory limits, dump counts and present-absent patterns
 erda | erda_11_select_training_data.ipynb   | \[NEEDS UPDATE\] Sort training data by gene
 erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
 erda | erda_data_available.ipynb            | Plots on theoretically available data based on Counter dictionaries
 hela | 00_0_hela_metadata_rawfiles.ipynb         |  Analyze rawfile metadata and prepare for data selection
 hela | 00_1_hela_MQ_summaries.ipynb              | Analyzse summaries.txt data from all samples
 hela | 00_2_hela_all_raw_files.ipynb             | Find duplicate raw files, analyze sizes
-hela | 00_3_13_hela_development_dataset_splitting| Splitting data into development datasets of HeLa cell line data
+hela | 00_3_hela_development_dataset_splitting   | Splitting data into development datasets of HeLa cell line data (based on wide format input from `erda_03` and `erda_04`)
 hela | 00_4_development_dataset_support.ipynb    | Support of training data samples/feat on selected development data set
 Single experiment |
 run  | 00_5_training_data_exploration.ipynb  | Explore a data set for diagnositics <br>  Visualize key metrics

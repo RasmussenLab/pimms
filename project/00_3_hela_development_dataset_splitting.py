@@ -19,7 +19,6 @@
 # - drop some samples based on quality criteria
 
 # %%
-import logging
 from pathlib import Path
 
 import numpy as np
@@ -61,9 +60,9 @@ SAMPLE_ID = 'Sample ID'
 DUMP: str = erda_dumps.FN_PROTEIN_GROUPS # Filepath to erda dump
 OUT_NAME = 'protein group'  # for legends labels
 # DUMP: str = erda_dumps.FN_PEPTIDES
-# OUT_NAME = 'aggregated peptide' # for legends labels
+# OUT_NAME = 'peptide' # for legends labels
 # DUMP: str = erda_dumps.FN_EVIDENCE
-# OUT_NAME = 'charged peptide' # for legends labels
+# OUT_NAME = 'precursor' # for legends labels
 
 FOLDER_DATASETS: str = f'dev_datasets/{DUMP.stem}'
 
@@ -93,7 +92,7 @@ files_out = dict()
 # %%
 data = pd.read_pickle(DUMP)
 data = data.squeeze()  # In case it is a DataFrame, not a series (-> leads to MultiIndex)
-name_data = data.name
+# name_data = data.name
 logger.info(
     f"Number of rows (row = sample, feature, intensity): {len(data):,d}")
 data
@@ -104,24 +103,26 @@ data
 # - see [blog](https://towardsdatascience.com/staying-sane-while-adopting-pandas-categorical-datatypes-78dbd19dcd8a)
 
 # %%
-index_columns = data.index.names
-data = data.reset_index()
-print(data.memory_usage(deep=True))
-cat_columns = data.columns[data.dtypes == 'category']
-if not cat_columns.empty:
-    data[cat_columns] = data[cat_columns].astype('object')
-    print("non categorical: \n", data.memory_usage(deep=True))
-    logger.warning(
-        "if time allows, this should be investigate -> use of loc with data which is not categorical")
-data = data.set_index(index_columns)
+# index_columns = data.index.names
+# data = data.reset_index()
+# print(data.memory_usage(deep=True))
+# cat_columns = data.columns[data.dtypes == 'category']
+# if not cat_columns.empty:
+#     data[cat_columns] = data[cat_columns].astype('object')
+#     print("non categorical: \n", data.memory_usage(deep=True))
+#     logger.warning(
+#         "if time allows, this should be investigate -> use of loc with data which is not categorical")
+# data = data.set_index(index_columns)
 
 # %%
-idx_non_sample = list(data.index.names)
-idx_non_sample.remove(SAMPLE_ID)
-idx_non_sample # index name(s) which are not the sample index
+# feat_name = list(data.index.names)
+# feat_name.remove(SAMPLE_ID)
+feat_name = (OUT_NAME,)
+feat_name # index name(s) which are not the sample index
 
 # %%
-M = len(data.index.levels[-1])
+# M = len(data.index.levels[-1])
+N, M = data.shape
 logger.info(f"Number of unqiue features: {M}")
 
 # %% [markdown]
@@ -129,7 +130,7 @@ logger.info(f"Number of unqiue features: {M}")
 
 # %%
 # sample_ids = data.index.levels[0] # assume first index position is Sample ID?
-sample_ids = data.index.get_level_values(SAMPLE_ID).unique()  # more explict
+sample_ids = data.index.unique() #.get_level_values(SAMPLE_ID).unique()  # more explict
 sample_ids
 
 # %% [markdown]
@@ -161,7 +162,7 @@ duplicated_sample_idx
 
 #
 # %%
-data_duplicates = data.loc[duplicated_sample_idx.index].unstack()
+data_duplicates = data.loc[duplicated_sample_idx.index] #.unstack()
 # data_duplicates.T.corr() # same samples are have corr. of 1
 data_duplicates.sum(axis=1) # keep only one seems okay
 
@@ -174,7 +175,7 @@ df_meta = df_meta.loc[idx_unique.index].rename(idx_unique)
 df_meta
 
 # %%
-data = data.unstack(idx_non_sample) # needed later anyways
+# data = data.unstack(feat_name) # needed later anyways
 data = data.loc[idx_unique.index].rename(idx_unique)
 data
 
@@ -190,7 +191,6 @@ logger.info(f"{fname = }")
 # ## Support per sample in entire data set
 
 # %%
-# counts = data.groupby(SAMPLE_ID).count().squeeze() # long format
 counts = data.count(axis=1) # wide format
 N = len(counts)
 fname = FOLDER_DATASETS / 'support_all.json'
@@ -204,7 +204,7 @@ ax = (counts
             grid=True,
             ylabel='number of features in sample',
             xlabel='Sample rank ordered by number of features',
-            title=f'Support of {N:,d} samples features over {M} features ({", ".join(idx_non_sample)})',
+            title=f'Support of {N:,d} samples features over {M} features ({", ".join(feat_name)})',
             ))
 vaep.plotting.add_prop_as_second_yaxis(ax, M)
 fig = ax.get_figure()
@@ -215,7 +215,6 @@ vaep.plotting.savefig(fig, fname)
 
 
 # %%
-# counts = data.groupby(idx_non_sample).count().squeeze() # long format
 counts = data.count(axis=0) # wide format
 counts.to_json(FOLDER_DATASETS / 'feat_completeness_all.json', indent=4)
 ax = (counts
@@ -226,7 +225,7 @@ ax = (counts
             grid=True,
             ylabel='number of samples per feature',
             xlabel='Feature rank ordered by number of samples',
-            title=f'Support of {len(counts):,d} features over {N} samples ({", ".join(idx_non_sample)})',
+            title=f'Support of {len(counts):,d} features over {N} samples ({", ".join(feat_name)})',
             ))
 vaep.plotting.add_prop_as_second_yaxis(ax, N)
 fig = ax.get_figure()
@@ -364,13 +363,29 @@ vaep.savefig(fig, name=fname)
 # %%
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 # boxplot: number of available sample for included features
-to_plot = data.loc[mask_top_5].notna().sum(axis=0).reset_index(
-    drop=True).to_frame(f'{OUT_NAME.capitalize()} prevalence')
+to_plot = (data
+           .loc[mask_top_5]
+           .notna()
+           .sum(axis=0)
+           .reset_index(drop=True)
+           .to_frame(f'{OUT_NAME.capitalize()} prevalence')
+           )
 # boxplot: number of features per sample
-to_plot = to_plot.join(data.loc[mask_top_5].notna().sum(axis=1).reset_index(
-    drop=True).to_frame(f'{OUT_NAME.capitalize()}s per sample'))
-to_plot = to_plot.join(counts_instrument.reset_index([0, 1], drop=True).loc[top_5, 'count'].reset_index(
-    drop=True).rename('Samples per instrument', axis='index'))
+to_plot = (to_plot
+           .join(data
+                 .loc[mask_top_5]
+                 .notna()
+                 .sum(axis=1)
+                 .reset_index(drop=True)
+                 .to_frame(f'{OUT_NAME.capitalize()}s per sample'))
+           )
+to_plot = (to_plot
+           .join(counts_instrument
+                 .reset_index([0, 1], drop=True)
+                 .loc[top_5, 'count']
+                 .reset_index(drop=True)
+                 .rename('Samples per instrument', axis='index'))
+           )
 ax = to_plot.plot(kind='box', ax=ax, fontsize=16, )
 ax.set_ylabel('number of observations',
               fontdict={'fontsize': 14})
@@ -400,10 +415,10 @@ for _instrument, _df_meta_instrument in top_5_meta.groupby(by=thermo_raw_files.c
 # %% [markdown]
 # ## Dump single experiments
 #
-# from long-format
+# in wide format
 
 # %%
-data = data.stack(idx_non_sample)
+# data = data.stack(feat_name)
 data
 
 # %%
@@ -422,10 +437,10 @@ for values in selected_instruments.index:
     sample_ids = sample_ids.index
     # which categorical this might need to be a categorical Index as well?
     dataset = data.loc[sample_ids]
-    dataset.index = dataset.index.remove_unused_levels()
+    # dataset.index = dataset.index.remove_unused_levels()
 
     display(dataset
-            .unstack(dataset.index.names[1:])
+            # .unstack(dataset.index.names[1:])
             .sort_index()
             )
 
@@ -437,6 +452,10 @@ for values in selected_instruments.index:
     logger.info(f'Dump dataset with N = {len(dataset)} to {fname_dataset}')
     _to_file_format = getattr(dataset, file_formats[FILE_EXT])
     _to_file_format(fname_dataset)
+
+    # calculate support
+    counts = dataset.count(axis=1).squeeze()
+    ## to disk
     fname_support = vaep.io.get_fname_from_keys(values,
                                                 folder='.',
                                                 file_ext="")
@@ -444,13 +463,14 @@ for values in selected_instruments.index:
                      (fname_support.stem + '_support.json').replace('Exactive_Series_slot_#', ''))
     files_out[fname_support.name] = fname_support
     logger.info(f"Dump support to: {fname_support.as_posix()}")
-    counts = dataset.groupby(SAMPLE_ID).count().squeeze()
+    
     counts.to_json(fname_support, indent=4)
 
     # very slow alternative, but 100% correct
-    M = dataset.index.droplevel(SAMPLE_ID).nunique()
+    # M = dataset.index.droplevel(SAMPLE_ID).nunique()
+    N, M = dataset.shape
 
-    # plot:
+    # plot support:
     fig, ax = plt.subplots()
     ax = (counts
           .sort_values()  # will raise an error with a DataFrame
@@ -460,7 +480,7 @@ for values in selected_instruments.index:
                 figsize=FIGSIZE,
                 grid=True,
                 xlabel='Count of samples ordered by number of features',
-                title=f'Support of {len(counts):,d} samples features over {M} features ({", ".join(idx_non_sample)})',
+                title=f'Support of {len(counts):,d} samples features over {M} features ({", ".join(feat_name)})',
                 ))
     vaep.plotting.add_prop_as_second_yaxis(ax, M)
     fig.tight_layout()

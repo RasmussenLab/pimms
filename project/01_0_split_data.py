@@ -94,9 +94,13 @@ meta_cat_col: str = None # category column in meta data
 
 # %%
 # # protein groups
+# FN_INTENSITIES = 'data/dev_datasets/intensities_wide_selected_N07441_M42881/Q_Exactive_HF_X_Orbitrap_6070.pkl'
+# fn_rawfile_metadata = 'data/dev_datasets/intensities_wide_selected_N07441_M42881/metadata.csv'
+#
 # FN_INTENSITIES =  'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 # fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
+#
+# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
 # index_col = ['Sample ID', 'Gene names'] 
 # meta_date_col = 'Content Creation Date'
 # column_names = None
