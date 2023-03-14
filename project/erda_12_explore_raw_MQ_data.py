@@ -15,7 +15,9 @@
 # %% [markdown]
 # # Explore MaxQuant (MQ) output files of single runs
 #
-# The `project/10_training_data.ipynb` notebook does extract information to be used as training data. File specific one could also use the retention time analysis to identify _valid_ co-occurring peptides to be use during training. Potentially this preprocessing step can be used at inference time.
+# The `erda_03_training_data.ipynb` notebook does extract information to be used as training data.
+# File specific one could also use the retention time analysis to identify _valid_ co-occurring peptides to be use during training.
+# Potentially this preprocessing step can be used at inference time.
 #
 # This notebook contains some relevant analysis for a specific `txt` output-folder in the current project
 #
@@ -26,12 +28,8 @@
 # - relation between `peptides.txt` and `evidence.txt`
 
 # %%
-from datetime import datetime
-
 import json
 import logging
-import os
-from pathlib import Path
 import random
 
 import ipywidgets as widgets
@@ -43,12 +41,10 @@ import pandas as pd
 
 import vaep.pandas
 from vaep.pandas import length
-from vaep.io.mq import FASTA_KEYS, MaxQuantOutput, MaxQuantOutputDynamic
-from vaep.io import search_files, search_subfolders
+from vaep.io.mq import FASTA_KEYS, MaxQuantOutput
+from vaep.io import search_subfolders
 import vaep.io.mq as mq
 from vaep.io.mq import mq_col
-
-
 
 
 from vaep.logging import setup_nb_logger
@@ -62,8 +58,7 @@ import config
 from config import FIGUREFOLDER
 # from config import FOLDER_RAW_DATA
 from config import FOLDER_MQ_TXT_DATA as FOLDER_RAW_DATA
-from config import FOLDER_KEY  # defines how filenames are parsed for use as indices
-from config import FOLDER_DATA  # project folder for storing the data
+
 
 print(f"Search Raw-Files on path: {FOLDER_RAW_DATA}")
 
@@ -216,7 +211,6 @@ peptide_view = (peptide_view[
     vaep.pandas.get_unique_non_unique_columns(peptide_view).non_unique]
     .dropna(axis=1, how='all')
     .set_index('Charge', append=True))
-peptide_view.to_excel(f'evidence_{_peptide}_{w_folder.value.stem}')
 peptide_view
 
 # %%
@@ -436,7 +430,8 @@ mask_seq_selected_not_assigned = seq_max_score_max_intensity.Proteins.isna(
 seq_max_score_max_intensity.loc[mask_seq_selected_not_assigned]
 
 # %% [markdown]
-# These might be a candiate for evaluating predictions, as the information is measured, but unknown. If they cannot be assigned, the closest fit on different genes with model predictions could be a criterion for selection
+# These might be a candiate for evaluating predictions, as the information is measured, but unknown. 
+# If they cannot be assigned, the closest fit on different genes with model predictions could be a criterion for selection
 
 # %% [markdown]
 # ## Create dumps of intensities in `peptides.txt`
@@ -474,7 +469,7 @@ seq_max_score_max_intensity[mq_col.GENE_NAMES].str.split(";"
 # Load fasta-file information
 
 # %%
-with open(src.config.FN_FASTA_DB) as f:
+with open(config.FN_FASTA_DB) as f:
     data_fasta = json.load(f)
 print(f'Number of proteins in fasta file DB: {len(data_fasta)}')
 

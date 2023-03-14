@@ -65,7 +65,7 @@ erda | erda_01_mq_select_runs.ipynb         | Aggregate current summary files fr
 erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (Counters used in `erda_03_training_data.ipynb`)
 erda | erda_03_training_data.ipynb          | Build training data dump (run for each data level) in wide format
 erda | erda_04_transpose_data.ipynb         | Transpose dataset (row: a sample), separate as erda has memory limits, dump counts and present-absent patterns
-erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
+erda | erda_12_explore_raw_MQ_data.ipynb    | Load a single MQ txt output folder and browse data <br> dumps large pickle files for training
 erda | erda_data_available.ipynb            | Plots on theoretically available data based on Counter dictionaries
 hela | 00_0_hela_metadata_rawfiles.ipynb         |  Analyze rawfile metadata and prepare for data selection
 hela | 00_1_hela_MQ_summaries.ipynb              | Analyzse summaries.txt data from all samples
