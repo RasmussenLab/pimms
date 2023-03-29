@@ -225,36 +225,60 @@ df_meta.loc[selected][["Path_old", "Path_new", "new_sample_id"]]
 # %% [markdown]
 # ### LFTP commands - raw files
 #
-# `-c` option allows providing several semi-colon separated commands
+# `-f` option allows to pass commands from a file
+# One needs to at least an `open` as the first line to log in to an ftp server
+# For pride one needs to additionally `cd` to the correct folder:
+# ```bash
+# > open ...
+# > cd ...
+# ```
+# to allow parallell commands, use the runtime setting
+# ```bash
+# >>> cat ~/.lftprc 
+# set cmd:parallel 2
+# ```
+
+# %% [markdown]
+# Create folders on pride for raw files
+
+# %%
+df_meta["folder_raw"] = "./raw_files/" + df_meta["Instrument_name"]
+df_meta["folder_raw"].unique()
+
+fname = out_folder / 'raw_file_directories.txt'
+
+commands = 'mkdir -p ' + df_meta.loc[selected, "folder_raw"].drop_duplicates()
+commands.to_csv(fname, header=False, index=False)
+
+# %% [markdown]
+# Create upload commands of raw files to create folders (could be combined with above)
 
 # %%
 commands = df_meta.loc[selected]
 commands = (
-    'put mq_out' 
-    + commands['Path_old'].astype('string').str[1:]
-    + ' ' 
-    + pd.to_datetime(commands[date_col]).dt.strftime("%Y")
+    'put ' 
+    + commands['Path_old'].astype('string')
+    + ' -o ' 
+    + "./raw_files/" 
+    + commands["Instrument_name"] 
     + '/'
-    + commands['Path_new'].astype('string')
+    + commands['new_sample_id'] + '.raw'
 )
 print(commands.sample(10).to_csv(sep=' ', header=False, index=False))
 
+
 # %% [markdown]
-# write all
+# write all to file
 
 # %%
-fname = out_folder / 'lftp_commands_rawfiles'
-
-commands = '; '.join(commands.to_list()) 
-
-with open(fname, 'w') as f:
-    f.write(commands)
+fname = out_folder / 'lftp_commands_rawfiles.txt'
+commands.to_csv(fname, header=False, index=False)
 
 # %% [markdown]
 # ### LFTP commands - MaxQuant output
 
 # %% [markdown]
-#
+# Create upload commands of MaxQuant output folders to pride using mirror
 #
 # - `mq_out` folder
 # - move from `Sample ID` folder into `new_sample_id` on erda
@@ -270,13 +294,11 @@ commands = (
 
 print(commands.sample(10).to_csv(header=False, index=False))
 
-# %%
-'; '.join(commands.sample(20).to_list())
+# %% [markdown]
+# write all to file
 
 # %%
-fname = out_folder / 'lftp_commands_mq_output'
+fname = out_folder / 'lftp_commands_mq_output.txt'
+commands.to_csv(fname, header=False, index=False)
 
-commands = '; '.join(commands.to_list()) 
-
-with open(fname, 'w') as f:
-    f.write(commands)
+# %%
