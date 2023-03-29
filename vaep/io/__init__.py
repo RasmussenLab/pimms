@@ -148,3 +148,26 @@ def parse_dict(input_dict: dict,
               v = fct(v)
         d[k] = v
     return d
+
+
+def extend_name(fname: Union[str, Path], extend_by: str, ext: str = None) -> Path:
+    """Rename a file.
+
+    Parameters
+    ----------
+    fname : Union[str, Path]
+        Filepath to file to rename.
+    extend_by : str
+        Extend file stem by string
+
+    Returns
+    -------
+    Path
+        Changed filepath with extension
+    """
+    fname = Path(fname)
+    if ext is None:
+        ext = fname.suffix
+    fname = fname.parent / f"{fname.stem}{extend_by}"
+    fname = fname.with_suffix(ext)
+    return fname

@@ -278,11 +278,29 @@ def plot_cutoffs(df: pd.DataFrame,
     ax = axes[0]
     notna.sum(axis=0).sort_values().plot(rot=90, ax=ax,
                                          ylabel='count samples', xlabel='feature name')
-    if min_feat_in_sample is not None:
-        ax.axhline(min_feat_in_sample)
+    if feat_completness_over_samples is not None:
+        ax.axhline(feat_completness_over_samples)
     ax = axes[1]
     notna.sum(axis=1).sort_values().plot(rot=90, ax=ax,
                                          ylabel='count features', xlabel='sample name')
-    if feat_completness_over_samples is not None:
-        ax.axhline(feat_completness_over_samples)
+    if min_feat_in_sample is not None:
+        ax.axhline(min_feat_in_sample)
     return fig, axes
+
+
+def plot_rolling_error(errors: pd.DataFrame, metric_name: str, window: int = 200,
+                       min_freq=None, freq_col: str = 'freq', colors_to_use=None,
+                       ax=None):
+    errors_smoothed = errors.drop(freq_col, axis=1).rolling(window=window, min_periods=1).mean()
+    errors_smoothed_max = errors_smoothed.max().max()
+    errors_smoothed[freq_col] = errors[freq_col]
+    if min_freq is None:
+        min_freq=errors_smoothed[freq_col].min()
+    else:
+        errors_smoothed = errors_smoothed.loc[errors_smoothed[freq_col] > min_freq]
+    ax = errors_smoothed.plot(x=freq_col, ylabel=f'rolling average error ({metric_name})',
+                              color=colors_to_use,
+                              xlim=(min_freq, errors_smoothed[freq_col].max()),
+                              ylim=(0, min(errors_smoothed_max, 5)), 
+                              ax=None)
+    return ax

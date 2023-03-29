@@ -55,19 +55,22 @@ FIGSIZE = (15, 10)
 # %% tags=["parameters"]
 N_MIN_INSTRUMENT = 300
 META_DATA: str = 'data/files_selected_metadata.csv'
-FILE_EXT = 'pkl'
+FILE_EXT = 'pkl' # 'csv' or 'pkl'
 SAMPLE_ID = 'Sample ID'
 
-DUMP: str = erda_dumps.FN_PROTEIN_GROUPS
+DUMP: str = erda_dumps.FN_PROTEIN_GROUPS # Filepath to erda dump
 OUT_NAME = 'protein group'  # for legends labels
 # DUMP: str = erda_dumps.FN_PEPTIDES
 # OUT_NAME = 'aggregated peptide' # for legends labels
 # DUMP: str = erda_dumps.FN_EVIDENCE
 # OUT_NAME = 'charged peptide' # for legends labels
 
-FOLDER_DATASETS: str = f'single_datasets/{DUMP.stem}'
+FOLDER_DATASETS: str = f'dev_datasets/{DUMP.stem}'
 
 INSTRUMENT_LEGEND_TITLE = 'Q Exactive HF-X Orbitrap'
+
+# %%
+# FILE_EXT = 'csv'
 
 # %% [markdown]
 # Make sure output folder exists
@@ -77,6 +80,8 @@ DUMP = Path(DUMP)  # set parameter from cli or yaml to Path
 FOLDER_DATASETS = defaults.FOLDER_DATA / FOLDER_DATASETS
 FOLDER_DATASETS.mkdir(exist_ok=True, parents=True)
 logger.info(f"Folder for datasets to be created: {FOLDER_DATASETS.absolute()}")
+
+files_out = dict()
 
 # %% [markdown]
 # ## Dumps
@@ -110,23 +115,87 @@ if not cat_columns.empty:
         "if time allows, this should be investigate -> use of loc with data which is not categorical")
 data = data.set_index(index_columns)
 
-# %% [markdown]
-# ## Support per sample
-
 # %%
 idx_non_sample = list(data.index.names)
 idx_non_sample.remove(SAMPLE_ID)
-idx_non_sample
+idx_non_sample # index name(s) which are not the sample index
 
 # %%
-# M = data.index.droplevel(SAMPLE_ID).nunique() # very slow alternative, but 100% correct
-M = vaep.io.filenames.read_M_features(DUMP.stem)
+M = len(data.index.levels[-1])
 logger.info(f"Number of unqiue features: {M}")
 
+# %% [markdown]
+# ## Filter data by metadata
+
 # %%
-counts = data.groupby(SAMPLE_ID).count().squeeze()
+# sample_ids = data.index.levels[0] # assume first index position is Sample ID?
+sample_ids = data.index.get_level_values(SAMPLE_ID).unique()  # more explict
+sample_ids
+
+# %% [markdown]
+# ### Meta Data
+#
+# - based on ThermoRawFileParser
+# %%
+df_meta = pd.read_csv(META_DATA, index_col=SAMPLE_ID)
+date_col = 'Content Creation Date'
+df_meta[date_col] = pd.to_datetime(df_meta[date_col])
+df_meta = df_meta.loc[sample_ids]
+df_meta
+
+# %% [markdown]
+# ## Rename samples
+# - to "YEAR_MONTH_DAY_HOUR_MIN_INSTRUMENT" (no encoding of information intended)
+# - check that instrument names are unique
+# - drop metadata (entire)
+# %%
+idx_all = (pd.to_datetime(df_meta["Content Creation Date"]).dt.strftime("%Y_%m_%d_%H_%M")
+        + '_'
+        + df_meta["Thermo Scientific instrument model"].str.replace(' ', '-')
+        + '_'
+        + df_meta["instrument serial number"].str.split('#').str[-1])
+
+mask = idx_all.duplicated(keep=False)
+duplicated_sample_idx = idx_all.loc[mask].sort_values()  # duplicated dumps
+duplicated_sample_idx
+
+#
+# %%
+data_duplicates = data.loc[duplicated_sample_idx.index].unstack()
+# data_duplicates.T.corr() # same samples are have corr. of 1
+data_duplicates.sum(axis=1) # keep only one seems okay
+
+# %%
+idx_unique = idx_all.drop_duplicates()
+idx_unique
+
+# %%
+df_meta = df_meta.loc[idx_unique.index].rename(idx_unique)
+df_meta
+
+# %%
+data = data.unstack(idx_non_sample) # needed later anyways
+data = data.loc[idx_unique.index].rename(idx_unique)
+data
+
+# %%
+meta_to_drop = ['Pathname']
+fname = FOLDER_DATASETS / 'metadata.csv'
+files_out[fname.name] = fname
+df_meta.drop(meta_to_drop, axis=1).to_csv(fname)
+logger.info(f"{fname = }")
+
+
+# %% [markdown]
+# ## Support per sample in entire data set
+
+# %%
+# counts = data.groupby(SAMPLE_ID).count().squeeze() # long format
+counts = data.count(axis=1) # wide format
 N = len(counts)
-counts.to_json(FOLDER_DATASETS / 'support_all.json', indent=4)
+fname = FOLDER_DATASETS / 'support_all.json'
+files_out[fname.name] = fname
+counts.to_json(fname, indent=4)
 ax = (counts
       .sort_values()  # will raise an error with a DataFrame
       .reset_index(drop=True)
@@ -140,12 +209,14 @@ ax = (counts
 vaep.plotting.add_prop_as_second_yaxis(ax, M)
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.plotting.savefig(fig, name='support_all',
-                      folder=FOLDER_DATASETS)
+fname = FOLDER_DATASETS / 'support_all.pdf'
+files_out[fname.name] = fname
+vaep.plotting.savefig(fig, fname)
 
 
 # %%
-counts = data.groupby(idx_non_sample).count().squeeze()
+# counts = data.groupby(idx_non_sample).count().squeeze() # long format
+counts = data.count(axis=0) # wide format
 counts.to_json(FOLDER_DATASETS / 'feat_completeness_all.json', indent=4)
 ax = (counts
       .sort_values()  # will raise an error with a DataFrame
@@ -159,39 +230,13 @@ ax = (counts
             ))
 vaep.plotting.add_prop_as_second_yaxis(ax, N)
 fig = ax.get_figure()
-vaep.plotting.savefig(fig, name='feat_per_sample_all',
-                      folder=FOLDER_DATASETS)
+fname = FOLDER_DATASETS / 'feat_per_sample_all.pdf'
+files_out[fname.stem] = fname
+vaep.plotting.savefig(fig, fname)
+
 
 # %% [markdown]
-# ## Filter for odd samples
-#
-# - fractionated samples
-# - GPF - Gas phase fractionation # Faims? DIA? 
-# - DIA
-# - CV
-
-# %%
-# see misc_data_exploration_peptides
-
-# %% [markdown]
-# ## Meta Data
-#
-# - based on ThermoRawFileParser
-
-# %%
-# sample_ids = data.index.levels[0] # assume first index position is Sample ID?
-sample_ids = data.index.get_level_values(SAMPLE_ID).unique()  # more explict
-sample_ids
-
-# %%
-df_meta = pd.read_csv(META_DATA, index_col=SAMPLE_ID)
-date_col = 'Content Creation Date'
-df_meta[date_col] = pd.to_datetime(df_meta[date_col])
-df_meta = df_meta.loc[sample_ids]
-df_meta
-
-# %% [markdown]
-# ### Available instruments
+# ## Available instruments
 
 # %%
 counts_instrument = df_meta.groupby(thermo_raw_files.cols_instrument)[date_col].agg(
@@ -203,21 +248,13 @@ len(counts_instrument)
 
 # %%
 selected_instruments = counts_instrument.query(f"count >= {N_MIN_INSTRUMENT}")
-fname = FOLDER_DATASETS / 'dataset_info'
-selected_instruments.to_latex(f"{fname}.tex")
-selected_instruments.to_excel(f"{fname}.xlsx")
-logger.info(f"Save Information to: {fname} (as json, tex)")
+fname = FOLDER_DATASETS / 'dataset_info.xlsx'
+files_out[fname.name] = fname
+selected_instruments.to_latex(fname.with_suffix('.tex'))
+selected_instruments.to_excel(fname)
+logger.info(f"Save Information to: {fname} (as xlsx and tex)")
 selected_instruments
 
-# %%
-# mask = pd.Series(False, index=df_meta.index)
-# for v in selected_instruments.index:
-#     mask = mask | (df_meta[selected_instruments.index.names] == v).all(axis=1)
-# mask.sum()
-
-# %%
-# df_meta = df_meta.loc[mask]
-# data = data.loc[df_meta.index]
 
 # %% [markdown]
 # ## Summary plot - UMAP
@@ -227,7 +264,6 @@ selected_instruments
 
 # %%
 reducer = umap.UMAP(random_state=42)
-data = data.unstack(idx_non_sample)
 data
 
 # %%
@@ -272,8 +308,10 @@ fig, ax = plt.subplots(figsize=(20, 10))
 
 ax = sns.scatterplot(data=to_plot, x='UMAP 1', y='UMAP 2', style="instrument with N",
                      hue="Date (90 days intervals)", ax=ax)  # ="Content Creation Date")
-vaep.savefig(fig, name='umap_interval90days_top5_instruments',
-             folder=FOLDER_DATASETS)
+
+fname = FOLDER_DATASETS / 'umap_interval90days_top5_instruments.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %%
 markers = ['o', 'x', 's', 'P', 'D', '.']
@@ -315,7 +353,10 @@ ax.legend(ax.collections, groups,
           title=INSTRUMENT_LEGEND_TITLE, fontsize='xx-large')
 ax.set_xlabel('UMAP 1')  # , fontdict={'size': 16})
 ax.set_ylabel('UMAP 2')
-vaep.savefig(fig, name='umap_date_top5_instruments', folder=FOLDER_DATASETS)
+
+fname = FOLDER_DATASETS / 'umap_date_top5_instruments.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # ## Summary statistics for top 5 instruments 
@@ -336,8 +377,10 @@ ax.set_ylabel('number of observations',
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
 to_plot.to_csv(FOLDER_DATASETS / 'summary_statistics_dump_data.csv')
-vaep.savefig(fig, name='summary_statistics_dump',
-             folder=FOLDER_DATASETS)
+
+fname = FOLDER_DATASETS / 'summary_statistics_dump.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 
 # %%
@@ -387,20 +430,22 @@ for values in selected_instruments.index:
             )
 
     fname_dataset = vaep.io.get_fname_from_keys(values,
-                                                folder=FOLDER_DATASETS,
                                                 file_ext=f".{FILE_EXT}")
-
+    fname_dataset = (FOLDER_DATASETS /
+                     fname_dataset.name.replace('Exactive_Series_slot_#', ''))
+    files_out[fname_dataset.name] = fname_dataset
     logger.info(f'Dump dataset with N = {len(dataset)} to {fname_dataset}')
     _to_file_format = getattr(dataset, file_formats[FILE_EXT])
     _to_file_format(fname_dataset)
-
     fname_support = vaep.io.get_fname_from_keys(values,
                                                 folder='.',
                                                 file_ext="")
-    fname_support = fname_support.stem + '_support'
-    logger.info(f"Dump support to: {fname_support}")
+    fname_support = (FOLDER_DATASETS /
+                     (fname_support.stem + '_support.json').replace('Exactive_Series_slot_#', ''))
+    files_out[fname_support.name] = fname_support
+    logger.info(f"Dump support to: {fname_support.as_posix()}")
     counts = dataset.groupby(SAMPLE_ID).count().squeeze()
-    counts.to_json(FOLDER_DATASETS / f"{fname_support}.json", indent=4)
+    counts.to_json(fname_support, indent=4)
 
     # very slow alternative, but 100% correct
     M = dataset.index.droplevel(SAMPLE_ID).nunique()
@@ -419,8 +464,9 @@ for values in selected_instruments.index:
                 ))
     vaep.plotting.add_prop_as_second_yaxis(ax, M)
     fig.tight_layout()
-    vaep.plotting.savefig(fig, name=fname_support,
-                          folder=FOLDER_DATASETS)
+    fname_support = fname_support.with_suffix('.pdf')    
+    files_out[fname_support.name] = fname_support
+    vaep.plotting.savefig(fig, name=fname_support)
 
 # %% [markdown]
 # ## Last example dumped
@@ -430,5 +476,10 @@ dataset
 
 # %%
 # add json dump as target file for script for workflows
-selected_instruments.to_json(f"{fname}.json", indent=4)
-logger.info(f"Saved: {fname}.json")
+fname = FOLDER_DATASETS / 'selected_instruments.json'
+files_out[fname.name] = fname
+selected_instruments.to_json(fname, indent=4)
+logger.info(f"Saved: {fname}")
+
+# %%
+files_out

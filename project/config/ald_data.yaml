@@ -1,0 +1,15 @@
+annotations: data/ALD_study/ald_experiment_annotations.csv
+clinic: data/ALD_study/labtest_integrated_numeric.csv
+fig_liver_pg_completness: runs/appl_ald_data/data_liver_proteinGroups_completness
+liver_aggPeptides: data/ALD_study/Peptide_20220819_100847_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv
+liver_proteinGroups: data/ALD_study/Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv
+plasma_aggPeptides: data/ALD_study/ald_proteome_spectronaut.tsv
+plasma_proteinGroups: data/ALD_study/Protein_ALDupgrade_Report.csv
+qc_liver_aggPeptides: data/ALD_study/processed/qc_liver_aggPeptides.pkl
+qc_liver_proteinGroups: data/ALD_study/processed/qc_liver_proteinGroups.pkl
+qc_plasma_aggPeptides: data/ALD_study/processed/qc_plasma_aggPeptides.pkl
+qc_plasma_proteinGroups: data/ALD_study/processed/qc_plasma_proteinGroups.pkl
+raw_meta: data/ALD_study/ald_metadata_rawfiles.csv
+sel_liver_aggPeptides: data/ALD_study/processed/ald_liver_aggPeptides.pkl
+sel_liver_proteinGroups: data/ALD_study/processed/ald_liver_proteinGroups.pkl
+sel_plasma_aggPeptides: data/ALD_study/processed/ald_plasma_aggPeptides.pkl

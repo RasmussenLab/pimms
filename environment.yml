@@ -11,8 +11,7 @@ dependencies:
   - biopython # Aligner
   - python=3.8
   - numpy=1.20
-  - pandas
-  - pandas-profiling
+  - pandas>=1.4
   - scipy>=1.6
   # plotting
   - matplotlib=3.3
@@ -54,5 +53,5 @@ dependencies:
   - jupytext
   - pip:
     - -e .
-    - git+https://github.com/enryH/nbconvert_md_processing.git
-    - mrmr_selection
+    - mrmr-selection
+    

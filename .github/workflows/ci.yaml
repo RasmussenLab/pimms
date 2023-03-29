@@ -47,11 +47,18 @@ jobs:
     # - name: Install package and install library
     #   run: |
     #     pip install pytest
-
-    - name: Run Unit-Tests
+    - name: Run Tests on installed package
       run: pytest . 
+    
     - name: View papermill help message for notebooks (as scripts)
       run: |
         cd project
         papermill 01_0_split_data.ipynb --help-notebook
         papermill 01_1_train_vae.ipynb --help-notebook
+    
+    - name: Run demo workflow
+      run: | 
+       cd project
+       snakemake -p -c1 -n
+       snakemake -p -c1
+       

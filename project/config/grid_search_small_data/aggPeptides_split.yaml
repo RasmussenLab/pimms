@@ -1,5 +1,6 @@
-FN_INTENSITIES: 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
-fn_rawfile_metadata: 'data/files_selected_metadata.csv'
+FN_INTENSITIES: data/dev_datasets/df_intensities_peptides_long/Q_Exactive_HF_X_Orbitrap_6070.pkl
+fn_rawfile_metadata: data/dev_datasets/df_intensities_peptides_long/metadata.csv
 sample_completeness: 0.5
 min_RT_time: 120
 select_N: 50
+column_names: null

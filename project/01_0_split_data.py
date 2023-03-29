@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -60,37 +60,64 @@ args = None
 args = dict(globals()).keys()
 
 # %% tags=["parameters"]
-FN_INTENSITIES: str =  'data/single_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'   # Sample (rows) intensiites for features (columns)
-fn_rawfile_metadata: str = 'data/files_selected_metadata.csv'  # Machine parsed metadata from raw file (see workflows/metadata)
+FN_INTENSITIES: str =  'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'   # Sample (rows) intensiites for features (columns)
+index_col: Union[str, int] = 0 # Can be either a string or position (typical 0 for first column), or a list of these.
+# wide_format: bool = False # intensities in wide format (more memory efficient of csv). Default is long_format (more precise)
+column_names: List[str] = ["Gene Names"] # Manuelly set column names (of Index object in columns)
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'  # Machine parsed metadata from raw file (see workflows/metadata), wide format per sample
 feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
 select_N: int = None # only use latest N samples
 min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
-index_col: Union[str, int] = ['Sample ID', 'Gene names'] # Can be either a string or position (typical 0 for first column), or a list of these
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
-folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-column_names: List[str] = None # Manuelly set column names (of Index object in columns)
+folder_experiment: str = f'runs/example'
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
 
 # %%
-# select_N = 50
-# fn_rawfile_metadata = ''
-# meta_date_col = ''
+# fn_rawfile_metadata = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
+# meta_date_col = 'Content Creation Date'
+# meta_cat_col = None
+# folder_experiment = 'runs/test_example/'
+
+# ################## intentisies ##############################################
+# # small protein groups, long format
+# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_long_N50.csv'
+# # small protein groups, wide format
+# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
+# column_names = ["Gene Names"]
+# index_col = 0
+# #############################################################################
 # meta_cat_col = ''
 # min_RT_time = ''
 
 # %%
+# # protein groups
+# FN_INTENSITIES =  'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
+# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
+# index_col = ['Sample ID', 'Gene names'] 
+# meta_date_col = 'Content Creation Date'
+# column_names = None
+# select_N = 50
+
+# %%
 # # peptides
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-# index_col: Union[str,int] = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
-# folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# FN_INTENSITIES = 'data/dev_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
+# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
+# index_col = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
+# meta_date_col = 'Content Creation Date'
+
 # %%
 # # # evidence
-# FN_INTENSITIES: str = 'data/single_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
-# index_col: Union[str,int] = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
-# folder_experiment: str = f'runs/experiment_03/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# FN_INTENSITIES = 'data/dev_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
+# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
+# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
+# index_col = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
+# meta_date_col = 'Content Creation Date'
+
 
 
 # %%
@@ -111,7 +138,7 @@ class DataConfig:
     min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
     index_col: Union[str, int] = 'Sample ID' # Can be either a string or position (typical 0 for first column), or a list of these
     logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
-    folder_experiment: str = 'runs/experiment_03'
+    folder_experiment: str = 'runs/example'
     column_names: str = None # Manuelly set column names (of Index object in columns)
     # metadata -> defaults for metadata extracted from machine data, used for plotting
     meta_date_col: str = None # date column in meta data
@@ -138,7 +165,12 @@ folder_figures = folder_experiment / 'figures'
 folder_figures.mkdir(exist_ok=True)
 logger.info(f'Folder for figures: {folder_figures = }')
 
-# %% [markdown] tags=[]
+# %%
+if isinstance(params.index_col, str) or isinstance(params.index_col, int):
+    params.index_col = [params.index_col]
+params.index_col  # make sure it is an iterable
+
+# %% [markdown]
 # ## Raw data
 
 # %% [markdown]
@@ -156,16 +188,11 @@ FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
 FILE_EXT = Path(FN_INTENSITIES).suffix[1:]
 logger.info(f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
-# %% tags=[]
-# %%time
-params.used_features = None # sorted(selected_peptides)
-if isinstance(params.index_col, str) and params.used_features: params.used_features.insert(0, params.index_col)
+# %%
 constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT]) #AnalyzePeptides.from_csv 
 analysis = constructor(fname=params.FN_INTENSITIES,
                                      index_col=index_col,
-                                     usecols=params.used_features
                                     )
-
 if params.column_names:
     analysis.df.columns.names = params.column_names
 
@@ -199,7 +226,7 @@ if isinstance(analysis.df.columns, pd.MultiIndex):
     analysis.df.columns.name = _new_name
     logger.warning(f"New name: {analysis.df.columns.names = }")
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Machine metadata
 #
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
@@ -320,7 +347,7 @@ def add_meta_data(analysis: AnalyzePeptides, df_meta:pd.DataFrame):
 
 analysis = add_meta_data(analysis, df_meta=df_meta)
 
-# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# %% [markdown]
 # Ensure unique indices
 
 # %%
@@ -342,9 +369,6 @@ if params.select_N is not None:
     analysis.df = analysis.df.loc[analysis.df_meta.index].dropna(how='all', axis=1)
     ax = analysis.df.T.describe().loc['count'].hist()
     _ = ax.set_title('histogram of features for all eligable samples')
-    
-    # updates
-    sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
 
 # %%
 # export Pathname captured by ThermoRawFileParser
@@ -354,7 +378,7 @@ if params.select_N is not None:
 # ## First Step: Select features by prevalence
 # - `feat_prevalence` across samples
 
-# %% tags=[]
+# %%
 freq_per_feature = analysis.df.notna().sum() # on wide format
 if isinstance(params.feat_prevalence, float):
     N_samples = len(analysis.df_meta)
@@ -373,7 +397,7 @@ analysis.N, analysis.M = analysis.df.shape
 # # potentially create freq based on DataFrame
 analysis.df
 
-# %% [markdown] tags=[] jp-MarkdownHeadingCollapsed=true tags=[]
+# %% [markdown]
 # ## Second step - Sample selection
 
 # %% [markdown]
@@ -417,6 +441,7 @@ ax.set_ylabel('observations')
 fname = folder_figures / 'feature_prevalence'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+
 
 # %% [markdown]
 # ### Number off observations accross feature value
@@ -497,6 +522,7 @@ pcs = analysis.get_PCA(n_components=K) # should be renamed to get_PCs
 pcs = pcs.iloc[:,:K].join(analysis.df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
+pcs_index_name = pcs.index.name
 pcs = pcs.reset_index()
 pcs
 
@@ -526,7 +552,7 @@ if params.meta_date_col != 'PlaceholderTime':
 # %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
-    hover_name=params.index_col[0],
+    hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
     title=f'First two Principal Components of {analysis.M} most abundant peptides for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
@@ -560,7 +586,6 @@ fig = ax.get_figure()
 fname = folder_figures / 'median_boxplot'
 figures[fname.stem] =  fname
 vaep.savefig(fig, fname)
-
 
 # %% [markdown]
 # Percentiles of intensities in dataset
@@ -673,18 +698,18 @@ splits.val_y
 # %%
 splits.train_X
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ### Save in long format
 #
 # - Data in long format: (peptide, sample_id, intensity)
 # - no missing values kept
 
 # %%
-splits.dump(folder=folder_data, file_format=FILE_EXT)  # dumps data in long-format
+splits.dump(folder=folder_data, file_format='pkl')  # dumps data in long-format
 
 # %%
 # # Reload from disk
-splits = DataSplits.from_folder(folder_data, file_format=FILE_EXT)
+splits = DataSplits.from_folder(folder_data, file_format='pkl')
 
 # %% [markdown]
 # ## Save parameters

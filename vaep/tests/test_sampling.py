@@ -12,7 +12,7 @@ from vaep.utils import create_random_df
 @pytest.fixture
 def random_data():
     """Fixture to load random data."""
-    return create_random_df(100, 10, prop_na=0.1)
+    return create_random_df(100, 10, prop_na=0.1).rename_axis('Sample ID').rename_axis('feat name', axis=1)
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def example_data():
     Fixture to load example data from a csv file for testing.
     """
     example_data_path = Path(__file__).resolve().parent / 'test_data.csv'
-    return pd.read_csv(example_data_path, index_col='id')
+    return pd.read_csv(example_data_path, index_col='id').rename_axis('Sample ID').rename_axis('feat name', axis=1)
 
 
 def test_feature_frequency(random_data):

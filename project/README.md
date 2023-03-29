@@ -12,27 +12,41 @@ Strictly required is an ordering meta data information,e.g. a measurment data, a
 
 ## Workflows
 
+> snakefile stored in [workflow](workflow/README.md)
+
+Execute example data (50 runs of HeLa lysate on protein groups level):
+
+```
+# in ./project
+snakemake -c1 -p -n # remove -n to execute
+```
+
+The example workflow runs in 3-5 mins on default setup (no GPU, no paralleziation).
+
+### Setup development data
+
 Setup project workflow
 ```
 # see what is all executed
 snakemake --snakefile Snakemake_project.smk -p -n # dry-run
 ``` 
 
+### single experiments
 
 Single Experiment with config files
+
 ```cmd
 # cwd: project folder (this folder)
-
-snakemake --configfile config/peptides_split.yaml --configfile config/peptides_train.yaml -p -n 
+snakemake --configfile config/single_dev_dataset/aggpeptides/config.yaml -p -n 
 ```
 
+### Single notebooks using papermill
 
 execute single notebooks
 ```cmd
-set DATASET=df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070 
+set DATASET=df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070 
 papermill  01_0_split_data.ipynb --help-notebook # check parameters
-papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data.ipynb -p MIN_SAMPLE 0.5 -p fn_rawfile_metadata data/single_datasets/%DATASET%.csv -p index_col "Sample ID" -p columns_name peptide
-
+papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data.ipynb -p MIN_SAMPLE 0.5 -p fn_rawfile_metadata data/dev_datasets/%DATASET%.csv -p index_col "Sample ID" -p columns_name peptide
 ```
 
 ## Notebooks

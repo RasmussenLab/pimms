@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -79,27 +79,28 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/experiment_03/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070' # Datasplit folder with data for experiment
+folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
-fn_rawfile_metadata: str = 'data/files_selected_metadata.csv' # Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # training
 epochs_max:int = 50  # Maximum number of epochs
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:Union[int,str] = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
+hidden_layers:str = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
 force_train:bool = True # Force training when saved model could be used. Per default re-train model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key: str = 'VAE' # model key (lower cased version will be used for file names)
-save_pred_real_na: bool = False # Save all predictions for real na
+model: str = 'VAE' # model name
+model_key: str = 'VAE' # potentially alternative key for model (grid search)
+save_pred_real_na: bool = True # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
 
 # %%
-# # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
+# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # latent_dim = 30
 # epochs_max = 2
@@ -179,7 +180,7 @@ else:
 #     - [x] add some additional NAs based on distribution of data
 
 # %%
-freq_feat = vaep.io.datasplits.load_freq(args.data)  
+freq_feat = vaep.io.datasplits.load_freq(args.data)
 freq_feat.head() # training data
 
 # %% [markdown]
@@ -207,25 +208,8 @@ data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
 
-
 # %% [markdown]
 # ### Add interpolation performance
-
-# %%
-interpolated = vaep.pandas.interpolate(wide_df = data.train_X) 
-val_pred_fake_na['interpolated'] = interpolated
-test_pred_fake_na['interpolated'] = interpolated
-del interpolated
-test_pred_fake_na
-
-# %%
-# Add median pred performance
-medians_train = data.train_X.median()
-medians_train.name = 'median'
-
-val_pred_fake_na = val_pred_fake_na.join(medians_train)
-test_pred_fake_na = test_pred_fake_na.join(medians_train)
-val_pred_fake_na
 
 # %% [markdown]
 # ### Fill Validation data with potentially missing features
@@ -236,7 +220,7 @@ data.train_X
 # %%
 data.val_y # potentially has less features
 
-# %% tags=[]
+# %%
 data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.columns).fillna(data.val_y)
 data.val_y
 
@@ -244,10 +228,10 @@ data.val_y
 # ## Variational Autoencoder
 
 # %% [markdown]
-# ### Transform of data
+# ### Analysis: DataLoaders, Model, transform
 
 # %%
-vae_default_pipeline = sklearn.pipeline.Pipeline(
+default_pipeline = sklearn.pipeline.Pipeline(
     [
         ('normalize', StandardScaler()),
         ('impute', SimpleImputer(add_indicator=False))
@@ -259,7 +243,7 @@ vae_default_pipeline = sklearn.pipeline.Pipeline(
 # %%
 from torch.nn import Sigmoid
 
-ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
+analysis = ae.AutoEncoderAnalysis(  # datasplits=data,
     train_df=data.train_X,
     val_df=data.val_y,
     model= models.vae.VAE,
@@ -268,38 +252,41 @@ ana_vae = ae.AutoEncoderAnalysis(  # datasplits=data,
                           # last_encoder_activation=None,
                       last_decoder_activation=None,
                       dim_latent=args.latent_dim),
-    transform=vae_default_pipeline,
+    transform=default_pipeline,
     decode=['normalize'],
     bs=args.batch_size)
-args.n_params_vae = ana_vae.n_params_ae
+args.n_params = analysis.n_params_ae
 if args.cuda:
-    ana_vae.model = ana_vae.model.cuda()
-ana_vae.model
+    analysis.model = analysis.model.cuda()
+analysis.model
 
 # %% [markdown]
 # ### Training
+#
+#
 
 # %%
-#self.loss_func(self.pred, *self.yb)
-
 results = []
 loss_fct = partial(models.vae.loss_fct, results=results)
 
 # %%
-# papermill_description=train_vae
-ana_vae.learn = Learner(dls=ana_vae.dls,
-                        model=ana_vae.model,
+analysis.learn = Learner(dls=analysis.dls,
+                        model=analysis.model,
                         loss_func=loss_fct,
                         cbs=[ae.ModelAdapterVAE(),
                              EarlyStoppingCallback(patience=50)
                              ])
 
-ana_vae.learn.show_training_loop()
-# learn.summary() # see comment above under DAE
+analysis.learn.show_training_loop()
+# %% [markdown]
+# Adding a `EarlyStoppingCallback` results in an error.  Potential fix in [PR3509](https://github.com/fastai/fastai/pull/3509) is not yet in current version. Try again later
 
 # %%
-suggested_lr = ana_vae.learn.lr_find()
-ana_vae.params['suggested_inital_lr'] = suggested_lr.valley
+# learn.summary()
+
+# %%
+suggested_lr = analysis.learn.lr_find()
+analysis.params['suggested_inital_lr'] = suggested_lr.valley
 suggested_lr
 
 # %%
@@ -310,28 +297,31 @@ results.clear() # reset results
 
 # %%
 # needs class as argument, not instance, but serialization needs instance
-ana_vae.params['last_decoder_activation'] = Sigmoid()
+analysis.params['last_decoder_activation'] = Sigmoid()
 
 vaep.io.dump_json(
     vaep.io.parse_dict(
-        ana_vae.params, types=[
+        analysis.params, types=[
             (torch.nn.modules.module.Module, lambda m: str(m))
         ]),
-    args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key.lower()))
+    args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key))
 
 # restore original value
-ana_vae.params['last_decoder_activation'] = Sigmoid
+analysis.params['last_decoder_activation'] = Sigmoid
 
-# %% tags=[]
-ana_vae.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
+# %%
+# papermill_description=train
+analysis.learn.fit_one_cycle(args.epochs_max, lr_max=suggested_lr.valley)
 
 # %% [markdown]
 # Save number of actually trained epochs
 
 # %%
-args.epoch_vae = ana_vae.learn.epoch + 1
-args.epoch_vae
+args.epoch_trained = analysis.learn.epoch + 1
+args.epoch_trained
 
+# %% [markdown]
+# #### Loss normalized by total number of measurements
 # %%
 # results are mixed (train and validation) -> better design needed
 # in general: L_rec >> L_reg (seems so)
@@ -340,19 +330,22 @@ args.epoch_vae
 # results_train.index.name = 'step'
 # results_train.plot()
 
-# %% tags=[]
+# %%
 N_train_notna = data.train_X.notna().sum().sum()
 N_val_notna = data.val_y.notna().sum().sum()
-fig = models.plot_training_losses(ana_vae.learn, args.model_key, folder=args.out_figures, norm_factors=[N_train_notna, N_val_notna]) # non-normalized plot of total loss
+fig = models.plot_training_losses(analysis.learn, args.model_key,
+                                  folder=args.out_figures,
+                                  norm_factors=[N_train_notna, N_val_notna])
 
 # %% [markdown]
 # ### Predictions
 # create predictions and select validation data predictions
 
 # %%
-pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=ana_vae.learn,
+analysis.model.eval()
+pred, target = res = ae.get_preds_from_df(df=data.train_X, learn=analysis.learn,
                                           position_pred_tuple=0,
-                                          transformer=ana_vae.transform)
+                                          transformer=analysis.transform)
 pred = pred.stack()
 pred
 
@@ -360,25 +353,23 @@ pred
 val_pred_fake_na['VAE'] = pred # 'model_key' ?
 val_pred_fake_na
 
-# %% [markdown]
-# select test data predictions
 
 # %%
 test_pred_fake_na['VAE'] = pred # model_key?
 test_pred_fake_na
 
 # %% [markdown]
-# save real na predictions
+# save missing values predictions
+
 # %%
 if args.save_pred_real_na:
-    # all idx missing in training data
-    mask = data.train_X.isna().stack()
-    idx_real_na = mask.index[mask]
-    # remove fake_na idx
-    idx_real_na = idx_real_na.drop(val_pred_fake_na.index).drop(test_pred_fake_na.index)
-    pred_real_na = pred.loc[idx_real_na]
-    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key.lower()}.csv")
-    del mask, idx_real_na, pred_real_na, pred
+    pred_real_na = ae.get_missing_values(df_train_wide=data.train_X,
+                                         val_idx=val_pred_fake_na.index,
+                                         test_idx=test_pred_fake_na.index,
+                                         pred=pred)
+    display(pred_real_na)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+
 
 # %% [markdown]
 # ### Plots
@@ -386,25 +377,24 @@ if args.save_pred_real_na:
 # - validation data
 
 # %%
-ana_vae.model = ana_vae.model.cpu()
-df_vae_latent = vaep.model.get_latent_space(ana_vae.model.get_mu_and_logvar,
-                                            dl=ana_vae.dls.valid,
-                                            dl_index=ana_vae.dls.valid.data.index)
-df_vae_latent
+analysis.model = analysis.model.cpu()
+df_latent = vaep.model.get_latent_space(analysis.model.get_mu_and_logvar,
+                                            dl=analysis.dls.valid,
+                                            dl_index=analysis.dls.valid.data.index)
+df_latent
 
 # %%
+ana_latent = analyzers.LatentAnalysis(df_latent,
+                                        df_meta,
+                                        args.model_key,
+                                        folder=args.out_figures)
 if args.meta_date_col and df_meta is not None:
-    ana_latent_vae = analyzers.LatentAnalysis(df_vae_latent,
-                                            df_meta,
-                                            args.model_key,
-                                            folder=args.out_figures)
-    figures[f'latent_{args.model_key.lower()}_by_date'], ax = ana_latent_vae.plot_by_date(
+    figures[f'latent_{args.model_key}_by_date'], ax = ana_latent.plot_by_date(
         args.meta_date_col)
 
 # %%
-# Could be created in data as an ID from three instrument variables
 if args.meta_cat_col and df_meta is not None:
-    figures[f'latent_{args.model_key.lower()}_by_{"_".join(args.meta_cat_col.split())}'], ax = ana_latent_vae.plot_by_category(
+    figures[f'latent_{args.model_key}_by_{"_".join(args.meta_cat_col.split())}'], ax = ana_latent.plot_by_category(
         args.meta_cat_col)
 
 # %%
@@ -440,7 +430,7 @@ errors_val
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (Collab, DAE, VAE)  
+# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)  
 # > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)  
 # > Could be changed.
 
@@ -454,123 +444,54 @@ errors_val
 
 # %%
 # papermill_description=metrics
-d_metrics = models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
+# d_metrics = models.Metrics(no_na_key='NA interpolated', with_na_key='NA not interpolated')
+d_metrics = models.Metrics()
 
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
 
-# %% tags=[]
+# %%
 added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
 added_metrics
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ### Test Datasplit
 #
 # Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
 
-# %% tags=[]
+# %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
 added_metrics
 
 # %% [markdown]
-# ### Save all metrics as json
+# Save all metrics as json
 
-# %% tags=[]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key.lower()}.json')
+# %%
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
 d_metrics
 
-
-# %% tags=[]
-def get_df_from_nested_dict(nested_dict, column_levels=['data_split', 'model', 'metric_name']):
-    metrics = {}
-    for k, run_metrics in nested_dict.items():
-        metrics[k] = vaep.pandas.flatten_dict_of_dicts(run_metrics)
-
-    metrics_dict_multikey = metrics
-
-    metrics = pd.DataFrame.from_dict(metrics, orient='index')
-    metrics.columns.names = column_levels
-    metrics.index.name = 'subset'
-    return metrics
-
-
-metrics_df = get_df_from_nested_dict(d_metrics.metrics).T
+# %%
+metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
 # %% [markdown]
 # ### Plot metrics
-
-# %%
-plotly_view = metrics_df.stack().unstack(-2).set_index('N', append=True)
-plotly_view.head()
-
-# %% [markdown]
-# #### Fake NA which could be interpolated
 #
-# - bulk of validation and test data
 
-# %%
-plotly_view.loc[pd.IndexSlice[:, :, 'NA interpolated']]
-
-# %%
-subset = 'NA interpolated'
-fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('metric_value').reset_index(),
-                 x="data_split",
-                 y='metric_value',
-                 color="model",
-                 facet_row="metric_name",
-                 # facet_col="subset",
-                 hover_data='N',
-                 title=f'Performance for {subset}',
-                 labels={"data_split": "data",
-                         "metric_value": '', 'metric_name': 'metric'},
-                 height=500,
-                 width=300,
-                 )
-fig.show()
-
-# %% [markdown]
-# #### Fake NA which could not be interpolated
-#
-# - small fraction of total validation and test data
-#
-# > not interpolated fake NA values are harder to predict for models  
-# > Note however: fewer predicitons might mean more variability of results
-
-# %%
-plotly_view.loc[pd.IndexSlice[:, :, 'NA not interpolated']]
-
-# %%
-subset = 'NA not interpolated'
-fig = px.scatter(plotly_view.loc[pd.IndexSlice[:, :, subset]].stack().to_frame('metric_value').reset_index(),
-                 x="data_split",
-                 y='metric_value',
-                 color="model",
-                 facet_row="metric_name",
-                 # facet_col="subset",
-                 hover_data='N',
-                 title=f'Performance for {subset}',
-                 labels={"data_split": "data",
-                         "metric_value": '', 'metric_name': 'metric'},
-                 height=500,
-                 width=300,
-                 )
-fig.show()
 
 # %% [markdown]
 # ## Save predictions
 
 # %%
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key.lower()}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key.lower()}.csv")
-
-# %% [markdown] tags=[]
+# save simulated missing values for both splits
+val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
+test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+# %% [markdown]
 # ## Config
 
 # %%
 figures # switch to fnames?
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{args.model_key.lower()}.yaml")
-args.model_type = 'VAE'
+args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
 args

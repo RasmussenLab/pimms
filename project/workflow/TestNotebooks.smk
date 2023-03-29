@@ -10,10 +10,10 @@ notebookes = [
     "00_2_hela_all_raw_files.ipynb",
     "misc_protein_support.ipynb",
     "00_5_training_data_exploration.ipynb",
-    "00_4_development_dataset_support.ipynb",         
-    "01_0_split_data.ipynb",                 
-    "14_experiment_03_dataloaders.ipynb",          
-    "14_experiment_03_dataset.ipynb",              
+    "00_4_development_dataset_support.ipynb",
+    "01_0_split_data.ipynb",
+    "14_experiment_03_dataloaders.ipynb",
+    "14_experiment_03_dataset.ipynb",
     # "02_3_grid_search_analysis.ipynb",   # needs parametrization for testing
     "14_experiment_03_latent_space_analysis.ipynb",
     "misc_embeddings.ipynb",
@@ -30,16 +30,17 @@ notebookes = [
     # "misc_id_mapper.ipynb", # to discard
 ]
 
+
 rule run:
     input:
-        expand("test_nb/{file}",
-        file=notebookes)
+        expand("test_nb/{file}", file=notebookes),
+
 
 rule execute:
     input:
-        nb = "{file}",
+        nb="{file}",
     output:
-        nb = "test_nb/{file}",
+        nb="test_nb/{file}",
     # conda:
     #     vaep
     shell:

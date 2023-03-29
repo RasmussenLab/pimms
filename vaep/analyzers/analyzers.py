@@ -88,7 +88,7 @@ class AnalyzePeptides(SimpleNamespace):
                  usecols=None,
                  **kwargs):
         df = pd.read_csv(fname, index_col=index_col, low_memory=False,
-                         nrows=nrows, usecols=usecols, squeeze=True)
+                         nrows=nrows, usecols=usecols).squeeze('columns')
         if len(df.shape) == 1:
             # unstack all but first column
             df = df.unstack(df.index.names[1:])

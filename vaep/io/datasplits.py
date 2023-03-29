@@ -23,6 +23,8 @@ def long_format(df: pd.DataFrame,
                 ) -> pd.DataFrame:
     # ToDo: Docstring as in class when finalized
     names = df.columns.names
+    if None in names:
+        raise ValueError(f"Column names must not be None: {names}")
     df_long = df.stack(names).to_frame(colname_values)
     return df_long
 
@@ -45,9 +47,7 @@ def wide_format(df: pd.DataFrame,
 class DataSplits():
     is_wide_format: bool = field(init=True, repr=False)
     train_X: pd.DataFrame = None
-    # val_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
-    # test_X: pd.DataFrame = None
     test_y: pd.DataFrame = None
     
 
