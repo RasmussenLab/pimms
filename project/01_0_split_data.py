@@ -71,6 +71,8 @@ select_N: int = None # only use latest N samples
 min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/example'
+folder_data:str = '' # specify data directory if needed
+file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
@@ -121,53 +123,18 @@ meta_cat_col: str = None # category column in meta data
 
 
 # %%
-args = {k: v for k, v in globals().items() if k not in args and k[0] != '_'}
+args = vaep.nb.get_params(args, globals=globals())
 args
 
-
 # %%
-# There must be a better way...
-@dataclass
-class DataConfig:
-    """Documentation. Copy parameters one-to-one to a dataclass."""
-    FN_INTENSITIES: str = '' # Sample (rows) intensiites for features (columns)
-    fn_rawfile_metadata: str = ''  # Machine parsed metadata from raw file (see workflows/metadata)
-    feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
-    sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
-    select_N:int = None # only use latest N samples
-    min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
-    index_col: Union[str, int] = 'Sample ID' # Can be either a string or position (typical 0 for first column), or a list of these
-    logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
-    folder_experiment: str = 'runs/example'
-    column_names: str = None # Manuelly set column names (of Index object in columns)
-    # metadata -> defaults for metadata extracted from machine data, used for plotting
-    meta_date_col: str = None # date column in meta data
-    meta_cat_col: str = None # category column in meta data
+params = vaep.nb.args_from_dict(args)
+# params = OmegaConf.create(args)
+params
 
-params = DataConfig(**args) # catches if non-specified arguments were passed
-
-params = OmegaConf.create(params.__dict__)
-dict(params)
-
-# %% [markdown]
-# ## Setup
-
-# %%
-folder_experiment = Path(folder_experiment)
-folder_experiment.mkdir(exist_ok=True, parents=True)
-logger.info(f'Folder for output = {folder_experiment}')
-
-folder_data = folder_experiment / 'data'
-folder_data.mkdir(exist_ok=True)
-logger.info(f'Folder for data: {folder_data = }')
-
-folder_figures = folder_experiment / 'figures'
-folder_figures.mkdir(exist_ok=True)
-logger.info(f'Folder for figures: {folder_figures = }')
 
 # %%
 if isinstance(params.index_col, str) or isinstance(params.index_col, int):
-    params.index_col = [params.index_col]
+    params.overwrite_entry('index_col', [params.index_col])
 params.index_col  # make sure it is an iterable
 
 # %% [markdown]
@@ -177,7 +144,7 @@ params.index_col  # make sure it is an iterable
 # process arguments
 
 # %%
-logger.info(f"{FN_INTENSITIES = }")
+logger.info(f"{params.FN_INTENSITIES = }")
 
 
 FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
@@ -185,13 +152,13 @@ FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
                               'pickle': 'from_pickle',
                               }
 
-FILE_EXT = Path(FN_INTENSITIES).suffix[1:]
+FILE_EXT = Path(params.FN_INTENSITIES).suffix[1:]
 logger.info(f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
 # %%
 constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT]) #AnalyzePeptides.from_csv 
 analysis = constructor(fname=params.FN_INTENSITIES,
-                                     index_col=index_col,
+                                     index_col=params.index_col,
                                     )
 if params.column_names:
     analysis.df.columns.names = params.column_names
@@ -250,7 +217,7 @@ df_meta
 if params.meta_date_col:
     df_meta[params.meta_date_col] = pd.to_datetime(df_meta[params.meta_date_col])
 else:
-    params.meta_date_col = 'PlaceholderTime'
+    params.overwrite_entry('meta_date_col', 'PlaceholderTime')
     df_meta[params.meta_date_col] = range(len(df_meta))
 df_meta
 
@@ -384,7 +351,7 @@ if isinstance(params.feat_prevalence, float):
     N_samples = len(analysis.df_meta)
     logger.info(f"Current number of samples: {N_samples}")
     logger.info(f"Feature has to be present in at least {params.feat_prevalence:.2%} of samples")
-    params.feat_prevalence = int(N_samples * params.feat_prevalence)
+    params.overwrite_entry('feat_prevalence', int(N_samples * params.feat_prevalence))
 assert isinstance(params.feat_prevalence, int)
 logger.info(f"Feature has to be present in at least {params.feat_prevalence} of samples")                
 # select features
@@ -407,7 +374,7 @@ analysis.df
 if isinstance(params.sample_completeness, float):
     msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
     # assumes df in wide format
-    params.sample_completeness = int(analysis.df.shape[1] * params.sample_completeness)
+    params.overwrite_entry('sample_completeness', int(analysis.df.shape[1] * params.sample_completeness))
     msg += f'This translates to a minimum number of features per sample (to be included): {params.sample_completeness}'
     logger.info(msg)
 
@@ -430,7 +397,7 @@ params.used_samples = analysis.df.index.to_list()
 ax = analysis.df.notna().sum(axis=1).hist()
 ax.set_xlabel('features per eligable sample')
 ax.set_ylabel('observations')
-fname = folder_figures / 'hist_features_per_sample'
+fname = params.out_figures / 'hist_features_per_sample'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -438,7 +405,7 @@ vaep.savefig(ax.get_figure(), fname)
 ax = analysis.df.notna().sum(axis=0).sort_values().plot()
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
-fname = folder_figures / 'feature_prevalence'
+fname = params.out_figures / 'feature_prevalence'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -465,7 +432,7 @@ ax, bins = plot_histogram_intensites(
     analysis.df.stack(), min_max=(min_intensity, max_intensity))
 ax.locator_params(axis='x', integer=True)
 
-fname = folder_figures / 'intensity_distribution_overall'
+fname = params.out_figures / 'intensity_distribution_overall'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -487,7 +454,7 @@ missing_by_median['Intensity rounded (based on N observations)'] = missing_by_me
 ax = missing_by_median.plot.scatter(x_col, y_col, ylim=(0, 1))
 
 
-fname = folder_figures / 'intensity_median_vs_prop_missing_scatter'
+fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -502,7 +469,7 @@ _ = ax.set_xlabel(x_col)
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
 
-fname = folder_figures / 'intensity_median_vs_prop_missing_boxplot'
+fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -533,7 +500,7 @@ pcs.describe(include='all', datetime_is_numeric=True).T
 if params.meta_cat_col:
     fig, ax = plt.subplots(figsize=(18,10))
     analyzers.seaborn_scatter(pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
-    fname = folder_figures / f'pca_sample_by_{"_".join(params.meta_cat_col.split())}'
+    fname = params.out_figures / f'pca_sample_by_{"_".join(params.meta_cat_col.split())}'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -541,7 +508,7 @@ if params.meta_cat_col:
 if params.meta_date_col != 'PlaceholderTime':
     fig, ax = plt.subplots(figsize=(23, 10))
     analyzers.plot_date_map(pcs[pcs_name], fig, ax, pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
-    fname = folder_figures / 'pca_sample_by_date'
+    fname = params.out_figures / 'pca_sample_by_date'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -560,7 +527,7 @@ fig = px.scatter(
     width=1200,
     height=600
 )
-fname = folder_figures / 'pca_identified_features.png'
+fname = params.out_figures / 'pca_identified_features.png'
 figures[fname.stem] =  fname
 fig.write_image(fname)
 fig # stays interactive in html
@@ -583,7 +550,7 @@ df = df.T
 ax = df.boxplot(rot=80, figsize=(20, 10), fontsize='large', showfliers=False, showcaps=False)
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
-fname = folder_figures / 'median_boxplot'
+fname = params.out_figures / 'median_boxplot'
 figures[fname.stem] =  fname
 vaep.savefig(fig, fname)
 
@@ -615,7 +582,7 @@ if not params.meta_date_col == 'PlaceholderTime':
                                                   median_sample_intensity[dates.name])
                                               )
     fig = ax.get_figure()
-    figures['median_scatter'] = folder_figures / 'median_scatter'
+    figures['median_scatter'] = params.out_figures / 'median_scatter'
     vaep.savefig(fig, figures['median_scatter'])
 
 # %% [markdown]
@@ -647,8 +614,8 @@ freq_per_feature
 
 # %%
 # freq_per_feature.name = 'Gene names freq' # name it differently?
-freq_per_feature.to_json(folder_data / 'freq_features.json') # index.name is lost when data is stored
-freq_per_feature.to_pickle(folder_data / 'freq_features.pkl')
+freq_per_feature.to_json(params.data / 'freq_features.json') # index.name is lost when data is stored
+freq_per_feature.to_pickle(params.data / 'freq_features.pkl')
 
 # %% [markdown]
 # Conserning sampling with frequency weights:
@@ -705,23 +672,19 @@ splits.train_X
 # - no missing values kept
 
 # %%
-splits.dump(folder=folder_data, file_format='pkl')  # dumps data in long-format
+splits.dump(folder=params.data, file_format=params.file_format)  # dumps data in long-format
 
 # %%
 # # Reload from disk
-splits = DataSplits.from_folder(folder_data, file_format='pkl')
+splits = DataSplits.from_folder(params.data, file_format=params.file_format)
 
 # %% [markdown]
 # ## Save parameters
 
 # %%
-print(OmegaConf.to_yaml(params))
-
-# %%
-fname = folder_experiment/'data_config.yaml'
-with open(fname, 'w') as f:
-    OmegaConf.save(params, f)
-fname
+fname = params.folder_experiment /'data_config.yaml'
+params.dump(fname)
+params
 
 # %% [markdown]
 # ## Saved Figures
