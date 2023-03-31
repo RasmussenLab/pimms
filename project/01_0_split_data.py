@@ -414,23 +414,9 @@ vaep.savefig(ax.get_figure(), fname)
 # ### Number off observations accross feature value
 
 # %%
-def min_max(s: pd.Series):
-    min_bin, max_bin = (int(s.min()), (int(s.max())+1))
-    return min_bin, max_bin
-
-
-def plot_histogram_intensites(s: pd.Series, interval_bins=1, min_max=(15, 40), ax=None):
-
-    min_bin, max_bin = min_max
-    bins = range(min_bin, int(max_bin), 1)
-    ax = s.plot.hist(bins=bins, ax=ax)
-    return ax, bins
-
-
-min_intensity, max_intensity = min_max(analysis.df.stack())
-ax, bins = plot_histogram_intensites(
-    analysis.df.stack(), min_max=(min_intensity, max_intensity))
-ax.locator_params(axis='x', integer=True)
+min_max = vaep.plotting.data.min_max(analysis.df.stack())
+ax, bins = vaep.plotting.data.plot_histogram_intensites(
+    analysis.df.stack(), min_max=min_max)
 
 fname = params.out_figures / 'intensity_distribution_overall'
 figures[fname.stem] = fname
@@ -442,7 +428,7 @@ missing_by_median = {'median feat value': analysis.df.median(
 missing_by_median = pd.DataFrame(missing_by_median)
 x_col, y_col = missing_by_median.columns
 
-bins = range(*min_max(missing_by_median['median feat value']), 1)
+bins = range(*vaep.plotting.data.min_max(missing_by_median['median feat value']), 1)
 
 missing_by_median['bins'] = pd.cut(
     missing_by_median['median feat value'], bins=bins)
@@ -674,9 +660,57 @@ splits.train_X
 # %%
 splits.dump(folder=params.data, file_format=params.file_format)  # dumps data in long-format
 
+# %% [markdown]
+# ### Reload from disk
+
 # %%
-# # Reload from disk
 splits = DataSplits.from_folder(params.data, file_format=params.file_format)
+
+# %% [markdown]
+# ## plot distribution of splits
+
+# %%
+ax = splits.train_X.plot.hist(
+    bins=bins, ax=None, label='train', title='Distribution of splits')
+_ = splits.val_y.plot.hist(bins=bins, xticks=list(
+    bins), ax=ax, label='test', legend=True)
+fname = params.out_figures / 'test_over_train_split.pdf'
+figures[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+
+# %%
+splits_df = pd.DataFrame(index=analysis.df_long.index)
+splits_df['train'] = splits.train_X
+splits_df['val'] = splits.val_y
+splits_df['test'] = splits.test_y
+splits_df.describe()
+
+# %%
+min_bin, max_bin = vaep.plotting.data.min_max(splits.val_y)
+bins = range(int(min_bin), int(max_bin), 1)
+ax = splits_df.plot.hist(bins=bins,
+                         xticks=list(bins),
+                         legend=True,
+                         stacked=True,
+                         title='Distribution of splits')
+ax.set_xlabel('Intensity bins')
+ax.yaxis.set_major_formatter("{x:,.0f}")
+fname = params.out_figures / 'splits_freq_stacked.pdf'
+figures[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
+                                               xticks=list(bins),
+                                               legend=True,
+                                               stacked=True,
+                                               title='Distribution of splits')
+ax.set_xlabel('Intensity bins')
+ax.yaxis.set_major_formatter("{x:,.0f}")
+fname = params.out_figures / 'val_test_split_freq_stacked_.pdf'
+figures[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
 # ## Save parameters
