@@ -15,6 +15,16 @@
 
 # %% [markdown]
 # # Compare models
+#
+# 1. Load available configurations
+# 2. Load validation predictions
+#     - calculate absolute error
+#     - select top N for plotting by MAE from smallest (best) to largest (worst) (top N as specified, default 5)
+#     - correlation per sample, correlation per feat, correlation overall
+#     - MAE plots
+# 3. Load test data predictions
+#     - as for validation data
+#     - top N based on validation data
 
 # %%
 import random
@@ -53,6 +63,7 @@ folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 models = 'CF,DAE,VAE'
+plot_to_n:int = 5 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 
 
 # %% [markdown]
@@ -71,29 +82,58 @@ figures = {}
 
 
 # %%
-MODELS = args.models.split(',')
-ORDER_MODELS = ['RSN', *MODELS]
+TARGET_COL = 'observed'
+METRIC = 'MAE'
+MIN_FREQ = None
+MODELS_PASSED = args.models.split(',')
+MODELS = ['RSN', *MODELS_PASSED]
+
+# MODELS = args.models.split(',')
+# ORDER_MODELS = ['RSN', *MODELS]
+
+# %%
+# list(sns.color_palette().as_hex()) # string representation of colors
+if args.plot_to_n > 10:
+    logger.warning("Set maximum of models to 10 (maximum)")
+    args.overwrite_entry('plot_to_n', 10)
+COLORS_TO_USE = [sns.color_palette()[5] ,*sns.color_palette()[:5]]
+
+# %%
+def assign_colors(models):
+    color_model_mapping = {
+    'CF': sns.color_palette()[1],
+    'DAE': sns.color_palette()[2],
+    'VAE': sns.color_palette()[3]
+    }
+    other_colors = [sns.color_palette()[0] ,*sns.color_palette()[4:]]
+    i=0
+    ret_colors = list()
+    for model in models:
+        if model in color_model_mapping:
+            ret_colors.append(color_model_mapping[model])
+        else:
+            pos = i % len(other_colors)
+            ret_colors.append(other_colors[pos])
+            i+=1
+    if i > len(other_colors):
+        logger.info("Reused some colors!")
+    return ret_colors
+
+assign_colors(['CF', 'DAE', 'knn', 'VAE'])
 
 # %%
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %%
-vaep.plotting.make_large_descriptors('large')
+vaep.plotting.make_large_descriptors('x-large')
 fig, axes = plt.subplots(1, 2, sharey=True)
 
-ax = axes[0]
-_ = data.val_y.unstack().notna().sum(axis=1).sort_values().plot(
-        ax=ax,
-        title='Validation split',
-        ylabel='number of feat')
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
+vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
+                                     title='Validation split',)
+vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
+                                     title='Test split',)
 
-ax = axes[1]
-_ = data.test_y.unstack().notna().sum(axis=1).sort_values().plot(
-        ax=ax,
-        title='Test split')
 fig.suptitle("Simulated missing values per sample", size=20)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 
 fname = args.out_figures / 'fake_na_val_test_splits.png'
 figures[fname.stem] = fname
@@ -113,10 +153,11 @@ prop = freq_feat / len(data.train_X.index.levels[0])
 prop.to_frame()
 
 # %% [markdown]
-# # reference methods
+# # Add reference methods
+#
+# > ToDo: Remove. Only consider explicitly added models for comparison
 #
 # - drawing from shifted normal distribution (RSN imputation)
-# - median imputation
 
 # %%
 data.to_wide_format()
@@ -133,12 +174,9 @@ std = data.train_X.std()
 imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
 imputed_shifted_normal.to_frame('intensity')
 
-# %%
-# medians_train = data.train_X.median()
-# medians_train.name = 'median'
-
 # %% [markdown]
 # # Model specifications
+# - used for bar plot annotations
 
 # %%
 import yaml
@@ -163,30 +201,230 @@ model_configs = pd.DataFrame(all_configs).set_index('model')
 model_configs.T
 
 # %% [markdown]
-# # load predictions
-#
-# - calculate correlation -> only makes sense per feature (and than save overall correlation stats)
-
-# %% [markdown]
-# ## test data
+# Set Feature name (columns are features, rows are samples)
 
 # %%
 # index name
 freq_feat.index.name = data.train_X.columns.name
 
 # %%
+# index name
+sample_index_name = data.train_X.index.name
+
+# %% [markdown]
+# # Load predictions on validation and test data split
+#
+
+# %% [markdown]
+# ## Validation data
+# - set top N models to plot based on validation data split
+# %%
+split = 'val'
+pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
+pred_val = compare_predictions.load_predictions(pred_files,
+                                                shared_columns=[TARGET_COL])
+pred_val['RSN'] = imputed_shifted_normal
+pred_val
+
+# %%
+errors_val = (pred_val
+              .drop(TARGET_COL, axis=1)
+              .sub(pred_val[TARGET_COL], axis=0)
+              [MODELS])
+errors_val.describe() # over all samples, and all features
+
+# %% [markdown]
+# Describe absolute error
+
+# %%
+errors_val.abs().describe() # over all samples, and all features
+
+# %% [markdown]
+# ## Select top N for plotting and set colors
+# %%
+ORDER_MODELS = (errors_val
+                .abs()
+                .mean()
+                .sort_values()
+                .index
+                .to_list())
+ORDER_MODELS
+
+
+# %% [markdown]
+# Hack color order, by assing CF, DAE and VAE unique colors no matter their order
+# Could be extended to all supported imputation methods
+# %%
+def assign_colors(models):
+    color_model_mapping = {
+        'CF': sns.color_palette()[2],
+        'DAE': sns.color_palette()[3],
+        'VAE': sns.color_palette()[4]
+    }
+    other_colors = [*sns.color_palette()[:2], *sns.color_palette()[5:]]
+    i = 0
+    ret_colors = list()
+    for model in models:
+        if model in color_model_mapping:
+            ret_colors.append(color_model_mapping[model])
+        else:
+            pos = i % len(other_colors)
+            ret_colors.append(other_colors[pos])
+            i += 1
+    if i > len(other_colors):
+        logger.info("Reused some colors!")
+    return ret_colors
+
+
+expected = [(0.17254901960784313, 0.6274509803921569, 0.17254901960784313),
+            (0.8392156862745098, 0.15294117647058825, 0.1568627450980392),
+            (0.12156862745098039, 0.4666666666666667, 0.7058823529411765),
+            (0.5803921568627451, 0.403921568627451, 0.7411764705882353),
+            (1.0, 0.4980392156862745, 0.054901960784313725)]
+
+actual = assign_colors(['CF', 'DAE', 'knn', 'VAE', 'lls'])
+
+assert expected == actual
+
+COLORS_TO_USE = assign_colors(ORDER_MODELS)
+
+# %%
+# For top_N -> define colors
+ORDER_PLOTS_TOP_N = ORDER_MODELS[:args.plot_to_n]
+ORDER_PLOTS_TOP_N
+
+# %% [markdown]
+# ### Correlation overall
+
+# %%
+pred_val_corr = pred_val.corr()
+ax = (pred_val_corr
+      .loc[TARGET_COL, ORDER_MODELS]
+      .plot
+      .bar(
+          # title='Correlation between Fake NA and model predictions on validation data',
+          ylabel='correlation overall'))
+ax = vaep.plotting.add_height_to_barplot(ax)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
+fname = args.out_figures / 'pred_corr_val_overall.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
+pred_val_corr
+
+# %% [markdown]
+# ### Correlation per sample
+
+# %%
+corr_per_sample_val = (pred_val
+                       .groupby(sample_index_name)
+                       .aggregate(
+                           lambda df: df.corr().loc[TARGET_COL]
+                       )[ORDER_MODELS])
+
+kwargs = dict(ylim=(0.7, 1), rot=90,
+              # title='Corr. betw. fake NA and model pred. per sample on validation data',
+              ylabel='correlation per sample')
+ax = corr_per_sample_val.plot.box(**kwargs)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                   horizontalalignment='right')
+fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
+with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as writer:
+    corr_per_sample_val.describe().to_excel(writer, sheet_name='summary')
+    corr_per_sample_val.to_excel(writer, sheet_name='correlations')
+
+# %% [markdown]
+# identify samples which are below lower whisker for models
+
+# %%
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[MODELS]).min()
+mask = (corr_per_sample_val[MODELS] < treshold).any(axis=1)
+corr_per_sample_val.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
+
+# %% [markdown]
+# ### Error plot
+
+# %%
+c_error_min = 4.5
+mask = (errors_val[MODELS].abs() > c_error_min).any(axis=1)
+errors_val.loc[mask].sort_index(level=1)
+
+# %%
+errors_val = errors_val.abs().groupby(freq_feat.index.name).mean() # absolute error
+errors_val = errors_val.join(freq_feat)
+errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
+errors_val
+
+# %% [markdown]
+# Some interpolated features are missing
+
+# %%
+errors_val.describe()  # mean of means
+
+# %%
+c_avg_error = 2
+mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
+errors_val.loc[mask]
+
+# %%
+# errors_val_smoothed = errors_val.copy()
+# errors_val_smoothed[errors_val.columns[:-1]] = (errors_val
+#                                                 [errors_val.columns[:-1]]
+#                                                 .rolling(window=200, min_periods=1)
+#                                                 .mean())
+ax = vaep.plotting.plot_rolling_error(errors_val[ORDER_PLOTS_TOP_N + ['freq']],
+                                      metric_name=METRIC,
+                                      window=int(len(errors_val)/15),
+                                      min_freq=MIN_FREQ,
+                                      colors_to_use=COLORS_TO_USE)
+#ToDo: color matching
+
+
+# %%
+fname = args.out_figures / 'performance_methods_by_completness.pdf'
+figures[fname.stem] = fname
+vaep.savefig(
+    ax.get_figure(),
+    name=fname)
+
+
+# %% [markdown]
+# ### Error by non-decimal number of intensity
+# - number of observations in parentheses. 
+
+# %%
+ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+    pred_val[
+    ['observed']+ORDER_PLOTS_TOP_N
+    ])
+fname = args.out_figures / 'errors_binned_by_int_val.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
+
+# %%
+errors_bind.head()
+errors_bind.to_csv(fname.with_suffix('.csv'))
+errors_bind.head()
+
+# %% [markdown]
+# ## test data
+
+# %%
 split = 'test'
 pred_files = [f for f in args.out_preds.iterdir() if split in f.name] # ToDo -> requested MODELS
-pred_test = compare_predictions.load_predictions(pred_files, shared_columns=['observed',])
-# pred_test = pred_test.join(medians_train, on=prop.index.name) # ToDo: median implicit
+pred_test = compare_predictions.load_predictions(pred_files, shared_columns=[TARGET_COL,])
 pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
 pred_test
 
+# %% [markdown]
+# ### Correlation overall
+
 # %%
 pred_test_corr = pred_test.corr()
-ax = pred_test_corr.loc['observed', ORDER_MODELS].plot.bar(
+ax = pred_test_corr.loc[TARGET_COL, ORDER_MODELS].plot.bar(
     # title='Corr. between Fake NA and model predictions on test data',
     ylabel='correlation coefficient overall',
     ylim=(0.7,1)
@@ -196,14 +434,20 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right
 vaep.savefig(ax.get_figure(), name='pred_corr_test_overall', folder=args.out_figures)
 pred_test_corr
 
-# %%
-# index name
-sample_index_name = data.train_X.index.name
+# %% [markdown]
+# ### Correlation per sample
 
 # %%
-corr_per_sample_test = pred_test.groupby(sample_index_name).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
-corr_per_sample_test = corr_per_sample_test.join(pred_test.groupby(sample_index_name)[
-                                       'observed'].count().rename('n_obs'))
+corr_per_sample_test = (pred_test
+                        .groupby(sample_index_name)
+                        .aggregate(lambda df: df.corr().loc[TARGET_COL])
+                        [ORDER_MODELS])
+corr_per_sample_test = corr_per_sample_test.join(
+    pred_test
+    .groupby(sample_index_name)[TARGET_COL]
+    .count()
+    .rename('n_obs')
+)
 too_few_obs = corr_per_sample_test['n_obs'] < 3
 corr_per_sample_test.loc[~too_few_obs].describe()
 
@@ -242,9 +486,9 @@ pred_test.loc[pd.IndexSlice[:, options[0]], :]
 # ### Correlation per feature
 
 # %%
-corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
+corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(lambda df: df.corr().loc[TARGET_COL])[ORDER_MODELS]
 corr_per_feat_test = corr_per_feat_test.join(pred_test.groupby(FEAT_NAME)[
-                                   'observed'].count().rename('n_obs'))
+                                   TARGET_COL].count().rename('n_obs'))
 
 too_few_obs = corr_per_feat_test['n_obs'] < 3
 corr_per_feat_test.loc[~too_few_obs].describe()
@@ -290,6 +534,9 @@ if not view.empty:
     )
 else:
     print("None found")
+# %% [markdown]
+# ### Error plot
+
 # %%
 metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(pred_test.drop('freq', axis=1), key='test data')
@@ -301,7 +548,6 @@ n_in_comparison = int(test_metrics.loc['N'].unique()[0])
 n_in_comparison
 
 # %%
-METRIC = 'MAE'
 _to_plot = test_metrics.loc[METRIC].to_frame().T
 _to_plot.index = [feature_names.name]
 _to_plot
@@ -317,17 +563,13 @@ _to_plot.loc["text"] = text
 _to_plot = _to_plot.fillna('')
 _to_plot
 
-# %%
-colors_to_use = [sns.color_palette()[5] ,*sns.color_palette()[:5]]
-# list(sns.color_palette().as_hex()) # string representation of colors
-sns.color_palette() # select colors for comparibility with grid search (where RSN was omitted)
 
 # %%
 fig, ax = plt.subplots(figsize=(10,8))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
                                                  ylabel=f"{METRIC} for {feature_names.name} (based on {n_in_comparison:,} log2 intensities)",
                                                  # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
-                                                 color=colors_to_use,
+                                                 color=COLORS_TO_USE,
                                                  ax=ax,
                                                  width=.8)
 ax = vaep.plotting.add_height_to_barplot(ax)
@@ -340,145 +582,39 @@ vaep.savefig(fig, name=fname)
 # %%
 errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*ORDER_MODELS, 'freq']]
 errors_test
-
+# %% [markdown]
+# ### Error plot by frequency
 
 # %%
-min_freq = None
 ax = vaep.plotting.plot_rolling_error(
     errors_test,
     metric_name=METRIC,
     window=int(len(errors_test)/15),
-    min_freq=min_freq, 
-    colors_to_use=colors_to_use)
+    min_freq=MIN_FREQ, 
+    colors_to_use=COLORS_TO_USE)
 fname = args.out_figures / 'errors_rolling_avg_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
+
 # %% [markdown]
-# ## Validation data
+# ### Error by non-decimal number of intensity
+#
+# - number of observations in parentheses. 
 
 # %%
-split = 'val'
-pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
-pred_val = compare_predictions.load_predictions(pred_files, shared_columns=['observed'])
-# pred_val = pred_val.join(medians_train, on=freq_feat.index.name)
-pred_val['RSN'] = imputed_shifted_normal
-# pred_val = pred_val.join(freq_feat, on=freq_feat.index.name)
-pred_val_corr = pred_val.corr()
-ax = pred_val_corr.loc['observed', ORDER_MODELS].plot.bar(
-    # title='Correlation between Fake NA and model predictions on validation data',
-    ylabel='correlation overall')
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_val_overall.pdf'
+ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+    pred_test[
+    ['observed']+ORDER_PLOTS_TOP_N
+    ])
+fname = args.out_figures / 'errors_binned_by_int_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
-pred_val_corr
 
 # %%
-corr_per_sample_val = pred_val.groupby(sample_index_name).aggregate(lambda df: df.corr().loc['observed'])[ORDER_MODELS]
-
-kwargs = dict(ylim=(0.7,1), rot=90,
-              # title='Corr. betw. fake NA and model pred. per sample on validation data',
-              ylabel='correlation per sample')
-ax = corr_per_sample_val.plot.box(**kwargs)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as writer:   
-    corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
-    corr_per_sample_test.to_excel(writer, sheet_name='correlations')
-
-# %% [markdown]
-# identify samples which are below lower whisker for models
-
-# %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[MODELS]).min()
-mask = (corr_per_sample_val[MODELS] < treshold).any(axis=1)
-corr_per_sample_val.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
-
-# %% [markdown]
-# ### Error plot
-
-# %%
-errors_val = pred_val.drop('observed', axis=1).sub(pred_val['observed'], axis=0)[ORDER_MODELS]
-errors_val.describe() # over all samples, and all features
-
-# %% [markdown]
-# Describe absolute error
-
-# %%
-errors_val.abs().describe() # over all samples, and all features
-
-# %%
-c_error_min = 4.5
-mask = (errors_val[MODELS].abs() > c_error_min).any(axis=1)
-errors_val.loc[mask].sort_index(level=1)
-
-# %%
-errors_val = errors_val.abs().groupby(freq_feat.index.name).mean() # absolute error
-errors_val = errors_val.join(freq_feat)
-errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
-errors_val
-
-# %% [markdown]
-# Some interpolated features are missing
-
-# %%
-errors_val.describe()  # mean of means
-
-# %%
-c_avg_error = 2
-mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
-errors_val.loc[mask]
-
-# %%
-errors_val_smoothed = errors_val.copy()
-errors_val_smoothed[errors_val.columns[:-1]] = (errors_val
-                                                [errors_val.columns[:-1]]
-                                                .rolling(window=200, min_periods=1)
-                                                .mean())
-ax = vaep.plotting.plot_rolling_error(errors_test,
-                                      metric_name=METRIC,
-                                      window=int(len(errors_test)/15),
-                                      min_freq=min_freq,
-                                      colors_to_use=colors_to_use)
-
-# %%
-errors_val_smoothed.describe()
-
-# %%
-fname = args.out_figures / 'performance_methods_by_completness.pdf'
-figures[fname.stem] = fname
-vaep.savefig(
-    ax.get_figure(),
-    name=fname)
-
-# %% [markdown]
-# # Average errors per feature - example scatter for collab
-# - see how smoothing is done, here `collab`
-# - shows how features are distributed in training data
-
-# %%
-# scatter plots to see spread
-model = MODELS[-1]
-ax = errors_val.plot.scatter(x=prop.name, y=model, c='darkblue', ylim=(0,2),
-  # title=f"Average error per feature on validation data for {model}",
-  ylabel=f'average error ({METRIC}) for {model} on valid. data')
-fname = args.out_figures / 'performance_methods_by_completness_scatter.pdf'
-figures[fname.stem] = fname
-vaep.savefig(
-    ax.get_figure(),
-    name=fname
-)
-
-# %% [markdown]
-# - [ ] plotly plot with number of observations the mean for each feature is based on
-
+errors_bind.to_csv(fname.with_suffix('.csv'))
+errors_bind.head()
 # %% [markdown]
 # ## Figures dumped to disk
 # %%
 figures
-
-# %%

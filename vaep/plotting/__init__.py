@@ -20,6 +20,7 @@ plt.rcParams['ps.fonttype'] = 42
 from . defaults import order_categories, labels_dict, IDX_ORDER
 from . import plotly
 from . import data
+from . import errors
 
 logger = logging.getLogger(__name__)
 
