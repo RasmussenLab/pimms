@@ -62,7 +62,7 @@ folder_experiment:str = 'runs/example' # Datasplit folder with data for experime
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
-models: str = 'CF,DAE,VAE'  # picked models to compare (comma separated)
+models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
 plot_to_n:int = 5 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 
 

@@ -49,7 +49,7 @@ file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # model
 sample_idx_position: int = 0 # position of index which is sample ID
-model_key: str = 'median' # model key (lower cased version will be used for file names)
+model_key: str = 'Median' # model key (lower cased version will be used for file names)
 model: str = 'Median' # model name
 save_pred_real_na: bool = True # Save all predictions for real na
 # metadata -> defaults for metadata extracted from machine data
@@ -284,11 +284,11 @@ metrics_df
 
 # %%
 # val
-fname = args.out_preds / f"pred_val_{args.model_key.lower()}.csv"
+fname = args.out_preds / f"pred_val_{args.model_key}.csv"
 setattr(args, fname.stem, fname.as_posix()) # add [] assignment?
 val_pred_fake_na.to_csv(fname)
 # test
-fname = args.out_preds / f"pred_test_{args.model_key.lower()}.csv"
+fname = args.out_preds / f"pred_test_{args.model_key}.csv"
 setattr(args, fname.stem, fname.as_posix())
 test_pred_fake_na.to_csv(fname)
 
