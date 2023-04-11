@@ -286,9 +286,8 @@ commands.to_csv(fname, header=False, index=False)
 # %%
 commands = df_meta.loc[selected]
 commands = (
-    "mirror -R --only-missing -P 8 --exclude-glob *.pdf " # command
+    "mirror -R --only-missing --log log_lftp_mirror.log --exclude-glob *.pdf " # command
     + "mq_out/" + commands.index # source
-    # + "./" + pd.to_datetime(commands[date_col]).dt.strftime("%Y") + "/" + commands["new_sample_id"] # dest
     + " ./MQ_tables/" + commands["Instrument_name"]+ "/" + commands["new_sample_id"] # dest
 )
 
