@@ -21,7 +21,7 @@
 # %%
 from typing import Union, List
 from dataclasses import dataclass
-import logging
+
 from pathlib import Path
 from pprint import pprint
 
@@ -33,19 +33,14 @@ pd.options.display.max_columns = 32
 
 import plotly.express as px
 
-from omegaconf import OmegaConf
-from sklearn.neighbors import NearestNeighbors
-
 import vaep
-from vaep.pandas import interpolate, parse_query_expression
 from vaep.io.datasplits import DataSplits
 from vaep.io import thermo_raw_files
-from vaep.sampling import feature_frequency, frequency_by_index, sample_data
+from vaep.sampling import feature_frequency, sample_data
 
 from vaep.analyzers import analyzers
 from vaep.analyzers.analyzers import  AnalyzePeptides
 
-from vaep.logging import setup_logger
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 
@@ -72,7 +67,7 @@ min_RT_time: Union[int, float] = None # based on raw file meta data, only take s
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/example'
 folder_data:str = '' # specify data directory if needed
-file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
+file_format: str = 'csv' # file format of create splits, default pickle (pkl)
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
@@ -127,8 +122,8 @@ args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
+
 params = vaep.nb.args_from_dict(args)
-# params = OmegaConf.create(args)
 params
 
 
