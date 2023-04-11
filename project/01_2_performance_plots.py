@@ -218,13 +218,15 @@ sample_index_name = data.train_X.index.name
 # %% [markdown]
 # ## Validation data
 # - set top N models to plot based on validation data split
+
 # %%
-split = 'val'
-pred_files = [f for f in args.out_preds.iterdir() if split in f.name]
-pred_val = compare_predictions.load_predictions(pred_files,
-                                                shared_columns=[TARGET_COL])
+pred_val = compare_predictions.load_split_prediction_by_modelkey(
+    experiment_folder=args.folder_experiment,
+    split='val',
+    model_keys=MODELS_PASSED,
+    shared_columns=[TARGET_COL])
 pred_val['RSN'] = imputed_shifted_normal
-pred_val
+pred_val[MODELS]
 
 # %%
 errors_val = (pred_val
@@ -417,9 +419,11 @@ errors_binned.head()
 # ## test data
 
 # %%
-split = 'test'
-pred_files = [f for f in args.out_preds.iterdir() if split in f.name] # ToDo -> requested MODELS
-pred_test = compare_predictions.load_predictions(pred_files, shared_columns=[TARGET_COL,])
+pred_test = compare_predictions.load_split_prediction_by_modelkey(
+    experiment_folder=args.folder_experiment,
+    split='test',
+    model_keys=MODELS_PASSED,
+    shared_columns=[TARGET_COL])
 pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
