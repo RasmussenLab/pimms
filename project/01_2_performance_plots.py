@@ -62,7 +62,7 @@ folder_experiment:str = 'runs/example' # Datasplit folder with data for experime
 folder_data:str = '' # specify data directory if needed
 file_format: str = 'pkl' # change default to pickled files
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
-models = 'CF,DAE,VAE'
+models: str = 'CF,DAE,VAE'  # picked models to compare (comma separated)
 plot_to_n:int = 5 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 
 
@@ -290,8 +290,12 @@ COLORS_TO_USE = assign_colors(ORDER_MODELS)
 
 # %%
 # For top_N -> define colors
-ORDER_PLOTS_TOP_N = ORDER_MODELS[:args.plot_to_n]
-ORDER_PLOTS_TOP_N
+TOP_N_ORDER = ORDER_MODELS[:args.plot_to_n]
+
+TOP_N_COLOR_PALETTE = {model: color for model,
+                       color in zip(TOP_N_ORDER, COLORS_TO_USE)}
+
+TOP_N_ORDER
 
 # %% [markdown]
 # ### Correlation overall
@@ -373,7 +377,7 @@ errors_val.loc[mask]
 #                                                 [errors_val.columns[:-1]]
 #                                                 .rolling(window=200, min_periods=1)
 #                                                 .mean())
-ax = vaep.plotting.plot_rolling_error(errors_val[ORDER_PLOTS_TOP_N + ['freq']],
+ax = vaep.plotting.plot_rolling_error(errors_val[TOP_N_ORDER + ['freq']],
                                       metric_name=METRIC,
                                       window=int(len(errors_val)/15),
                                       min_freq=MIN_FREQ,
@@ -394,18 +398,20 @@ vaep.savefig(
 # - number of observations in parentheses. 
 
 # %%
-ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+
+ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_val[
-    ['observed']+ORDER_PLOTS_TOP_N
-    ])
+        ['observed']+TOP_N_ORDER
+    ],
+    palette=TOP_N_COLOR_PALETTE)
 fname = args.out_figures / 'errors_binned_by_int_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
 # %%
-errors_bind.head()
-errors_bind.to_csv(fname.with_suffix('.csv'))
-errors_bind.head()
+errors_binned.head()
+errors_binned.to_csv(fname.with_suffix('.csv'))
+errors_binned.head()
 
 # %% [markdown]
 # ## test data
@@ -605,8 +611,9 @@ vaep.savefig(ax.get_figure(), name=fname)
 # %%
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
     pred_test[
-    ['observed']+ORDER_PLOTS_TOP_N
-    ])
+        ['observed']+TOP_N_ORDER
+    ],
+    palette=TOP_N_COLOR_PALETTE)
 fname = args.out_figures / 'errors_binned_by_int_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)

@@ -21,6 +21,7 @@ from . defaults import order_categories, labels_dict, IDX_ORDER
 from . import plotly
 from . import data
 from . import errors
+from .errors import plot_rolling_error
 
 logger = logging.getLogger(__name__)
 
