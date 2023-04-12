@@ -18,29 +18,14 @@
 
 # %%
 import logging
-from pathlib import Path
-from pprint import pprint
-from typing import Union, List
 
-import plotly.express as px
-
-# from fastai.losses import MSELossFlat
-# from fastai.learner import Learner
-
-
-import fastai
-# from fastai.tabular.all import *
 
 from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
-from fastai.data.all import *
-
-from fastai.tabular.all import *
-from fastai.collab import *
 
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import plot_loss, RecorderDump, calc_net_weight_count
+from vaep.models import plot_loss
 from fastai import learner
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
@@ -55,9 +40,9 @@ from vaep.analyzers import analyzers
 import vaep.model
 import vaep.models as models
 from vaep.models import ae
-from vaep.models import collab as vaep_collab
-from vaep.io.datasets import DatasetWithTarget
-from vaep.transform import VaepPipeline
+# from vaep.models import collab as vaep_collab
+# from vaep.io.datasets import DatasetWithTarget
+# from vaep.transform import VaepPipeline
 from vaep.io import datasplits
 # from vaep.io.dataloaders import get_dls, get_test_dl
 from vaep import sampling
@@ -103,9 +88,11 @@ meta_cat_col: str = None # category column in meta data
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# latent_dim = 30
-# epochs_max = 2
-# # force_train = False
+batch_size = 10
+epochs_max = 100
+latent_dim = 10
+hidden_layers = '1024'
+
 
 # %% [markdown]
 # Some argument transformations

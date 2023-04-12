@@ -20,8 +20,6 @@
 import logging
 from pprint import pprint
 
-import plotly.express as px
-
 from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
@@ -31,7 +29,7 @@ from fastai.tabular.all import *
 from fastai.collab import *
 
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import plot_loss, RecorderDump, calc_net_weight_count
+from vaep.models import plot_loss, RecorderDump
 from fastai import learner
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
@@ -81,7 +79,9 @@ save_pred_real_na:bool=True # Save all predictions for missing values
 # %%
 # folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
 # folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# epochs_max = 2
+# epochs_max = 50
+# latent_dim = 25
+# batch_size = 4_096 
 
 # %% [markdown]
 # Some argument transformations

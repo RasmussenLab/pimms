@@ -5,6 +5,8 @@ from snakemake.logging import logger
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
+# include rules per model
+
 
 folder_experiment = config["folder_experiment"]
 
@@ -45,13 +47,12 @@ rule comparison:
 # separate workflow by level -> provide custom configs
 nb = "01_0_split_data.ipynb"
 
-
 rule create_splits:
     input:
         nb=nb,
         configfile=config["config_split"],
     output:
-        train_split="{folder_experiment}/data/train_X.pkl",
+        train_split="{folder_experiment}/data/train_X.csv",
         nb="{folder_experiment}" f"/{nb}",
     params:
         folder_experiment="{folder_experiment}",
@@ -65,7 +66,7 @@ rule create_splits:
 rule train_models:
     input:
         nb="01_1_train_{model}.ipynb",
-        train_split="{folder_experiment}/data/train_X.pkl",
+        train_split="{folder_experiment}/data/train_X.csv",
         configfile=config["config_train"],
     output:
         nb="{folder_experiment}/01_1_train_{model}.ipynb",

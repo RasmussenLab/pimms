@@ -1,9 +1,9 @@
 # models_training:
 folder_experiment:  runs/example
-file_format: pkl
-latent_dim: 10
-batch_size: 64
-epochs_max: 100
+file_format: csv
+latent_dim: 25
+batch_size: 10
+epochs_max: 50
 hidden_layers: "256"
 sample_idx_position: 0
 cuda: False
