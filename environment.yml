@@ -47,6 +47,17 @@ dependencies:
   - jupyterlab-git
   - jupyter-dash
   - papermill # execute ipynb's
+  # R packages
+  - r-irkernel  
+  - r-reshape2
+  - r-stringi # reshape2
+  - r-e1071
+  - r-norm
+  - r-missforest
+  - r-mice
+  - r-tidyverse
+  - bioconductor-impute
+  - bioconductor-pcamethods
   # dev
   - pytest
   - pytest-cov

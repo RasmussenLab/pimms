@@ -26,9 +26,9 @@ rule comparison:
     input:
         nb=nb,
         runs=expand(
-            "{folder_experiment}/01_1_train_{model}.ipynb",
+            "{folder_experiment}/preds/pred_test_{model}.csv",
             folder_experiment=config["folder_experiment"],
-            model=config["models"],
+            model=config["models"]+config["NAGuideR_methods"],
         ),
     output:
         pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
@@ -43,7 +43,89 @@ rule comparison:
         " -r models {params.models:q}"
         " && jupyter nbconvert --to html {output.nb}"
 
+##########################################################################################
+# train NaGuideR methods
 
+rule transform_NAGuideR_predictions:
+    input: 
+        dumps=expand(
+            "{{folder_experiment}}/preds/pred_all_{method}.csv",
+            method=config["NAGuideR_methods"],
+        ),
+        nb="01_1_transfer_NAGuideR_pred.ipynb",
+    output:
+    # "{{folder_experiment}}/preds/pred_real_na_{method}.csv"),
+        expand( (
+            "{{folder_experiment}}/preds/pred_val_{method}.csv",
+            "{{folder_experiment}}/preds/pred_test_{method}.csv"),
+            method=config["NAGuideR_methods"],
+        ),
+        nb="{folder_experiment}/01_1_transfer_NAGuideR_pred.ipynb",
+    params:
+        folder_experiment="{folder_experiment}",
+        file_format=config["file_format"],
+        # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
+        dumps_as_str=lambda wildcards, input: ','.join(input.dumps)
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r folder_experiment {params.folder_experiment}"
+        " -r file_format {params.file_format}"
+        " -p dumps {params.dumps_as_str}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+rule train_NAGuideR_model:
+    input:
+        nb="01_1_train_NAGuideR_methods.ipynb",
+        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+    output:
+        nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
+        dump="{folder_experiment}/preds/pred_all_{method}.csv"
+    params:
+        folder_experiment="{folder_experiment}",
+        method="{method}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r train_split {input.train_split}"
+        " -r method {params.method}"
+        " -r folder_experiment {params.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+rule transform_data_to_wide_format:
+    input:
+        nb="01_0_transform_data_to_wide_format.ipynb",
+        train_split="{folder_experiment}/data/train_X.csv",
+    output:
+        nb="{folder_experiment}/01_0_transform_data_to_wide_format.ipynb",
+        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+    params:
+        folder_experiment="{folder_experiment}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r folder_experiment {params.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+##########################################################################################
+# train models in python
+rule train_models:
+    input:
+        nb="01_1_train_{model}.ipynb",
+        train_split="{folder_experiment}/data/train_X.csv",
+        configfile=config["config_train"],
+    output:
+        nb="{folder_experiment}/01_1_train_{model}.ipynb",
+        pred="{folder_experiment}/preds/pred_test_{model}.csv",
+    params:
+        folder_experiment="{folder_experiment}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -f {input.configfile}"
+        " -r folder_experiment {params.folder_experiment}"
+        " -r model_key {wildcards.model}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+
+##########################################################################################
+# Create Data splits
 # separate workflow by level -> provide custom configs
 nb = "01_0_split_data.ipynb"
 
@@ -60,21 +142,4 @@ rule create_splits:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
-        " && jupyter nbconvert --to html {output.nb}"
-
-
-rule train_models:
-    input:
-        nb="01_1_train_{model}.ipynb",
-        train_split="{folder_experiment}/data/train_X.csv",
-        configfile=config["config_train"],
-    output:
-        nb="{folder_experiment}/01_1_train_{model}.ipynb",
-    params:
-        folder_experiment="{folder_experiment}",
-    shell:
-        "papermill {input.nb} {output.nb}"
-        " -f {input.configfile}"
-        " -r folder_experiment {params.folder_experiment}"
-        " -r model_key {wildcards.model}"
         " && jupyter nbconvert --to html {output.nb}"
