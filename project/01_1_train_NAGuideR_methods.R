@@ -15,6 +15,7 @@
 
 # # NAGuide R methods
 
+library(impute)
 library(reshape2)
 library(data.table)
 library(tidyverse)
