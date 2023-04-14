@@ -13,3 +13,8 @@ models:
 NAGuideR_methods:
   - lls
   - knnmethod
+  - rf
+  - impseq
+  - qrilc
+  # - seqknn
+  - svdmethod

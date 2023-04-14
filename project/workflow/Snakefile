@@ -21,6 +21,7 @@ rule all:
 
 nb = "01_2_performance_plots.ipynb"
 
+MODELS = config["models"]+config["NAGuideR_methods"]
 
 rule comparison:
     input:
@@ -28,14 +29,14 @@ rule comparison:
         runs=expand(
             "{folder_experiment}/preds/pred_test_{model}.csv",
             folder_experiment=config["folder_experiment"],
-            model=config["models"]+config["NAGuideR_methods"],
+            model=MODELS,
         ),
     output:
         pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
         nb="{folder_experiment}" f"/{nb}",
     params:
         meta_data=config["fn_rawfile_metadata"],
-        models=",".join(config["models"]),
+        models=",".join(MODELS),
     shell:
         "papermill {input.nb} {output.nb}"
         " -r fn_rawfile_metadata {params.meta_data:q}"

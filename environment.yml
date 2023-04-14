@@ -7,8 +7,6 @@ channels:
   - pytorch
   - fastai
   - plotly
-  - conda-forge
-  - bioconda
 dependencies:
   - biopython # Aligner
   - python=3.8
@@ -53,7 +51,6 @@ dependencies:
   # - cross-r-base
   - r-base=3.6
   - r-irkernel  
-  # - r-rmarkdown # https://github.com/conda-forge/r-stringi-feedstock/issues/13
   # - r-devtools
   # - r-data.table
   - r-reshape2

@@ -430,7 +430,7 @@ missing_by_median['bins'] = pd.cut(
 missing_by_median['median feat value (rounded)'] = missing_by_median['median feat value'].round(decimals=0).astype(int)
 _counts = missing_by_median.groupby('median feat value (rounded)')['median feat value'].count().rename('count')
 missing_by_median = missing_by_median.join(_counts, on='median feat value (rounded)')
-missing_by_median['Intensity rounded (based on N observations)'] = missing_by_median.iloc[:,-2:].apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
+missing_by_median['Intensity binned (based on N feature medians)'] = missing_by_median.iloc[:,-2:].apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
 
 ax = missing_by_median.plot.scatter(x_col, y_col, ylim=(0, 1))
 
@@ -441,7 +441,7 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 y_col = 'prop. missing'
-x_col = 'Intensity rounded (based on N observations)'
+x_col = 'Intensity binned (based on N feature medians)'
 ax = missing_by_median[[x_col, y_col]].plot.box(by=x_col)
 ax = ax[0] # returned series due to by argument?
 _ = ax.set_title('')

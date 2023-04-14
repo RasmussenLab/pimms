@@ -550,7 +550,7 @@ else:
 # %%
 metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(pred_test.drop('freq', axis=1), key='test data')
-test_metrics = pd.DataFrame(test_metrics)[ORDER_MODELS]
+test_metrics = pd.DataFrame(test_metrics)[TOP_N_ORDER]
 test_metrics
 
 # %%
@@ -590,7 +590,7 @@ figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
-errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*ORDER_MODELS, 'freq']]
+errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*TOP_N_ORDER, 'freq']]
 errors_test
 # %% [markdown]
 # ### Error plot by frequency

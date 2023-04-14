@@ -13,11 +13,8 @@
 #     name: python3
 # ---
 
-# %%
-
-# %% [Markdown]
+# %% [markdown]
 # # Transfer predictions from NAGuideR
-#
 
 # %%
 import logging

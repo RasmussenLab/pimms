@@ -26,11 +26,11 @@ library(tidyverse)
 # install.packages(c("rrcovNA", "e1071"))
 # -
 
-# Copied from [NAGuideR's github](https://github.com/wangshisheng/NAguideR/blob/15ec86263d5821990ad39a8d9f378cf4d76b25fb/inst/NAguideRapp/app.R#L1705-L1849) RShiny application
+# Copied from [NAGuideR's github](https://github.com/wangshisheng/NAguideR/blob/15ec86263d5821990ad39a8d9f378cf4d76b25fb/inst/NAguideRapp/app.R#L1705-L1849) RShiny application. Adapted to run as standalone function in context of the Snakemake workflow.
 #
 # - `df` and `df1` ?
 # - seems quite hacky
-# - code is unchanged from repo
+# - code is only slightly adapted from repo to run here.
 
 nafunctions<-function(x,method="zero"){
     df<-df1<-as.data.frame(x)
@@ -56,7 +56,10 @@ nafunctions<-function(x,method="zero"){
       df<-data_zero1$data
     }
     else if(method=="seqknn"){
-      library(SeqKnn)
+        if(!require(SeqKnn)){
+            install.packages("src/R_NAGuideR/SeqKnn_1.0.1.tar.gz", repos = NULL,type="source")
+            library(SeqKnn)
+      }
       df <- SeqKNN(df1,k = 10)
     }
     else if(method=="bpca"){
@@ -134,23 +137,25 @@ nafunctions<-function(x,method="zero"){
       df<-newdatareadmi/minum
       rownames(df)<-rownames(df1)
     }
-    # else if(method=="trknn"){
-    #   source('Trunc_KNN/Imput_funcs.r')
-    #   sim_trKNN_wrapper <- function(data) {
-    #     result <- data %>% as.matrix %>% t %>% imputeKNN(., k=10, distance='truncation', perc=0) %>% t
-    #     return(result)
-    #   }
-    #   df1x <- sim_trKNN_wrapper(t(df1))
-    #   df<-as.data.frame(t(df1x))
-    # }
+    else if(method=="trknn"){
+      source('src/R_NAGuideR/Imput_funcs.r')
+      sim_trKNN_wrapper <- function(data) {
+        result <- data %>% as.matrix %>% t %>% imputeKNN(., k=10, distance='truncation', perc=0) %>% t
+        return(result)
+      }
+      df1x <- sim_trKNN_wrapper(t(df1))
+      df<-as.data.frame(t(df1x))
+    }
     else if(method=="rf"){
       library(missForest)
-      data_zero1 <- missForest(t(df1), maxiter =10,ntree = input$rfntrees,mtry=floor(nrow(df1)^(1/3)),verbose = TRUE)
+      data_zero1 <- missForest(t(df1), maxiter =10,
+                               ntree = 20 # input$rfntrees
+                               ,mtry=floor(nrow(df1)^(1/3)),verbose = TRUE)
       df<-t(data_zero1$ximp)
     }
     else if(method=="pi"){
-      width <- input$piwidth
-      downshift <- input$pidownshift
+      width <- 0.3 # input$piwidth
+      downshift <- 1.8 # input$pidownshift
       for(i in 1:ncol(df1)){
         temp <- df1[[i]]
         if(sum(is.na(temp))>0){
@@ -163,12 +168,15 @@ nafunctions<-function(x,method="zero"){
       }
       df
     }
-    else if(method=="grr"){
-      library(DreamAI)
-      df<-impute.RegImpute(data=as.matrix(df1), fillmethod = "row_mean", maxiter_RegImpute = 10,conv_nrmse = 1e-03)
-    }
+    # else if(method=="grr"){
+    #   library(DreamAI)
+    #   df<-impute.RegImpute(data=as.matrix(df1), fillmethod = "row_mean", maxiter_RegImpute = 10,conv_nrmse = 1e-03)
+    # }
     else if(method=="gms"){
-      library(GMSimpute)
+      if(!require(GMSimpute)){
+            install.packages("src/R_NAGuideR/GMSimpute_0.0.1.1.tar.gz", repos = NULL,type="source")
+            library(GMSimpute)
+      }  
       df<-GMS.Lasso(df1,nfolds=3,log.scale=FALSE,TS.Lasso=TRUE)
     }
     else{
@@ -183,7 +191,7 @@ nafunctions<-function(x,method="zero"){
 
 # + tags=["parameters"]
 train_split = 'runs/example/data/data_wide_sample_cols.csv' # test
-experiment_folder = 'runs/example/'
+folder_experiment = 'runs/example/'
 method = 'knnmethod'
 # -
 
@@ -217,7 +225,7 @@ pred
 
 dim(pred)
 
-fname = file.path(experiment_folder, 'preds', paste0('pred_all_', method, '.csv'))
+fname = file.path(folder_experiment, 'preds', paste0('pred_all_', method, '.csv'))
 fname
 
 write_csv(pred, path=fname)
