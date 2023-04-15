@@ -13,8 +13,11 @@ models:
 NAGuideR_methods:
   - lls
   - knnmethod
+  - seqknn
   - rf
   - impseq
   - qrilc
-  # - seqknn
+  - minprob
+  - mindet
   - svdmethod
+  - mice-norm

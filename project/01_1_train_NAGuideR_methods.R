@@ -22,10 +22,6 @@ library(tidyverse)
 
 # setup can be tricky... trying to integrate as much as possible into conda environment
 
-# +
-# install.packages(c("rrcovNA", "e1071"))
-# -
-
 # Copied from [NAGuideR's github](https://github.com/wangshisheng/NAguideR/blob/15ec86263d5821990ad39a8d9f378cf4d76b25fb/inst/NAguideRapp/app.R#L1705-L1849) RShiny application. Adapted to run as standalone function in context of the Snakemake workflow.
 #
 # - `df` and `df1` ?
@@ -86,18 +82,27 @@ nafunctions<-function(x,method="zero"){
       df <- norm::imp.norm(ss, thx, xxm)
     }
     else if(method=="qrilc"){
-      library(imputeLCMD)
+      if (!require(imputeLCMD)) {
+        install.packages("imputeLCMD")
+        library(imputeLCMD)
+      }
       xxm<-t(df1)
       data_zero1 <- imputeLCMD::impute.QRILC(xxm, tune.sigma = 1)[[1]]
       df<-t(data_zero1)
     }
     else if(method=="mindet"){
-      library(imputeLCMD)
+      if (!require(imputeLCMD)) {
+        install.packages("imputeLCMD")
+        library(imputeLCMD)
+      }
       xxm<-as.matrix(df1)
       df <- imputeLCMD::impute.MinDet(xxm, q = 0.01)
     }
     else if(method=="minprob"){
-      library(imputeLCMD)
+      if (!require(imputeLCMD)) {
+        install.packages("imputeLCMD")
+        library(imputeLCMD)
+      }
       xxm<-as.matrix(df1)
       df <- imputeLCMD::impute.MinProb(xxm, q = 0.01, tune.sigma = 1)
     }
@@ -107,11 +112,17 @@ nafunctions<-function(x,method="zero"){
       rownames(df)<-rownames(df1)
     }
     else if(method=="impseq"){
-      library(rrcovNA)
+      if (!require(rrcovNA)) {
+        install.packages("rrcovNA")
+        library(rrcovNA)
+      }
       df <- impSeq(df1)
     }
     else if(method=="impseqrob"){
-      library(rrcovNA)
+      if (!require(rrcovNA)) {
+        install.packages("rrcovNA")
+        library(rrcovNA)
+      }
       data_zero1 <- impSeqRob(df1, alpha=0.9)
       df<-data_zero1$x
     }
