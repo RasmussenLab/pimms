@@ -1,9 +1,21 @@
 config_split: config/single_dev_dataset/evidence/split.yaml
-config_train: config/single_dev_dataset/evidence/train.yaml
-folder_experiment: runs/experiment_03/df_intensities_evidence_long/Q_Exactive_HF_X_Orbitrap_6070
-fn_rawfile_metadata: data/files_selected_metadata.csv
+config_train: config/single_dev_dataset/evidence/train_{model}.yaml
+folder_experiment: runs/Q_Exactive_HF_X_Orbitrap_6070/evidence
+fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
 models:
- - CF
- - DAE
+ - Median
+ - CF # ~ 10:14 min
+ - DAE # ~ 4:21 min
  - VAE
-
+ - KNN
+NAGuideR_methods:
+  # - lls # takes hours, produces totally off results
+  - knnmethod
+  # - seqknn # error
+  # - rf # takes hours
+  # - impseq # error
+  - qrilc # < 2 min
+  - minprob # ~ 1 min
+  - mindet # ~ 1 min
+  # - svdmethod # killed after 25mins
+  # - mice-norm # killed after 30mins

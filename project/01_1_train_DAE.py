@@ -71,12 +71,13 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 # training
 epochs_max:int = 50  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
+patience:int = 25 # Patience for early stopping
 batch_size:int = 64 # Batch size for training (and evaluation)
 cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:str = '512' # A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
-force_train:bool = True # Force training when saved model could be used. Per default re-train model
+
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'DAE' # model name
 model_key: str = 'DAE' # potentially alternative key for model (grid search)
@@ -85,13 +86,6 @@ save_pred_real_na: bool = True # Save all predictions for missing values
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
 
-# %%
-# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-batch_size = 10
-epochs_max = 100
-latent_dim = 10
-hidden_layers = '1024'
 
 
 # %% [markdown]
@@ -247,7 +241,7 @@ analysis.model
 analysis.learn = Learner(dls=analysis.dls,
                         model=analysis.model,
                         loss_func=MSELossFlat(reduction='sum'),
-                        cbs=[EarlyStoppingCallback(patience=5),
+                        cbs=[EarlyStoppingCallback(patience=args.patience),
                              ae.ModelAdapter(p=0.2)]
                         )
 

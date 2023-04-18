@@ -81,6 +81,8 @@ rule train_NAGuideR_model:
     output:
         nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
         dump="{folder_experiment}/preds/pred_all_{method}.csv"
+    benchmark:
+        "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
     params:
         folder_experiment="{folder_experiment}",
         method="{method}",
@@ -114,13 +116,17 @@ rule train_models:
         configfile=config["config_train"],
     output:
         nb="{folder_experiment}/01_1_train_{model}.ipynb",
-        pred="{folder_experiment}/preds/pred_test_{model}.csv",
+        pred="{folder_experiment}/preds/pred_test_{model}.csv"
+    benchmark:
+        "{folder_experiment}/01_1_train_{model}.tsv"
     params:
         folder_experiment="{folder_experiment}",
+        meta_data=config["fn_rawfile_metadata"],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
+        " -r fn_rawfile_metadata {params.meta_data}"
         " -r model_key {wildcards.model}"
         " && jupyter nbconvert --to html {output.nb}"
 
@@ -139,8 +145,10 @@ rule create_splits:
         nb="{folder_experiment}" f"/{nb}",
     params:
         folder_experiment="{folder_experiment}",
+        meta_data=config["fn_rawfile_metadata"],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
+        " -r fn_rawfile_metadata {params.meta_data}"
         " && jupyter nbconvert --to html {output.nb}"

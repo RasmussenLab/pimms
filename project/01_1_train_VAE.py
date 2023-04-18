@@ -70,7 +70,8 @@ cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:str = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
-force_train:bool = True # Force training when saved model could be used. Per default re-train model
+# force_train:bool = True # Force training when saved model could be used. Per default re-train model
+patience:int = 50 # Patience for early stopping
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'VAE' # model name
 model_key: str = 'VAE' # potentially alternative key for model (grid search)
@@ -78,15 +79,6 @@ save_pred_real_na: bool = True # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
-
-# %%
-# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# batch_size = 10
-# epochs_max = 100
-# latent_dim = 10
-# hidden_layers = '256'
-
 
 # %% [markdown]
 # Some argument transformations
@@ -256,7 +248,7 @@ analysis.learn = Learner(dls=analysis.dls,
                         model=analysis.model,
                         loss_func=loss_fct,
                         cbs=[ae.ModelAdapterVAE(),
-                             EarlyStoppingCallback(patience=50)
+                             EarlyStoppingCallback(patience=args.patience)
                              ])
 
 analysis.learn.show_training_loop()
@@ -304,13 +296,6 @@ args.epoch_trained
 
 # %% [markdown]
 # #### Loss normalized by total number of measurements
-# %%
-# results are mixed (train and validation) -> better design needed
-# in general: L_rec >> L_reg (seems so)
-# # rename _results!
-# results_train = pd.DataFrame.from_records(_results[::2], columns=['L_rec', 'L_reg'])
-# results_train.index.name = 'step'
-# results_train.plot()
 
 # %%
 N_train_notna = data.train_X.notna().sum().sum()

@@ -66,6 +66,7 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 # training
 epochs_max:int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
+patience:int = 1 # Patience for early stopping
 batch_size:int = 32_768 # Batch size for training (and evaluation)
 cuda:bool=True # Use the GPU for training?
 # model
@@ -75,13 +76,6 @@ sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'CF' # model name
 model_key: str = 'CF' # potentially alternative key for model (grid search)
 save_pred_real_na:bool=True # Save all predictions for missing values
-
-# %%
-# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# epochs_max = 50
-# latent_dim = 25
-# batch_size = 4_096 
 
 # %% [markdown]
 # Some argument transformations
@@ -141,8 +135,8 @@ else:
 # load meta data for splits
 
 # %%
-df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
-df_meta.loc[data.train_X.index.levels[0]]
+# df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
+# df_meta.loc[data.train_X.index.levels[0]]
 
 
 # %% [markdown]
@@ -205,7 +199,7 @@ ana_collab.model = EmbeddingDotBias.from_classes(
 args.n_params = models.calc_net_weight_count(ana_collab.model)
 ana_collab.params['n_parameters'] = args.n_params
 ana_collab.learn = Learner(dls=ana_collab.dls, model=ana_collab.model, loss_func=MSELossFlat(),
-                           cbs=EarlyStoppingCallback(patience=1),
+                           cbs=EarlyStoppingCallback(patience=args.patience),
                            model_dir=args.out_models)
 if args.cuda:
     ana_collab.learn.model = ana_collab.learn.model.cuda()
