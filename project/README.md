@@ -55,7 +55,7 @@ papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data
 - hela: dumps from erda processing (raw file names, aggregated `summaries.txt` from MQ, protein groups, peptides and precursor dumps)
 - run: a single experiment with models attached, see `workflow/Snakefile`
 - grid: only grid search associated, see `workflow/Snakefile_grid.smk`
-- best: best models repeatedly trained or across datasets, see `workflow/Snakefile_best_repeated.smk` and `workflow/Snakefile_best_across_datasets.smk`
+- best: best models repeatedly trained or across datasets, see `workflow/Snakefile_best_repeated_train.smk` and `workflow/Snakefile_best_across_datasets.smk`
 - ald: ALD study associated, see `workflow/Sankefile_ald_comparison.smk`
 
 tag | notebook  | Description
