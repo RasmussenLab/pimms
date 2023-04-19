@@ -126,7 +126,7 @@ rule train_models:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
-        " -r fn_rawfile_metadata {params.meta_data}"
+        " -p fn_rawfile_metadata {params.meta_data}"
         " -r model_key {wildcards.model}"
         " && jupyter nbconvert --to html {output.nb}"
 
@@ -150,5 +150,5 @@ rule create_splits:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
-        " -r fn_rawfile_metadata {params.meta_data}"
+        " -p fn_rawfile_metadata {params.meta_data}"
         " && jupyter nbconvert --to html {output.nb}"
