@@ -19,11 +19,10 @@
 # Create data splits
 
 # %%
-from typing import Union, List
-from dataclasses import dataclass
-
 from pathlib import Path
-from pprint import pprint
+
+from typing import Union, List
+
 
 import numpy as np
 import pandas as pd
@@ -63,6 +62,7 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
 select_N: int = None # only use latest N samples
+random_state: int = 42 # random state for reproducibility of splits
 min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/example'
@@ -71,6 +71,7 @@ file_format: str = 'csv' # file format of create splits, default pickle (pkl)
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
+
 
 # %%
 # fn_rawfile_metadata = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
@@ -631,7 +632,11 @@ analysis.to_long_format(inplace=True)
 analysis.df_long
 
 # %%
-fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(), sample_index_to_drop=0, weights=freq_per_feature, frac=0.1)
+fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(),
+                                      sample_index_to_drop=0,
+                                      weights=freq_per_feature,
+                                      frac=0.1,
+                                      random_state=params.random_state,)
 assert len(splits.train_X) > len(fake_na)
 splits.val_y = fake_na.sample(frac=0.5).sort_index()
 splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]

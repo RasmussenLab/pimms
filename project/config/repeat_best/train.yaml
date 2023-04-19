@@ -1,7 +1,7 @@
 epochs_max:
 - 100
 repeats: 5
-folder: "runs/repeat_best"
+folder: "runs/repeat_best_train"
 levels:
 - proteinGroups
 - peptides
