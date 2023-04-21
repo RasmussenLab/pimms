@@ -73,50 +73,6 @@ meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
 
 
-# %%
-# fn_rawfile_metadata = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
-# meta_date_col = 'Content Creation Date'
-# meta_cat_col = None
-# folder_experiment = 'runs/test_example/'
-
-# ################## intentisies ##############################################
-# # small protein groups, long format
-# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_long_N50.csv'
-# # small protein groups, wide format
-# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
-# column_names = ["Gene Names"]
-# index_col = 0
-# #############################################################################
-# meta_cat_col = ''
-# min_RT_time = ''
-
-# %%
-# # protein groups
-# FN_INTENSITIES =  'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-# index_col = ['Sample ID', 'Gene names'] 
-# meta_date_col = 'Content Creation Date'
-# column_names = None
-# select_N = 50
-
-# %%
-# # peptides
-# FN_INTENSITIES = 'data/dev_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-# index_col = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
-# meta_date_col = 'Content Creation Date'
-
-# %%
-# # # evidence
-# FN_INTENSITIES = 'data/dev_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-# index_col = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
-# meta_date_col = 'Content Creation Date'
-
-
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -375,7 +331,9 @@ if isinstance(params.sample_completeness, float):
     logger.info(msg)
 
 sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
-    
+sample_counts.describe()
+
+# %%
 mask = sample_counts > params.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 print(msg)
