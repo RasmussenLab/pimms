@@ -16,6 +16,8 @@ plt.rcParams['figure.figsize'] = [16.0, 7.0]
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 
+plt.rcParams['figure.dpi'] = 147
+
 
 from . defaults import order_categories, labels_dict, IDX_ORDER
 from . import plotly

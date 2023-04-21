@@ -41,15 +41,14 @@ files_in = {
 }
 
 # %%
-# FOLDER = Path('runs/dev_dataset_small/')
-# files_in = {
-#       'protein groups': Path('runs/example') / 'figures/performance_test.csv',
-#       'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
-#       'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
-# }
+FOLDER = Path('runs/dev_dataset_small/')
+files_in = {
+      'protein groups': Path('runs/example') / 'figures/performance_test.csv',
+      'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
+      'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
+}
 
 # %%
-ORDER_DATA = list(files_in.keys())
 METRIC = 'MAE'
 
 # %%
@@ -64,12 +63,25 @@ df = df.set_index(list(df.columns[:2]))
 df
 
 # %%
+import yaml
+data_levels_annotated = dict()
+for key, fname in files_in.items():
+    fname = fname.parents[1] / 'data_config.yaml'
+    with open(fname) as f:
+        data_config = yaml.safe_load(f)
+    data_levels_annotated[key] = f"{key} \n (N={data_config['N']:,d}, M={data_config['M']:,d})"
+    # print(pd.read_csv(file).mean())
+# data_levels_annotated
+ORDER_DATA = list(data_levels_annotated.values())
+df = df.rename(index=data_levels_annotated)
+
+# %%
 fname = FOLDER / 'best_models_1_test_mpl.pdf'
 metrics = df['metric_value'].unstack('model')
 ORDER_MODELS = metrics.mean().sort_values().index.to_list()
 metrics = metrics.loc[ORDER_DATA, ORDER_MODELS]
 
-plt.rcParams['figure.figsize'] = [4.0, 3.0]
+plt.rcParams['figure.figsize'] = [4.0, 2.0]
 matplotlib.rcParams.update({'font.size': 5})
 
 ax = (metrics
@@ -78,7 +90,9 @@ ax = (metrics
             xlabel='',
             ylabel=f"{METRIC} (log2 intensities)",
             # position=0.1,
-            width=.85))
+            width=.85,
+            fontsize=8
+        ))
 
 ax = vaep.plotting.add_height_to_barplot(ax, size=5)
 ax.legend(fontsize=5, loc='lower right')
