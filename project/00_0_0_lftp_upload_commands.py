@@ -7,24 +7,21 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.14.5
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
 # %% [markdown]
-# # Rawfile Renaming
+# # Rawfile and MaxQuant output folder renaming
 #
 # - generated using `workflows/metadata`
 # - all raw files collected ~50,000
+# - creates lftp upload commands
 
 # %%
-from collections import defaultdict, namedtuple
 from pathlib import Path, PurePosixPath
-
-import numpy as np
 import pandas as pd
-import vaep.pandas
 import yaml
 
 
@@ -47,7 +44,8 @@ def rename(fname, new_sample_id, new_folder=None, ext=None):
 # %% tags=["parameters"]
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv' # Machine parsed metadata from rawfile workflow
 fn_files_selected: str = 'data/samples_selected.yaml' # selected files based on threshold of identified peptides
-out_folder: str = 'data/rename'
+out_folder: str = 'data/rename' # output folder
+fn_server_log: str = 'data/rename/mq_out_server.log' # server log of all uploaded files
 
 # %%
 out_folder = Path(out_folder)
@@ -124,8 +122,6 @@ duplicated_sample_idx
 df_meta['new_sample_id'] =  idx_all
 
 
-df_meta["Path_new"] = df_meta[["Pathname", "new_sample_id", "Instrument_name"]].apply(lambda s: rename(*s), axis=1)
-
 
 _n = df_meta.groupby("new_sample_id").cumcount().astype('string').str.replace('0', '')
 _n[_n != ''] = '_r' + _n[_n != '']
@@ -139,12 +135,9 @@ df_meta.loc[mask, ["Pathname", "new_sample_id"]]
 # %%
 df_meta.loc[~mask, ["Pathname", "new_sample_id"]]
 
-# %%
-df_meta["Path_new"] = df_meta[["Pathname", "new_sample_id"]].apply(lambda s: rename(*s), axis=1)
 
 # %%
 assert df_meta["Pathname"].is_unique
-assert df_meta["Path_new"].is_unique
 assert df_meta["new_sample_id"].is_unique
 
 # %% [markdown]
@@ -153,7 +146,7 @@ assert df_meta["new_sample_id"].is_unique
 # %%
 df_meta["Path_old"] = df_meta["Pathname"]
 
-df_meta[["Path_old", "Path_new", "new_sample_id"]]
+df_meta[["Path_old", "new_sample_id"]]
 
 # %%
 df_meta
@@ -207,15 +200,23 @@ def build_instrument_name(s):
 # %%
 fname = out_folder / 'selected_old_new_id_mapping.csv'
 files_out[fname.name] = fname.as_posix()
-df_meta.loc[selected, ["Path_old", "Path_new", "new_sample_id"]].to_csv(fname)
+df_meta.loc[selected].to_csv(fname)
 fname
 
 # %% [markdown]
 # ### OS rename
 
 # %%
-# df_meta["Path_old"] = df_meta["Pathname"]
-df_meta.loc[selected][["Path_old", "Path_new", "new_sample_id"]]
+df_meta.loc[selected][["Path_old", "new_sample_id"]]
+
+# %%
+(df_meta
+ .loc[selected, "Path_old"]
+ .iloc[:3]
+ .to_csv(out_folder / 'rawfiles_to_checksum.txt',
+          index=False,
+            header=False)
+ )
 
 # %% [markdown]
 # ## Put files on PRIDE FTP server
@@ -300,4 +301,3 @@ print(commands.sample(10).to_csv(header=False, index=False))
 fname = out_folder / 'lftp_commands_mq_output.txt'
 commands.to_csv(fname, header=False, index=False)
 
-# %%
