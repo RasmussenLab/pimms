@@ -148,7 +148,7 @@ def add_height_to_barplot(ax, size=15):
         ax.annotate(text=format(bar.get_height(), '.2f'),
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, 7),
+                    xytext=(0, int(size/2)),
                     ha='center',
                     va='center',
                     size=size,

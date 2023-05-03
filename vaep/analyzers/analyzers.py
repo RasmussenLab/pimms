@@ -469,10 +469,11 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
         5, 1], "wspace": 0.2}, figsize=(10, 4))
     values = pd.Series(corr_lower_triangle.to_numpy().flatten()).dropna()
     ax = axes[0]
-    values.hist(ax=ax, bins=bins)
+    ax = values.hist(ax=ax, bins=bins)
+    ax.yaxis.set_major_formatter("{x:,.0f}")
     ax = axes[1]
     plt.axis('off')
-    data = values.describe().round(2)
+    data = values.describe(percentiles=np.linspace(0.1,1,10)).round(2)
     data.name = ''
     _ = pd.plotting.table(ax=ax, data=data, loc="best", edges="open")
     return fig, axes
