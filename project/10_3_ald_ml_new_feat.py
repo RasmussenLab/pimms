@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -50,13 +50,17 @@ args = dict(globals()).keys()
 folder_data: str = ''  # specify data directory if needed
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
-model_key = 'vae'
+model_key = 'VAE'
 target = 'kleiner'
 sample_id_col = 'Sample ID'
 cutoff_target:int = 2 # => for binarization target >= cutoff_target
-file_format = "pkl"
+file_format = "csv"
 out_folder='diff_analysis'
 fn_qc_samples = 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+
+baseline = 'RSN' # default is RSN, but could be any other trained model
+template_pred = 'pred_real_na_{}.csv' # fixed, do not change
+
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -65,15 +69,21 @@ params
 # %%
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment/params["out_folder"]/params["target"]/params["model_key"])
+args = vaep.nb.add_default_paths(args,
+                                 out_root=(args.folder_experiment
+                                           / params["out_folder"]
+                                           / params["target"]
+                                           / f"{params['baseline']}_vs_{params['model_key']}"))
 args.update_from_dict(params)
 args
 
 # %% [markdown]
 # ## Load target
 
-# %% tags=[]
-target = pd.read_csv(args.fn_clinical_data, index_col=0, usecols=[args.sample_id_col, args.target])
+# %%
+target = pd.read_csv(args.fn_clinical_data,
+                     index_col=0,
+                     usecols=[args.sample_id_col, args.target])
 target = target.dropna()
 target
 
@@ -127,8 +137,7 @@ ald_study
 # ### Load semi-supervised model imputations
 
 # %%
-template = 'pred_real_na_{}.csv'
-fname = args.out_preds / template.format(args.model_key)
+fname = args.out_preds / args.template_pred.format(args.model_key)
 print(f"missing values pred. by {args.model_key}: {fname}")
 pred_real_na = vaep.analyzers.compare_predictions.load_single_csv_pred_file(fname).loc[in_both]
 pred_real_na.sample(3)

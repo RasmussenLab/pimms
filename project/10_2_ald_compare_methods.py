@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.14.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -38,24 +38,29 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
-model_key = 'vae'
+
 target = 'kleiner'
+model_key = 'VAE'
+baseline = 'RSN'
 out_folder = 'diff_analysis'
 
 disease_ontology = 5082  # code from https://disease-ontology.org/
 # split diseases notebook? Query gene names for proteins in file from uniprot?
-f_annotations = None #'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
+f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
-# %% tags=[]
+# %%
 params = vaep.nb.get_params(args, globals=globals())
 params
 
 # %%
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args, out_root=args.folder_experiment /
-                                 params["out_folder"]/params["target"]/params["model_key"])
+args = vaep.nb.add_default_paths(args,
+                                 out_root=(args.folder_experiment
+                                           / params["out_folder"]
+                                           / params["target"]
+                                           / f"{params['baseline']}_vs_{params['model_key']}"))
 args.update_from_dict(params)
 args
 
@@ -87,18 +92,6 @@ writer = pd.ExcelWriter(files_out['diff_analysis_compare_methods.xlsx'])
 # %%
 scores = pd.read_pickle(files_in['diff_analysis_scores.pkl'])
 scores
-
-# %%
-# ToDo: change in library
-names = {'vae': 'VAE', 'random shifted_imputation': 'RSN', 'CF': 'CF', 'dae': 'DAE'}
-
-assert args.model_key in names.keys(
-), f"Missing model key which was expected: {args.model_key}, to be among {', '.join(names.keys())}"
-
-new_model_key = names[args.model_key]
-
-scores = scores.rename(names, axis=1)
-scores.head()
 
 # %%
 models = vaep.nb.Config.from_dict(
@@ -179,6 +172,7 @@ if gene_to_PG is not None:
     gene_idx_diff = gene_to_PG.loc[scores_common.index].squeeze().loc[mask_different]
     _to_write = _to_write.set_index(gene_idx_diff, append=True)    
 _to_write.to_excel(writer, 'differences', **writer_args)
+
 # %%
 var = 'qvalue'
 to_plot = [scores_common[v][var] for k, v in models.items()]
@@ -190,12 +184,12 @@ to_plot = pd.concat(to_plot, axis=1)
 to_plot = to_plot.join(gene_to_PG) if gene_to_PG is not None else to_plot
 to_plot
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # ## Plot of intensities for most extreme example
 
 # %%
 # should it be possible to run not only RSN?
-to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot[new_model_key]).abs()
+to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot[args.model_key]).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 
 # %% [markdown]
@@ -229,7 +223,6 @@ vaep.savefig(fig, name=fname)
 # %%
 fig, ax = plt.subplots(figsize=figsize)
 ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],
-                     palette='Set2',
                      size='frequency', hue='Differential Analysis Comparison')
 ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
@@ -250,7 +243,7 @@ scores_model_only = (scores_model_only
                      .loc[
                          scores_model_only.index.difference(
                              scores_common.index),
-                        new_model_key]
+                        args.model_key]
                      .sort_values(by='qvalue', ascending=True)
                      .join(freq_feat)
                      )
@@ -267,7 +260,7 @@ scores_model_only_rejected = scores_model_only.loc[scores_model_only.rejected]
 scores_model_only_rejected.to_excel(
     writer, 'only_model_rejected', **writer_args)
 
-# %% [markdown] tags=[]
+# %% [markdown]
 # # DISEASES DB lookup
 
 # %%
@@ -326,8 +319,8 @@ disease_assocications_new_rejected.loc[idx].loc[mask]
 # %% [markdown]
 # ## Shared which are only significant for by model
 
-# %% tags=[]
-mask = (scores_common[(new_model_key, 'rejected')] & mask_different)
+# %%
+mask = (scores_common[(args.model_key, 'rejected')] & mask_different)
 mask.sum()
 
 # %%
@@ -343,7 +336,7 @@ disease_assocications_shared_rejected_by_model.loc[idx].loc[mask]
 # %% [markdown]
 # ## Only significant by RSN
 
-# %% tags=[]
+# %%
 mask = (scores_common[('RSN', 'rejected')] & mask_different)
 mask.sum()
 
