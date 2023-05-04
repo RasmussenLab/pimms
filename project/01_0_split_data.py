@@ -357,6 +357,9 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = analysis.df.notna().sum(axis=0).sort_values().plot()
+_new_labels = [l.get_text().split(';')[0] for l in ax.get_xticklabels()]
+_ = ax.set_xticklabels(_new_labels, rotation=45,
+                       horizontalalignment='right')
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
 fname = params.out_figures / 'feature_prevalence'
@@ -377,38 +380,13 @@ figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-missing_by_median = {'median feat value': analysis.df.median(
-), 'prop. missing': analysis.df.isna().mean()}
-missing_by_median = pd.DataFrame(missing_by_median)
-x_col, y_col = missing_by_median.columns
-
-bins = range(*vaep.plotting.data.min_max(missing_by_median['median feat value']), 1)
-
-missing_by_median['bins'] = pd.cut(
-    missing_by_median['median feat value'], bins=bins)
-missing_by_median['median feat value (rounded)'] = missing_by_median['median feat value'].round(decimals=0).astype(int)
-_counts = missing_by_median.groupby('median feat value (rounded)')['median feat value'].count().rename('count')
-missing_by_median = missing_by_median.join(_counts, on='median feat value (rounded)')
-missing_by_median['Intensity binned (based on N feature medians)'] = missing_by_median.iloc[:,-2:].apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
-
-ax = missing_by_median.plot.scatter(x_col, y_col, ylim=(0, 1))
-
-
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(data=analysis.df, type='scatter')
 fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-y_col = 'prop. missing'
-x_col = 'Intensity binned (based on N feature medians)'
-ax = missing_by_median[[x_col, y_col]].plot.box(by=x_col)
-ax = ax[0] # returned series due to by argument?
-_ = ax.set_title('')
-_ = ax.set_ylabel(y_col)
-_ = ax.set_xlabel(x_col)
-_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                       horizontalalignment='right')
-
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(data=analysis.df, type='boxplot')
 fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
@@ -684,3 +662,5 @@ params
 # %%
 # saved figures
 figures
+
+# %%

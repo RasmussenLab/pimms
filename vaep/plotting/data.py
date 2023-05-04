@@ -217,3 +217,64 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
     ax.set_ylabel(None)
     fig.tight_layout()
     return fig
+
+
+def plot_feat_median_over_prop_missing(data: pd.DataFrame,
+                                       type: str = 'scatter',
+                                       s=1) -> matplotlib.axes.Axes:
+    """Plot feature median over proportion missing in that feature.
+    Sorted by feature median into bins."""
+    y_col = 'prop. missing'
+    x_col = 'Feature median intensity binned (based on N feature medians)'
+
+    missing_by_median = {
+        'median feat value': data.median(),
+        y_col: data.isna().mean()}
+    missing_by_median = pd.DataFrame(missing_by_median)
+
+    bins = range(
+        *min_max(missing_by_median['median feat value']), 1)
+
+    missing_by_median['bins'] = pd.cut(
+        missing_by_median['median feat value'], bins=bins)
+    missing_by_median['median feat value (rounded)'] = (missing_by_median['median feat value']
+                                                        .round(decimals=0)
+                                                        .astype(int)
+                                                        )
+    _counts = (missing_by_median
+               .groupby('median feat value (rounded)')['median feat value']
+               .count()
+               .rename('count'))
+    missing_by_median = missing_by_median.join(
+        _counts, on='median feat value (rounded)')
+    missing_by_median = missing_by_median.sort_values(
+        'median feat value (rounded)')
+    missing_by_median[x_col] = (missing_by_median.iloc[:, -2:]
+                                .apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
+                                )
+    if type == 'scatter':
+        ax = missing_by_median.plot.scatter(x_col, y_col,
+                                            ylim=(-.05, 1),
+                                            s=s,)
+        # # for some reason this does not work as it does elswhere:
+        # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45) 
+        # # do it manually:
+        _ = [(l.set_rotation(45), l.set_horizontalalignment('right'))
+             for l in ax.get_xticklabels()]
+    elif type == 'boxplot':
+        ax = missing_by_median[[x_col, y_col]].plot.box(
+            by=x_col,
+            boxprops=dict(linewidth=s),
+            flierprops=dict(markersize=s),
+        )
+        ax = ax[0]  # returned series due to by argument?
+        _ = ax.set_title('')
+        _ = ax.set_ylabel(y_col)
+        _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                               horizontalalignment='right')
+        _ = ax.set_xlabel(x_col)
+        _ = ax.set_ylim(-0.05, 1)
+    else:
+        raise ValueError(
+            f'Unknown plot type: {type}, choose from: scatter, boxplot')
+    return ax

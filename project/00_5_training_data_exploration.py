@@ -76,8 +76,6 @@ elif FN_INTENSITIES.suffix == '.csv':
     data = pd.read_csv(FN_INTENSITIES, INDEX_COL=[0,1], nrows=N_FIRST_ROWS)
 data
 # %%
-
-# %%
 if LONG_FORMAT:
     data = data.unstack()
 data = np.log2(data)
@@ -146,6 +144,19 @@ fname = FIGUREFOLDER / f'dist_all_violin_plot.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
+# %%
+# %%
+ax = plotting.data.plot_feat_median_over_prop_missing(data=data, type='scatter', s=1)
+fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_scatter'
+files_out[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+ax = plotting.data.plot_feat_median_over_prop_missing(data=data, type='boxplot', s=.8)
+fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_boxplot'
+files_out[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
 
 # %%
 records.update(
@@ -188,6 +199,10 @@ ax = cv.hist(bins=30)
 fname = FIGUREFOLDER / f'CV_histogram_features.pdf'
 files_out[fname.name] = fname
 vaep.savefig(ax.get_figure(), name=fname)
+
+
+# %%
+
 
 
 # %% [markdown]
@@ -262,6 +277,7 @@ dynamic_range = None
 if min_max[1] < 100:
     dynamic_range = get_dynamic_range(min_max)
 dynamic_range
+
 
 # %%
 files_out
