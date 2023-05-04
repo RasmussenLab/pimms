@@ -1,6 +1,6 @@
 # %% [markdown]
-# # # Create SDRF file
-# - [example ](https://github.com/bigbio/proteomics-sample-metadata/blob/6f31044f0bcf545ae2da6e853f8ccad011ea4703/annotated-projects/PXD000895/PXD000895.sdrf.tsv)
+# # Create SDRF file
+# - [example](https://github.com/bigbio/proteomics-sample-metadata/blob/6f31044f0bcf545ae2da6e853f8ccad011ea4703/annotated-projects/PXD000895/PXD000895.sdrf.tsv)
 
 # %%
 from pathlib import Path
@@ -27,7 +27,7 @@ sdrf['characteristics[disease]'] = 'adenocarcinoma'
 sdrf['characteristics[cell line]'] = 'HeLa cells'
 sdrf['characteristics[biological replicate]'] = 1
 sdrf['assay name'] = sdrf.index
-sdrf['technology type'] = ''
+sdrf['technology type'] = 'proteomic profiling by mass spectrometer'
 sdrf['comment[technical replicate]'] = range(0, len(sdrf))
 sdrf['comment[data file]'] = sdrf.index + '.raw'
 sdrf['comment[fraction identifier]'] = 1
