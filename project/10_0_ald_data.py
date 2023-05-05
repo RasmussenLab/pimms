@@ -509,6 +509,15 @@ fig = ax.get_figure()
 fig.tight_layout()
 vaep.savefig(fig, name='data_proteinGroups_completness', folder=folder_run)
 
+
+# %% [markdown]
+# Save unfiltered data
+# %%
+fname = folder_data_out / 'ald_plasma_proteinGroups_unfiltered.pkl'
+df.to_pickle(fname)
+fname
+
+
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples
 

@@ -250,11 +250,11 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
     missing_by_median = missing_by_median.sort_values(
         'median feat value (rounded)')
     missing_by_median[x_col] = (missing_by_median.iloc[:, -2:]
-                                .apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
+                                .apply(lambda s: "{:02,d}  (N={:3,d})".format(*s), axis=1)
                                 )
     if type == 'scatter':
         ax = missing_by_median.plot.scatter(x_col, y_col,
-                                            ylim=(-.05, 1),
+                                            ylim=(-.03, 1.03),
                                             s=s,)
         # # for some reason this does not work as it does elswhere:
         # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45) 
@@ -273,7 +273,7 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
         _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                                horizontalalignment='right')
         _ = ax.set_xlabel(x_col)
-        _ = ax.set_ylim(-0.05, 1)
+        _ = ax.set_ylim(-0.03, 1.03)
     else:
         raise ValueError(
             f'Unknown plot type: {type}, choose from: scatter, boxplot')

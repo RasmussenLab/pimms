@@ -13,7 +13,7 @@
 # ---
 
 # %% [markdown]
-# # # Inspect data using plots
+# # Inspect data using plots
 # - spread of intensities between samples
 # - spread of intensities within samples
 # - missing data plots: violin, box and histogram - both for features and samples
@@ -40,30 +40,95 @@ from vaep.pandas import missing_data
 import vaep.data_handling
 from vaep.analyzers import analyzers
 
+logger = vaep.logging.setup_nb_logger()
+
 matplotlib.rcParams.update({'font.size': 5,
                             'figure.figsize': [4.0, 2.0]})
 
 
+def only_every_x_ticks(ax, x=2):
+    """Sparse out ticks on both axis by factor x"""
+    ax.set_xticks(ax.get_xticks()[::x])
+    ax.set_yticks(ax.get_yticks()[::x])
+    return ax
+
+
+def use_first_n_chars_in_labels(ax, x=2):
+    """Take first N characters of labels and use them as new labels"""
+    # xaxis
+    _new_labels = [l.get_text()[:x]
+                   for l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+    # yaxis
+    _new_labels = [l.get_text()[:x] for l in ax.get_yticklabels()]
+    _ = ax.set_yticklabels(_new_labels)
+    return ax
+
+
+def split_xticklabels(ax, PG_SEPARATOR=';'):
+    """Split labels by PG_SEPARATOR and only use first part"""
+    if PG_SEPARATOR is not None:
+        _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
+                       for l in ax.get_xticklabels()]
+        _ = ax.set_xticklabels(_new_labels)
+    return ax
+
+
+def get_clustermap(data):
+    from sklearn.impute import SimpleImputer
+    from vaep.pandas import _add_indices
+    X = SimpleImputer().fit_transform(data)
+    X = _add_indices(X, data)
+    cg = sns.clustermap(X,
+                        z_score=0,
+                        cmap="vlag",
+                        center=0,
+                        cbar_pos=(0.02, 0.83, 0.05, 0.15)
+                        )
+    return cg
+
+
+def get_dynamic_range(min_max):
+    dynamic_range = pd.DataFrame(range(*min_max), columns=['x'])
+    dynamic_range['$2^x$'] = dynamic_range.x.apply(lambda x: 2**x)
+    dynamic_range.set_index('x', inplace=True)
+    dynamic_range.index.name = ''
+    dynamic_range = dynamic_range.T
+    return dynamic_range
+
+
 # %% [markdown]
-# ### Parameters
+# ## Parameters
 
 # %% tags=["parameters"]
-FN_INTENSITIES:str = 'data/dev_datasets/df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070.pkl'
-FOLDER_EXPERIMENT:str = 'runs/data_exploration/dev_datasets/proteins/Q_Exactive_HF_X_Orbitrap_6070'
-N_FIRST_ROWS = None # possibility to select N first rows
-log_transform: bool = True # log transform data
-INDEX_COL: list = [0,1] # list of integers or string denoting the index columns (used for csv)
-LONG_FORMAT: bool = True # if True, the data is expected to be in long format
+FN_INTENSITIES: str = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
+FOLDER_EXPERIMENT: str = 'runs/example/data_inspection'
+N_FIRST_ROWS = None  # possibility to select N first rows
+LOG_TRANSFORM: bool = True  # log transform data
+# list of integers or string denoting the index columns (used for csv)
+INDEX_COL: list = [0]
+LONG_FORMAT: bool = False  # if True, the data is expected to be in long format
 # Threshold used later for data filtering (here only for visualisation)
 COMPLETENESS_OVER_SAMPLES = 0.25  # 25% of samples have to have that features
 MIN_FEAT_PER_SAMPLE = .4  # 40% of features selected in first step
+# protein group separator, e.g.';'  (could also be gene groups)
+PG_SEPARATOR: str = ';'
+SAMPLE_FIRST_N_CHARS: int = 16  # number of characters used for sample names
 
+
+# %% [markdown]
+# ## Load and check data
+#
+# - supported for now: pickle and comma separated
+# - transform long to wide data?
+# - log transform data using logarithm of two?
+# - remove entirely missing columns (features) or rows (samples)
 
 # %%
 FOLDER_EXPERIMENT = Path(FOLDER_EXPERIMENT)
 FN_INTENSITIES = Path(FN_INTENSITIES)
 
-FIGUREFOLDER = FOLDER_EXPERIMENT / 'figures' 
+FIGUREFOLDER = FOLDER_EXPERIMENT / 'figures'
 FIGUREFOLDER.mkdir(exist_ok=True, parents=True)
 FIGUREFOLDER
 
@@ -73,27 +138,31 @@ files_out = dict()
 if FN_INTENSITIES.suffix == '.pkl':
     data = pd.read_pickle(FN_INTENSITIES)
 elif FN_INTENSITIES.suffix == '.csv':
-    data = pd.read_csv(FN_INTENSITIES, INDEX_COL=[0,1], nrows=N_FIRST_ROWS)
+    data = pd.read_csv(FN_INTENSITIES, index_col=INDEX_COL, nrows=N_FIRST_ROWS)
 data
 # %%
 if LONG_FORMAT:
-    data = data.unstack()
-data = np.log2(data)
+    data = data.squeeze().unstack()
+if LOG_TRANSFORM:
+    data = np.log2(data)
+
+# drop entrily missing rows or columns
+data = data.dropna(axis=0, how='all').dropna(axis=1, how='all')
 data
 
 # %%
-records = dict(inital=missing_data.get_record(data))
-records
+if len(data.columns.names) > 1:
+    _levels_dropped = data.columns.names[1:]
+    data.columns = data.columns.droplevel(_levels_dropped)
+    logger.warning("Drop multiindex level, kepp only first. Dropped: "
+                   f"{_levels_dropped}")
+
+# %% [markdown]
+# ## Calculate cutoffs for visualization and stats
 
 # %% [markdown]
 # - filtering based on many other samples?
 # - low feature completeness threshold in comparison to other approaches
-
-# %%
-# maybe would be good to throw some terrible samples away (hard minimum treshold)
-# won't change a lot, but get rid of dummy samples
-# mask = data.notna().sum(axis=1) > 200
-# mask.sum()
 
 # %%
 min_samples_per_feat = int(len(data) * COMPLETENESS_OVER_SAMPLES)
@@ -111,52 +180,12 @@ print(f"drop = {(~samples_selected).sum()} samples")
 selected = selected[samples_selected]
 selected.shape
 
-# %%
-fig = plotting.data.plot_missing_dist_highdim(data,
-                                min_feat_per_sample=min_feat_per_sample,
-                                min_samples_per_feat=min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_lineplot.pdf'
-files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
-
-
-# %%
-fig = plotting.data.plot_missing_pattern_histogram(data,
-                               min_feat_per_sample=min_feat_per_sample,
-                               min_samples_per_feat=min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_histogram.pdf'
-files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
-
 # %% [markdown]
-# Boxplots
+# ### Update records if cutoffs would be used
 
 # %%
-fig = plotting.data.plot_missing_dist_boxplots(data)
-fname = FIGUREFOLDER / f'dist_all_boxplots.pdf'
-files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
-
-# %%
-fig = plotting.data.plot_missing_pattern_violinplot(
-    data, min_feat_per_sample, min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_violin_plot.pdf'
-files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
-
-# %%
-# %%
-ax = plotting.data.plot_feat_median_over_prop_missing(data=data, type='scatter', s=1)
-fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_scatter'
-files_out[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
-
-# %%
-ax = plotting.data.plot_feat_median_over_prop_missing(data=data, type='boxplot', s=.8)
-fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_boxplot'
-files_out[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
-
+records = dict(inital=missing_data.get_record(data))
+records
 
 # %%
 records.update(
@@ -178,6 +207,64 @@ with open(fname, 'w') as f:
 
 
 # %% [markdown]
+# ## Plot basic distribution present-absent pattern of features and samples
+#
+# ### Line plots
+
+# %%
+fig = plotting.data.plot_missing_dist_highdim(data,
+                                              min_feat_per_sample=min_feat_per_sample,
+                                              min_samples_per_feat=min_samples_per_feat)
+fname = FIGUREFOLDER / f'dist_all_lineplot.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
+
+
+# %%
+fig = plotting.data.plot_missing_pattern_histogram(data,
+                                                   min_feat_per_sample=min_feat_per_sample,
+                                                   min_samples_per_feat=min_samples_per_feat)
+fname = FIGUREFOLDER / f'dist_all_histogram.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
+
+# %% [markdown]
+# ### Boxplots
+
+# %%
+fig = plotting.data.plot_missing_dist_boxplots(data)
+fname = FIGUREFOLDER / f'dist_all_boxplots.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
+
+# %% [markdown]
+# ### Violinplots
+
+# %%
+fig = plotting.data.plot_missing_pattern_violinplot(
+    data, min_feat_per_sample, min_samples_per_feat)
+fname = FIGUREFOLDER / f'dist_all_violin_plot.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
+
+# %% [markdown]
+# ## Feature medians over prop. of missing of feature
+# %%
+ax = plotting.data.plot_feat_median_over_prop_missing(
+    data=data, type='scatter', s=1)
+fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_scatter'
+files_out[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+ax = plotting.data.plot_feat_median_over_prop_missing(
+    data=data, type='boxplot', s=.8)
+fname = FIGUREFOLDER / 'intensity_median_vs_prop_missing_boxplot'
+files_out[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+
+# %% [markdown]
 # ## Correlation between peptides
 # - linear correlation as indicator that there is some variation which could be used by models (or other heuristics)
 
@@ -188,6 +275,7 @@ fig, axes = analyzers.plot_corr_histogram(corr_lower_triangle, bins=40)
 fname = FIGUREFOLDER / f'corr_histogram_feat.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
+
 
 # %% [markdown]
 # ### Coefficient of variation (CV) of features
@@ -200,21 +288,97 @@ fname = FIGUREFOLDER / f'CV_histogram_features.pdf'
 files_out[fname.name] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
-
-# %%
-
-
-
 # %% [markdown]
 # ## Clustermap and heatmaps of missing values
 
 # %%
-# USE_CBAR = False
+cg = sns.clustermap(data.notna(), cbar_pos=None)
+ax = cg.ax_heatmap
+if PG_SEPARATOR is not None:
+    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
+                   for l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+fname = FIGUREFOLDER / 'clustermap_present_absent_pattern.png'
+files_out[fname.name] = fname
+vaep.savefig(cg.fig,
+             name=fname,
+             pdf=False)
 
-# axes_heatmap_missing = sns.heatmap(data_to_visualize,
-#                                    ax=axes_heatmap_missing,
-#                                    cbar = USE_CBAR,
-#                                   )
+# %% [markdown]
+# based on cluster, plot heatmaps of features and samples
+
+# %%
+assert (len(cg.dendrogram_row.reordered_ind), len(
+    cg.dendrogram_col.reordered_ind)) == data.shape
+
+# %%
+vaep.plotting.make_large_descriptors(5)
+ax = sns.heatmap(
+    data.iloc[cg.dendrogram_row.reordered_ind,
+              cg.dendrogram_col.reordered_ind],
+    #    cbar = USE_CBAR,
+)
+only_every_x_ticks(ax, x=2)
+use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+if PG_SEPARATOR is not None:
+    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
+                   for l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+fname = FIGUREFOLDER / 'heatmap_intensities_ordered_by_missing_pattern.png'
+files_out[fname.name] = fname
+vaep.savefig(ax.get_figure(), name=fname, pdf=False)
+# ax.get_figure().savefig(fname, dpi=300)
+
+# %% [markdown]
+# ### Heatmap of sample and feature correlation
+
+# %%
+fig, ax = plt.subplots(figsize=(4, 4))
+ax = sns.heatmap(
+    analyzers.corr_lower_triangle(
+        data.iloc[:, cg.dendrogram_col.reordered_ind]),
+    ax=ax,
+    square=True,
+)
+_ = only_every_x_ticks(ax, x=2)
+_ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+if PG_SEPARATOR is not None:
+    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
+                   for l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+fname = FIGUREFOLDER / 'heatmap_feature_correlation.png'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname, pdf=False)
+
+# %%
+fig, ax = plt.subplots(figsize=(4, 4))
+ax = sns.heatmap(
+    analyzers.corr_lower_triangle(
+        data.T.iloc[:, cg.dendrogram_row.reordered_ind]),
+    ax=ax,
+    square=True,
+)
+_ = only_every_x_ticks(ax, x=2)
+_ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+fname = FIGUREFOLDER / 'heatmap_sample_correlation.png'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname, pdf=False)
+
+# %%
+cg = get_clustermap(data)
+ax = cg.ax_heatmap
+if PG_SEPARATOR is not None:
+    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
+                   for l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+
+fname = FIGUREFOLDER / 'clustermap_intensities_normalized.png'
+files_out[fname.name] = fname
+cg.fig.savefig(fname, dpi=300)  # avoid tight_layout
+# tight_layout makes the cbar a bit ugly
+# vaep.savefig(cg.fig,
+#              name=fname,
+#              pdf=False)
 
 # %% [markdown]
 # ## Sample stats
@@ -224,8 +388,8 @@ TYPE = 'feat'
 COL_NO_MISSING, COL_NO_IDENTIFIED = f'no_missing_{TYPE}', f'no_identified_{TYPE}'
 COL_PROP_SAMPLES = 'prop_samples'
 
-
-sample_stats = vaep.data_handling.compute_stats_missing(data.notna(), COL_NO_MISSING, COL_NO_IDENTIFIED )
+sample_stats = vaep.data_handling.compute_stats_missing(
+    data.notna(), COL_NO_MISSING, COL_NO_IDENTIFIED)
 sample_stats
 
 # %%
@@ -252,6 +416,7 @@ sample_stats[COL_NO_MISSING_PROP] = sample_stats[COL_NO_MISSING] / \
 sns.set(style="white")
 g = sns.relplot(x='prop_samples', y=COL_NO_MISSING_PROP, data=sample_stats)
 plt.subplots_adjust(top=0.9)
+plt.ylim(0, 1)
 g.set_axis_labels(
     "Proportion of samples (sorted by frequency)", "proportion missing")
 g.fig.suptitle(f'Proportion of missing {TYPE} ordered')
@@ -264,14 +429,6 @@ vaep.savefig(g, fname)
 # ### Reference table intensities (log2)
 
 # %%
-def get_dynamic_range(min_max):
-    dynamic_range = pd.DataFrame(range(*min_max), columns=['x'])
-    dynamic_range['$2^x$'] = dynamic_range.x.apply(lambda x: 2**x)
-    dynamic_range.set_index('x', inplace=True)
-    dynamic_range.index.name = ''
-    dynamic_range = dynamic_range.T
-    return dynamic_range
-
 min_max = int(data.min().min()), int(data.max().max()) + 1
 dynamic_range = None
 if min_max[1] < 100:
