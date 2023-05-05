@@ -104,7 +104,7 @@ data['size_gb'] = data['bytes'] / 1024 ** 3
 data
 
 # %%
-fname = 'processed/all_raw_file_sizes.csv'
+fname = 'data/processed/all_raw_file_sizes.csv'
 data.to_csv(fname)
 
 # %% [markdown]

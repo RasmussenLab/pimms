@@ -149,7 +149,6 @@ f"based on  a minimum of {w_ions_range.value} peptides.")
 idx_selected = MS_spectra.loc[mask].index
 MS_spectra.loc[idx_selected]
 
-
 # %% [markdown]
 # ### Select Date Range
 #

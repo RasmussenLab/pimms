@@ -37,14 +37,11 @@ import vaep
 
 import config
 
+
 # %%
-from typing import List
-def select_files_by_parent_folder(fpaths:List, years:List):
-    selected = []
-    for year_folder in years:
-        # several passes, but not a bottle neck
-        selected += [dump for dump in fpaths if year_folder in dump.parent.stem]
-    return selected
+def join_as_str(seq):
+    ret = "_".join(str(x) for x in seq)
+    return ret
 
 
 # %% [markdown]
@@ -53,7 +50,6 @@ def select_files_by_parent_folder(fpaths:List, years:List):
 # %% [tag=parameters]
 RANDOM_SEED: int = 42  # Random seed for reproducibility
 FEAT_COMPLETNESS_CUTOFF = 0.25 # Minimal proportion of samples which have to share a feature
-YEARS = ['2017','2018', '2019', '2020']
 SAMPLE_COL = 'Sample ID'
 OUT_FOLDER = 'data/selected/'
 FN_ID_OLD_NEW: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
@@ -130,7 +126,9 @@ mask = counts['counts'] >= treshold_counts
 counts.loc[mask]
 
 # %%
-IDX_selected = counts.loc[mask].set_index('Sequence').index
+IDX_selected = counts.loc[mask].set_index(cfg.IDX_COLS_LONG[1:]).index
+if len(cfg.IDX_COLS_LONG[1:]) > 1:
+    IDX_selected = IDX_selected.map(join_as_str)
 IDX_selected
 
 # %% [markdown]
@@ -140,30 +138,28 @@ IDX_selected
 selected_dumps = df_ids["Sample ID"]
 selected_dumps = {k: counter.dumps[k] for k in selected_dumps}
 selected_dumps = list(selected_dumps.items())
+print(f"Selected # {len(selected_dumps):,d} dumps.")
 selected_dumps[:10]
 
-# %% [markdown]
-# potentially select meta data
-
-# %%
-# selected_dumps = select_files_by_parent_folder(list(counter.dumps.values()), years=YEARS)
-# print("Total number of files:", len(selected_dumps))
-# selected_dumps[-10:]
 
 # %% [markdown]
 # ## Collect in parallel
 
 # %%
-# def load_fct(path):
-#     s = (
-#     pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
-#     .notna()
-#     .squeeze()
-#     .astype(pd.Int8Dtype())
-#     )
-#     return s
+def load_fct(path):
+    s = (
+    pd.read_csv(path, index_col=cfg.IDX_COLS_LONG[1:], usecols=[*cfg.IDX_COLS_LONG[1:], "Intensity"])
+    .squeeze()
+    .astype(pd.Int64Dtype())
+    )
+    if len(cfg.IDX_COLS_LONG[1:]) > 1:
+        s.index = s.index.map(join_as_str)
+        
+    return s
+load_fct(selected_dumps[0][-1])
 
 
+# %%
 def collect(folders, index, load_fct):
     current = multiprocessing.current_process()
     i = current._identity[0] % N_WORKERS + 1
@@ -193,14 +189,6 @@ def collect(folders, index, load_fct):
 # ## Collect intensities in parallel
 
 # %%
-def load_fct(path):
-    s = (
-    pd.read_csv(path, index_col="Sequence", usecols=["Sequence", "Intensity"])
-    .squeeze()
-    .astype(pd.Int64Dtype())
-    )
-    return s
-
 all = None # free memory
 
 collect_intensities = partial(collect, index=IDX_selected, load_fct=load_fct)
@@ -223,6 +211,11 @@ all
 all.memory_usage(deep=True).sum() / (2**20)
 
 # %%
+# all = pd.read_pickle('data/selected/proteinGroups/intensities_wide_selected_N00100_M07444.pkl')
+all = all.rename(df_ids.set_index("Sample ID")['new_sample_id'], axis=1)
+all.head()
+
+# %%
 # %%time
 fname = out_folder / config.insert_shape(all,  'intensities_wide_selected{}.pkl') 
 all.to_pickle(fname)
@@ -235,12 +228,4 @@ all.to_csv(fname.with_suffix('.csv'), chunksize=1_000)
 # %% [markdown]
 # Samples as rows, feature columns as columns
 #
-# - can fail due to memory
-
-# %%
-# all = all.T # 
-
-# %%
-# # %%time
-# fname = out_folder / config.insert_shape(all,  template='intensities_wide_selected{}.pkl', shape=(N, M)) 
-# all.to_pickle(fname)
+# - can fail due to memory -> next notebook

@@ -255,7 +255,6 @@ mq_output.peptides.Intensity # as is in peptides.txt, comma seperated thousands
 #             out_folder=FOLDER_PEP_PER_GENE, mq_output_object=mq_output, fasta_db=data_fasta)
 #         completeness_per_gene = peptide_extractor()
 
-
 # %% [markdown] Collapsed="false"
 # ## Theoretial Peptides from used fasta-file
 #

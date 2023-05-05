@@ -27,8 +27,14 @@ import config
 # Paramters
 
 # %%
-out_folder = Path('data/selected/peptides') 
-fname = out_folder / 'intensities_wide_selected_N42881_M07441.pkl'
+# out_folder = Path('data/selected/proteinGroups') 
+# fname = out_folder / 'intensities_wide_selected_N04550_M07444.pkl'
+
+# out_folder = Path('data/selected/peptides') 
+# fname = out_folder / 'intensities_wide_selected_N42881_M07441.pkl'
+
+out_folder = Path('data/selected/evidence') 
+fname = out_folder / 'intensities_wide_selected_N49560_M07444.pkl'
 
 
 # %%
@@ -75,6 +81,7 @@ count_samples.to_json(fname)
 vaep.plotting.make_large_descriptors(size='medium')
 
 ax = count_samples.sort_values().plot(rot=90, ylabel='observations')
+ax.yaxis.set_major_formatter("{x:,.0f}")
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
@@ -99,7 +106,8 @@ count_features = df.notna().sum()
 fname = out_folder / 'count_feat.json'
 count_features.to_json(fname)
 
-ax = count_features.sort_values().plot(rot=90, ylabel='observations') 
+ax = count_features.sort_values().plot(rot=90, ylabel='observations')
+ax.yaxis.set_major_formatter("{x:,.0f}")
 vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
