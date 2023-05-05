@@ -43,6 +43,7 @@ def rename(fname, new_sample_id, new_folder=None, ext=None):
 
 # %% tags=["parameters"]
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv' # Machine parsed metadata from rawfile workflow
+fn_mq_summaries: str = 'data/samples_selected_summaries.csv' # MaxQuant summary files
 fn_files_selected: str = 'data/samples_selected.yaml' # selected files based on threshold of identified peptides
 out_folder: str = 'data/rename' # output folder
 fn_server_log: str = 'data/rename/mq_out_server.log' # server log of all uploaded files
@@ -219,7 +220,16 @@ df_meta.loc[selected][["Path_old", "new_sample_id"]]
  )
 
 # %% [markdown]
-# ## Put files on PRIDE FTP server
+# Save summaries for selected files
+
+# %%
+df_summaries = pd.read_csv(fn_mq_summaries, index_col=0)
+df_summaries = df_summaries.loc[selected].rename(df_meta.loc[selected, 'new_sample_id'])
+df_summaries.to_csv(out_folder / 'mq_summaries.csv')
+del df_summaries
+
+# %% [markdown]
+# ## Put files on PRgIDE FTP server
 #
 # rename using `new_sample_id`
 
