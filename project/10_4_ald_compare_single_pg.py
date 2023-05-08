@@ -48,13 +48,9 @@ sample_id_col = 'Sample ID'
 target = 'kleiner'
 cutoff_target: int = 2  # => for binarization target >= cutoff_target
 out_folder = 'diff_analysis'
-file_format = 'pkl'
+file_format = 'csv'
 baseline = 'RSN' # default is RSN, but could be any other trained model
 template_pred = 'pred_real_na_{}.csv' # fixed, do not change
-
-
-# %%
-folder_experiment = 'runs/appl_ald_data_old/plasma/proteinGroups'
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -68,6 +64,11 @@ args = vaep.nb.add_default_paths(args,
                                            / params["out_folder"]
                                            / params["target"]
                                            / f"{params['baseline']}_vs_{params['model_key']}"))
+args.folder_scores = (args.folder_experiment
+                      / 'scores'
+                      / params["out_folder"]
+                      / params["target"]
+                      )
 args.update_from_dict(params)
 args
 
@@ -156,6 +157,9 @@ feat_observed = data[pg_selected].dropna()
 
 # %%
 # axes = axes.ravel()
+# args.out_folder.parent / 'intensity_plots'
+# each feature -> one plot?
+# plot all which are at least for one method significant?
 folder = args.out_folder / 'intensities_for_diff_in_DA_decision'
 folder.mkdir(parents=True, exist_ok=True)
 

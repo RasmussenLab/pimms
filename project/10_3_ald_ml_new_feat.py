@@ -15,19 +15,23 @@
 # %% [markdown]
 # # Compare outcomes from differential analysis based on different imputation methods
 #
-# - load scores based on `16_ald_diff_analysis`
+# - load scores based on `10_1_ald_diff_analysis.ipynb`
+# - compare performance for set of features included in original Study
+#   to the set of features included in Niu. et. al 2022
+#   (by lowering the threshold for feature completeness))
+# - RSN should be set as baseline if Niu et. al 2022 data is used
+#
+# This notebook could be adapted to compare
+# 1. different set of features which were classified "significant" (is there signal)?
 
 # %%
 from pathlib import Path
-
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 import sklearn
 
 import vaep
 import vaep.analyzers
-import vaep.imputation
 import vaep.io.datasplits
 
 
@@ -53,13 +57,13 @@ folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 model_key = 'VAE'
 target = 'kleiner'
 sample_id_col = 'Sample ID'
-cutoff_target:int = 2 # => for binarization target >= cutoff_target
+cutoff_target: int = 2  # => for binarization target >= cutoff_target
 file_format = "csv"
-out_folder='diff_analysis'
-fn_qc_samples = 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+out_folder = 'diff_analysis'
+fn_qc_samples = '' #'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 
-baseline = 'RSN' # default is RSN, but could be any other trained model
-template_pred = 'pred_real_na_{}.csv' # fixed, do not change
+baseline = 'RSN'  # default is RSN, as this was used in the original ALD Niu. et. al 2022
+template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
 
 # %%
@@ -76,6 +80,9 @@ args = vaep.nb.add_default_paths(args,
                                            / f"{params['baseline']}_vs_{params['model_key']}"))
 args.update_from_dict(params)
 args
+
+# %%
+files_out = dict()
 
 # %% [markdown]
 # ## Load target
@@ -99,12 +106,6 @@ data.sample(5)
 # %% [markdown]
 # Get overlap between independent features and target
 
-# %%
-in_both = data.index.levels[0].intersection(target.index)
-assert not in_both.empty, f"No shared indices: {data.index.levels[0]} and {target.index}"
-print(f"Samples available both in proteomics data and for target: {len(in_both)}")
-target, data = target.loc[in_both], data.loc[in_both]
-
 # %% [markdown]
 # ### Load ALD data or create
 
@@ -122,16 +123,24 @@ if args.fn_qc_samples:
     qc_samples = qc_samples[ald_study.columns]
     qc_cv_feat = qc_samples.std() / qc_samples.mean()
     qc_cv_feat = qc_cv_feat.rename(qc_samples.columns.name)
-    fig, ax = plt.subplots(figsize=(4,7))
+    fig, ax = plt.subplots(figsize=(4, 7))
     ax = qc_cv_feat.plot.box(ax=ax)
     ax.set_ylabel('Coefficient of Variation')
     print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
     ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples)]
 
-column_name_first_prot_to_pg = {pg.split(';')[0]: pg for pg in data.unstack().columns}
+column_name_first_prot_to_pg = {
+    pg.split(';')[0]: pg for pg in data.unstack().columns}
 
 ald_study = ald_study.rename(columns=column_name_first_prot_to_pg)
 ald_study
+
+# %%
+mask_has_target = data.index.levels[0].intersection(target.index)
+assert not mask_has_target.empty, f"No data for target: {data.index.levels[0]} and {target.index}"
+print(
+    f"Samples available both in proteomics data and for target: {len(mask_has_target)}")
+target, data, ald_study = target.loc[mask_has_target], data.loc[mask_has_target], ald_study.loc[mask_has_target]
 
 # %% [markdown]
 # ### Load semi-supervised model imputations
@@ -139,22 +148,23 @@ ald_study
 # %%
 fname = args.out_preds / args.template_pred.format(args.model_key)
 print(f"missing values pred. by {args.model_key}: {fname}")
-pred_real_na = vaep.analyzers.compare_predictions.load_single_csv_pred_file(fname).loc[in_both]
+load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_pred_file
+pred_real_na = load_single_csv_pred_file(fname).loc[mask_has_target]
 pred_real_na.sample(3)
 
 # %%
-pred_real_na_imputed_normal = vaep.imputation.impute_shifted_normal(ald_study)
-pred_real_na_imputed_normal
+fname = args.out_preds / args.template_pred.format(args.baseline)
+pred_real_na_baseline = load_single_csv_pred_file(fname) #.loc[mask_has_target]
+pred_real_na_baseline
 
 # %% [markdown]
 # # Model predictions
-#
 # General approach:
 #   - use one train, test split of the data
 #   - select best 10 features from training data `X_train`, `y_train` before binarization of target
 #   - dichotomize (binarize) data into to groups (zero and 1)
 #   - evaluate model on the test data `X_test`, `y_test`
-#  
+#
 # Repeat general approach for
 #  1. all original ald data: all features justed in original ALD study
 #  2. all model data: all features available my using the self supervised deep learning model
@@ -165,7 +175,8 @@ X = pd.concat([data, pred_real_na]).unstack()
 X
 
 # %%
-ald_study = pd.concat([ald_study.stack(), pred_real_na_imputed_normal]).unstack()
+# could be just observed, drop columns with missing values
+ald_study = pd.concat([ald_study.stack(), pred_real_na_baseline]).unstack()
 ald_study
 
 # %%
@@ -192,7 +203,7 @@ cv_feat_ald
 
 # %%
 cv_feat_all = vaep.sklearn.find_n_best_features(X=X, y=target, name=args.target,
-                                               groups=target_to_group)
+                                                groups=target_to_group)
 cv_feat_all = cv_feat_all.groupby('n_features').agg(['mean', 'std'])
 cv_feat_all
 
@@ -204,9 +215,12 @@ cv_feat_new = cv_feat_new.groupby('n_features').agg(['mean', 'std'])
 cv_feat_new
 
 # %%
-n_feat_best = pd.DataFrame({'ald': cv_feat_ald.loc[:, pd.IndexSlice[:,'mean']].idxmax(),
- 'all': cv_feat_all.loc[:, pd.IndexSlice[:,'mean']].idxmax(),
- 'new': cv_feat_new.loc[:, pd.IndexSlice[:,'mean']].idxmax()}).droplevel(-1)
+n_feat_best = pd.DataFrame(
+    {'ald': cv_feat_ald.loc[:, pd.IndexSlice[:, 'mean']].idxmax(),
+     'all': cv_feat_all.loc[:, pd.IndexSlice[:, 'mean']].idxmax(),
+     'new': cv_feat_new.loc[:, pd.IndexSlice[:, 'mean']].idxmax()
+     }
+).droplevel(-1)
 n_feat_best
 
 # %% [markdown]
@@ -214,24 +228,35 @@ n_feat_best
 
 # %%
 X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
-    X, target, test_size=.2,
-    stratify=target_to_group, random_state=42)
+    X,
+    target,
+    test_size=.2,
+    stratify=target_to_group,
+    random_state=42)
 idx_train = X_train.index
 idx_test = X_test.index
 
 # %%
-vaep.pandas.combine_value_counts(pd.concat([y_train, y_test], axis=1, ignore_index=True
-                                           ).rename(columns={0: 'train', 1: 'test'})
-                                 )
+vaep.pandas.combine_value_counts(
+    pd.concat([y_train, y_test],
+              axis=1,
+              ignore_index=True,
+              )
+    .rename(columns={0: 'train', 1: 'test'})
+)
 
 # %%
 # y_train = y_train >= args.cutoff_target
 # y_test = y_test >= args.cutoff_target
 
 # %%
-vaep.pandas.combine_value_counts(pd.concat([y_train, y_test], axis=1, ignore_index=True
-                                           ).rename(columns={0: 'train', 1: 'test'})
-                                 )
+vaep.pandas.combine_value_counts(
+    pd.concat([y_train, y_test],
+              axis=1,
+              ignore_index=True
+              )
+    .rename(columns={0: 'train', 1: 'test'})
+)
 
 # %%
 y_train.value_counts()
@@ -243,72 +268,124 @@ y_train.value_counts()
 # - add mrmr selection of data (select best number of features to use instead of fixing it)
 
 # %%
-splits = Splits(X_train=X.loc[idx_train], X_test=X.loc[idx_test], y_train=y_train, y_test=y_test)
-results_model_full = vaep.sklearn.run_model(splits, n_feat_to_select=n_feat_best.loc['test_roc_auc', 'all'])
+splits = Splits(X_train=X.loc[idx_train],
+                X_test=X.loc[idx_test],
+                y_train=y_train,
+                y_test=y_test)
+results_model_full = vaep.sklearn.run_model(
+    splits,
+    n_feat_to_select=n_feat_best.loc['test_roc_auc', 'all'])
 results_model_full.name = f'{args.model_key} all'
+fname = args.out_folder / f'results_{results_model_full.name}.pkl'
+files_out[fname.name] = fname
+results_model_full.to_pickle(fname)
+
 
 # %%
-splits = Splits(X_train=X.loc[idx_train, new_features], X_test=X.loc[idx_test, new_features], y_train=y_train, y_test=y_test)
-results_model_new = vaep.sklearn.run_model(splits,  n_feat_to_select=n_feat_best.loc['test_roc_auc', 'new'])
+# all(results_model_full.test.roc.tpr
+#     ==
+#     vaep.sklearn.Results.from_pickle(fname).test.roc.tpr)
+
+# %%
+splits = Splits(X_train=X.loc[idx_train, new_features],
+                X_test=X.loc[idx_test, new_features],
+                y_train=y_train,
+                y_test=y_test)
+results_model_new = vaep.sklearn.run_model(
+    splits,
+    n_feat_to_select=n_feat_best.loc['test_roc_auc', 'new'])
 results_model_new.name = f'{args.model_key} new'
+fname = args.out_folder / f'results_{results_model_new.name}.pkl'
+files_out[fname.name] = fname
+results_model_new.to_pickle(fname)
 
 # %%
-splits_ald = Splits(X_train=ald_study.loc[idx_train], X_test=ald_study.loc[idx_test], y_train=y_train, y_test=y_test)
-results_ald_full = vaep.sklearn.run_model(splits_ald,  n_feat_to_select=n_feat_best.loc['test_roc_auc', 'ald'])
+splits_ald = Splits(
+    X_train=ald_study.loc[idx_train],
+    X_test=ald_study.loc[idx_test],
+    y_train=y_train,
+    y_test=y_test)
+results_ald_full = vaep.sklearn.run_model(
+    splits_ald,
+    n_feat_to_select=n_feat_best.loc['test_roc_auc', 'ald'])
 results_ald_full.name = 'ALD study all'
+fname = args.out_folder / f'results_{results_ald_full.name}.pkl'
+files_out[fname.name] = fname
+results_ald_full.to_pickle(fname)
 
 # %% [markdown]
 # ### ROC-AUC
 
 # %%
-figsize=(8,8)
-fig, ax = plt.subplots(1,1, figsize=figsize)
+figsize = (8, 8)
+fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.test, results_ald_full.name, ax)
 plot_split_auc(results_model_full.test, results_model_full.name, ax)
 plot_split_auc(results_model_new.test, results_model_new.name, ax)
-vaep.savefig(fig, name='auc_roc_curve', folder=args.out_folder)
+fname = args.out_folder / 'auc_roc_curve.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # ### Features selected
 
 # %%
-selected_features = pd.DataFrame([results_ald_full.selected_features, results_model_full.selected_features, results_model_new.selected_features], index=[results_ald_full.name, results_model_full.name, results_model_new.name]).T
+selected_features = pd.DataFrame(
+    [results_ald_full.selected_features,
+     results_model_full.selected_features,
+     results_model_new.selected_features],
+    index=[
+        results_ald_full.name,
+        results_model_full.name,
+        results_model_new.name]
+).T
 selected_features.index.name = 'rank'
-selected_features.to_excel(args.out_folder / 'mrmr_feat_by_model.xlsx')
+fname = args.out_folder / 'mrmr_feat_by_model.xlsx'
+files_out[fname.name] = fname
+selected_features.to_excel(fname)
 selected_features
 
 # %% [markdown]
 # ### Precision-Recall plot
 
 # %%
-fig, ax = plt.subplots(1,1, figsize=figsize)
+fig, ax = plt.subplots(1, 1, figsize=figsize)
 
 ax = plot_split_prc(results_ald_full.test, results_ald_full.name, ax)
 ax = plot_split_prc(results_model_full.test, results_model_full.name, ax)
 ax = plot_split_prc(results_model_new.test, results_model_new.name, ax)
-vaep.savefig(fig, name='prec_recall_curve', folder=args.out_folder)
+fname = folder = args.out_folder / 'prec_recall_curve.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # ## Train data plots
 
 # %%
-fig, ax = plt.subplots(1,1, figsize=figsize)
+fig, ax = plt.subplots(1, 1, figsize=figsize)
 
 ax = plot_split_prc(results_ald_full.train, results_ald_full.name, ax)
 ax = plot_split_prc(results_model_full.train, results_model_full.name, ax)
 ax = plot_split_prc(results_model_new.train, results_model_new.name, ax)
-vaep.savefig(fig, name='prec_recall_curve_train', folder=args.out_folder)
+fname = folder = args.out_folder / 'prec_recall_curve_train.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %%
-figsize=(10,7)
-fig, ax = plt.subplots(1,1, figsize=figsize)
+figsize = (10, 7)
+fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.train, results_ald_full.name, ax)
 plot_split_auc(results_model_full.train, results_model_full.name, ax)
 plot_split_auc(results_model_new.train, results_model_new.name, ax)
-vaep.savefig(fig, name='auc_roc_curve_train', folder=args.out_folder)
+fname = folder = args.out_folder / 'auc_roc_curve_train.pdf'
+files_out[fname.name] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # Options:
-# - F1 results for test data for best cutoff on training data? 
+# - F1 results for test data for best cutoff on training data?
 #   (select best cutoff of training data, evaluate on test data)
 # - plot X_train PCA/UMAP, map X_test
+
+# %%
+files_out

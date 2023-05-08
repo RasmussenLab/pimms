@@ -49,6 +49,7 @@ disease_ontology = 5082  # code from https://disease-ontology.org/
 f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
+
 # %%
 params = vaep.nb.get_params(args, globals=globals())
 params
@@ -57,17 +58,22 @@ params
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args,
-                                 out_root=(args.folder_experiment
-                                           / params["out_folder"]
-                                           / params["target"]
-                                           / f"{params['baseline']}_vs_{params['model_key']}"))
+                                 out_root=(
+                                     args.folder_experiment
+                                     / params["out_folder"]
+                                     / params["target"]
+                                     / f"{params['baseline']}_vs_{params['model_key']}"))
 args.update_from_dict(params)
+args.scores_folder = scores_folder = (args.folder_experiment
+                                      / params["out_folder"]
+                                      / params["target"]
+                                      / 'scores')
 args
 
 # %%
-files_in = {'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
-            'diff_analysis_scores.pkl': args.out_folder / f'diff_analysis_scores.pkl',
-            'f_annotations_gene_to_pg': args.f_annotations}
+files_in = {
+    'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
+    'f_annotations_gene_to_pg': args.f_annotations}
 files_in
 
 # %% [markdown]
@@ -79,18 +85,29 @@ files_out = dict()
 # %%
 writer_args = dict(float_format='%.3f')
 
-files_out['diff_analysis_compare_methods.xlsx'] = (args.out_folder /
-                                                   f'diff_analysis_compare_methods.xlsx')
+files_out['diff_analysis_compare_methods.xlsx'] = (
+    args.out_folder /
+    'diff_analysis_compare_methods.xlsx')
 writer = pd.ExcelWriter(files_out['diff_analysis_compare_methods.xlsx'])
 
 # %% [markdown]
 # # Load scores 
 
 # %%
-[x for x in args.out_folder.iterdir() if 'scores' in str(x)]
+[x for x in args.scores_folder.iterdir() if 'scores' in str(x)]
 
 # %%
-scores = pd.read_pickle(files_in['diff_analysis_scores.pkl'])
+fname =args.scores_folder / f'diff_analysis_scores_{args.baseline}.pkl'
+scores_baseline = pd.read_pickle(fname)
+scores_baseline
+
+# %%
+fname = args.scores_folder / f'diff_analysis_scores_{args.model_key}.pkl'
+scores_model = pd.read_pickle(fname)
+scores_model
+
+# %%
+scores = scores_model.join(scores_baseline, how='outer')
 scores
 
 # %%
@@ -178,7 +195,7 @@ var = 'qvalue'
 to_plot = [scores_common[v][var] for k, v in models.items()]
 for s, k in zip(to_plot, models.keys()):
     s.name = k.replace('_', ' ')
-to_plot.append(freq_feat.loc[scores_common.index])
+to_plot.append(scores_common[list(models.keys())[0]]['N'].rename('frequency'))
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
 to_plot = to_plot.join(gene_to_PG) if gene_to_PG is not None else to_plot
@@ -189,7 +206,7 @@ to_plot
 
 # %%
 # should it be possible to run not only RSN?
-to_plot['diff_qvalue']  = (to_plot['RSN'] - to_plot[args.model_key]).abs()
+to_plot['diff_qvalue']  = (to_plot[str(args.baseline)] - to_plot[str(args.model_key)]).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 
 # %% [markdown]
@@ -212,8 +229,9 @@ ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
 ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper right")
-files_out[f'diff_analysis_comparision_1_{args.model_key}'] = (args.out_folder /
-                                                              f'diff_analysis_comparision_1_{args.model_key}')
+files_out[f'diff_analysis_comparision_1_{args.model_key}'] = (
+    args.out_folder /
+    f'diff_analysis_comparision_1_{args.model_key}')
 fname = files_out[f'diff_analysis_comparision_1_{args.model_key}']
 vaep.savefig(fig, name=fname)
 
@@ -320,13 +338,13 @@ disease_assocications_new_rejected.loc[idx].loc[mask]
 # ## Shared which are only significant for by model
 
 # %%
-mask = (scores_common[(args.model_key, 'rejected')] & mask_different)
+mask = (scores_common[(str(args.model_key), 'rejected')] & mask_different)
 mask.sum()
 
 # %%
 idx = disease_associations_all.index.intersection(mask.index[mask])
-disease_assocications_shared_rejected_by_model = disease_associations_all.loc[idx].sort_values(
-    'score', ascending=False)
+disease_assocications_shared_rejected_by_model = (disease_associations_all.loc[idx].sort_values(
+    'score', ascending=False))
 disease_assocications_shared_rejected_by_model.head(20)
 
 # %%
@@ -337,13 +355,15 @@ disease_assocications_shared_rejected_by_model.loc[idx].loc[mask]
 # ## Only significant by RSN
 
 # %%
-mask = (scores_common[('RSN', 'rejected')] & mask_different)
+mask = (scores_common[(str(args.baseline), 'rejected')] & mask_different)
 mask.sum()
 
 # %%
 idx = disease_associations_all.index.intersection(mask.index[mask])
-disease_assocications_shared_rejected_by_RSN = disease_associations_all.loc[idx].sort_values(
-    'score', ascending=False)
+disease_assocications_shared_rejected_by_RSN = (
+    disease_associations_all
+    .loc[idx]
+    .sort_values('score', ascending=False))
 disease_assocications_shared_rejected_by_RSN.head(20)
 
 # %%

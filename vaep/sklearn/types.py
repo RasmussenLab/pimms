@@ -1,3 +1,4 @@
+import pickle
 from dataclasses import dataclass
 from collections import namedtuple
 
@@ -23,6 +24,16 @@ class Results:
     train: ResultsSplit = None
     test: ResultsSplit = None
     name: str = None
+
+    def to_pickle(self, fname):
+        with open(fname, 'wb') as f:
+            pickle.dump(self, f)
+
+    # not necessary, but here it ensure Results is defined
+    @classmethod
+    def from_pickle(cls, fname):
+        with open(fname, 'rb') as f:
+            return pickle.load(f)
 
 
 @dataclass
