@@ -23,6 +23,8 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
+
+import matplotlib
 import seaborn
 
 import vaep
@@ -31,6 +33,10 @@ import vaep.io.datasplits
 import vaep.imputation
 
 logger = vaep.logging.setup_nb_logger()
+
+
+plt.rcParams['figure.figsize'] = [4, 2.5] # [16.0, 7.0] , [4, 3]
+vaep.plotting.make_large_descriptors(5)
 
 # %% [markdown]
 # ## Parameters
@@ -62,32 +68,57 @@ args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args,
                                  out_root=(args.folder_experiment
                                            / params["out_folder"]
-                                           / params["target"]
-                                           / f"{params['baseline']}_vs_{params['model_key']}"))
+                                           / params["target"]))
 args.folder_scores = (args.folder_experiment
-                      / 'scores'
                       / params["out_folder"]
                       / params["target"]
+                      / 'scores'
                       )
 args.update_from_dict(params)
 args
 
 # %%
-files_in = dict(diff_analysis=(args.out_folder /
-                               f'diff_analysis_compare_methods.xlsx'))
-files_in
-
-# %% [markdown]
-# ## Load data for different decisions
+# files_in = dict(diff_analysis=(args.out_folder /
+#                                f'diff_analysis_compare_methods.xlsx'))
+# files_in
 
 # %%
-# blank index columns -> previous entry is used..
-differences = pd.read_excel(
-    files_in['diff_analysis'], sheet_name='differences', index_col=[0, 1], header=[0, 1])
-differences[('comp', 'diff_qvalue')] = (
-    differences[(args.baseline, 'qvalue')] - differences[(args.model_key, 'qvalue')]).abs()
-differences = differences.sort_values(('comp', 'diff_qvalue'), ascending=False)
-differences
+scores = [fname for fname in Path(args.folder_scores).iterdir() if fname.suffix == '.pkl']
+scores
+
+# %%
+# scores = 
+scores = pd.concat([pd.read_pickle(fname) for fname in scores], axis=1)
+scores
+
+# %%
+qvalues = scores.loc[:, pd.IndexSlice[:, 'qvalue']]
+qvalues
+
+# %%
+da_target = scores.loc[pd.IndexSlice[:, args.target], pd.IndexSlice[:, 'rejected']]
+da_target
+
+# %%
+da_target_same = (da_target.sum(axis=1) == 0) | da_target.all(axis=1)
+da_target_same.value_counts() 
+
+# %%
+feat_idx_w_diff = da_target_same[~da_target_same].index
+feat_idx_w_diff
+
+# %% [markdown]
+# take only those with different decisions
+
+# %%
+qvalues = qvalues.loc[feat_idx_w_diff].sort_values(('None', 'qvalue'))
+qvalues
+
+# %%
+fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
+writer = pd.ExcelWriter(fname)
+qvalues.to_excel(writer, sheet_name='qvalues')
+
 
 # %% [markdown]
 # ## Load target
@@ -113,27 +144,39 @@ data = pd.concat([data.train_X, data.val_y, data.test_y]).unstack()
 data
 
 
+# %%
+feat_sel = feat_idx_w_diff.droplevel(-1)
+data = data.loc[:, feat_sel]
+data
+
 # %% [markdown]
-# better load RSN prediction
 # - RSN prediction are based on all samples mean and std (N=455) as in original study
 # - VAE also trained on all samples (self supervised)
 # One could also reduce the selected data to only the samples with a valid target marker,
 # but this was not done in the original study which considered several different target markers.
 #
 # RSN : shifted per sample, not per feature!
-# %%
-# reload
-pred_real_na_imputed_baseline = vaep.imputation.impute_shifted_normal(
-    df_wide=data)
-pred_real_na_imputed_baseline = pred_real_na_imputed_baseline.unstack()
-pred_real_na_imputed_baseline
+#
+# Load all prediction files and reshape
 
 # %%
-fname = args.out_preds / args.template_pred.format(args.model_key)
-pred_real_na = vaep.analyzers.compare_predictions.load_single_csv_pred_file(
-    fname)
-pred_real_na = pred_real_na.unstack()
-pred_real_na.sample(3)
+# exclude 'None' as this is without imputation (-> data)
+model_keys = [k for k in qvalues.columns.get_level_values(0) if k != 'None']
+pred_paths= [
+    args.out_preds / args.template_pred.format(method)
+      for method in model_keys]
+pred_paths
+
+# %%
+load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_pred_file
+pred_real_na = dict()
+for method in model_keys:
+    fname = args.out_preds / args.template_pred.format(method)
+    print(f"missing values pred. by {args.model_key}: {fname}")
+    pred_real_na[method] = load_single_csv_pred_file(fname)
+pred_real_na = pd.DataFrame(pred_real_na)
+pred_real_na
+
 
 # %% [markdown]
 # Once imputation, reduce to target samples only (samples with target score)
@@ -141,19 +184,17 @@ pred_real_na.sample(3)
 # %%
 # select samples with target information
 data = data.loc[target.index]
-pred_real_na_imputed_baseline = pred_real_na_imputed_baseline.loc[target.index]
 pred_real_na = pred_real_na.loc[target.index]
 
-assert len(data) == len(pred_real_na) == len(pred_real_na_imputed_baseline)
+# assert len(data) == len(pred_real_na)
 
 
 # %%
-idx = differences.index[0]
-pg_selected, gene_selected = idx  # top feat
-pg_selected, gene_selected
+idx = feat_sel[0]
 
 # %%
-feat_observed = data[pg_selected].dropna()
+feat_observed = data[idx].dropna()
+feat_observed
 
 # %%
 # axes = axes.ravel()
@@ -166,7 +207,7 @@ folder.mkdir(parents=True, exist_ok=True)
 
 # %%
 min_y_int, max_y_int = vaep.plotting.data.get_min_max_iterable(
-    [data.stack(), pred_real_na.stack(), pred_real_na_imputed_baseline.stack()])
+    [data.stack(), pred_real_na.stack()])
 min_max = min_y_int, max_y_int
 
 target_name = target.columns[0]
@@ -174,47 +215,58 @@ target_name = target.columns[0]
 min_max, target_name
 
 # %%
-for idx in differences.index:
-    pg_selected, gene_selected = idx  # top feat
+for idx in feat_sel:
     fig, ax = plt.subplots()
-    dfs = [data[pg_selected].dropna(), pred_real_na[pg_selected].dropna(),
-           pred_real_na_imputed_baseline[pg_selected].dropna()]
 
-    bins = None
-    ax = None
-    _series = dfs[0]
-    _series_vae = dfs[1]
-    _series_rsn = dfs[2]
+    feat_observed = data[idx].dropna()
 
-    ax, bins = vaep.plotting.data.plot_histogram_intensites(
-        _series,
-        ax=ax,
-        min_max=min_max,
-        label=f'measured (N={len(_series):,d})',
-        color='grey',
-        alpha=0.6)
-    ax, bins = vaep.plotting.data.plot_histogram_intensites(
-        _series_vae,
-        ax=ax,
-        min_max=min_max,
-        label=f'{args.model_key.upper()} (N={len(_series_vae):,d})',
-        color='green',
-        alpha=1)
-    ax, bins = vaep.plotting.data.plot_histogram_intensites(
-        _series_rsn,
-        ax=ax,
-        min_max=min_max,
-        label=f'{args.baseline.upper()} (N={len(_series_rsn):,d})',
-        color='red',
-        alpha=0.8)
-
+    label_template = '{method} (N={n:,d}, q={q:.3f})'
+    # observed data
+    vaep.plotting.data.plot_histogram_intensites(
+            feat_observed,
+            ax=ax,
+            min_max=min_max,
+            label=label_template.format(method='measured',
+                                        n=len(feat_observed),
+                                        q=float(qvalues.loc[idx, ('None', 'qvalue')])),
+            color='grey',
+            alpha=0.6)
+    
+    # all models    
+    for i, method in enumerate(model_keys):
+        try:
+            pred = pred_real_na.loc[pd.IndexSlice[:, idx], method].dropna()
+            if len(pred) == 0:
+                # in case no values was imputed -> qvalue is as based on measured
+                label = label_template.format(method=method,
+                                              n=len(pred),
+                                              q=float(qvalues.loc[idx, ('None', 'qvalue')]
+                                                      ))
+            else:
+                label = label_template.format(method=method,
+                                              n=len(pred),
+                                              q=float(qvalues.loc[idx, (method, 'qvalue')]
+                                                      ))
+            ax, bins = vaep.plotting.data.plot_histogram_intensites(
+                pred,
+                ax=ax,
+                min_max=min_max,
+                label=label,
+                color=f'C{i}',
+                alpha=0.6)
+        except KeyError:
+            print(f"No missing values for {idx}: {method}")
+            continue
+    first_pg = idx.split(";")[0]
     ax.set_title(
-        f'Imputation for protein group {pg_selected.split(";")[0]} (gene: {gene_selected}) with target {target_name} (N= {len(data):,d} samples)')
+        f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
     ax.set_ylabel('count measurments')
     _ = ax.legend()
+    
     vaep.savefig(
-        fig, folder / f'hist_{gene_selected}_pg_{pg_selected.split(";")[0]}.pdf')
+        fig, folder / f'{first_pg}_hist.pdf')
     plt.close(fig)
+
 # %% [markdown]
 # ## Compare with target annotation
 
@@ -222,49 +274,73 @@ for idx in differences.index:
 # labels somehow?
 # target.replace({True: f' >={args.cutoff_target}', False: f'<{args.cutoff_target}'})
 
-for idx in differences.index:
-    pg_selected, gene_selected = idx  # top feat
+for i, idx in enumerate(feat_sel):
+    print(f"Swarmplot {i:3<}: {idx}:")
+    fig, ax = plt.subplots()
 
-    _series, _series_vae, _series_rsn = (
-        data[pg_selected].dropna(),
-        pred_real_na[pg_selected].dropna(),
-        pred_real_na_imputed_baseline[pg_selected].dropna()
+    feat_observed = data[idx].dropna()
+    label_template = '{method} (N={n:,d}, q={q:.3f})'
+    key = label_template.format(method='measured',
+                                        n=len(feat_observed),
+                                        q=float(qvalues.loc[idx, ('None', 'qvalue')])
     )
-    ax = None
-    groups_order = [f'Measured (N={len(_series):,d})',
-                    f'{args.model_key.upper()} (N={len(_series_vae):,d}, q={differences.loc[idx, ("VAE", "qvalue")]:.3f})',
-                    f'RSN (N={len(_series_rsn):,d}, q={differences.loc[idx, ("RSN", "qvalue")]:.3f})']
-    to_plot = pd.concat([
-        _series.to_frame('intensity').assign(
-            group=groups_order[0]),
-        _series_vae.to_frame('intensity').assign(
-            group=groups_order[1]),
-        _series_rsn.to_frame('intensity').assign(
-            group=groups_order[2]),
-    ]).join(target, how='inner')
+    to_plot = {key: feat_observed}
+    
+    for method in model_keys:
+        try:
+            pred = pred_real_na.loc[pd.IndexSlice[:,
+                                                  idx], method].dropna().droplevel(-1)
+            if len(pred) == 0:
+                # in case no values was imputed -> qvalue is as based on measured
+                key = label_template.format(method=method,
+                                            n=len(pred),
+                                            q=float(qvalues.loc[idx, ('None', 'qvalue')]
+                                                    ))
+            else:
+                key = label_template.format(method=method,
+                                            n=len(pred),
+                                            q=float(qvalues.loc[idx, (method, 'qvalue')]
+                                                    ))
+            to_plot[key] = pred
+        except KeyError:
+            print(f"No missing values for {idx}: {method}")
+            continue
+
+    to_plot = pd.DataFrame.from_dict(to_plot)
+    to_plot.columns.name = 'group'
+    groups_order = to_plot.columns.to_list()
+    to_plot = to_plot.stack().to_frame('intensity').reset_index(-1)
+    to_plot = to_plot.join(target.astype('category'), how='inner')
 
     ax = seaborn.swarmplot(data=to_plot,
                            x='group',
                            y='intensity',
                            order=groups_order,
-                             hue=args.target)
-    fig = ax.get_figure()
+                           hue=args.target,
+                           size=2,
+                           ax=ax)
+    first_pg = idx.split(";")[0]
     ax.set_title(
-        f'Imputation for protein group {pg_selected.split(";")[0]} (gene: {gene_selected.split(";")[0]}) with target {target_name} (N= {len(data):,d} samples)')
+        f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
 
-    _ = ax.legend()
+    _ = ax.legend(fontsize=5, title_fontsize=5, markerscale=0.4,)
     _ = ax.set_ylim(min_y_int, max_y_int)
     _ = ax.locator_params(axis='y', integer=True)
     _ = ax.set_xlabel('')
+    _xticks = ax.get_xticks()
+    ax.xaxis.set_major_locator(matplotlib.ticker.FixedLocator(_xticks))
+    _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
+                       horizontalalignment='right')
     fname = (folder /
-             f'swarmplot_{gene_selected.split(";")[0]}'
-             f'_pg_{pg_selected.split(";")[0]}.pdf')
+             f'{first_pg}_swarmplot.pdf')
     vaep.savefig(
         fig,
         name=fname)
     plt.close()
 
 
+
 # %% [markdown]
 # - add non-imputed data q-value
 # %%
+writer.close()
