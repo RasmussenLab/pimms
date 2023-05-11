@@ -1,52 +1,83 @@
+""" Snakemake file for the ALD study workflow
+
+- needs that data was created (could be added)
+- performs differential analysis for a set of methods/models.
+  - currently need to be explicitly specified
+- select one base model for comparison (RSN was used in original study)
+- plot observed and imputed values for selected features with different diff. analysis
+  outcomes (not all the same)
+"""
+
+
 configfile: "config/appl_ald_data/plasma/proteinGroups/comparison.yaml"
 
 
 folder_experiment = config["folder_experiment"]
 
-stem = folder_experiment + "/{out_folder}/{target}/{model}/"
+out_folder = folder_experiment + "/{out_folder}/{target}/"
+
+out_folder_two_methods_cp = out_folder + "{baseline}_vs_{model}/"
 
 target_cutoff = dict(kleiner="2")
+
+target = "kleiner"
+
+
+wildcard_constraints:
+    target=target,
+    baseline=config["baseline"],
+    out_folder=config["out_folder"],
+    model="|".join(config["methods"]),
 
 
 rule all:
     input:
         expand(
             [
-                stem + "diff_analysis_comparision_2_{model}.pdf",
-                stem + "mrmr_feat_by_model.xlsx",
+                out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
+                out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx",
             ],
-            target=["kleiner"],
-            model=["vae", "collab"],
-            out_folder="diff_analysis",
+            target=[target],
+            baseline=config["baseline"],
+            model=config["methods"],
+            out_folder=config["out_folder"],
         ),
 
 
-nb = "16_ald_compare_methods.ipynb"
+##########################################################################################
+# basemethod vs other methods
+nb = "10_2_ald_compare_methods.ipynb"
 
 
 rule compare_diff_analysis:
     input:
         nb=nb,
-        scores=stem + "diff_analysis_scores.pkl",
+        score_base=out_folder + "scores/diff_analysis_scores_{baseline}.pkl",
+        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl",
         f_annotations=config["f_annotations"],
     output:
-        nb=stem + nb,
-        figure=stem + "diff_analysis_comparision_2_{model}.pdf",
+        nb=out_folder_two_methods_cp + nb,
+        figure=out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
     params:
         disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
         annotaitons_gene_col=config["annotaitons_gene_col"],
+        # baseline=config["baseline"],
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
         " -r target {wildcards.target}"
+        " -r baseline {wildcards.baseline}"
         " -r model_key {wildcards.model}"
+        " -r out_folder {wildcards.out_folder}"
         " -p disease_ontology {params.disease_ontology}"
         " -r f_annotations {input.f_annotations}"
         " -r annotaitons_gene_col {params.annotaitons_gene_col}"
         " && jupyter nbconvert --to html {output.nb}"
 
 
-nb = "16_ald_diff_analysis.ipynb"
+##########################################################################################
+# Scores for each model (method)
+nb = "10_1_ald_diff_analysis.ipynb"
 
 
 rule differential_analysis:
@@ -54,8 +85,8 @@ rule differential_analysis:
         nb=nb,
         pred_real_na=folder_experiment + "/preds/pred_real_na_{model}.csv",
     output:
-        scores=stem + "diff_analysis_scores.pkl",
-        nb=stem + nb,
+        scores=out_folder + "scores/diff_analysis_scores_{model}.pkl",
+        nb=out_folder + "scores/diff_analysis_{model}.ipynb",
     params:
         covar=lambda wildcards: config["covar"][wildcards.target],
     shell:
@@ -64,30 +95,33 @@ rule differential_analysis:
         " -r target {wildcards.target}"
         " -r covar {params.covar}"
         " -r model_key {wildcards.model}"
+        " -r out_folder {wildcards.out_folder}"
         " && jupyter nbconvert --to html {output.nb}"
 
 
-nb = "16_ald_ml_new_feat.ipynb"
+##########################################################################################
+# Compare performance of models (methods) on prediction task
+nb = "10_3_ald_ml_new_feat.ipynb"
 
 
 rule ml_comparison:
     input:
         nb=nb,
+        pred_base=folder_experiment + "/preds/pred_real_na_{baseline}.csv",
+        pred_model=folder_experiment + "/preds/pred_real_na_{model}.csv",
         fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
     output:
-        sel_feat=stem + "mrmr_feat_by_model.xlsx",
-        nb=stem + nb,
+        sel_feat=out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx",
+        nb=out_folder_two_methods_cp + nb,
     params:
-        model_key="{model}",
-        # cutoff_target="2",
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
-        out_folder="{out_folder}",
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
         " -r target {wildcards.target}"
+        " -r baseline {wildcards.baseline}"
+        " -r model_key {wildcards.model}"
+        " -r out_folder {wildcards.out_folder}"
         " -p cutoff_target {params.cutoff}"
         " -r fn_clinical_data {input.fn_clinical_data}"
-        " -r out_folder {params.out_folder}"
-        " -r model_key {params.model_key}"
         " && jupyter nbconvert --to html {output.nb}"
