@@ -22,80 +22,55 @@ target_cutoff = dict(kleiner="2")
 
 target = "kleiner"
 
+all_methods = [config["baseline"], 'None', *config["methods"]]
 
 wildcard_constraints:
     target=target,
     baseline=config["baseline"],
     out_folder=config["out_folder"],
-    model="|".join(config["methods"]),
+    model="|".join(all_methods),
 
 
 rule all:
     input:
+        expand(out_folder + 'diff_analysis_compare_DA.xlsx',
+            target=target,
+            out_folder=config["out_folder"],)
+
+##########################################################################################
+# Create plots for featues where decisions between model differ (if computed)
+
+nb = "10_4_ald_compare_single_pg.ipynb"
+
+rule plot_intensities_for_diverging_results:
+    input:
+        expand(folder_experiment + "/preds/pred_real_na_{method}.csv",
+        method=[config["baseline"], *config["methods"]],),
         expand(
-            [
-                out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
-                out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx",
-            ],
+        [
+            out_folder + "scores/diff_analysis_scores_{model}.pkl",
+        ],
             target=[target],
             baseline=config["baseline"],
-            model=config["methods"],
+            model=all_methods,
             out_folder=config["out_folder"],
         ),
-
-
-##########################################################################################
-# basemethod vs other methods
-nb = "10_2_ald_compare_methods.ipynb"
-
-
-rule compare_diff_analysis:
-    input:
         nb=nb,
-        score_base=out_folder + "scores/diff_analysis_scores_{baseline}.pkl",
-        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl",
-        f_annotations=config["f_annotations"],
+        fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
     output:
-        nb=out_folder_two_methods_cp + nb,
-        figure=out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
+        diff_da = out_folder + 'diff_analysis_compare_DA.xlsx',
+        nb=out_folder + nb
     params:
-        disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
-        annotaitons_gene_col=config["annotaitons_gene_col"],
-        # baseline=config["baseline"],
+        baseline=config["baseline"],
+        cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
         " -r target {wildcards.target}"
-        " -r baseline {wildcards.baseline}"
-        " -r model_key {wildcards.model}"
+        " -r baseline {params.baseline}" # not yet used
         " -r out_folder {wildcards.out_folder}"
-        " -p disease_ontology {params.disease_ontology}"
-        " -r f_annotations {input.f_annotations}"
-        " -r annotaitons_gene_col {params.annotaitons_gene_col}"
-        " && jupyter nbconvert --to html {output.nb}"
-
-
-##########################################################################################
-# Scores for each model (method)
-nb = "10_1_ald_diff_analysis.ipynb"
-
-
-rule differential_analysis:
-    input:
-        nb=nb,
-        pred_real_na=folder_experiment + "/preds/pred_real_na_{model}.csv",
-    output:
-        scores=out_folder + "scores/diff_analysis_scores_{model}.pkl",
-        nb=out_folder + "scores/diff_analysis_{model}.ipynb",
-    params:
-        covar=lambda wildcards: config["covar"][wildcards.target],
-    shell:
-        "papermill {input.nb} {output.nb}"
-        f" -r folder_experiment {folder_experiment}"
-        " -r target {wildcards.target}"
-        " -r covar {params.covar}"
-        " -r model_key {wildcards.model}"
-        " -r out_folder {wildcards.out_folder}"
+        " -p cutoff_target {params.cutoff}"
+        " -r fn_clinical_data {input.fn_clinical_data}"
         " && jupyter nbconvert --to html {output.nb}"
 
 
@@ -125,3 +100,59 @@ rule ml_comparison:
         " -p cutoff_target {params.cutoff}"
         " -r fn_clinical_data {input.fn_clinical_data}"
         " && jupyter nbconvert --to html {output.nb}"
+
+##########################################################################################
+# basemethod vs other methods
+nb = "10_2_ald_compare_methods.ipynb"
+
+
+rule compare_diff_analysis:
+    input:
+        nb=nb,
+        score_base=out_folder + "scores/diff_analysis_scores_{baseline}.pkl",
+        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl",
+        f_annotations=config["f_annotations"],
+    output:
+        nb=out_folder_two_methods_cp + nb,
+        figure=out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
+    params:
+        disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
+        annotaitons_gene_col=config["annotaitons_gene_col"],
+    shell:
+        "papermill {input.nb} {output.nb}"
+        f" -r folder_experiment {folder_experiment}"
+        " -r target {wildcards.target}"
+        " -r baseline {wildcards.baseline}"
+        " -r model_key {wildcards.model}"
+        " -r out_folder {wildcards.out_folder}"
+        " -p disease_ontology {params.disease_ontology}"
+        " -r f_annotations {input.f_annotations}"
+        " -r annotaitons_gene_col {params.annotaitons_gene_col}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+
+##########################################################################################
+# Scores for each model (method)
+nb = "10_1_ald_diff_analysis.ipynb"
+
+
+rule differential_analysis:
+    input:
+        nb=nb,
+        # pred_real_na=folder_experiment + "/preds/pred_real_na_{model}.csv",
+    output:
+        score=out_folder + "scores/diff_analysis_scores_{model}.pkl",
+        nb=out_folder + "scores/diff_analysis_{model}.ipynb",
+    params:
+        covar=lambda wildcards: config["covar"][wildcards.target],
+    shell:
+        "papermill {input.nb} {output.nb}"
+        f" -r folder_experiment {folder_experiment}"
+        " -r target {wildcards.target}"
+        " -r covar {params.covar}"
+        " -r model_key {wildcards.model}"
+        " -r out_folder {wildcards.out_folder}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+
+

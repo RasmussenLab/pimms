@@ -200,7 +200,7 @@ if args.model_key == 'RSN':
     pred_real_na = vaep.imputation.impute_shifted_normal(
         ald_study)
     pred_real_na.to_csv(fname)
-elif args.model_key:
+elif args.model_key and str(args.model_key) != 'None':
     pred_real_na = (vaep
                     .analyzers
                     .compare_predictions
