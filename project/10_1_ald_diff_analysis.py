@@ -49,6 +49,7 @@ folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
 fn_qc_samples = '' #'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv'
 
 
 target: str = 'kleiner'
@@ -83,6 +84,7 @@ args
 # Outputs of this notebook will be stored here
 
 # %%
+files_out = {}
 args.out_folder
 
 # %% [markdown]
@@ -107,6 +109,22 @@ df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
 cols_clinic = vaep.pandas.get_columns_accessor(df_clinic) # pick Berlin as reference?
 df_clinic[[args.target, *args.covar]].describe()
+
+
+# %%
+# ## Additional annotations
+# - additional annotations of features (e.g. gene names for protein groups)
+
+feat_name = observed.index.names[-1]
+if args.f_annotations:
+    gene_to_PG = pd.read_csv(args.f_annotations)
+    gene_to_PG = gene_to_PG.drop_duplicates().set_index(feat_name)
+    fname = args.out_folder / Path(args.f_annotations).name
+    gene_to_PG.to_csv(fname)
+    files_out[fname.name] = fname.as_posix()
+else:
+    gene_to_PG = None
+gene_to_PG
 
 # %% [markdown]
 # Entries with missing values
@@ -310,6 +328,19 @@ scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
         covar=args.covar,
         value_name=args.value_name)
 
+scores
+
+# %%
+# features are in first index position
+feat_idx = scores.index.get_level_values(0)
+if gene_to_PG is not None:
+    scores = (scores
+              .join(gene_to_PG)
+              .set_index(gene_to_PG.columns.to_list(), append=True)
+    )
+scores
+
+# %%
 scores.columns = pd.MultiIndex.from_product([[str(args.model_key)], scores.columns],
                                             names=('model', 'var'))
 scores.loc[pd.IndexSlice[:, args.target], :]

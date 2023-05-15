@@ -59,6 +59,7 @@ rule plot_intensities_for_diverging_results:
         fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
     output:
         diff_da = out_folder + 'diff_analysis_compare_DA.xlsx',
+        qvalues =  out_folder + 'qvalues_target.pkl',
         nb=out_folder + nb
     params:
         baseline=config["baseline"],
@@ -110,8 +111,7 @@ rule compare_diff_analysis:
     input:
         nb=nb,
         score_base=out_folder + "scores/diff_analysis_scores_{baseline}.pkl",
-        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl",
-        f_annotations=config["f_annotations"],
+        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl"
     output:
         nb=out_folder_two_methods_cp + nb,
         figure=out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
@@ -139,7 +139,7 @@ nb = "10_1_ald_diff_analysis.ipynb"
 rule differential_analysis:
     input:
         nb=nb,
-        # pred_real_na=folder_experiment + "/preds/pred_real_na_{model}.csv",
+        f_annotations=config["f_annotations"],
     output:
         score=out_folder + "scores/diff_analysis_scores_{model}.pkl",
         nb=out_folder + "scores/diff_analysis_{model}.ipynb",
@@ -148,6 +148,7 @@ rule differential_analysis:
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
+        " -r f_annotations {input.f_annotations}"
         " -r target {wildcards.target}"
         " -r covar {params.covar}"
         " -r model_key {wildcards.model}"

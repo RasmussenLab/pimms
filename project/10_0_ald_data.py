@@ -392,7 +392,7 @@ meta.describe(include='all')
 # %%
 id_mappings =  ["PG.ProteinAccessions", "PG.Genes"]
 id_mappings = meta[id_mappings].drop_duplicates()
-id_mappings.to_csv(folder_data_out / 'ald_plasma_proteinGroups_id_mappings.csv')
+id_mappings.to_csv(folder_data_out / 'ald_plasma_proteinGroups_id_mappings.csv', index=False)
 id_mappings
 
 # %%

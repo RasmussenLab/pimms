@@ -46,14 +46,14 @@ rule comparison:
 
 ##########################################################################################
 # train NaGuideR methods
-
+nb_stem = "01_1_transfer_NAGuideR_pred"
 rule transform_NAGuideR_predictions:
     input: 
         dumps=expand(
             "{{folder_experiment}}/preds/pred_all_{method}.csv",
             method=config["NAGuideR_methods"],
         ),
-        nb="01_1_transfer_NAGuideR_pred.ipynb",
+        nb=f"{nb_stem}.ipynb",
     output:
     # "{{folder_experiment}}/preds/pred_real_na_{method}.csv"),
         expand( (
@@ -62,6 +62,8 @@ rule transform_NAGuideR_predictions:
             method=config["NAGuideR_methods"],
         ),
         nb="{folder_experiment}/01_1_transfer_NAGuideR_pred.ipynb",
+    benchmark:
+         "{folder_experiment}/"f"{nb_stem}.tsv",
     params:
         folder_experiment="{folder_experiment}",
         file_format=config["file_format"],

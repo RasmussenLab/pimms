@@ -46,7 +46,6 @@ out_folder = 'diff_analysis'
 
 disease_ontology = 5082  # code from https://disease-ontology.org/
 # split diseases notebook? Query gene names for proteins in file from uniprot?
-f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv' # snakemake -> copy to experiment folder
 annotaitons_gene_col = 'PG.Genes'
 
 
@@ -73,7 +72,7 @@ args
 # %%
 files_in = {
     'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
-    'f_annotations_gene_to_pg': args.f_annotations}
+    }
 files_in
 
 # %% [markdown]
@@ -85,10 +84,10 @@ files_out = dict()
 # %%
 writer_args = dict(float_format='%.3f')
 
-files_out['diff_analysis_compare_methods.xlsx'] = (
-    args.out_folder /
-    'diff_analysis_compare_methods.xlsx')
-writer = pd.ExcelWriter(files_out['diff_analysis_compare_methods.xlsx'])
+fname =     args.out_folder / 'diff_analysis_compare_methods.xlsx'
+files_out[fname.name] = fname
+writer = pd.ExcelWriter(fname)
+fname
 
 # %% [markdown]
 # # Load scores 
@@ -129,18 +128,7 @@ scores.describe()
 # %%
 scores.describe(include=['bool', 'O'])
 
-# %% [markdown]
-# ## Load gene to protein groups mapped
 
-# %%
-feat_name = scores.index.names[0]
-if args.f_annotations:
-    gene_to_PG = pd.read_csv(files_in['f_annotations_gene_to_pg'], usecols=[
-                            feat_name, args.annotaitons_gene_col])
-    gene_to_PG = gene_to_PG.drop_duplicates().set_index(feat_name)
-    gene_to_PG
-else:
-    gene_to_PG = None
 
 # %% [markdown]
 # ## Load frequencies of observed features
@@ -185,9 +173,6 @@ scores_common.loc[mask_different]
 
 # %%
 _to_write = scores_common.loc[mask_different]
-if gene_to_PG is not None:
-    gene_idx_diff = gene_to_PG.loc[scores_common.index].squeeze().loc[mask_different]
-    _to_write = _to_write.set_index(gene_idx_diff, append=True)    
 _to_write.to_excel(writer, 'differences', **writer_args)
 
 # %%
@@ -198,7 +183,6 @@ for s, k in zip(to_plot, models.keys()):
 to_plot.append(scores_common[list(models.keys())[0]]['N'].rename('frequency'))
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
-to_plot = to_plot.join(gene_to_PG) if gene_to_PG is not None else to_plot
 to_plot
 
 # %% [markdown]
@@ -294,12 +278,25 @@ data
 # ToDo: new script -> DISEASES DB lookup
 
 # %%
-if gene_to_PG is None:
-    logger.warning('No gene to PG mapping provided. Exiting.')
+
+# %%
+feat_name = scores.index.names[0] # first index level is feature name
+if args.annotaitons_gene_col in scores.index.names:
+    logger.info(f"Found gene annotation in scores index:  {scores.index.names}")
+else:
+    logger.info(f"No gene annotation in scores index:  {scores.index.names}"
+                " Exiting.")
     exit(0)
 
 # %%
-gene_to_PG = gene_to_PG.reset_index().set_index(args.annotaitons_gene_col)
+gene_to_PG = (scores.droplevel(
+        list(set(scores.index.names) - {feat_name, args.annotaitons_gene_col})
+        )
+        .index
+        .to_frame()
+        .reset_index(drop=True)
+        .set_index(args.annotaitons_gene_col)
+    )
 gene_to_PG.head()
 
 # %%

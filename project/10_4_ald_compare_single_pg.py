@@ -35,7 +35,7 @@ import vaep.imputation
 logger = vaep.logging.setup_nb_logger()
 
 
-plt.rcParams['figure.figsize'] = [4, 2.5] # [16.0, 7.0] , [4, 3]
+plt.rcParams['figure.figsize'] = [4, 2.5]  # [16.0, 7.0] , [4, 3]
 vaep.plotting.make_large_descriptors(5)
 
 # %% [markdown]
@@ -55,8 +55,9 @@ target = 'kleiner'
 cutoff_target: int = 2  # => for binarization target >= cutoff_target
 out_folder = 'diff_analysis'
 file_format = 'csv'
-baseline = 'RSN' # default is RSN, but could be any other trained model
-template_pred = 'pred_real_na_{}.csv' # fixed, do not change
+baseline = 'RSN'  # default is RSN, but could be any other trained model
+template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
+
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -78,30 +79,36 @@ args.update_from_dict(params)
 args
 
 # %%
-# files_in = dict(diff_analysis=(args.out_folder /
-#                                f'diff_analysis_compare_methods.xlsx'))
-# files_in
+files_out = dict()
 
 # %%
-scores = [fname for fname in Path(args.folder_scores).iterdir() if fname.suffix == '.pkl']
+score_dumps = [fname for fname in Path(
+    args.folder_scores).iterdir() if fname.suffix == '.pkl']
+score_dumps
+
+# %%
+scores = pd.concat([pd.read_pickle(fname) for fname in score_dumps], axis=1)
 scores
 
 # %%
-# scores = 
-scores = pd.concat([pd.read_pickle(fname) for fname in scores], axis=1)
-scores
-
-# %%
-qvalues = scores.loc[:, pd.IndexSlice[:, 'qvalue']]
+qvalues = scores.loc[pd.IndexSlice[:, args.target],
+                     pd.IndexSlice[:, 'qvalue']]
+fname  = args.out_folder / 'qvalues_target.pkl'
+files_out[fname.name] = fname.as_posix()
+qvalues.to_pickle(fname)
 qvalues
 
 # %%
-da_target = scores.loc[pd.IndexSlice[:, args.target], pd.IndexSlice[:, 'rejected']]
+da_target = scores.loc[pd.IndexSlice[:, args.target],
+                       pd.IndexSlice[:, 'rejected']]
+fname = args.out_folder / 'equality_rejected_target.pkl'
+files_out[fname.name] = fname.as_posix()
+da_target.to_pickle(fname)
 da_target
 
 # %%
 da_target_same = (da_target.sum(axis=1) == 0) | da_target.all(axis=1)
-da_target_same.value_counts() 
+da_target_same.value_counts()
 
 # %%
 feat_idx_w_diff = da_target_same[~da_target_same].index
@@ -117,6 +124,7 @@ qvalues
 # %%
 fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
 writer = pd.ExcelWriter(fname)
+files_out[fname.name] = fname.as_posix()
 qvalues.to_excel(writer, sheet_name='qvalues')
 
 
@@ -124,7 +132,8 @@ qvalues.to_excel(writer, sheet_name='qvalues')
 # ## Load target
 
 # %%
-target = pd.read_csv(args.fn_clinical_data, index_col=0,
+target = pd.read_csv(args.fn_clinical_data,
+                     index_col=0,
                      usecols=[args.sample_id_col, args.target])
 target = target.dropna()
 target
@@ -139,13 +148,14 @@ pd.crosstab(target.squeeze(), target_to_group.squeeze())
 
 # %%
 data = vaep.io.datasplits.DataSplits.from_folder(
-    args.data, file_format=args.file_format)
+    args.data,
+    file_format=args.file_format)
 data = pd.concat([data.train_X, data.val_y, data.test_y]).unstack()
 data
 
 
 # %%
-feat_sel = feat_idx_w_diff.droplevel(-1)
+feat_sel = feat_idx_w_diff.get_level_values(0)
 data = data.loc[:, feat_sel]
 data
 
@@ -162,9 +172,9 @@ data
 # %%
 # exclude 'None' as this is without imputation (-> data)
 model_keys = [k for k in qvalues.columns.get_level_values(0) if k != 'None']
-pred_paths= [
+pred_paths = [
     args.out_preds / args.template_pred.format(method)
-      for method in model_keys]
+    for method in model_keys]
 pred_paths
 
 # %%
@@ -172,7 +182,7 @@ load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_p
 pred_real_na = dict()
 for method in model_keys:
     fname = args.out_preds / args.template_pred.format(method)
-    print(f"missing values pred. by {args.model_key}: {fname}")
+    print(f"missing values pred. by {method}: {fname}")
     pred_real_na[method] = load_single_csv_pred_file(fname)
 pred_real_na = pd.DataFrame(pred_real_na)
 pred_real_na
@@ -223,16 +233,16 @@ for idx in feat_sel:
     label_template = '{method} (N={n:,d}, q={q:.3f})'
     # observed data
     vaep.plotting.data.plot_histogram_intensites(
-            feat_observed,
-            ax=ax,
-            min_max=min_max,
-            label=label_template.format(method='measured',
-                                        n=len(feat_observed),
-                                        q=float(qvalues.loc[idx, ('None', 'qvalue')])),
-            color='grey',
-            alpha=0.6)
-    
-    # all models    
+        feat_observed,
+        ax=ax,
+        min_max=min_max,
+        label=label_template.format(method='measured',
+                                    n=len(feat_observed),
+                                    q=float(qvalues.loc[idx, ('None', 'qvalue')])),
+        color='grey',
+        alpha=0.6)
+
+    # all models
     for i, method in enumerate(model_keys):
         try:
             pred = pred_real_na.loc[pd.IndexSlice[:, idx], method].dropna()
@@ -262,7 +272,7 @@ for idx in feat_sel:
         f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
     ax.set_ylabel('count measurments')
     _ = ax.legend()
-    
+    files_out[fname.name] = fname.as_posix()
     vaep.savefig(
         fig, folder / f'{first_pg}_hist.pdf')
     plt.close(fig)
@@ -281,11 +291,11 @@ for i, idx in enumerate(feat_sel):
     feat_observed = data[idx].dropna()
     label_template = '{method} (N={n:,d}, q={q:.3f})'
     key = label_template.format(method='measured',
-                                        n=len(feat_observed),
-                                        q=float(qvalues.loc[idx, ('None', 'qvalue')])
-    )
+                                n=len(feat_observed),
+                                q=float(qvalues.loc[idx, ('None', 'qvalue')])
+                                )
     to_plot = {key: feat_observed}
-    
+
     for method in model_keys:
         try:
             pred = pred_real_na.loc[pd.IndexSlice[:,
@@ -328,19 +338,24 @@ for i, idx in enumerate(feat_sel):
     _ = ax.locator_params(axis='y', integer=True)
     _ = ax.set_xlabel('')
     _xticks = ax.get_xticks()
-    ax.xaxis.set_major_locator(matplotlib.ticker.FixedLocator(_xticks))
+    ax.xaxis.set_major_locator(
+        matplotlib.ticker.FixedLocator(_xticks)
+    )
     _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                       horizontalalignment='right')
+                           horizontalalignment='right')
     fname = (folder /
              f'{first_pg}_swarmplot.pdf')
+    files_out[fname.name] = fname.as_posix()
     vaep.savefig(
         fig,
         name=fname)
     plt.close()
 
 
-
 # %% [markdown]
 # - add non-imputed data q-value
 # %%
 writer.close()
+
+# %%
+files_out

@@ -11,7 +11,7 @@ def percent_non_missing(df: pd.DataFrame) -> float:
     return df.notna().sum().sum() / math.prod(df.shape)
 
 def list_files(folder='.') -> list[str]:
-    return [str(f.as_posix()) for f in Path(folder).iterdir()]
+    return [f.as_posix() for f in Path(folder).iterdir()]
 
 
 def get_record(data: pd.DataFrame, columns_sample=False) -> dict:
