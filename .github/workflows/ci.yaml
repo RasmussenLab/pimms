@@ -54,3 +54,8 @@ jobs:
        cd project
        snakemake -p -c1 -n
        snakemake -p -c1
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: example-workflow-results
+        path: project/runs/example/01_2_performance_plots.html
