@@ -403,7 +403,7 @@ usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE]
 
 
 def count_peptides(folders: List[Path], dump=True,
-                   use_cols=usecols,
+                   usecols=usecols,
                    parent_folder_fct: Callable = create_parent_folder_name,
                    outfolder=FOLDER_PROCESSED / 'agg_peptides_dumps'):
     c = Counter()

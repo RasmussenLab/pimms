@@ -62,18 +62,20 @@ tag | notebook  | Description
 --- | ---  |  --- 
 Development data related 
 erda | erda_01_mq_select_runs.ipynb         | Aggregate current summary files from MQ runs into table
-erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (`erda_03_training_data.ipynb`)
-erda | erda_03_training_data.ipynb          | ERDA: Build training data dump (run for each data level)
-erda | erda_11_select_training_data.ipynb   | \[NEEDS UPDATE\] Sort training data by gene
-erda | erda_12_explore_raw_MQ_data.ipynb    | Load an MQ txt output folder and browse data <br> dumps large pickle files for training
+erda | erda_02_mq_count_features.ipynb      | Aggregate information from all eligable MQ runs <br> Saves processed files used for data selection (Counters used in `erda_03_training_data.ipynb`)
+erda | erda_03_training_data.ipynb          | Build training data dump (run for each data level) in wide format
+erda | erda_04_transpose_data.ipynb         | Transpose dataset (row: a sample), separate as erda has memory limits, dump counts and present-absent patterns
+erda | erda_12_explore_raw_MQ_data.ipynb    | Load a single MQ txt output folder and browse data <br> dumps large pickle files for training
 erda | erda_data_available.ipynb            | Plots on theoretically available data based on Counter dictionaries
 hela | 00_0_hela_metadata_rawfiles.ipynb         |  Analyze rawfile metadata and prepare for data selection
 hela | 00_1_hela_MQ_summaries.ipynb              | Analyzse summaries.txt data from all samples
 hela | 00_2_hela_all_raw_files.ipynb             | Find duplicate raw files, analyze sizes
-hela | 00_3_13_hela_development_dataset_splitting| Splitting data into development datasets of HeLa cell line data
-hela | 00_4_development_dataset_support.ipynb    | Support of training data samples/feat on selected development data set
+hela | 00_3_hela_selected_files_overview.ipynb   | Data description based on file size and metaddata of selected files
+hela | 00_4_hela_development_dataset_splitting   | Splitting data into development datasets of HeLa cell line data (based on wide format input from `erda_03` and `erda_04`)
+Single development dataset |
+hela | 00_5_hela_development_dataset_support.ipynb    | Support of training data samples/feat on selected development data set
+hela | 00_6_hela_training_data_exploration.ipynb  | Explore a data set for diagnositics <br>  Visualize key metrics
 Single experiment |
-run  | 00_5_training_data_exploration.ipynb  | Explore a data set for diagnositics <br>  Visualize key metrics
 run  | 01_0_split_data.ipynb               | Create train, validation and test data splits
 run  | 01_1_train_<model>.ipynb            | Train a single model e.g. (VAE, DAE, CF)
 run  | 01_2_performance_plots.ipynb        | Performance of single model run
@@ -130,6 +132,16 @@ by another Software, these notebooks need to be adapted for if they contain `mq`
 - loads a python config file (setting `FeatureCounter` classes and custom functions)
   along string configuration variables
 
+## HeLa notebooks - Training data
+
+
+### `00_0_1_rawfile_renaming.ipynb`
+
+> internal, documentation only (see pride upload for result)
+
+- create a new id for each raw file based on the creation date and instrument
+- uses metadata
+- build lftp commands for pride upload
 
 ### `00_0_hela_metadata_rawfiles.ipynb`
 
@@ -137,21 +149,35 @@ by another Software, these notebooks need to be adapted for if they contain `mq`
 - create `data/files_per_instrument_nested.yaml` for selection of data by massspectrometer
 
 ### `00_1_hela_MQ_summaries.ipynb`
+
 - analysze all `summaries.txt`
 
-### `misc_clustering_proteins.ipynb`
+### `00_2_hela_all_raw_files.ipynb`
 
-- total amount of peptide data
-## Training data
+### `00_3_hela_selected_files_overview.ipynb`
 
-### `00_3_hela_development_dataset_splitting.ipynb`
-- Create development dataset(s) of common machines
-- UMAP Figure 1b, statistics of **Fig. 1c**
+- created joined metadata file 
+- overview of metadata of selected files for data descriptor paper
 
-### `00_4_development_dataset_support.ipynb`
+### `00_4_hela_development_dataset_splitting.ipynb`
 
+- Create development dataset(s) of common machines, one for each machine
+- UMAP **Figure 1b**, statistics of **Figure 1c**
+- create datasets for training PIMMS models
 
-### `00_5_training_data_exploration.ipynb`
+### Training data inspection
+
+### `00_5_hela_development_dataset_support.ipynb`
+
+- feature counts for a single development dataset (e.g. for a single machine)
+
+### `00_6_hela_training_data_exploration.ipynb`
+
+> needs clean-up
+
+- explore a data set for diagnositics
+
+## Single experiment run
 ### `01_0_split_data.ipynb`
 
 - select data according to procedure described in **Fig. S1**
@@ -161,14 +187,30 @@ by another Software, these notebooks need to be adapted for if they contain `mq`
 
 ### `01_2_performance_plots.ipynb`
 
-### `02_1_aggregate_metrics.py.ipynb`
+## Grid search and best model analysis
+
+### `02_1_aggregate_metrics.py.ipynb` and `02_1_join_metrics.py.ipynb`
 - helper script to collect `metrics`. 
-### `02_2_aggregate_configs.py.ipynb`
+### `02_2_aggregate_configs.py.ipynb` and `02_2_join_configs.py.ipynb`
+
 - helper script to collect `config`urations.
+
+### `02_3_grid_search_analysis.ipynb`
+
+- analyze different runs with varying hyperparameters on a single data set
+- run for each protein group, peptides and precursor data set
+
+### `02_4_best_models_over_all_data.ipynb`	
+
+- show best models across data sets in grid search
 
 ### `03_1_best_models_comparison.ipynb`
 
 ## Misc
+
+### `misc_clustering_proteins.ipynb`
+
+- first PCA analysis of proteins from Annelaura
 
 ### `misc_data_exploration_proteins.ipynb` 
 
