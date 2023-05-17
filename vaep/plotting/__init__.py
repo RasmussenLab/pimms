@@ -12,7 +12,7 @@ import vaep.pandas
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
 
-plt.rcParams['figure.figsize'] = [16.0, 7.0]
+plt.rcParams['figure.figsize'] = [16.0, 7.0] # [4, 2], [4, 3]
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
 
@@ -27,6 +27,18 @@ from .errors import plot_rolling_error
 
 logger = logging.getLogger(__name__)
 
+__all__ = ['plotly',
+           'data',
+           'errors',
+           'plot_rolling_error',
+           # define in this file
+           'savefig',
+           'select_xticks',
+           'select_dates',
+           'make_large_descriptors',
+           'plot_feat_counts',
+           'plot_cutoffs',
+           ]
 
 def _savefig(fig, name, folder: pathlib.Path = '.',
              pdf=True,

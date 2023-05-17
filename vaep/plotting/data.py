@@ -132,9 +132,14 @@ def plot_missing_dist_boxplots(data: pd.DataFrame,
                                min_samples_per_feat=None) -> matplotlib.figure.Figure:
     fig, axes = plt.subplots(1, 2, figsize=(4, 2))
     not_na = data.notna()
+    idx_label, col_label = 'feature', 'sample'
+    if data.index.name:
+        idx_label = data.index.name
+    if data.columns.name:
+        col_label = data.columns.name
     ax = (not_na
           .sum(axis=1)
-          .rename('observation (feature) per sample')
+          .rename(f'observation ({idx_label}) per {col_label}')
           .plot
           .box(ax=axes[0])
           )
@@ -144,7 +149,7 @@ def plot_missing_dist_boxplots(data: pd.DataFrame,
     ax.yaxis.set_major_formatter("{x:,.0f}")
     ax = (not_na
           .sum(axis=0)
-          .rename('observation (samples) per feature')
+          .rename(f'observation ({idx_label}) per {col_label}')
           .plot
           .box(ax=axes[1])
           )
@@ -190,8 +195,12 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
                                    min_samples_per_feat=None,) -> matplotlib.figure.Figure:
     fig, axes = plt.subplots(1, 2, figsize=(4, 2))
     not_na = data.notna()
-
-    name = 'features per sample'
+    idx_label, col_label = 'sample', 'feature'
+    if data.index.name:
+        idx_label = data.index.name
+    if data.columns.name:
+        col_label = data.columns.name
+    name = f'observations per {idx_label}'
     ax = not_na.sum(axis=1).to_frame(name).plot.hist(
         ax=axes[0],
         bins=bins,
@@ -201,9 +210,10 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
         ax.vlines(min_feat_per_sample, *ax.get_ylim(), color='red')
     ax.locator_params(axis='y', integer=True)
     ax.yaxis.set_major_formatter("{x:,.0f}")
-    ax.set_xlabel('observations (features)')
-    ax.set_ylabel('observations')
-    name = 'samples per feature'
+    ax.set_xlabel(name)
+    ax.set_ylabel('observations in bin')
+    # second
+    name = f'observations per {col_label}'
     ax = data = not_na.sum(axis=0).to_frame(name).plot.hist(
         ax=axes[1],
         bins=bins,
@@ -213,7 +223,7 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
         ax.vlines(min_samples_per_feat, *ax.get_ylim(), color='red')
     ax.locator_params(axis='y', integer=True)
     ax.yaxis.set_major_formatter("{x:,.0f}")
-    ax.set_xlabel('observations (samples)')
+    ax.set_xlabel(name)
     ax.set_ylabel(None)
     fig.tight_layout()
     return fig
@@ -257,7 +267,7 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
                                             ylim=(-.03, 1.03),
                                             s=s,)
         # # for some reason this does not work as it does elswhere:
-        # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45) 
+        # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
         # # do it manually:
         _ = [(l.set_rotation(45), l.set_horizontalalignment('right'))
              for l in ax.get_xticklabels()]
