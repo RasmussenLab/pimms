@@ -27,14 +27,22 @@ jobs:
         miniforge-variant: Mambaforge
         # miniforge-version: latest
         use-mamba: true
+        channel-priority: strict
         python-version: ${{ matrix.python-version }}
         environment-file: environment.yml
         activate-environment: vaep
         auto-activate-base: true
         # auto-update-conda: true
-    - name: setup-env-manuelly
+    - name: inspect-conda-environment
       run: |
         conda info
+        conda list
+        conda info -e
+    - name: test-r-kernel-imports
+      run: |
+        Rscript -e "library(stringi)"
+        Rscript -e "library(stringr)"
+        Rscript -e "library(reshape2)"
     # # currently part of environment
     # - name: Install package and install library
     #   run: |
@@ -46,3 +54,8 @@ jobs:
        cd project
        snakemake -p -c1 -n
        snakemake -p -c1
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: example-workflow-results
+        path: project/runs/example/01_2_performance_plots.html

@@ -18,51 +18,31 @@
 
 # %%
 import logging
-from pathlib import Path
-from pprint import pprint
-from typing import Union, List
-
-import plotly.express as px
-
-# from fastai.losses import MSELossFlat
-# from fastai.learner import Learner
 
 
-import fastai
-# from fastai.tabular.all import *
-
+# import partial, Learner, EarlyStoppingCallback
 from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
-from fastai.data.all import *
-
-from fastai.tabular.all import *
-from fastai.collab import *
 
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import plot_loss, RecorderDump, calc_net_weight_count
+from vaep.models import plot_loss
 from fastai import learner
 learner.Recorder.plot_loss = plot_loss
-# import fastai.callback.hook # Learner.summary
 
+import pandas as pd
 import sklearn
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
 
 import vaep
 from vaep.analyzers import analyzers
 import vaep.model
 import vaep.models as models
 from vaep.models import ae
-from vaep.models import collab as vaep_collab
-from vaep.io.datasets import DatasetWithTarget
-from vaep.transform import VaepPipeline
 from vaep.io import datasplits
-# from vaep.io.dataloaders import get_dls, get_test_dl
-from vaep import sampling
 
-import vaep.nb as config
+import vaep.nb
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
@@ -81,7 +61,7 @@ args = dict(globals()).keys()
 # files and folders
 folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
-file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
+file_format: str = 'csv' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # training
 epochs_max:int = 50  # Maximum number of epochs
@@ -90,7 +70,8 @@ cuda:bool = True # Whether to use a GPU for training
 # model
 latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
 hidden_layers:str = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
-force_train:bool = True # Force training when saved model could be used. Per default re-train model
+# force_train:bool = True # Force training when saved model could be used. Per default re-train model
+patience:int = 50 # Patience for early stopping
 sample_idx_position: int = 0 # position of index which is sample ID
 model: str = 'VAE' # model name
 model_key: str = 'VAE' # potentially alternative key for model (grid search)
@@ -98,13 +79,6 @@ save_pred_real_na: bool = True # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
-
-# %%
-# folder_experiment = "runs/experiment_03/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# folder_experiment = "runs/experiment_03/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070"
-# latent_dim = 30
-# epochs_max = 2
-# # force_train = False
 
 # %% [markdown]
 # Some argument transformations
@@ -274,7 +248,7 @@ analysis.learn = Learner(dls=analysis.dls,
                         model=analysis.model,
                         loss_func=loss_fct,
                         cbs=[ae.ModelAdapterVAE(),
-                             EarlyStoppingCallback(patience=50)
+                             EarlyStoppingCallback(patience=args.patience)
                              ])
 
 analysis.learn.show_training_loop()
@@ -322,13 +296,6 @@ args.epoch_trained
 
 # %% [markdown]
 # #### Loss normalized by total number of measurements
-# %%
-# results are mixed (train and validation) -> better design needed
-# in general: L_rec >> L_reg (seems so)
-# # rename _results!
-# results_train = pd.DataFrame.from_records(_results[::2], columns=['L_rec', 'L_reg'])
-# results_train.index.name = 'step'
-# results_train.plot()
 
 # %%
 N_train_notna = data.train_X.notna().sum().sum()
@@ -473,11 +440,6 @@ d_metrics
 # %%
 metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
-
-# %% [markdown]
-# ### Plot metrics
-#
-
 
 # %% [markdown]
 # ## Save predictions

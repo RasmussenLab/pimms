@@ -20,19 +20,19 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
              .apply(
         lambda x: f"{x.bin} (N={x.n_obs:,d})", axis=1
     )
-        .rename('bin')
+        .rename('intensity bin')
         .astype('category')
     )
 
     errors_binned = (errors_binned[models_order]
                      .stack()
-                     .to_frame('intensity')
+                     .to_frame('Average error')
                      .join(n_obs)
                      .reset_index()
                      )
 
     ax = sns.barplot(data=errors_binned, ax=ax,
-                     x='bin', y='intensity', hue='model',
+                     x='intensity bin', y='Average error', hue='model',
                      palette=palette)
     ax.xaxis.set_tick_params(rotation=-90)
     return ax, errors_binned

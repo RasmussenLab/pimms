@@ -18,7 +18,6 @@
 
 # %%
 import logging
-import plotly.express as px
 
 import pandas as pd
 
@@ -45,7 +44,7 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 # files and folders
 folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
-file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
+file_format: str = 'csv' # file format of create splits, default pickle (pkl)
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 # model
 sample_idx_position: int = 0 # position of index which is sample ID

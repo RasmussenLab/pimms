@@ -49,7 +49,7 @@ Command: `snakemake --snakefile workflow/Snakefile_grid.smk --rulegraph | dot -T
 - see if model trains stable on one dataset
 
 ```bash
-snakemake --snakefile workflow/Snakefile_best_repeated.smk -n -p
+snakemake --snakefile workflow/Snakefile_best_repeated_train.smk -n -p
 ```
 
 ### Repeated training of models across machine datasets

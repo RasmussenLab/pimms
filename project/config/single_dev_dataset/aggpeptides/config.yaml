@@ -1,9 +1,0 @@
-config_split: config/single_dev_dataset/aggPeptides/split.yaml
-config_train: config/single_dev_dataset/aggPeptides/train.yaml
-folder_experiment: runs/experiment_03/df_intensities_peptides_long/Q_Exactive_HF_X_Orbitrap_6070
-fn_rawfile_metadata: data/files_selected_metadata.csv
-models:
- - CF
- - DAE
- - VAE
-

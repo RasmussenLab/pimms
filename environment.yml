@@ -1,17 +1,17 @@
 # Dev Environment
 name: vaep
 channels:
-  - defaults
+  # - defaults
+  - conda-forge
+  - bioconda
   - pytorch
   - fastai
   - plotly
-  - conda-forge
-  - bioconda
 dependencies:
   - biopython # Aligner
   - python=3.8
   - numpy=1.20
-  - pandas>=1.4
+  - pandas=1
   - scipy>=1.6
   # plotting
   - matplotlib=3.3
@@ -20,8 +20,8 @@ dependencies:
   - seaborn
   - pip
   # ML
-  - pytorch=1.10.*
-  - scikit-learn=1.0.*
+  - pytorch=1.10
+  - scikit-learn=1.0
   - fastai
   - torchvision
   - cudatoolkit=10.2
@@ -36,17 +36,40 @@ dependencies:
   - openpyxl # xml
   - omegaconf
   # snakemake
-  - snakemake-minimal=7.12.0
+  - snakemake-minimal
   # jupyter
-  - ipykernel=5.3
-  - ipython=7.22
-  - ipywidgets=7.6
+  - ipykernel
+  - ipython
+  - ipywidgets
   - jupytext
   - jupyterlab # standalone jupyter installation
-  - jupyterlab_code_formatter
-  - jupyterlab-git
+  # - jupyterlab_code_formatter
+  # - jupyterlab-git
   - jupyter-dash
   - papermill # execute ipynb's
+  # R packages
+  # - cross-r-base
+  - r-base=3.6
+  - r-irkernel  
+  # - r-devtools
+  # - r-data.table
+  - r-reshape2
+  - r-stringi # + rmarkdown hack for reshape2
+  - r-stringr # reshape2
+  # - r-gdata
+  # - r-glmnet
+  - r-e1071
+  - r-norm
+  - r-missforest
+  - r-vim
+  - r-mice
+  - r-tidyverse
+    # - bioconductor-biocinstaller
+  # - r-imputelcmd # bioconda
+  - bioconductor-impute
+  - bioconductor-pcamethods
+  # - rrcovNA, GMSimpute
+  # SeqKnn, pcaMethods, DreamAI # bioconductor
   # dev
   - pytest
   - pytest-cov

@@ -95,6 +95,7 @@ def add_default_paths(cfg: Config, folder_data='', out_root=None):
         cfg.data = Path(folder_data)
     else:
         cfg.data = cfg.folder_experiment / 'data'
+        cfg.data.mkdir(exist_ok=True, parents=True)
     assert cfg.data.exists(), f"Directory not found: {cfg.data}"
     del folder_data
     cfg.out_figures = cfg.folder_experiment / 'figures'

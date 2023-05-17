@@ -20,6 +20,7 @@ from vaep.plotting import savefig
 
 from . import nb
 
+## set some defaults
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
         formatter = self.formatter or '{:,d}'.format
@@ -29,4 +30,4 @@ class IntArrayFormatter(pf.GenericArrayFormatter):
 pd.options.display.float_format = '{:,.3f}'.format
 pf.IntArrayFormatter = IntArrayFormatter
 
-vaep.plotting.make_large_descriptors()
+vaep.plotting.make_large_descriptors('x-large')

@@ -19,11 +19,10 @@
 # Create data splits
 
 # %%
-from typing import Union, List
-from dataclasses import dataclass
-import logging
 from pathlib import Path
-from pprint import pprint
+
+from typing import Union, List
+
 
 import numpy as np
 import pandas as pd
@@ -33,19 +32,14 @@ pd.options.display.max_columns = 32
 
 import plotly.express as px
 
-from omegaconf import OmegaConf
-from sklearn.neighbors import NearestNeighbors
-
 import vaep
-from vaep.pandas import interpolate, parse_query_expression
 from vaep.io.datasplits import DataSplits
 from vaep.io import thermo_raw_files
-from vaep.sampling import feature_frequency, frequency_by_index, sample_data
+from vaep.sampling import feature_frequency, sample_data
 
 from vaep.analyzers import analyzers
 from vaep.analyzers.analyzers import  AnalyzePeptides
 
-from vaep.logging import setup_logger
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 
@@ -68,61 +62,15 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 feat_prevalence: Union[int, float] = 0.25 # Minimum number or fraction of feature prevalence across samples to be kept
 sample_completeness: Union[int, float] = 0.5 # Minimum number or fraction of total requested features per Sample
 select_N: int = None # only use latest N samples
+random_state: int = 42 # random state for reproducibility of splits
 min_RT_time: Union[int, float] = None # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2' # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = f'runs/example'
 folder_data:str = '' # specify data directory if needed
-file_format: str = 'pkl' # file format of create splits, default pickle (pkl)
+file_format: str = 'csv' # file format of create splits, default pickle (pkl)
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None # date column in meta data
 meta_cat_col: str = None # category column in meta data
-
-# %%
-# fn_rawfile_metadata = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
-# meta_date_col = 'Content Creation Date'
-# meta_cat_col = None
-# folder_experiment = 'runs/test_example/'
-
-# ################## intentisies ##############################################
-# # small protein groups, long format
-# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_long_N50.csv'
-# # small protein groups, wide format
-# FN_INTENSITIES = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
-# column_names = ["Gene Names"]
-# index_col = 0
-# #############################################################################
-# meta_cat_col = ''
-# min_RT_time = ''
-
-# %%
-# # protein groups
-# FN_INTENSITIES = 'data/dev_datasets/intensities_wide_selected_N07441_M42881/Q_Exactive_HF_X_Orbitrap_6070.pkl'
-# fn_rawfile_metadata = 'data/dev_datasets/intensities_wide_selected_N07441_M42881/metadata.csv'
-#
-# FN_INTENSITIES =  'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-#
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# index_col = ['Sample ID', 'Gene names'] 
-# meta_date_col = 'Content Creation Date'
-# column_names = None
-# select_N = 50
-
-# %%
-# # peptides
-# FN_INTENSITIES = 'data/dev_datasets/df_intensities_peptides_long_2017_2018_2019_2020_N05011_M42725/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.pkl'  # Intensities for feature
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-# index_col = ['Sample ID', 'peptide'] # Can be either a string or position (typical 0 for first column)
-# meta_date_col = 'Content Creation Date'
-
-# %%
-# # # evidence
-# FN_INTENSITIES = 'data/dev_datasets/df_intensities_evidence_long_2017_2018_2019_2020_N05015_M49321/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6075.pkl'  # Intensities for feature
-# folder_experiment = f'runs/{Path(FN_INTENSITIES).parent.name}/{Path(FN_INTENSITIES).stem}'
-# fn_rawfile_metadata = 'data/files_selected_metadata.csv' 
-# index_col = ['Sample ID', 'Sequence', 'Charge'] # Can be either a string or position (typical 0 for first column)
-# meta_date_col = 'Content Creation Date'
 
 
 
@@ -131,8 +79,8 @@ args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
+
 params = vaep.nb.args_from_dict(args)
-# params = OmegaConf.create(args)
 params
 
 
@@ -383,7 +331,9 @@ if isinstance(params.sample_completeness, float):
     logger.info(msg)
 
 sample_counts = analysis.df.notna().sum(axis=1) # if DataFrame
-    
+sample_counts.describe()
+
+# %%
 mask = sample_counts > params.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 print(msg)
@@ -407,6 +357,9 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = analysis.df.notna().sum(axis=0).sort_values().plot()
+_new_labels = [l.get_text().split(';')[0] for l in ax.get_xticklabels()]
+_ = ax.set_xticklabels(_new_labels, rotation=45,
+                       horizontalalignment='right')
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
 fname = params.out_figures / 'feature_prevalence'
@@ -427,38 +380,13 @@ figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-missing_by_median = {'median feat value': analysis.df.median(
-), 'prop. missing': analysis.df.isna().mean()}
-missing_by_median = pd.DataFrame(missing_by_median)
-x_col, y_col = missing_by_median.columns
-
-bins = range(*vaep.plotting.data.min_max(missing_by_median['median feat value']), 1)
-
-missing_by_median['bins'] = pd.cut(
-    missing_by_median['median feat value'], bins=bins)
-missing_by_median['median feat value (rounded)'] = missing_by_median['median feat value'].round(decimals=0).astype(int)
-_counts = missing_by_median.groupby('median feat value (rounded)')['median feat value'].count().rename('count')
-missing_by_median = missing_by_median.join(_counts, on='median feat value (rounded)')
-missing_by_median['Intensity rounded (based on N observations)'] = missing_by_median.iloc[:,-2:].apply(lambda s: "{}  (N={:3,d})".format(*s), axis=1)
-
-ax = missing_by_median.plot.scatter(x_col, y_col, ylim=(0, 1))
-
-
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(data=analysis.df, type='scatter')
 fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-y_col = 'prop. missing'
-x_col = 'Intensity rounded (based on N observations)'
-ax = missing_by_median[[x_col, y_col]].plot.box(by=x_col)
-ax = ax[0] # returned series due to by argument?
-_ = ax.set_title('')
-_ = ax.set_ylabel(y_col)
-_ = ax.set_xlabel(x_col)
-_ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                       horizontalalignment='right')
-
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(data=analysis.df, type='boxplot')
 fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
@@ -640,7 +568,11 @@ analysis.to_long_format(inplace=True)
 analysis.df_long
 
 # %%
-fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(), sample_index_to_drop=0, weights=freq_per_feature, frac=0.1)
+fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(),
+                                      sample_index_to_drop=0,
+                                      weights=freq_per_feature,
+                                      frac=0.1,
+                                      random_state=params.random_state,)
 assert len(splits.train_X) > len(fake_na)
 splits.val_y = fake_na.sample(frac=0.5).sort_index()
 splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]
@@ -730,3 +662,5 @@ params
 # %%
 # saved figures
 figures
+
+# %%

@@ -60,11 +60,10 @@ args = dict(globals()).keys()
 # files and folders
 folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
 folder_data:str = '' # specify data directory if needed
-file_format: str = 'pkl' # change default to pickled files
+file_format: str = 'csv' # change default to pickled files
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
 models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
 plot_to_n:int = 5 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
-
 
 # %% [markdown]
 # Some argument transformations
@@ -79,7 +78,7 @@ args
 
 # %%
 figures = {}
-
+dumps = {}
 
 # %%
 TARGET_COL = 'observed'
@@ -191,6 +190,7 @@ def load_config_file(fname: Path, first_split='config_') -> dict:
 
 # model_key could be used as key from config file
 # load only specified configs?
+# case: no config file available?
 all_configs = collect(
     paths=(fname for fname in args.out_models.iterdir()
            if fname.suffix == '.yaml'
@@ -330,13 +330,16 @@ corr_per_sample_val = (pred_val
 kwargs = dict(ylim=(0.7, 1), rot=90,
               # title='Corr. betw. fake NA and model pred. per sample on validation data',
               ylabel='correlation per sample')
-ax = corr_per_sample_val.plot.box(**kwargs)
+ax = corr_per_sample_val[TOP_N_ORDER].plot.box(**kwargs)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
 fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
-with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as writer:
+
+fname = args.out_figures/'pred_corr_val_per_sample.xlsx'
+dumps[fname.stem] = fname
+with pd.ExcelWriter(fname) as writer:
     corr_per_sample_val.describe().to_excel(writer, sheet_name='summary')
     corr_per_sample_val.to_excel(writer, sheet_name='correlations')
 
@@ -344,8 +347,8 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_valid_per_sample.xlsx') as write
 # identify samples which are below lower whisker for models
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[MODELS]).min()
-mask = (corr_per_sample_val[MODELS] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_val[TOP_N_ORDER]).min()
+mask = (corr_per_sample_val[TOP_N_ORDER] < treshold).any(axis=1)
 corr_per_sample_val.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
 
 # %% [markdown]
@@ -374,17 +377,11 @@ mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
 errors_val.loc[mask]
 
 # %%
-# errors_val_smoothed = errors_val.copy()
-# errors_val_smoothed[errors_val.columns[:-1]] = (errors_val
-#                                                 [errors_val.columns[:-1]]
-#                                                 .rolling(window=200, min_periods=1)
-#                                                 .mean())
 ax = vaep.plotting.plot_rolling_error(errors_val[TOP_N_ORDER + ['freq']],
                                       metric_name=METRIC,
                                       window=int(len(errors_val)/15),
                                       min_freq=MIN_FREQ,
                                       colors_to_use=COLORS_TO_USE)
-#ToDo: color matching
 
 
 # %%
@@ -400,7 +397,6 @@ vaep.savefig(
 # - number of observations in parentheses. 
 
 # %%
-
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_val[
         ['observed']+TOP_N_ORDER
@@ -412,6 +408,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 # %%
 errors_binned.head()
+dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned.head()
 
@@ -441,7 +438,9 @@ ax = pred_test_corr.loc[TARGET_COL, ORDER_MODELS].plot.bar(
 )
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-vaep.savefig(ax.get_figure(), name='pred_corr_test_overall', folder=args.out_figures)
+fname = args.out_figures / 'pred_corr_test_overall.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
 pred_test_corr
 
 # %% [markdown]
@@ -465,12 +464,17 @@ corr_per_sample_test.loc[~too_few_obs].describe()
 kwargs = dict(ylim=(0.7,1), rot=90,
               # title='Corr. betw. fake NA and model predictions per sample on test data',
               ylabel='correlation per sample')
-ax = corr_per_sample_test.drop('n_obs', axis=1).plot.box(**kwargs)
+ax = (corr_per_sample_test
+      .loc[~too_few_obs, TOP_N_ORDER]
+      .plot
+      .box(**kwargs))
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fname = args.out_figures / 'pred_corr_test_per_sample.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
-with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer:   
+
+dumps[fname.stem] = fname.with_suffix('.xlsx')
+with pd.ExcelWriter(fname.with_suffix('.xlsx')) as writer:   
     corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
     corr_per_sample_test.to_excel(writer, sheet_name='correlations')
 
@@ -478,8 +482,8 @@ with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_sample.xlsx') as writer
 # identify samples which are below lower whisker for models
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[MODELS]).min()
-mask = (corr_per_sample_test[MODELS] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_sample_test[TOP_N_ORDER]).min()
+mask = (corr_per_sample_test[TOP_N_ORDER] < treshold).any(axis=1)
 corr_per_sample_test.loc[mask].style.highlight_min(axis=1) if mask.sum() else 'Nothing to display'
 
 # %%
@@ -510,13 +514,17 @@ corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
 kwargs = dict(rot=90,
               # title=f'Corr. per {FEAT_NAME} on test data',
               ylabel=f'correlation per {FEAT_NAME}')
-ax = corr_per_feat_test.loc[~too_few_obs].drop(
-    'n_obs', axis=1).plot.box(**kwargs)
+ax = (corr_per_feat_test
+      .loc[~too_few_obs, TOP_N_ORDER]
+      .plot
+      .box(**kwargs)
+      )
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fname = args.out_figures / 'pred_corr_test_per_feat.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
-with pd.ExcelWriter(args.out_figures/'pred_corr_test_per_feat.xlsx') as writer:
+dumps[fname.stem] = fname.with_suffix('.xlsx')
+with pd.ExcelWriter(fname.with_suffix('.xlsx')) as writer:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(writer, sheet_name='summary')
     corr_per_feat_test.to_excel(writer, sheet_name='correlations')
 
@@ -526,8 +534,8 @@ feat_count_test.name = 'count'
 feat_count_test.head()
 
 # %%
-treshold = vaep.pandas.get_lower_whiskers(corr_per_feat_test[MODELS]).min()
-mask = (corr_per_feat_test[MODELS] < treshold).any(axis=1)
+treshold = vaep.pandas.get_lower_whiskers(corr_per_feat_test[TOP_N_ORDER]).min()
+mask = (corr_per_feat_test[TOP_N_ORDER] < treshold).any(axis=1)
 
 def highlight_min(s, color, tolerence=0.00001):
     return np.where((s - s.min()).abs() < tolerence, f"background-color: {color};", None)
@@ -550,7 +558,7 @@ else:
 # %%
 metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(pred_test.drop('freq', axis=1), key='test data')
-test_metrics = pd.DataFrame(test_metrics)[ORDER_MODELS]
+test_metrics = pd.DataFrame(test_metrics)[TOP_N_ORDER]
 test_metrics
 
 # %%
@@ -563,11 +571,18 @@ _to_plot.index = [feature_names.name]
 _to_plot
 
 # %%
+def build_text(s):
+    ret = ''
+    if not np.isnan(s["latent_dim"]):
+        ret += f'LD: {int(s["latent_dim"])} '
+    if not np.isnan(s["hidden_layers"]):
+        t = ",".join(str(x) for x in s["hidden_layers"])
+        ret += f"HL: {t}"
+    return ret
+
 text = model_configs[["latent_dim", "hidden_layers"]].apply(
-    lambda s: f'LD: {s["latent_dim"]:3} '
-              f'- HL: {",".join(str(x) for x in s["hidden_layers"]) if s["hidden_layers"] is not np.nan else "-"}',
+    build_text,
     axis=1)
-text = text.rename({'dae': 'DAE', 'vae': 'VAE'})
 
 _to_plot.loc["text"] = text
 _to_plot = _to_plot.fillna('')
@@ -590,7 +605,15 @@ figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
-errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*ORDER_MODELS, 'freq']]
+dumps[fname.stem] = fname.with_suffix('.csv')
+_to_plot_long = _to_plot.T
+_to_plot_long = _to_plot_long.rename({feature_names.name: 'metric_value'}, axis=1)
+_to_plot_long['data level'] = feature_names.name
+_to_plot_long = _to_plot_long.set_index('data level', append=True)
+_to_plot_long.to_csv(fname.with_suffix('.csv'))
+
+# %%
+errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop("freq", axis=1), freq_feat=freq_feat)[[*TOP_N_ORDER, 'freq']]
 errors_test
 # %% [markdown]
 # ### Error plot by frequency
@@ -623,9 +646,14 @@ figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
 # %%
+dumps[fname.stem] = fname.with_suffix('.csv')
 errors_bind.to_csv(fname.with_suffix('.csv'))
 errors_bind.head()
 # %% [markdown]
 # ## Figures dumped to disk
 # %%
 figures
+# %%
+dumps
+
+# %%

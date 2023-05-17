@@ -5,6 +5,8 @@ from snakemake.logging import logger
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
+# include rules per model
+
 
 folder_experiment = config["folder_experiment"]
 
@@ -19,21 +21,22 @@ rule all:
 
 nb = "01_2_performance_plots.ipynb"
 
+MODELS = config["models"]+config["NAGuideR_methods"]
 
 rule comparison:
     input:
         nb=nb,
         runs=expand(
-            "{folder_experiment}/01_1_train_{model}.ipynb",
+            "{folder_experiment}/preds/pred_test_{model}.csv",
             folder_experiment=config["folder_experiment"],
-            model=config["models"],
+            model=MODELS,
         ),
     output:
         pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
         nb="{folder_experiment}" f"/{nb}",
     params:
         meta_data=config["fn_rawfile_metadata"],
-        models=",".join(config["models"]),
+        models=",".join(MODELS),
     shell:
         "papermill {input.nb} {output.nb}"
         " -r fn_rawfile_metadata {params.meta_data:q}"
@@ -41,39 +44,113 @@ rule comparison:
         " -r models {params.models:q}"
         " && jupyter nbconvert --to html {output.nb}"
 
+##########################################################################################
+# train NaGuideR methods
+nb_stem = "01_1_transfer_NAGuideR_pred"
+rule transform_NAGuideR_predictions:
+    input: 
+        dumps=expand(
+            "{{folder_experiment}}/preds/pred_all_{method}.csv",
+            method=config["NAGuideR_methods"],
+        ),
+        nb=f"{nb_stem}.ipynb",
+    output:
+    # "{{folder_experiment}}/preds/pred_real_na_{method}.csv"),
+        expand( (
+            "{{folder_experiment}}/preds/pred_val_{method}.csv",
+            "{{folder_experiment}}/preds/pred_test_{method}.csv"),
+            method=config["NAGuideR_methods"],
+        ),
+        nb="{folder_experiment}/01_1_transfer_NAGuideR_pred.ipynb",
+    benchmark:
+         "{folder_experiment}/"f"{nb_stem}.tsv",
+    params:
+        folder_experiment="{folder_experiment}",
+        file_format=config["file_format"],
+        # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
+        dumps_as_str=lambda wildcards, input: ','.join(input.dumps)
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r folder_experiment {params.folder_experiment}"
+        " -r file_format {params.file_format}"
+        " -p dumps {params.dumps_as_str}"
+        " && jupyter nbconvert --to html {output.nb}"
 
+rule train_NAGuideR_model:
+    input:
+        nb="01_1_train_NAGuideR_methods.ipynb",
+        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+    output:
+        nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
+        dump="{folder_experiment}/preds/pred_all_{method}.csv"
+    benchmark:
+        "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
+    params:
+        folder_experiment="{folder_experiment}",
+        method="{method}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r train_split {input.train_split}"
+        " -r method {params.method}"
+        " -r folder_experiment {params.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+rule transform_data_to_wide_format:
+    input:
+        nb="01_0_transform_data_to_wide_format.ipynb",
+        train_split="{folder_experiment}/data/train_X.csv",
+    output:
+        nb="{folder_experiment}/01_0_transform_data_to_wide_format.ipynb",
+        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+    params:
+        folder_experiment="{folder_experiment}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r folder_experiment {params.folder_experiment}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+##########################################################################################
+# train models in python
+rule train_models:
+    input:
+        nb="01_1_train_{model}.ipynb",
+        train_split="{folder_experiment}/data/train_X.csv",
+        configfile=config["config_train"],
+    output:
+        nb="{folder_experiment}/01_1_train_{model}.ipynb",
+        pred="{folder_experiment}/preds/pred_test_{model}.csv"
+    benchmark:
+        "{folder_experiment}/01_1_train_{model}.tsv"
+    params:
+        folder_experiment="{folder_experiment}",
+        meta_data=config["fn_rawfile_metadata"],
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -f {input.configfile}"
+        " -r folder_experiment {params.folder_experiment}"
+        " -p fn_rawfile_metadata {params.meta_data}"
+        " -r model_key {wildcards.model}"
+        " && jupyter nbconvert --to html {output.nb}"
+
+
+##########################################################################################
+# Create Data splits
 # separate workflow by level -> provide custom configs
 nb = "01_0_split_data.ipynb"
-
 
 rule create_splits:
     input:
         nb=nb,
         configfile=config["config_split"],
     output:
-        train_split="{folder_experiment}/data/train_X.pkl",
+        train_split="{folder_experiment}/data/train_X.csv",
         nb="{folder_experiment}" f"/{nb}",
     params:
         folder_experiment="{folder_experiment}",
+        meta_data=config["fn_rawfile_metadata"],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_experiment}"
-        " && jupyter nbconvert --to html {output.nb}"
-
-
-rule train_models:
-    input:
-        nb="01_1_train_{model}.ipynb",
-        train_split="{folder_experiment}/data/train_X.pkl",
-        configfile=config["config_train"],
-    output:
-        nb="{folder_experiment}/01_1_train_{model}.ipynb",
-    params:
-        folder_experiment="{folder_experiment}",
-    shell:
-        "papermill {input.nb} {output.nb}"
-        " -f {input.configfile}"
-        " -r folder_experiment {params.folder_experiment}"
-        " -r model_key {wildcards.model}"
+        " -p fn_rawfile_metadata {params.meta_data}"
         " && jupyter nbconvert --to html {output.nb}"
