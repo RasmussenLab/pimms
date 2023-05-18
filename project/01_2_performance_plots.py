@@ -85,7 +85,7 @@ TARGET_COL = 'observed'
 METRIC = 'MAE'
 MIN_FREQ = None
 MODELS_PASSED = args.models.split(',')
-MODELS = ['RSN', *MODELS_PASSED]
+MODELS = MODELS_PASSED.copy()
 
 # MODELS = args.models.split(',')
 # ORDER_MODELS = ['RSN', *MODELS]
@@ -143,6 +143,7 @@ vaep.plotting.make_large_descriptors('xx-large')
 # ## Across data completeness
 
 # %%
+# load frequency of training features... 
 freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')   # needs to be pickle -> index.name needed
 
 freq_feat.head() # training data
@@ -150,13 +151,6 @@ freq_feat.head() # training data
 # %%
 prop = freq_feat / len(data.train_X.index.levels[0])
 prop.to_frame()
-
-# %% [markdown]
-# # Add reference methods
-#
-# > ToDo: Remove. Only consider explicitly added models for comparison
-#
-# - drawing from shifted normal distribution (RSN imputation)
 
 # %%
 data.to_wide_format()
@@ -167,11 +161,9 @@ N_SAMPLES, M_FEAT = data.train_X.shape
 print(f"N samples: {N_SAMPLES:,d}, M features: {M_FEAT}")
 
 # %%
-mean = data.train_X.mean()
-std = data.train_X.std()
-
-imputed_shifted_normal = vaep.imputation.impute_shifted_normal(data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
-imputed_shifted_normal.to_frame('intensity')
+fname = args.folder_experiment / '01_2_performance_summary.xlsx'
+dumps[fname.stem] = fname
+writer = pd.ExcelWriter(fname)
 
 # %% [markdown]
 # # Model specifications
@@ -198,6 +190,7 @@ all_configs = collect(
     load_fn=load_config_file
 )
 model_configs = pd.DataFrame(all_configs).set_index('model')
+model_configs.T.to_excel(writer, sheet_name='model_params')
 model_configs.T
 
 # %% [markdown]
@@ -225,7 +218,6 @@ pred_val = compare_predictions.load_split_prediction_by_modelkey(
     split='val',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
-pred_val['RSN'] = imputed_shifted_normal
 pred_val[MODELS]
 
 # %%
@@ -252,6 +244,11 @@ ORDER_MODELS = (errors_val
                 .to_list())
 ORDER_MODELS
 
+# %%
+mae_stats_ordered = errors_val.abs().describe()[ORDER_MODELS]
+mae_stats_ordered.to_excel(writer, sheet_name='mae_stats_ordered')
+writer.close()
+mae_stats_ordered
 
 # %% [markdown]
 # Hack color order, by assing CF, DAE and VAE unique colors no matter their order
@@ -421,7 +418,6 @@ pred_test = compare_predictions.load_split_prediction_by_modelkey(
     split='test',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
-pred_test['RSN'] = imputed_shifted_normal
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
 pred_test
