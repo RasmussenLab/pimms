@@ -7,7 +7,6 @@ Imputation can be down by column.
 """
 from typing import Tuple, Dict
 from sklearn.impute import KNNImputer
-from sklearn.neighbors import KNeighborsTransformer
 from sklearn.neighbors import NearestNeighbors
 import scipy
 import numpy as np

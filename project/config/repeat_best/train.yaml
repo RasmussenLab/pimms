@@ -1,0 +1,13 @@
+epochs_max:
+- 100
+repeats: 5
+folder: "runs/repeat_best_train"
+levels:
+- proteinGroups
+- peptides
+- evidence 
+fn_rawfile_metadata: data/dev_datasets/df_intensities_{level}_long/metadata.csv
+config_split: 'config/single_dev_dataset/{level}/split.yaml'
+config_train: 'config/single_dev_dataset/{level}/train_{model}.yaml'
+repitition_name: 'repeat'
+file_format: pkl

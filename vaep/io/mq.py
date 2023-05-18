@@ -648,7 +648,7 @@ class ExtractFromPeptidesTxt():
         assert isinstance(mq_output_object, MaxQuantOutput)
         self._mq_output = mq_output_object
         self.out_folder = Path(out_folder) / mq_output_object.folder.stem
-        self.out_folder.mkdir(exist_ok=True)
+        self.out_folder.mkdir(exist_ok=True, parents=True)
         self.fname_template = '{gene}.json'
         self.fasta_db = fasta_db
 

@@ -1,0 +1,21 @@
+config_split: config/single_dev_dataset/evidence_N50/split.yaml
+config_train: config/single_dev_dataset/evidence_N50/train_{model}.yaml
+folder_experiment: runs/dev_dataset_small/evidence_N50
+fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
+file_format: csv
+models:
+  - Median # maps to median on file system?
+  - CF
+  - DAE
+  - VAE
+  - KNN
+NAGuideR_methods:
+  # - lls # 1:20h killed
+  - knnmethod
+  # - rf
+  # - impseq
+  - qrilc
+  - minprob
+  - mindet 
+  # - seqknn
+  # - svdmethod

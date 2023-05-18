@@ -24,12 +24,17 @@ latent_dim:
 folder_grid_search: "runs/grid_search"
 folder_experiment2: "runs/grid_search/{{level}}"
 folder_experiment: "runs/grid_search/{level}"
-fn_rawfile_metadata: "data/files_selected_metadata.csv"
+fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
 levels:
 - proteinGroups
 - aggPeptides
 - evidence 
 config_split: 'config/single_dev_dataset/{level}/split.yaml'
 config_train: 'placeholder.yaml'
-name_template: run_LD_{latent_dim}_E_{epochs_max}
+name_template: run/LD_{latent_dim}_E_{epochs_max}
 cuda: True
+models:
+  - CF
+  - DAE
+  - VAE
+  - median

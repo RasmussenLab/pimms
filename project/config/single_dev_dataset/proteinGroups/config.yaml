@@ -1,5 +1,16 @@
 config_split: config/single_dev_dataset/proteinGroups/split.yaml
-config_train: config/single_dev_dataset/proteinGroups/train.yaml
-folder_experiment: runs/experiment_03/df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070
-fn_rawfile_metadata: data/files_selected_metadata.csv
+config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
+folder_experiment: runs/Q_Exactive_HF_X_Orbitrap_6070/proteinGroups
+fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv
 cuda: True
+models:
+ - Median
+ - CF
+ - DAE
+ - VAE
+ - KNN
+NAGuideR_methods:
+  - lls
+  - knnmethod
+  - rf
+  # - impseq # fails

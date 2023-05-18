@@ -4,6 +4,7 @@ import numbers
 
 from types import SimpleNamespace
 import typing
+from typing import Iterable
 
 import numpy as np
 import pandas as pd
@@ -123,6 +124,13 @@ def get_columns_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.Om
         cols = {k.lower(): v for k, v in cols.items()}
     return omegaconf.OmegaConf.create(cols)
 
+
+def get_columns_accessor_from_iterable(cols: Iterable[str],
+                                       all_lower_case=False) -> omegaconf.OmegaConf:
+    cols = index_to_dict(cols)
+    if all_lower_case:
+        cols = {k.lower(): v for k, v in cols.items()}
+    return omegaconf.OmegaConf.create(cols)
 
 def select_max_by(df: pd.DataFrame, grouping_columns: list, selection_column: str) -> pd.DataFrame:
     df = df.sort_values(by=[*grouping_columns, selection_column], ascending=False)

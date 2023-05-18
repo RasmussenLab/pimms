@@ -1,4 +1,22 @@
 config_split: config/appl_ald_data/plasma/proteinGroups/split.yaml
-config_train: config/appl_ald_data/plasma/proteinGroups/train.yaml
+config_train: config/appl_ald_data/plasma/proteinGroups/train_{model}.yaml
 folder_experiment: runs/appl_ald_data/plasma/proteinGroups
 fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+file_format: pkl
+models:
+  - Median # maps to median on file system?
+  - CF
+  - DAE
+  - VAE
+  - KNN
+NAGuideR_methods:
+  # - lls
+  - knnmethod
+  # - seqknn # error
+  - rf
+  # - impseq
+  - qrilc
+  - minprob
+  - mindet
+  - svdmethod
+  # - mice-norm # stopped after 8h

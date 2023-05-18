@@ -41,6 +41,7 @@ rule graph is
 
 <img src="rulegraphs/rulegraph_gridsearch.png" alt="Rule graph for grid search" width="500"/>
 
+Command: `snakemake --snakefile workflow/Snakefile_grid.smk --rulegraph | dot -Tpng > rulegraph_gridsearch.png`
 
 ## Repeated training
 
@@ -48,7 +49,7 @@ rule graph is
 - see if model trains stable on one dataset
 
 ```bash
-snakemake --snakefile workflow/Snakefile_best_repeated.smk -n -p
+snakemake --snakefile workflow/Snakefile_best_repeated_train.smk -n -p
 ```
 
 ### Repeated training of models across machine datasets

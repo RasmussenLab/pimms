@@ -55,7 +55,10 @@ def ancova_pg(df_long: pd.DataFrame,
     for feat_name, data_feat in df_long.groupby(feat_col):
         ancova = pg.ancova(data=data_feat, dv=dv,
                            between=between, covar=covar)
+        covar = [covar] if isinstance(covar, str) else covar
+        N_used = data_feat[[dv, between, *covar]].dropna().shape[0]
         ancova[feat_col] = feat_name
+        ancova['N'] = N_used
         scores.append(ancova)
     scores = pd.concat(scores)
     scores['-Log10 pvalue'] = -np.log10(scores['p-unc'])
