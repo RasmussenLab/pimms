@@ -2,13 +2,32 @@
 
 ## Data requirements
 
-(tbc)
+Required is abundance data in wide or long format in order to run the models. 
 
-ThermoRawFileParser output is used as metadata so far (a workflow is provided).
-Strictly required is an ordering meta data information,e.g. a measurment data, and whatever else
-   (e.g. some clinical metadata over samples)
-- `meta_date_col`: currently stricktly required
-- `meta_cat_col`: optional column used for visualization of PCAs
+| Sample ID | Protein A | Protein B | Protein C | ... |
+| sample_01 | 0.1       | 0.2       | 0.3       | ... |
+| sample_02 | 0.2       | 0.1       | 0.4       | ... |
+| sample_03 | 0.3       | 0.2       | 0.1       | ... |
+
+or as long formated data.
+
+| Sample ID | Protein | Abundance |
+| sample_01 | Protein A | 0.1       |
+| sample_01 | Protein B | 0.2       |
+| sample_01 | Protein C | 0.3       |
+| sample_02 | Protein A | 0.2       |
+| sample_02 | Protein B | 0.1       |
+| sample_02 | Protein C | 0.4       |
+| sample_03 | Protein A | 0.3       |
+| sample_03 | Protein B | 0.2       |
+| sample_03 | Protein C | 0.1       |
+
+Currently `pickle`d and `csv` files are supported.
+
+Optionally, ThermoRawFileParser output cab be used as metadata.
+along further as e.g. clinical metadata for each sample.
+- `meta_date_col`: optional column used to order the samples (e.g. by date)
+- `meta_cat_col`: optional categoyr column used for visualization of samples in PCAs
 
 ## Workflows
 

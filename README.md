@@ -46,7 +46,7 @@ conda (or mamba), see [instructions on setting up a virtual environment](docs/ve
 Download the repository
 
 ```
-git clone git@github.com:RasmussenLab/pimms.git
+git clone https://github.com/RasmussenLab/pimms.git
 cd pimms
 ```
 
