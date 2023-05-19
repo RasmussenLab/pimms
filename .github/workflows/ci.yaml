@@ -58,6 +58,7 @@ jobs:
         papermill 01_1_train_CF.ipynb --help-notebook
     - name: Run demo workflow
       run: | 
+       cd project
        snakemake -p -c1 -n
        snakemake -p -c1
     - name: Archive results
