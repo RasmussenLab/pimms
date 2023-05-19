@@ -153,7 +153,7 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     return ax2
 
 
-def add_height_to_barplot(ax, size=15):
+def add_height_to_barplot(ax, size=5):
     for bar in ax.patches:
         if not bar.get_height():
             continue
@@ -168,7 +168,7 @@ def add_height_to_barplot(ax, size=15):
     return ax
 
 
-def add_text_to_barplot(ax, text, size=15):
+def add_text_to_barplot(ax, text, size=5):
     for bar, text in zip(ax.patches, text):
         logger.debug(f"{bar = }, f{text = }, {bar.get_height() = }")
         if not bar.get_height():

@@ -46,6 +46,9 @@ pd.options.display.max_rows = 120
 pd.options.display.min_rows = 50
 pd.options.display.max_colwidth = 100
 
+plt.rcParams.update({'figure.figsize': (4, 2)})
+vaep.plotting.make_large_descriptors(5)
+
 logger = vaep.logging.setup_nb_logger()
 
 # %%
@@ -124,20 +127,18 @@ assign_colors(['CF', 'DAE', 'knn', 'VAE'])
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %%
-vaep.plotting.make_large_descriptors('x-large')
 fig, axes = plt.subplots(1, 2, sharey=True)
 
 vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
-                                     title='Validation split',)
+                                     title='Validation split',size=1)
 vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
-                                     title='Test split',)
+                                     title='Test split',size=1)
 
-fig.suptitle("Simulated missing values per sample", size=20)
+fig.suptitle("Simulated missing values per sample", size=8)
 
 fname = args.out_figures / 'fake_na_val_test_splits.png'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
-vaep.plotting.make_large_descriptors('xx-large')
 
 # %% [markdown]
 # ## Across data completeness
@@ -325,6 +326,8 @@ corr_per_sample_val = (pred_val
                        )[ORDER_MODELS])
 
 kwargs = dict(ylim=(0.7, 1), rot=90,
+            #     boxprops=dict(linewidth=1.5),
+            flierprops=dict(markersize=3),
               # title='Corr. betw. fake NA and model pred. per sample on validation data',
               ylabel='correlation per sample')
 ax = corr_per_sample_val[TOP_N_ORDER].plot.box(**kwargs)
@@ -379,9 +382,6 @@ ax = vaep.plotting.plot_rolling_error(errors_val[TOP_N_ORDER + ['freq']],
                                       window=int(len(errors_val)/15),
                                       min_freq=MIN_FREQ,
                                       colors_to_use=COLORS_TO_USE)
-
-
-# %%
 fname = args.out_figures / 'performance_methods_by_completness.pdf'
 figures[fname.stem] = fname
 vaep.savefig(
@@ -394,10 +394,12 @@ vaep.savefig(
 # - number of observations in parentheses. 
 
 # %%
+fig, ax = plt.subplots(figsize=(8,3))
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_val[
         ['observed']+TOP_N_ORDER
     ],
+    ax=ax,
     palette=TOP_N_COLOR_PALETTE)
 fname = args.out_figures / 'errors_binned_by_int_val.pdf'
 figures[fname.stem] = fname
@@ -458,6 +460,7 @@ corr_per_sample_test.loc[~too_few_obs].describe()
 
 # %%
 kwargs = dict(ylim=(0.7,1), rot=90,
+              flierprops=dict(markersize=3),
               # title='Corr. betw. fake NA and model predictions per sample on test data',
               ylabel='correlation per sample')
 ax = (corr_per_sample_test
@@ -508,7 +511,7 @@ corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
 
 # %%
 kwargs = dict(rot=90,
-              # title=f'Corr. per {FEAT_NAME} on test data',
+            flierprops=dict(markersize=1),
               ylabel=f'correlation per {FEAT_NAME}')
 ax = (corr_per_feat_test
       .loc[~too_few_obs, TOP_N_ORDER]
@@ -586,15 +589,15 @@ _to_plot
 
 
 # %%
-fig, ax = plt.subplots(figsize=(10,8))
+fig, ax = plt.subplots(figsize=(4,2))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
                                                  ylabel=f"{METRIC} for {feature_names.name} (based on {n_in_comparison:,} log2 intensities)",
                                                  # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
                                                  color=COLORS_TO_USE,
                                                  ax=ax,
                                                  width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=16)
+ax = vaep.plotting.add_height_to_barplot(ax, size=5)
+ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
 ax.set_xticklabels([])
 fname = args.out_figures / 'performance_test.pdf'
 figures[fname.stem] = fname
@@ -632,11 +635,14 @@ vaep.savefig(ax.get_figure(), name=fname)
 # - number of observations in parentheses. 
 
 # %%
+fig, ax = plt.subplots(figsize=(8,3))
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
     pred_test[
         ['observed']+TOP_N_ORDER
     ],
-    palette=TOP_N_COLOR_PALETTE)
+    palette=TOP_N_COLOR_PALETTE,
+    ax=ax,
+    )
 fname = args.out_figures / 'errors_binned_by_int_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)

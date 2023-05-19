@@ -28,7 +28,8 @@ import vaep.plotting
 from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
-plt.rcParams['figure.figsize'] = [16.0, 7.0]
+plt.rcParams['figure.figsize'] = [4.0, 2.0]
+vaep.plotting.make_large_descriptors(5)
 
 # %%
 IDX =[['proteinGroups', 'peptides', 'evidence'],
@@ -37,6 +38,7 @@ IDX =[['proteinGroups', 'peptides', 'evidence'],
 REPITITION_NAME = snakemake.params.repitition_name # 'dataset', 'repeat'
 
 metrics_fname = Path(snakemake.input.metrics)
+metrics_fname
 
 # %%
 FOLDER = metrics_fname.parent
@@ -62,7 +64,7 @@ to_plot
 # %%
 logger.setLevel(20) # reset debug
 ax = to_plot['mean'].plot.bar(rot=0, width=.8, yerr=to_plot['std'])
-
+ax.set_xlabel('')
 
 # %%
 to_dump = to_plot.swaplevel(1,0, axis=1).sort_index(axis=1)
@@ -79,12 +81,14 @@ selected = metrics.loc[pd.IndexSlice[
 selected.stack().to_frame('MAE').reset_index()
 
 # %%
-fig = sns.barplot(x='data level',
+ax = sns.barplot(x='data level',
             y='MAE',
             hue='model',
             order = IDX[0],
             ci=95,
+            errwidth=1.5,
             data=selected.stack().to_frame('MAE').reset_index())
+ax.set_xlabel('')
 fig = ax.get_figure()
 
 # %%

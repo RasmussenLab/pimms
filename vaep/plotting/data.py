@@ -43,6 +43,7 @@ def plot_observations(df: pd.DataFrame,
                       ax: Axes = None,
                       title: str = '',
                       axis: int = 1,
+                      size: int = 1,
                       ylabel: str = 'number of features',
                       xlabel: str = 'Samples ordered by number of features') -> Axes:
     """Plot non missing observations by row (axis=1) or column (axis=0) in
@@ -77,6 +78,7 @@ def plot_observations(df: pd.DataFrame,
           .plot(
               ax=ax,
               style='.',
+              ms=size,
               title=title,
               ylabel=ylabel,
               xlabel=xlabel)
