@@ -397,7 +397,7 @@ ax = vaep.plotting.plot_rolling_error(errors_val[TOP_N_ORDER + ['freq']],
                                       window=int(len(errors_val)/15),
                                       min_freq=MIN_FREQ,
                                       colors_to_use=COLORS_TO_USE)
-fname = args.out_figures / 'performance_methods_by_completness.pdf'
+fname = args.out_figures / 'performance_methods_by_completness_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(
     ax.get_figure(),

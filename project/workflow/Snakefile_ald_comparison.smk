@@ -45,7 +45,9 @@ nb = "10_4_ald_compare_single_pg.ipynb"
 rule plot_intensities_for_diverging_results:
     input:
         expand(folder_experiment + "/preds/pred_real_na_{method}.csv",
-        method=[config["baseline"], *config["methods"]],),
+        method=[
+            config["baseline"],
+            *config["methods"]],),
         expand(
         [
             out_folder + "scores/diff_analysis_scores_{model}.pkl",

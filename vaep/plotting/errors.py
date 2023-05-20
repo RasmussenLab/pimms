@@ -17,18 +17,21 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
         pred=pred, target_col=target_col)
 
     meta_cols = ['bin', 'n_obs']  # calculated along binned error
+    len_max_bin = len(str(int(errors_binned['bin'].max())))
     n_obs = (errors_binned[meta_cols]
              .apply(
-        lambda x: f"{x.bin} (N={x.n_obs:,d})", axis=1
+        lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
     )
         .rename('intensity bin')
         .astype('category')
     )
 
-    errors_binned = (errors_binned[models_order]
+    errors_binned = (errors_binned
+                     [models_order]
                      .stack()
                      .to_frame('Average error')
                      .join(n_obs)
+                     .sort_values(by='intensity bin')
                      .reset_index()
                      )
 
