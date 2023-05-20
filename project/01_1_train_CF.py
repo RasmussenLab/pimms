@@ -45,7 +45,8 @@ from vaep import sampling
 import vaep.nb
 from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'))
-logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
+logger.info(
+    "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
 
@@ -59,23 +60,26 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
-folder_data:str = '' # specify data directory if needed
-file_format: str = 'csv' # change default to pickled files
-fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
+# Datasplit folder with data for experiment
+folder_experiment: str = 'runs/example'
+folder_data: str = ''  # specify data directory if needed
+file_format: str = 'csv'  # change default to pickled files
+# Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 # training
-epochs_max:int = 20  # Maximum number of epochs
+epochs_max: int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
-patience:int = 1 # Patience for early stopping
-batch_size:int = 32_768 # Batch size for training (and evaluation)
-cuda:bool=True # Use the GPU for training?
+patience: int = 1  # Patience for early stopping
+batch_size: int = 32_768  # Batch size for training (and evaluation)
+cuda: bool = True  # Use the GPU for training?
 # model
-latent_dim:int = 10 # Dimensionality of encoding dimension (latent space of model)
+# Dimensionality of encoding dimension (latent space of model)
+latent_dim: int = 10
 # hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
-sample_idx_position: int = 0 # position of index which is sample ID
-model: str = 'CF' # model name
-model_key: str = 'CF' # potentially alternative key for model (grid search)
-save_pred_real_na:bool=True # Save all predictions for missing values
+sample_idx_position: int = 0  # position of index which is sample ID
+model: str = 'CF'  # model name
+model_key: str = 'CF'  # potentially alternative key for model (grid search)
+save_pred_real_na: bool = True  # Save all predictions for missing values
 
 # %% [markdown]
 # Some argument transformations
@@ -105,7 +109,8 @@ TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 # ## Load data in long format
 
 # %%
-data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format) 
+data = datasplits.DataSplits.from_folder(
+    args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
@@ -114,12 +119,12 @@ data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format
 data.train_X.sample(5)
 
 # %% [markdown]
-# Infer index names from long format 
+# Infer index names from long format
 
 # %%
 index_columns = list(data.train_X.index.names)
 sample_id = index_columns.pop(args.sample_idx_position)
-if len(index_columns) == 1: 
+if len(index_columns) == 1:
     index_column = index_columns.pop()
     index_columns = None
     logger.info(f"{sample_id = }, single feature: {index_column = }")
@@ -129,7 +134,8 @@ else:
 if not index_columns:
     index_columns = [sample_id, index_column]
 else:
-    raise NotImplementedError("More than one feature: Needs to be implemented. see above logging output.")
+    raise NotImplementedError(
+        "More than one feature: Needs to be implemented. see above logging output.")
 
 # %% [markdown]
 # load meta data for splits
@@ -150,13 +156,13 @@ else:
 
 # %%
 freq_peptides = sampling.frequency_by_index(data.train_X, 0)
-freq_peptides.head() # training data
+freq_peptides.head()  # training data
 
 # %% [markdown]
 # ### Produce some addional fake samples
 
 # %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance. 
+# The validation fake NA is used to by all models to evaluate training performance.
 
 # %%
 val_pred_fake_na = data.val_y.to_frame(name='observed')
@@ -178,12 +184,12 @@ test_pred_fake_na.describe()
 ana_collab = models.collab.CollabAnalysis(
     datasplits=data,
     sample_column=sample_id,
-    item_column=index_column, # not generic
+    item_column=index_column,  # not generic
     target_column='intensity',
     model_kwargs=dict(n_factors=args.latent_dim,
-                    y_range=(int(data.train_X.min()),
-                                int(data.train_X.max())+1)
-                    ),
+                      y_range=(int(data.train_X.min()),
+                               int(data.train_X.max())+1)
+                      ),
     batch_size=args.batch_size)
 
 # %%
@@ -225,10 +231,10 @@ recorder_dump = RecorderDump(
 recorder_dump.save(args.out_figures)
 del recorder_dump
 vaep.savefig(fig, name='collab_training',
-                folder=args.out_figures)
+             folder=args.out_figures)
 ana_collab.model_kwargs['batch_size'] = ana_collab.batch_size
 vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
-                    TEMPLATE_MODEL_PARAMS.format('CF'))
+                  TEMPLATE_MODEL_PARAMS.format('CF'))
 
 # %% [markdown]
 # ### Predictions
@@ -238,7 +244,8 @@ vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
 
 # %%
 # this could be done using the validation data laoder now
-ana_collab.test_dl = ana_collab.dls.test_dl(data.val_y.reset_index())  # test_dl is here validation data
+ana_collab.test_dl = ana_collab.dls.test_dl(
+    data.val_y.reset_index())  # test_dl is here validation data
 val_pred_fake_na['CF'], _ = ana_collab.learn.get_preds(
     dl=ana_collab.test_dl)
 val_pred_fake_na
@@ -257,7 +264,7 @@ if args.save_pred_real_na:
     pred_real_na = models.collab.get_missing_values(
         df_train_long=data.train_X,
         val_idx=data.val_y.index,
-        test_idx=data.test_y.index, 
+        test_idx=data.test_y.index,
         analysis_collab=ana_collab)
     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
 
@@ -275,8 +282,8 @@ data.train_X.head()
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)  
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)  
+# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
+# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
 # > Could be changed.
 
 # %% [markdown]
@@ -284,7 +291,7 @@ data.train_X.head()
 #
 # - all measured (identified, observed) peptides in validation data
 #
-# > Does not make to much sense to compare collab and AEs,  
+# > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
 # %%
@@ -311,11 +318,13 @@ added_metrics
 # Save all metrics as json
 
 # %%
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
+                  f'metrics_{args.model_key}.json')
 
 
 # %%
-metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
+metrics_df = models.get_df_from_nested_dict(
+    d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
 # %% [markdown]
@@ -330,7 +339,7 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # ## Config
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
+args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args
 
 # %%
