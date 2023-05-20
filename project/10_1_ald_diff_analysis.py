@@ -214,11 +214,7 @@ fname
 # ALD study approach -> has access to simulated missing data!
 # (VAE model did not see this data)
 pred_real_na = None
-if args.model_key == 'RSN':
-    pred_real_na = vaep.imputation.impute_shifted_normal(
-        ald_study)
-    pred_real_na.to_csv(fname)
-elif args.model_key and str(args.model_key) != 'None':
+if args.model_key and str(args.model_key) != 'None':
     pred_real_na = (vaep
                     .analyzers
                     .compare_predictions
@@ -226,6 +222,12 @@ elif args.model_key and str(args.model_key) != 'None':
                     )
 else:
     logger.info('No model key provided -> no imputation of data.')
+
+if args.model_key == 'RSN':
+    logger.info('Filtering of data as done in original paper for RSN.')
+    # Select only idx from RSN which are selected by ald study cutoffs
+    idx_to_sel = ald_study.columns.intersection(pred_real_na.index.levels[-1])
+    pred_real_na = pred_real_na.loc[pd.IndexSlice[:, idx_to_sel]]
 pred_real_na
 
 
@@ -311,8 +313,8 @@ df = pd.concat([observed, pred_real_na]).unstack()
 df.loc[idx_complete_data]
 
 # %%
-# if some features were not imputed -> drop them
-# could be changed: let a model decide if a feature should be imputed, otherwise don't.
+# * if some features were not imputed -> drop them
+# ? could be changed: let a model decide if a feature should be imputed, otherwise don't.
 if pred_real_na is not None:
     if df.isna().sum().sum():
         logger.warning("DataFrame has missing entries after imputation.")

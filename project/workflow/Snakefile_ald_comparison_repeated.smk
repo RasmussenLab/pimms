@@ -40,7 +40,7 @@ rule compare_repetitions:
 
 rule run_comparison_workflow:
     input:
-        f"{folder_run}/figures/performance_methods_by_completness.pdf",
+        f"{folder_run}/figures/errors_binned_by_int_test.pdf",
     output:
         excel=f"{out_folder}/equality_rejected_target.pkl",
         qvalues=f"{out_folder}/qvalues_target.pkl",
@@ -57,7 +57,7 @@ rule run_comparison_workflow:
 
 rule run_models:
     output:
-        f"{folder_run}/figures/performance_methods_by_completness.pdf",
+        f"{folder_run}/figures/errors_binned_by_int_test.pdf",
     params:
         configfile="config/appl_ald_data/plasma/proteinGroups/config.yaml",
         folder_experiment=folder_run,

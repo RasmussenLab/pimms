@@ -1,0 +1,264 @@
+# ---
+# jupyter:
+#   jupytext:
+#     formats: ipynb,py:percent
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.14.5
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
+# # Variational Autoencoder
+
+# %%
+import logging
+
+import pandas as pd
+
+import vaep
+import vaep.model
+import vaep.models as models
+import vaep.imputation
+from vaep.io import datasplits
+
+import vaep.nb
+logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger.info("Median Imputation")
+
+figures = {}  # collection of ax or figures
+
+
+# %%
+# catch passed parameters
+args = None
+args = dict(globals()).keys()
+
+# %% [markdown]
+# Papermill script parameters:
+
+# %% tags=["parameters"]
+# files and folders
+# Datasplit folder with data for experiment
+folder_experiment: str = 'runs/example'
+file_format: str = 'csv'  # file format of create splits, default pickle (pkl)
+# Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
+# model
+sample_idx_position: int = 0  # position of index which is sample ID
+# model key (lower cased version will be used for file names)
+model_key: str = 'RSN'
+model: str = 'RSN'  # model name
+save_pred_real_na: bool = True  # Save all predictions for real na
+# metadata -> defaults for metadata extracted from machine data
+meta_date_col: str = None  # date column in meta data
+meta_cat_col: str = None  # category column in meta data
+
+
+# %% [markdown]
+# Some argument transformations
+
+
+# %%
+args = vaep.nb.get_params(args, globals=globals())
+args
+
+# %%
+args = vaep.nb.args_from_dict(args)
+args
+
+
+# %% [markdown]
+# Some naming conventions
+
+# %%
+TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
+
+# %% [markdown]
+# ## Load data in long format
+
+# %%
+data = datasplits.DataSplits.from_folder(
+    args.data, file_format=args.file_format)
+
+# %% [markdown]
+# data is loaded in long format
+
+# %%
+data.train_X.sample(5)
+
+# %% [markdown]
+# Infer index names from long format
+
+# %%
+index_columns = list(data.train_X.index.names)
+sample_id = index_columns.pop(args.sample_idx_position)
+if len(index_columns) == 1:
+    index_column = index_columns.pop()
+    index_columns = None
+    logger.info(f"{sample_id = }, single feature: {index_column = }")
+else:
+    logger.info(f"{sample_id = }, multiple features: {index_columns = }")
+
+if not index_columns:
+    index_columns = [sample_id, index_column]
+else:
+    raise NotImplementedError(
+        "More than one feature: Needs to be implemented. see above logging output.")
+
+# %% [markdown]
+# load meta data for splits
+
+# %%
+if args.fn_rawfile_metadata:
+    df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
+    display(df_meta.loc[data.train_X.index.levels[0]])
+else:
+    df_meta = None
+
+# %% [markdown]
+# ## Initialize Comparison
+#
+
+# %%
+freq_feat = vaep.io.datasplits.load_freq(args.data)
+freq_feat.head()  # training data
+
+# %% [markdown]
+# ### Produce some addional fake samples
+
+# %% [markdown]
+# The validation simulated NA is used to by all models to evaluate training performance.
+
+# %%
+val_pred_fake_na = data.val_y.to_frame(name='observed')
+val_pred_fake_na
+
+# %%
+test_pred_fake_na = data.test_y.to_frame(name='observed')
+test_pred_fake_na.describe()
+
+# %% [markdown]
+# ## Data in wide format
+
+# %%
+data.to_wide_format()
+args.M = data.train_X.shape[-1]
+data.train_X.head()
+
+
+# %% [markdown]
+# ### Impute using shifted normal distribution
+
+# %%
+imputed_shifted_normal = vaep.imputation.impute_shifted_normal(
+    data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
+imputed_shifted_normal = imputed_shifted_normal.to_frame('intensity')
+imputed_shifted_normal
+
+# %%
+val_pred_fake_na[args.model] = imputed_shifted_normal
+test_pred_fake_na[args.model] = imputed_shifted_normal
+val_pred_fake_na
+
+# %% [markdown]
+# Save predictions for NA
+
+# %%
+if args.save_pred_real_na:
+    mask = data.train_X.isna().stack()
+    idx_real_na = mask.index[mask]
+    idx_real_na = (idx_real_na
+                   .drop(val_pred_fake_na.index)
+                   .drop(test_pred_fake_na.index))
+    # hacky, but works:
+    pred_real_na = (pd.Series(0, index=idx_real_na, name='placeholder')
+                    .to_frame()
+                    .join(imputed_shifted_normal)
+                    .drop('placeholder', axis=1))
+    # pred_real_na.name = 'intensity'
+    display(pred_real_na)
+    pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
+
+
+# # %% [markdown]
+# ### Plots
+#
+# %%
+ax, _ = vaep.plotting.errors.plot_errors_binned(val_pred_fake_na)
+
+# %%
+ax, _ = vaep.plotting.errors.plot_errors_binned(test_pred_fake_na)
+
+# %% [markdown]
+# ## Comparisons
+
+
+# %% [markdown]
+# ### Validation data
+#
+# - all measured (identified, observed) peptides in validation data
+
+# %%
+# papermill_description=metrics
+d_metrics = models.Metrics()
+
+# %% [markdown]
+# The fake NA for the validation step are real test data (not used for training nor early stopping)
+
+# %%
+added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
+added_metrics
+
+# %% [markdown]
+# ### Test Datasplit
+#
+# Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
+
+# %%
+added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
+added_metrics
+
+# %% [markdown]
+# The fake NA for the validation step are real test data
+
+# %% [markdown]
+# ### Save all metrics as json
+
+# %%
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
+                  f'metrics_{args.model_key}.json')
+d_metrics
+
+# %%
+metrics_df = models.get_df_from_nested_dict(
+    d_metrics.metrics, column_levels=['model', 'metric_name']).T
+metrics_df
+
+# %% [markdown]
+# ## Save predictions
+
+# %%
+# val
+fname = args.out_preds / f"pred_val_{args.model_key}.csv"
+setattr(args, fname.stem, fname.as_posix())  # add [] assignment?
+val_pred_fake_na.to_csv(fname)
+# test
+fname = args.out_preds / f"pred_test_{args.model_key}.csv"
+setattr(args, fname.stem, fname.as_posix())
+test_pred_fake_na.to_csv(fname)
+
+# %% [markdown]
+# ## Config
+
+# %%
+figures  # switch to fnames?
+
+# %%
+args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
+args
