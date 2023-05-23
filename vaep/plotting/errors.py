@@ -1,5 +1,7 @@
 """Plot errors based on DataFrame with model predictions."""
 import pandas as pd
+
+from typing import Optional
 from matplotlib.axes import Axes
 import seaborn as sns
 
@@ -9,6 +11,7 @@ import vaep.pandas.calc_errors
 def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
                        ax: Axes = None,
                        palette: dict = None,
+                       metric_name: Optional[str] = None,
                        errwidth: float = 1.2) -> Axes:
     assert target_col in pred.columns, f'Specify `target_col` parameter, `pred` do no contain: {target_col}'
     models_order = pred.columns.to_list()
@@ -25,18 +28,18 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
         .rename('intensity bin')
         .astype('category')
     )
+    metric_name = metric_name or 'Average error'
 
     errors_binned = (errors_binned
                      [models_order]
                      .stack()
-                     .to_frame('Average error')
+                     .to_frame(metric_name)
                      .join(n_obs)
-                     .sort_values(by='intensity bin')
                      .reset_index()
                      )
 
     ax = sns.barplot(data=errors_binned, ax=ax,
-                     x='intensity bin', y='Average error', hue='model',
+                     x='intensity bin', y=metric_name, hue='model',
                      palette=palette,
                      errwidth=errwidth,)
     ax.xaxis.set_tick_params(rotation=-90)

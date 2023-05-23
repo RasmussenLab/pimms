@@ -62,6 +62,14 @@ df.columns = ['model', *df.columns[1:]]
 df = df.set_index(list(df.columns[:2]))
 df
 
+# %% [markdown]
+# color mapping globally defined for article figures
+
+# %%
+COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
+print(COLORS_TO_USE_MAPPTING.keys())
+sns.color_palette(palette=COLORS_TO_USE_MAPPTING.values())
+
 # %%
 import yaml
 data_levels_annotated = dict()
@@ -89,7 +97,7 @@ ax = (metrics
       .bar(rot=0,
             xlabel='',
             ylabel=f"{METRIC} (log2 intensities)",
-            # position=0.1,
+            color=COLORS_TO_USE_MAPPTING,
             width=.85,
             fontsize=8
         ))

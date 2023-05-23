@@ -106,30 +106,7 @@ if args.plot_to_n > 10:
 COLORS_TO_USE = [sns.color_palette()[5], *sns.color_palette()[:5]]
 
 # %%
-
-
-def assign_colors(models):
-    color_model_mapping = {
-        'CF': sns.color_palette()[1],
-        'DAE': sns.color_palette()[2],
-        'VAE': sns.color_palette()[3]
-    }
-    other_colors = [sns.color_palette()[0], *sns.color_palette()[4:]]
-    i = 0
-    ret_colors = list()
-    for model in models:
-        if model in color_model_mapping:
-            ret_colors.append(color_model_mapping[model])
-        else:
-            pos = i % len(other_colors)
-            ret_colors.append(other_colors[pos])
-            i += 1
-    if i > len(other_colors):
-        logger.info("Reused some colors!")
-    return ret_colors
-
-
-assign_colors(['CF', 'DAE', 'knn', 'VAE'])
+vaep.plotting.defaults.assign_colors(['CF', 'DAE', 'knn', 'VAE'])
 
 # %%
 data = datasplits.DataSplits.from_folder(
@@ -264,40 +241,7 @@ mae_stats_ordered
 # Hack color order, by assing CF, DAE and VAE unique colors no matter their order
 # Could be extended to all supported imputation methods
 # %%
-
-
-def assign_colors(models):
-    color_model_mapping = {
-        'CF': sns.color_palette()[2],
-        'DAE': sns.color_palette()[3],
-        'VAE': sns.color_palette()[4]
-    }
-    other_colors = [*sns.color_palette()[:2], *sns.color_palette()[5:]]
-    i = 0
-    ret_colors = list()
-    for model in models:
-        if model in color_model_mapping:
-            ret_colors.append(color_model_mapping[model])
-        else:
-            pos = i % len(other_colors)
-            ret_colors.append(other_colors[pos])
-            i += 1
-    if i > len(other_colors):
-        logger.info("Reused some colors!")
-    return ret_colors
-
-
-expected = [(0.17254901960784313, 0.6274509803921569, 0.17254901960784313),
-            (0.8392156862745098, 0.15294117647058825, 0.1568627450980392),
-            (0.12156862745098039, 0.4666666666666667, 0.7058823529411765),
-            (0.5803921568627451, 0.403921568627451, 0.7411764705882353),
-            (1.0, 0.4980392156862745, 0.054901960784313725)]
-
-actual = assign_colors(['CF', 'DAE', 'knn', 'VAE', 'lls'])
-
-assert expected == actual
-
-COLORS_TO_USE = assign_colors(ORDER_MODELS)
+COLORS_TO_USE = vaep.plotting.defaults.assign_colors(ORDER_MODELS)
 
 # %%
 # For top_N -> define colors
@@ -415,7 +359,9 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
         ['observed']+TOP_N_ORDER
     ],
     ax=ax,
-    palette=TOP_N_COLOR_PALETTE)
+    palette=TOP_N_COLOR_PALETTE,
+    metric_name=METRIC,)
+ax.set_ylabel(f"Average error ({METRIC})")
 fname = args.out_figures / 'errors_binned_by_int_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -667,13 +613,14 @@ vaep.savefig(ax.get_figure(), name=fname)
 # - number of observations in parentheses.
 
 # %%
-fig, ax = plt.subplots(figsize=(8, 3))
+fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
     pred_test[
         ['observed']+TOP_N_ORDER
     ],
-    palette=TOP_N_COLOR_PALETTE,
     ax=ax,
+    palette=TOP_N_COLOR_PALETTE,
+    metric_name=METRIC,
 )
 fname = args.out_figures / 'errors_binned_by_int_test.pdf'
 figures[fname.stem] = fname
