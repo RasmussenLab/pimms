@@ -28,8 +28,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-pd.options.display.max_columns = 32
-
 import plotly.express as px
 
 import vaep
@@ -43,7 +41,13 @@ from vaep.analyzers.analyzers import  AnalyzePeptides
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 
+
+pd.options.display.max_columns = 32
+plt.rcParams['figure.figsize'] = [4, 2]
+vaep.plotting.make_large_descriptors(5)
+
 figures = {}  # collection of ax or figures
+dumps = {}  # collection of data dumps
 
 # %% [markdown]
 # ## Arguments
@@ -134,6 +138,22 @@ analysis.df
 ax = analysis.df.notna().sum(axis=0).to_frame(
     analysis.df.columns.name).plot.box()
 ax.set_ylabel('number of observation across samples')
+
+
+# %%
+fname = params.out_folder / '01_0_data_stats.xlsx'
+dumps[fname.name] = fname.as_posix()
+writer = pd.ExcelWriter(fname)
+
+notna = analysis.df.notna()
+data_stats_original = pd.concat(
+    [
+        notna.sum().describe().rename('feat_stats'),
+        notna.sum(axis=1).describe().rename('sample_stats')
+    ],
+    axis=1)
+data_stats_original.to_excel(writer, sheet_name='data_stats_original')
+data_stats_original
 
 
 # %% [markdown]
@@ -313,10 +333,6 @@ if params.select_N is not None:
     ax = analysis.df.T.describe().loc['count'].hist()
     _ = ax.set_title('histogram of features for all eligable samples')
 
-# %%
-# export Pathname captured by ThermoRawFileParser
-# analysis.df_meta['Pathname'].to_json(folder_experiment / 'config_rawfile_paths.json', indent=4)
-
 # %% [markdown]
 # ## First Step: Select features by prevalence
 # - `feat_prevalence` across samples
@@ -342,6 +358,16 @@ analysis.N, analysis.M = analysis.df.shape
 
 # # potentially create freq based on DataFrame
 analysis.df
+
+notna = analysis.df.notna()
+data_stats_filtered = pd.concat(
+    [
+        notna.sum().describe().rename('feat_stats'),
+        notna.sum(axis=1).describe().rename('sample_stats')
+    ],
+    axis=1)
+data_stats_filtered.to_excel(writer, sheet_name='data_stats_filtered')
+data_stats_filtered
 
 # %% [markdown]
 # ## Second step - Sample selection
@@ -447,19 +473,19 @@ pcs.describe(include='all', datetime_is_numeric=True).T
 
 # %%
 if params.meta_cat_col:
-    fig, ax = plt.subplots(figsize=(18, 10))
+    fig, ax = plt.subplots(figsize=(2,2))
     analyzers.seaborn_scatter(
-        pcs[pcs_name], fig, ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
-    fname = params.out_figures / \
-        f'pca_sample_by_{"_".join(params.meta_cat_col.split())}'
+        pcs[pcs_name], ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
+    fname = (params.out_figures
+              / f'pca_sample_by_{"_".join(params.meta_cat_col.split())}')
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
 # %%
 if params.meta_date_col != 'PlaceholderTime':
-    fig, ax = plt.subplots(figsize=(23, 10))
+    fig, ax = plt.subplots()
     analyzers.plot_date_map(
-        pcs[pcs_name], fig, ax, pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
+        df=pcs[pcs_name], ax=ax, dates=pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
     fname = params.out_figures / 'pca_sample_by_date'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
@@ -469,17 +495,34 @@ if params.meta_date_col != 'PlaceholderTime':
 # - size: number of features in a single sample
 
 # %%
+fig, ax = plt.subplots()
+col_identified_feat = 'identified features'
+analyzers.plot_scatter(
+    pcs[pcs_name],
+    ax,
+    pcs[col_identified_feat],
+    title=f'by {col_identified_feat}',
+    size=5,
+)
+fname = (params.out_figures
+         / f'pca_sample_by_{"_".join(col_identified_feat.split())}.pdf')
+figures[fname.stem] = fname
+vaep.savefig(fig, fname)
+
+# %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {analysis.M} most abundant peptides for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {analysis.M} features for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
-    color='identified features',
-    width=1200,
-    height=600
+    color=col_identified_feat,
+    template='none',
+    width=1200, # 4 inches x 300 dpi
+    height=600 # 2 inches x 300 dpi
 )
-fname = params.out_figures / 'pca_identified_features.png'
+fname = (params.out_figures
+         / f'pca_sample_by_{"_".join(col_identified_feat.split())}_plotly.pdf')
 figures[fname.stem] = fname
 fig.write_image(fname)
 fig  # stays interactive in html
@@ -499,7 +542,7 @@ if not params.meta_date_col == 'PlaceholderTime':
 df = df.T
 
 # %%
-ax = df.boxplot(rot=80, figsize=(20, 10), fontsize='large',
+ax = df.boxplot(rot=80, figsize=(8, 3), fontsize=5,
                 showfliers=False, showcaps=False)
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
@@ -530,7 +573,8 @@ if not params.meta_date_col == 'PlaceholderTime':
     ax = median_sample_intensity.plot.scatter(x=dates.name, y='median intensity',
                                               rot=90,
                                               fontsize='large',
-                                              figsize=(20, 10),
+                                              figsize=(8, 2),
+                                              s=5,
                                               xticks=vaep.plotting.select_dates(
                                                   median_sample_intensity[dates.name])
                                               )
@@ -568,8 +612,12 @@ freq_per_feature
 # %%
 # freq_per_feature.name = 'Gene names freq' # name it differently?
 # index.name is lost when data is stored
-freq_per_feature.to_json(params.data / 'freq_features.json')
-freq_per_feature.to_pickle(params.data / 'freq_features.pkl')
+fname = params.data / 'freq_features.json'
+dumps[fname.name] = fname
+freq_per_feature.to_json(fname)
+fname = fname.with_suffix('.pkl')
+dumps[fname.name] = fname
+freq_per_feature.to_pickle(fname)
 
 # %% [markdown]
 # Conserning sampling with frequency weights:
@@ -638,7 +686,9 @@ splits.train_X
 
 # %%
 # dumps data in long-format
-splits.dump(folder=params.data, file_format=params.file_format)
+splits_dumped = splits.dump(folder=params.data, file_format=params.file_format)
+dumps.update(splits_dumped)
+splits_dumped
 
 # %% [markdown]
 # ### Reload from disk
@@ -650,30 +700,59 @@ splits = DataSplits.from_folder(params.data, file_format=params.file_format)
 # ## plot distribution of splits
 
 # %%
-ax = splits.train_X.plot.hist(
-    bins=bins, ax=None, label='train', title='Distribution of splits')
-_ = splits.val_y.plot.hist(bins=bins, xticks=list(
-    bins), ax=ax, label='test', legend=True)
-fname = params.out_figures / 'test_over_train_split.pdf'
-figures[fname.name] = fname
-vaep.savefig(ax.get_figure(), fname)
-
-
-# %%
 splits_df = pd.DataFrame(index=analysis.df_long.index)
 splits_df['train'] = splits.train_X
 splits_df['val'] = splits.val_y
 splits_df['test'] = splits.test_y
-splits_df.describe()
+stats_splits = splits_df.describe()
+stats_splits.to_excel(writer, 'stats_splits', float_format='%.2f')
+stats_splits
+
+# %%
+# ! whitespaces in legends are not displayed correctly...
+# max_int_len   = len(str(int(stats_splits.loc['count'].max()))) +1
+# _legend = [
+#     f'{s:<5} (N={int(stats_splits.loc["count", s]):>{max_int_len},d})'.replace(
+#         ' ', '\u00A0')
+#     for s in ('train', 'val', 'test')]
+_legend = [
+    f'{s:<5} (N={int(stats_splits.loc["count", s]):,d})'
+    for s in ('train', 'val', 'test')]
+print(_legend)
+
+# %%
+ax = (splits
+      .train_X
+      .plot
+      .hist(
+          bins=bins,
+          ax=None,
+          color='C0',
+))
+_ = (splits
+     .val_y
+     .plot
+     .hist(bins=bins,
+           xticks=list(bins),
+           ax=ax,
+           color='C2',
+           legend=True)
+     )
+ax.legend(_legend[:-1])
+fname = params.out_figures / 'test_over_train_split.pdf'
+figures[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
 
 # %%
 min_bin, max_bin = vaep.plotting.data.min_max(splits.val_y)
 bins = range(int(min_bin), int(max_bin), 1)
 ax = splits_df.plot.hist(bins=bins,
                          xticks=list(bins),
-                         legend=True,
+                         legend=False,
                          stacked=True,
-                         title='Distribution of splits')
+                         color=['C0', 'C1', 'C2'],
+    )
+ax.legend(_legend)
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = params.out_figures / 'splits_freq_stacked.pdf'
@@ -683,9 +762,11 @@ vaep.savefig(ax.get_figure(), fname)
 # %%
 ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
                                                xticks=list(bins),
-                                               legend=True,
+                                               color=['C1', 'C2'],
+                                               legend=False,
                                                stacked=True,
-                                               title='Distribution of splits')
+                        )
+ax.legend(_legend[1:])
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = params.out_figures / 'val_test_split_freq_stacked_.pdf'
@@ -707,4 +788,10 @@ params
 # saved figures
 figures
 
+# %% [markdown]
+# Saved dumps
+
+# %%
+writer.close()
+dumps
 # %%

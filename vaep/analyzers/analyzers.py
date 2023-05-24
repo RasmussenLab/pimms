@@ -312,7 +312,7 @@ class AnalyzePeptides(SimpleNamespace):
 
         # by dates
         ax = axes[2]
-        plot_date_map(df=PCs.iloc[:, :2], fig=fig,
+        plot_date_map(df=PCs.iloc[:, :2],
                       ax=ax, dates=self.df_meta.date)
 
         return fig
@@ -398,7 +398,7 @@ class LatentAnalysis(Analysis):
             raise ValueError(f"Requested key: '{meta_key}' is not in available,"
                              f" use: {', '.join(x for x in self.meta_data.columns)}")
         fig, ax = plt.subplots(figsize=self.fig_size)
-        _ = fct(df=self.latent_reduced, fig=fig, ax=ax,
+        _ = fct(df=self.latent_reduced, ax=ax,
                 meta=meta_data.loc[self.latent_reduced.index],
                 title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
         if save:
@@ -503,7 +503,12 @@ def run_pca(df_wide:pd.DataFrame, n_components:int=2) -> Tuple[pd.DataFrame, PCA
     return PCs, pca
 
 
-def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, title: str = 'by date'):
+def plot_date_map(df, ax,
+                  dates: pd.Series = None,
+                  meta: pd.Series = None,
+                  title: str = 'by date',
+                  fontsize=8,
+                  size=2):
     if dates is not None and meta is not None:
         raise ValueError("Only set either dates or meta parameters.")
         # ToDo: Clean up arguments
@@ -511,34 +516,54 @@ def plot_date_map(df, fig, ax, dates: pd.Series = None, meta: pd.Series = None, 
         dates = meta
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
-    ax.set_title(title, fontsize=18)
+    ax.set_title(title, fontsize=fontsize)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = scatter_plot_w_dates(
         ax, df, dates=dates, errors='raise')
-    cbar = add_date_colorbar(path_collection, ax=ax, fig=fig)
+    cbar = add_date_colorbar(path_collection, ax=ax)
 
 
-def plot_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+def plot_scatter(df, ax,
+                 meta: pd.Series,
+                 title: str = 'by some metadata',
+                 alpha=ALPHA,
+                 fontsize=8,
+                 size=2):
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
-    ax.set_title(title, fontsize=18)
+    ax.set_title(title, fontsize=fontsize)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = ax.scatter(
-        x=cols[0], y=cols[1], c=meta, data=df, alpha=alpha)
-    cbar = fig.colorbar(path_collection, ax=ax)
+        x=cols[0], y=cols[1], s=size, c=meta, data=df, alpha=alpha)
+    cbar = ax.get_figure().colorbar(path_collection, ax=ax)
 
 
-def seaborn_scatter(df, fig, ax, meta: pd.Series, title: str = 'by some metadata', alpha=ALPHA):
+def seaborn_scatter(df, ax,
+                    meta: pd.Series,
+                    title: str = 'by some metadata',
+                    alpha=ALPHA,
+                    fontsize=5,
+                    size=5):
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
     seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
-                        hue=meta, ax=ax, palette='deep')
-    ax.set_title(title, fontsize=18)
+                        hue=meta, ax=ax, palette='deep', s=size, alpha=alpha)
+    _ = ax.legend(fontsize=fontsize,
+              title_fontsize=fontsize,
+              markerscale=0.4,
+              title=meta.name,
+              )
+    ax.set_title(title, fontsize=fontsize)
+    return ax
 
 
-def scatter_plot_w_dates(ax, df, dates=None, marker=None, errors='raise'):
+def scatter_plot_w_dates(ax, df,
+                         dates=None,
+                         marker=None,
+                         errors='raise',
+                         size=2):
     """plot first vs. second column in DataFrame.
     Use dates to color data.
     
@@ -562,14 +587,15 @@ def scatter_plot_w_dates(ax, df, dates=None, marker=None, errors='raise'):
         c=[mdates.date2num(t) for t in pd.to_datetime(dates, errors=errors)
            ] if dates is not None else None,
         alpha=ALPHA,
+        s=size,
         marker=marker,
     )
     return path_collection
 
 
-def add_date_colorbar(mappable, ax, fig):
+def add_date_colorbar(mappable, ax):
     loc = mdates.AutoDateLocator()
-    cbar = fig.colorbar(mappable, ax=ax, ticks=loc,
+    cbar = ax.get_figure().colorbar(mappable, ax=ax, ticks=loc,
                      format=mdates.AutoDateFormatter(loc))
     return cbar
 
