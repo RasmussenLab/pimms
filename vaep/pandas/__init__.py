@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import omegaconf
 
-from .calc_errors import calc_errors_per_feat
+from .calc_errors import calc_errors_per_feat, get_absolute_error
 
 def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     """Pass a selection of columns to combine it's value counts.

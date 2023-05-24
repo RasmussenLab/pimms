@@ -1,4 +1,5 @@
 """Plot errors based on DataFrame with model predictions."""
+from __future__ import annotations
 import pandas as pd
 
 from typing import Optional
@@ -44,6 +45,54 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
                      errwidth=errwidth,)
     ax.xaxis.set_tick_params(rotation=-90)
     return ax, errors_binned
+
+
+def plot_errors_by_median(pred: pd.DataFrame,
+                          feat_medians: pd.Series,
+                          target_col='observed',
+                          ax: Axes = None,
+                          palette: dict = None,
+                          metric_name: Optional[str] = None,
+                          errwidth: float = 1.2) -> tuple[Axes, pd.DataFrame]:
+    # calculate absolute errors
+    errors = vaep.pandas.get_absolute_error(pred, y_true=target_col)
+    errors.columns.name = 'model'
+
+    # define bins by integer value of median feature intensity
+    feat_medians = feat_medians.astype(int).rename("bin")
+
+    # number of intensities per bin
+    n_obs = pred[target_col].to_frame().join(feat_medians)
+    n_obs = n_obs.groupby('bin').size().to_frame('n_obs')
+
+    errors = (errors.stack().to_frame(metric_name).join(feat_medians)
+              ).reset_index()
+    n_obs.index.name = "bin"
+
+    errors = errors.join(n_obs, on="bin")
+
+    x_axis_name = 'median feature intensity'
+    len_max_bin = len(str(int(errors['bin'].max())))
+    errors[x_axis_name] = (
+        errors[['bin', 'n_obs']]
+        .apply(
+            lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+        )
+        .rename('intensity bin')
+        .astype('category')
+    )
+
+    metric_name = metric_name or 'Average error'
+
+    sns.barplot(data=errors,
+                ax=ax,
+                x=x_axis_name,
+                y=metric_name,
+                hue='model',
+                palette=palette,
+                errwidth=errwidth,)
+    ax.xaxis.set_tick_params(rotation=-90)
+    return ax, errors
 
 
 def plot_rolling_error(errors: pd.DataFrame, metric_name: str, window: int = 200,

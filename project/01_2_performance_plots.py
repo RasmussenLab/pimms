@@ -356,7 +356,7 @@ vaep.savefig(
 fig, ax = plt.subplots(figsize=(8, 3))
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_val[
-        ['observed']+TOP_N_ORDER
+        [TARGET_COL]+TOP_N_ORDER
     ],
     ax=ax,
     palette=TOP_N_COLOR_PALETTE,
@@ -384,6 +384,42 @@ pred_test = compare_predictions.load_split_prediction_by_modelkey(
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
 SAMPLE_ID, FEAT_NAME = pred_test.index.names
 pred_test
+
+# %% [markdown]
+# ## Intensity distribution as histogram
+# plot top 4 models
+# %%
+min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
+top_n =  4
+fig, axes = plt.subplots(ncols=4, figsize=(8, 2), sharey=True)
+
+for model, color, ax in zip(
+    ORDER_MODELS[:4],
+    COLORS_TO_USE[:4],
+    axes):
+    
+    ax, _ = vaep.plotting.data.plot_histogram_intensites(
+        pred_test[TARGET_COL],
+        color='grey',
+        min_max=min_max,
+        ax=ax
+    )
+    ax, _ = vaep.plotting.data.plot_histogram_intensites(
+        pred_test[model],
+        color=color,
+        min_max=min_max,
+        ax=ax,
+        alpha=0.5,
+    )
+    _ = [(l.set_rotation(90))
+             for l in ax.get_xticklabels()]
+    ax.legend()
+
+axes[0].set_ylabel('Number of observations')
+
+fname = args.out_figures / f'intensity_binned_top_{top_n}_models_test.pdf'
+figures[fname.stem] = fname
+vaep.savefig(fig, name=fname)
 
 # %% [markdown]
 # ### Correlation overall
@@ -608,6 +644,34 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 
 # %% [markdown]
+# Plot error by median feature intensity
+
+# %%
+fig, ax = plt.subplots(figsize=(8,2))
+
+ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+    pred=pred_test[
+        [TARGET_COL]+TOP_N_ORDER
+    ],
+    feat_medians=data.train_X.median(),
+    ax=ax,
+    metric_name=METRIC,
+    palette=COLORS_TO_USE
+)
+
+fname = args.out_figures / 'errors_binned_by_feat_medians.pdf'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), name=fname)
+
+# %%
+(errors_binned
+ .set_index(
+     ['model', 'median feature intensity']
+ )
+ .loc[ORDER_MODELS[0]]
+ .sort_values(by=METRIC))
+
+# %% [markdown]
 # ### Error by non-decimal number of intensity
 #
 # - number of observations in parentheses.
@@ -616,7 +680,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
     pred_test[
-        ['observed']+TOP_N_ORDER
+        [TARGET_COL]+TOP_N_ORDER
     ],
     ax=ax,
     palette=TOP_N_COLOR_PALETTE,
