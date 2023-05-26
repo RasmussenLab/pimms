@@ -36,7 +36,7 @@ dependencies:
   - openpyxl # xml
   - omegaconf
   # snakemake
-  - snakemake-minimal
+  - snakemake-minimal<7.26
   # jupyter
   - ipykernel
   - ipython
