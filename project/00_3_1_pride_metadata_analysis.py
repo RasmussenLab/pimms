@@ -282,7 +282,7 @@ cols = vaep.pandas.get_columns_accessor_from_iterable(cols)
 
 fig, ax = plt.subplots()
 
-ax = ax = seaborn.scatterplot(
+ax = seaborn.scatterplot(
     view,
     x=cols.MS_max_RT,
     y=cols.Peptide_Sequences_Identified,
