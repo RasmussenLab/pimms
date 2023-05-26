@@ -49,6 +49,7 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
+make_plots = True # create histograms and swarmplots of diverging results
 model_key = 'VAE'
 sample_id_col = 'Sample ID'
 target = 'kleiner'
@@ -91,16 +92,46 @@ scores = pd.concat([pd.read_pickle(fname) for fname in score_dumps], axis=1)
 scores
 
 # %%
+# %% [markdown]
+# ## Load frequencies of observed features
+
+# %%
+fname = args.folder_experiment / 'freq_features_observed.csv'
+freq_feat = pd.read_csv(fname, index_col=0)
+freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
+freq_feat
+
+# %%
 qvalues = scores.loc[pd.IndexSlice[:, args.target],
-                     pd.IndexSlice[:, 'qvalue']]
+                     pd.IndexSlice[:, 'qvalue']
+                     ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+qvalues.index.names = qvalues.index.names[:-1] + ['frequency']
 fname  = args.out_folder / 'qvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 qvalues.to_pickle(fname)
 qvalues
 
 # %%
+pvalues = scores.loc[pd.IndexSlice[:, args.target],
+                     pd.IndexSlice[:, 'p-unc']
+                     ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+pvalues.index.names = pvalues.index.names[:-1] + ['frequency']
+fname  = args.out_folder / 'pvalues_target.pkl'
+files_out[fname.name] = fname.as_posix()
+pvalues.to_pickle(fname)
+pvalues
+
+# %%
 da_target = scores.loc[pd.IndexSlice[:, args.target],
-                       pd.IndexSlice[:, 'rejected']]
+                       pd.IndexSlice[:, 'rejected']
+                       ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+da_target.index.names = da_target.index.names[:-1] + ['frequency']
 fname = args.out_folder / 'equality_rejected_target.pkl'
 files_out[fname.name] = fname.as_posix()
 da_target.to_pickle(fname)
@@ -126,6 +157,16 @@ fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
 writer = pd.ExcelWriter(fname)
 files_out[fname.name] = fname.as_posix()
 qvalues.to_excel(writer, sheet_name='qvalues')
+writer.close()
+
+# %% [markdown]
+# ## Plots for inspecting imputations (for diverging decisions)
+
+# %%
+if not args.make_plots:
+    logger.warning("Not plots requested.")
+    import sys
+    sys.exit(0)
 
 
 # %% [markdown]
@@ -351,11 +392,6 @@ for i, idx in enumerate(feat_sel):
         name=fname)
     plt.close()
 
-
-# %% [markdown]
-# - add non-imputed data q-value
-# %%
-writer.close()
 
 # %%
 files_out

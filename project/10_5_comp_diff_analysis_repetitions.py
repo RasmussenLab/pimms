@@ -45,7 +45,9 @@ df_long_qvalues
 
 # %%
 qvalue_stats = df_long_qvalues.groupby(level=0).agg(['mean', 'std'])
-qvalue_stats.to_excel(writer, sheet_name='all_qvalue_stats')
+qvalue_stats.to_excel(writer,
+                      sheet_name='all_qvalue_stats',
+                      float_format='%3.5f')
 qvalue_stats
 
 # %%
@@ -54,7 +56,8 @@ decisions_da_target
 
 # %%
 da_counts = sum(pd.read_pickle(f) for f in decisions_da_target)
-da_counts.to_excel(writer, sheet_name='all_rejected_counts')
+da_counts.to_excel(writer,
+                   sheet_name='all_rejected_counts')
 da_counts
 
 # %% [markdown]
@@ -88,7 +91,6 @@ qvalue_stats = (qvalue_stats
                 .loc[idx_different]
                 .sort_values(('None', 'qvalue', 'mean'))
 )
-# qvalue_stats.to_excel(writer, sheet_name='different_qvalue_stats')
 qvalue_stats
 
 # %% [markdown]
@@ -96,9 +98,80 @@ qvalue_stats
 
 # %%
 da_counts = da_counts.loc[qvalue_stats.index]
-da_counts.to_excel(writer, sheet_name='different_rejected_counts')
+# da_counts.to_excel(writer,
+#                    sheet_name='different_rejected_counts')
 qvalue_stats.index = da_counts.index
-qvalue_stats.to_excel(writer, sheet_name='different_qvalue_stats')
+# qvalue_stats.to_excel(writer,
+#                       sheet_name='different_qvalue_stats',
+#                       float_format='%3.5f'
+#                       )
+
 
 # %%
+da_counts = da_counts.droplevel(-1, axis=1)
+da_counts
+
+# %% [markdown]
+# - case: feature omitted in original study
+# - case: feature added: drop RSN as it does not make sense.
+#         (or assing None value -> that's what counts)
+
+# %%
+mask_pgs_included_in_ald_study = qvalue_stats[('RSN', 'qvalue', 'mean')].notna()
+mask_pgs_included_in_ald_study
+
+# %%
+# pgs included in original ald study
+tab_diff_rejec_counts_old = (da_counts
+ .loc[mask_pgs_included_in_ald_study]
+ .reset_index()
+ .groupby(
+     by=da_counts.columns.to_list())
+ .size()
+ .to_frame('N')
+)
+tab_diff_rejec_counts_old.to_excel(writer,
+                             sheet_name='tab_diff_rejec_counts_old')
+tab_diff_rejec_counts_old
+
+# %%
+da_counts.loc[mask_pgs_included_in_ald_study
+              ].to_excel(writer,
+                         sheet_name='diff_rejec_counts_old')
+qvalue_stats.loc[mask_pgs_included_in_ald_study
+                 ].to_excel(writer,
+                            sheet_name='diff_qvalue_stats_old',
+                            float_format='%3.5f'
+                            )
+
+# %%
+# new pgs
+tab_diff_rejec_counts_new = (da_counts
+ .loc[~mask_pgs_included_in_ald_study]
+ .reset_index()
+ .drop('RSN', axis=1)
+ .groupby(
+     by=
+     [m for m in da_counts.columns if m != 'RSN'])
+ .size()
+ .to_frame('N')
+)
+tab_diff_rejec_counts_new.to_excel(writer,
+                                sheet_name='tab_diff_rejec_counts_new')
+tab_diff_rejec_counts_new
+
+# %%
+da_counts.loc[~mask_pgs_included_in_ald_study
+              ].to_excel(writer,
+                         sheet_name='diff_rejec_counts_new')
+qvalue_stats.loc[~mask_pgs_included_in_ald_study
+                 ].to_excel(writer,
+                            sheet_name='diff_qvalue_stats_new',
+                            float_format='%3.5f'
+                            )
+
+# %%
+writer.close()
 fname
+
+# %%

@@ -313,7 +313,8 @@ if args.annotaitons_gene_col in scores.index.names:
 else:
     logger.info(f"No gene annotation in scores index:  {scores.index.names}"
                 " Exiting.")
-    exit(0)
+    import sys
+    sys.exit(0)
 
 # %%
 gene_to_PG = (scores.droplevel(

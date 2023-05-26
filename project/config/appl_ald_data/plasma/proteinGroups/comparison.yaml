@@ -1,6 +1,7 @@
 folder_experiment: runs/appl_ald_data/plasma/proteinGroups
 out_folder: diff_analysis # subfolder of experiment folder
 fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+make_plots: True
 covar: 
   kleiner: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
   inflammation: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num

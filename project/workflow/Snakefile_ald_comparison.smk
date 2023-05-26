@@ -77,6 +77,7 @@ rule plot_intensities_for_diverging_results:
     params:
         baseline=config["baseline"],
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
+        make_plots=config["make_plots"],
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -84,6 +85,7 @@ rule plot_intensities_for_diverging_results:
         " -r baseline {params.baseline}" # not yet used
         " -r out_folder {wildcards.out_folder}"
         " -p cutoff_target {params.cutoff}"
+        " -p make_plots {params.make_plots}"
         " -r fn_clinical_data {input.fn_clinical_data}"
         " && jupyter nbconvert --to html {output.nb}"
 
@@ -118,7 +120,7 @@ rule ml_comparison:
 ##########################################################################################
 # basemethod vs other methods
 nb = "10_2_ald_compare_methods.ipynb"
-
+nb_stem = "10_2_ald_compare_methods"
 
 rule compare_diff_analysis:
     input:
@@ -131,6 +133,8 @@ rule compare_diff_analysis:
     params:
         disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
         annotaitons_gene_col=config["annotaitons_gene_col"],
+    benchmark:
+         out_folder_two_methods_cp + f"{nb_stem}.tsv",
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"

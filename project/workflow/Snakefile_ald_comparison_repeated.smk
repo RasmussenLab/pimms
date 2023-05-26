@@ -8,8 +8,9 @@ folder_run = folder_experiment + "/run_{run}"
 out_folder = folder_run + "/{sub_folder}/{target}"
 
 target = "kleiner"
-sub_folder = "diff_analysis_dev"
+sub_folder = "diff_analysis"
 N = 10
+make_plots = False
 
 rule all:
     input:
@@ -50,6 +51,7 @@ rule run_comparison_workflow:
     shell:
         "snakemake -s workflow\Snakefile_ald_comparison.smk"
         " --config folder_experiment={params.folder_experiment}"
+        f" make_plots={make_plots}"
         " --drop-meta"
         " -p"
         " -c1"

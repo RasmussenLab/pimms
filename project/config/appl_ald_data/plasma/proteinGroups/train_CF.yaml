@@ -2,7 +2,7 @@ folder_experiment:  runs/example
 file_format: csv
 latent_dim: 25
 batch_size: 8192
-epochs_max: 50
+epochs_max: 200
 patience: 3
 sample_idx_position: 0
 cuda: False
