@@ -14,7 +14,7 @@
 # ---
 
 # %% [markdown]
-# # Variational Autoencoder
+# # Imputation using random draws from shifted normal distribution
 
 # %%
 import logging

@@ -33,9 +33,20 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand(out_folder + 'diff_analysis_compare_DA.xlsx',
+        expand(
+            out_folder + 'diff_analysis_compare_DA.xlsx',
             target=target,
-            out_folder=config["out_folder"],)
+            out_folder=config["out_folder"],),
+        expand(
+            [
+                out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
+                out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx"
+            ],
+            target=[target],
+            baseline=config["baseline"],
+            model=config["methods"],
+            out_folder=config["out_folder"],
+        ),
 
 ##########################################################################################
 # Create plots for featues where decisions between model differ (if computed)
@@ -128,7 +139,6 @@ rule compare_diff_analysis:
         " -r model_key {wildcards.model}"
         " -r out_folder {wildcards.out_folder}"
         " -p disease_ontology {params.disease_ontology}"
-        " -r f_annotations {input.f_annotations}"
         " -r annotaitons_gene_col {params.annotaitons_gene_col}"
         " && jupyter nbconvert --to html {output.nb}"
 

@@ -65,13 +65,20 @@ def plot_errors_by_median(pred: pd.DataFrame,
     n_obs = pred[target_col].to_frame().join(feat_medians)
     n_obs = n_obs.groupby('bin').size().to_frame('n_obs')
 
-    errors = (errors.stack().to_frame(metric_name).join(feat_medians)
+    errors = (errors
+              .stack()
+              .to_frame(metric_name)
+              .join(feat_medians)
               ).reset_index()
     n_obs.index.name = "bin"
 
     errors = errors.join(n_obs, on="bin")
 
-    x_axis_name = 'median feature intensity'
+    feat_name = feat_medians.index.name
+    if not feat_name:
+        feat_name = 'feature'
+
+    x_axis_name = f'intensity binned by median of {feat_name}'
     len_max_bin = len(str(int(errors['bin'].max())))
     errors[x_axis_name] = (
         errors[['bin', 'n_obs']]

@@ -32,7 +32,7 @@ rule compare_repetitions:
     output:
         f"{folder_experiment}/agg_differences_compared.xlsx",
     log:
-        notebook=f"runs/appl_ald_data/plasma/proteinGroups/10_5_comp_diff_analysis_repetitions.ipynb",
+        notebook=f"{folder_experiment}/10_5_comp_diff_analysis_repetitions.ipynb",
     params:
         folder_experiment=folder_experiment,
     notebook:

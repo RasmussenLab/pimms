@@ -15,7 +15,7 @@ NAGuideR_methods:
   - knnmethod
   # - seqknn # error
   - rf
-  # - impseq
+  # - impseq # error
   - qrilc
   - minprob
   - mindet

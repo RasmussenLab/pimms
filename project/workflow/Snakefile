@@ -66,13 +66,11 @@ rule transform_NAGuideR_predictions:
          "{folder_experiment}/"f"{nb_stem}.tsv",
     params:
         folder_experiment="{folder_experiment}",
-        file_format=config["file_format"],
         # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
         dumps_as_str=lambda wildcards, input: ','.join(input.dumps)
     shell:
         "papermill {input.nb} {output.nb}"
         " -r folder_experiment {params.folder_experiment}"
-        " -r file_format {params.file_format}"
         " -p dumps {params.dumps_as_str}"
         " && jupyter nbconvert --to html {output.nb}"
 

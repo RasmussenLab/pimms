@@ -28,6 +28,10 @@ import vaep
 import vaep.databases.diseases
 logger = vaep.logging.setup_nb_logger()
 
+plt.rcParams['figure.figsize'] = (2, 2)
+fontsize= 5
+vaep.plotting.make_large_descriptors(fontsize)
+
 # %%
 # catch passed parameters
 args = None
@@ -135,14 +139,19 @@ scores.describe(include=['bool', 'O'])
 
 # %%
 freq_feat = pd.read_csv(files_in['freq_features_observed.csv'], index_col=0)
+freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
 freq_feat
 
 # %% [markdown]
 # # Compare shared features
 
 # %%
-scores_common = scores.dropna().reset_index(-1, drop=True)
-scores_common[('data', 'freq')] = freq_feat
+scores_common = (scores
+                 .dropna()
+                 .reset_index(-1, drop=True)
+                 ).join(
+                    freq_feat, how='left'
+                 )
 scores_common
 
 
@@ -177,10 +186,10 @@ _to_write.to_excel(writer, 'differences', **writer_args)
 
 # %%
 var = 'qvalue'
-to_plot = [scores_common[v][var] for k, v in models.items()]
+to_plot = [scores_common[v][var] for v in models.values()]
 for s, k in zip(to_plot, models.keys()):
     s.name = k.replace('_', ' ')
-to_plot.append(scores_common[list(models.keys())[0]]['N'].rename('frequency'))
+to_plot.append(scores_common['data'])
 to_plot.append(annotations)
 to_plot = pd.concat(to_plot, axis=1)
 to_plot
@@ -199,15 +208,22 @@ to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 # - first only using created annotations
 
 # %%
-figsize = (8, 8)
+figsize = (2, 2)
+size = 5
 fig, ax = plt.subplots(figsize=figsize)
 x_col = to_plot.columns[0]
 y_col = to_plot.columns[1]
 ax = sns.scatterplot(data=to_plot,
                      x=x_col,
                      y=y_col,
+                     s=size,
                      hue='Differential Analysis Comparison',
                      ax=ax)
+_ = ax.legend(fontsize=fontsize,
+              title_fontsize=fontsize,
+              markerscale=0.4,
+                title='',
+              )
 ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')
@@ -223,9 +239,20 @@ vaep.savefig(fig, name=fname)
 # - showing how many features were measured ("observed")
 
 # %%
+figsize = (2.5, 2.5)
 fig, ax = plt.subplots(figsize=figsize)
-ax = sns.scatterplot(data=to_plot, x=to_plot.columns[0], y=to_plot.columns[1],
-                     size='frequency', hue='Differential Analysis Comparison')
+ax = sns.scatterplot(data=to_plot,
+                     x=to_plot.columns[0],
+                     y=to_plot.columns[1],
+                     size='frequency',
+                     s=size,
+                     sizes=(5,20),
+                     hue='Differential Analysis Comparison')
+_ = ax.legend(fontsize=fontsize,
+              title_fontsize=fontsize,
+              markerscale=0.6,
+              title='',
+              )
 ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
 ax.hlines(0.05, 0, 1, color='grey', linestyles='dotted')

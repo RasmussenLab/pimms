@@ -176,7 +176,14 @@ X
 
 # %%
 # could be just observed, drop columns with missing values
-ald_study = pd.concat([ald_study.stack(), pred_real_na_baseline]).unstack()
+ald_study = pd.concat(
+    [ald_study.stack(),
+     pred_real_na.loc[
+        # only select columns in selected in ald_study
+        pd.IndexSlice[:, ald_study.columns]
+    ]
+    ]
+).unstack()
 ald_study
 
 # %%

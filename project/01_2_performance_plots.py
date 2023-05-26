@@ -666,7 +666,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 # %%
 (errors_binned
  .set_index(
-     ['model', 'median feature intensity']
+     ['model', errors_binned.columns[-1]]
  )
  .loc[ORDER_MODELS[0]]
  .sort_values(by=METRIC))
