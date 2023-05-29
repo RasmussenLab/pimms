@@ -110,12 +110,12 @@ scores_model = pd.read_pickle(fname)
 scores_model
 
 # %%
-scores = scores_model.join(scores_baseline, how='outer')
+scores = scores_model.join(scores_baseline, how='outer')[[args.baseline, args.model_key]]
 scores
 
 # %%
 models = vaep.nb.Config.from_dict(
-    vaep.pandas.index_to_dict(scores.columns.levels[0]))
+    vaep.pandas.index_to_dict(scores.columns.get_level_values(0)))
 vars(models)
 
 # %%

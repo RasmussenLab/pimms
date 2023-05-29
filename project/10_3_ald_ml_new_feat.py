@@ -39,6 +39,12 @@ import vaep.sklearn
 from vaep.sklearn.types import Splits
 from vaep.plotting.metrics import plot_split_auc, plot_split_prc
 
+plt.rcParams['figure.figsize'] = (2, 2)
+plt.rcParams['lines.linewidth'] = 1
+fontsize= 5
+figsize= (2, 2)
+vaep.plotting.make_large_descriptors(fontsize)
+
 
 logger = vaep.logging.setup_nb_logger()
 
@@ -324,7 +330,6 @@ results_ald_full.to_pickle(fname)
 # ### ROC-AUC
 
 # %%
-figsize = (8, 8)
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.test, results_ald_full.name, ax)
 plot_split_auc(results_model_full.test, results_model_full.name, ax)
@@ -379,7 +384,6 @@ files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
-figsize = (10, 7)
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.train, results_ald_full.name, ax)
 plot_split_auc(results_model_full.train, results_model_full.name, ax)
