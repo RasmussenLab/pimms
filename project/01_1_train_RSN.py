@@ -52,6 +52,8 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 # model
 sample_idx_position: int = 0  # position of index which is sample ID
 # model key (lower cased version will be used for file names)
+axis: int = 1 # impute per row/sample (1) or per column/feat (0). 
+completeness = 0.6 # fractio of non missing values for row/sample (axis=0) or column/feat (axis=1)
 model_key: str = 'RSN'
 model: str = 'RSN'  # model name
 save_pred_real_na: bool = True  # Save all predictions for real na
@@ -157,7 +159,11 @@ data.train_X.head()
 
 # %%
 imputed_shifted_normal = vaep.imputation.impute_shifted_normal(
-    data.train_X, mean_shift=1.8, std_shrinkage=0.3, axis=0)
+    data.train_X,
+    mean_shift=1.8,
+    std_shrinkage=0.3,
+    completeness=args.completeness,
+    axis=args.axis)
 imputed_shifted_normal = imputed_shifted_normal.to_frame('intensity')
 imputed_shifted_normal
 

@@ -39,10 +39,10 @@ import vaep.sklearn
 from vaep.sklearn.types import Splits
 from vaep.plotting.metrics import plot_split_auc, plot_split_prc
 
-plt.rcParams['figure.figsize'] = (2, 2)
+plt.rcParams['figure.figsize'] = (2.5, 2.5)
 plt.rcParams['lines.linewidth'] = 1
 fontsize= 5
-figsize= (2, 2)
+figsize= (2.5, 2.5)
 vaep.plotting.make_large_descriptors(fontsize)
 
 
@@ -184,7 +184,7 @@ X
 # could be just observed, drop columns with missing values
 ald_study = pd.concat(
     [ald_study.stack(),
-     pred_real_na.loc[
+     pred_real_na_baseline.loc[
         # only select columns in selected in ald_study
         pd.IndexSlice[:, ald_study.columns]
     ]
