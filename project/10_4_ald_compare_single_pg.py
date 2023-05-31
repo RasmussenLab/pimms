@@ -82,6 +82,11 @@ args
 # %%
 files_out = dict()
 
+fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
+writer = pd.ExcelWriter(fname)
+files_out[fname.name] = fname.as_posix()
+
+
 # %%
 score_dumps = [fname for fname in Path(
     args.folder_scores).iterdir() if fname.suffix == '.pkl']
@@ -111,6 +116,7 @@ qvalues.index.names = qvalues.index.names[:-1] + ['frequency']
 fname  = args.out_folder / 'qvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 qvalues.to_pickle(fname)
+qvalues.to_excel(writer, sheet_name='qvalues_all')
 qvalues
 
 # %%
@@ -123,6 +129,7 @@ pvalues.index.names = pvalues.index.names[:-1] + ['frequency']
 fname  = args.out_folder / 'pvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 pvalues.to_pickle(fname)
+pvalues.to_excel(writer, sheet_name='pvalues_all')
 pvalues
 
 # %%
@@ -135,6 +142,25 @@ da_target.index.names = da_target.index.names[:-1] + ['frequency']
 fname = args.out_folder / 'equality_rejected_target.pkl'
 files_out[fname.name] = fname.as_posix()
 da_target.to_pickle(fname)
+
+count_rejected = vaep.pandas.combine_value_counts(da_target.droplevel(-1, axis=1))
+count_rejected.to_excel(writer, sheet_name='count_rejected')
+count_rejected
+
+# %%
+mask_common = da_target.notna().all(axis=1)
+count_rejected_common = vaep.pandas.combine_value_counts(da_target.loc[mask_common].droplevel(-1, axis=1))
+count_rejected_common.to_excel(writer, sheet_name='count_rejected_common')
+count_rejected_common
+
+# %%
+count_rejected_new = vaep.pandas.combine_value_counts(da_target.loc[~mask_common].droplevel(-1, axis=1))
+count_rejected_new.to_excel(writer, sheet_name='count_rejected_new')
+count_rejected_new
+
+
+# %%
+da_target.to_excel(writer, sheet_name='equality_rejected_all')
 da_target
 
 # %%
@@ -149,14 +175,10 @@ feat_idx_w_diff
 # take only those with different decisions
 
 # %%
-qvalues = qvalues.loc[feat_idx_w_diff].sort_values(('None', 'qvalue'))
-qvalues
-
-# %%
-fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
-writer = pd.ExcelWriter(fname)
-files_out[fname.name] = fname.as_posix()
-qvalues.to_excel(writer, sheet_name='qvalues')
+(qvalues
+ .loc[feat_idx_w_diff]
+ .sort_values(('None', 'qvalue'))
+ .to_excel(writer, sheet_name='qvalues_diff'))
 writer.close()
 
 # %% [markdown]
@@ -194,9 +216,20 @@ data = vaep.io.datasplits.DataSplits.from_folder(
 data = pd.concat([data.train_X, data.val_y, data.test_y]).unstack()
 data
 
+# %% [markdown]
+# plot all of the new pgs which are at least once significant which are not already dumped.
+
+# %%
+feat_new_abundant = da_target.loc[~mask_common].any(axis=1)
+feat_new_abundant = feat_new_abundant.loc[feat_new_abundant].index.get_level_values(0)
+feat_new_abundant
 
 # %%
 feat_sel = feat_idx_w_diff.get_level_values(0)
+feat_sel = feat_sel.union(feat_new_abundant)
+len(feat_sel)
+
+# %%
 data = data.loc[:, feat_sel]
 data
 
@@ -347,11 +380,16 @@ for i, idx in enumerate(feat_sel):
                                             n=len(pred),
                                             q=float(qvalues.loc[idx, ('None', 'qvalue')]
                                                     ))
-            else:
+            elif qvalues.loc[idx, (method, 'qvalue')].notna().all():
                 key = label_template.format(method=method,
                                             n=len(pred),
                                             q=float(qvalues.loc[idx, (method, 'qvalue')]
                                                     ))
+            elif qvalues.loc[idx, (method, 'qvalue')].isna().all():
+                logger.info(f"NA qvalues for {idx}: {method}")
+                continue
+            else:
+                raise ValueError("Unknown case.")
             to_plot[key] = pred
         except KeyError:
             print(f"No missing values for {idx}: {method}")
