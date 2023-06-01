@@ -58,6 +58,7 @@ out_folder = 'diff_analysis'
 file_format = 'csv'
 baseline = 'RSN'  # default is RSN, but could be any other trained model
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
+ref_method_score = None # filepath to reference method score
 
 
 # %%
@@ -95,6 +96,16 @@ score_dumps
 # %%
 scores = pd.concat([pd.read_pickle(fname) for fname in score_dumps], axis=1)
 scores
+
+# %%
+# Reference dump
+if args.ref_method_score:    
+    scores_reference = (pd
+                        .read_pickle(args.ref_method_score)
+                        .rename({'None': 'None (100%)'},
+                                axis=1))
+    scores = scores.join(scores_reference)
+    logger.info(f'Added reference method scores from {args.ref_method_score}')
 
 # %%
 # %% [markdown]
@@ -148,6 +159,8 @@ count_rejected.to_excel(writer, sheet_name='count_rejected')
 count_rejected
 
 # %%
+# ! This uses implicitly that RSN is not available for some protein groups
+# ! Make an explicit list of the 313 protein groups available in original data
 mask_common = da_target.notna().all(axis=1)
 count_rejected_common = vaep.pandas.combine_value_counts(da_target.loc[mask_common].droplevel(-1, axis=1))
 count_rejected_common.to_excel(writer, sheet_name='count_rejected_common')

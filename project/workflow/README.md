@@ -65,9 +65,20 @@ This will need a two step procedure as a single experiment for the semi-supervis
 models needs to be run. 
 Then the comparsion with the shifted normal distribution and the ald setup is done.
 
-```
+```bash
+# fit models
 snakemake --configfile config\appl_ald_data\plasma\proteinGroups\config.yaml -p -c1 -n
+# compare downstream performance
 snakemake --snakefile workflow\Snakefile_ald_comparison.smk --configfile config/appl_ald_data/plasma/proteinGroups/comparison.yaml -p -c1 -n
+```
+
+For the reduced dataset (80% of the original dataset), which was 
+generated using `00_8_add_random_missing_values.py`:
+```bash
+# fit models
+snakemake --configfile config/appl_ald_data/plasma/proteinGroups_80%_dataset/config.yaml -p -c1
+# compare downstream performance
+snakemake --snakefile workflow\Snakefile_ald_comparison.smk --configfile config/appl_ald_data/plasma/proteinGroups_80%_dataset/comparison.yaml -p -c1 -n
 ```
 
 

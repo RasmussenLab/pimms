@@ -5,14 +5,16 @@ logger = logging.getLogger(__name__)
 
 
 color_model_mapping = {
+    'KNN': sns.color_palette()[0],
+    'knnmethod': sns.color_palette()[1],
     'CF': sns.color_palette()[2],
     'DAE': sns.color_palette()[3],
     'VAE': sns.color_palette()[4],
-    'KNN': sns.color_palette()[0],
-    'knnmethod': sns.color_palette()[1],
     'rf': sns.color_palette()[5],
+    'Median': sns.color_palette()[6],
+    'None': sns.color_palette()[7],
 }
-other_colors = sns.color_palette()[5:]
+other_colors = sns.color_palette()[8:]
 
 
 def assign_colors(models):

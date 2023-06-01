@@ -78,6 +78,7 @@ rule plot_intensities_for_diverging_results:
         baseline=config["baseline"],
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
         make_plots=config["make_plots"],
+        ref_method_score = config['ref_method_score'] # None, 
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -86,6 +87,7 @@ rule plot_intensities_for_diverging_results:
         " -r out_folder {wildcards.out_folder}"
         " -p cutoff_target {params.cutoff}"
         " -p make_plots {params.make_plots}"
+        " -p ref_method_score {params.ref_method_score}"
         " -r fn_clinical_data {input.fn_clinical_data}"
         " && jupyter nbconvert --to html {output.nb}"
 
