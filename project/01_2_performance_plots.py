@@ -663,6 +663,10 @@ fname = args.out_figures / 'errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
+dumps[fname.stem] = fname.with_suffix('.csv')
+errors_binned.to_csv(fname.with_suffix('.csv'))
+errors_binned.head()
+
 # %%
 (errors_binned
  .set_index(
@@ -678,7 +682,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 # %%
 fig, ax = plt.subplots(figsize=(8, 2))
-ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_test[
         [TARGET_COL]+TOP_N_ORDER
     ],
@@ -692,8 +696,8 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 # %%
 dumps[fname.stem] = fname.with_suffix('.csv')
-errors_bind.to_csv(fname.with_suffix('.csv'))
-errors_bind.head()
+errors_binned.to_csv(fname.with_suffix('.csv'))
+errors_binned.head()
 # %% [markdown]
 # ## Figures dumped to disk
 # %%
