@@ -57,13 +57,15 @@ covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
 
 file_format = "csv"
 model_key = 'VAE' # model(s) to evaluate
-baseline = 'RSN' # default is RSN, but could be any other trained model
+model = None # default same as model_key, but could be overwritten (edge case)
 value_name='intensity'
 out_folder='diff_analysis'
 template_pred = 'pred_real_na_{}.csv' # fixed, do not change
 
 
 # %%
+if not model:
+    model = model_key
 params = vaep.nb.get_params(args, globals=globals(), remove=True)
 params
 
@@ -139,11 +141,40 @@ df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
 # Data description of data used:
 
 # %%
-idx_complete_data = df_clinic[[args.target, *args.covar]].dropna().index
+mask_sample_with_complete_clinical_data = df_clinic[[args.target, *args.covar]].notna().all(axis=1)
+fname = args.out_folder / 'mask_sample_with_complete_clinical_data.csv'
+files_out[fname.name] = fname.as_posix()
+mask_sample_with_complete_clinical_data.to_csv(fname)
+
+idx_complete_data = (mask_sample_with_complete_clinical_data
+                     .loc[mask_sample_with_complete_clinical_data]
+                     .index)
 df_clinic.loc[idx_complete_data, [args.target, *args.covar]].describe()
 
 # %%
 df_clinic.loc[idx_complete_data, args.target].value_counts()
+
+# %% [markdown]
+# check which patients with kleiner score have misssing covariates
+
+# %%
+df_clinic.loc[(~mask_sample_with_complete_clinical_data
+               & df_clinic[args.target].notna()),
+              [args.target, *args.covar]]
+
+# %% [markdown]
+# Save feature frequency of observed data based on complete clinical data
+
+# %%
+feat_freq_observed = observed.unstack().loc[idx_complete_data].notna().sum()
+feat_freq_observed.name = 'frequency'
+
+fname = args.folder_experiment / 'freq_features_observed.csv'
+files_out['feat_freq_observed'] = fname.as_posix()
+logger.info(fname)
+feat_freq_observed.to_csv(fname)
+ax = feat_freq_observed.sort_values().plot(marker='.', rot=90)
+_ = ax.set_xticklabels([l.get_text().split(';')[0] for l in ax.get_xticklabels()])
 
 # %% [markdown]
 # ## ALD study approach using all measurments
@@ -176,14 +207,6 @@ if args.fn_qc_samples:
 ald_study
 
 # %%
-freq_feat = observed.unstack().notna().sum()
-freq_feat.name = 'frequency'
-fname = args.folder_experiment / 'freq_features_observed.csv'
-logger.info(fname)
-freq_feat.to_csv(fname)
-freq_feat
-
-# %%
 fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
              feat_completness_over_samples=cutoffs.feat_completness_over_samples,
              min_feat_in_sample=cutoffs.min_feat_in_sample)
@@ -201,7 +224,7 @@ template_pred = str(args.out_preds / args.template_pred)
 template_pred
 
 # %%
-fname = args.out_preds / args.template_pred.format(args.model_key)
+fname = args.out_preds / args.template_pred.format(args.model)
 fname 
 
 # %% [markdown]
@@ -277,6 +300,7 @@ fig = plot_distributions(observed,
                          imputation=pred_real_na,
                          model_key=args.model_key, figsize=(2.5, 2))
 fname = args.out_folder / 'dist_plots' / f'real_na_obs_vs_{args.model_key}.pdf'
+files_out[fname.name] = fname.as_posix()
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
@@ -350,12 +374,12 @@ scores.loc[pd.IndexSlice[:, args.target], :]
 
 # %%
 fname = args.out_folder/ 'scores' / f'diff_analysis_scores_{str(args.model_key)}.pkl'
+files_out[fname.name] = fname.as_posix()
 fname.parent.mkdir(exist_ok=True, parents=True)
 scores.to_pickle(fname)
 fname
 
 
 # %%
-list(args.out_folder.iterdir())
-
+files_out
 # %%
