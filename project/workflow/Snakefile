@@ -21,7 +21,9 @@ rule all:
 
 nb = "01_2_performance_plots.ipynb"
 
-MODELS = config["models"]+config["NAGuideR_methods"]
+MODELS = config["models"]
+if config["NAGuideR_methods"]:
+    MODELS += config["NAGuideR_methods"]
 
 rule comparison:
     input:

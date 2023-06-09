@@ -14,11 +14,13 @@ folder_experiment: "runs/optimize/{level}" # used by Snakefile of single experim
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
 levels:
 - proteinGroups
-- aggPeptides
+- peptides
 # - evidence 
 config_split: 'config/single_dev_dataset/{level}/split.yaml'
+file_format: csv
 config_train: 'placeholder.yaml'
 cuda: True
+NAGuideR_methods:
 models:
   - Median
   - CF
