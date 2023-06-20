@@ -287,7 +287,10 @@ def plot_distributions(observed: pd.Series,
     if imputation is not None:
         ax = axes[1]
         label = f'Missing values imputed using {model_key.upper()}'
-        ax = imputation.hist(ax=ax,bins=bins, color=f'C{1}')
+        color = vaep.plotting.defaults.color_model_mapping.get(model_key, None)
+        if color is None:
+            color = f'C{1}'
+        ax = imputation.hist(ax=ax,bins=bins, color=color)
         ax.set_title(f'{label} (N={len(imputation):,d})')
         ax.set_ylabel('observations')
         ax.locator_params(axis='y', integer=True)

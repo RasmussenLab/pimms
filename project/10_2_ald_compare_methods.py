@@ -173,10 +173,10 @@ annotations.name = 'Differential Analysis Comparison'
 annotations.value_counts()
 
 # %%
-mask_different = ((scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1)) &
-                  ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(
-                      axis=1))
-                  )
+mask_different = (
+    (scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1))
+    & ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(axis=1))
+)
 
 scores_common.loc[mask_different]
 

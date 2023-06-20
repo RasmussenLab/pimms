@@ -158,7 +158,6 @@ rule differential_analysis:
     input:
         nb=nb,
         f_annotations=config["f_annotations"],
-        pred=folder_experiment + "/preds/pred_real_na_{model}.csv",
     output:
         score=out_folder + "scores/diff_analysis_scores_{model}.pkl",
         nb=out_folder + "scores/diff_analysis_{model}.ipynb",

@@ -217,6 +217,9 @@ target
 # %%
 target_to_group = target.copy()
 target = target >= args.cutoff_target
+target = target.replace({False: f'{args.target} < {args.cutoff_target}',
+                        True: f'{args.target} >= {args.cutoff_target}'}
+                        ).astype('category')
 pd.crosstab(target.squeeze(), target_to_group.squeeze())
 
 # %% [markdown]
@@ -375,6 +378,11 @@ for i, idx in enumerate(feat_sel):
     print(f"Swarmplot {i:3<}: {idx}:")
     fig, ax = plt.subplots()
 
+    # dummy plots, just to get the Path objects
+    tmp_dot = ax.scatter([1,2],[3,4], marker='X')
+    new_mk, = tmp_dot.get_paths()
+    tmp_dot.remove()
+
     feat_observed = data[idx].dropna()
     label_template = '{method} (N={n:,d}, q={q:.3f})'
     key = label_template.format(method='measured',
@@ -382,7 +390,6 @@ for i, idx in enumerate(feat_sel):
                                 q=float(qvalues.loc[idx, ('None', 'qvalue')])
                                 )
     to_plot = {key: feat_observed}
-
     for method in model_keys:
         try:
             pred = pred_real_na.loc[pd.IndexSlice[:,
@@ -413,19 +420,20 @@ for i, idx in enumerate(feat_sel):
     groups_order = to_plot.columns.to_list()
     to_plot = to_plot.stack().to_frame('intensity').reset_index(-1)
     to_plot = to_plot.join(target.astype('category'), how='inner')
+    to_plot = to_plot.astype({'group': 'category'})
 
     ax = seaborn.swarmplot(data=to_plot,
                            x='group',
                            y='intensity',
                            order=groups_order,
+                           dodge=True,
                            hue=args.target,
-                           size=2,
+                           size=1,
                            ax=ax)
     first_pg = idx.split(";")[0]
     ax.set_title(
         f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
 
-    _ = ax.legend(fontsize=5, title_fontsize=5, markerscale=0.4,)
     _ = ax.set_ylim(min_y_int, max_y_int)
     _ = ax.locator_params(axis='y', integer=True)
     _ = ax.set_xlabel('')
@@ -435,6 +443,21 @@ for i, idx in enumerate(feat_sel):
     )
     _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                            horizontalalignment='right')
+
+    N_hues = len(pd.unique(to_plot[args.target]))
+
+    _ = ax.collections[0].set_paths([new_mk])
+    _ = ax.collections[1].set_paths([new_mk])
+
+    # import matplotlib.lines as mlines
+    label_target_0, label_target_1 = ax.collections[-2].get_label(), ax.collections[-1].get_label()
+    _ = ax.collections[-2].set_label(f'imputed, {label_target_0}')
+    _ = ax.collections[-1].set_label(f'imputed, {label_target_1}')
+    _obs_label0 = ax.scatter([], [], color='C0', marker='X', label=f'observed, {label_target_0}')
+    _obs_label1 = ax.scatter([], [], color='C1', marker='X', label=f'observed, {label_target_1}')
+    _ = ax.legend(
+        handles=[_obs_label0, _obs_label1, *ax.collections[-4:-2]],
+        fontsize=5, title_fontsize=5, markerscale=0.4,)
     fname = (folder /
              f'{first_pg}_swarmplot.pdf')
     files_out[fname.name] = fname.as_posix()
@@ -442,7 +465,5 @@ for i, idx in enumerate(feat_sel):
         fig,
         name=fname)
     plt.close()
-
-
 # %%
 files_out
