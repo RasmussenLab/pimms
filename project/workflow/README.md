@@ -81,8 +81,15 @@ snakemake --configfile config/appl_ald_data/plasma/proteinGroups_80%_dataset/con
 snakemake --snakefile workflow\Snakefile_ald_comparison.smk --configfile config/appl_ald_data/plasma/proteinGroups_80%_dataset/comparison.yaml -p -c1 -n
 ```
 
-
 Rule graph for ALD comparison (after using single experiment)
-
-
 ![Comparison after default](rulegraphs/rulegraph_ald_comparison.png)
+
+## Repeated execution
+Executes both workflows for model training and comparison ten times:
+
+- `F` to force execution of all workflows
+   (each workflow then checks what it needs to execute)
+- `nolock` : ensure that parent workflow does not block child workflow
+```bash
+snakemake -s workflow\Snakefile_ald_comparison_repeated.smk -p -c1 --nolock --drop-metadata -F -n
+```

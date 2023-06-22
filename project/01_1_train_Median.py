@@ -167,6 +167,7 @@ data.train_X.head()
 
 # %%
 # Add median pred performance
+args.n_params = data.train_X.shape[-1]
 medians_train = data.train_X.median()
 medians_train.name = args.model
 pred = medians_train

@@ -111,6 +111,24 @@ sel.to_excel(writer, sheet_name='lost_signal_qvalues')
 sel
 
 # %%
+# 0: FN
+# 1: TP
+da_target_sel_counts = (da_target_sel[ORDER_MODELS]
+ .loc[mask_lost_sign.squeeze()]
+ .astype(int)
+ .replace(
+     {0: 'FN',
+      1: 'TP'}
+ ).droplevel(-1, axis=1)
+)
+da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
+ax = da_target_sel_counts.T.plot.bar()
+ax.locator_params(axis='y', integer=True)
+fname = out_folder / 'lost_signal_da_counts.pdf'
+files_out[fname.name] = fname.as_posix()
+vaep.savefig(ax.figure, fname)
+
+# %%
 ax = plot_qvalues(df=sel,
                   x=REF_MODEL,
                   y=ORDER_MODELS,
@@ -136,6 +154,22 @@ sel.columns = sel.columns.droplevel(-1)
 sel = sel[ORDER_MODELS + [REF_MODEL]]
 sel.to_excel(writer, sheet_name='gained_signal_qvalues')
 sel
+
+# %%
+da_target_sel_counts = (da_target_sel[ORDER_MODELS]
+ .loc[mask_gained_signal.squeeze()]
+ .astype(int)
+ .replace(
+     {0: 'TN',
+      1: 'FP'}
+ ).droplevel(-1, axis=1)
+)
+da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
+ax = da_target_sel_counts.T.plot.bar()
+ax.locator_params(axis='y', integer=True)
+fname = out_folder / 'gained_signal_da_counts.pdf'
+files_out[fname.name] = fname.as_posix()
+vaep.savefig(ax.figure, fname)
 
 # %%
 ax = plot_qvalues(sel,

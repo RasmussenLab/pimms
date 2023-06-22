@@ -171,6 +171,19 @@ qvalue_stats.loc[~mask_pgs_included_in_ald_study
                             )
 
 # %%
+mask_new_da_with_imp = mask_new_da_with_imputation = ((~mask_pgs_included_in_ald_study)
+                               & (da_counts['None'] != 10))
+
+tab_new_da_with_imp = vaep.pandas.combine_value_counts(
+    da_counts
+    .loc[mask_new_da_with_imputation]
+).fillna(0).astype(int)
+tab_new_da_with_imp.index.name = 'number of reps'
+tab_new_da_with_imp.columns.name = 'DA decisions by method'
+tab_new_da_with_imp.to_excel(writer, sheet_name='tab_new_da_with_imp')
+tab_new_da_with_imp
+
+# %%
 writer.close()
 fname
 

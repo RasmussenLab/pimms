@@ -665,7 +665,7 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
-errors_binned.head()
+errors_binned
 
 # %%
 (errors_binned
