@@ -13,14 +13,14 @@ vaep.plotting.make_large_descriptors(5)
 COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
 
 def plot_qvalues(df, x: str, y: list, ax=None, cutoff=0.05,
-                 alpha=1.0):
+                 alpha=1.0, style='.', markersize=3):
     ax = df.plot.line(x=x,
                       y=y,
-                      style='.',
+                      style=style,
                       ax=ax,
                       color=COLORS_TO_USE_MAPPTING,
                       alpha=alpha,
-                      markersize=1.5)
+                      markersize=markersize)
     _ = ax.hlines(cutoff,
                   xmin=ax.get_xlim()[0],
                   xmax=ax.get_xlim()[1],
@@ -135,7 +135,7 @@ ax = plot_qvalues(df=sel,
                   cutoff=CUTOFF)
 ax.set_xlim(-0.0005, CUTOFF + 0.0005)
 ax.set_xlabel("q-value using 100% of the data without imputation")
-ax.set_ylabel("q-value using 80%")
+ax.set_ylabel("q-value using 80% of the data")
 fname = out_folder / 'lost_signal_qvalues.pdf'
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(ax.figure, fname)
