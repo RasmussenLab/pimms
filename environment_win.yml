@@ -8,24 +8,23 @@ channels:
   - fastai
   - plotly
 dependencies:
-  - biopython # Aligner
   - python=3.8
-  - numpy=1.20
+  - numpy
   - pandas=1
-  - scipy>=1.6
+  - scipy
   # plotting
-  - matplotlib=3.3
+  - matplotlib
   - python-kaleido
   - plotly
   - seaborn
   - pip
   # ML
-  - pytorch=1.10
-  - scikit-learn=1.0
+  - pytorch=1
+  - scikit-learn=1
   - fastai
-  - torchvision
-  - cudatoolkit=10.2
-  - tensorboard
+  # - torchvision
+  - cudatoolkit
+  # - tensorboard
   - umap-learn
   # stats
   - pingouin
@@ -38,13 +37,8 @@ dependencies:
   # snakemake
   - snakemake-minimal<7.26
   # jupyter
-  - ipykernel
-  - ipython
-  - ipywidgets
-  - jupytext
   - jupyterlab # standalone jupyter installation
-  # - jupyterlab_code_formatter
-  # - jupyterlab-git
+  - jupyter_contrib_nbextensions # needed to avoid error when exporting to html
   - jupyter-dash
   - papermill # execute ipynb's
   # R packages (listed in NAGuideR)
@@ -60,17 +54,20 @@ dependencies:
   - r-missforest
   - r-vim
   - r-mice
-  - r-tidyverse
-  # - bioconductor-biocinstaller
+  # - r-tidyverse
+  - r-readr
+  - r-tibble
   # - r-imputelcmd # bioconda
-  - bioconductor-impute
-  - bioconductor-pcamethods
+  # - bioconductor-impute # not available for Windows
+  # - bioconductor-pcamethods # not available for Windows
   # - rrcovNA, GMSimpute
   # SeqKnn, pcaMethods, DreamAI # bioconductor
   # dev
-  - pytest
-  - pytest-cov
-  - jupytext
+  # - pytest
+  # - pytest-cov
+  # - jupytext
+  # - jupyterlab_code_formatter
+  # - jupyterlab-git
   - pip:
     - -e .
     - mrmr-selection

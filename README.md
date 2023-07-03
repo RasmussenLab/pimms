@@ -58,7 +58,32 @@ conda env create -n pimms -f environment.yml # slower
 mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-> If on Mac M1: use  `environment_m1.yaml` where cudatoolkit is removed.
+If on Mac M1: use  `environment_m1.yaml` where cudatoolkit is removed.
+
+```
+conda env create -n pimms -f environment_m1.yml # slower
+mamba env create -n pimms -f environment_m1.yml # faster, less then 5mins
+```
+
+If on Windows: use `environment_win.yaml` where ~~two R-Bioconductor~~ R-packages (see note bolow) are removed as 
+no binaries are available for Windows. You will need to install these manually afterwards if you want to use methods implemented in R.
+
+> Note: Turns out that installing dependencies partly by conda and partly manuaelly
+using `BiocManager` is not working.
+
+```
+conda env create -n pimms -f environment_win.yml # slower
+mamba env create -n pimms -f environment_win.yml # faster, less then 5mins
+# Then if R packages are needed, they are installed on the fly for Windows.
+# Could be used as well for MacOS or Linux.
+```
+
+Trouble shoot your R installation by opening jupyter lab
+
+```
+# in projects folder
+jupyter lab # open 01_1_train_NAGuideR.ipynb
+```
 
 ## Run Demo
 
@@ -67,6 +92,8 @@ Change to the [`project` folder](./project) and see it's [README](project/README
 > Currently there are only notebooks and scripts under `project`, 
 > but shared functionality will be added under `vaep` folder-package: This can 
 > then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
+
+You can subselect models by editing the config file:  [`config.yaml`](project/config/single_dev_dataset/proteinGroups_N50/config.yaml) file.
 
 ```
 conda activate pimms # activate virtual environment
@@ -126,6 +153,41 @@ df_imputed = pd.concat([observed, pred]).unstack()
 assert df_imputed.isna().sum().sum() == 0
 df_imputed
 ```
+
+## Available imputation methods
+
+Packages either are based on this repository, or were referenced by NAGuideR.
+
+| Method        | Package           | source       | status | name              |
+| ------------- | ----------------- | ------       | --- |------------------ | 
+| CF            | pimms             | pip          | | Collaborative Filtering |
+| DAE           | pimms             | pip          | | Denoising Autoencoder   |
+| VAE           | pimms             | pip          | | Variational Autoencoder |     
+|  |   | | | 
+| ZERO          | -                 | -            | | replace NA with 0 |
+| MINIMUM       | -                 | -            | | replace NA with global minimum    |
+| COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
+| ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
+| KNN_IMPUTE    | impute            | BIOCONDUCTOR | |
+| SEQKNN        | SeqKnn            | tar file     | |
+| BPCA          | pcaMethods        | BIOCONDUCTOR | |
+| SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | |
+| LLS           | pcaMethods        | BIOCONDUCTOR | |
+| MLE           | norm              | CRAN         | |
+| QRILC         | imputeLCMD        | CRAN         | |
+| MINDET        | imputeLCMD        | CRAN         | |
+| MINPROB       | imputeLCMD        | CRAN         | |
+| IRM           | VIM               | CRAN         | |
+| IMPSEQ        | rrcovNA           | CRAN         | |
+| IMPSEQROB     | rrcovNA           | CRAN         | |
+| MICE-NORM     | mice              | CRAN         | |
+| MICE-CART     | mice              | CRAN         | |
+| TRKNN         | -                 | script       | | 
+| RF            | missForest        | CRAN         | | Random Forest
+| PI            | -                 | -            | | Downshifted normal distribution (per column)
+| ~~grr~~       | DreamAI           | -            | Fails to install | - 
+| ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
+
 
 
 <!-- ### Setup using pip

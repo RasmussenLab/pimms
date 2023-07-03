@@ -10,13 +10,13 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  - lls
-  - knnmethod
-  - seqknn
-  - rf
-  - impseq
-  - qrilc
-  - minprob
-  - mindet
-  - svdmethod
-  - mice-norm
+  - ROWMEDIAN # e1071
+  - KNN_IMPUTE # impute
+  - SEQKNN # SeqKNN
+  - RF # missForest
+  - IMPSEQ # rrcovNA
+  - QRILC # imputeLCMD
+  - SVDMETHOD # pcaMethods
+  - MICE-NORM # mice
+  - MLE # norm
+  - IRM # VIM

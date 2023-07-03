@@ -17,6 +17,7 @@
 # # Transfer predictions from NAGuideR
 
 # %%
+from pathlib import Path
 import logging
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -85,11 +86,9 @@ test_pred_fake_na.describe()
 
 # %%
 if args.dumps is not None:
-    entire_pred = args.dumps.split(',')
-entire_pred
-
-# %%
-entire_pred = list(file for file in args.out_preds.iterdir()
+    entire_pred = [Path(s) for s in args.dumps.split(',')]
+else:
+    entire_pred = list(file for file in args.out_preds.iterdir()
                    if '_all_' in str(file))
 entire_pred
 
@@ -159,9 +158,17 @@ metrics_df = vaep.models.get_df_from_nested_dict(
 metrics_df
 
 # %%
+order_methods = metrics_df.loc[pd.IndexSlice[:, 'MAE'], 'valid_fake_na'].sort_values()
+order_methods
+
+# %%
+top_5 = ['observed', *order_methods.droplevel(-1).index[:6]]
+top_5
+
+# %%
 fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
-    val_pred_fake_na,
+    val_pred_fake_na[top_5],
     ax=ax,
 )
 fname = args.out_figures / 'NAGuideR_errors_per_bin_val.png'
