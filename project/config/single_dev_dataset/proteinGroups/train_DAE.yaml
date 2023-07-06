@@ -1,9 +1,9 @@
 file_format: csv
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv
-latent_dim: 50
+latent_dim: 25
 batch_size: 64
 epochs_max: 100
-hidden_layers: "2056"
+hidden_layers: "512"
 sample_idx_position: 0
 cuda: True
 save_pred_real_na: True

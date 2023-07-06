@@ -2,7 +2,7 @@ file_format: csv
 latent_dim: 50
 batch_size: 64
 epochs_max: 100
-hidden_layers: "512" # "2056"
+hidden_layers: "512"
 sample_idx_position: 0
 cuda: True
 save_pred_real_na: True

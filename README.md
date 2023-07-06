@@ -156,7 +156,8 @@ df_imputed
 
 ## Available imputation methods
 
-Packages either are based on this repository, or were referenced by NAGuideR.
+Packages either are based on this repository, or were referenced by NAGuideR (Table S1).
+From the brief description in the table the exact procedure is not always clear.
 
 | Method        | Package           | source       | status | name              |
 | ------------- | ----------------- | ------       | --- |------------------ | 
@@ -168,24 +169,24 @@ Packages either are based on this repository, or were referenced by NAGuideR.
 | MINIMUM       | -                 | -            | | replace NA with global minimum    |
 | COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
 | ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
-| KNN_IMPUTE    | impute            | BIOCONDUCTOR | |
-| SEQKNN        | SeqKnn            | tar file     | |
-| BPCA          | pcaMethods        | BIOCONDUCTOR | |
-| SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | |
-| LLS           | pcaMethods        | BIOCONDUCTOR | |
-| MLE           | norm              | CRAN         | |
-| QRILC         | imputeLCMD        | CRAN         | |
-| MINDET        | imputeLCMD        | CRAN         | |
-| MINPROB       | imputeLCMD        | CRAN         | |
-| IRM           | VIM               | CRAN         | |
-| IMPSEQ        | rrcovNA           | CRAN         | |
-| IMPSEQROB     | rrcovNA           | CRAN         | |
-| MICE-NORM     | mice              | CRAN         | |
-| MICE-CART     | mice              | CRAN         | |
-| TRKNN         | -                 | script       | | 
-| RF            | missForest        | CRAN         | | Random Forest
-| PI            | -                 | -            | | Downshifted normal distribution (per column)
-| ~~grr~~       | DreamAI           | -            | Fails to install | - 
+| KNN_IMPUTE    | impute            | BIOCONDUCTOR | | k nearest neighbor imputation   |
+| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> start with feature with least missing values and re-use imputed values for not yet imputed features
+| BPCA          | pcaMethods        | BIOCONDUCTOR | | Bayesian PCA missing value imputation
+| SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
+| LLS           | pcaMethods        | BIOCONDUCTOR | | Local least squares imputation of a feature based on k most correlated features
+| MLE           | norm              | CRAN         | | Maximum likelihood estimation
+| QRILC         | imputeLCMD        | CRAN         | | quantile regression imputation of left-censored data, i.e. by random draws from a truncated distribution which parameters were estimated by quantile regression
+| MINDET        | imputeLCMD        | CRAN         | | replace NA with q-quantile minimum in a sample
+| MINPROB       | imputeLCMD        | CRAN         | | replace NA by random draws from q-quantile minimum centered distribution
+| IRM           | VIM               | CRAN         | | iterativ robust model-based imputation (one feature at at time)
+| IMPSEQ        | rrcovNA           | CRAN         | | Sequential imputation of missing values by minimizing the determinant of the covariance matrix with imputed values
+| IMPSEQROB     | rrcovNA           | CRAN         | | Sequential imputation of missing values using robust estimators
+| MICE-NORM     | mice              | CRAN         | | Multivariate Imputation by Chained Equations (MICE) using Bayesian linear regression
+| MICE-CART     | mice              | CRAN         | | Multivariate Imputation by Chained Equations (MICE) using regression trees
+| TRKNN         | -                 | script       | | truncation k-nearest neighbor imputation 
+| RF            | missForest        | CRAN         | | Random Forest imputation (one feature at a time)
+| PI            | -                 | -            | | Downshifted normal distribution (per sample)
+| ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
 | ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
 
 

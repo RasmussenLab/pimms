@@ -17,6 +17,7 @@ logger.info(f"{folder_experiment = }")
 rule all:
     input:
         f"{folder_experiment}/figures/errors_binned_by_int_test.pdf",
+        f"{folder_experiment}/01_2_performance_summary.xlsx"
 
 
 nb = "01_2_performance_plots.ipynb"
@@ -34,6 +35,7 @@ rule comparison:
             model=MODELS,
         ),
     output:
+        xlsx="{folder_experiment}/01_2_performance_summary.xlsx",
         pdf="{folder_experiment}/figures/errors_binned_by_int_test.pdf",
         nb="{folder_experiment}" f"/{nb}",
     params:

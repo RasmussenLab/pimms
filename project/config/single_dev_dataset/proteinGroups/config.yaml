@@ -1,6 +1,6 @@
 config_split: config/single_dev_dataset/proteinGroups/split.yaml
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
-folder_experiment: runs/Q_Exactive_HF_X_Orbitrap_6070/proteinGroups
+folder_experiment: runs/dev_dataset_large/proteinGroups
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv
 cuda: True
 models:
@@ -10,7 +10,24 @@ models:
  - VAE
  - KNN
 NAGuideR_methods:
-  - lls
-  - knnmethod
-  - rf
-  # - impseq # fails
+ - ZERO
+ - MINIMUM
+ - COLMEDIAN
+ - ROWMEDIAN
+ - KNN_IMPUTE
+ # - SEQKNN # error
+ # - BPCA # stopped after 30mins
+ - SVDMETHOD # stopped after 30mins
+ - LLS
+ # - MLE # error
+ - QRILC
+ - MINDET
+ - MINPROB
+ # - IRM # stopped after 30mins
+ # - IMPSEQ # error
+ # - IMPSEQROB # error
+ # - MICE-NORM # stopped after 30mins
+ # - MICE-CART # stopped after 30mins
+ # - TRKNN # error
+ - RF
+ - PI
