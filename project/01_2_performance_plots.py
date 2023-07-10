@@ -53,6 +53,28 @@ vaep.plotting.make_large_descriptors(5)
 
 logger = vaep.logging.setup_nb_logger()
 
+
+def load_config_file(fname: Path, first_split='config_') -> dict:
+    with open(fname) as f:
+        loaded = yaml.safe_load(f)
+    key = f"{select_content(fname.stem, first_split=first_split)}"
+    return key, loaded
+
+
+def build_text(s):
+    ret = ''
+    if not np.isnan(s["latent_dim"]):
+        ret += f'LD: {int(s["latent_dim"])} '
+    try:
+        if len(s["hidden_layers"]):
+            t = ",".join(str(x) for x in s["hidden_layers"])
+            ret += f"HL: {t}"
+    except TypeError:
+        # nan
+        pass
+    return ret
+
+
 # %%
 # catch passed parameters
 args = None
@@ -72,6 +94,7 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 plot_to_n: int = 5
+
 
 # %% [markdown]
 # Some argument transformations
@@ -95,15 +118,12 @@ MIN_FREQ = None
 MODELS_PASSED = args.models.split(',')
 MODELS = MODELS_PASSED.copy()
 
-# MODELS = args.models.split(',')
-# ORDER_MODELS = ['RSN', *MODELS]
 
 # %%
 # list(sns.color_palette().as_hex()) # string representation of colors
 if args.plot_to_n > 10:
     logger.warning("Set maximum of models to 10 (maximum)")
     args.overwrite_entry('plot_to_n', 10)
-COLORS_TO_USE = [sns.color_palette()[5], *sns.color_palette()[:5]]
 
 # %%
 vaep.plotting.defaults.assign_colors(['CF', 'DAE', 'knn', 'VAE'])
@@ -158,18 +178,9 @@ writer = pd.ExcelWriter(fname)
 # - used for bar plot annotations
 
 # %%
-
-
-def load_config_file(fname: Path, first_split='config_') -> dict:
-    with open(fname) as f:
-        loaded = yaml.safe_load(f)
-    key = f"{select_content(fname.stem, first_split=first_split)}"
-    return key, loaded
-
-
 # model_key could be used as key from config file
-# load only specified configs?
-# case: no config file available?
+# ? load only specified configs?
+# ? case: no config file available?
 all_configs = collect(
     paths=(fname for fname in args.out_models.iterdir()
            if fname.suffix == '.yaml'
@@ -232,10 +243,9 @@ ORDER_MODELS = (errors_val
 ORDER_MODELS
 
 # %%
-mae_stats_ordered = errors_val.abs().describe()[ORDER_MODELS]
-mae_stats_ordered.to_excel(writer, sheet_name='mae_stats_ordered')
-writer.close()
-mae_stats_ordered
+mae_stats_ordered_val = errors_val.abs().describe()[ORDER_MODELS]
+mae_stats_ordered_val.to_excel(writer, sheet_name='mae_stats_ordered_val', float_format='%.5f')
+mae_stats_ordered_val
 
 # %% [markdown]
 # Hack color order, by assing CF, DAE and VAE unique colors no matter their order
@@ -295,9 +305,9 @@ vaep.savefig(ax.get_figure(), name=fname)
 
 fname = args.out_figures/'pred_corr_val_per_sample.xlsx'
 dumps[fname.stem] = fname
-with pd.ExcelWriter(fname) as writer:
-    corr_per_sample_val.describe().to_excel(writer, sheet_name='summary')
-    corr_per_sample_val.to_excel(writer, sheet_name='correlations')
+with pd.ExcelWriter(fname) as w:
+    corr_per_sample_val.describe().to_excel(w, sheet_name='summary')
+    corr_per_sample_val.to_excel(w, sheet_name='correlations')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
@@ -334,18 +344,6 @@ errors_val.describe()  # mean of means
 c_avg_error = 2
 mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
 errors_val.loc[mask]
-
-# %%
-ax = vaep.plotting.plot_rolling_error(errors_val[TOP_N_ORDER + ['freq']],
-                                      metric_name=METRIC,
-                                      window=int(len(errors_val)/15),
-                                      min_freq=MIN_FREQ,
-                                      colors_to_use=COLORS_TO_USE)
-fname = args.out_figures / 'performance_methods_by_completness_val.pdf'
-figures[fname.stem] = fname
-vaep.savefig(
-    ax.get_figure(),
-    name=fname)
 
 
 # %% [markdown]
@@ -386,18 +384,45 @@ SAMPLE_ID, FEAT_NAME = pred_test.index.names
 pred_test
 
 # %% [markdown]
+# Write averages for all models to excel (from before?)
+
+# %%
+errors_test_mae = vaep.pandas.calc_errors.get_absolute_error(
+    pred_test
+)
+mae_stats_ordered_test = errors_test_mae.describe()[ORDER_MODELS]
+mae_stats_ordered_test
+
+# %%
+mae_stats_ordered_test.to_excel(writer, sheet_name='mae_stats_ordered_test', float_format='%.5f')
+
+# %%
+cp_mean_perf = pd.concat([
+    mae_stats_ordered_val.loc['mean'],
+    mae_stats_ordered_test.loc['mean'],
+],
+axis=1,
+keys=['val', 'test']
+).sort_values(by='val')
+cp_mean_perf.to_excel(writer, sheet_name='cp_mean_perf', float_format='%.5f')
+cp_mean_perf
+
+# %%
+writer.close()
+
+# %% [markdown]
 # ## Intensity distribution as histogram
 # plot top 4 models
 # %%
 min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
-top_n =  4
+top_n = 4
 fig, axes = plt.subplots(ncols=4, figsize=(8, 2), sharey=True)
 
 for model, color, ax in zip(
-    ORDER_MODELS[:4],
-    COLORS_TO_USE[:4],
-    axes):
-    
+        ORDER_MODELS[:4],
+        COLORS_TO_USE[:4],
+        axes):
+
     ax, _ = vaep.plotting.data.plot_histogram_intensites(
         pred_test[TARGET_COL],
         color='grey',
@@ -412,7 +437,7 @@ for model, color, ax in zip(
         alpha=0.5,
     )
     _ = [(l.set_rotation(90))
-             for l in ax.get_xticklabels()]
+         for l in ax.get_xticklabels()]
     ax.legend()
 
 axes[0].set_ylabel('Number of observations')
@@ -472,9 +497,9 @@ figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
 dumps[fname.stem] = fname.with_suffix('.xlsx')
-with pd.ExcelWriter(fname.with_suffix('.xlsx')) as writer:
-    corr_per_sample_test.describe().to_excel(writer, sheet_name='summary')
-    corr_per_sample_test.to_excel(writer, sheet_name='correlations')
+with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
+    corr_per_sample_test.describe().to_excel(w, sheet_name='summary')
+    corr_per_sample_test.to_excel(w, sheet_name='correlations')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
@@ -526,10 +551,10 @@ fname = args.out_figures / 'pred_corr_test_per_feat.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.xlsx')
-with pd.ExcelWriter(fname.with_suffix('.xlsx')) as writer:
+with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(
-        writer, sheet_name='summary')
-    corr_per_feat_test.to_excel(writer, sheet_name='correlations')
+        w, sheet_name='summary')
+    corr_per_feat_test.to_excel(w, sheet_name='correlations')
 
 # %%
 feat_count_test = data.test_y.stack().groupby(FEAT_NAME).count()
@@ -579,18 +604,6 @@ _to_plot.index = [feature_names.name]
 _to_plot
 
 # %%
-
-
-def build_text(s):
-    ret = ''
-    if not np.isnan(s["latent_dim"]):
-        ret += f'LD: {int(s["latent_dim"])} '
-    if not np.isnan(s["hidden_layers"]):
-        t = ",".join(str(x) for x in s["hidden_layers"])
-        ret += f"HL: {t}"
-    return ret
-
-
 text = model_configs[["latent_dim", "hidden_layers"]].apply(
     build_text,
     axis=1)
@@ -624,30 +637,12 @@ _to_plot_long['data level'] = feature_names.name
 _to_plot_long = _to_plot_long.set_index('data level', append=True)
 _to_plot_long.to_csv(fname.with_suffix('.csv'))
 
-# %%
-errors_test = vaep.pandas.calc_errors_per_feat(pred_test.drop(
-    "freq", axis=1), freq_feat=freq_feat)[[*TOP_N_ORDER, 'freq']]
-errors_test
-# %% [markdown]
-# ### Error plot by frequency
-
-# %%
-ax = vaep.plotting.plot_rolling_error(
-    errors_test,
-    metric_name=METRIC,
-    window=int(len(errors_test)/15),
-    min_freq=MIN_FREQ,
-    colors_to_use=COLORS_TO_USE)
-fname = args.out_figures / 'errors_rolling_avg_test.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-
 
 # %% [markdown]
 # Plot error by median feature intensity
 
 # %%
-fig, ax = plt.subplots(figsize=(8,2))
+fig, ax = plt.subplots(figsize=(8, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred=pred_test[
@@ -698,10 +693,12 @@ vaep.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned.head()
+
 # %% [markdown]
 # ## Figures dumped to disk
 # %%
 figures
+
 # %%
 dumps
 

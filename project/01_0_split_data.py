@@ -41,6 +41,18 @@ from vaep.analyzers.analyzers import  AnalyzePeptides
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 
+def add_meta_data(analysis: AnalyzePeptides, df_meta: pd.DataFrame):
+    try:
+        analysis.df = analysis.df.loc[df_meta.index]
+    except KeyError as e:
+        logger.warning(e)
+        logger.warning("Ignore missing samples in quantified samples")
+        analysis.df = analysis.df.loc[analysis.df.index.intersection(
+            df_meta.index)]
+
+    analysis.df_meta = df_meta
+    return analysis
+
 
 pd.options.display.max_columns = 32
 plt.rcParams['figure.figsize'] = [4, 2]
@@ -72,6 +84,7 @@ feat_prevalence: Union[int, float] = 0.25
 # Minimum number or fraction of total requested features per Sample
 sample_completeness: Union[int, float] = 0.5
 select_N: int = None  # only use latest N samples
+sample_N: bool = False # if select_N, sample N randomly instead of using latest?
 random_state: int = 42  # random state for reproducibility of splits
 # based on raw file meta data, only take samples with RT > min_RT_time
 min_RT_time: Union[int, float] = None
@@ -294,19 +307,6 @@ if df_meta.columns.isin(meta_raw_settings).sum() == len(meta_raw_settings):
 # - sort data the same as sorted meta data
 
 # %%
-def add_meta_data(analysis: AnalyzePeptides, df_meta: pd.DataFrame):
-    try:
-        analysis.df = analysis.df.loc[df_meta.index]
-    except KeyError as e:
-        logger.warning(e)
-        logger.warning("Ignore missing samples in quantified samples")
-        analysis.df = analysis.df.loc[analysis.df.index.intersection(
-            df_meta.index)]
-
-    analysis.df_meta = df_meta
-    return analysis
-
-
 analysis = add_meta_data(analysis, df_meta=df_meta)
 
 # %% [markdown]
@@ -325,8 +325,10 @@ assert analysis.df.index.is_unique, "Duplicates in index"
 # %%
 if params.select_N is not None:
     params.select_N = min(params.select_N, len(analysis.df_meta))
-
-    analysis.df_meta = analysis.df_meta.iloc[-params.select_N:]
+    if params.sample_N:
+        analysis.df_meta = analysis.df_meta.sample(params.select_N)
+    else:
+        analysis.df_meta = analysis.df_meta.iloc[-params.select_N:]
 
     analysis.df = analysis.df.loc[analysis.df_meta.index].dropna(
         how='all', axis=1)
@@ -347,6 +349,7 @@ if isinstance(params.feat_prevalence, float):
     params.overwrite_entry('feat_prevalence', int(
         N_samples * params.feat_prevalence))
 assert isinstance(params.feat_prevalence, int)
+# ! check that feature prevalence is greater equal to 3 (otherwise train, val, test split is not possible)
 logger.info(
     f"Feature has to be present in at least {params.feat_prevalence} of samples")
 # select features
@@ -631,7 +634,7 @@ freq_per_feature.to_pickle(fname)
 # - validation data (for model)
 
 # %%
-analysis.splits = DataSplits(is_wide_format=True)
+analysis.splits = DataSplits(is_wide_format=False)
 splits = analysis.splits
 print(f"{analysis.splits = }")
 analysis.splits.__annotations__
@@ -658,7 +661,7 @@ fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(),
                                       frac=0.1,
                                       random_state=params.random_state,)
 assert len(splits.train_X) > len(fake_na)
-splits.val_y = fake_na.sample(frac=0.5).sort_index()
+splits.val_y = fake_na.sample(frac=0.5, random_state=params.random_state).sort_index()
 splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]
 # splits
 
@@ -771,6 +774,26 @@ ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = params.out_figures / 'val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %% [markdown]
+# plot training data missing plots
+
+# %%
+splits.to_wide_format()
+
+# %%
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=splits.train_X, type='scatter')
+fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter_train'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
+# %%
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=splits.train_X, type='boxplot')
+fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot_train'
+figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %% [markdown]

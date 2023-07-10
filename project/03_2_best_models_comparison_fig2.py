@@ -33,7 +33,7 @@ logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 # %%
 # parameters
-FOLDER = Path('runs/Q_Exactive_HF_X_Orbitrap_6070/')
+FOLDER = Path('runs/dev_dataset_large/')
 files_in = {
       'protein groups': FOLDER / 'proteinGroups/figures/performance_test.csv',
       'peptides': FOLDER / 'peptides/figures/performance_test.csv',
@@ -43,7 +43,7 @@ files_in = {
 # %%
 FOLDER = Path('runs/dev_dataset_small/')
 files_in = {
-      'protein groups': Path('runs/example') / 'figures/performance_test.csv',
+      'protein groups': FOLDER / 'proteinGroups_N50/figures/performance_test.csv',
       'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
       'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
 }
@@ -82,6 +82,7 @@ for key, fname in files_in.items():
 # data_levels_annotated
 ORDER_DATA = list(data_levels_annotated.values())
 df = df.rename(index=data_levels_annotated)
+df
 
 # %%
 fname = FOLDER / 'best_models_1_test_mpl.pdf'
@@ -120,3 +121,33 @@ vaep.savefig(fig, fname)
 # %%
 df = metrics.fillna(0.0).stack().to_frame('metric_value').join(text.rename('text'))
 df.to_excel(fname.with_suffix('.xlsx'))
+
+# %% [markdown]
+# # aggregate all mean results
+
+# %%
+files_perf = {k: f.parent.parent / '01_2_performance_summary.xlsx' for k, f in files_in.items()}
+files_perf
+
+# %%
+perf = dict()
+for k, f in files_perf.items():
+    df = pd.read_excel(f, index_col=0, sheet_name=1)
+    perf[(k, 'val')] = df.loc['mean']
+    df = pd.read_excel(f, index_col=0, sheet_name=2)
+    perf[(k, 'test')] = df.loc['mean']
+
+perf = pd.DataFrame(perf)
+order = (perf
+    .loc[:, pd.IndexSlice[:, 'val']]
+    .mean(axis=1)
+    .sort_values()
+    .index)
+perf = perf.loc[order]
+perf
+
+# %%
+fname = FOLDER / 'performance_summary.xlsx'
+perf.to_excel(fname)
+fname.as_posix()
+# %%
