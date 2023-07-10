@@ -1,12 +1,12 @@
 epochs_max:
-- 100
+- 500
 batch_size: 10
 batch_size_collab: 4096
 hidden_layers:
 - '256'
 - '512'
 - '1024'
-- '2056'
+# - '2056'
 - '128_64'
 - '256_128'
 - '512_256'
@@ -27,7 +27,7 @@ folder_experiment: "runs/grid_search_small_data/{level}"
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
 levels:
 - proteinGroups
-- aggPeptides
+- peptides
 - evidence 
 config_split: 'config/grid_search_small_data/{level}_split.yaml'
 config_train: 'placeholder.yaml'
