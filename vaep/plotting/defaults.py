@@ -3,16 +3,23 @@ import seaborn as sns
 
 logger = logging.getLogger(__name__)
 
-
+# ! default seaborn color map only has 10 colors
+# https://seaborn.pydata.org/tutorial/color_palettes.html
+# sns.color_palette("husl", N) to get N distinct colors
+#  
 color_model_mapping = {
     'KNN': sns.color_palette()[0],
-    'knnmethod': sns.color_palette()[1],
+    'KNN_IMPUTE': sns.color_palette()[1],
     'CF': sns.color_palette()[2],
     'DAE': sns.color_palette()[3],
     'VAE': sns.color_palette()[4],
-    'rf': sns.color_palette()[5],
+    'RF': sns.color_palette()[5],
     'Median': sns.color_palette()[6],
     'None': sns.color_palette()[7],
+    'BPCA': sns.color_palette()[8],
+    'MICE-CART': sns.color_palette()[9],
+    'SEQKNN': sns.color_palette()[6],
+    'MICE-NORM': sns.color_palette()[1],
 }
 other_colors = sns.color_palette()[8:]
 

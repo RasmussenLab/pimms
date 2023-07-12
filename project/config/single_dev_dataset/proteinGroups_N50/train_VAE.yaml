@@ -3,8 +3,8 @@ folder_experiment:  runs/example
 file_format: csv
 latent_dim: 25
 batch_size: 10
-epochs_max: 50
-hidden_layers: "256"
+epochs_max: 200
+hidden_layers: "512_256"
 sample_idx_position: 0
 cuda: False
 save_pred_real_na: True

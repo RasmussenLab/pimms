@@ -21,13 +21,11 @@ from pathlib import Path
 import logging
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 import vaep
 import vaep.models
 from vaep.io import datasplits
 import vaep.pandas
-from vaep.pandas import calc_errors
 
 vaep.plotting.make_large_descriptors(5)
 
@@ -89,25 +87,19 @@ if args.dumps is not None:
     entire_pred = [Path(s) for s in args.dumps.split(',')]
 else:
     entire_pred = list(file for file in args.out_preds.iterdir()
-                   if '_all_' in str(file))
+                       if '_all_' in str(file))
 entire_pred
 
 # %%
 mask = data.train_X.unstack().isna().stack()
 idx_real_na = mask.index[mask]
 idx_real_na = (idx_real_na
-                .drop(val_pred_fake_na.index)
-                .drop(test_pred_fake_na.index))
+               .drop(val_pred_fake_na.index)
+               .drop(test_pred_fake_na.index))
 
 for fpath in entire_pred:
     col_name = fpath.stem.split('_all_')[-1]
-    pred = pd.read_csv(fpath, index_col=[1,0])
-    # pred.columns = pred.columns.str[1:].str.replace(
-    #     '.', '-', regex=False)  # NaGuideR change the sample names
-    # pred.columns.name = test_pred_fake_na.index.names[0]
-    # pred.index.name = test_pred_fake_na.index.names[1]
-    # pred = pred.unstack()
-
+    pred = pd.read_csv(fpath, index_col=[1, 0])
     val_pred_fake_na[col_name] = pred
     fname = args.out_preds / f'pred_val_{col_name}.csv'
     files_out[fname.name] = fname.as_posix()
@@ -117,8 +109,6 @@ for fpath in entire_pred:
     fname = args.out_preds / f'pred_test_{col_name}.csv'
     files_out[fname.name] = fname.as_posix()
     test_pred_fake_na[['observed', col_name]].to_csv(fname)
-    
-   
 
     # hacky, but works:
     pred_real_na = (pd.Series(0, index=idx_real_na, name='placeholder')
@@ -158,7 +148,8 @@ metrics_df = vaep.models.get_df_from_nested_dict(
 metrics_df
 
 # %%
-order_methods = metrics_df.loc[pd.IndexSlice[:, 'MAE'], 'valid_fake_na'].sort_values()
+order_methods = metrics_df.loc[pd.IndexSlice[:,
+                                             'MAE'], 'valid_fake_na'].sort_values()
 order_methods
 
 # %%

@@ -1,6 +1,6 @@
 config_split: config/single_dev_dataset/proteinGroups_N50/split.yaml
 config_train: config/single_dev_dataset/proteinGroups_N50/train_{model}.yaml
-folder_experiment: runs/example
+folder_experiment: runs/dev_dataset_small/proteinGroups_N50
 fn_rawfile_metadata: data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv
 file_format: csv
 models:
@@ -10,13 +10,24 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  - ROWMEDIAN # e1071
-  - KNN_IMPUTE # impute
-  - SEQKNN # SeqKNN
-  - RF # missForest
-  - IMPSEQ # rrcovNA
-  - QRILC # imputeLCMD
-  - SVDMETHOD # pcaMethods
-  - MICE-NORM # mice
-  - MLE # norm
-  - IRM # VIM
+  - ZERO
+  - MINIMUM
+  - COLMEDIAN
+  - ROWMEDIAN
+  - KNN_IMPUTE
+  - SEQKNN
+  - BPCA
+  - SVDMETHOD
+  - LLS
+  - MLE
+  - QRILC
+  - MINDET
+  - MINPROB
+  - IRM # stopped after 30mins
+  - IMPSEQ # error
+  - IMPSEQROB
+  - MICE-NORM
+  - MICE-CART # stopped after 30mins
+  # - TRKNN # error
+  - RF
+  - PI

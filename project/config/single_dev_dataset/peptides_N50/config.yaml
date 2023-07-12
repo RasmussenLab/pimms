@@ -11,12 +11,24 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  # - lls # 1:20h killed
-  - knnmethod
-  # - rf
-  # - impseq
-  - qrilc
-  - minprob
-  - mindet 
-  # - seqknn
-  # - svdmethod
+  - ZERO
+  - MINIMUM
+  - COLMEDIAN
+  - ROWMEDIAN
+  - KNN_IMPUTE
+  # - SEQKNN # error
+  - BPCA
+  - SVDMETHOD
+  # - LLS # stopped after 30mins
+  - MLE
+  - QRILC # fails for N=10
+  - MINDET
+  - MINPROB
+  # - IRM # stopped after 30mins
+  # - IMPSEQ # error
+  - IMPSEQROB
+  - MICE-NORM
+  # - MICE-CART # stopped after 30mins
+  # - TRKNN # error
+  # - RF # stopped after 30mins
+  - PI
