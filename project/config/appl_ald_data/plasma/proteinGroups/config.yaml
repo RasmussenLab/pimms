@@ -1,7 +1,7 @@
 config_split: config/appl_ald_data/plasma/proteinGroups/split.yaml
 config_train: config/appl_ald_data/plasma/proteinGroups/train_{model}.yaml
 folder_experiment: runs/appl_ald_data/plasma/proteinGroups
-fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+fn_rawfile_metadata: data/ALD_study/processed/raw_meta.csv
 file_format: pkl
 models:
   - RSN
@@ -11,13 +11,24 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  # - lls
-  - knnmethod
-  # - seqknn # error
-  - rf
-  # - impseq # error
-  - qrilc
-  - minprob
-  - mindet
-  - svdmethod
-  # - mice-norm # stopped after 8h
+  - ZERO
+  - MINIMUM
+  - COLMEDIAN
+  - ROWMEDIAN
+  - KNN_IMPUTE
+  # - SEQKNN # error
+  - BPCA
+  - SVDMETHOD
+  - LLS
+  - MLE
+  - QRILC
+  - MINDET
+  - MINPROB
+  - IRM
+  # - IMPSEQ # error
+  - IMPSEQROB
+  # - MICE-NORM # stopped after 30mins
+  # - MICE-CART # stopped after 30mins
+  # - TRKNN # error
+  - RF
+  - PI

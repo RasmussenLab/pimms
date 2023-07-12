@@ -1,5 +1,5 @@
-FN_INTENSITIES: 'data/ALD_study/processed/ald_plasma_proteinGroups.pkl'
-fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+FN_INTENSITIES: data/ALD_study/processed/ald_plasma_proteinGroups.pkl
+fn_rawfile_metadata: data/ALD_study/processed/raw_meta.csv
 sample_completeness: 0.5
 min_RT_time: 20
 column_names:
