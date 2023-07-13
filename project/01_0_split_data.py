@@ -103,7 +103,6 @@ args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
-
 params = vaep.nb.args_from_dict(args)
 params
 
@@ -141,6 +140,9 @@ analysis = constructor(fname=params.FN_INTENSITIES,
 if params.column_names:
     analysis.df.columns.names = params.column_names
 
+if not analysis.df.index.name:
+    logger.warning("No sample index name found, setting to 'Sample ID'")
+    analysis.df.index.name = 'Sample ID'
 
 log_fct = getattr(np, params.logarithm)
 analysis.log_transform(log_fct)
@@ -179,7 +181,7 @@ def join_as_str(seq):
     ret = "_".join(str(x) for x in seq)
     return ret
 
-
+# ToDo: join multiindex samples indices (pkl dumps)
 # if hasattr(analysis.df.columns, "levels"):
 if isinstance(analysis.df.columns, pd.MultiIndex):
     logger.warning("combine MultiIndex columns to one feature column")
@@ -681,6 +683,40 @@ splits.train_X
 # -> or raise error as feature completness treshold is so low that less than 3 samples
 # per feature are allowd.
 
+diff = (splits
+    .val_y
+    .index
+    .levels[-1]
+    .difference(splits
+                .train_X
+                .index
+                .levels[-1]
+    ).to_list())
+if diff:
+    to_remove = splits.val_y.loc[pd.IndexSlice[:, diff]]
+    display(to_remove)
+    splits.train_X = pd.concat([splits.train_X, to_remove])
+    splits.val_y = splits.val_y.drop(to_remove.index)
+diff
+
+# %%
+diff = (splits
+    .test_y
+    .index
+    .levels[-1]
+    .difference(splits
+                .train_X
+                .index
+                .levels[-1]
+    ).to_list())
+if diff:
+    to_remove = splits.test_y.loc[pd.IndexSlice[:, diff]]
+    display(to_remove)
+    splits.train_X = pd.concat([splits.train_X, to_remove])
+    splits.test_y = splits.test_y.drop(to_remove.index)
+diff
+
+
 # %% [markdown]
 # ### Save in long format
 #
@@ -712,7 +748,7 @@ stats_splits.to_excel(writer, 'stats_splits', float_format='%.2f')
 stats_splits
 
 # %%
-# ! whitespaces in legends are not displayed correctly...
+# whitespaces in legends are not displayed correctly...
 # max_int_len   = len(str(int(stats_splits.loc['count'].max()))) +1
 # _legend = [
 #     f'{s:<5} (N={int(stats_splits.loc["count", s]):>{max_int_len},d})'.replace(

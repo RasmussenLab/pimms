@@ -5,12 +5,7 @@ from snakemake.logging import logger
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
-# include rules per model
-
-
 folder_experiment = config["folder_experiment"]
-
-
 logger.info(f"{folder_experiment = }")
 
 
@@ -22,7 +17,7 @@ rule all:
 
 nb = "01_2_performance_plots.ipynb"
 
-MODELS = config["models"]
+MODELS = config["models"].copy()
 if config["NAGuideR_methods"]:
     MODELS += config["NAGuideR_methods"]
 
@@ -84,7 +79,7 @@ rule train_NAGuideR_model:
         train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
     output:
         nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
-        dump="{folder_experiment}/preds/pred_all_{method}.csv"
+        dump=temp("{folder_experiment}/preds/pred_all_{method}.csv")
     benchmark:
         "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
     params:
@@ -103,7 +98,7 @@ rule transform_data_to_wide_format:
         train_split="{folder_experiment}/data/train_X.csv",
     output:
         nb="{folder_experiment}/01_0_transform_data_to_wide_format.ipynb",
-        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+        train_split=temp("{folder_experiment}/data/data_wide_sample_cols.csv"),
     params:
         folder_experiment="{folder_experiment}",
     shell:
