@@ -126,9 +126,6 @@ if args.plot_to_n > 10:
     args.overwrite_entry('plot_to_n', 10)
 
 # %%
-vaep.plotting.defaults.assign_colors(['CF', 'DAE', 'knn', 'VAE'])
-
-# %%
 data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
@@ -251,7 +248,7 @@ mae_stats_ordered_val
 # Hack color order, by assing CF, DAE and VAE unique colors no matter their order
 # Could be extended to all supported imputation methods
 # %%
-COLORS_TO_USE = vaep.plotting.defaults.assign_colors(ORDER_MODELS)
+COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
 
 # %%
 # For top_N -> define colors
@@ -590,7 +587,7 @@ else:
 # %%
 metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(
-    pred_test.drop('freq', axis=1), key='test data')
+    pred_test[['observed', *TOP_N_ORDER]], key='test data')
 test_metrics = pd.DataFrame(test_metrics)[TOP_N_ORDER]
 test_metrics
 
@@ -616,7 +613,7 @@ _to_plot
 # %%
 fig, ax = plt.subplots(figsize=(4, 2))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
-                                                 ylabel=f"{METRIC} for {feature_names.name} (based on {n_in_comparison:,} log2 intensities)",
+                                                 ylabel=f"{METRIC} for {feature_names.name} ({n_in_comparison:,} intensities)",
                                                  # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
                                                  color=COLORS_TO_USE,
                                                  ax=ax,
