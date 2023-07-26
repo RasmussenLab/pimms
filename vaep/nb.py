@@ -95,13 +95,14 @@ def add_default_paths(cfg: Config, folder_data='', out_root=None):
         cfg.data = Path(folder_data)
     else:
         cfg.data = cfg.folder_experiment / 'data'
+        cfg.data.mkdir(exist_ok=True, parents=True)
     assert cfg.data.exists(), f"Directory not found: {cfg.data}"
     del folder_data
     cfg.out_figures = cfg.folder_experiment / 'figures'
     cfg.out_figures.mkdir(exist_ok=True)
-    cfg.out_metrics = cfg.folder_experiment / 'metrics'
+    cfg.out_metrics = cfg.folder_experiment
     cfg.out_metrics.mkdir(exist_ok=True)
-    cfg.out_models = cfg.folder_experiment / 'models'
+    cfg.out_models = cfg.folder_experiment
     cfg.out_models.mkdir(exist_ok=True)
     cfg.out_preds = cfg.folder_experiment / 'preds'
     cfg.out_preds.mkdir(exist_ok=True)

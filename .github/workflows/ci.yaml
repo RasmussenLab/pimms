@@ -27,22 +27,42 @@ jobs:
         miniforge-variant: Mambaforge
         # miniforge-version: latest
         use-mamba: true
+        channel-priority: strict
         python-version: ${{ matrix.python-version }}
         environment-file: environment.yml
         activate-environment: vaep
         auto-activate-base: true
         # auto-update-conda: true
-    - name: setup-env-manuelly
+    - name: inspect-conda-environment
       run: |
         conda info
+        conda list
+        conda info -e
+    - name: test-r-kernel-imports
+      run: |
+        Rscript -e "library(stringi)"
+        Rscript -e "library(stringr)"
+        Rscript -e "library(reshape2)"
     # # currently part of environment
     # - name: Install package and install library
     #   run: |
     #     pip install pytest
     - name: Run Tests on installed package
       run: pytest . 
+    - name: View papermill help message for notebooks (as scripts)
+      run: |
+        cd project
+        papermill 01_0_split_data.ipynb --help-notebook
+        papermill 01_1_train_VAE.ipynb --help-notebook
+        papermill 01_1_train_DAE.ipynb --help-notebook
+        papermill 01_1_train_CF.ipynb --help-notebook
     - name: Run demo workflow
       run: | 
        cd project
-       snakemake -p -c1 -n
-       snakemake -p -c1
+       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
+       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: example-workflow-results-${{ matrix.os }}
+        path: project/runs/example/01_2_performance_plots.html

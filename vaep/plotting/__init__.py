@@ -12,16 +12,33 @@ import vaep.pandas
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
 
-plt.rcParams['figure.figsize'] = [16.0, 7.0]
+plt.rcParams['figure.figsize'] = [16.0, 7.0] # [4, 2], [4, 3]
 plt.rcParams['pdf.fonttype'] = 42
 plt.rcParams['ps.fonttype'] = 42
+
+plt.rcParams['figure.dpi'] = 147
 
 
 from . defaults import order_categories, labels_dict, IDX_ORDER
 from . import plotly
+from . import data
+from . import errors
+from .errors import plot_rolling_error
 
 logger = logging.getLogger(__name__)
 
+__all__ = ['plotly',
+           'data',
+           'errors',
+           'plot_rolling_error',
+           # define in this file
+           'savefig',
+           'select_xticks',
+           'select_dates',
+           'make_large_descriptors',
+           'plot_feat_counts',
+           'plot_cutoffs',
+           ]
 
 def _savefig(fig, name, folder: pathlib.Path = '.',
              pdf=True,
@@ -136,12 +153,14 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     return ax2
 
 
-def add_height_to_barplot(ax, size=15):
+def add_height_to_barplot(ax, size=5):
     for bar in ax.patches:
+        if not bar.get_height():
+            continue
         ax.annotate(text=format(bar.get_height(), '.2f'),
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, 7),
+                    xytext=(0, int(size/2)),
                     ha='center',
                     va='center',
                     size=size,
@@ -149,9 +168,11 @@ def add_height_to_barplot(ax, size=15):
     return ax
 
 
-def add_text_to_barplot(ax, text, size=15):
+def add_text_to_barplot(ax, text, size=5):
     for bar, text in zip(ax.patches, text):
         logger.debug(f"{bar = }, f{text = }, {bar.get_height() = }")
+        if not bar.get_height():
+            continue
         ax.annotate(text=text,
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
@@ -286,3 +307,5 @@ def plot_cutoffs(df: pd.DataFrame,
     if min_feat_in_sample is not None:
         ax.axhline(min_feat_in_sample)
     return fig, axes
+
+

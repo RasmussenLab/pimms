@@ -1,0 +1,11 @@
+FN_INTENSITIES: data/dev_datasets/df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070.pkl
+FOLDER_EXPERIMENT: runs/data_exploration/dev_datasets/proteins/Q_Exactive_HF_X_Orbitrap_6070
+N_FIRST_ROWS:
+LOG_TRANSFORM: True
+INDEX_COL:
+  - 0
+  - 1
+LONG_FORMAT: True
+COMPLETENESS_OVER_SAMPLES: 0.25
+MIN_FEAT_PER_SAMPLE: 0.4
+PG_SEPARATOR: ;

@@ -1,8 +1,0 @@
-# models_training:
-folder_experiment:  'runs/experiment_03/df_intensities_evidence_long/Q_Exactive_HF_X_Orbitrap_6070'
-file_format: pkl
-latent_dim: 20
-hidden_layers: "512"
-sample_idx_position: 0
-cuda: True
-save_pred_real_na: True

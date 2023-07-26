@@ -28,8 +28,4 @@ def test_basic_repr():
     assert model.n_features == 100
 
 
-def test_get_funnel_layers():
-    actual = ae.get_funnel_layers(900, 100, 3)
-    expected = [700, 500, 300]
-    assert actual == expected
 

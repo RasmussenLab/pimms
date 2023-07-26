@@ -66,11 +66,19 @@ def test_impute_shifted_normal(example_data, axis):
     mask_observed = example_data.notna()
     imputed = impute_shifted_normal(example_data, axis=axis, mean_shift=mean_shift)
     assert len(imputed) == ((N*M) - len(example_data.stack()))
-    mean_imputed = imputed.unstack().mean(axis=axis)
-    mean = example_data.mean(axis=axis)
-    std = example_data.std(axis=axis)
+    
+    if axis == 1:
+        min_N = int(len(example_data) * 0.6)
+        selected = example_data.dropna(axis=1, thresh=min_N)
+    elif axis == 0:
+        min_M = int(example_data.shape[1] * 0.6)
+        selected = example_data.dropna(axis=0, thresh=min_M)
+    
+    mean = selected.mean(axis=axis)
+    std = selected.std(axis=axis)
     mean_shifted = mean - (std * mean_shift)
-    # pd.DataFrame({'mean_expected': mean_shifted, 'mean_imputed': mean_imputed})
+
+    mean_imputed = imputed.unstack().mean(axis=axis)
     assert (mean_shifted - mean_imputed).abs().max() < 0.35
 
 

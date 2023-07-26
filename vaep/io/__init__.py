@@ -151,7 +151,7 @@ def parse_dict(input_dict: dict,
 
 
 def extend_name(fname: Union[str, Path], extend_by: str, ext: str = None) -> Path:
-    """Rename a file.
+    """Extend the name of a file.
 
     Parameters
     ----------

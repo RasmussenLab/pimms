@@ -39,7 +39,7 @@ class DotProductBias(Module):
 
 def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
     """Helper function to combine training and validation data in long-format. The 
-    training and validation data will be mixed up in Collab training as the sample
+    training and validation data will be mixed up in CF training as the sample
     embeddings have to be trained for all samples. The returned frac can be used to have
     the same number of (non-missing) validation samples as before.
 
@@ -58,20 +58,13 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
     """
     X = train_df.append(val_df).reset_index()
     frac = len(val_df) / (len(train_df)+len(val_df))
-
-    # idx_splitter = IndexSplitter(list(range(len(data.train_X), len(data.train_X)+ len(data.val_X) )))
-    # splits = idx_splitter(ana_collab.X)
-    #N_train, N_valid = len(train_df), len(val_df)
-    #splits = [list(range(0, N_train)), list(range(N_train, N_train + N_valid))]
-    # List of list of indices belonging to training data and list of indices belonging
-    # to validation data.
     return X, frac
 
 
 def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tensor,
                        feat_embeddings: Embedding, feat_bias: Embedding, items: torch.tensor,
                        y_range=None) -> torch.tensor:
-    """Collab dot product for a single sample using a set of feature items.
+    """CF dot product for a single sample using a set of feature items.
 
     Parameters
     ----------
@@ -95,7 +88,7 @@ def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tenso
 
     Example
     -------
-    # learn is a Collab Learner
+    # learn is a CF Learner
     idx = learn.classes['Sample ID'].map_objs(['sample1', 'sample2'])
     idx = torch.tensor(idx)
     collab_dot_product(learn.u_weight(idx), learn.u_bias(idx),
@@ -113,7 +106,7 @@ def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tenso
 def collab_prediction(idx_samples: torch.tensor,
                       learn: fastai.learner.Learner,
                       index_samples: pd.Index = None) -> pd.DataFrame:
-    """Based on a Collab model Learner, calculate all out of sample predicitons
+    """Based on a CF model Learner, calculate all out of sample predicitons
     for all features trained.
 
     Parameters
@@ -167,8 +160,11 @@ class CollabAnalysis(analysis.ModelAnalysis):
                  target_column='intensity',
                  model_kwargs=dict(),
                  batch_size=64):
-        self.X, self.frac = combine_data(datasplits.train_X,
+        if datasplits.val_y is not None:
+            self.X, self.frac = combine_data(datasplits.train_X,
                                          datasplits.val_y)
+        else:
+            self.X, self.frac = datasplits.train_X.reset_index(), 0.0
         self.batch_size = batch_size
         self.dls = CollabDataLoaders.from_df(self.X, valid_pct=self.frac,
                                              seed=42,
@@ -181,9 +177,10 @@ class CollabAnalysis(analysis.ModelAnalysis):
         rating_name=target_column
         cat_names = [user_name,item_name]
         ratings = self.X
-        # splits = RandomSplitter(valid_pct=valid_pct, seed=42)(range_of(ratings))
-        idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
-        splits = idx_splitter(self.X)
+        splits = None
+        if datasplits.val_y is not None:
+            idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
+            splits = idx_splitter(self.X)
         to = TabularCollab(ratings, [Categorify], cat_names, y_names=[rating_name], y_block=TransformBlock(), splits=splits)
         self.dls = to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}
@@ -192,3 +189,18 @@ class CollabAnalysis(analysis.ModelAnalysis):
 
         self.transform = None  # No data transformation needed
         self.learn = None
+
+
+def get_missing_values(df_train_long: pd.DataFrame,
+                       val_idx: pd.Index,
+                       test_idx: pd.Index,
+                       analysis_collab: CollabAnalysis) -> pd.Series:
+    mask = df_train_long.unstack().isna().stack()
+    idx_real_na = mask.loc[mask].index
+    idx_real_na = (idx_real_na
+                   .drop(val_idx)
+                   .drop(test_idx))
+    dl_real_na = analysis_collab.dls.test_dl(idx_real_na.to_frame())
+    pred_real_na, _ = analysis_collab.learn.get_preds(dl=dl_real_na)
+    pred_real_na = pd.Series(pred_real_na, idx_real_na, name='intensity')
+    return pred_real_na

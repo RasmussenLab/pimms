@@ -1,0 +1,33 @@
+config_split: config/single_dev_dataset/evidence_N50/split.yaml
+config_train: config/single_dev_dataset/evidence_N50/train_{model}.yaml
+folder_experiment: runs/dev_dataset_small/evidence_N50
+fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
+file_format: csv
+models:
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - KNN
+NAGuideR_methods:
+  - ZERO
+  - MINIMUM
+  - COLMEDIAN
+  - ROWMEDIAN
+  - KNN_IMPUTE
+  # - SEQKNN # error
+  - BPCA
+  - SVDMETHOD
+  # - LLS # stopped after 30mins
+  - MLE
+  - QRILC # fails for N=10
+  - MINDET
+  - MINPROB
+  # - IRM # stopped after 30mins
+  # - IMPSEQ # error
+  - IMPSEQROB
+  - MICE-NORM
+  # - MICE-CART # stopped after 30mins
+  # - TRKNN # error
+  # - RF # stopped after 30mins
+  - PI

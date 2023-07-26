@@ -47,9 +47,7 @@ def wide_format(df: pd.DataFrame,
 class DataSplits():
     is_wide_format: bool = field(init=True, repr=False)
     train_X: pd.DataFrame = None
-    # val_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
-    # test_X: pd.DataFrame = None
     test_y: pd.DataFrame = None
     
 
@@ -66,14 +64,14 @@ class DataSplits():
         return ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
                 'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
 
-    def dump(self, folder='data', file_format='csv'):
+    def dump(self, folder='data', file_format='csv')-> dict:
         """dump in long format."""
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
 
         if not file_format in FILE_FORMAT_TO_DUMP_FCT:
             raise ValueError(f"Select one of these formats: {', '.join(FILE_FORMAT_TO_DUMP_FCT.keys())}")
-
+        dumps = {}
         n_dumped = 0
         for (_attr, _df) in self:
             if _df is None:
@@ -90,6 +88,7 @@ class DataSplits():
             else:
                 raise ValueError()
             fname = folder / f"{_attr}.{file_format}"
+            dumps[fname.name] = fname.as_posix()
             logger.info(f"save '{_attr}' to file: {fname}")
             dump_fct = getattr(_df, FILE_FORMAT_TO_DUMP_FCT[file_format][0])
             dump_fct(fname)
@@ -97,6 +96,7 @@ class DataSplits():
         if not n_dumped:
             raise ValueError(f'Nothing to dump, all None: {self}')
             # _df.to_json(fname) # does not work easily for series
+        return dumps
 
     def load(self, folder: str, use_wide_format=False, file_format='csv') -> None:
         """Load data in place from folder"""

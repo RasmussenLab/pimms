@@ -12,7 +12,6 @@ https://docs.python.org/3/library/pathlib.html#correspondence-to-tools-in-the-os
 """
 import vaep.io
 import logging
-import os
 import yaml
 from collections import namedtuple
 from pathlib import Path, PurePath, PurePosixPath

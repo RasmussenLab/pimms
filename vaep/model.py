@@ -1,4 +1,3 @@
-from vaep.models.ae import loss_function
 import logging
 import numpy as np
 import pandas as pd
@@ -10,125 +9,19 @@ from torch import nn
 from torch.nn import functional as F
 
 import fastai.collab as _fastai
-# from fastai.collab import sigmoid_range, Module, Embedding
 
 logger = logging.getLogger(__name__)
 
 
-# from IPython.core.debugger import set_trace # invoke debugging
 
 
-# from fastai.losses import MSELossFlat
-# from fastai.learner import Learner
 
 
-# Reconstruction + β * KL divergence losses summed over all elements and batch
-# def loss_function(recon_batch, batch, mu, logvar, beta=1):
-#     BCE = nn.functional.binary_cross_entropy(
-#         recon_batch, batch, reduction='sum'
-#     )
-#     KLD = 0.5 * torch.sum(logvar.exp() - logvar - 1 + mu.pow(2))
-
-#     return {'loss':  BCE + beta * KLD, 'BCE': BCE, 'KLD': KLD}
-
-def train(model: torch.nn.Module, train_loader: torch.utils.data.DataLoader, optimizer: torch.optim,
-          device, return_pred=False):
-    """Train one epoch.
-
-    Parameters
-    ----------
-    model : torch.nn.Module
-        [description]
-    train_loader : torch.utils.data.DataLoader
-        [description]
-    optimizer : torch.optim
-        [description]
-    device : [type]
-        [description]
-    """
-    model.train()
-    batch_metrics = {}
-
-    for batch_idx, batch in enumerate(train_loader):
-        try:
-            data, mask = batch
-            batch = batch.to(device)
-            mask = mask.to(device)
-            batch = (data, mask)
-        except:
-            batch = batch.to(device)
-            data = batch
-
-        recon_batch, mu, logvar = model(data)
-        _batch_metric = loss_function(
-            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
-            recon_batch=recon_batch,
-            batch=data,
-            mu=mu,
-            reconstruction_loss=F.binary_cross_entropy,
-            logvar=logvar)
-
-        # train specific
-        optimizer.zero_grad()
-        loss = _batch_metric['loss']
-        loss.backward()
-        optimizer.step()
-
-        batch_metrics[batch_idx] = {
-            key: value.item() / len(data) for key, value in _batch_metric.items()}
-
-    return batch_metrics
 
 
-def evaluate(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
-             device,
-             return_pred=False):
-    """Evaluate all batches in data_loader
 
-    Parameters
-    ----------
-    model : torch.nn.Module
-        [description]
-    data_loader : torch.utils.data.DataLoader
-        [description]
-    device : [type]
-        [description]
 
-    Returns
-    -------
-    [type]
-        [description]
-    """
-    model.eval()
-    assert model.training == False
-    batch_metrics = {}
-    if return_pred:
-        pred = []
-    for batch_idx, batch in enumerate(data_loader):
-        try:
-            if not isinstance(batch, torch.Tensor):
-                data, mask = batch
-            else:
-                raise ValueError
-            batch = batch.to(device)
-            mask = mask.to(device)
-            batch = (data, mask)
-        except ValueError:
-            batch = batch.to(device)
-            data = batch
 
-        recon_batch, mu, logvar = model(data)
-        _batch_metric = loss_function(
-            # this needs to be just batch_data (which is then unpacked?) # could be a static Model function
-            recon_batch=recon_batch,
-            batch=data,
-            mu=mu,
-            logvar=logvar)
-        batch_metrics[batch_idx] = {
-            key: value.item() / len(data) for key, value in _batch_metric.items()}
-        if return_pred:
-            pred.append(recon_batch.detach().numpy())
-    return batch_metrics if not return_pred else (batch_metrics, pred)
 
 
 def build_df_from_pred_batches(pred, scaler=None, index=None, columns=None):
@@ -181,29 +74,6 @@ def get_latent_space(model_method_call:callable,
     return latent_space
 
 
-def process_train_loss(d: dict, alpha=0.1):
-    """Process training loss to DataFrame.
-
-    Parameters
-    ----------
-    d: dict
-        Dictionary of {'key': Iterable}
-    alpha: float
-        Smooting factor, default 0.1
-
-    Returns
-    -------
-    df: pandas.DataFrame
-        Pandas DataFrame including the loss and smoothed loss.
-    """
-    assert len(
-        d) == 1, "Not supported here. Only one list-like loss with key {key: Iterable}."
-    df = pd.DataFrame(d)
-    key = next(iter(d.keys()))
-    df = df.reset_index(drop=False).rename(columns={'index': 'steps'})
-    key_new = f'{key} smoothed'
-    df[key_new] = df[key].ewm(alpha=alpha).mean()
-    return df
 
 
 # # Defining the model manuelly
