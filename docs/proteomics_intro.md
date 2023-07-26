@@ -1,6 +1,6 @@
 # Proteomics Introductions
 
-### Lennart Martens - Introduction to Proteomics 
+## Lennart Martens - Introduction to Proteomics 
 > [lecture videos on youtube](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl)
 - Digitalizer: Transform an analog signal into a digital signal
 
@@ -23,7 +23,7 @@
   - electron-capture dissociation (ECD): c and z ions 
     - preserves PTMs as the fracturing is non- ergodic (vibration induced)
 
-### Intro (OpenMS from Tübingen)
+## Intro (OpenMS from Tübingen)
 > [Recording on youtube](https://www.youtube.com/watch?v=tnS-w8ggEAA&list=PL_6fafgzU1nHd13qqjm3uNvyHh62JpPcB&index=2&t=0s)
 - *Ion mobility* as a way to identify number of charges (ions), adding another dimension to the data
 - predict MS2 peptide itensities in order to better identify peptides ([MS2PIP](https://iomics.ugent.be/ms2pip/), [DeepMass: Prism](https://github.com/verilylifesciences/deepmass), Prosit)- 
@@ -38,13 +38,6 @@
 - HUGO PSI Standards Formats: Machines do not provide all the same standardized dataset.
 - KNIME is popular for custom machines. `Nextflow` for cloud providers
 
-
-
-# Introduction to proteomics
-Given by Jeppe Madsen and Martin Rzkær
-
-> Support-Request: SUND-CPR-Mssupport  
-> E-Mail Subject: CC-QE1-ISSUE
 
 
 ## Mass Spectrometry

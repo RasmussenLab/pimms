@@ -11,18 +11,20 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sys
-sys.path.insert(0, os.path.abspath('../.'))
+from importlib import metadata
+# import sys
+# sys.path.insert(0, os.path.abspath('../.'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'vaep'
-copyright = '2021, Henry Webel'
+project = 'pimms'
+copyright = '2023, Henry Webel'
 author = 'Henry Webel'
 
-# The full version, including alpha/beta/rc tags
-release = '0.1'
+PACKAGE_VERSION = metadata.version("vaep")
+version = PACKAGE_VERSION
+release = PACKAGE_VERSION
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,9 +33,15 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['myst_parser',
+              # 'sphinx_mdinclude',
               'sphinx.ext.napoleon',
-            #   'sphinx_markdown_tables'
+              'sphinx.ext.autodoc',
+              'sphinx.ext.autodoc.typehints',
               ]
+
+myst_enable_extensions = [
+        "strikethrough",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -49,9 +57,42 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+#html_theme = 'alabaster'
+html_theme = 'sphinx_book_theme' # pip install sphinx-book-theme
+
+# check https://github.com/executablebooks/sphinx-book-theme/blob/master/docs/conf.py
+html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# -- Setup for sphinx-apidoc -------------------------------------------------
+
+# Read the Docs doesn't support running arbitrary commands like tox.
+# sphinx-apidoc needs to be called manually if Sphinx is running there.
+# https://github.com/readthedocs/readthedocs.org/issues/1139
+
+if os.environ.get("READTHEDOCS") == "True":
+    from pathlib import Path
+
+    PROJECT_ROOT = Path(__file__).parent.parent
+    PACKAGE_ROOT = PROJECT_ROOT / "src" / "imppkg"
+
+    def run_apidoc(_):
+        from sphinx.ext import apidoc
+        apidoc.main([
+            "--force",
+            "--implicit-namespaces",
+            "--module-first",
+            "--separate",
+            "-o",
+            str(PROJECT_ROOT / "docs" / "reference"),
+            str(PACKAGE_ROOT),
+            str(PACKAGE_ROOT / "*.c"),
+            str(PACKAGE_ROOT / "*.so"),
+        ])
+
+    def setup(app):
+        app.connect('builder-inited', run_apidoc)
