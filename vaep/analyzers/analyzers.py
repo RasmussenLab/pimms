@@ -2,10 +2,8 @@ from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple, Union, List
-import itertools
 import random
 
-# from fastcore.meta import delegates
 
 import numpy as np
 import pandas as pd
@@ -435,24 +433,6 @@ def get_consecutive_data_indices(df, n_samples):
     start_sample = len(index) - n_samples
     start_sample = random.randint(0, start_sample)
     return df.loc[index[start_sample:start_sample+n_samples]]
-
-
-# def long_format(df: pd.DataFrame,
-#                 colname_values: str = 'intensity',
-#                 # index_name: str = 'Sample ID'
-#                 ) -> pd.DataFrame:
-#     # ToDo: Docstring as in class when finalized
-#     df_long = df.stack().to_frame(colname_values)
-#     return df_long
-
-
-# def wide_format(df: pd.DataFrame,
-#                 columns: str = 'Sample ID',
-#                 name_values: str = 'intensity') -> pd.DataFrame:
-#     # ToDo: Docstring as in class when finalized
-#     df_wide = df.pivot(columns=columns, values=name_values)
-#     df_wide = df_wide.T
-#     return df_wide
 
 
 def corr_lower_triangle(df):
