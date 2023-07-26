@@ -308,12 +308,14 @@ class Metrics():
         return pprint.pformat(self.metrics, indent=2, compact=True)
 
 
-def get_df_from_nested_dict(nested_dict, column_levels=['data_split', 'model', 'metric_name']):
+def get_df_from_nested_dict(nested_dict,
+                            column_levels=['data_split', 'model', 'metric_name'],
+                            row_name='subset'):
     metrics = {}
     for k, run_metrics in nested_dict.items():
         metrics[k] = vaep.pandas.flatten_dict_of_dicts(run_metrics)
 
     metrics = pd.DataFrame.from_dict(metrics, orient='index')
     metrics.columns.names = column_levels
-    metrics.index.name = 'subset'
+    metrics.index.name = row_name
     return metrics
