@@ -59,8 +59,8 @@ jobs:
     - name: Run demo workflow
       run: | 
        cd project
-       snakemake -p -c1 -n
-       snakemake -p -c1
+       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
+       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
