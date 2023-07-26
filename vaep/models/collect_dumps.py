@@ -6,7 +6,7 @@ import yaml
 from typing import Iterable, Callable
 import vaep.pandas
 
-logger = logging.getLogger('vaep')
+logger = logging.getLogger(__name__)
 
 
 def select_content(s: str, first_split):

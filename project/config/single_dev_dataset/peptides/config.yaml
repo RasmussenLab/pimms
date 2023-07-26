@@ -1,6 +1,6 @@
 config_split: config/single_dev_dataset/peptides/split.yaml
 config_train: config/single_dev_dataset/peptides/train_{model}.yaml
-folder_experiment: runs/Q_Exactive_HF_X_Orbitrap_6070/peptides
+folder_experiment: runs/dev_dataset_large/peptides
 fn_rawfile_metadata: data/dev_datasets/df_intensities_peptides_long/metadata.csv
 models:
  - Median # ~ 1:20 min
@@ -9,14 +9,24 @@ models:
  - VAE #  ~ 3:32 min
  - KNN  # ~ 2:20 min
 NAGuideR_methods:
-  # - lls # takes long
-  - knnmethod # 1:44 min
-  # - seqknn # error
-  # - rf # takes long
-  # - impseq
-  - qrilc # ~ 1 min
-  - minprob # ~ 10 sec
-  - mindet # ~ 10 sec
-  # - seqknn
-  # - svdmethod
-
+ - ZERO
+ - MINIMUM
+ - COLMEDIAN
+ - ROWMEDIAN
+ - KNN_IMPUTE
+ # - SEQKNN # error
+ # - BPCA # stopped after 30mins
+ # - SVDMETHOD # stopped after 30mins
+ # - LLS # stopped after 30mins
+ # - MLE # error
+ - QRILC
+ - MINDET
+ - MINPROB
+ # - IRM # stopped after 30mins
+ # - IMPSEQ # error
+ # - IMPSEQROB # error
+ # - MICE-NORM # stopped after 30mins
+ # - MICE-CART # stopped after 30mins
+ # - TRKNN # error
+ # - RF # stopped after 30mins
+ - PI

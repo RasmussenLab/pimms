@@ -25,6 +25,8 @@ from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
 
+from torch.nn import Sigmoid
+
 # overwriting Recorder callback with custom plot_loss
 from vaep.models import plot_loss
 from fastai import learner
@@ -44,7 +46,8 @@ from vaep.io import datasplits
 
 import vaep.nb
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
-logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
+logger.info(
+    "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
 
@@ -59,26 +62,30 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
-folder_data:str = '' # specify data directory if needed
-file_format: str = 'csv' # file format of create splits, default pickle (pkl)
-fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
+# Datasplit folder with data for experiment
+folder_experiment: str = 'runs/example'
+folder_data: str = ''  # specify data directory if needed
+file_format: str = 'csv'  # file format of create splits, default pickle (pkl)
+# Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 # training
-epochs_max:int = 50  # Maximum number of epochs
-batch_size:int = 64 # Batch size for training (and evaluation)
-cuda:bool = True # Whether to use a GPU for training
+epochs_max: int = 50  # Maximum number of epochs
+batch_size: int = 64  # Batch size for training (and evaluation)
+cuda: bool = True  # Whether to use a GPU for training
 # model
-latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:str = '256_128' # A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
+# Dimensionality of encoding dimension (latent space of model)
+latent_dim: int = 25
+# A underscore separated string of layers, '256_128' for the encoder, reverse will be use for decoder
+hidden_layers: str = '256_128'
 # force_train:bool = True # Force training when saved model could be used. Per default re-train model
-patience:int = 50 # Patience for early stopping
-sample_idx_position: int = 0 # position of index which is sample ID
-model: str = 'VAE' # model name
-model_key: str = 'VAE' # potentially alternative key for model (grid search)
-save_pred_real_na: bool = True # Save all predictions for missing values
+patience: int = 50  # Patience for early stopping
+sample_idx_position: int = 0  # position of index which is sample ID
+model: str = 'VAE'  # model name
+model_key: str = 'VAE'  # potentially alternative key for model (grid search)
+save_pred_real_na: bool = True  # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col: str = None # date column in meta data
-meta_cat_col: str = None # category column in meta data
+meta_date_col: str = None  # date column in meta data
+meta_cat_col: str = None  # category column in meta data
 
 # %% [markdown]
 # Some argument transformations
@@ -92,9 +99,11 @@ args
 args = vaep.nb.args_from_dict(args)
 
 if isinstance(args.hidden_layers, str):
-    args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
+    args.overwrite_entry("hidden_layers", [int(x)
+                         for x in args.hidden_layers.split('_')])
 else:
-    raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
+    raise ValueError(
+        f"hidden_layers is of unknown type {type(args.hidden_layers)}")
 args
 
 
@@ -108,7 +117,8 @@ TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 # ## Load data in long format
 
 # %%
-data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format) 
+data = datasplits.DataSplits.from_folder(
+    args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
@@ -117,12 +127,12 @@ data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format
 data.train_X.sample(5)
 
 # %% [markdown]
-# Infer index names from long format 
+# Infer index names from long format
 
 # %%
 index_columns = list(data.train_X.index.names)
 sample_id = index_columns.pop(args.sample_idx_position)
-if len(index_columns) == 1: 
+if len(index_columns) == 1:
     index_column = index_columns.pop()
     index_columns = None
     logger.info(f"{sample_id = }, single feature: {index_column = }")
@@ -132,7 +142,8 @@ else:
 if not index_columns:
     index_columns = [sample_id, index_column]
 else:
-    raise NotImplementedError("More than one feature: Needs to be implemented. see above logging output.")
+    raise NotImplementedError(
+        "More than one feature: Needs to be implemented. see above logging output.")
 
 # %% [markdown]
 # load meta data for splits
@@ -155,13 +166,13 @@ else:
 
 # %%
 freq_feat = vaep.io.datasplits.load_freq(args.data)
-freq_feat.head() # training data
+freq_feat.head()  # training data
 
 # %% [markdown]
 # ### Produce some addional fake samples
 
 # %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance. 
+# The validation fake NA is used to by all models to evaluate training performance.
 
 # %%
 val_pred_fake_na = data.val_y.to_frame(name='observed')
@@ -192,10 +203,11 @@ data.train_X.head()
 data.train_X
 
 # %%
-data.val_y # potentially has less features
+data.val_y  # potentially has less features
 
 # %%
-data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.columns).fillna(data.val_y)
+data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index,
+                          columns=data.train_X.columns).fillna(data.val_y)
 data.val_y
 
 # %% [markdown]
@@ -215,15 +227,14 @@ default_pipeline = sklearn.pipeline.Pipeline(
 # ### Analysis: DataLoaders, Model
 
 # %%
-from torch.nn import Sigmoid
 
 analysis = ae.AutoEncoderAnalysis(  # datasplits=data,
     train_df=data.train_X,
     val_df=data.val_y,
-    model= models.vae.VAE,
+    model=models.vae.VAE,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
                       h_layers=args.hidden_layers,
-                          # last_encoder_activation=None,
+                      # last_encoder_activation=None,
                       last_decoder_activation=None,
                       dim_latent=args.latent_dim),
     transform=default_pipeline,
@@ -245,11 +256,11 @@ loss_fct = partial(models.vae.loss_fct, results=results)
 
 # %%
 analysis.learn = Learner(dls=analysis.dls,
-                        model=analysis.model,
-                        loss_func=loss_fct,
-                        cbs=[ae.ModelAdapterVAE(),
-                             EarlyStoppingCallback(patience=args.patience)
-                             ])
+                         model=analysis.model,
+                         loss_func=loss_fct,
+                         cbs=[ae.ModelAdapterVAE(),
+                              EarlyStoppingCallback(patience=args.patience)
+                              ])
 
 analysis.learn.show_training_loop()
 # %% [markdown]
@@ -264,7 +275,7 @@ analysis.params['suggested_inital_lr'] = suggested_lr.valley
 suggested_lr
 
 # %%
-results.clear() # reset results
+results.clear()  # reset results
 
 # %% [markdown]
 # dump model config
@@ -317,12 +328,12 @@ pred = pred.stack()
 pred
 
 # %%
-val_pred_fake_na['VAE'] = pred # 'model_key' ?
+val_pred_fake_na['VAE'] = pred  # 'model_key' ?
 val_pred_fake_na
 
 
 # %%
-test_pred_fake_na['VAE'] = pred # model_key?
+test_pred_fake_na['VAE'] = pred  # model_key?
 test_pred_fake_na
 
 # %% [markdown]
@@ -346,15 +357,15 @@ if args.save_pred_real_na:
 # %%
 analysis.model = analysis.model.cpu()
 df_latent = vaep.model.get_latent_space(analysis.model.get_mu_and_logvar,
-                                            dl=analysis.dls.valid,
-                                            dl_index=analysis.dls.valid.data.index)
+                                        dl=analysis.dls.valid,
+                                        dl_index=analysis.dls.valid.data.index)
 df_latent
 
 # %%
 ana_latent = analyzers.LatentAnalysis(df_latent,
-                                        df_meta,
-                                        args.model_key,
-                                        folder=args.out_figures)
+                                      df_meta,
+                                      args.model_key,
+                                      folder=args.out_figures)
 if args.meta_date_col and df_meta is not None:
     figures[f'latent_{args.model_key}_by_date'], ax = ana_latent.plot_by_date(
         args.meta_date_col)
@@ -374,21 +385,24 @@ ax = feat_freq_val.plot.box()
 # freq_feat.to_frame('overall').join(feat_freq_val).plot.scatter(x='overall', y='freq_val')
 
 # %%
-feat_freq_val.value_counts().sort_index().head() # require more than one feat?
+feat_freq_val.value_counts().sort_index().head()  # require more than one feat?
 
 # %%
-errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
+errors_val = val_pred_fake_na.drop('observed', axis=1).sub(
+    val_pred_fake_na['observed'], axis=0)
 errors_val = errors_val.abs().groupby(level=-1).mean()
 errors_val = errors_val.join(freq_feat).sort_values(by='freq', ascending=True)
 
 
-errors_val_smoothed = errors_val.copy() #.loc[feat_freq_val > 1]
-errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]].rolling(window=200, min_periods=1).mean()
-ax = errors_val_smoothed.plot(x='freq', figsize=(15,10) )
+errors_val_smoothed = errors_val.copy()  # .loc[feat_freq_val > 1]
+errors_val_smoothed[errors_val.columns[:-1]] = errors_val[errors_val.columns[:-1]
+                                                          ].rolling(window=200, min_periods=1).mean()
+ax = errors_val_smoothed.plot(x='freq', figsize=(15, 10))
 # errors_val_smoothed
 
 # %%
-errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
+errors_val = val_pred_fake_na.drop('observed', axis=1).sub(
+    val_pred_fake_na['observed'], axis=0)
 errors_val.abs().groupby(level=-1).agg(['mean', 'count'])
 
 # %%
@@ -397,8 +411,8 @@ errors_val
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)  
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)  
+# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
+# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
 # > Could be changed.
 
 # %% [markdown]
@@ -406,7 +420,7 @@ errors_val
 #
 # - all measured (identified, observed) peptides in validation data
 #
-# > Does not make to much sense to compare collab and AEs,  
+# > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
 # %%
@@ -434,11 +448,13 @@ added_metrics
 # Save all metrics as json
 
 # %%
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
+                  f'metrics_{args.model_key}.json')
 d_metrics
 
 # %%
-metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
+metrics_df = models.get_df_from_nested_dict(
+    d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
 # %% [markdown]
@@ -452,8 +468,8 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # ## Config
 
 # %%
-figures # switch to fnames?
+figures  # switch to fnames?
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
+args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args

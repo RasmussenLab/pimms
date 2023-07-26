@@ -49,6 +49,7 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
+make_plots = True # create histograms and swarmplots of diverging results
 model_key = 'VAE'
 sample_id_col = 'Sample ID'
 target = 'kleiner'
@@ -57,6 +58,7 @@ out_folder = 'diff_analysis'
 file_format = 'csv'
 baseline = 'RSN'  # default is RSN, but could be any other trained model
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
+ref_method_score = None # filepath to reference method score
 
 
 # %%
@@ -81,6 +83,11 @@ args
 # %%
 files_out = dict()
 
+fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
+writer = pd.ExcelWriter(fname)
+files_out[fname.name] = fname.as_posix()
+
+
 # %%
 score_dumps = [fname for fname in Path(
     args.folder_scores).iterdir() if fname.suffix == '.pkl']
@@ -91,19 +98,82 @@ scores = pd.concat([pd.read_pickle(fname) for fname in score_dumps], axis=1)
 scores
 
 # %%
+# Reference dump
+if args.ref_method_score:    
+    scores_reference = (pd
+                        .read_pickle(args.ref_method_score)
+                        .rename({'None': 'None (100%)'},
+                                axis=1))
+    scores = scores.join(scores_reference)
+    logger.info(f'Added reference method scores from {args.ref_method_score}')
+
+# %%
+# %% [markdown]
+# ## Load frequencies of observed features
+
+# %%
+fname = args.folder_experiment / 'freq_features_observed.csv'
+freq_feat = pd.read_csv(fname, index_col=0)
+freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
+freq_feat
+
+# %%
 qvalues = scores.loc[pd.IndexSlice[:, args.target],
-                     pd.IndexSlice[:, 'qvalue']]
+                     pd.IndexSlice[:, 'qvalue']
+                     ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+qvalues.index.names = qvalues.index.names[:-1] + ['frequency']
 fname  = args.out_folder / 'qvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 qvalues.to_pickle(fname)
+qvalues.to_excel(writer, sheet_name='qvalues_all')
 qvalues
 
 # %%
+pvalues = scores.loc[pd.IndexSlice[:, args.target],
+                     pd.IndexSlice[:, 'p-unc']
+                     ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+pvalues.index.names = pvalues.index.names[:-1] + ['frequency']
+fname  = args.out_folder / 'pvalues_target.pkl'
+files_out[fname.name] = fname.as_posix()
+pvalues.to_pickle(fname)
+pvalues.to_excel(writer, sheet_name='pvalues_all')
+pvalues
+
+# %%
 da_target = scores.loc[pd.IndexSlice[:, args.target],
-                       pd.IndexSlice[:, 'rejected']]
+                       pd.IndexSlice[:, 'rejected']
+                       ].join(freq_feat
+                            ).set_index(
+    ('data', 'frequency'), append=True)
+da_target.index.names = da_target.index.names[:-1] + ['frequency']
 fname = args.out_folder / 'equality_rejected_target.pkl'
 files_out[fname.name] = fname.as_posix()
 da_target.to_pickle(fname)
+
+count_rejected = vaep.pandas.combine_value_counts(da_target.droplevel(-1, axis=1))
+count_rejected.to_excel(writer, sheet_name='count_rejected')
+count_rejected
+
+# %%
+# ! This uses implicitly that RSN is not available for some protein groups
+# ! Make an explicit list of the 313 protein groups available in original data
+mask_common = da_target.notna().all(axis=1)
+count_rejected_common = vaep.pandas.combine_value_counts(da_target.loc[mask_common].droplevel(-1, axis=1))
+count_rejected_common.to_excel(writer, sheet_name='count_rejected_common')
+count_rejected_common
+
+# %%
+count_rejected_new = vaep.pandas.combine_value_counts(da_target.loc[~mask_common].droplevel(-1, axis=1))
+count_rejected_new.to_excel(writer, sheet_name='count_rejected_new')
+count_rejected_new
+
+
+# %%
+da_target.to_excel(writer, sheet_name='equality_rejected_all')
 da_target
 
 # %%
@@ -118,14 +188,20 @@ feat_idx_w_diff
 # take only those with different decisions
 
 # %%
-qvalues = qvalues.loc[feat_idx_w_diff].sort_values(('None', 'qvalue'))
-qvalues
+(qvalues
+ .loc[feat_idx_w_diff]
+ .sort_values(('None', 'qvalue'))
+ .to_excel(writer, sheet_name='qvalues_diff'))
+writer.close()
+
+# %% [markdown]
+# ## Plots for inspecting imputations (for diverging decisions)
 
 # %%
-fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
-writer = pd.ExcelWriter(fname)
-files_out[fname.name] = fname.as_posix()
-qvalues.to_excel(writer, sheet_name='qvalues')
+if not args.make_plots:
+    logger.warning("Not plots requested.")
+    import sys
+    sys.exit(0)
 
 
 # %% [markdown]
@@ -141,6 +217,9 @@ target
 # %%
 target_to_group = target.copy()
 target = target >= args.cutoff_target
+target = target.replace({False: f'{args.target} < {args.cutoff_target}',
+                        True: f'{args.target} >= {args.cutoff_target}'}
+                        ).astype('category')
 pd.crosstab(target.squeeze(), target_to_group.squeeze())
 
 # %% [markdown]
@@ -153,9 +232,20 @@ data = vaep.io.datasplits.DataSplits.from_folder(
 data = pd.concat([data.train_X, data.val_y, data.test_y]).unstack()
 data
 
+# %% [markdown]
+# plot all of the new pgs which are at least once significant which are not already dumped.
+
+# %%
+feat_new_abundant = da_target.loc[~mask_common].any(axis=1)
+feat_new_abundant = feat_new_abundant.loc[feat_new_abundant].index.get_level_values(0)
+feat_new_abundant
 
 # %%
 feat_sel = feat_idx_w_diff.get_level_values(0)
+feat_sel = feat_sel.union(feat_new_abundant)
+len(feat_sel)
+
+# %%
 data = data.loc[:, feat_sel]
 data
 
@@ -288,6 +378,11 @@ for i, idx in enumerate(feat_sel):
     print(f"Swarmplot {i:3<}: {idx}:")
     fig, ax = plt.subplots()
 
+    # dummy plots, just to get the Path objects
+    tmp_dot = ax.scatter([1,2],[3,4], marker='X')
+    new_mk, = tmp_dot.get_paths()
+    tmp_dot.remove()
+
     feat_observed = data[idx].dropna()
     label_template = '{method} (N={n:,d}, q={q:.3f})'
     key = label_template.format(method='measured',
@@ -295,7 +390,6 @@ for i, idx in enumerate(feat_sel):
                                 q=float(qvalues.loc[idx, ('None', 'qvalue')])
                                 )
     to_plot = {key: feat_observed}
-
     for method in model_keys:
         try:
             pred = pred_real_na.loc[pd.IndexSlice[:,
@@ -306,11 +400,16 @@ for i, idx in enumerate(feat_sel):
                                             n=len(pred),
                                             q=float(qvalues.loc[idx, ('None', 'qvalue')]
                                                     ))
-            else:
+            elif qvalues.loc[idx, (method, 'qvalue')].notna().all():
                 key = label_template.format(method=method,
                                             n=len(pred),
                                             q=float(qvalues.loc[idx, (method, 'qvalue')]
                                                     ))
+            elif qvalues.loc[idx, (method, 'qvalue')].isna().all():
+                logger.info(f"NA qvalues for {idx}: {method}")
+                continue
+            else:
+                raise ValueError("Unknown case.")
             to_plot[key] = pred
         except KeyError:
             print(f"No missing values for {idx}: {method}")
@@ -321,19 +420,20 @@ for i, idx in enumerate(feat_sel):
     groups_order = to_plot.columns.to_list()
     to_plot = to_plot.stack().to_frame('intensity').reset_index(-1)
     to_plot = to_plot.join(target.astype('category'), how='inner')
+    to_plot = to_plot.astype({'group': 'category'})
 
     ax = seaborn.swarmplot(data=to_plot,
                            x='group',
                            y='intensity',
                            order=groups_order,
+                           dodge=True,
                            hue=args.target,
-                           size=2,
+                           size=1,
                            ax=ax)
     first_pg = idx.split(";")[0]
     ax.set_title(
         f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
 
-    _ = ax.legend(fontsize=5, title_fontsize=5, markerscale=0.4,)
     _ = ax.set_ylim(min_y_int, max_y_int)
     _ = ax.locator_params(axis='y', integer=True)
     _ = ax.set_xlabel('')
@@ -343,6 +443,21 @@ for i, idx in enumerate(feat_sel):
     )
     _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                            horizontalalignment='right')
+
+    N_hues = len(pd.unique(to_plot[args.target]))
+
+    _ = ax.collections[0].set_paths([new_mk])
+    _ = ax.collections[1].set_paths([new_mk])
+
+    # import matplotlib.lines as mlines
+    label_target_0, label_target_1 = ax.collections[-2].get_label(), ax.collections[-1].get_label()
+    _ = ax.collections[-2].set_label(f'imputed, {label_target_0}')
+    _ = ax.collections[-1].set_label(f'imputed, {label_target_1}')
+    _obs_label0 = ax.scatter([], [], color='C0', marker='X', label=f'observed, {label_target_0}')
+    _obs_label1 = ax.scatter([], [], color='C1', marker='X', label=f'observed, {label_target_1}')
+    _ = ax.legend(
+        handles=[_obs_label0, _obs_label1, *ax.collections[-4:-2]],
+        fontsize=5, title_fontsize=5, markerscale=0.4,)
     fname = (folder /
              f'{first_pg}_swarmplot.pdf')
     files_out[fname.name] = fname.as_posix()
@@ -350,12 +465,5 @@ for i, idx in enumerate(feat_sel):
         fig,
         name=fname)
     plt.close()
-
-
-# %% [markdown]
-# - add non-imputed data q-value
-# %%
-writer.close()
-
 # %%
 files_out

@@ -1,21 +1,32 @@
 config_split: config/single_dev_dataset/evidence/split.yaml
 config_train: config/single_dev_dataset/evidence/train_{model}.yaml
-folder_experiment: runs/Q_Exactive_HF_X_Orbitrap_6070/evidence
+folder_experiment: runs/dev_dataset_large/evidence
 fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
 models:
  - Median
- - CF # ~ 10:14 min
- - DAE # ~ 4:21 min
+ - CF
+ - DAE
  - VAE
  - KNN
 NAGuideR_methods:
-  # - lls # takes hours, produces totally off results
-  - knnmethod
-  # - seqknn # error
-  # - rf # takes hours
-  # - impseq # error
-  - qrilc # < 2 min
-  - minprob # ~ 1 min
-  - mindet # ~ 1 min
-  # - svdmethod # killed after 25mins
-  # - mice-norm # killed after 30mins
+ - ZERO
+ - MINIMUM
+ - COLMEDIAN
+ - ROWMEDIAN
+ - KNN_IMPUTE
+ # - SEQKNN # error
+ # - BPCA # stopped after 30mins
+ # - SVDMETHOD # stopped after 30mins
+ # - LLS # stopped after 30mins
+ # - MLE # error
+ - QRILC
+ - MINDET
+ - MINPROB
+ # - IRM # stopped after 30mins
+ # - IMPSEQ # error
+ # - IMPSEQROB # error
+ # - MICE-NORM # stopped after 30mins
+ # - MICE-CART # stopped after 30mins
+ # - TRKNN # error
+ # - RF # stopped after 30mins
+ - PI

@@ -1,5 +1,5 @@
 file_format: csv
-latent_dim: 75
+latent_dim: 50
 batch_size: 32768
 epochs_max: 100
 sample_idx_position: 0

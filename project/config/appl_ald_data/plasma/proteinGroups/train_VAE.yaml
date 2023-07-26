@@ -1,0 +1,10 @@
+# models_training:
+folder_experiment:  runs/example
+file_format: csv
+latent_dim: 10
+batch_size: 64
+epochs_max: 200
+hidden_layers: "64"
+sample_idx_position: 0
+cuda: False
+save_pred_real_na: True

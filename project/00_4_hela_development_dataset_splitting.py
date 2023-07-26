@@ -346,7 +346,7 @@ for k, _to_plot in to_plot.groupby('instrument with N'):
     groups.append(k)
 
 cbar = vaep.analyzers.analyzers.add_date_colorbar(
-    ax.collections[0], ax=ax, fig=fig)
+    ax.collections[0], ax=ax)
 cbar.ax.set_ylabel("date of measurement", labelpad=-115, loc='center')
 ax.legend(ax.collections, groups,
           title=INSTRUMENT_LEGEND_TITLE, fontsize='xx-large')

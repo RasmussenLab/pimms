@@ -49,6 +49,13 @@ jobs:
     #     pip install pytest
     - name: Run Tests on installed package
       run: pytest . 
+    - name: View papermill help message for notebooks (as scripts)
+      run: |
+        cd project
+        papermill 01_0_split_data.ipynb --help-notebook
+        papermill 01_1_train_VAE.ipynb --help-notebook
+        papermill 01_1_train_DAE.ipynb --help-notebook
+        papermill 01_1_train_CF.ipynb --help-notebook
     - name: Run demo workflow
       run: | 
        cd project
@@ -57,5 +64,5 @@ jobs:
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
-        name: example-workflow-results
+        name: example-workflow-results-${{ matrix.os }}
         path: project/runs/example/01_2_performance_plots.html

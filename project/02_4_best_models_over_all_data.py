@@ -69,11 +69,8 @@ group_by = ['data_split', 'data level', 'metric_name', 'model']
 
 selected_cols = ['metric_value', 'latent_dim', 'hidden_layers', 'n_params', 'text', 'N', 'M', 'id']
 
-# order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-#                     'model': ['median', 'interpolated', 'CF', 'DAE', 'VAE']}
-
-order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
-                    'model': ['interpolated', *models]}
+order_categories = {'data level': ['proteinGroups', 'peptides', 'evidence'],
+                    'model': [*models]}
 
 # %%
 FOLDER = fname.parent.parent
@@ -120,14 +117,35 @@ order_categories
 # - report results on test data and validation data
 
 # %%
-dataset = 'valid_fake_na' # data_split
-
-selected = metrics_long.reset_index(
-    ).groupby(by=group_by
-              ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
+dataset = 'valid_fake_na'  # data_split
+top_n = 3
+selected = (metrics_long
+            .reset_index()
+            .groupby(by=group_by)
+            .apply(
+                lambda df: df.sort_values(by='metric_value').iloc[:top_n]
+            )
+            )
 sel_on_val = selected.loc[
     pd.IndexSlice[dataset, IDX_ORDER[0], 'MAE', IDX_ORDER[1]],
     selected_cols]
+fname = FOLDER / f'sel_on_val_{dataset}_top_{top_n}.xlsx'
+writer = pd.ExcelWriter(fname)
+sel_on_val.to_excel(writer, sheet_name=f'top_{top_n}')
+sel_on_val
+
+# %%
+# select best model of top N with least parameters
+sel_on_val = (sel_on_val
+ .groupby(by=group_by)
+ .apply(
+     lambda df: df.sort_values(by='n_params').iloc[0]
+     )
+    ).loc[
+    pd.IndexSlice[dataset, IDX_ORDER[0], 'MAE', IDX_ORDER[1]],
+    selected_cols]
+sel_on_val.to_excel(writer, sheet_name=f'selected')
+writer.close()
 sel_on_val
 
 # %% [markdown]

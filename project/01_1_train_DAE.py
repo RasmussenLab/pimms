@@ -49,7 +49,8 @@ from vaep import sampling
 
 import vaep.nb as config
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
-logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
+logger.info(
+    "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
 
@@ -64,28 +65,31 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
-folder_data:str = '' # specify data directory if needed
-file_format: str = 'csv' # file format of create splits, default pickle (pkl)
-fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
+# Datasplit folder with data for experiment
+folder_experiment: str = 'runs/example'
+folder_data: str = ''  # specify data directory if needed
+file_format: str = 'csv'  # file format of create splits, default pickle (pkl)
+# Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 # training
-epochs_max:int = 50  # Maximum number of epochs
+epochs_max: int = 50  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
-patience:int = 25 # Patience for early stopping
-batch_size:int = 64 # Batch size for training (and evaluation)
-cuda:bool = True # Whether to use a GPU for training
+patience: int = 25  # Patience for early stopping
+batch_size: int = 64  # Batch size for training (and evaluation)
+cuda: bool = True  # Whether to use a GPU for training
 # model
-latent_dim:int = 25 # Dimensionality of encoding dimension (latent space of model)
-hidden_layers:str = '512' # A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
+# Dimensionality of encoding dimension (latent space of model)
+latent_dim: int = 25
+# A underscore separated string of layers, '128_64' for the encoder, reverse will be use for decoder
+hidden_layers: str = '512'
 
-sample_idx_position: int = 0 # position of index which is sample ID
-model: str = 'DAE' # model name
-model_key: str = 'DAE' # potentially alternative key for model (grid search)
-save_pred_real_na: bool = True # Save all predictions for missing values
+sample_idx_position: int = 0  # position of index which is sample ID
+model: str = 'DAE'  # model name
+model_key: str = 'DAE'  # potentially alternative key for model (grid search)
+save_pred_real_na: bool = True  # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col: str = None # date column in meta data
-meta_cat_col: str = None # category column in meta data
-
+meta_date_col: str = None  # date column in meta data
+meta_cat_col: str = None  # category column in meta data
 
 
 # %% [markdown]
@@ -100,9 +104,11 @@ args
 args = vaep.nb.args_from_dict(args)
 
 if isinstance(args.hidden_layers, str):
-    args.overwrite_entry("hidden_layers", [int(x) for x in args.hidden_layers.split('_')])
+    args.overwrite_entry("hidden_layers", [int(x)
+                         for x in args.hidden_layers.split('_')])
 else:
-    raise ValueError(f"hidden_layers is of unknown type {type(args.hidden_layers)}")
+    raise ValueError(
+        f"hidden_layers is of unknown type {type(args.hidden_layers)}")
 args
 
 
@@ -116,7 +122,8 @@ TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 # ## Load data in long format
 
 # %%
-data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format) 
+data = datasplits.DataSplits.from_folder(
+    args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
@@ -125,12 +132,12 @@ data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format
 data.train_X.sample(5)
 
 # %% [markdown]
-# Infer index names from long format 
+# Infer index names from long format
 
 # %%
 index_columns = list(data.train_X.index.names)
 sample_id = index_columns.pop(args.sample_idx_position)
-if len(index_columns) == 1: 
+if len(index_columns) == 1:
     index_column = index_columns.pop()
     index_columns = None
     logger.info(f"{sample_id = }, single feature: {index_column = }")
@@ -140,7 +147,8 @@ else:
 if not index_columns:
     index_columns = [sample_id, index_column]
 else:
-    raise NotImplementedError("More than one feature: Needs to be implemented. see above logging output.")
+    raise NotImplementedError(
+        "More than one feature: Needs to be implemented. see above logging output.")
 
 # %% [markdown]
 # load meta data for splits
@@ -163,13 +171,13 @@ else:
 
 # %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
-freq_feat.head() # training data
+freq_feat.head()  # training data
 
 # %% [markdown]
 # ### Produce some addional fake samples
 
 # %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance. 
+# The validation fake NA is used to by all models to evaluate training performance.
 
 # %%
 val_pred_fake_na = data.val_y.to_frame(name='observed')
@@ -198,10 +206,11 @@ data.train_X.head()
 data.train_X
 
 # %%
-data.val_y # potentially has less features
+data.val_y  # potentially has less features
 
 # %%
-data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index, columns=data.train_X.columns).fillna(data.val_y)
+data.val_y = pd.DataFrame(pd.NA, index=data.train_X.index,
+                          columns=data.train_X.columns).fillna(data.val_y)
 data.val_y
 
 # %% [markdown]
@@ -239,11 +248,11 @@ analysis.model
 
 # %%
 analysis.learn = Learner(dls=analysis.dls,
-                        model=analysis.model,
-                        loss_func=MSELossFlat(reduction='sum'),
-                        cbs=[EarlyStoppingCallback(patience=args.patience),
-                             ae.ModelAdapter(p=0.2)]
-                        )
+                         model=analysis.model,
+                         loss_func=MSELossFlat(reduction='sum'),
+                         cbs=[EarlyStoppingCallback(patience=args.patience),
+                              ae.ModelAdapter(p=0.2)]
+                         )
 
 analysis.learn.show_training_loop()
 
@@ -262,8 +271,8 @@ suggested_lr
 # dump model config
 
 # %%
-vaep.io.dump_json(analysis.params, args.out_models / TEMPLATE_MODEL_PARAMS.format(args.model_key))
-
+vaep.io.dump_json(analysis.params, args.out_models /
+                  TEMPLATE_MODEL_PARAMS.format(args.model_key))
 
 
 # %%
@@ -309,12 +318,12 @@ pred, target = analysis.get_preds_from_df(df_wide=data.train_X)  # train_X
 pred = pred.stack()
 pred
 # %%
-val_pred_fake_na['DAE'] = pred # model_key ?
+val_pred_fake_na['DAE'] = pred  # model_key ?
 val_pred_fake_na
 
 
 # %%
-test_pred_fake_na['DAE'] = pred # model_key?
+test_pred_fake_na['DAE'] = pred  # model_key?
 test_pred_fake_na
 
 # %% [markdown]
@@ -338,15 +347,15 @@ if args.save_pred_real_na:
 # %%
 analysis.model.cpu()
 df_latent = vaep.model.get_latent_space(analysis.model.encoder,
-                                            dl=analysis.dls.valid,
-                                            dl_index=analysis.dls.valid.data.index)
+                                        dl=analysis.dls.valid,
+                                        dl_index=analysis.dls.valid.data.index)
 df_latent
 
 # %%
 ana_latent = analyzers.LatentAnalysis(df_latent,
-                                        df_meta,
-                                        args.model_key,
-                                        folder=args.out_figures)
+                                      df_meta,
+                                      args.model_key,
+                                      folder=args.out_figures)
 if args.meta_date_col and df_meta is not None:
     figures[f'latent_{args.model_key}_by_date'], ax = ana_latent.plot_by_date(
         args.meta_date_col)
@@ -358,8 +367,8 @@ if args.meta_cat_col and df_meta is not None:
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)  
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)  
+# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
+# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
 # > Could be changed.
 
 # %% [markdown]
@@ -367,7 +376,7 @@ if args.meta_cat_col and df_meta is not None:
 #
 # - all measured (identified, observed) peptides in validation data
 #
-# > Does not make to much sense to compare collab and AEs,  
+# > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
 # %%
@@ -394,7 +403,8 @@ added_metrics
 # Save all metrics as json
 
 # %%
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
+vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
+                  f'metrics_{args.model_key}.json')
 d_metrics
 
 # %%
@@ -413,8 +423,8 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # ## Config
 
 # %%
-figures # switch to fnames?
+figures  # switch to fnames?
 
 # %%
-args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
+args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args

@@ -39,6 +39,12 @@ import vaep.sklearn
 from vaep.sklearn.types import Splits
 from vaep.plotting.metrics import plot_split_auc, plot_split_prc
 
+plt.rcParams['figure.figsize'] = (2.5, 2.5)
+plt.rcParams['lines.linewidth'] = 1
+fontsize= 5
+figsize= (2.5, 2.5)
+vaep.plotting.make_large_descriptors(fontsize)
+
 
 logger = vaep.logging.setup_nb_logger()
 
@@ -176,7 +182,14 @@ X
 
 # %%
 # could be just observed, drop columns with missing values
-ald_study = pd.concat([ald_study.stack(), pred_real_na_baseline]).unstack()
+ald_study = pd.concat(
+    [ald_study.stack(),
+     pred_real_na_baseline.loc[
+        # only select columns in selected in ald_study
+        pd.IndexSlice[:, ald_study.columns]
+    ]
+    ]
+).unstack()
 ald_study
 
 # %%
@@ -317,7 +330,6 @@ results_ald_full.to_pickle(fname)
 # ### ROC-AUC
 
 # %%
-figsize = (8, 8)
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.test, results_ald_full.name, ax)
 plot_split_auc(results_model_full.test, results_model_full.name, ax)
@@ -372,7 +384,6 @@ files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
-figsize = (10, 7)
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.train, results_ald_full.name, ax)
 plot_split_auc(results_model_full.train, results_model_full.name, ax)

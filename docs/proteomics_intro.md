@@ -62,7 +62,7 @@ Given by Jeppe Madsen and Martin Rzkær
     - hydrophilic vs hydrophobic liquids (Acetonitrile)
 
 ### Column
-- reverse phase (chromatography), see [wikipedia](Reversed-phase chromatography 
+- reverse phase (chromatography)
   (also called RPC, reverse-phase chromatography, or hydrophobic chromatography) 
   includes any chromatographic method that uses a hydrophobic stationary phase. 
   RPC refers to liquid (rather than gas) chromatography.)

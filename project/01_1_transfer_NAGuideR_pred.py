@@ -17,16 +17,17 @@
 # # Transfer predictions from NAGuideR
 
 # %%
+from pathlib import Path
 import logging
 import pandas as pd
-import seaborn as sns
+import matplotlib.pyplot as plt
 
 import vaep
 import vaep.models
 from vaep.io import datasplits
 import vaep.pandas
-from vaep.pandas import calc_errors
 
+vaep.plotting.make_large_descriptors(5)
 
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 
@@ -56,6 +57,9 @@ args = vaep.nb.get_params(args, globals=globals())
 args = vaep.nb.args_from_dict(args)
 args
 
+# %%
+files_out = {}
+
 # %% [markdown]
 # load data splits
 
@@ -80,31 +84,41 @@ test_pred_fake_na.describe()
 
 # %%
 if args.dumps is not None:
-    entire_pred = args.dumps.split(',')
+    entire_pred = [Path(s) for s in args.dumps.split(',')]
+else:
+    entire_pred = list(file for file in args.out_preds.iterdir()
+                       if '_all_' in str(file))
 entire_pred
 
 # %%
-entire_pred = list(file for file in args.out_preds.iterdir()
-                   if '_all_' in str(file))
-entire_pred
+mask = data.train_X.unstack().isna().stack()
+idx_real_na = mask.index[mask]
+idx_real_na = (idx_real_na
+               .drop(val_pred_fake_na.index)
+               .drop(test_pred_fake_na.index))
 
-# %%
 for fpath in entire_pred:
     col_name = fpath.stem.split('_all_')[-1]
-    pred = pd.read_csv(fpath, index_col=[1,0])
-    # pred.columns = pred.columns.str[1:].str.replace(
-    #     '.', '-', regex=False)  # NaGuideR change the sample names
-    # pred.columns.name = test_pred_fake_na.index.names[0]
-    # pred.index.name = test_pred_fake_na.index.names[1]
-    # pred = pred.unstack()
-
+    pred = pd.read_csv(fpath, index_col=[1, 0])
     val_pred_fake_na[col_name] = pred
-    val_pred_fake_na[['observed', col_name]].to_csv(
-        args.out_preds / f'pred_val_{col_name}.csv')
+    fname = args.out_preds / f'pred_val_{col_name}.csv'
+    files_out[fname.name] = fname.as_posix()
+    val_pred_fake_na[['observed', col_name]].to_csv(fname)
 
     test_pred_fake_na[col_name] = pred
-    test_pred_fake_na[['observed', col_name]].to_csv(
-        args.out_preds / f'pred_test_{col_name}.csv')
+    fname = args.out_preds / f'pred_test_{col_name}.csv'
+    files_out[fname.name] = fname.as_posix()
+    test_pred_fake_na[['observed', col_name]].to_csv(fname)
+
+    # hacky, but works:
+    pred_real_na = (pd.Series(0, index=idx_real_na, name='placeholder')
+                    .to_frame()
+                    .join(pred, how='left')
+                    .drop('placeholder', axis=1))
+    # pred_real_na.name = 'intensity'
+    fname = args.out_preds / f'pred_real_na_{col_name}.csv'
+    files_out[fname.name] = fname.as_posix()
+    pred_real_na.to_csv(fname)
 
 # del pred
 # %%
@@ -133,34 +147,24 @@ metrics_df = vaep.models.get_df_from_nested_dict(
     d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
-errors = calc_errors.calc_errors_per_bin(val_pred_fake_na, target_col='observed')
-errors
+# %%
+order_methods = metrics_df.loc[pd.IndexSlice[:,
+                                             'MAE'], 'valid_fake_na'].sort_values()
+order_methods
 
 # %%
-top5 = errors.drop(['bin', 'n_obs'], axis=1).mean().sort_values().iloc[:5].index.to_list()
-errors[top5].describe()
+top_5 = ['observed', *order_methods.droplevel(-1).index[:6]]
+top_5
 
 # %%
-meta_cols = ['bin', 'n_obs']
-n_obs = errors[meta_cols].apply(
-        lambda x: f"{x.bin} (N={x.n_obs:,d})", axis=1
-        ).rename('bin').astype('category')
-
-errors_long = (errors[top5]
-               #.drop(meta_cols, axis=1)
-               .stack()
-               .to_frame('intensity')
-               .join(n_obs)
-               .reset_index()
+fig, ax = plt.subplots(figsize=(8, 2))
+ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+    val_pred_fake_na[top_5],
+    ax=ax,
 )
-errors_long.sample(5)
-
-# %%
-ax = sns.barplot(data=errors_long,
-            x='bin', y='intensity', hue='model')
-ax.xaxis.set_tick_params(rotation=-90)
-
-fname = args.out_figures / 'NAGuideR_errors_per_bin.png'
+fname = args.out_figures / 'NAGuideR_errors_per_bin_val.png'
+files_out[fname.name] = fname.as_posix()
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
+files_out

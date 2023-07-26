@@ -36,7 +36,7 @@ dependencies:
   - openpyxl # xml
   - omegaconf
   # snakemake
-  - snakemake-minimal
+  - snakemake-minimal<7.26
   # jupyter
   - ipykernel
   - ipython
@@ -47,12 +47,9 @@ dependencies:
   # - jupyterlab-git
   - jupyter-dash
   - papermill # execute ipynb's
-  # R packages
-  # - cross-r-base
+  # R packages (listed in NAGuideR)
   - r-base=3.6
   - r-irkernel  
-  # - r-devtools
-  # - r-data.table
   - r-reshape2
   - r-stringi # + rmarkdown hack for reshape2
   - r-stringr # reshape2
@@ -64,7 +61,7 @@ dependencies:
   - r-vim
   - r-mice
   - r-tidyverse
-    # - bioconductor-biocinstaller
+  # - bioconductor-biocinstaller
   # - r-imputelcmd # bioconda
   - bioconductor-impute
   - bioconductor-pcamethods

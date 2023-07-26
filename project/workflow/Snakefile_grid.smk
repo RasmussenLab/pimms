@@ -80,10 +80,11 @@ use rule create_splits from single_experiment as splits with:
         nb=nb,
         configfile=config["config_split"],
     output:
-        train_split=f"{folder_dataset}/data/train_X.pkl",
+        train_split=f"{folder_dataset}/data/train_X.csv",
         nb=f"{folder_dataset}/{nb}",
     params:
         folder_experiment=f"{folder_dataset}",
+        meta_data=config["fn_rawfile_metadata"],
 
 
 ##########################################################################################
@@ -99,6 +100,7 @@ rule results_dataset:
         f"{folder_dataset}/metrics_long_df.csv",
     params:
         models=MODELS,
+        file_format=config["file_format"],
     log:
         notebook=f"{folder_dataset}/02_3_grid_search_analysis.ipynb",
     notebook:
@@ -218,7 +220,7 @@ run_id_template = "LD_{latent_dim}_E_{epochs_max}_HL_{hidden_layers}"
 rule train_ae_models:
     input:
         nb="01_1_train_{ae_model}.ipynb",
-        train_split=f"{folder_dataset}/data/train_X.pkl",
+        train_split=f"{folder_dataset}/data/train_X.csv",
         configfile=f"{root_model}/{run_id_template}/config_nb_train.yaml",
     output:
         nb=f"{root_model}/{run_id_template}/01_1_train_{{ae_model}}.ipynb",
@@ -297,18 +299,30 @@ rule collect_metrics_cf:
         "../02_1_aggregate_metrics.py.ipynb"
 
 
-use rule train_models from single_experiment as train_CF_model with:
+rule train_CF_model:
     input:
         nb=f"01_1_train_{_model}.ipynb",
-        train_split=f"{folder_dataset}/data/train_X.pkl",
+        train_split=f"{folder_dataset}/data/train_X.csv",
         configfile=f"{root_model}/" f"{run_id_template}/config_nb_train_CF.yaml",
     output:
-        nb=f"{root_model}/{run_id_template}/01_1_train_{{model}}.ipynb",
-        metric=f"{root_model}/{run_id_template}/metrics_{{model}}.json",
-        config=f"{root_model}/{run_id_template}/model_config_{{model}}.yaml",
+        nb=f"{root_model}/{run_id_template}/01_1_train_{_model}.ipynb",
+        metric=f"{root_model}/{run_id_template}/metrics_{_model}.json",
+        config=f"{root_model}/{run_id_template}/model_config_{_model}.yaml",
+    benchmark:
+        f"{root_model}/{run_id_template}/01_1_train_{_model}.tsv",
     threads: 10
     params:
         folder_experiment=f"{root_model}/{run_id_template}",
+        meta_data=config["fn_rawfile_metadata"],
+        model_key=f"{_model}",
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -f {input.configfile}"
+        " -r folder_experiment {params.folder_experiment}"
+        " -p fn_rawfile_metadata {params.meta_data}"
+        " -r model_key {params.model_key}"
+        " && jupyter nbconvert --to html {output.nb}"
+
 
 
 rule build_train_config_collab:
@@ -387,7 +401,7 @@ rule build_train_config_median:
 rule use_median_model:
     input:
         nb="01_1_train_{model}.ipynb",
-        train_split=f"{folder_dataset}/data/train_X.pkl",
+        train_split=f"{folder_dataset}/data/train_X.csv",
         config_train=f"{root_model}/config_nb_{{model}}.yaml",
     output:
         nb=f"{root_model}/01_1_train_{{model}}.ipynb",

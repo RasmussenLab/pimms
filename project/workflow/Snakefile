@@ -5,23 +5,21 @@ from snakemake.logging import logger
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
-# include rules per model
-
-
 folder_experiment = config["folder_experiment"]
-
-
 logger.info(f"{folder_experiment = }")
 
 
 rule all:
     input:
-        f"{folder_experiment}/figures/performance_methods_by_completness.pdf",
+        f"{folder_experiment}/figures/errors_binned_by_int_test.pdf",
+        f"{folder_experiment}/01_2_performance_summary.xlsx"
 
 
 nb = "01_2_performance_plots.ipynb"
 
-MODELS = config["models"]+config["NAGuideR_methods"]
+MODELS = config["models"].copy()
+if config["NAGuideR_methods"]:
+    MODELS += config["NAGuideR_methods"]
 
 rule comparison:
     input:
@@ -32,7 +30,8 @@ rule comparison:
             model=MODELS,
         ),
     output:
-        pdf="{folder_experiment}/figures/performance_methods_by_completness.pdf",
+        xlsx="{folder_experiment}/01_2_performance_summary.xlsx",
+        pdf="{folder_experiment}/figures/errors_binned_by_int_test.pdf",
         nb="{folder_experiment}" f"/{nb}",
     params:
         meta_data=config["fn_rawfile_metadata"],
@@ -66,13 +65,11 @@ rule transform_NAGuideR_predictions:
          "{folder_experiment}/"f"{nb_stem}.tsv",
     params:
         folder_experiment="{folder_experiment}",
-        file_format=config["file_format"],
         # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
         dumps_as_str=lambda wildcards, input: ','.join(input.dumps)
     shell:
         "papermill {input.nb} {output.nb}"
         " -r folder_experiment {params.folder_experiment}"
-        " -r file_format {params.file_format}"
         " -p dumps {params.dumps_as_str}"
         " && jupyter nbconvert --to html {output.nb}"
 
@@ -82,7 +79,7 @@ rule train_NAGuideR_model:
         train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
     output:
         nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
-        dump="{folder_experiment}/preds/pred_all_{method}.csv"
+        dump=temp("{folder_experiment}/preds/pred_all_{method}.csv")
     benchmark:
         "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
     params:
@@ -101,7 +98,7 @@ rule transform_data_to_wide_format:
         train_split="{folder_experiment}/data/train_X.csv",
     output:
         nb="{folder_experiment}/01_0_transform_data_to_wide_format.ipynb",
-        train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+        train_split=temp("{folder_experiment}/data/data_wide_sample_cols.csv"),
     params:
         folder_experiment="{folder_experiment}",
     shell:

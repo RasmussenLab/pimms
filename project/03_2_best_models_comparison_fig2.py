@@ -14,6 +14,7 @@
 # ---
 
 # %%
+import yaml
 from pathlib import Path
 import pandas as pd
 
@@ -30,22 +31,21 @@ from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 
-
 # %%
 # parameters
-FOLDER = Path('runs/Q_Exactive_HF_X_Orbitrap_6070/')
+FOLDER = Path('runs/dev_dataset_large/')
 files_in = {
-      'protein groups': FOLDER / 'proteinGroups/figures/performance_test.csv',
-      'peptides': FOLDER / 'peptides/figures/performance_test.csv',
-      'precursors': FOLDER / 'evidence/figures/performance_test.csv'
+    'protein groups': FOLDER / 'proteinGroups/figures/performance_test.csv',
+    'peptides': FOLDER / 'peptides/figures/performance_test.csv',
+    'precursors': FOLDER / 'evidence/figures/performance_test.csv'
 }
 
 # %%
 FOLDER = Path('runs/dev_dataset_small/')
 files_in = {
-      'protein groups': Path('runs/example') / 'figures/performance_test.csv',
-      'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
-      'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
+    'protein groups': FOLDER / 'proteinGroups_N50/figures/performance_test.csv',
+    'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
+    'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
 }
 
 # %%
@@ -62,8 +62,15 @@ df.columns = ['model', *df.columns[1:]]
 df = df.set_index(list(df.columns[:2]))
 df
 
+# %% [markdown]
+# color mapping globally defined for article figures
+
 # %%
-import yaml
+COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
+print(COLORS_TO_USE_MAPPTING.keys())
+sns.color_palette(palette=COLORS_TO_USE_MAPPTING.values())
+
+# %%
 data_levels_annotated = dict()
 for key, fname in files_in.items():
     fname = fname.parents[1] / 'data_config.yaml'
@@ -74,6 +81,7 @@ for key, fname in files_in.items():
 # data_levels_annotated
 ORDER_DATA = list(data_levels_annotated.values())
 df = df.rename(index=data_levels_annotated)
+df
 
 # %%
 fname = FOLDER / 'best_models_1_test_mpl.pdf'
@@ -87,12 +95,12 @@ matplotlib.rcParams.update({'font.size': 5})
 ax = (metrics
       .plot
       .bar(rot=0,
-            xlabel='',
-            ylabel=f"{METRIC} (log2 intensities)",
-            # position=0.1,
-            width=.85,
-            fontsize=8
-        ))
+           xlabel='',
+           ylabel=f"{METRIC} (log2 intensities)",
+           color=COLORS_TO_USE_MAPPTING,
+           width=.85,
+           fontsize=8
+           ))
 
 ax = vaep.plotting.add_height_to_barplot(ax, size=5)
 ax.legend(fontsize=5, loc='lower right')
@@ -110,5 +118,36 @@ vaep.savefig(fig, fname)
 
 
 # %%
-df = metrics.fillna(0.0).stack().to_frame('metric_value').join(text.rename('text'))
+df = metrics.fillna(0.0).stack().to_frame(
+    'metric_value').join(text.rename('text'))
 df.to_excel(fname.with_suffix('.xlsx'))
+
+# %% [markdown]
+# # aggregate all mean results
+
+# %%
+files_perf = {k: f.parent.parent /
+              '01_2_performance_summary.xlsx' for k, f in files_in.items()}
+files_perf
+
+# %%
+perf = dict()
+for k, f in files_perf.items():
+    df = pd.read_excel(f, index_col=0, sheet_name=1)
+    perf[(k, 'val')] = df.loc['mean']
+    df = pd.read_excel(f, index_col=0, sheet_name=2)
+    perf[(k, 'test')] = df.loc['mean']
+
+perf = pd.DataFrame(perf)
+order = (perf
+         .loc[:, pd.IndexSlice[:, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         .index)
+perf = perf.loc[order]
+perf
+
+# %%
+fname = FOLDER / 'performance_summary.xlsx'
+perf.to_excel(fname)
+fname.as_posix()

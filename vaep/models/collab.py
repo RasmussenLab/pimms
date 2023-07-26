@@ -160,8 +160,11 @@ class CollabAnalysis(analysis.ModelAnalysis):
                  target_column='intensity',
                  model_kwargs=dict(),
                  batch_size=64):
-        self.X, self.frac = combine_data(datasplits.train_X,
+        if datasplits.val_y is not None:
+            self.X, self.frac = combine_data(datasplits.train_X,
                                          datasplits.val_y)
+        else:
+            self.X, self.frac = datasplits.train_X.reset_index(), 0.0
         self.batch_size = batch_size
         self.dls = CollabDataLoaders.from_df(self.X, valid_pct=self.frac,
                                              seed=42,
@@ -174,9 +177,10 @@ class CollabAnalysis(analysis.ModelAnalysis):
         rating_name=target_column
         cat_names = [user_name,item_name]
         ratings = self.X
-        # splits = RandomSplitter(valid_pct=valid_pct, seed=42)(range_of(ratings))
-        idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
-        splits = idx_splitter(self.X)
+        splits = None
+        if datasplits.val_y is not None:
+            idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
+            splits = idx_splitter(self.X)
         to = TabularCollab(ratings, [Categorify], cat_names, y_names=[rating_name], y_block=TransformBlock(), splits=splits)
         self.dls = to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}

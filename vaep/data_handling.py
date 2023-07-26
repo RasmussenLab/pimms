@@ -21,7 +21,7 @@ def compute_stats_missing(X:pd.DataFrame,
                           col_no_identified:str='no_identified',
                           col_prop_samples:str='prop_samples') -> pd.DataFrame:
     """Dataset of repeated samples indicating if an observation
-    has the variables observed or missing x\in\{0,1\}"""
+    has the variables observed or missing x in {0,1}"""
     if X.index.name:
         index_col = X.index.name
     else:

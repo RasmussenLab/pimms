@@ -43,6 +43,7 @@ def plot_observations(df: pd.DataFrame,
                       ax: Axes = None,
                       title: str = '',
                       axis: int = 1,
+                      size: int = 1,
                       ylabel: str = 'number of features',
                       xlabel: str = 'Samples ordered by number of features') -> Axes:
     """Plot non missing observations by row (axis=1) or column (axis=0) in
@@ -77,6 +78,7 @@ def plot_observations(df: pd.DataFrame,
           .plot(
               ax=ax,
               style='.',
+              ms=size,
               title=title,
               ylabel=ylabel,
               xlabel=xlabel)
@@ -247,18 +249,17 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
 
     missing_by_median['bins'] = pd.cut(
         missing_by_median['median feat value'], bins=bins)
-    missing_by_median['median feat value (rounded)'] = (missing_by_median['median feat value']
-                                                        .round(decimals=0)
+    missing_by_median['median feat value (floor)'] = (missing_by_median['median feat value']
                                                         .astype(int)
                                                         )
     _counts = (missing_by_median
-               .groupby('median feat value (rounded)')['median feat value']
+               .groupby('median feat value (floor)')['median feat value']
                .count()
                .rename('count'))
     missing_by_median = missing_by_median.join(
-        _counts, on='median feat value (rounded)')
+        _counts, on='median feat value (floor)')
     missing_by_median = missing_by_median.sort_values(
-        'median feat value (rounded)')
+        'median feat value (floor)')
     missing_by_median[x_col] = (missing_by_median.iloc[:, -2:]
                                 .apply(lambda s: "{:02,d}  (N={:3,d})".format(*s), axis=1)
                                 )

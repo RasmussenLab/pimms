@@ -17,7 +17,6 @@
 # # Analyis of grid hyperparameter search
 
 # %%
-import json
 import pathlib
 import pandas as pd
 import plotly.express as px
@@ -66,7 +65,8 @@ except AssertionError:
 try:
     ORDER = {'model': snakemake.params.models}
 except AttributeError:
-    ORDER = {'model': ['Median', 'interpolated', 'CF', 'DAE', 'VAE']}
+    ORDER = {'model': ['CF', 'DAE', 'VAE']}
+FILE_FORMAT = snakemake.params.file_format
 
 # %%
 path_metrics = pathlib.Path(metrics_csv)
@@ -259,16 +259,15 @@ metrics_long.sample(5)
 
 # %%
 # ToDo: Ensure each model configuration saves a "n_params" argument
-mask = metrics_long.model == 'interpolated'
+mask = metrics_long.model == 'KNN'
 # at least overall (and 1 for the number of replicates?)
+# distances?
 metrics_long.loc[mask, 'n_params'] = 1
 mask = metrics_long.model == 'Median'
 # number of features to calculate median of
 metrics_long.loc[mask, 'n_params'] = metrics_long.loc[mask, 'M']
 
-metrics_long[[*columns_names, 'n_params',
-             #'n_params_vae', 'n_params_dae', 'n_params_collab'
-              ]]
+metrics_long[[*columns_names, 'n_params']]
 
 # %% [markdown]
 # A a descriptive column describing the `subset` and the total number of simulated NAs in it.
@@ -316,7 +315,51 @@ hover_data = {k: ':,d' for k in
 hover_data['data_split'] = True
 hover_data['metric_value'] = ':.4f'
 
+# %%
+import seaborn as sns
+plt.rcParams['figure.figsize'] = (8, 4)
+plt.rcParams['lines.linewidth'] = 2
+plt.rcParams['lines.markersize'] = 3
+vaep.plotting.make_large_descriptors(5)
 
+col_order = ('valid_fake_na', 'test_fake_na')
+row_order = ('MAE', 'MSE')
+fg = sns.relplot(
+    data=metrics_long,
+    x='n_params',
+    y='metric_value',
+    col="data_split",
+    col_order = col_order,
+    row="metric_name",
+    row_order = row_order,
+    hue="model",
+    # style="day",
+    palette=vaep.plotting.defaults.color_model_mapping,
+    height=2,
+    aspect=1.8,
+    kind="scatter"
+)
+fg.fig.get_size_inches()
+
+(ax_00, ax_01), (ax_10, ax_11) = fg.axes
+ax_00.set_ylabel(row_order[0])
+ax_10.set_ylabel(row_order[1])
+_ = ax_00.set_title('validation data') # col_order[0]
+_ = ax_01.set_title('test data') # col_order[1]
+ax_10.set_xlabel('number of parameters') # n_params
+ax_11.set_xlabel('number of parameters')
+ax_10.xaxis.set_major_formatter("{x:,.0f}")
+ax_11.xaxis.set_major_formatter("{x:,.0f}")
+_ = ax_10.set_title('')
+_ = ax_11.set_title('')
+fg.tight_layout()
+fname
+fname = FOLDER / f"hyperpar_results_by_parameters_val+test.pdf"
+files_out[fname.name] = fname.as_posix()
+fg.savefig(fname)
+fg.savefig(fname.with_suffix('.png'), dpi=300)
+
+# %%
 def plot_by_params(data_split: str = '', subset: str = ''):
     selected = metrics_long
     if data_split:
@@ -334,30 +377,20 @@ def plot_by_params(data_split: str = '', subset: str = ''):
                          "  ", " "),
                      labels=labels_dict,
                      category_orders=ORDER,
-                     width=1600,
-                     height=700,
+                     width=750,
+                     height=300,
                      template='none',
                      )
-
+    fig.update_traces(marker={'size': 3})
     fig.update_layout(
-        font={'size': 18},
-        xaxis={'title': {'standoff': 15}},
-        yaxis={'title': {'standoff': 15}})
+        font={'size': 8},
+        xaxis={'title': {'standoff': 6}},
+        yaxis={'title': {'standoff': 6}})
     return fig
 
-
-data_split = "valid_fake_na"
-fig = plot_by_params(data_split)
-files_out[f"hyperpar_{data_split}_results_by_parameters_all.pdf"] = (FOLDER /
-                                                                  f"hyperpar_{data_split}_results_by_parameters_all.pdf")
-fig.write_image(files_out[f"hyperpar_{data_split}_results_by_parameters_all.pdf"])
-fig
-
-# %%
 dataset = "test_fake_na"
 fig = plot_by_params(dataset)
-fname = (FOLDER /
-         f"hyperpar_{dataset}_results_by_parameters.pdf")
+fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters.pdf"
 files_out[f"hyperpar_{dataset}_results_by_parameters.pdf"] = fname
 fig.write_image(fname)
 logger.info(f"Save to {fname}")
@@ -396,8 +429,8 @@ def get_plotly_figure(dataset: str, x='latent_dim'):
                      title=f'Performance on {dataset.replace("_", " ")} data',
                      labels=labels_dict,
                      category_orders=ORDER,
-                     width=1600,
-                     height=700,
+                     width=750,
+                     height=300,
                      template='none',
                      )
     fig.update_xaxes(dict(
@@ -405,10 +438,11 @@ def get_plotly_figure(dataset: str, x='latent_dim'):
         tickvals=sorted(metrics_long[x].unique()),
     )
     )
+    fig.update_traces(marker={'size': 3})
     fig.update_layout(
-        font={'size': 18},
-        xaxis={'title': {'standoff': 15}},
-        yaxis={'title': {'standoff': 15}})
+        font={'size': 8},
+        xaxis={'title': {'standoff': 6}},
+        yaxis={'title': {'standoff': 6}})
     return fig
 
 
@@ -435,7 +469,7 @@ fig.show()
 # %%
 dataset = 'valid_fake_na'
 group_by = ['data_split', 'metric_name', 'model', 'latent_dim']
-METRIC = 'MAE'
+METRIC = 'MAE' # params.metric
 selected = (metrics_long
             .reset_index()
             .groupby(by=group_by)
@@ -517,7 +551,10 @@ order = list(pred_split.columns[1:])
 pred_split
 
 # %%
-data = datasplits.DataSplits.from_folder(FOLDER / 'data', file_format='pkl')
+data = datasplits.DataSplits.from_folder(
+    FOLDER / 'data',
+    # # ! fileformat can be different
+    file_format=FILE_FORMAT)
 
 N_SAMPLES = int(data.train_X.index.levels[0].nunique())
 # selection criteria # maybe to be set externally (depends on data selection)
@@ -659,7 +696,7 @@ selected = metrics_long.reset_index(
 selected
 
 # %%
-order_categories = {'data level': ['proteinGroups', 'aggPeptides', 'evidence'],
+order_categories = {'data level': ['proteinGroups', 'peptides', 'evidence'],
                     'model': ORDER['model']}
 order_models = set(selected['model'])
 order_models = [m for m in ORDER['model'] if m in order_models]
