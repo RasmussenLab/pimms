@@ -20,6 +20,9 @@ from vaep.plotting import savefig
 
 from . import nb
 
+__license__ = 'GPLv3'
+__version__ = (0, 0, 1)
+
 ## set some defaults
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):

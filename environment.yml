@@ -8,7 +8,7 @@ channels:
   - fastai
   - plotly
 dependencies:
-  - biopython # Aligner
+  # - biopython # Aligner
   - python=3.8
   - numpy=1.20
   - pandas=1
@@ -71,6 +71,8 @@ dependencies:
   - pytest
   - pytest-cov
   - jupytext
+  - flake8
+  - flake8-bugbear
   - pip:
     - -e .
     - mrmr-selection
