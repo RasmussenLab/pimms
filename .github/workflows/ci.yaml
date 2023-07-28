@@ -60,7 +60,7 @@ jobs:
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
-       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml
+       snakemake -p -c2 --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
