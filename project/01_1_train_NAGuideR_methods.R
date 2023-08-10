@@ -6,7 +6,7 @@
 #       extension: .R
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: R
 #     language: R
@@ -25,7 +25,7 @@ packages_base_R <- c("BiocManager", "reshape2", "data.table", "readr", "tibble")
 install_rpackage  <- function(pkg){
     # If not installed, install the package
     if (!require(pkg, character.only = TRUE)) {
-        install.packages(pkg)
+        install.packages(pkg) #, dependencies = TRUE)
         library(pkg, character.only = TRUE)
     }
     
@@ -111,17 +111,20 @@ nafunctions <- function(x,method="zero"){
       df <- norm::imp.norm(ss, thx, xxm)
     }
     else if(method=="qrilc"){
+      install_bioconductor("pcaMethods")  
       install_rpackage('imputeLCMD')
       xxm<-t(df1)
       data_zero1 <- imputeLCMD::impute.QRILC(xxm, tune.sigma = 1)[[1]]
       df<-t(data_zero1)
     }
     else if(method=="mindet"){
+      install_bioconductor("pcaMethods")
       install_rpackage('imputeLCMD')
       xxm<-as.matrix(df1)
       df <- imputeLCMD::impute.MinDet(xxm, q = 0.01)
     }
     else if(method=="minprob"){
+      install_bioconductor("pcaMethods")
       install_rpackage('imputeLCMD')
       xxm<-as.matrix(df1)
       df <- imputeLCMD::impute.MinProb(xxm, q = 0.01, tune.sigma = 1)
@@ -172,7 +175,7 @@ nafunctions <- function(x,method="zero"){
       df<-as.data.frame(t(df1x))
     }
     else if(method=="rf"){
-      install_rpackage('missForest')
+      install_rpackage("missForest")
       data_zero1 <- missForest(t(df1), maxiter =10,
                                ntree = 20 # input$rfntrees
                                ,mtry=floor(nrow(df1)^(1/3)),verbose = TRUE)
@@ -269,7 +272,7 @@ feat_name <- original_header[1]
 
 # Uncomment to test certain methods (only for debugging, as at least one method per package is tested using Github Actions)
 
-# +
+# + vscode={"languageId": "r"}
 # to_test <- c(
  # 'ZERO',
  # 'MINIMUM',

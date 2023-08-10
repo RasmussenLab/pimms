@@ -3,28 +3,27 @@ name: vaep
 channels:
   # - defaults
   - conda-forge
-  - bioconda
   - pytorch
   - fastai
+  - bioconda
   - plotly
 dependencies:
-  # - biopython # Aligner
   - python=3.8
-  - numpy=1.20
+  - numpy
   - pandas=1
   - scipy>=1.6
   # plotting
-  - matplotlib=3.3
+  - matplotlib
   - python-kaleido
   - plotly
   - seaborn
   - pip
   # ML
-  - pytorch=1.10
-  - scikit-learn=1.0
+  - pytorch=1
+  - scikit-learn
   - fastai
   - torchvision
-  - cudatoolkit=10.2
+  - cudatoolkit
   - tensorboard
   - umap-learn
   # stats
@@ -41,38 +40,40 @@ dependencies:
   - ipykernel
   - ipython
   - ipywidgets
-  - jupytext
   - jupyterlab # standalone jupyter installation
-  # - jupyterlab_code_formatter
-  # - jupyterlab-git
+  # - jupyter_contrib_nbextensions # delete configuration file if you see an error: https://github.com/jupyter/nbconvert/issues/526#issuecomment-277552771
   - jupyter-dash
   - papermill # execute ipynb's
   # R packages (listed in NAGuideR)
   - r-base=3.6
-  - r-irkernel  
+  - r-irkernel
   - r-reshape2
   - r-stringi # + rmarkdown hack for reshape2
   - r-stringr # reshape2
-  # - r-gdata
-  # - r-glmnet
+  - r-tidyverse
+  - r-gdata
+  - r-glmnet
   - r-e1071
   - r-norm
   - r-missforest
   - r-vim
   - r-mice
-  - r-tidyverse
   # - bioconductor-biocinstaller
   # - r-imputelcmd # bioconda
-  - bioconductor-impute
-  - bioconductor-pcamethods
+  # - bioconductor-impute
+  # - bioconductor-pcamethods
   # - rrcovNA, GMSimpute
   # SeqKnn, pcaMethods, DreamAI # bioconductor
   # dev
   - pytest
   - pytest-cov
-  - jupytext
-  - flake8
-  - flake8-bugbear
+  # - jupytext
+  # - flake8
+  # - flake8-bugbear
+  # - build
+  # - pre-commit
+  # - jupyterlab_code_formatter
+  # - jupyterlab-git
   - pip:
     - -e .
     - mrmr-selection
