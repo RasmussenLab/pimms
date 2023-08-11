@@ -13,10 +13,11 @@ from vaep.transform import log
 from vaep.transform import StandardScaler, ShiftedStandardScaler, VaepPipeline
 from vaep.io.datasets import to_tensor
 
-def test_log():
-    row = pd.Series([np.NaN, 0.0, np.exp(1), np.exp(2)])
-    row = log(row)
-    assert row.equals(pd.Series([np.NaN, np.NaN, 1.0, 2.0]))
+# not used anywhere
+# def test_log():
+#     row = pd.Series([np.NaN, 0.0, np.exp(1), np.exp(2)])
+#     row = log(row)
+#     assert row.equals(pd.Series([np.NaN, np.NaN, 1.0, 2.0]))
 
 
 def test_StandardScaler():

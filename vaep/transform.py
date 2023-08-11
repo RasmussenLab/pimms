@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def log(row: pd.Series):
-    """Apply log Transformation to values."""
+    """Apply log Transformation to values setting zeros to NaN."""
     return np.log(row.where(row != 0.0))
 
 
@@ -35,7 +35,7 @@ def log(row: pd.Series):
 #     axis=0)
 # analysis.corr_linear_vs_log.describe()
 
-# Can this be a MixIn class?
+# ? Can this be a MixIn class?
 class StandardScaler(preprocessing.StandardScaler):
     def transform(self, X, copy=None):
         res = super().transform(X, copy)
