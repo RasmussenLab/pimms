@@ -25,7 +25,7 @@ packages_base_R <- c("BiocManager", "reshape2", "data.table", "readr", "tibble")
 install_rpackage  <- function(pkg){
     # If not installed, install the package
     if (!require(pkg, character.only = TRUE)) {
-        install.packages(pkg) #, dependencies = TRUE)
+        install.packages(pkg)
         library(pkg, character.only = TRUE)
     }
     
@@ -111,19 +111,22 @@ nafunctions <- function(x,method="zero"){
       df <- norm::imp.norm(ss, thx, xxm)
     }
     else if(method=="qrilc"){
-      install_bioconductor("pcaMethods")  
+      install_bioconductor("impute")
+      install_bioconductor("pcaMethods")
       install_rpackage('imputeLCMD')
       xxm<-t(df1)
       data_zero1 <- imputeLCMD::impute.QRILC(xxm, tune.sigma = 1)[[1]]
       df<-t(data_zero1)
     }
     else if(method=="mindet"){
+      install_bioconductor("impute")
       install_bioconductor("pcaMethods")
       install_rpackage('imputeLCMD')
       xxm<-as.matrix(df1)
       df <- imputeLCMD::impute.MinDet(xxm, q = 0.01)
     }
     else if(method=="minprob"){
+      install_bioconductor("impute")
       install_bioconductor("pcaMethods")
       install_rpackage('imputeLCMD')
       xxm<-as.matrix(df1)
