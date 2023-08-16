@@ -6,7 +6,7 @@ channels:
   - fastai # fastchan
   - bioconda
   - plotly
-  - defaults
+  # - defaults
   - conda-forge
 dependencies:
   - python=3.8
@@ -21,11 +21,11 @@ dependencies:
   - pip
   # ML
   - pytorch=1 #=1.13.1=py3.8_cuda11.7_cudnn8_0
-  - pytorch-cuda
+  # - pytorch-cuda
   - scikit-learn
   - fastai
-  # - torchvision
-  # - cudatoolkit
+  - torchvision
+  - cudatoolkit #=11.7
   # - tensorboard
   - umap-learn
   # stats
