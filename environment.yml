@@ -25,7 +25,7 @@ dependencies:
   - scikit-learn
   - fastai
   - torchvision
-  - cudatoolkit #=11.7
+  # - cudatoolkit #=11.7
   # - tensorboard
   - umap-learn
   # stats
@@ -47,7 +47,7 @@ dependencies:
   - jupyter-dash
   - papermill # execute ipynb's
   # R packages (listed in NAGuideR)
-  - r-base=3.6
+  - r-base #=3.6
   - r-irkernel
   - r-reshape2
   - r-stringi # + rmarkdown hack for reshape2
@@ -63,6 +63,8 @@ dependencies:
   - r-cluster
   - r-mvtnorm
   - r-rrcov
+  - r-gmm
+  - r-tmvtnorm
   # - bioconductor-biocinstaller
   # - r-imputelcmd # bioconda
   # - bioconductor-impute
