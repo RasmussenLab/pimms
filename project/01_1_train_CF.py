@@ -105,6 +105,10 @@ args
 # %%
 TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 
+if not args.cuda:
+    default_device(use=False)  # set to cpu
+
+
 # %% [markdown]
 # ## Load data in long format
 
