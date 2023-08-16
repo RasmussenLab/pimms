@@ -60,6 +60,9 @@ dependencies:
   - r-missforest
   - r-vim
   - r-mice
+  - r-cluster
+  - r-mvtnorm
+  - r-rrcov
   # - bioconductor-biocinstaller
   # - r-imputelcmd # bioconda
   # - bioconductor-impute
