@@ -1,13 +1,13 @@
 # Dev Environment
 name: vaep
 channels:
+  - conda-forge
   - pytorch
   - nvidia
   - fastai # fastchan
   - bioconda
   - plotly
   # - defaults
-  - conda-forge
 dependencies:
   - python=3.8
   - numpy
