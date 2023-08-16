@@ -1,12 +1,13 @@
 # Dev Environment
 name: vaep
 channels:
-  # - defaults
-  - conda-forge
   - pytorch
-  - fastai
+  - nvidia
+  - fastai # fastchan
   - bioconda
   - plotly
+  - defaults
+  - conda-forge
 dependencies:
   - python=3.8
   - numpy
@@ -19,12 +20,13 @@ dependencies:
   - seaborn
   - pip
   # ML
-  - pytorch=1
+  - pytorch=1 #=1.13.1=py3.8_cuda11.7_cudnn8_0
+  - pytorch-cuda
   - scikit-learn
   - fastai
-  - torchvision
-  - cudatoolkit
-  - tensorboard
+  # - torchvision
+  # - cudatoolkit
+  # - tensorboard
   - umap-learn
   # stats
   - pingouin
