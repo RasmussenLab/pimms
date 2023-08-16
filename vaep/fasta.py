@@ -17,7 +17,7 @@ def get_n_miscleaved(pep_sequences: list, num_missed: int):
     _miscleaved = []
     for i in range(len(pep_sequences)):
         if i >= num_missed:
-            _miscleaved.append(''.join(pep_sequences[i-num_missed:i+1]))
+            _miscleaved.append(''.join(pep_sequences[i - num_missed:i + 1]))
     return _miscleaved
 
 
@@ -41,7 +41,7 @@ def cleave_to_tryptic(seq, num_missed_cleavages=1, reversed=False, add_rxk=False
 
     peps_seq = [seq, ]
 
-    for i in range(1, num_missed_cleavages+1):
+    for i in range(1, num_missed_cleavages + 1):
         _seq = get_n_miscleaved(seq, num_missed=i)
         peps_seq.append(_seq)
 
@@ -53,9 +53,9 @@ def cleave_to_tryptic(seq, num_missed_cleavages=1, reversed=False, add_rxk=False
 
 
 def find_rxk_peptides(l_peptides):
-    """Combine 3 peptides to one, if the first is an 
-    'RxK'-peptide: RX, XR, KX, XK - where the X can 
-    be any other amino-acid. 
+    """Combine 3 peptides to one, if the first is an
+    'RxK'-peptide: RX, XR, KX, XK - where the X can
+    be any other amino-acid.
 
     Returns
     -------
@@ -67,7 +67,7 @@ def find_rxk_peptides(l_peptides):
         for i in range(len(l_peptides) - 2):
             if len(l_peptides[i]) <= 2:
                 rdx_peptides.append(
-                    ''.join(l_peptides[i:i+3])
+                    ''.join(l_peptides[i:i + 3])
                 )
         return rdx_peptides
     else:

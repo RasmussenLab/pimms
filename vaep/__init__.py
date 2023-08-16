@@ -16,19 +16,23 @@ import pandas.io.formats.format as pf
 import vaep.pandas
 import vaep.plotting
 import vaep.logging
-from vaep.plotting import savefig
+import vaep.plotting
 
-from . import nb
+import vaep.nb
+
+savefig = vaep.plotting.savefig
 
 __license__ = 'GPLv3'
 __version__ = (0, 0, 1)
 
-## set some defaults
+
+# set some defaults
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
         formatter = self.formatter or '{:,d}'.format
         fmt_values = [formatter(x) for x in self.values]
         return fmt_values
+
 
 pd.options.display.float_format = '{:,.3f}'.format
 pf.IntArrayFormatter = IntArrayFormatter
