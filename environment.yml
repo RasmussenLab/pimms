@@ -48,6 +48,7 @@ dependencies:
   - papermill # execute ipynb's
   # R packages (listed in NAGuideR)
   - r-base #=3.6
+  - r-devtools # is it needed for source installs on windows server? 
   - r-irkernel
   - r-reshape2
   - r-stringi # + rmarkdown hack for reshape2
