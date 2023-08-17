@@ -85,7 +85,7 @@ if os.environ.get("READTHEDOCS") == "True":
             "--force",
             "--implicit-namespaces",
             "--module-first",
-            "--separate",
+            # "--separate",
             "-o",
             str(PROJECT_ROOT / "docs" / "reference"),
             str(PACKAGE_ROOT),
