@@ -23,7 +23,7 @@ Welcome to PIMMS documentation!
    :maxdepth: 3
    :caption: Library:
 
-   source/modules
+   reference/modules
 
 
 Indices and tables

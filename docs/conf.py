@@ -22,7 +22,7 @@ project = 'pimms'
 copyright = '2023, Henry Webel'
 author = 'Henry Webel'
 
-PACKAGE_VERSION = metadata.version("pimms")
+PACKAGE_VERSION = metadata.version("pimms-learn")
 version = PACKAGE_VERSION
 release = PACKAGE_VERSION
 
@@ -56,9 +56,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-#html_theme = 'alabaster'
-html_theme = 'sphinx_book_theme' # pip install sphinx-book-theme
+
+html_theme = 'sphinx_book_theme'  # pip install sphinx-book-theme
 
 # check https://github.com/executablebooks/sphinx-book-theme/blob/master/docs/conf.py
 html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
@@ -66,7 +65,7 @@ html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 
 # -- Setup for sphinx-apidoc -------------------------------------------------
 
