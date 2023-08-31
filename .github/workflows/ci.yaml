@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: ["ubuntu-latest",
              "macos-13",
-             "windows-latest" # rrcovNA cannot be build from source on windows-server
+             # "windows-latest" # rrcovNA cannot be build from source on windows-server
              ]
         python-version: ["3.8"]
     steps:
