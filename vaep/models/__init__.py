@@ -263,10 +263,10 @@ def calculte_metrics(pred_df: pd.DataFrame,
     else:
         if issubclass(type(true_col), int):
             y_true = pred_df.iloc[:, true_col]
-            pred_df = pred_df.drop(y_true.name, axis=1)
+            y_pred = pred_df.drop(y_true.name, axis=1)
         elif issubclass(type(true_col), str):
             y_true = pred_df[true_col]
-            pred_df = pred_df.drop(true_col, axis=1)
+            y_pred = pred_df.drop(true_col, axis=1)
         else:
             raise ValueError(
                 f'true_col has to be of type str or int, not {type(true_col)}')
