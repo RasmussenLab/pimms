@@ -4,6 +4,7 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main, dev]
+  release:
   schedule:
     - cron: '0 2 * * 3,6'
 jobs:
