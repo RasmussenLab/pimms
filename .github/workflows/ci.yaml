@@ -94,3 +94,28 @@ jobs:
       
       - name: Run pytest
         run: pytest .
+
+
+  publish:
+    name: Publish package
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    needs:
+      - run-tests
+      - test_pip_pkg_install
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+  
+      - uses: actions/setup-python@v4.0.0
+        with:
+          python-version: "3.8"
+      - name: Install twine and build
+        run: python -m pip install --upgrade twine build
+      - name: Build
+        run: python -m build
+
+      - uses: pypa/gh-action-pypi-publish
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
