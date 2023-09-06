@@ -67,7 +67,8 @@ class DataLoadersCreator():
 def get_dls(train_X: pandas.DataFrame,
             valid_X: pandas.DataFrame,
             transformer: VaepPipeline,
-            bs: int = 64) -> DataLoaders:
+            bs: int = 64,
+            num_workers=0) -> DataLoaders:
     """Create training and validation dataloaders
 
     Parameters
@@ -112,7 +113,10 @@ def get_dls(train_X: pandas.DataFrame,
     valid_ds = datasets.DatasetWithTargetSpecifyTarget(df=train_X,
                                                        targets=valid_X,
                                                        transformer=transformer)
-    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=False)
+    # ! Need for script exection (as plain python file)
+    # https://pytorch.org/docs/stable/notes/windows.html#multiprocessing-error-without-if-clause-protection
+    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=False,
+                                  num_workers=num_workers)
 
 
 # dls.test_dl
