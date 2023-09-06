@@ -1,29 +1,29 @@
-Welcome to vaep's documentation!
+Welcome to PIMMS documentation!
 ================================
 
+.. .. mdinclude:: ../README.md
 
+.. https://github.com/sphinx-doc/sphinx/issues/7000#issuecomment-1006645012
+.. https://stackoverflow.com/a/54519037
+.. include:: ../README.md
+   :parser: myst_parser.sphinx_
+   :start-line: 1
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Topic and note pages:
 
-   
-   MaxQuant
    proteomics_intro
+   MaxQuant
    lab_book
    vae_notes
    venv_setup
    
-   
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :caption: Library:
 
-   source/modules
-
-
-.. .. automodule:: vaep
-..    :members:
+   reference/modules
 
 
 Indices and tables

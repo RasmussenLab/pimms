@@ -420,13 +420,13 @@ for model, color, ax in zip(
         COLORS_TO_USE[:4],
         axes):
 
-    ax, _ = vaep.plotting.data.plot_histogram_intensites(
+    ax, _ = vaep.plotting.data.plot_histogram_intensities(
         pred_test[TARGET_COL],
         color='grey',
         min_max=min_max,
         ax=ax
     )
-    ax, _ = vaep.plotting.data.plot_histogram_intensites(
+    ax, _ = vaep.plotting.data.plot_histogram_intensities(
         pred_test[model],
         color=color,
         min_max=min_max,

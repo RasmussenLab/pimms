@@ -1,0 +1,13 @@
+# dev
+pytest
+pytest-cov
+jupytext
+flake8
+flake8-bugbear
+build
+wheel
+setuptools
+pre-commit
+pre-commit
+jupyterlab_code_formatter
+jupyterlab-git

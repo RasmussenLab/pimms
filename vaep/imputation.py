@@ -6,7 +6,6 @@ Imputation can be down by column.
 
 """
 from typing import Tuple, Dict
-from sklearn.impute import KNNImputer
 from sklearn.neighbors import NearestNeighbors
 import scipy
 import numpy as np
@@ -21,9 +20,9 @@ RANDOMSEED = 123
 
 def impute_missing(protein_values, mean=None, std=None):
     """
-    Imputation is based on the mean and standard deviation 
+    Imputation is based on the mean and standard deviation
     from the protein_values.
-    If mean and standard deviation (std) are given, 
+    If mean and standard deviation (std) are given,
     missing values are imputed and protein_values are returned imputed.
     If no mean and std are given, the mean and std are computed from
     the non-missing protein_values.
@@ -39,7 +38,7 @@ def impute_missing(protein_values, mean=None, std=None):
     protein_values: pandas.Series
     """
     raise NotImplementedError('Will be the main function combining features')
-    #clip by zero?
+    # clip by zero?
 
 
 def _select_data(data: pd.DataFrame, threshold: float):
@@ -59,7 +58,7 @@ def _select_data(data: pd.DataFrame, threshold: float):
 
 
 def _sparse_coo_array(data: pd.DataFrame):
-    """Return a sparse scipy matrix from dense `pandas.DataFrame` with many 
+    """Return a sparse scipy matrix from dense `pandas.DataFrame` with many
     missing values.
     """
     indices = np.nonzero(~np.isnan(data.to_numpy()))
@@ -84,7 +83,7 @@ def _get_weighted_mean(distances, data):
 # could be done in PCA transformed space
 def imputation_KNN(data, alone=True, threshold=0.5):
     """
-    
+
 
     Parameters
     ----------
@@ -110,7 +109,7 @@ def imputation_KNN(data, alone=True, threshold=0.5):
                 "for ids: {}".format(ids[distances == 0.0])
             )
         mask = data_selected.iloc[i].isna()
-        data_selected.loc[i, mask] = mean_imputed.loc[mask] # SettingWithCopyError
+        data_selected.loc[i, mask] = mean_imputed.loc[mask]  # SettingWithCopyError
 
     data.update(data_selected)
     return data
@@ -132,7 +131,7 @@ def imputation_normal_distribution(log_intensities: pd.Series,
         Shift the mean of the log_intensities by factors of their standard
         deviation to the negative.
     std_shrinkage: float
-        Value greater than zero by which to shrink (or inflate) the 
+        Value greater than zero by which to shrink (or inflate) the
         standard deviation of the log_intensities.
     """
     np.random.seed(RANDOMSEED)
@@ -140,7 +139,7 @@ def imputation_normal_distribution(log_intensities: pd.Series,
         try:
             log_intensities.Series(log_intensities)
             logger.warning("Series created of Iterable.")
-        except:
+        except BaseException:
             raise ValueError(
                 "Plese provided data which is a pandas.Series or an Iterable")
     if mean_shift < 0:
@@ -165,10 +164,10 @@ def imputation_normal_distribution(log_intensities: pd.Series,
                                  np.random.normal(mean_shifted, std_shrinked))
 
 
-def impute_shifted_normal(df_wide:pd.DataFrame,
-                          mean_shift:float=1.8,
-                          std_shrinkage:float=0.3,
-                          completeness:float=0.6,
+def impute_shifted_normal(df_wide: pd.DataFrame,
+                          mean_shift: float = 1.8,
+                          std_shrinkage: float = 0.3,
+                          completeness: float = 0.6,
                           axis=1,
                           seed=RANDOMSEED) -> pd.Series:
     """Get replacements for missing values.
@@ -212,15 +211,15 @@ def impute_shifted_normal(df_wide:pd.DataFrame,
     N, M = df_wide.shape
     if axis == 1:
         imputed_shifted_normal = pd.DataFrame(
-        np.random.normal(mean_shifted, std_shrinked, size=(M, N)),
-        index=df_wide.columns,
-        columns=df_wide.index)
+            np.random.normal(mean_shifted, std_shrinked, size=(M, N)),
+            index=df_wide.columns,
+            columns=df_wide.index)
         imputed_shifted_normal = imputed_shifted_normal.T
     else:
         imputed_shifted_normal = pd.DataFrame(
-        np.random.normal(mean_shifted, std_shrinked, size=(N, M)),
-        index=df_wide.index,
-        columns=df_wide.columns)
+            np.random.normal(mean_shifted, std_shrinked, size=(N, M)),
+            index=df_wide.index,
+            columns=df_wide.columns)
     imputed_shifted_normal = imputed_shifted_normal[df_wide.isna()].stack()
     return imputed_shifted_normal
 
@@ -234,18 +233,18 @@ def imputation_mixed_norm_KNN(data):
     return data
 
 
-def compute_moments_shift(observed: pd.Series, imputed: pd.Series, names:Tuple[str, str]=('observed', 'imputed')) -> Dict[str, float]:
+def compute_moments_shift(observed: pd.Series, imputed: pd.Series,
+                          names: Tuple[str, str] = ('observed', 'imputed')) -> Dict[str, float]:
     """Summary of overall shift of mean and std. dev. of predictions for a imputation method."""
     name_obs, name_model = names
     data = {name: {'mean': series.mean(), 'std': series.std()} for series, name in zip([observed, imputed], names)}
     observed, imputed = data[name_obs], data[name_model]
-    shifts = dict()
     data[name_model]['mean shift (in std)'] = (observed["mean"] - imputed["mean"]) / observed["std"]
     data[name_model]['std shrinkage'] = imputed["std"] / observed["std"]
     return data
 
 
-def stats_by_level(series:pd.Series, index_level:int=0, min_count:int=5) -> pd.Series:
+def stats_by_level(series: pd.Series, index_level: int = 0, min_count: int = 5) -> pd.Series:
     """Count, mean and std. dev. by index level."""
     agg = series.groupby(level=index_level).agg(['count', 'mean', 'std'])
     agg = agg.loc[agg['count'] > min_count]

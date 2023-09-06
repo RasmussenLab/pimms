@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -65,8 +65,10 @@ date_col = ('FileProperties', 'Content Creation Date')
 df_meta[date_col] = pd.to_datetime(
     df_meta[date_col])
 df_meta.sort_values(date_col, inplace=True)
+msg = f"A total of {len(df_meta)} raw files could be read using the ThermoFisherRawFileParser."
+print(msg)
 df_meta
-msg = f"A total of {len(df_meta)} raw files could be read using the ThermoFisherRawFileParser." 
+
 
 # %%
 meta_stats = df_meta.describe(include='all', datetime_is_numeric=True)

@@ -107,7 +107,6 @@ if args.ref_method_score:
     scores = scores.join(scores_reference)
     logger.info(f'Added reference method scores from {args.ref_method_score}')
 
-# %%
 # %% [markdown]
 # ## Load frequencies of observed features
 
@@ -322,7 +321,7 @@ for idx in feat_sel:
 
     label_template = '{method} (N={n:,d}, q={q:.3f})'
     # observed data
-    vaep.plotting.data.plot_histogram_intensites(
+    vaep.plotting.data.plot_histogram_intensities(
         feat_observed,
         ax=ax,
         min_max=min_max,
@@ -347,7 +346,7 @@ for idx in feat_sel:
                                               n=len(pred),
                                               q=float(qvalues.loc[idx, (method, 'qvalue')]
                                                       ))
-            ax, bins = vaep.plotting.data.plot_histogram_intensites(
+            ax, bins = vaep.plotting.data.plot_histogram_intensities(
                 pred,
                 ax=ax,
                 min_max=min_max,

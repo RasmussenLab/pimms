@@ -51,10 +51,10 @@ class DataSplits():
     test_y: pd.DataFrame = None
     
 
-    def __post_init__(self, is_wide_format=True):
+    def __post_init__(self):
         self._items = sorted(self.__dict__)
+        self._is_wide = self.is_wide_format
         self._items.remove('is_wide_format')
-        self._is_wide = is_wide_format # needs to be set explicitly when using the init
 
     def __getitem__(self, index):
         return (self._items[index], getattr(self, self._items[index]))

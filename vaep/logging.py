@@ -1,3 +1,4 @@
+"""Custom logging setup for notebooks."""
 from pathlib import Path
 from datetime import datetime
 import logging
@@ -8,10 +9,10 @@ LOG_FOLDER.mkdir(exist_ok=True)
 
 
 def setup_nb_logger(level: int = logging.INFO,
-                    format_str: str = f'%(name)s - %(levelname)-8s %(message)s') -> None:
+                    format_str: str = '%(name)s - %(levelname)-8s %(message)s') -> None:
     logging.basicConfig(level=level, format=format_str)
     root_logger = logging.getLogger()
-    root_logger.setLevel(level) # in case root_logger existed already before calling basicConfig
+    root_logger.setLevel(level)  # in case root_logger existed already before calling basicConfig
     c_format = logging.Formatter(format_str)
     if root_logger.handlers:
         handler = root_logger.handlers[0]
@@ -19,6 +20,7 @@ def setup_nb_logger(level: int = logging.INFO,
         handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(c_format)
     return root_logger
+
 
 def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     """Setup logging in project. Takes a logger an creates
@@ -43,13 +45,13 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     >>> logger = logging.getLogger('vaep')
     >>> _ = setup_logger_w_file(logger) # no logging to file
     >>> logger.handlers = [] # reset logger
-    >>> _ = setup_logger_w_file() # 
+    >>> _ = setup_logger_w_file() #
 
     """
     logger.setLevel(level)
     logger.handlers = []  # remove any handler in case you reexecute the cell
 
-    c_format = logging.Formatter(f'%(name)s - %(levelname)-8s %(message)s')
+    c_format = logging.Formatter('%(name)s - %(levelname)-8s %(message)s')
 
     c_handler = logging.StreamHandler(sys.stdout)
     c_handler.setLevel(level)

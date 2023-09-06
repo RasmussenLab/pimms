@@ -13,23 +13,23 @@ import math
 from torch import nn
 import torch.nn.functional as F
 
-
+leaky_relu_default = nn.LeakyReLU(.1)
 
 class VAE(nn.Module):
     def __init__(self,
                  n_features: int,
-                 h_layers: List[str],
-                 activation=nn.LeakyReLU(.1),
-                #  last_encoder_activation=nn.LeakyReLU(.1),
+                 n_neurons: List[int],
+                 activation=leaky_relu_default,
+                 #  last_encoder_activation=leaky_relu_default,
                  last_decoder_activation=None,
                  dim_latent: int = 10):
         super().__init__()
-        #set up hyperparameters
-        self.n_features, self.h_layers = n_features, list(h_layers)
-        self.layers = [n_features, *self.h_layers]
+        # set up hyperparameters
+        self.n_features, self.n_neurons = n_features, list(n_neurons)
+        self.layers = [n_features, *self.n_neurons]
         self.dim_latent = dim_latent
 
-        #define architecture hidden layer
+        # define architecture hidden layer
         def build_layer(in_feat, out_feat):
             return [nn.Linear(in_feat, out_feat),
                     nn.Dropout(0.2),

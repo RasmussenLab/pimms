@@ -432,7 +432,7 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 min_max = vaep.plotting.data.min_max(analysis.df.stack())
-ax, bins = vaep.plotting.data.plot_histogram_intensites(
+ax, bins = vaep.plotting.data.plot_histogram_intensities(
     analysis.df.stack(), min_max=min_max)
 
 fname = params.out_figures / 'intensity_distribution_overall'

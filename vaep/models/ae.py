@@ -70,7 +70,7 @@ def get_preds_from_df(df: pd.DataFrame,
 
 
 
-
+leaky_relu_default = nn.LeakyReLU(.1)
 
 class Autoencoder(nn.Module):
     """Autoencoder base class.
@@ -79,8 +79,8 @@ class Autoencoder(nn.Module):
 
     def __init__(self,
                  n_features: int,
-                 n_neurons: Union[int, list],
-                 activation=nn.LeakyReLU(.1),
+                 n_neurons: Union[int, List[int]],
+                 activation=leaky_relu_default,
                  last_decoder_activation=None,
                  dim_latent: int = 10):
         """Initialize an Autoencoder
@@ -106,7 +106,7 @@ class Autoencoder(nn.Module):
         self.layers = [n_features, *self.n_neurons]
         self.dim_latent = dim_latent
 
-        #define architecture hidden layer
+        # define architecture hidden layer
         def build_layer(in_feat, out_feat):
             return [nn.Linear(in_feat, out_feat),
                     nn.Dropout(0.2),
@@ -192,15 +192,15 @@ def get_missing_values(df_train_wide: pd.DataFrame,
 
 #     def __init__(self,
 #                  n_features: int,
-#                  h_layers: int,
+#                  n_neurons: int,
 #                  activation=nn.LeakyReLU,
 #                  last_encoder_activation=nn.LeakyReLU,
 #                  last_decoder_activation=None,
 #                  dim_latent: int = 10):
 
 #         super().__init__()
-#         self.n_features, self.h_layers = n_features, list(L(h_layers))
-#         self.layers = [n_features, *self.h_layers]
+#         self.n_features, self.n_neurons = n_features, list(L(n_neurons))
+#         self.layers = [n_features, *self.n_neurons]
 #         self.dim_latent = dim_latent
 
 #         # Encoder

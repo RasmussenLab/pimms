@@ -1,3 +1,4 @@
+"""Types used in scikit-learn pipelines."""
 import pickle
 from dataclasses import dataclass
 from collections import namedtuple
@@ -11,8 +12,8 @@ PrecisionRecallCurve = namedtuple("PrecisionRecallCurve", 'precision recall cuto
 
 @dataclass
 class ResultsSplit:
-    auc: float = None # receiver operation curve area under the curve
-    aps: float = None # average precision score
+    auc: float = None  # receiver operation curve area under the curve
+    aps: float = None  # average precision score
     roc: AucRocCurve = None
     prc: PrecisionRecallCurve = None
 

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -104,6 +104,10 @@ args
 
 # %%
 TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
+
+if not args.cuda:
+    default_device(use=False)  # set to cpu
+
 
 # %% [markdown]
 # ## Load data in long format
@@ -209,6 +213,11 @@ ana_collab.learn = Learner(dls=ana_collab.dls, model=ana_collab.model, loss_func
                            model_dir=args.out_models)
 if args.cuda:
     ana_collab.learn.model = ana_collab.learn.model.cuda()
+else:
+    # try to set explicitly cpu in case not cuda
+    # MPS logic might not work properly in fastai yet https://github.com/fastai/fastai/pull/3858
+    ana_collab.learn.model = ana_collab.learn.model.cpu()
+
 # learn.summary() # see comment at DAE
 
 # %% [markdown]

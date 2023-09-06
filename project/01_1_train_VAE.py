@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -233,7 +233,7 @@ analysis = ae.AutoEncoderAnalysis(  # datasplits=data,
     val_df=data.val_y,
     model=models.vae.VAE,
     model_kwargs=dict(n_features=data.train_X.shape[-1],
-                      h_layers=args.hidden_layers,
+                      n_neurons=args.hidden_layers,
                       # last_encoder_activation=None,
                       last_decoder_activation=None,
                       dim_latent=args.latent_dim),
