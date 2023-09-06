@@ -1,0 +1,37 @@
+python >= 3.8, < 3.9
+numpy
+pandas < 2.0
+scipy >= 1.6
+# plotting
+matplotlib
+python-kaleido
+plotly
+seaborn
+pip
+# ML
+pytorch < 2.0
+# pytorch-cuda
+scikit-learn
+fastai
+torchvision
+# cudatoolkit=11.7
+tensorboard
+umap-learn
+# stats
+pingouin
+statsmodels
+# other
+tqdm # progress bars
+xmltodict # configs
+openpyxl # xml
+omegaconf
+# snakemake
+snakemake-minimal < 7.26
+# jupyter
+ipykernel
+ipython
+ipywidgets
+jupyterlab # standalone jupyter installation
+# jupyter_contrib_nbextensions # delete configuration file if you see an error: https://github.com/jupyter/nbconvert/issues/526#issuecomment-277552771
+jupyter-dash
+papermill # execute ipynb's

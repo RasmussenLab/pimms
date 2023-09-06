@@ -1,0 +1,15 @@
+# R3.6.3 is not available as binaries for M1 and M2 amd64 atm (2023-08-11)
+r-base # >= 3.6.0, < 4.0 # would be good if it could be relaxed
+r-irkernel
+# r-biocmanager
+r-reshape2
+r-stringi # + rmarkdown hack for reshape2
+r-stringr # reshape2
+r-tidyverse
+r-gdata
+r-glmnet
+r-e1071
+r-norm
+r-missforest
+r-vim
+r-mice

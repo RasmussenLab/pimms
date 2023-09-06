@@ -2,22 +2,21 @@
 
 PIMMS stands for Proteomics Imputation Modeling Mass Spectrometry 
 and is a hommage to our dear British friends 
-who are missing as part of the EU for far too long already.
-(Pimms is also a british summer drink)
+who are missing as part of the EU for far too long already
+(Pimms is also a British summer drink).
 
-The pre-print is available [on biorxiv](https://www.biorxiv.org/content/10.1101/2023.01.12.523792v1).
+The pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
 
-> `PIMMS`was called `vaep` during development.  
+> `PIMMS` was called `vaep` during development.  
 > Before entire refactoring has to been completed the imported package will be
 `vaep`.
 
-We provide functionality as a python package and excutable workflows and notebooks 
-under the [`project`](project) folder, inclduing an example.
+We provide functionality as a python package, an excutable workflow and notebooks.
 
-The [`workflows`](workflows) folder contains snakemake workflows used for rawfile data processing, 
-both for [running MaxQuant](workflows\maxquant) over a large set of HeLa raw files 
-and ThermoRawFileParser on a list of raw files to [extract their meta data](workflows\metadata).
+The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+
+
 
 ## Notebooks as scripts using papermill
 
@@ -33,13 +32,25 @@ papermill 01_1_train_vae.ipynb --help-notebook
 
 > Misstyped argument names won't throw an error when using papermill
 
-### Outlook
+### Python package
 
-We also plan to provide functionality and examples to interactive use of the 
-models developed in PIMMS.
+For interactive use of the models provided in PIMMS, you can use our
+[python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
+The interface is similar to scikit-learn.
 
-## Setup
-The package is not yet available as a standalone software on pypi. Currently we use 
+
+```
+pip install pimms-learn
+```
+
+
+Then you can use the models on a pandas DataFrame with missing values. Try this in the tutorial on Colab:
+[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+
+
+## Setup for PIMMS comparison workflow
+
+The package is available as a standalone software on pypi. However, running the entire snakemake workflow in enabled using 
 conda (or mamba) and pip to setup the environment. For a detailed description of setting up
 conda (or mamba), see [instructions on setting up a virtual environment](docs/venv_setup.md).
 
@@ -58,32 +69,56 @@ conda env create -n pimms -f environment.yml # slower
 mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-If on Mac M1: use  `environment_m1.yaml` where cudatoolkit is removed.
+If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment.
+
+### Install development dependencies
+
+Check how to install pytorch for your system [here](https://pytorch.org/get-started/previous-versions/#v1131).
+
+- select the version compatible with your cuda version if you have an nvidia gpu
+
+```bash
+conda create -n vaep_manuel python=3.8 pip
+conda activate vaep_manuel
+conda update pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia # might be different
+pip install . # pimms-learn
+pip install papermill jupyterlab # use run notebook interactive or as a script
+cd project
+papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_test.ipynb # second notebook is output
+python 04_1_train_pimms_models.ipynb # just execute the code
+# jupyter lab # open 04_1_train_pimms_models.ipynb
+```
+
+### Entire development installation
+
+
+```bash
+conda create -n pimms_dev -c pytorch -c nvidia -c fastai -c bioconda -c plotly -c conda-forge --file requirements.txt --file requirements_R.txt --file requirements_dev.txt
+pip install -e . # other pip dependencies missing
+snakemake --configfile config/single_dev_dataset/example/config.yaml -F -n
+```
+
+or if you want to update an existing environment
+
 
 ```
-conda env create -n pimms -f environment_m1.yml # slower
-mamba env create -n pimms -f environment_m1.yml # faster, less then 5mins
+conda update  -c defaults -c conda-forge -c fastai -c bioconda -c plotly --file requirements.txt --file requirements_R.txt --file requirements_dev.txt
 ```
 
-If on Windows: use `environment_win.yaml` where ~~two R-Bioconductor~~ R-packages (see note bolow) are removed as 
-no binaries are available for Windows. You will need to install these manually afterwards if you want to use methods implemented in R.
-
-> Note: Turns out that installing dependencies partly by conda and partly manuaelly
-using `BiocManager` is not working.
+or using the environment.yml file (can fail on certain systems)
 
 ```
-conda env create -n pimms -f environment_win.yml # slower
-mamba env create -n pimms -f environment_win.yml # faster, less then 5mins
-# Then if R packages are needed, they are installed on the fly for Windows.
-# Could be used as well for MacOS or Linux.
+conda env create -f environment.yml
 ```
+
+
+### Troubleshooting
 
 Trouble shoot your R installation by opening jupyter lab
 
 ```
 # in projects folder
 jupyter lab # open 01_1_train_NAGuideR.ipynb
-```
 
 ## Run Demo
 
@@ -191,25 +226,21 @@ From the brief description in the table the exact procedure is not always clear.
 
 
 
-<!-- ### Setup using pip
+## Workflows
 
-> Dependecies are currently provided through `environment.yml`, see above
+The workflows folder in the repository contains snakemake workflows used for rawfile data processing, 
+both for running MaxQuant over a large set of HeLa raw files 
+and ThermoRawFileParser on a list of raw files to extract their meta data. For details see:
 
-From GitHub
-```
-pip install git+https://github.com/RasmussenLab/pimms.git
-```
+>  Webel, Henry, Yasset Perez-Riverol, Annelaura Bach Nielson, and Simon Rasmussen. 2023. “Mass Spectrometry-Based Proteomics Data from Thousands of HeLa Control Samples.” Research Square. https://doi.org/10.21203/rs.3.rs-3083547/v1.
 
-Using the clone repository
-```
-pip install /path/to/cloned/folder 
-```
+### MaxQuant
 
-And using the cloned repository for an editable installation
-```
-pip install -e /path/to/cloned/folder 
-```
+Process single raw files using MaxQuant. See [README](workflows/maxquant/README.md) for details.
 
-## Overview vaep package -->
+### Metadata
 
+Read metadata from single raw files using MaxQuant. See [README](workflows/metadata/README.md) for details.
 
+## Build status
+[![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)
