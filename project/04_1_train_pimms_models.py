@@ -15,11 +15,16 @@ import os
 IN_COLAB = 'COLAB_GPU' in os.environ
 if IN_COLAB:
     print("Install PIMMS...")
-    # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
-    # #  !pip install pimms-learn
+    # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
+    # # !pip install pimms-learn
+
+# %%
+import os
+IN_COLAB = 'COLAB_GPU' in os.environ
+
+fn_intensities = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
+if IN_COLAB:
     fn_intensities = 'https://raw.githubusercontent.com/RasmussenLab/pimms/main/project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
-else:
-    fn_intensities = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
 
 # %%
 import numpy as np
@@ -71,8 +76,11 @@ df.head()
 # %% [markdown]
 # The resulting DataFrame with one column has an `MulitIndex` with the sample and feature identifier.
 
+# %% [markdown]
+# ## Collaborative Filtering
+
 # %%
-# CollaborativeFilteringTransformer?
+# # # # CollaborativeFilteringTransformer?
 
 # %% [markdown]
 # Let's set up collaborative filtering without a validation or test set, using 
