@@ -16,7 +16,10 @@ IN_COLAB = 'COLAB_GPU' in os.environ
 if IN_COLAB:
     print("Install PIMMS...")
     # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
-    # # !pip install pimms-learn
+    # !pip install pimms-learn
+
+# %% [markdown]
+# If on colab, please restart the environment and run everything from here on.
 
 # %%
 import os
