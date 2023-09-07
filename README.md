@@ -17,22 +17,7 @@ We provide functionality as a python package, an excutable workflow and notebook
 The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
 
 
-
-## Notebooks as scripts using papermill
-
-If you want to run a model on your prepared data, you can run notebooks prefixed with 
-`01_`, i.e. `project/01_*.ipynb`. Using jupytext also python percentage script versions
-are saved.
-
-```
-cd project # project folder as pwd
-papermill 01_0_split_data.ipynb --help-notebook
-papermill 01_1_train_vae.ipynb --help-notebook
-```
-
-> Misstyped argument names won't throw an error when using papermill
-
-### Python package
+## Python package
 
 For interactive use of the models provided in PIMMS, you can use our
 [python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
@@ -47,12 +32,28 @@ pip install pimms-learn
 Then you can use the models on a pandas DataFrame with missing values. Try this in the tutorial on Colab:
 [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
 
+## Notebooks as scripts using papermill
+
+If you want to run a model on your prepared data, you can run notebooks prefixed with 
+`01_`, i.e. [`project/01_*.ipynb`](https://github.com/RasmussenLab/pimms/tree/HEAD/project) after cloning the repository. Using jupytext also python percentage script versions
+are saved.
+
+```
+cd project # project folder as pwd
+papermill 01_0_split_data.ipynb --help-notebook
+papermill 01_1_train_vae.ipynb --help-notebook
+```
+
+> Misstyped argument names won't throw an error when using papermill
+
+
+
 
 ## Setup for PIMMS comparison workflow
 
 The package is available as a standalone software on pypi. However, running the entire snakemake workflow in enabled using 
 conda (or mamba) and pip to setup the environment. For a detailed description of setting up
-conda (or mamba), see [instructions on setting up a virtual environment](docs/venv_setup.md).
+conda (or mamba), see [instructions on setting up a virtual environment](https://github.com/RasmussenLab/pimms/blob/HEAD/docs/venv_setup.md).
 
 Download the repository
 
