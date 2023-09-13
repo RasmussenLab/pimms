@@ -399,7 +399,7 @@ class Count():
 ### aggregated peptides
 
 # # check df for redundant information (same feature value for all entries)
-usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE]
+usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE, 'PEP']
 
 
 def count_peptides(folders: List[Path], dump=True,
@@ -426,6 +426,7 @@ def count_peptides(folders: List[Path], dump=True,
 d_dtypes_training_sample = {
     'Sequence': pd.StringDtype(),
     'Proteins': pd.StringDtype(),
+    'PEP': pd.Float32Dtype(),
     'Leading razor protein': pd.StringDtype(),
     'Gene names': pd.StringDtype(),
     'Intensity': pd.Int64Dtype()
