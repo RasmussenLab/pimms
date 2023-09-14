@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 # ! default seaborn color map only has 10 colors
 # https://seaborn.pydata.org/tutorial/color_palettes.html
 # sns.color_palette("husl", N) to get N distinct colors
-#  
 color_model_mapping = {
     'KNN': sns.color_palette()[0],
     'KNN_IMPUTE': sns.color_palette()[1],
@@ -21,7 +20,8 @@ color_model_mapping = {
     'SEQKNN': sns.color_palette()[6],
     'MICE-NORM': sns.color_palette()[1],
 }
-other_colors = sns.color_palette()[8:]
+# other_colors = sns.color_palette()[8:]
+other_colors = sns.color_palette("husl", 20)
 
 
 def assign_colors(models):

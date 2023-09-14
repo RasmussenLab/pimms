@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -249,6 +249,7 @@ mae_stats_ordered_val
 # Could be extended to all supported imputation methods
 # %%
 COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
+sns.color_palette(COLORS_TO_USE)
 
 # %%
 # For top_N -> define colors
@@ -300,7 +301,7 @@ fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
-fname = args.out_figures/'pred_corr_val_per_sample.xlsx'
+fname = args.out_figures / 'pred_corr_val_per_sample.xlsx'
 dumps[fname.stem] = fname
 with pd.ExcelWriter(fname) as w:
     corr_per_sample_val.describe().to_excel(w, sheet_name='summary')
@@ -351,7 +352,7 @@ errors_val.loc[mask]
 fig, ax = plt.subplots(figsize=(8, 3))
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_val[
-        [TARGET_COL]+TOP_N_ORDER
+        [TARGET_COL] + TOP_N_ORDER
     ],
     ax=ax,
     palette=TOP_N_COLOR_PALETTE,
@@ -398,8 +399,8 @@ cp_mean_perf = pd.concat([
     mae_stats_ordered_val.loc['mean'],
     mae_stats_ordered_test.loc['mean'],
 ],
-axis=1,
-keys=['val', 'test']
+    axis=1,
+    keys=['val', 'test']
 ).sort_values(by='val')
 cp_mean_perf.to_excel(writer, sheet_name='cp_mean_perf', float_format='%.5f')
 cp_mean_perf
@@ -601,9 +602,13 @@ _to_plot.index = [feature_names.name]
 _to_plot
 
 # %%
-text = model_configs[["latent_dim", "hidden_layers"]].apply(
-    build_text,
-    axis=1)
+try:
+    text = model_configs[["latent_dim", "hidden_layers"]].apply(
+        build_text,
+        axis=1)
+except KeyError:
+    logger.warning("No model PIMMS models in comparsion. Using empty text")
+    text = pd.Series('', index=model_configs.columns)
 
 _to_plot.loc["text"] = text
 _to_plot = _to_plot.fillna('')
@@ -643,7 +648,7 @@ fig, ax = plt.subplots(figsize=(8, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred=pred_test[
-        [TARGET_COL]+TOP_N_ORDER
+        [TARGET_COL] + TOP_N_ORDER
     ],
     feat_medians=data.train_X.median(),
     ax=ax,
@@ -676,7 +681,7 @@ errors_binned
 fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_test[
-        [TARGET_COL]+TOP_N_ORDER
+        [TARGET_COL] + TOP_N_ORDER
     ],
     ax=ax,
     palette=TOP_N_COLOR_PALETTE,
