@@ -1,4 +1,4 @@
-"""Plot data distribution based on pandas DataFrames or Series."""
+"""Plot data distribution based on pandas `DataFrames` or `Series`."""
 from typing import Tuple, Iterable
 
 import matplotlib
@@ -9,7 +9,19 @@ import seaborn as sns
 
 
 def min_max(s: pd.Series) -> Tuple[int]:
-    min_bin, max_bin = (int(s.min()), (int(s.max())+1))
+    """Get the min and max as integer from a pandas.Series.
+
+    Parameters
+    ----------
+    s : pd.Series
+        Series of intensities.
+
+    Returns
+    -------
+    Tuple[int]
+        _description_
+    """
+    min_bin, max_bin = (int(s.min()), (int(s.max()) + 1))
     return min_bin, max_bin
 
 
@@ -27,10 +39,10 @@ def get_min_max_iterable(series: Iterable[pd.Series]) -> Tuple[int]:
 
 
 def plot_histogram_intensities(s: pd.Series,
-                              interval_bins=1,
-                              min_max=(15, 40),
-                              ax=None,
-                              **kwargs) -> Tuple[Axes, range]:
+                               interval_bins=1,
+                               min_max=(15, 40),
+                               ax=None,
+                               **kwargs) -> Tuple[Axes, range]:
     """Plot intensities in Series in a certain range and equally spaced intervals."""
     min_bin, max_bin = min_max
     bins = range(min_bin, max_bin, interval_bins)
@@ -90,8 +102,24 @@ def plot_observations(df: pd.DataFrame,
 
 
 def plot_missing_dist_highdim(data: pd.DataFrame,
-                              min_feat_per_sample=None,
-                              min_samples_per_feat=None) -> matplotlib.figure.Figure:
+                              min_feat_per_sample: int = None,
+                              min_samples_per_feat: int = None) -> matplotlib.figure.Figure:
+    """Plot missing distribution (cdf) in high dimensional data.
+
+    Parameters
+    ----------
+    data : pd.DataFrame
+        Intensity table with samples in rows and features in columns.
+    min_feat_per_sample : int, optional
+        Show the minimum required features a sample has to have, by default None
+    min_samples_per_feat : int, optional
+        Show the minimum required number of samples a feature has to be found in, by default None
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        Figure with two plots (Axes).
+    """
     fig, axes = plt.subplots(1, 2, figsize=(4, 2))
     not_na = data.notna()
     name = 'features per sample'
@@ -251,8 +279,8 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
     missing_by_median['bins'] = pd.cut(
         missing_by_median['median feat value'], bins=bins)
     missing_by_median['median feat value (floor)'] = (missing_by_median['median feat value']
-                                                        .astype(int)
-                                                        )
+                                                      .astype(int)
+                                                      )
     _counts = (missing_by_median
                .groupby('median feat value (floor)')['median feat value']
                .count()
