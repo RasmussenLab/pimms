@@ -210,10 +210,10 @@ class MaxQuantOutput():
 
     Attributes
     ----------
-    self.files : list 
+    self.files : list
         list of files in `folder`.
     _inital_attritubutes : list
-        Initial set of non-magic attributes 
+        Initial set of non-magic attributes
     NAME_FILE_MAP : dict
         Keys for known MaxQuant output files.
     """
@@ -319,7 +319,7 @@ class MaxQuantOutputDynamic(MaxQuantOutput):
     name_file_map : dict
         Keys for known MaxQuant output files.
     _inital_attritubutes : list
-        Initial set of non-magic attributes 
+        Initial set of non-magic attributes
     """
 
     def __init__(self, folder):
@@ -368,7 +368,7 @@ def check_df(df, columns):
 
     missing = []
     for col in columns:
-        if not col in df:
+        if col not in df:
             missing.append(col)
 
     if missing:
@@ -380,7 +380,7 @@ COLS_ = [mq_col.INTENSITY, mq_col.LEADING_RAZOR_PROTEIN] + FASTA_KEYS
 
 def get_peptides_with_single_gene(peptides, keep_columns=COLS_, gene_column=mq_col.GENE_NAMES):
     """Get long-data-format. Ungroup gene names. Peptides "shared" by genes
-    are assigned individual rows. retains only cases with full list of 
+    are assigned individual rows. retains only cases with full list of
     features provided by `keep_columns`.
 
     Parameters
@@ -388,7 +388,7 @@ def get_peptides_with_single_gene(peptides, keep_columns=COLS_, gene_column=mq_c
     peptides: pandas.DataFrame
         MaxQuant txt output loaded as `pandas.DataFrame`.
     keep_columns: list
-        List of columns to keep from the `peptides`.txt, default 
+        List of columns to keep from the `peptides`.txt, default
         {cols_}
     gene_column: str
         Column containing group information of format "group1;group2",
@@ -474,7 +474,7 @@ def count_genes_in_sets(gene_sets, sep=';'):
 
 
 def get_identifier_from_column(df: pd.DataFrame, identifier_col: str):
-    """Get unique identifier in a column of a DataFrame. 
+    """Get unique identifier in a column of a DataFrame.
 
     Parameters
     ----------
@@ -579,7 +579,7 @@ def find_exact_cleaved_peptides_for_razor_protein(gene_data, fasta_db, gene_id: 
         #       pendants (e.g. Keratin: Q04695;CON__Q04695)
         # exclude potential other contaminents
         protein_sets = [
-            x for x in proteins_shared_by_all if not 'CON__' in x]  # .sorted()
+            x for x in proteins_shared_by_all if 'CON__' not in x]  # .sorted()
         if len(protein_sets) == 0:
             # raise KeyError("No other overall protein found for sequences.")
             logger.warning(
@@ -606,7 +606,7 @@ def calculate_completness_for_sample(
     peps_exact_cleaved : Iterable[str]
         Iterable of peptides exactly cleaved
     peps_in_data : Iterable[str]
-        Iterable of peptides found during a run / in a sample. Check if peptides 
+        Iterable of peptides found during a run / in a sample. Check if peptides
         overlap with any of the exact peptides.
 
     Returns

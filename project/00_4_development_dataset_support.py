@@ -20,13 +20,14 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-import vaep # set formatting defaults
+import vaep  # set formatting defaults
 
 # %% [markdown]
 # ## Parameters
 
 # %% tags=["parameters"]
-support_json: str = 'data\dev_datasets\df_intensities_proteinGroups_long\Q_Exactive_HF_X_Orbitrap_6070_support.json' # Path to json support file
+# Path to json support file
+support_json: str = 'data\\dev_datasets\\df_intensities_proteinGroups_long\\Q_Exactive_HF_X_Orbitrap_6070_support.json'
 
 # %% [markdown]
 # ## Completeness of samples
@@ -36,10 +37,10 @@ support = pd.read_json(support_json, typ='series').sort_values().to_frame('no. o
 support.head()
 
 # %%
-support.describe(percentiles=np.linspace(0.1,1,10))
+support.describe(percentiles=np.linspace(0.1, 1, 10))
 
 # %%
-ax = support.plot(rot=90, figsize=(20,10), legend=False)
+ax = support.plot(rot=90, figsize=(20, 10), legend=False)
 ax.set_ylabel('number of features')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 

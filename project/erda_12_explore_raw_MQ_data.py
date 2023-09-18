@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3.8.13 ('vaep')
 #     language: python
@@ -46,18 +46,14 @@ from vaep.io import search_subfolders
 import vaep.io.mq as mq
 from vaep.io.mq import mq_col
 
+##### CONFIG #####
+import config
+from config import FOLDER_MQ_TXT_DATA as FOLDER_RAW_DATA
+from config import FIGUREFOLDER
+
 
 from vaep.logging import setup_nb_logger
 logger = setup_nb_logger()
-
-##################
-##### CONFIG #####
-##################
-
-import config
-from config import FIGUREFOLDER
-# from config import FOLDER_RAW_DATA
-from config import FOLDER_MQ_TXT_DATA as FOLDER_RAW_DATA
 
 
 print(f"Search Raw-Files on path: {FOLDER_RAW_DATA}")
@@ -95,13 +91,15 @@ intensities = mq_output.peptides.Intensity
 intensities
 
 # %% [markdown]
-# Not all peptides are associated with a Protein or Gene by MQ, although there is evidence for the peptide. This is due to potential `CON_`taminants in the medium which is encouded by default by MQ.
+# Not all peptides are associated with a Protein or Gene by MQ, although
+# there is evidence for the peptide. This is due to potential
+# `CON_`taminants in the medium which is encouded by default by MQ.
 
 # %%
 mq_output.peptides[FASTA_KEYS].isna().sum()
 
 # %% [markdown]
-# ## `evidence.txt` 
+# ## `evidence.txt`
 #
 # contains
 # - retention time for peptides
@@ -170,7 +168,8 @@ rt_summary = rt.groupby(level=0).agg(_agg_functions)
 rt_summary
 
 # %% [markdown]
-# Let's see several quartiles for both median and standard deviation (the columns are independent from each other) for the retention time
+# Let's see several quartiles for both median and standard deviation (the
+# columns are independent from each other) for the retention time
 
 # %%
 rt_summary.describe(percentiles=[0.8, 0.9, 0.95, 0.96, 0.97, 0.98, 0.99])
@@ -196,7 +195,9 @@ rt.loc[mask_indices]
 mq_output.evidence.loc[mask_indices]
 
 # %% [markdown]
-# Model evaluation possibility: Discard samples with several measurements from an experiment and predict value. See which intensity measurement corresponds more closely. 
+# Model evaluation possibility: Discard samples with several measurements
+# from an experiment and predict value. See which intensity measurement
+# corresponds more closely.
 
 # %%
 _peptide = random.choice(mask_indices)
@@ -228,7 +229,8 @@ mq_output.peptides.loc[_peptide].to_frame().T
 # ## Differences in intensities b/w peptides.txt and evidence.txt
 #
 #
-# The intensity reported in `peptides.txt` corresponds to roughly to the sum of the intensities found in different scans:
+# The intensity reported in `peptides.txt` corresponds to roughly to the
+# sum of the intensities found in different scans:
 
 # %%
 col_intensity = mq_col.INTENSITY
@@ -270,7 +272,7 @@ _diff.loc[mask_diff]
 _diff[mask_diff].describe()
 
 # %% [markdown]
-# Several smaller and larger differences in an intensity range way below the detection limit arise for some sequences. 
+# Several smaller and larger differences in an intensity range way below the detection limit arise for some sequences.
 
 # %% [markdown]
 # ### Ideas on source of difference
@@ -411,7 +413,7 @@ mq_output.evidence.loc[_sequences, [
 aggregators = ["Sequence", "Score", mq_col.INTENSITY]
 mask_intensity_not_na = mq_output.evidence.Intensity.notna()
 seq_max_score_max_intensity = mq_output.evidence.loc[mask_intensity_not_na].reset_index(
-)[aggregators+["Proteins", "Gene names"]].sort_values(by=aggregators).set_index("Sequence").groupby(level=0).last()
+)[aggregators + ["Proteins", "Gene names"]].sort_values(by=aggregators).set_index("Sequence").groupby(level=0).last()
 seq_max_score_max_intensity
 
 # %%
@@ -430,8 +432,9 @@ mask_seq_selected_not_assigned = seq_max_score_max_intensity.Proteins.isna(
 seq_max_score_max_intensity.loc[mask_seq_selected_not_assigned]
 
 # %% [markdown]
-# These might be a candiate for evaluating predictions, as the information is measured, but unknown. 
-# If they cannot be assigned, the closest fit on different genes with model predictions could be a criterion for selection
+# These might be a candiate for evaluating predictions, as the information is measured, but unknown.
+# If they cannot be assigned, the closest fit on different genes with
+# model predictions could be a criterion for selection
 
 # %% [markdown]
 # ## Create dumps of intensities in `peptides.txt`
@@ -447,7 +450,7 @@ mq_output.dump_intensity(folder='data/peptides_txt_intensities/')
 # ## Create dumps per gene
 
 # %% [markdown]
-# Some hundred peptides map to more than two genes 
+# Some hundred peptides map to more than two genes
 
 # %%
 seq_max_score_max_intensity[mq_col.GENE_NAMES].str.split(";"
@@ -465,7 +468,7 @@ seq_max_score_max_intensity[mq_col.GENE_NAMES].str.split(";"
 # - multiple genes:
 #     - select first and add reference in others
 #     - split and dump repeatedly
-#     
+#
 # Load fasta-file information
 
 # %%
@@ -497,7 +500,8 @@ set_proteins_to_remove
 
 # %%
 mask = mq_output.peptides[mq_col.LEADING_RAZOR_PROTEIN].isin(set_proteins_to_remove)
-mq_output.peptides.loc[mask, 'Potential contaminant'].value_counts() # ToDo: Remove potential contaminants, check evidence.txt
+# ToDo: Remove potential contaminants, check evidence.txt
+mq_output.peptides.loc[mask, 'Potential contaminant'].value_counts()
 
 # %% [markdown]
 # ### `id_map`: Find genes based on fasta file
@@ -597,7 +601,7 @@ gene_sets_unique.loc[mask_more_than_one_gene]
 # Does a group of peptide only assigns unique set of genes? Genes can have more than one protein.
 #   - first build groups
 #   - then see matches (see further below)
-#   
+#
 
 # %%
 peptides_with_single_gene = mq.get_peptides_with_single_gene(
@@ -619,9 +623,8 @@ mask = peptides_with_single_gene['Proteins'].str.contains('CON__')
 peptides_with_single_gene.loc[mask]
 
 # %%
-_mask_con = peptides_with_single_gene.loc[mask, mq_col.PROTEINS].str.split(";"
-                                                                           ).apply(lambda x: [True if "CON_" in item else False for item in x]
-                                                                                   ).apply(all)
+_mask_con = peptides_with_single_gene.loc[mask, mq_col.PROTEINS].str.split(";").apply(
+    lambda x: [True if "CON_" in item else False for item in x]).apply(all)
 
 assert _mask_con.sum() == 0, "There are peptides resulting only from possible confounders: {}".format(
     ", ".join(str(x) for x in peptides_with_single_gene.loc[mask, mq_col.PROTEINS].loc[_mask_con].index))
@@ -650,7 +653,7 @@ set_of_proteins = {x for x in set_of_proteins if 'CON__' not in x}
 set_of_proteins
 
 # %%
-gene_data[mq_col.PROTEINS].value_counts() # combine? select first in case of a CON_ as leading razor protein?
+gene_data[mq_col.PROTEINS].value_counts()  # combine? select first in case of a CON_ as leading razor protein?
 
 # %%
 protein_id = set_of_proteins.pop()
@@ -678,7 +681,7 @@ peps_exact_cleaved[:10]
 peps_in_data = gene_data.index
 
 mq.calculate_completness_for_sample(
-    peps_exact_cleaved=peps_exact_cleaved, 
+    peps_exact_cleaved=peps_exact_cleaved,
     peps_in_data=peps_in_data)
 
 # %% [markdown]
@@ -800,18 +803,26 @@ isinstance(mq_output, MaxQuantOutput), type(mq_output)
 # #### Descriptics
 
 # %%
-s_completeness = pd.Series(completeness_per_gene,  name='completenes_by_gene')
+s_completeness = pd.Series(completeness_per_gene, name='completenes_by_gene')
 s_completeness.describe()
 
 # %%
 N_BINS = 20
-ax = s_completeness.plot(kind='hist',
-                         bins=N_BINS,
-                         xticks=[x/100 for x in range(0, 101, 5)],
-                         figsize=(10, 5),
-                         rot=90,
-                         title=f"Frequency of proportion of observed exact peptides (completness) per razor protein from 0 to 1 in {N_BINS} bins"
-                               f"\nin sample {mq_output.folder.stem}")
+ax = s_completeness.plot(
+    kind='hist',
+    bins=N_BINS,
+    xticks=[
+        x /
+        100 for x in range(
+            0,
+            101,
+            5)],
+    figsize=(
+        10,
+        5),
+    rot=90,
+    title=f"Frequency of proportion of observed exact peptides (completness) per razor protein from 0 to 1 in {N_BINS} bins"
+    f"\nin sample {mq_output.folder.stem}")
 
 _ = ax.set_xlabel(
     "Proportion of exactly observed peptides (including up to 2 mis-cleavages)")

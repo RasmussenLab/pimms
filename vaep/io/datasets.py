@@ -9,6 +9,7 @@ from typing import Tuple
 
 DEFAULT_DTYPE = torch.get_default_dtype()
 
+
 class PeptideDatasetInMemory(Dataset):
     """Peptide Dataset fully in memory."""
 
@@ -23,7 +24,7 @@ class PeptideDatasetInMemory(Dataset):
             Peptide data for training, potentially with missings.
         mask : [type], optional
             Mask selecting values for evaluation from data(y), by default None
-            If no mask is provided, all non-missing values from `data`-array 
+            If no mask is provided, all non-missing values from `data`-array
             will be used.
         fill_na : int, optional
             value to replace missing values with, by default 0
@@ -83,19 +84,21 @@ class DatasetWithMaskAndNoTarget(Dataset):
         mask_isna = self.mask_isna.iloc[idx]
         data = self.data.iloc[idx]
         mask_isna, data = to_tensor(mask_isna), to_tensor(data)
-        return  mask_isna, data
+        return mask_isna, data
+
 
 class DatasetWithTarget(DatasetWithMaskAndNoTarget):
 
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         mask, data = super().__getitem__(idx)
-        return  mask, data, data
+        return mask, data, data
+
 
 class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
 
-    def __init__(self, df: pd.DataFrame, targets:pd.DataFrame,
+    def __init__(self, df: pd.DataFrame, targets: pd.DataFrame,
                  transformer: sklearn.pipeline.Pipeline = None):
-        """Create a dataset for validation. 
+        """Create a dataset for validation.
 
         Parameters
         ----------
@@ -113,7 +116,7 @@ class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
         self.columns = df.columns
         self.transformer = transformer
 
-        self.target = df.fillna(targets) # not really necessary, without mask would not be needed
+        self.target = df.fillna(targets)  # not really necessary, without mask would not be needed
 
         if transformer:
             if hasattr(transformer, 'transform'):
@@ -125,16 +128,16 @@ class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
 
         self.data = df
         self.length_ = len(self.data)
-        
 
     def __getitem__(self, idx) -> Tuple[torch.Tensor, torch.Tensor]:
-        mask_isna, data =  super().__getitem__(idx)
-        target =  to_tensor(self.target.iloc[idx])
+        mask_isna, data = super().__getitem__(idx)
+        target = to_tensor(self.target.iloc[idx])
         return mask_isna, data, target
+
 
 class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
     """Peptide Dataset fully in memory.
-    
+
     Dataset: torch.utils.data.Dataset
     """
 
@@ -155,7 +158,7 @@ class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
 
 class PeptideDatasetInMemoryNoMissings(Dataset):
     """Peptide Dataset fully in memory.
-    
+
     Dataset: torch.utils.data.Dataset
     """
 

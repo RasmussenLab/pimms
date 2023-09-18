@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -27,9 +27,9 @@ import config as cfg
 # %%
 plt.rcParams.update({'xtick.labelsize': 'xx-large',
                      'ytick.labelsize': 'xx-large',
-                     'axes.titlesize' : 'xx-large',
-                     'axes.labelsize' : 'xx-large',
-                    })
+                     'axes.titlesize': 'xx-large',
+                     'axes.labelsize': 'xx-large',
+                     })
 # {k:v for k,v in plt.rcParams.items() if 'tick' in k and 'size' in k}
 
 # %% [markdown]
@@ -42,16 +42,16 @@ plt.rcParams.update({'xtick.labelsize': 'xx-large',
 mu = 25.0
 stddev = 1.0
 
-x = np.linspace(mu -5, mu + 5, num=101)
+x = np.linspace(mu - 5, mu + 5, num=101)
 
 y_normal = scipy.stats.norm.pdf(x, loc=mu, scale=stddev)
 
-mu_shifted = mu - (1.8*stddev)
-stddev_shifted = 0.3*stddev
+mu_shifted = mu - (1.8 * stddev)
+stddev_shifted = 0.3 * stddev
 print(f"Downshifted: {mu_shifted = }, {stddev_shifted = }")
-y_impute = scipy.stats.norm.pdf(x, loc=mu - (1.8*stddev), scale=0.3*stddev)
+y_impute = scipy.stats.norm.pdf(x, loc=mu - (1.8 * stddev), scale=0.3 * stddev)
 
-colors = plt.cm.viridis([0.25,0.75])    
+colors = plt.cm.viridis([0.25, 0.75])
 
 fig, ax = plt.subplots(1, 1, figsize=(5, 4))
 
@@ -75,22 +75,24 @@ fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation_highres', dpi=600
 #
 # - what does log2 transformation mean for the error
 #
-# If the error is calculated in log2 space, the larger values have to be predicted with higher precision (in comparison to the original space)
+# If the error is calculated in log2 space, the larger values have to be
+# predicted with higher precision (in comparison to the original space)
 
 # %%
-def get_original_error_log2(x:float, error_log2:float):
-    return 2 ** (np.log2(x) + error_log2) - x 
+def get_original_error_log2(x: float, error_log2: float):
+    return 2 ** (np.log2(x) + error_log2) - x
+
 
 print(
     f"{get_original_error_log2(1e9, 0.5) = :,.1f}",
     f"{get_original_error_log2(1e8, 0.5) = :,.1f}",
     sep='\n'
-    )
+)
 
 
 # %% [markdown]
-# If we try to find the rel log2 error equalling the original error, this can be done by 
-# equating: 
+# If we try to find the rel log2 error equalling the original error, this can be done by
+# equating:
 #
 # $$ \exp(\ln(a)+e) - a = \exp(\ln(a)+e^*) - b $$
 #
@@ -101,11 +103,12 @@ print(
 # %%
 def rel_error(measurment, log_error, other_measurment):
     numerator = 2 ** (np.log2(measurment) + log_error)
-    numerator-=measurment
-    numerator+=other_measurment
-    
+    numerator -= measurment
+    numerator += other_measurment
+
     denominator = other_measurment
     return np.log2(numerator / denominator)
+
 
 rel_error = rel_error(1.e9, 0.5, 1e8)
 print(f"{rel_error = :.3f}")
@@ -115,10 +118,10 @@ print(
     f"0.500 rel to 1e9: {get_original_error_log2(1e9, 0.5) :,.1f}",
     f"{rel_error:.3f} rel to 1e8: {get_original_error_log2(1e8, rel_error) :,.1f}",
     sep='\n'
-    )
+)
 
 # %% [markdown]
-# So the relative error of 0.5 for $10^9$ is five times larger for $10^8$ in the logspace, 
+# So the relative error of 0.5 for $10^9$ is five times larger for $10^8$ in the logspace,
 # whereas the error in the original space is the same
 
 # %% [markdown]

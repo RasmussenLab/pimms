@@ -11,11 +11,11 @@ def ancova_pg(df_long: pd.DataFrame,
               feat_col: str,
               dv: str,
               between: str,
-              covar: list[str]|str,
+              covar: list[str] | str,
               fdr=0.05) -> pd.DataFrame:
     """ Analysis of covariance (ANCOVA) using pg.ancova
     https://pingouin-stats.org/generated/pingouin.ancova.html
-    
+
     Adds multiple hypothesis testing correction by Benjamini-Hochberg
     (qvalue, rejected)
 
@@ -64,7 +64,7 @@ def ancova_pg(df_long: pd.DataFrame,
     scores['-Log10 pvalue'] = -np.log10(scores['p-unc'])
     scores = scores[scores.Source != 'Residual']
 
-    #FDR correction
+    # FDR correction
     scores = add_fdr_scores(scores, random_seed=123)
     return scores
 
@@ -83,7 +83,7 @@ def analyze(df_proteomics: pd.DataFrame,
             df_clinic: pd.DataFrame,
             target: str,
             covar: list[str],
-            value_name: str='intensity') -> pd.DataFrame:
+            value_name: str = 'intensity') -> pd.DataFrame:
     """apply ancova and multiple test correction.
 
     Parameters

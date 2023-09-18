@@ -5,9 +5,10 @@ from torch.utils.tensorboard import SummaryWriter
 
 class TensorboardModelNamer():
     """PyTorch SummaryWriter helper class for experiments.
-    
+
     Creates new SummaryWriter for an experiment
     """
+
     def __init__(self, prefix_folder, root_dir=Path('runs')):
         """[summary]
 
@@ -30,7 +31,7 @@ class TensorboardModelNamer():
         name = 'model_'
         name += f'hl{hidden_layers:02d}'
 
-        if type(neurons) == str:
+        if isinstance(neurons, str):
             neurons = neurons.split()
         elif not type(neurons) in [list, tuple]:
             raise TypeError(
@@ -39,7 +40,7 @@ class TensorboardModelNamer():
         for x in neurons:
             name += f'_{x}'
 
-        if type(scaler) == str:
+        if isinstance(scaler, str):
             name += f'_{scaler}'
         else:
             name += f'_{scaler!r}'

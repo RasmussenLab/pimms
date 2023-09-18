@@ -21,6 +21,8 @@ import vaep.pandas
 from vaep.plotting import plot_feat_counts
 # from .config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 
+from fastcore.imports import IN_IPYTHON, IN_JUPYTER, IN_COLAB, IN_NOTEBOOK
+
 logger = logging.getLogger(__name__)
 logger.info(f"Calling from {__name__}")
 
@@ -39,7 +41,6 @@ DEFAULTS.ALL_SUMMARIES = Path(FOLDER_PROCESSED) / 'all_summaries.json'
 DEFAULTS.COUNT_ALL_PEPTIDES = FOLDER_PROCESSED / 'count_all_peptides.json'
 
 # fastcore.imports has in_notebook, etc functionality
-from fastcore.imports import IN_IPYTHON, IN_JUPYTER, IN_COLAB, IN_NOTEBOOK
 # IN_IPYTHON,IN_JUPYTER,IN_COLAB,IN_NOTEBOOK = in_ipython(),in_jupyter(),in_colab(),in_notebook()
 
 N_WORKERS_DEFAULT = os.cpu_count() - 1 if os.cpu_count() <= 16 else 16
@@ -172,6 +173,8 @@ class MqAllSummaries():
         return [Path(relativ_to) / folder for folder in self.df.loc[mask].index]
 
 # maybe move functions related to fnames
+
+
 def get_fname(N, M):
     """Helper function to get file for intensities"""
     return f'df_intensities_N{N:05d}_M{M:05d}'
@@ -185,8 +188,7 @@ def create_parent_folder_name(folder: Path) -> str:
     return folder.stem[:4]
 
 
-## plotting function for value_counts from FeatureCounter.get_df_counts
-
+# plotting function for value_counts from FeatureCounter.get_df_counts
 
 
 def collect_in_chuncks(paths: Iterable[Union[str, Path]],
@@ -196,7 +198,7 @@ def collect_in_chuncks(paths: Iterable[Union[str, Path]],
                        desc='Run chunks in parallel') -> List:
     """collect the results from process_chunk_fct (chunk of files to loop over).
     The idea is that process_chunk_fct creates a more memory-efficient intermediate
-    result than possible if only callling single fpaths in paths. 
+    result than possible if only callling single fpaths in paths.
 
     Parameters
     ----------
@@ -216,8 +218,8 @@ def collect_in_chuncks(paths: Iterable[Union[str, Path]],
     if n_workers > 1:
         with multiprocessing.Pool(n_workers) as p:
             collected = list(tqdm(p.imap(process_chunk_fct, paths_splits),
-                                             total=len(paths_splits),
-                                             desc=desc))
+                                  total=len(paths_splits),
+                                  desc=desc))
     else:
         collected = map(process_chunk_fct, paths_splits)
     return collected
@@ -225,9 +227,9 @@ def collect_in_chuncks(paths: Iterable[Union[str, Path]],
 
 class FeatureCounter():
     def __init__(self, fp_counter: str, counting_fct: Callable[[List], Counter],
-                idx_names:Union[List, None]=None,
-                feature_name='feature',
-                overwrite=False):
+                 idx_names: Union[List, None] = None,
+                 feature_name='feature',
+                 overwrite=False):
         self.fp = Path(fp_counter)
         self.counting_fct = counting_fct
         self.idx_names = idx_names
@@ -238,7 +240,7 @@ class FeatureCounter():
             self.loaded = set(folder for folder in d['based_on'])
             self.dumps = d['dumps']
         else:
-            self.loaded = set() # None
+            self.loaded = set()  # None
             self.counter = Counter()
             self.dumps = dict()
 
@@ -262,10 +264,10 @@ class FeatureCounter():
 
         if folders:
             list_of_sample_dicts = collect_in_chuncks(folders,
-                       process_chunk_fct=self.counting_fct,
-                       n_workers = n_workers,
-                         chunks=n_workers*3,
-                       desc = 'Count features in 100 chunks')
+                                                      process_chunk_fct=self.counting_fct,
+                                                      n_workers=n_workers,
+                                                      chunks=n_workers * 3,
+                                                      desc='Count features in 100 chunks')
 
             for d in tqdm(list_of_sample_dicts,
                           total=len(list_of_sample_dicts),
@@ -286,7 +288,6 @@ class FeatureCounter():
     @property
     def n_samples(self):
         return len(self.loaded)
-    
 
     def get_df_counts(self) -> pd.DataFrame:
         """Counted features as DataFrame with proportion values.
@@ -297,14 +298,14 @@ class FeatureCounter():
             _description_
         """
         feat_counts = (pd.Series(self.counter)
-                    .sort_values(ascending=False)
-                    .to_frame('counts'))
+                       .sort_values(ascending=False)
+                       .to_frame('counts'))
         feat_counts['proportion'] = feat_counts / self.n_samples
-        if self.idx_names: 
+        if self.idx_names:
             feat_counts.index.names = self.idx_names
         feat_counts.reset_index(inplace=True)
         feat_counts.index.name = 'consecutive count'
-        return feat_counts  
+        return feat_counts
 
     def plot_counts(self, df_counts: pd.DataFrame = None, ax=None, prop_feat=0.25, min_feat_prop=.01):
         """Plot counts based on get_df_counts."""
@@ -348,8 +349,8 @@ class FeatureCounter():
          }
         """
         d = {'counter': self.counter,
-            'based_on': list(self.loaded),
-            'dumps': {k: str(v) for k, v in self.dumps.items()}}
+             'based_on': list(self.loaded),
+             'dumps': {k: str(v) for k, v in self.dumps.items()}}
         logger.info(f"Save to: {self.fp}")
         dump_json(d, filename=self.fp)
 
@@ -357,7 +358,7 @@ class FeatureCounter():
         with open(self.fp) as f:
             d = json.load(f)
         d['counter'] = Counter(d['counter'])
-        d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
+        d['dumps'] = {k: Path(v) for k, v in d['dumps'].items()}
         return d
 
     def load_dump(self, fpath, fct=pd.read_csv, use_cols=None):
@@ -392,11 +393,12 @@ class Count():
             c.update(df.index)
             if self.dump:
                 fpath_dict[folder.stem] = dump_to_csv(df, folder=folder, outfolder=self.outfolder,
-                            parent_folder_fct=self.parent_folder_fct)
+                                                      parent_folder_fct=self.parent_folder_fct)
         ret = {'counter': c, 'dumps': fpath_dict}
         return ret
 
-### aggregated peptides
+# aggregated peptides
+
 
 # # check df for redundant information (same feature value for all entries)
 usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE, 'PEP']
@@ -418,10 +420,11 @@ def count_peptides(folders: List[Path], dump=True,
         c.update(peptides.index)
         if dump:
             fpath_dict[folder.stem] = dump_to_csv(peptides.drop('Potential contaminant', axis=1),
-                             folder=folder, outfolder=outfolder,
-                    parent_folder_fct=parent_folder_fct)
+                                                  folder=folder, outfolder=outfolder,
+                                                  parent_folder_fct=parent_folder_fct)
     ret = {'counter': c, 'dumps': fpath_dict}
     return ret
+
 
 d_dtypes_training_sample = {
     'Sequence': pd.StringDtype(),
@@ -438,6 +441,7 @@ def load_agg_peptide_dump(fpath):
     peptides = pd.read_csv(fpath, index_col=0, dtype=d_dtypes_training_sample)
     return peptides
 
+
 @delegates()
 class PeptideCounter(FeatureCounter):
 
@@ -446,7 +450,7 @@ class PeptideCounter(FeatureCounter):
                  counting_fct: Callable[[List], Counter] = count_peptides,
                  idx_names=['Sequence'],
                  feature_name='aggregated peptide',
-                  **kwargs):
+                 **kwargs):
         super().__init__(fp_counter, counting_fct=counting_fct,
                          idx_names=idx_names, feature_name=feature_name, **kwargs)
 
@@ -455,8 +459,7 @@ class PeptideCounter(FeatureCounter):
         return load_agg_peptide_dump(fpath)
 
 
-
-### Evidence
+# Evidence
 evidence_cols = mq.mq_evidence_cols
 
 
@@ -504,7 +507,7 @@ def count_evidence(folders: List[Path],
         c.update(evidence.index)
         if dump:
             fpath_dict[folder.stem] = dump_to_csv(evidence, folder=folder, outfolder=outfolder,
-            parent_folder_fct=parent_folder_fct)
+                                                  parent_folder_fct=parent_folder_fct)
     ret = {'counter': c, 'dumps': fpath_dict}
     return ret
 
@@ -530,7 +533,7 @@ class EvidenceCounter(FeatureCounter):
          }
         """
         d = {'counter': vaep.pandas.create_dict_of_dicts(self.counter),
-             'based_on': list(self.loaded), 
+             'based_on': list(self.loaded),
              'dumps': {k: str(v) for k, v in self.dumps.items()}}
         print(f"Save to: {self.fp}")
         dump_json(d, filename=self.fp)
@@ -540,7 +543,7 @@ class EvidenceCounter(FeatureCounter):
             d = json.load(f)
         d['counter'] = Counter(
             vaep.pandas.flatten_dict_of_dicts(d['counter']))
-        d['dumps'] = {k: Path(v) for k,v in d['dumps'].items()}
+        d['dumps'] = {k: Path(v) for k, v in d['dumps'].items()}
         return d
 
 
@@ -548,7 +551,7 @@ def load_evidence_dump(fpath, index_col=['Sequence', 'Charge']):
     df = pd.read_csv(fpath, index_col=index_col)
     return df
 
-### Protein Groups
+# Protein Groups
 
 
 pg_cols = mq.mq_protein_groups_cols
@@ -557,7 +560,7 @@ pg_cols = mq.mq_protein_groups_cols
 
 
 def load_and_process_proteinGroups(folder: Union[str, Path],
-                                   #use_cols not really a parameter (or needs asserts?)
+                                   # use_cols not really a parameter (or needs asserts?)
                                    use_cols: List = [
                                        pg_cols.Protein_IDs,
                                        pg_cols.Majority_protein_IDs,
@@ -580,7 +583,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     pg = pg.loc[mask]
     gene_set = pg[pg_cols.Gene_names].str.split(';')
     col_loc_gene_names = pg.columns.get_loc(pg_cols.Gene_names)
-    _ = pg.insert(col_loc_gene_names+1, 'Number of Genes',
+    _ = pg.insert(col_loc_gene_names + 1, 'Number of Genes',
                   gene_set.apply(vaep.pandas.length))
     mask_no_gene = pg[pg_cols.Gene_names].isna()
     pg_no_gene = pg.loc[mask_no_gene]
@@ -591,9 +594,6 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     pg = pg.append(pg_no_gene)
     pg = pg.set_index(pg_cols.Protein_IDs)
     return pg
-
-
-
 
 
 count_protein_groups = Count(load_and_process_proteinGroups,
@@ -619,7 +619,7 @@ class ProteinGroupsCounter(FeatureCounter):
     def __init__(self, fp_counter: str,
                  counting_fct: Callable[[List],
                                         Counter] = count_protein_groups,
-                 idx_names=[pg_cols.Protein_IDs], # mq_specfic
+                 idx_names=[pg_cols.Protein_IDs],  # mq_specfic
                  feature_name='protein group',
                  **kwargs):
         super().__init__(fp_counter, counting_fct, idx_names=idx_names,
@@ -631,9 +631,10 @@ def load_pg_dump(folder, use_cols=None):
     df = pd.read_csv(folder, index_col=pg_cols.Protein_IDs, usecols=use_cols)
     return df
 
-## Gene Counter
+# Gene Counter
 
-def pg_idx_gene_fct(folder:Union[str, Path], use_cols=None):
+
+def pg_idx_gene_fct(folder: Union[str, Path], use_cols=None):
     folder = Path(folder)
     logger.debug(f"Load: {folder}")
     df = pd.read_csv(folder, index_col=pg_cols.Gene_names, usecols=use_cols)
@@ -650,7 +651,7 @@ count_genes = Count(pg_idx_gene_fct,
                     dump=False)
 
 
-#summing needs to be done over processed proteinGroup dumps
+# summing needs to be done over processed proteinGroup dumps
 @delegates()
 class GeneCounter(FeatureCounter):
     """Gene Counter to count gene in dumped proteinGroups."""

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -41,8 +41,8 @@ from vaep.plotting.metrics import plot_split_auc, plot_split_prc
 
 plt.rcParams['figure.figsize'] = (2.5, 2.5)
 plt.rcParams['lines.linewidth'] = 1
-fontsize= 5
-figsize= (2.5, 2.5)
+fontsize = 5
+figsize = (2.5, 2.5)
 vaep.plotting.make_large_descriptors(fontsize)
 
 
@@ -66,7 +66,7 @@ sample_id_col = 'Sample ID'
 cutoff_target: int = 2  # => for binarization target >= cutoff_target
 file_format = "csv"
 out_folder = 'diff_analysis'
-fn_qc_samples = '' #'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+fn_qc_samples = ''  # 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 
 baseline = 'RSN'  # default is RSN, as this was used in the original ALD Niu. et. al 2022
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
@@ -160,7 +160,7 @@ pred_real_na.sample(3)
 
 # %%
 fname = args.out_preds / args.template_pred.format(args.baseline)
-pred_real_na_baseline = load_single_csv_pred_file(fname) #.loc[mask_has_target]
+pred_real_na_baseline = load_single_csv_pred_file(fname)  # .loc[mask_has_target]
 pred_real_na_baseline
 
 # %% [markdown]
@@ -174,7 +174,9 @@ pred_real_na_baseline
 # Repeat general approach for
 #  1. all original ald data: all features justed in original ALD study
 #  2. all model data: all features available my using the self supervised deep learning model
-#  3. newly available feat only: the subset of features available from the self supervised deep learning model which were newly retained using the new approach
+# 3. newly available feat only: the subset of features available from the
+# self supervised deep learning model which were newly retained using the
+# new approach
 
 # %%
 X = pd.concat([data, pred_real_na]).unstack()

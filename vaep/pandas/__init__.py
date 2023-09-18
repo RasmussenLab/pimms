@@ -12,6 +12,7 @@ import omegaconf
 
 from .calc_errors import calc_errors_per_feat, get_absolute_error
 
+
 def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     """Pass a selection of columns to combine it's value counts.
 
@@ -40,9 +41,9 @@ def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
 
 
 def counts_with_proportion(s: pd.Series) -> pd.DataFrame:
-    """Counts with proportion of counts(!). 
-    
-    Note: In case of missing values the proportion is not based on the total number of 
+    """Counts with proportion of counts(!).
+
+    Note: In case of missing values the proportion is not based on the total number of
     rows in the DataFrame.
     """
     s = s.value_counts()
@@ -111,10 +112,12 @@ def replace_with(string_key: str, replace: str = "()/", replace_with: str = '') 
         string_key = string_key.replace(symbol, replace_with)
     return string_key
 
-def index_to_dict(index:pd.Index) -> dict:
+
+def index_to_dict(index: pd.Index) -> dict:
     cols = {replace_with(col.replace(' ', '_').replace(
         '-', '_')): col for col in index}
     return cols
+
 
 def get_columns_accessor(df: pd.DataFrame, all_lower_case=False) -> omegaconf.OmegaConf:
     if isinstance(df.columns, pd.MultiIndex):
@@ -131,6 +134,7 @@ def get_columns_accessor_from_iterable(cols: Iterable[str],
     if all_lower_case:
         cols = {k.lower(): v for k, v in cols.items()}
     return omegaconf.OmegaConf.create(cols)
+
 
 def select_max_by(df: pd.DataFrame, grouping_columns: list, selection_column: str) -> pd.DataFrame:
     df = df.sort_values(by=[*grouping_columns, selection_column], ascending=False)
@@ -189,7 +193,7 @@ def _add_indices(array: np.array, original_df: pd.DataFrame,
 def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
     """Interpolate NA values with the values before and after.
     Uses n=3 replicates.
-    First rows replicates are the two following. 
+    First rows replicates are the two following.
     Last rows replicates are the two preceding.
 
     Parameters
@@ -219,7 +223,7 @@ def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
     ret.iloc[0] = first_row
     ret.iloc[-1] = last_row
 
-    ret = ret[mask].stack().dropna().squeeze() # does not work with MultiIndex columns
+    ret = ret[mask].stack().dropna().squeeze()  # does not work with MultiIndex columns
     ret.rename(name, inplace=True)
     return ret
 
@@ -236,7 +240,7 @@ def create_dict_of_dicts(d: dict, verbose=False,
             print(f"current key: {str(keys):90}: {len(v):>5}")
         current_dict = ret
         for k in keys[:-1]:
-            if not k in current_dict:
+            if k not in current_dict:
                 current_dict[k] = dict()
             current_dict = current_dict[k]
         last_key = keys[-1]
@@ -319,13 +323,13 @@ def length(x):
     Otherwise return length of list, pandas.Series, numpy.array, dict, etc."""
     try:
         return len(x)
-    except:
+    except BaseException:
         return 0
 
 
 def get_last_index_matching_proportion(df_counts: pd.DataFrame,
-                                       prop:float=0.25,
-                                       prop_col:str='proportion') -> object:
+                                       prop: float = 0.25,
+                                       prop_col: str = 'proportion') -> object:
     """df_counts needs to be sorted by "prop_col" (descending).
 
     Parameters
@@ -349,8 +353,8 @@ def get_last_index_matching_proportion(df_counts: pd.DataFrame,
     return idx_cutoff
 
 
-def get_lower_whiskers(df:pd.DataFrame, factor:float=1.5) -> pd.Series:
+def get_lower_whiskers(df: pd.DataFrame, factor: float = 1.5) -> pd.Series:
     ret = df.describe()
     iqr = ret.loc['75%'] - ret.loc['25%']
-    ret = ret.loc['25%'] - iqr*factor
+    ret = ret.loc['25%'] - iqr * factor
     return ret

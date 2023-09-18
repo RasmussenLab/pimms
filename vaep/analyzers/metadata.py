@@ -37,7 +37,7 @@ assert re.search(regex_not_researcher, 'MNT').group() == 'MNT'
 assert re.search(regex_not_researcher, 'MA').group() == 'MA'
 assert re.search(regex_not_researcher, 'QC').group() == 'QC'
 assert re.search(regex_not_researcher, 'MA_OFF').group() == 'MA'
-assert re.search(regex_not_researcher, '_LiNi_') == None
+assert re.search(regex_not_researcher, '_LiNi_') is None
 
 
 type_run = {'MA': 'MNT',

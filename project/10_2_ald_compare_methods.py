@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -29,7 +29,7 @@ import vaep.databases.diseases
 logger = vaep.logging.setup_nb_logger()
 
 plt.rcParams['figure.figsize'] = (2, 2)
-fontsize= 5
+fontsize = 5
 vaep.plotting.make_large_descriptors(fontsize)
 
 # %%
@@ -76,7 +76,7 @@ args
 # %%
 files_in = {
     'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
-    }
+}
 files_in
 
 # %% [markdown]
@@ -88,19 +88,19 @@ files_out = dict()
 # %%
 writer_args = dict(float_format='%.3f')
 
-fname =     args.out_folder / 'diff_analysis_compare_methods.xlsx'
+fname = args.out_folder / 'diff_analysis_compare_methods.xlsx'
 files_out[fname.name] = fname
 writer = pd.ExcelWriter(fname)
 fname
 
 # %% [markdown]
-# # Load scores 
+# # Load scores
 
 # %%
 [x for x in args.scores_folder.iterdir() if 'scores' in str(x)]
 
 # %%
-fname =args.scores_folder / f'diff_analysis_scores_{args.baseline}.pkl'
+fname = args.scores_folder / f'diff_analysis_scores_{args.baseline}.pkl'
 scores_baseline = pd.read_pickle(fname)
 scores_baseline
 
@@ -133,7 +133,6 @@ scores.describe()
 scores.describe(include=['bool', 'O'])
 
 
-
 # %% [markdown]
 # ## Load frequencies of observed features
 
@@ -150,8 +149,8 @@ scores_common = (scores
                  .dropna()
                  .reset_index(-1, drop=True)
                  ).join(
-                    freq_feat, how='left'
-                 )
+    freq_feat, how='left'
+)
 scores_common
 
 
@@ -162,7 +161,7 @@ def annotate_decision(scores, model, model_column):
 
 annotations = None
 for model, model_column in models.items():
-    if not annotations is None:
+    if annotations is not None:
         annotations += ' - '
         annotations += annotate_decision(scores_common,
                                          model=model, model_column=model_column)
@@ -199,7 +198,7 @@ to_plot
 
 # %%
 # should it be possible to run not only RSN?
-to_plot['diff_qvalue']  = (to_plot[str(args.baseline)] - to_plot[str(args.model_key)]).abs()
+to_plot['diff_qvalue'] = (to_plot[str(args.baseline)] - to_plot[str(args.model_key)]).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 
 # %% [markdown]
@@ -222,7 +221,7 @@ ax = sns.scatterplot(data=to_plot,
 _ = ax.legend(fontsize=fontsize,
               title_fontsize=fontsize,
               markerscale=0.4,
-                title='',
+              title='',
               )
 ax.set_xlabel(f"qvalue for {x_col}")
 ax.set_ylabel(f"qvalue for {y_col}")
@@ -246,7 +245,7 @@ ax = sns.scatterplot(data=to_plot,
                      y=to_plot.columns[1],
                      size='frequency',
                      s=size,
-                     sizes=(5,20),
+                     sizes=(5, 20),
                      hue='Differential Analysis Comparison')
 _ = ax.legend(fontsize=fontsize,
               title_fontsize=fontsize,
@@ -272,7 +271,7 @@ scores_model_only = (scores_model_only
                      .loc[
                          scores_model_only.index.difference(
                              scores_common.index),
-                        args.model_key]
+                         args.model_key]
                      .sort_values(by='qvalue', ascending=True)
                      .join(freq_feat)
                      )
@@ -307,7 +306,7 @@ data
 # %%
 
 # %%
-feat_name = scores.index.names[0] # first index level is feature name
+feat_name = scores.index.names[0]  # first index level is feature name
 if args.annotaitons_gene_col in scores.index.names:
     logger.info(f"Found gene annotation in scores index:  {scores.index.names}")
 else:
@@ -318,13 +317,13 @@ else:
 
 # %%
 gene_to_PG = (scores.droplevel(
-        list(set(scores.index.names) - {feat_name, args.annotaitons_gene_col})
-        )
-        .index
-        .to_frame()
-        .reset_index(drop=True)
-        .set_index(args.annotaitons_gene_col)
-    )
+    list(set(scores.index.names) - {feat_name, args.annotaitons_gene_col})
+)
+    .index
+    .to_frame()
+    .reset_index(drop=True)
+    .set_index(args.annotaitons_gene_col)
+)
 gene_to_PG.head()
 
 # %%

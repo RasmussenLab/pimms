@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -70,17 +70,16 @@ annotation
 # %%
 fname = params.data / 'sample_annotation_placeholder.csv'
 annotation.to_csv(fname)
-fname 
+fname
 
 # %% [markdo]
 # Save with samples in columns
 
 # %%
 fname = params.data / 'data_wide_sample_cols.csv'
-# fillna('Filtered') 
+# fillna('Filtered')
 train_data.T.to_csv(fname)
 fname
-
 
 
 # %%

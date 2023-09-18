@@ -3,6 +3,8 @@
 
 
 # %%
+import pandas as pd
+import numpy as np
 from collections import defaultdict
 from pathlib import Path, PurePosixPath
 
@@ -62,8 +64,6 @@ file_types = {'.zip': 'SEARCH',
               '.tsv': 'EXPERIMENTAL_DESIGN'}
 
 # %%
-import numpy as np
-import pandas as pd
 files = pd.DataFrame(columns='FMH	file_id	file_type	file_path	file_mapping'.split('\t'))
 files['file_path'] = pd.read_csv(file, header=None)
 files['FMH'] = 'FMH'
@@ -78,4 +78,3 @@ files
 files.to_csv(FOLDER / 'submiss.px_to_add.tsv', sep='\t', index=False)
 # %% [markdown]
 # Some manuel adding of the last files still required...
-

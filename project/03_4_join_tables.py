@@ -7,7 +7,7 @@ import pandas as pd
 # %%
 fname = 'runs/appl_ald_data/plasma/proteinGroups_all/01_2_performance_summary.xlsx'
 ald_pg_perf = pd.read_excel(fname, sheet_name=-1, index_col=0)
-ald_pg_perf.columns = pd.MultiIndex.from_tuples([('ALD data','protein groups', x) for x in ald_pg_perf.columns])
+ald_pg_perf.columns = pd.MultiIndex.from_tuples([('ALD data', 'protein groups', x) for x in ald_pg_perf.columns])
 ald_pg_perf
 
 # %%
@@ -29,10 +29,10 @@ table
 
 # %%
 order = (table
-    .loc[:, pd.IndexSlice[:, :, 'val']]
-    .mean(axis=1)
-    .sort_values()
-)
+         .loc[:, pd.IndexSlice[:, :, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         )
 order
 
 # %%
@@ -63,10 +63,10 @@ table
 # %%
 # %%
 order = (table
-    .loc[:, pd.IndexSlice[:, 'val']]
-    .mean(axis=1)
-    .sort_values()
-)
+         .loc[:, pd.IndexSlice[:, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         )
 order
 
 # %%

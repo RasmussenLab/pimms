@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: vaep
 #     language: python
@@ -14,7 +14,7 @@
 
 # %% [markdown]
 # # Process FASTA files
-# > uses only the provided fasta files in `src.config.py` by `FOLDER_FASTA` 
+# > uses only the provided fasta files in `src.config.py` by `FOLDER_FASTA`
 #
 # - create theoretically considered peptides considered by search engines
 # - dump results as human readable json to `FN_FASTA_DB` file specifed in src.config.
@@ -22,6 +22,7 @@
 # > Based on notebook received by [Annelaura Bach](https://www.cpr.ku.dk/staff/mann-group/?pure=en/persons/443836) and created by Johannes B. Müller \[[scholar](https://scholar.google.com/citations?user=Rn1OS8oAAAAJ&hl=de), [MPI Biochemistry](https://www.biochem.mpg.de/person/93696/2253)\]
 
 # %%
+
 from collections import defaultdict, namedtuple
 import os
 import json
@@ -38,6 +39,7 @@ from tqdm.notebook import tqdm
 from vaep.fasta import cleave_to_tryptic
 from vaep.fasta import iterFlatten
 from vaep.fasta import count_peptide_matches
+from vaep.fasta import read_fasta
 from vaep.io import search_files
 from vaep.pandas import combine_value_counts
 from vaep.databases.uniprot import query_uniprot_id_mapping
@@ -51,6 +53,8 @@ from config import FN_ID_MAP
 from config import FN_PROT_GENE_MAP
 from config import FN_PEP_TO_PROT
 
+from config import KEY_FASTA_HEADER, KEY_FASTA_SEQ, KEY_GENE_NAME, KEY_PEPTIDES
+
 # %% [markdown]
 # ## Core Functionality - Example
 #
@@ -61,7 +65,10 @@ from config import FN_PEP_TO_PROT
 test_data = {
     "meta": ">tr|A0A024R1R8|A0A024R1R8_HUMAN HCG2014768, isoform CRA_a OS=Homo sapiens OX=9606 GN=hCG_2014768 PE=4 SV=1",
     "seq": "MSSHEGGKKKALKQPKKQAKEMDEEEKAFKQKQKEEQKKLEVLKAKVVGKGPLATGGIKKSGKK",
-    "peptides": ["MSSHEGGK", "EMDEEEK", "GPLATGGIK"],
+    "peptides": [
+        "MSSHEGGK",
+        "EMDEEEK",
+        "GPLATGGIK"],
 }
 
 # %% [markdown]
@@ -77,7 +84,7 @@ test_data = {
 #
 # - map peptide set of peptides (how to deal with mis-cleavages?)
 #     - mis-cleavages can happen both to the peptide before and after.
-#     > `pep1, pep2, pep3, pep4, pep5`  
+#     > `pep1, pep2, pep3, pep4, pep5`
 #     > `pep1pep2, pep2pep3, pep3pep4, pep4pep5`
 #     - sliding windows can pass trough the list of peptides - should work with recursion
 
@@ -86,7 +93,7 @@ l_peptides = test_data["seq"].replace("K", "K ").replace("R", "R ").split()
 l_peptides
 
 # %% [markdown]
-# `add_rxk` should add pattern of starting R and trailing K ?  
+# `add_rxk` should add pattern of starting R and trailing K ?
 
 # %%
 last_pep = ""
@@ -128,7 +135,8 @@ example_peptides_fasta[-1]
 print("".join(example_peptides_fasta[0]), *example_peptides_fasta, sep="\n")
 
 # %% [markdown]
-# rdx peptides are a subset of two missed cleavage sites peptides. There are omitted when two and more cleavage site can be skipped.
+# rdx peptides are a subset of two missed cleavage sites peptides. There
+# are omitted when two and more cleavage site can be skipped.
 
 # %%
 example_peptides_fasta = cleave_to_tryptic(
@@ -138,7 +146,8 @@ print("number of peptides: ", [len(_l) for _l in example_peptides_fasta])
 example_peptides_fasta[-1]
 
 # %% [markdown]
-# Data Structure is no a list of list. Maybe this could be improved. Information what kind of type the peptide is from, is still interesting.
+# Data Structure is no a list of list. Maybe this could be improved.
+# Information what kind of type the peptide is from, is still interesting.
 
 # %% [markdown]
 # ## Process Fasta Files
@@ -153,9 +162,9 @@ print("\n".join(fasta_files.files))
 # %% [markdown]
 # ### Define Setup
 #
-# Set input FASTA, Output .txt name, lower legth cutoff, missed cleavages and if to report reverse. 
+# Set input FASTA, Output .txt name, lower legth cutoff, missed cleavages and if to report reverse.
 #
-# Tryptic digest of Fastas to Peptides >6 in list for matching with measured peptides  
+# Tryptic digest of Fastas to Peptides >6 in list for matching with measured peptides
 
 # %%
 CUTOFF_LEN_PEP = 7
@@ -190,9 +199,7 @@ print(_summary_text, sep="\n")
 # ### Schema for single fasta entry
 
 # %%
-from config import KEY_FASTA_HEADER, KEY_FASTA_SEQ, KEY_GENE_NAME, KEY_PEPTIDES
 
-from vaep.fasta import read_fasta
 
 data_fasta = {}
 
@@ -205,7 +212,7 @@ data_fasta = {}
 #                      }
 # # or dataclass
 # from dataclasses import make_dataclass
-# FastaEntry = make_dataclass(cls_name='FastaEntry', 
+# FastaEntry = make_dataclass(cls_name='FastaEntry',
 #                             fields=[
 #                                 (KEY_FASTA_HEADER, 'str'),
 #                                 (KEY_GENE_NAME, 'str'),
@@ -266,6 +273,7 @@ d_seq_length.describe()
 # %%
 test_series = pd.Series({"A": 4, "B": 1, "C": 0, "D": 4})
 
+
 def get_indices_with_value(s: pd.Series, value):
     """Return indices for with the value is true"""
     return s[s == value].index
@@ -274,7 +282,8 @@ def get_indices_with_value(s: pd.Series, value):
 get_indices_with_value(test_series, 4)
 
 # %% [markdown]
-# Boolean Indexing, remember to set [parantheses](https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#boolean-indexing)
+# Boolean Indexing, remember to set
+# [parantheses](https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#boolean-indexing)
 
 # %%
 MIN_AA_IN_SEQ = 10
@@ -348,7 +357,14 @@ fig.savefig(Path(FIGUREFOLDER) / 'fasta_exact_peptide_count_freq.pdf')
 # ### Proteins' Isoforms
 
 # %% [markdown]
-# Possible to join "isoforms" by joining all variants to one. Isoforms are numbered from the second on by appending `-i` for $i>1$, i.e. starting with `-2`. The gene name of which the protein (isoform) originate can be obtained by using [id mapping](https://www.uniprot.org/help/api_idmapping). Isoforms are not mapped automatically by Uniprot to its GENENAME, i.e. you have to strip all `-i`, e.g `-2`, `-3`, for querying. Here the protein, gene pairs are mapped to the unique protein identifiers.
+# Possible to join "isoforms" by joining all variants to one. Isoforms are
+# numbered from the second on by appending `-i` for $i>1$, i.e. starting
+# with `-2`. The gene name of which the protein (isoform) originate can be
+# obtained by using [id
+# mapping](https://www.uniprot.org/help/api_idmapping). Isoforms are not
+# mapped automatically by Uniprot to its GENENAME, i.e. you have to strip
+# all `-i`, e.g `-2`, `-3`, for querying. Here the protein, gene pairs are
+# mapped to the unique protein identifiers.
 
 # %%
 prot_ids = list(data_fasta.keys())
@@ -425,7 +441,8 @@ assert (
 ), f"The number of proteins associated to a gene found on 11.11.2020 was 72471, now it's {len(genes)}"
 
 # %% [markdown]
-# Add gene names from UniProt to `id_map` DataFrame by an outer join (keeping all information based on the protein names shared by isotopes)
+# Add gene names from UniProt to `id_map` DataFrame by an outer join
+# (keeping all information based on the protein names shared by isotopes)
 
 # %%
 id_map = id_map.merge(genes, how="outer", left_on="protein", right_index=True)
@@ -440,10 +457,10 @@ id_map.replace('', np.nan)
 
 # %%
 genes_fasta_offline = pd.DataFrame(
-        ((_key, _data[KEY_GENE_NAME]) for _key, _data in data_fasta.items()),
-        columns=["prot_id", "gene_fasta"],
-    ).set_index("prot_id"
-    ).replace('', np.nan)
+    ((_key, _data[KEY_GENE_NAME]) for _key, _data in data_fasta.items()),
+    columns=["prot_id", "gene_fasta"],
+).set_index("prot_id"
+            ).replace('', np.nan)
 genes_fasta_offline.loc[genes_fasta_offline.gene_fasta.isna()]
 
 # %%
@@ -460,7 +477,9 @@ mask_no_gene = id_map.gene.isna()
 id_map.loc[mask_no_gene]
 
 # %% [markdown]
-# Using the genes from the fasta file header reduces the number of missing genes, but additionally other differences arise in the comparison to the lastest version.
+# Using the genes from the fasta file header reduces the number of missing
+# genes, but additionally other differences arise in the comparison to the
+# lastest version.
 
 # %%
 mask_gene_diffs = id_map.gene != id_map.gene_fasta
@@ -483,7 +502,8 @@ print(_summary_text)
 # %% [markdown]
 # ### Isotopes mapping
 #
-# Isotopes are mapped now to a protein with the same name. The same can be achieved by just discarding everything behind the hypen `-`
+# Isotopes are mapped now to a protein with the same name. The same can be
+# achieved by just discarding everything behind the hypen `-`
 
 # %%
 id_map.loc[id_map.index.str.contains("-")]
@@ -523,7 +543,7 @@ print(_summary_text)
 f"Proteins are mapped to a total number of genes of {len(set(dict_protein_to_gene.values()))}"
 
 # %% [markdown]
-# ### Map peptide to either identifier, common protein or gene  
+# ### Map peptide to either identifier, common protein or gene
 #
 
 # %%
@@ -548,12 +568,14 @@ with open(FN_PEP_TO_PROT, "w") as f:
 # %% [markdown]
 # ### Plot histograms for different levels of abstraction
 #
-# Plot counts of matched 
+# Plot counts of matched
 #    1. protein IDs
 #    2. proteins (joining isoforms)
 #    3. genes
-#    
-# to their peptides. See how many unique peptides exist. The number of peptides should stay the same, so the counts do not have to be normalized.
+#
+# to their peptides. See how many unique peptides exist. The number of
+# peptides should stay the same, so the counts do not have to be
+# normalized.
 
 # %%
 USE_OFFLINE_FASTA_GENES = True
@@ -610,7 +632,7 @@ ax = counts_by_level.iloc[:5].plot(kind="bar", ax=ax)
 ax.set_ylabel("peptide counts")
 ax.set_xlabel("number of matched levels")
 # ax.yaxis.set_major_formatter("{x:,}")
-_y_ticks = ax.set_yticks(list(range(0, 3_500_000, 500_000))) # is there a ways to transform float to int in matplotlib?
+_y_ticks = ax.set_yticks(list(range(0, 3_500_000, 500_000)))  # is there a ways to transform float to int in matplotlib?
 _y_ticks_labels = ax.set_yticklabels([f"{x:,}" for x in range(0, 3_500_000, 500_000)])
 
 _savefig(fig, folder="figures", name="fasta_top4")
@@ -637,7 +659,7 @@ axes[i].set_title(f"{30} most frequent matches")
 
 axes = axes.reshape((2, 2))
 
-pad = 5  #  in point
+pad = 5  # in point
 for i in range(2):
     axes[-1, i].set_xlabel("Count of number of matches for a peptide")
     axes[i, 0].set_ylabel("number of peptides")

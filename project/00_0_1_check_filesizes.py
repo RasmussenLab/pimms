@@ -74,14 +74,14 @@ entries = entries.join(entries_pride, on='path_pride', how='left')
 # %%
 mask = (entries['size_pride'] - entries['size_erda']).abs() > 5
 to_redo = entries.loc[mask].reset_index()
-to_redo 
+to_redo
 
 # %%
 commands = 'put ' + to_redo['fname'] + ' -o ' + to_redo['path_pride']
 print(commands.to_csv(header=False, index=False))
 
 # %% [markdown]
-# ## Check MaxQuant output filesizes 
+# ## Check MaxQuant output filesizes
 
 # %%
 df_meta = df_meta.reset_index().set_index('Sample ID')
@@ -101,7 +101,7 @@ with open(fname_mq_out_erda) as f:
                 files.append(entry)
                 if entry.id_old not in folder:
                     folder.add(entry.id_old)
-            
+
 print(f"{len(folder) =: }")
 print(f"{len(files) =: }")
 files[:3]
@@ -113,16 +113,16 @@ files
 
 # %%
 files['path_pride'] = ('MQ_tables/'
-                        + files['Instrument_name']
-                          + '/' 
-                          + files["new_sample_id"]
-                          + '/'
-                          + files["filename"])
+                       + files['Instrument_name']
+                       + '/'
+                       + files["new_sample_id"]
+                       + '/'
+                       + files["filename"])
 files['path_pride'].iloc[:4].to_list()
 
 
 # %%
-files['filename'].value_counts() # except mqpar.xml all present on erda
+files['filename'].value_counts()  # except mqpar.xml all present on erda
 
 # %%
 files_pride = list()
@@ -163,4 +163,3 @@ files_redo
 to_do = pd.concat([missing_on_pride, files_redo])
 commands = 'put -e \'' + to_do['path_erda'] + "' -o '" + to_do.index + "'"
 commands.to_csv(FOLDER / 'mq_out_remaining.txt', header=False, index=False)
-

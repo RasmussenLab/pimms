@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -27,13 +27,13 @@ import config
 # Paramters
 
 # %%
-# out_folder = Path('data/selected/proteinGroups') 
+# out_folder = Path('data/selected/proteinGroups')
 # fname = out_folder / 'intensities_wide_selected_N04550_M07444.pkl'
 
-# out_folder = Path('data/selected/peptides') 
+# out_folder = Path('data/selected/peptides')
 # fname = out_folder / 'intensities_wide_selected_N42881_M07441.pkl'
 
-out_folder = Path('data/selected/evidence') 
+out_folder = Path('data/selected/evidence')
 fname = out_folder / 'intensities_wide_selected_N49560_M07444.pkl'
 
 
@@ -43,8 +43,10 @@ def get_template(fname, split='_N'):
     stem = fname.stem.split(split)[0]
     return f"{stem}{{}}{ext}"
 
+
 def memory_usage_in_mb(df):
     return df.memory_usage(deep=True).sum() / (2**20)
+
 
 template = get_template(fname)
 template
@@ -69,7 +71,7 @@ df.memory_usage(deep=True).sum() / (2**20)
 # %%
 # # %%time
 # df = pd.read_csv(fname.with_suffix('.csv'), index_col=0)
-# df.memory_usage(deep=True).sum() / (2**20) 
+# df.memory_usage(deep=True).sum() / (2**20)
 
 # %%
 # %%time
@@ -119,7 +121,7 @@ df
 
 # %%
 # %%time
-fname = out_folder / config.insert_shape(df,  'absent_0_present_1_selected{}.pkl')
+fname = out_folder / config.insert_shape(df, 'absent_0_present_1_selected{}.pkl')
 
 files_out[fname.name] = fname.as_posix()
 df.to_pickle(fname)

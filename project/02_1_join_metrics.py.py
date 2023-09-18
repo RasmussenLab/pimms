@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -30,11 +30,13 @@ filepaths_in
 filepath_out
 
 # %% [markdown]
-# ## Example 
+# ## Example
 #
 # - first file
 
 # %%
+
+
 def process(fpath: str) -> pd.DataFrame:
     df = pd.read_csv(fpath, index_col=POS_INDEX_COL, header=list(range(N_HEADER_COLS)))
     return df

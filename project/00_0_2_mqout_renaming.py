@@ -15,7 +15,7 @@ import pandas as pd
 # %%
 FOLDER = Path('data/rename')
 meta_in = FOLDER / 'selected_old_new_id_mapping.csv'
-fn_server_log: str = 'data/rename/mq_out_server.log' # server log of all uploaded files
+fn_server_log: str = 'data/rename/mq_out_server.log'  # server log of all uploaded files
 
 # %%
 df_meta = pd.read_csv(meta_in, index_col='new_sample_id')
@@ -27,10 +27,10 @@ df_meta
 
 # %%
 files_types = ["modificationSpecificPeptides.txt",
-"mqpar.xml",
-"mzRange.txt",
-"Oxidation (M)Sites.txt",
-"summary.txt",]
+               "mqpar.xml",
+               "mzRange.txt",
+               "Oxidation (M)Sites.txt",
+               "summary.txt",]
 
 # %%
 name_lookup = df_meta["Sample ID"].reset_index().set_index("new_sample_id")
@@ -51,14 +51,14 @@ with open(fn_server_log) as f:
                                               new_name=new_name,
                                               fn=fname)
             to_rename.append(command)
-            
+
             counter[fname.name] += 1
 len(to_rename)
 
 # %%
 # mqpar.xml missing in some folders
-pd.Series(counter) # maybe one folder has some missing?
+pd.Series(counter)  # maybe one folder has some missing?
 
 # %%
 with open(FOLDER / 'sed_rename_commands.sh', 'w') as f:
-        f.writelines('\n'.join(to_rename))
+    f.writelines('\n'.join(to_rename))

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.0
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: vaep
 #     language: python
@@ -17,7 +17,9 @@
 
 # %%
 from collections import defaultdict
+import itertools
 import json
+from pprint import pprint
 from tqdm.notebook import tqdm
 
 import numpy as np
@@ -30,7 +32,7 @@ from config import fasta_entry as fasta_keys
 
 # %%
 with open(FN_FASTA_DB) as f:
-    data_fasta = json.load(f)#, indent=4, sort_keys=False)
+    data_fasta = json.load(f)  # , indent=4, sort_keys=False)
 len(data_fasta)
 
 # %%
@@ -46,11 +48,10 @@ for key, fasta_entry in tqdm(data_fasta.items()):
 print(f"#{len(protein_wo_gene)} proteins have not gene associated: {', '.join(protein_wo_gene[:10])}, ...")
 
 # %%
-gene = 'ACTG1' # Actin as a contaminant protein
+gene = 'ACTG1'  # Actin as a contaminant protein
 gene_isotopes[gene]
 
 # %%
-from pprint import pprint
 for isotope in gene_isotopes[gene]:
     pprint(data_fasta[isotope])
 
@@ -74,7 +75,8 @@ sequences.str.len()
 aligner = Align.PairwiseAligner()
 
 # %%
-alignments = aligner.align(sequences.loc['I3L1U9'], sequences.loc['I3L3I0']) # Identical? Maybe check if this is more than once the case?
+# Identical? Maybe check if this is more than once the case?
+alignments = aligner.align(sequences.loc['I3L1U9'], sequences.loc['I3L3I0'])
 for alignment in alignments:
     print(alignment)
 
@@ -82,13 +84,13 @@ for alignment in alignments:
 data_fasta['I3L1U9'][fasta_keys.seq] == data_fasta['I3L3I0'][fasta_keys.seq]
 
 # %%
-alignments = aligner.align(sequences.loc['I3L1U9'], sequences.loc['I3L3R2']) # Identical?
+alignments = aligner.align(sequences.loc['I3L1U9'], sequences.loc['I3L3R2'])  # Identical?
 for alignment in alignments:
     print(alignment)
     break
 
 # %%
-alignments = aligner.align(sequences.loc['P63261'], sequences.loc['K7EM38']) # Identical?
+alignments = aligner.align(sequences.loc['P63261'], sequences.loc['K7EM38'])  # Identical?
 for alignment in alignments:
     print(alignment)
     break
@@ -97,20 +99,19 @@ for alignment in alignments:
 # ## Unique Peptides
 
 # %%
-import itertools
 peptides = {}
 for isotope in gene_isotopes[gene]:
     sequences[isotope] = data_fasta[isotope][fasta_keys.peptides][0]
 
 for peptides in itertools.zip_longest(*sequences.values, fillvalue=''):
-    if len(set(peptides)) == 1: 
+    if len(set(peptides)) == 1:
         print(f'all identical: {peptides[0]}')
     else:
         print('\t'.join(peptides))
 
 # %%
 for j, peptides in enumerate(sequences.values):
-    if j==0:
+    if j == 0:
         set_overlap = set(peptides)
     else:
         set_overlap = set_overlap.intersection(peptides)

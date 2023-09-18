@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -36,9 +36,9 @@ from tqdm.notebook import tqdm_notebook
 import vaep
 
 import config
+from config.training_data import peptides as cfg
 
 
-# %%
 def join_as_str(seq):
     ret = "_".join(str(x) for x in seq)
     return ret
@@ -49,10 +49,10 @@ def join_as_str(seq):
 
 # %% [tag=parameters]
 RANDOM_SEED: int = 42  # Random seed for reproducibility
-FEAT_COMPLETNESS_CUTOFF = 0.25 # Minimal proportion of samples which have to share a feature
+FEAT_COMPLETNESS_CUTOFF = 0.25  # Minimal proportion of samples which have to share a feature
 SAMPLE_COL = 'Sample ID'
 OUT_FOLDER = 'data/selected/'
-FN_ID_OLD_NEW: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
+FN_ID_OLD_NEW: str = 'data/rename/selected_old_new_id_mapping.csv'  # selected samples with pride and original id
 
 
 # %% [markdown]
@@ -60,7 +60,6 @@ FN_ID_OLD_NEW: str = 'data/rename/selected_old_new_id_mapping.csv' # selected sa
 
 # %%
 # options = ['peptides', 'evidence', 'proteinGroups']
-from config.training_data import peptides as cfg
 # from config.training_data import evidence as cfg
 # from config.training_data import proteinGroups as cfg
 
@@ -111,7 +110,7 @@ counts
 
 # %%
 if TYPES_COUNT:
-    counts = counts.convert_dtypes().astype({'Charge': int}) #
+    counts = counts.convert_dtypes().astype({'Charge': int})
 mask = counts['proportion'] >= FEAT_COMPLETNESS_CUTOFF
 counts.loc[mask]
 
@@ -148,14 +147,16 @@ selected_dumps[:10]
 # %%
 def load_fct(path):
     s = (
-    pd.read_csv(path, index_col=cfg.IDX_COLS_LONG[1:], usecols=[*cfg.IDX_COLS_LONG[1:], "Intensity"])
-    .squeeze()
-    .astype(pd.Int64Dtype())
+        pd.read_csv(path, index_col=cfg.IDX_COLS_LONG[1:], usecols=[*cfg.IDX_COLS_LONG[1:], "Intensity"])
+        .squeeze()
+        .astype(pd.Int64Dtype())
     )
     if len(cfg.IDX_COLS_LONG[1:]) > 1:
         s.index = s.index.map(join_as_str)
-        
+
     return s
+
+
 load_fct(selected_dumps[0][-1])
 
 
@@ -181,7 +182,7 @@ def collect(folders, index, load_fct):
                 logging.warning(f"Empty file: {path}")
                 failed.append((id, path))
             pbar.update(1)
-            
+
     return all
 
 
@@ -189,7 +190,7 @@ def collect(folders, index, load_fct):
 # ## Collect intensities in parallel
 
 # %%
-all = None # free memory
+all = None  # free memory
 
 collect_intensities = partial(collect, index=IDX_selected, load_fct=load_fct)
 
@@ -200,10 +201,10 @@ with multiprocessing.Pool(N_WORKERS) as p:
         tqdm_notebook(
             p.imap(collect_intensities,
                    np.array_split(selected_dumps, N_WORKERS)),
-                   total=N_WORKERS,
+            total=N_WORKERS,
         )
-    )  
-    
+    )
+
 all = pd.concat(all, axis=1)
 all
 
@@ -217,7 +218,7 @@ all.head()
 
 # %%
 # %%time
-fname = out_folder / config.insert_shape(all,  'intensities_wide_selected{}.pkl') 
+fname = out_folder / config.insert_shape(all, 'intensities_wide_selected{}.pkl')
 all.to_pickle(fname)
 fname
 

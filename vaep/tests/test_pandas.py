@@ -5,12 +5,12 @@ import vaep.pandas
 
 def test_interpolate():
     test_data = {
-        "pep1": {0: nan,  1: 27.8, 2: 28.9, 3: nan,  4: 28.7},
-        "pep2": {0: 29.1, 1: nan,  2: 27.6, 3: 29.1, 4: nan},
+        "pep1": {0: nan, 1: 27.8, 2: 28.9, 3: nan, 4: 28.7},
+        "pep2": {0: 29.1, 1: nan, 2: 27.6, 3: 29.1, 4: nan},
         # 4 values replace based on one (edge case):
-        "pep3": {0: nan,  1: nan,  2: 23.6, 3: nan,  4: nan},
-        "pep4": {0: nan,  1: nan,  2: nan,  3: nan,  4: nan},
-        "pep5": {0: 26.0, 1: 27.0, 2: nan,  3: nan,  4: nan},
+        "pep3": {0: nan, 1: nan, 2: 23.6, 3: nan, 4: nan},
+        "pep4": {0: nan, 1: nan, 2: nan, 3: nan, 4: nan},
+        "pep5": {0: 26.0, 1: 27.0, 2: nan, 3: nan, 4: nan},
     }
 
     df_test_data = pd.DataFrame(test_data)
@@ -52,11 +52,12 @@ def test_flatten_dict_of_dicts():
 
     assert expected == actual
 
+
 def test_create_dict_of_dicts():
     data = {('a', 'a1', 'a2'): 1,
-                ('a', 'a1', 'a3'): 2,
-                ('b', 'b1', 'b2'): 3,
-                ('b', 'b1', 'b3'): 4}
+            ('a', 'a1', 'a3'): 2,
+            ('b', 'b1', 'b2'): 3,
+            ('b', 'b1', 'b3'): 4}
     expected = {
         "a": {'a1': {'a2': 1, 'a3': 2}},
         "b": {'b1': {'b2': 3, 'b3': 4}}
@@ -65,9 +66,9 @@ def test_create_dict_of_dicts():
     assert expected == actual
 
     data = {('a', 'a1', 'a2'): (1, 1),
-                ('a', 'a1', 'a3'): (2, 2),
-                ('b', 'b1', 'b2'): (3, 3),
-                ('b', 'b1', 'b3'): (4, 4)}
+            ('a', 'a1', 'a3'): (2, 2),
+            ('b', 'b1', 'b2'): (3, 3),
+            ('b', 'b1', 'b3'): (4, 4)}
     expected = {
         "a": {'a1': {'a2': [1, 1], 'a3': [2, 2]}},
         "b": {'b1': {'b2': [3, 3], 'b3': [4, 4]}}

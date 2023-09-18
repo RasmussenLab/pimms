@@ -17,7 +17,7 @@ df_meta = pd.read_csv(fn_meta, index_col='new_sample_id')
 df_meta
 
 # %%
-sdrf = pd.DataFrame() # pd.read_table(fn_sdrf_cellline_template)
+sdrf = pd.DataFrame()  # pd.read_table(fn_sdrf_cellline_template)
 sdrf['source name'] = df_meta.index
 sdrf = sdrf.set_index('source name')
 sdrf['characteristics[organism]'] = 'Homo sapiens'

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -51,14 +51,14 @@ from vaep.logging import setup_logger_w_file
 from config import FOLDER_MQ_TXT_DATA, FOLDER_PROCESSED
 from config import FOLDER_KEY  # defines how filenames are parsed for use as indices
 
-from config import FOLDER_DATA # project folder for storing the data
+from config import FOLDER_DATA  # project folder for storing the data
 print(f"Search Raw-Files on path: {FOLDER_MQ_TXT_DATA}")
 
 ##################
 ### Logging ######
 ##################
 
-#Delete Jupyter notebook root logger handler
+# Delete Jupyter notebook root logger handler
 root_logger = logging.getLogger()
 root_logger.handlers = []
 
@@ -68,10 +68,10 @@ logger = setup_logger_w_file(logger, fname_base='log_00_maxquant_file_reader')
 logger.info('Start with handlers: \n' + "\n".join(f"- {repr(log_)}" for log_ in logger.handlers))
 
 # %%
-folders = [folder for folder in  Path(FOLDER_MQ_TXT_DATA).iterdir() if folder.is_dir()]
+folders = [folder for folder in Path(FOLDER_MQ_TXT_DATA).iterdir() if folder.is_dir()]
 
 # %%
-folders_dict = {folder.name: folder for folder in sorted(folders) }
+folders_dict = {folder.name: folder for folder in sorted(folders)}
 assert len(folders_dict) == len(folders), "Non unique file names"
 
 # %% Collapsed="false"
@@ -84,7 +84,8 @@ mq_output = MaxQuantOutputDynamic(w_file.value)
 mq_output
 
 # %% [markdown]
-# Results will be saved in a subfolder under `vaep/project/data` using the name of the specified input-folder per default. Change to your liking:
+# Results will be saved in a subfolder under `vaep/project/data` using the
+# name of the specified input-folder per default. Change to your liking:
 
 # %% [markdown]
 # > Go to the block you are interested in!
@@ -107,7 +108,7 @@ mq_output.summary.iloc[0].to_dict()
 # %% [markdown] Collapsed="false"
 # ### Summaries
 #
-# - aggregated in `vaep/project/erda_01_mq_aggregate_summaries.ipynb` 
+# - aggregated in `vaep/project/erda_01_mq_aggregate_summaries.ipynb`
 #     - file selection based on summaries for further analysis thereafter
 
 # %%
@@ -152,8 +153,8 @@ mq_output.summary.iloc[0].to_dict()
 # %%
 mqpar_files = (Path(FOLDER_DATA) / 'mqpar_files')
 
-mqpar_files  = [file for file in mqpar_files.iterdir() if file.suffix == '.xml']
-len(mqpar_files) # nested search needed
+mqpar_files = [file for file in mqpar_files.iterdir() if file.suffix == '.xml']
+len(mqpar_files)  # nested search needed
 
 # %% Collapsed="false"
 w_file = widgets.Dropdown(options=mqpar_files, description='Select a file')
@@ -168,8 +169,8 @@ fname_mqpar_xml = os.path.join(FOLDER_PROCESSED, 'peptide_intensities.{}')
 d_mqpar = dict()
 for file in tqdm(mqpar_files):
     d_mqpar[file.stem] = load_mqpar_xml(file)['MaxQuantParams']
-    
-df_mqpar = pd.DataFrame(d_mqpar.values() , index=d_mqpar.keys()).convert_dtypes()
+
+df_mqpar = pd.DataFrame(d_mqpar.values(), index=d_mqpar.keys()).convert_dtypes()
 df_mqpar
 
 # %% [markdown]
@@ -188,7 +189,7 @@ df_mqpar['numThreads'].value_counts()
 df_mqpar.iloc[0].loc['fastaFiles']
 
 # %% [markdown]
-# in order to see if there are different setting based on the string columns, drop duplicates 
+# in order to see if there are different setting based on the string columns, drop duplicates
 #
 # - only one should remain
 
@@ -212,7 +213,7 @@ mq_output.peptides
 mq_output.evidence
 
 # %%
-mq_output.peptides.Intensity # as is in peptides.txt, comma seperated thousands
+mq_output.peptides.Intensity  # as is in peptides.txt, comma seperated thousands
 
 # %% [markdown] Collapsed="false"
 # ### Create peptide intensity dumps for each MQ outputfolder

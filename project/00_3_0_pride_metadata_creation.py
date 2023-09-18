@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -15,7 +15,7 @@
 # %% [markdown]
 # # Selected files
 #
-# - document metadata and file sizes of published dataset in Scientific Data Report 
+# - document metadata and file sizes of published dataset in Scientific Data Report
 #
 # ## Contents
 #
@@ -33,11 +33,11 @@ import pandas as pd
 # ## PARAMETERS
 
 # %%
-fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv' # selected samples with pride and original id
-fn_raw_file_size: str = 'processed/all_raw_file_sizes.csv' # raw file sizes
+fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv'  # selected samples with pride and original id
+fn_raw_file_size: str = 'processed/all_raw_file_sizes.csv'  # raw file sizes
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv'
-fn_summaries:str = 'data/processed/all_summaries.json'
-date_col:str = 'Content Creation Date'
+fn_summaries: str = 'data/processed/all_summaries.json'
+date_col: str = 'Content Creation Date'
 out_folder: str = 'data/dev_datasets/pride_upload'
 
 # %% [markdown]
@@ -71,7 +71,6 @@ df_raw_file_size
 df_raw_file_size.index.is_unique
 
 # %%
-from pathlib import Path
 df_raw_file_size['path'] = df_raw_file_size['path'].apply(lambda x: Path(x).as_posix())
 df_raw_file_size = df_raw_file_size.reset_index().set_index('path')
 df_raw_file_size
@@ -93,7 +92,7 @@ df_meta
 
 # %%
 df_meta = df_meta.loc[df_ids.index]
-df_meta.columns = df_meta.columns.droplevel() # remove top level name
+df_meta.columns = df_meta.columns.droplevel()  # remove top level name
 df_meta
 
 # %% [markdown]
@@ -113,7 +112,7 @@ df_meta = (df_ids
            .join(df_raw_file_size)
            .join(df_meta)
            .join(df_summaries)
-          )
+           )
 df_meta
 
 # %%
@@ -123,11 +122,11 @@ df_meta.index.name = 'Sample ID'
 # %%
 df_meta = (df_meta
            .drop(['Path_old', 'Pathname', 'path'], axis=1)
-           .rename({'Path_new':'Pathname'}, axis=1)
+           .rename({'Path_new': 'Pathname'}, axis=1)
            .dropna(how='all', axis=1)
            .convert_dtypes()
            .assign(**{date_col: lambda df_meta: pd.to_datetime(df_meta[date_col])})
-)
+           )
 df_meta
 
 # %% [markdown]
@@ -152,12 +151,12 @@ df_meta.dtypes.astype('string').to_json(fname)
 dtypes = pd.read_json(
     files_out['pride_metadata_schema.json'],
     orient='index'
-    ).squeeze()
-mask_dates = dtypes.str.contains('datetime') # date columns need to be provide separately
+).squeeze()
+mask_dates = dtypes.str.contains('datetime')  # date columns need to be provide separately
 pd.read_csv(files_out['pride_metadata.csv'],
             parse_dates=mask_dates.loc[mask_dates].index.to_list(),
             dtype=dtypes.loc[~mask_dates].to_dict()
-).dtypes
+            ).dtypes
 
 
 # %%

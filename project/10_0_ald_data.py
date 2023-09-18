@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -38,14 +38,14 @@ folder_run.mkdir(parents=True, exist_ok=True)
 print(*(folder_data.iterdir()), sep='\n')
 
 fnames = dict(
-plasma_proteinGroups = folder_data / 'Protein_ALDupgrade_Report.csv',
-plasma_aggPeptides = folder_data / 'ald_proteome_spectronaut.tsv',
-liver_proteinGroups = folder_data / 'Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
-liver_aggPeptides = folder_data / 'Peptide_20220819_100847_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
-annotations = folder_data / 'ald_experiment_annotations.csv',
-clinic = folder_data / 'labtest_integrated_numeric.csv',
-raw_meta = folder_data / 'ald_metadata_rawfiles.csv')
-fnames =vaep.nb.Config.from_dict(fnames) # could be handeled kwargs as in normal dict
+    plasma_proteinGroups=folder_data / 'Protein_ALDupgrade_Report.csv',
+    plasma_aggPeptides=folder_data / 'ald_proteome_spectronaut.tsv',
+    liver_proteinGroups=folder_data / 'Protein_20200221_121354_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
+    liver_aggPeptides=folder_data / 'Peptide_20220819_100847_20200218_ALD_LiverTissue_PlateS1_Atlaslib_Report.csv',
+    annotations=folder_data / 'ald_experiment_annotations.csv',
+    clinic=folder_data / 'labtest_integrated_numeric.csv',
+    raw_meta=folder_data / 'ald_metadata_rawfiles.csv')
+fnames = vaep.nb.Config.from_dict(fnames)  # could be handeled kwargs as in normal dict
 
 
 # %%
@@ -77,7 +77,7 @@ annotations = pd.read_csv(fnames.annotations, index_col='Sample ID')
 annotations
 
 # %%
-annotations['Participant ID'].value_counts().value_counts() # some only have a blood sample, some both
+annotations['Participant ID'].value_counts().value_counts()  # some only have a blood sample, some both
 
 # %% [markdown]
 # ### Select ALD subcohort
@@ -147,7 +147,7 @@ clinic["kleiner"] = clinic["kleiner"].replace({-1: np.nan, 0.5: np.nan})
 clinic["kleiner"].value_counts()
 
 # %%
-clinic.loc[idx_overlap_plasma].to_csv(folder_data_out /'ald_metadata_cli.csv')
+clinic.loc[idx_overlap_plasma].to_csv(folder_data_out / 'ald_metadata_cli.csv')
 
 # %% [markdown]
 # ## Rawfile information
@@ -212,7 +212,7 @@ raw_meta.to_csv(folder_data_out / 'raw_meta.csv')
 # > see section below
 
 # %% [markdown]
-# ## (Aggregated) Peptide Data 
+# ## (Aggregated) Peptide Data
 
 # %%
 df = pd.read_table(fnames.plasma_aggPeptides, low_memory=False)
@@ -263,7 +263,7 @@ meta
 meta.describe(include='all')
 
 # %%
-id_mappings =  ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
+id_mappings = ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
 id_mappings = meta[id_mappings].drop_duplicates()
 id_mappings.to_csv(folder_data_out / 'ald_plasma_aggPeptides_id_mappings.csv')
 id_mappings
@@ -273,28 +273,29 @@ id_mappings
 #
 # taken from [Spectronaut manuel](https://biognosys.com/resources/spectronaut-manual/)
 #
-# feature | description 
+# feature | description
 # --- | ---
 # PEP.IsProteinGroupSpecific | True or False. Tells you whether the peptide only belongs to one Protein Group.
 # PEP.StrippedSequence | -
 # PEP.IsProteotypic |  -
 # PEP.PeptidePosition | -
-# PG.Cscore | - 
+# PG.Cscore | -
 # PG.ProteinAccessions | -
-# PG.Genes | - 
+# PG.Genes | -
 # PEP.Quantity | The quantitative value for that peptide as defined in the settings.
-# EG.PrecursorId | Unique Id for the precursor: [modified sequence] plus [charge] 
+# EG.PrecursorId | Unique Id for the precursor: [modified sequence] plus [charge]
 # EG.Qvalue | The q-value (FDR) of the EG.
-# EG.TotalQuantity (Settings) | The quantitative value for that EG as defined in the settings. 
+# EG.TotalQuantity (Settings) | The quantitative value for that EG as defined in the settings.
 #
-# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious. 
+# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious.
 #
-# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious. 
+# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious.
 #
-# After discussing with Lili, `PEP.Quantity` is the fitting entity for each unique aggregated Peptide. Duplicated entries are just to drop
+# After discussing with Lili, `PEP.Quantity` is the fitting entity for
+# each unique aggregated Peptide. Duplicated entries are just to drop
 
 # %%
-sel_cols = ['Sample ID', 'PEP.StrippedSequence', 'PEP.Quantity'] # selected quantity in last position
+sel_cols = ['Sample ID', 'PEP.StrippedSequence', 'PEP.Quantity']  # selected quantity in last position
 df = df.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2])
 df
 
@@ -313,7 +314,7 @@ idx.name = 'Sample ID'
 idx.describe()
 
 # %% [markdown]
-# - rawfile metadata -> keep 
+# - rawfile metadata -> keep
 
 # %%
 df = df.set_index(idx)
@@ -330,7 +331,8 @@ des_data
 # ### Check for metadata from rawfile overlap
 
 # %% [markdown]
-# For one raw file no metadata could be extracted (`ERROR: Unable to access the RAW file using the native Thermo library.`)
+# For one raw file no metadata could be extracted (`ERROR: Unable to
+# access the RAW file using the native Thermo library.`)
 
 # %%
 idx_diff = df.index.difference(raw_meta.index)
@@ -390,7 +392,7 @@ meta = df.iloc[:, :N_FRIST_META]
 meta.describe(include='all')
 
 # %%
-id_mappings =  ["PG.ProteinAccessions", "PG.Genes"]
+id_mappings = ["PG.ProteinAccessions", "PG.Genes"]
 id_mappings = meta[id_mappings].drop_duplicates()
 id_mappings.to_csv(folder_data_out / 'ald_plasma_proteinGroups_id_mappings.csv', index=False)
 id_mappings
@@ -401,7 +403,7 @@ column_types.describe()  # .apply(lambda l: l[-1])
 
 # %%
 column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
-column_types # 'PG.Quantity' expected
+column_types  # 'PG.Quantity' expected
 
 # %%
 df = df.set_index(list(df.columns[:N_FRIST_META])).sort_index(axis=1)
@@ -412,11 +414,12 @@ df.loc[:, df.columns.str.contains(VAR_PG)]
 # Drop index columns which are not selected
 
 # %%
-def find_idx_to_drop(df:pd.DataFrame, idx_to_keep:list):
-    to_drop = [x for x in df.index.names if not x in idx_to_keep]
+def find_idx_to_drop(df: pd.DataFrame, idx_to_keep: list):
+    to_drop = [x for x in df.index.names if x not in idx_to_keep]
     logger.info("Columnns to drop: {}".format(",".join((str(x) for x in to_drop))))
     return to_drop
-    
+
+
 to_drop = find_idx_to_drop(df, idx_cols)
 df = df.reset_index(level=to_drop, drop=True)
 df.head()
@@ -503,7 +506,7 @@ kwargs = {'xlabel': 'protein group number ordered by completeness',
           'title': 'protein group measurement distribution'}
 
 ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
-), feat_col_name='count', n_samples=len(df), ax=None, min_feat_prop=.0,**kwargs)
+), feat_col_name='count', n_samples=len(df), ax=None, min_feat_prop=.0, **kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
@@ -623,7 +626,7 @@ meta = df.index.to_frame().reset_index(drop=True)
 meta
 
 # %%
-id_mappings =  ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
+id_mappings = ["PEP.StrippedSequence", "PG.ProteinAccessions", "PG.Genes"]
 id_mappings = meta[id_mappings].drop_duplicates()
 id_mappings.to_csv(folder_data_out / 'ald_liver_aggPeptides_id_mappings.csv')
 id_mappings
@@ -634,28 +637,29 @@ id_mappings
 #
 # taken from [Spectronaut manuel](https://biognosys.com/resources/spectronaut-manual/)
 #
-# feature | description 
+# feature | description
 # --- | ---
 # PEP.IsProteinGroupSpecific | True or False. Tells you whether the peptide only belongs to one Protein Group.
 # PEP.StrippedSequence | -
 # PEP.IsProteotypic |  -
 # PEP.PeptidePosition | -
-# PG.Cscore | - 
+# PG.Cscore | -
 # PG.ProteinAccessions | -
-# PG.Genes | - 
+# PG.Genes | -
 # PEP.Quantity | The quantitative value for that peptide as defined in the settings.
-# EG.PrecursorId | Unique Id for the precursor: [modified sequence] plus [charge] 
+# EG.PrecursorId | Unique Id for the precursor: [modified sequence] plus [charge]
 # EG.Qvalue | The q-value (FDR) of the EG.
-# EG.TotalQuantity (Settings) | The quantitative value for that EG as defined in the settings. 
+# EG.TotalQuantity (Settings) | The quantitative value for that EG as defined in the settings.
 #
-# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious. 
+# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious.
 #
-# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious. 
+# > Headers related to Peptides (PEP) as defined in the settings. Many headers related to Peptides are self-explanatory. Here are the most relevant and some which are not too obvious.
 #
-# After discussing with Lili, `PEP.Quantity` is the fitting entity for each unique aggregated Peptide. Duplicated entries are just to drop
+# After discussing with Lili, `PEP.Quantity` is the fitting entity for
+# each unique aggregated Peptide. Duplicated entries are just to drop
 
 # %%
-sel_cols = ['Sample ID', 'PEP.StrippedSequence', VAR_PEP] # selected quantity in last position
+sel_cols = ['Sample ID', 'PEP.StrippedSequence', VAR_PEP]  # selected quantity in last position
 df = df.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:2]).squeeze()
 df
 
@@ -666,7 +670,7 @@ df.sort_index()
 
 # %% [markdown]
 # Select entry with maximum intensity of `duplicated entries`
-#  
+#
 # > change of variable and many duplicates -> could be PSM table? (close to evidence?)
 
 # %%
@@ -674,10 +678,12 @@ mask_idx_duplicated = df.index.duplicated(False)
 df.loc[mask_idx_duplicated].sort_index()
 
 # %%
-df = vaep.pandas.select_max_by(df=df.reset_index(), grouping_columns=sel_cols[:-1], selection_column=sel_cols[-1]).set_index(sel_cols[:-1])
+df = vaep.pandas.select_max_by(df=df.reset_index(),
+                               grouping_columns=sel_cols[:-1],
+                               selection_column=sel_cols[-1]).set_index(sel_cols[:-1])
 
 # %%
-assert df.index.duplicated(False).sum() == 0 , "Still missing values"
+assert df.index.duplicated(False).sum() == 0, "Still missing values"
 
 # %%
 df = df.unstack()
@@ -690,7 +696,7 @@ idx.name = 'Sample ID'
 idx.describe()
 
 # %% [markdown]
-# - rawfile metadata -> keep 
+# - rawfile metadata -> keep
 
 # %%
 df = df.set_index(idx)
@@ -706,13 +712,14 @@ df
 # %%time
 # des_data = df.describe() unnecessary computation which take too long
 des_data = df.isna().sum().to_frame('count').T
-des_data                        
+des_data
 
 # %% [markdown]
 # ### Check for metadata from rawfile overlap
 
 # %% [markdown]
-# For one raw file no metadata could be extracted (`ERROR: Unable to access the RAW file using the native Thermo library.`)
+# For one raw file no metadata could be extracted (`ERROR: Unable to
+# access the RAW file using the native Thermo library.`)
 
 # %%
 # idx_diff = df.index.difference(raw_meta.index)
@@ -773,7 +780,7 @@ meta = df.iloc[:, :N_FRIST_META]
 meta.describe(include='all')
 
 # %%
-id_mappings =  ["PG.ProteinAccessions", "PG.Genes"]
+id_mappings = ["PG.ProteinAccessions", "PG.Genes"]
 id_mappings = meta[id_mappings].drop_duplicates()
 id_mappings.to_csv(folder_data_out / 'ald_liver_proteinGroups_id_mappings.csv')
 id_mappings
@@ -784,7 +791,7 @@ column_types.describe()  # .apply(lambda l: l[-1])
 
 # %%
 column_types = ['.'.join(x for x in tup) for tup in list(column_types.unique())]
-column_types # 'PG.Quantity' expected
+column_types  # 'PG.Quantity' expected
 
 # %%
 df = df.set_index(list(df.columns[:N_FRIST_META])).sort_index(axis=1)
@@ -824,7 +831,7 @@ df = df.loc[~mask]
 df
 
 # %%
-sel_cols = ['PG.ProteinAccessions', 'PG.Genes', 'Sample ID', VAR_PG] # last one gives quantity
+sel_cols = ['PG.ProteinAccessions', 'PG.Genes', 'Sample ID', VAR_PG]  # last one gives quantity
 df = df.reset_index()[sel_cols].drop_duplicates().set_index(sel_cols[:-1])
 
 # %%

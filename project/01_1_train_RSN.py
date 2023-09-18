@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -52,8 +52,8 @@ fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_
 # model
 sample_idx_position: int = 0  # position of index which is sample ID
 # model key (lower cased version will be used for file names)
-axis: int = 1 # impute per row/sample (1) or per column/feat (0). 
-completeness = 0.6 # fractio of non missing values for row/sample (axis=0) or column/feat (axis=1)
+axis: int = 1  # impute per row/sample (1) or per column/feat (0).
+completeness = 0.6  # fractio of non missing values for row/sample (axis=0) or column/feat (axis=1)
 model_key: str = 'RSN'
 model: str = 'RSN'  # model name
 save_pred_real_na: bool = True  # Save all predictions for real na
@@ -224,7 +224,9 @@ added_metrics
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
+# Fake NAs : Artificially created NAs. Some data was sampled and set
+# explicitly to misssing before it was fed to the model for
+# reconstruction.
 
 # %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')

@@ -18,7 +18,7 @@ def find_indices_containing_query(query, X):
 
 def get_unique_stem(query, index: pd.Index):
     """Gets stem filename, by splitting filename left of query and remove last underscore _.
-    
+
     Fractionated samples seem to be named by fraction type. Last field indicates fraction.
     """
     ret = index.str.split(query).str[0].str.rsplit("_", n=1).str[0]
@@ -34,7 +34,7 @@ def show_fractions(stub: str, df):
 
 
 class RawFileViewer:
-    def __init__(self, df:pd.DataFrame, start_query: str="[Ff]rac", outputfolder: str='.', path_col='path'):
+    def __init__(self, df: pd.DataFrame, start_query: str = "[Ff]rac", outputfolder: str = '.', path_col='path'):
         """Indices are used."""
         self.df = df
         self.file_names = df.index
@@ -42,7 +42,7 @@ class RawFileViewer:
 
         self.w_query = widgets.Text(start_query)
         self.query = start_query
-        
+
         self.save_button = widgets.Button(description='Save current files.')
         self.save_button.on_click(self.save_current_files)
 
@@ -59,10 +59,10 @@ class RawFileViewer:
             sub_df = self.find_indices_containing_query(query)
             ret = get_unique_stem(query, sub_df.index)
             return ret
-        except:
+        except BaseException:
             print(f"Not a valid query: {query} ")
             return ()
-    
+
     def save_current_files(self, button):
         """Save files in current views as txt file.
         """
@@ -74,12 +74,12 @@ class RawFileViewer:
         with open(fname, 'w') as f:
             f.write(f'-lmkdir {self.stub}\n')
             for _path in files:
-                _local_path = PurePosixPath(self.stub)/_path.name
+                _local_path = PurePosixPath(self.stub) / _path.name
                 _remote_path = PurePosixPath(_path)
                 line = line_template.format(remote_path=_remote_path, local_path=_local_path)
                 f.write(f'{line}\n')
         print(f"Saved file paths to: {fname}")
-    
+
     def viewer(self, query, stub: str):
         if query != self.query:
             self.query = query
@@ -91,7 +91,7 @@ class RawFileViewer:
                 print(f"Nothing to display for QUERY: {query}")
                 stub = None
             # find_indices_containing_query = partial(find_indices_containing_query, X=data_unique)
-        if stub and stub!=self.stub:
+        if stub and stub != self.stub:
             try:
                 subset = self.df[self.df.index.str.contains(stub)]
                 print('current stub: ', repr(stub))

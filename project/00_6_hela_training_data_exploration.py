@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: vaep
 #     language: python
@@ -21,9 +21,12 @@
 from datetime import datetime
 from functools import partial
 from pathlib import Path
+from random import sample
 
+import ipywidgets as w
 import numpy as np
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 
 # from sklearn import preprocessing
@@ -37,6 +40,7 @@ from vaep.plotting import _savefig
 import config
 from vaep.analyzers import analyzers
 from vaep.io.data_objects import PeptideCounter
+from vaep.transform import log
 
 pd.options.display.max_columns = 100
 pd.options.display.min_rows = 30
@@ -53,14 +57,15 @@ pd.options.display.min_rows = 30
 # ### Peptides
 
 # %%
-FN_PEPTIDE_INTENSITIES = Path('data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.csv')
+FN_PEPTIDE_INTENSITIES = Path(
+    'data/dev_datasets/df_intensities_proteinGroups_long_2017_2018_2019_2020_N05015_M04547/Q_Exactive_HF_X_Orbitrap_Exactive_Series_slot_#6070.csv')
 FIGUREFOLDER = FN_PEPTIDE_INTENSITIES.parent / 'figures' / FN_PEPTIDE_INTENSITIES.stem
 FIGUREFOLDER.mkdir(exist_ok=True, parents=True)
 FIGUREFOLDER
 
 # %%
-N_FIRST_ROWS = None # possibility to select N first rows
-analysis = analyzers.AnalyzePeptides.from_csv(fname=FN_PEPTIDE_INTENSITIES, index_col=[0,1],nrows=N_FIRST_ROWS)
+N_FIRST_ROWS = None  # possibility to select N first rows
+analysis = analyzers.AnalyzePeptides.from_csv(fname=FN_PEPTIDE_INTENSITIES, index_col=[0, 1], nrows=N_FIRST_ROWS)
 df = analysis.to_wide_format()
 analysis.describe_peptides(sample_n=30)
 
@@ -108,10 +113,11 @@ analysis.df.sample(30, axis=0).T.describe()
 stats = analysis.describe_peptides()
 
 # %%
-_ = stats.loc['CV'].hist(figsize=(10, 4)) # biological coefficient of variation: standard deviation (variation) w.r.t mean
+# biological coefficient of variation: standard deviation (variation) w.r.t mean
+_ = stats.loc['CV'].hist(figsize=(10, 4))
 
 # %%
-_ = stats.loc['count'].hist(figsize=(10,4))
+_ = stats.loc['count'].hist(figsize=(10, 4))
 
 # %% Collapsed="false"
 INDEX_NAME = 'Sample ID'
@@ -121,7 +127,7 @@ analysis.df.index.name = INDEX_NAME
 analysis.df
 
 # %% Collapsed="false"
-N_MIN_OBS = analysis.df.shape[0] * 0.7 # here: present in 70% of the samples
+N_MIN_OBS = analysis.df.shape[0] * 0.7  # here: present in 70% of the samples
 mask_min_obsevation = analysis.df.notna().sum() >= N_MIN_OBS
 mask_min_obsevation.sum()
 
@@ -156,16 +162,16 @@ USE_CBAR = False
 
 axes_heatmap_missing = sns.heatmap(data_to_visualize,
                                    ax=axes_heatmap_missing,
-                                   cbar = USE_CBAR,
-                                  )
+                                   cbar=USE_CBAR,
+                                   )
 
 # %% [markdown]
-# White patches indicates that a peptide has been measured, black means it was not measured. Some samples (rows) have few of the most common peptides. This suggests to set a minimum of total peptides in a sample, which is common pratice. 
+# White patches indicates that a peptide has been measured, black means it was not measured. Some samples (rows) have few of the most common peptides. This suggests to set a minimum of total peptides in a sample, which is common pratice.
 #
 # > An algorithm should work with the most common peptides and base it's inference capabilities after training on these.
 
 # %%
-data_to_visualize.sum(axis=1).nsmallest(20) # Samplest with the fewest measurements out of the seletion
+data_to_visualize.sum(axis=1).nsmallest(20)  # Samplest with the fewest measurements out of the seletion
 
 # %% Collapsed="false"
 # # This currently crashes if you want to have a pdf
@@ -184,7 +190,7 @@ COL_NO_MISSING, COL_NO_IDENTIFIED = f'no_missing_{TYPE}', f'no_identified_{TYPE}
 COL_PROP_SAMPLES = 'prop_samples'
 
 
-sample_stats = vaep.data_handling.compute_stats_missing(not_missing, COL_NO_MISSING, COL_NO_IDENTIFIED )
+sample_stats = vaep.data_handling.compute_stats_missing(not_missing, COL_NO_MISSING, COL_NO_IDENTIFIED)
 sample_stats
 
 # %% Collapsed="false"
@@ -246,9 +252,8 @@ sequences = SequenceAnalyser(X.columns.to_series())
 sequences.length()
 
 # %% Collapsed="false"
-import ipywidgets as w
 _ = w.interact(sequences.calc_counts,
-           n_characters=w.IntSlider(value=4, min=1, max=55))
+               n_characters=w.IntSlider(value=4, min=1, max=55))
 
 # %% Collapsed="false"
 sequences_p4 = sequences.calc_counts(4)
@@ -258,7 +263,7 @@ display(sequences_p4.head())
 sequences_p4.loc[sequences_p4.isin(('CON_', 'REV_'))].sort_index()
 
 # %% [markdown] Collapsed="false"
-# What to do when 
+# What to do when
 #
 #
 # ```
@@ -276,11 +281,10 @@ sequences_p4.loc[sequences_p4.isin(('CON_', 'REV_'))].sort_index()
 
 # %% [markdown] Collapsed="false"
 # ### Minumum required sample quality
-# First define the minum requirement of a sample to be kept in 
+# First define the minum requirement of a sample to be kept in
 
 # %% Collapsed="false"
-import ipywidgets as w
-range_peps = (0,  max(sample_stats[COL_NO_IDENTIFIED]))
+range_peps = (0, max(sample_stats[COL_NO_IDENTIFIED]))
 MIN_DEPTH_SAMPLE = int(range_peps[1] * 0.6)
 w_min_depth_sample = w.IntSlider(
     value=MIN_DEPTH_SAMPLE, min=0, max=range_peps[1])
@@ -326,11 +330,10 @@ x_90.sample()
 
 # %% Collapsed="false"
 sample = x_50.sample().iloc[0]
-sample_id = sample.name 
+sample_id = sample.name
 print("Sample ID:", sample_id)
 
 # %% Collapsed="false"
-import matplotlib
 
 sns.set(style="darkgrid")
 
@@ -363,8 +366,8 @@ fig = plot_dist_comparison(sample, log=np.log2)
 _savefig(fig, f"distribution_peptides_sample_{str(sample_id)}_log2")
 
 # %%
-sample_log_stats       = np.log2(sample).describe().to_frame('log2')
-sample_log_stats['ln'] = np.log (sample).describe()
+sample_log_stats = np.log2(sample).describe().to_frame('log2')
+sample_log_stats['ln'] = np.log(sample).describe()
 sample_log_stats
 
 # %%
@@ -384,8 +387,6 @@ print(f"std : {sample_log_stats.loc['std' ,'log2'] * c = : .3f}")
 # #### One Peptide, all samples
 
 # %% Collapsed="false"
-from vaep.transform import log
-from random import sample
 sample = x_50.sample(axis=1).squeeze()
 peptide = sample.name
 
@@ -412,6 +413,6 @@ dynamic_range.T
 
 # %% [markdown] Collapsed="false"
 # ### Find Protein of Peptides
-# - check with some reference list of peptides: This is created in `project\FASTA_tryptic_digest.ipynb` 
+# - check with some reference list of peptides: This is created in `project\FASTA_tryptic_digest.ipynb`
 
 # %%

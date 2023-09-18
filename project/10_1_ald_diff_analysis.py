@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -17,7 +17,7 @@
 #
 # - load missing values predictions
 # - leave all other values as they were
-# - compare missing values predicition by model with baseline method 
+# - compare missing values predicition by model with baseline method
 #   (default: draw from shifted normal distribution. short RSN)
 
 # %%
@@ -48,19 +48,19 @@ args = dict(globals()).keys()
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
 folder_data: str = ''  # specify data directory if needed
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
-fn_qc_samples = '' #'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
+fn_qc_samples = ''  # 'data/ALD_study/processed/qc_plasma_proteinGroups.pkl'
 f_annotations = 'data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv'
 
 
 target: str = 'kleiner'
-covar:str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
+covar: str = 'age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num'
 
 file_format = "csv"
-model_key = 'VAE' # model(s) to evaluate
-model = None # default same as model_key, but could be overwritten (edge case)
-value_name='intensity'
-out_folder='diff_analysis'
-template_pred = 'pred_real_na_{}.csv' # fixed, do not change
+model_key = 'VAE'  # model(s) to evaluate
+model = None  # default same as model_key, but could be overwritten (edge case)
+value_name = 'intensity'
+out_folder = 'diff_analysis'
+template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
 
 # %%
@@ -109,7 +109,7 @@ observed
 # %%
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
-cols_clinic = vaep.pandas.get_columns_accessor(df_clinic) # pick Berlin as reference?
+cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
 df_clinic[[args.target, *args.covar]].describe()
 
 
@@ -183,7 +183,7 @@ _ = ax.set_xticklabels([l.get_text().split(';')[0] for l in ax.get_xticklabels()
 DATA_COMPLETENESS = 0.6
 # MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
-CV_QC_SAMPLE: float = 0.4 # Coef. of variation on 13 QC samples
+CV_QC_SAMPLE: float = 0.4  # Coef. of variation on 13 QC samples
 
 ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(observed.unstack(
 ), data_completeness=DATA_COMPLETENESS, frac_protein_groups=FRAC_PROTEIN_GROUPS)
@@ -196,20 +196,20 @@ if args.fn_qc_samples:
     qc_samples = pd.read_pickle(args.fn_qc_samples)
     qc_cv_feat = qc_samples.std() / qc_samples.mean()
     qc_cv_feat = qc_cv_feat.rename(qc_samples.columns.name)
-    fig, ax = plt.subplots(figsize=(4,7))
+    fig, ax = plt.subplots(figsize=(4, 7))
     ax = qc_cv_feat.plot.box(ax=ax)
     ax.set_ylabel('Coefficient of Variation')
     vaep.savefig(fig, name='cv_qc_samples', folder=args.out_figures)
     print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
     # only to ald_study data
     ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples[ald_study.columns])]
-    
+
 ald_study
 
 # %%
 fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
-             feat_completness_over_samples=cutoffs.feat_completness_over_samples,
-             min_feat_in_sample=cutoffs.min_feat_in_sample)
+                                       feat_completness_over_samples=cutoffs.feat_completness_over_samples,
+                                       min_feat_in_sample=cutoffs.min_feat_in_sample)
 vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 
 
@@ -225,7 +225,7 @@ template_pred
 
 # %%
 fname = args.out_preds / args.template_pred.format(args.model)
-fname 
+fname
 
 # %% [markdown]
 # Baseline comparison
@@ -262,7 +262,7 @@ pred_real_na
 def plot_distributions(observed: pd.Series,
                        imputation: pd.Series = None,
                        model_key: str = 'MODEL',
-                       figsize=(4,3),
+                       figsize=(4, 3),
                        sharex=True):
     """Plots distributions of intensities provided as dictionary of labels to pd.Series."""
     series_ = [observed, imputation] if imputation is not None else [observed]
@@ -274,8 +274,8 @@ def plot_distributions(observed: pd.Series,
     else:
         fig, ax = plt.subplots(1, figsize=figsize, sharex=sharex)
 
-    bins = range(min_bin, max_bin+1, 1)
-    
+    bins = range(min_bin, max_bin + 1, 1)
+
     label = 'observed measurments'
     ax = observed.hist(ax=ax, bins=bins, color='grey')
     ax.set_title(f'{label} (N={len(observed):,d})')
@@ -283,14 +283,13 @@ def plot_distributions(observed: pd.Series,
     ax.locator_params(axis='y', integer=True)
     ax.yaxis.set_major_formatter("{x:,.0f}")
 
-
     if imputation is not None:
         ax = axes[1]
         label = f'Missing values imputed using {model_key.upper()}'
         color = vaep.plotting.defaults.color_model_mapping.get(model_key, None)
         if color is None:
             color = f'C{1}'
-        ax = imputation.hist(ax=ax,bins=bins, color=color)
+        ax = imputation.hist(ax=ax, bins=bins, color=color)
         ax.set_title(f'{label} (N={len(imputation):,d})')
         ax.set_ylabel('observations')
         ax.locator_params(axis='y', integer=True)
@@ -312,7 +311,7 @@ vaep.savefig(fig, name=fname)
 # %%
 if pred_real_na is not None:
     shifts = (vaep.imputation.compute_moments_shift(observed, pred_real_na,
-                                                        names=('observed', args.model_key)))
+                                                    names=('observed', args.model_key)))
     display(pd.DataFrame(shifts).T)
 
 # %% [markdown]
@@ -323,8 +322,8 @@ if pred_real_na is not None:
     index_level = 0  # per sample
     mean_by_sample = pd.DataFrame(
         {'observed': vaep.imputation.stats_by_level(observed, index_level=index_level),
-        args.model_key: vaep.imputation.stats_by_level(pred_real_na, index_level=index_level)
-    })
+         args.model_key: vaep.imputation.stats_by_level(pred_real_na, index_level=index_level)
+         })
     mean_by_sample.loc['mean_shift'] = (mean_by_sample.loc['mean', 'observed'] -
                                         mean_by_sample.loc['mean']).abs() / mean_by_sample.loc['std', 'observed']
     mean_by_sample.loc['std shrinkage'] = mean_by_sample.loc['std'] / \
@@ -352,10 +351,10 @@ if pred_real_na is not None:
 # Targets - Clinical variables
 # %%
 scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
-        df_clinic=df_clinic,
-        target=args.target,
-        covar=args.covar,
-        value_name=args.value_name)
+                                          df_clinic=df_clinic,
+                                          target=args.target,
+                                          covar=args.covar,
+                                          value_name=args.value_name)
 
 scores
 
@@ -366,7 +365,7 @@ if gene_to_PG is not None:
     scores = (scores
               .join(gene_to_PG)
               .set_index(gene_to_PG.columns.to_list(), append=True)
-    )
+              )
 scores
 
 # %%
@@ -376,7 +375,7 @@ scores.loc[pd.IndexSlice[:, args.target], :]
 
 
 # %%
-fname = args.out_folder/ 'scores' / f'diff_analysis_scores_{str(args.model_key)}.pkl'
+fname = args.out_folder / 'scores' / f'diff_analysis_scores_{str(args.model_key)}.pkl'
 files_out[fname.name] = fname.as_posix()
 fname.parent.mkdir(exist_ok=True, parents=True)
 scores.to_pickle(fname)

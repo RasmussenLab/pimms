@@ -8,14 +8,14 @@ N, M = 10, 4
 
 X = np.random.rand(N, M)
 df = (pd.DataFrame(X,
-                  index=[f'sample_{i}' for i in range(N)],
-                  columns=(f'feat_{i}' for i in range(M)))
-        .rename_axis('Sample ID')
-        .rename_axis('Feature Name', axis=1))
+                   index=[f'sample_{i}' for i in range(N)],
+                   columns=(f'feat_{i}' for i in range(M)))
+      .rename_axis('Sample ID')
+      .rename_axis('Feature Name', axis=1))
 
-_splits = {'train_X': df.iloc[:int(N*0.6)],
-           'val_y': df.iloc[int(N*0.6):int(N*0.8)],
-           'test_y': df.iloc[int(N*0.8):]}
+_splits = {'train_X': df.iloc[:int(N * 0.6)],
+           'val_y': df.iloc[int(N * 0.6):int(N * 0.8)],
+           'test_y': df.iloc[int(N * 0.8):]}
 
 
 def test_DataSplits_iter():
@@ -54,10 +54,11 @@ def test_dump_load(tmp_path):
     splits = DataSplits(is_wide_format=None)
     splits.load(folder=tmp_path, use_wide_format=True)
     assert splits.train_X is not _splits['train_X']
-    
+
     npt.assert_almost_equal(_splits['train_X'].values, splits.train_X)
     # #ToDo: Index and Column names are not yet correctly set
     # assert splits.train_X.equals(_splits['train_X'])
+
 
 def test_to_long_format(tmp_path):
     splits = DataSplits(**_splits, is_wide_format=True)
@@ -72,6 +73,7 @@ def test_to_long_format(tmp_path):
     assert splits.val_y is not expected
     assert splits.val_y.equals(expected)
 
+
 def test_to_wide_format(tmp_path):
     splits = DataSplits(**_splits, is_wide_format=True)
     splits.dump(folder=tmp_path)
@@ -85,9 +87,10 @@ def test_to_wide_format(tmp_path):
     assert splits.val_y is not expected
     assert splits.val_y.equals(expected)
 
+
 def test_interpolate():
     splits = DataSplits(**_splits, is_wide_format=True)
-    splits._is_wide = True # ToDo. Is not correctly set when init is called.
+    splits._is_wide = True  # ToDo. Is not correctly set when init is called.
     with pytest.raises(AttributeError):
         _ = splits.interpolate('non-existing')
 

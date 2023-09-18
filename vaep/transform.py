@@ -73,6 +73,7 @@ StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_
 # # arguments, see https://fastcore.fast.ai/meta.html#Metaprogramming
 # # decorate()
 
+
 def transform(self, X, **kwargs):
     res = super(self.__class__, self).transform(X, **kwargs)
     if isinstance(X, pd.DataFrame):
@@ -140,8 +141,9 @@ def get_df_fitted_mean_std(self, index):
 
 class VaepPipeline():
     """Custom Pipeline combining a pandas.DataFrame and a sklearn.pipeline.Pipleine."""
-    def __init__(self, df_train:pd.DataFrame, encode:sklearn.pipeline.Pipeline,
-                        decode:List[str] =None):
+
+    def __init__(self, df_train: pd.DataFrame, encode: sklearn.pipeline.Pipeline,
+                 decode: List[str] = None):
         """[summary]
 
         Parameters
@@ -153,7 +155,7 @@ class VaepPipeline():
         decode : List[str], optional
             subset of transforms (their string name) as an Iterable, by default None, i.e.
             the same as encode
-        """        
+        """
         self.columns = df_train.columns
         self.M = len(df_train.columns)
         self.encode = encode
@@ -163,20 +165,18 @@ class VaepPipeline():
             for d in decode:
                 self.decode.append(
                     (d, self.encode.named_steps[d])
-                    )
+                )
 
             self.decode = sklearn.pipeline.Pipeline(self.decode)
         else:
             self.decode = self.encode
-        
-        
-    
+
     def transform(self, X):
         res = self.encode.transform(X)
         if isinstance(X, pd.DataFrame):
             return pd.DataFrame(res, columns=X.columns, index=X.index)
         return res
-    
+
     # Option: single-dispatch based on type of X
     def inverse_transform(self, X, index=None):
         columns = self.columns

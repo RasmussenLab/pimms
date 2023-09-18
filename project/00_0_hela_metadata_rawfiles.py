@@ -34,9 +34,11 @@ import vaep.pandas
 # %% tags=["parameters"]
 fn_rawfile_metadata: str = 'data/rawfile_metadata.csv'  # Machine parsed metadata from rawfile workflow
 # outputs
-fn_files_per_instrument: str = 'data/files_per_instrument.yaml'  # All parsed raw files nested by instrument (model, attribute, serial number)
+# All parsed raw files nested by instrument (model, attribute, serial number)
+fn_files_per_instrument: str = 'data/files_per_instrument.yaml'
 fn_files_selected: str = 'data/samples_selected.yaml'  # selected files based on threshold of identified peptides
-fn_files_per_instrument_selected: str = 'data/files_selected_per_instrument.yaml'  # Selected parsed raw files nested by instrument (model, attribute, serial number)
+# Selected parsed raw files nested by instrument (model, attribute, serial number)
+fn_files_per_instrument_selected: str = 'data/files_selected_per_instrument.yaml'
 
 # %% [markdown]
 # ### Machine metadata

@@ -12,6 +12,7 @@ vaep.plotting.make_large_descriptors(5)
 
 COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
 
+
 def plot_qvalues(df, x: str, y: list, ax=None, cutoff=0.05,
                  alpha=1.0, style='.', markersize=3):
     ax = df.plot.line(x=x,
@@ -30,10 +31,8 @@ def plot_qvalues(df, x: str, y: list, ax=None, cutoff=0.05,
     return ax
 
 
-
 # %% [markdown]
 # DA analysis
-
 # %%
 out_folder = 'runs/appl_ald_data/plasma/proteinGroups_80%_dataset/diff_analysis/kleiner/'
 out_folder = Path(out_folder)
@@ -102,7 +101,7 @@ da_target_sel
 # %%
 mask_lost_sign = (
     (da_target_sel['None'] == False)
-    & (da_target_sel[REF_MODEL] == True)
+    & (da_target_sel[REF_MODEL])
 )
 sel = qvalues_sel.loc[mask_lost_sign.squeeze()]
 sel.columns = sel.columns.droplevel(-1)
@@ -114,12 +113,12 @@ sel
 # 0: FN
 # 1: TP
 da_target_sel_counts = (da_target_sel[ORDER_MODELS]
- .loc[mask_lost_sign.squeeze()]
- .astype(int)
- .replace(
-     {0: 'FN',
-      1: 'TP'}
- ).droplevel(-1, axis=1)
+                        .loc[mask_lost_sign.squeeze()]
+                        .astype(int)
+                        .replace(
+    {0: 'FN',
+     1: 'TP'}
+).droplevel(-1, axis=1)
 )
 da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
 ax = da_target_sel_counts.T.plot.bar()
@@ -146,7 +145,7 @@ vaep.savefig(ax.figure, fname)
 
 # %%
 mask_gained_signal = (
-    (da_target_sel['None'] == True)
+    (da_target_sel['None'])
     & (da_target_sel[REF_MODEL] == False)
 )
 sel = qvalues_sel.loc[mask_gained_signal.squeeze()]
@@ -157,12 +156,12 @@ sel
 
 # %%
 da_target_sel_counts = (da_target_sel[ORDER_MODELS]
- .loc[mask_gained_signal.squeeze()]
- .astype(int)
- .replace(
-     {0: 'TN',
-      1: 'FP'}
- ).droplevel(-1, axis=1)
+                        .loc[mask_gained_signal.squeeze()]
+                        .astype(int)
+                        .replace(
+    {0: 'TN',
+     1: 'FP'}
+).droplevel(-1, axis=1)
 )
 da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
 ax = da_target_sel_counts.T.plot.bar()

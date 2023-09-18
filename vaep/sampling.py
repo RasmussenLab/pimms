@@ -16,11 +16,11 @@ def feature_frequency(df_wide: pd.DataFrame, measure_name: str = 'freq') -> pd.S
     Returns
     -------
     pd.Series
-        Frequency on non-missing entries per feature (column). 
+        Frequency on non-missing entries per feature (column).
     """
     # if hasattr(df_wide.columns, "levels"): # is columns.names always set?
     # is listed as attribute: https://pandas.pydata.org/docs/reference/api/pandas.Index.html
-    _df_feat = df_wide.stack(df_wide.columns.names) # ensure that columns are named
+    _df_feat = df_wide.stack(df_wide.columns.names)  # ensure that columns are named
 
     _df_feat = _df_feat.to_frame(measure_name)
     # implicit as stack puts column index in the last position (here: 1)
@@ -61,8 +61,8 @@ def sample_data(series: pd.Series, sample_index_to_drop: Union[str, int],
     Parameters
     ----------
     series : pd.Series
-        Long-format data in pd.Series. Index name is feature name. 2 dimensional 
-        MultiIndex. 
+        Long-format data in pd.Series. Index name is feature name. 2 dimensional
+        MultiIndex.
     sample_index_to_drop : Union[str, int]
         Sample index (as str or integer Index position). Unit to group by (i.e. Samples)
     frac : float, optional

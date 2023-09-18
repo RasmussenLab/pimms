@@ -179,11 +179,11 @@ def query_uniprot_id_mapping(query_list: list, FROM='UniProtKB_AC-ID', TO='Gene_
     """Query Uniprot ID mappings programatically (utility function)
     See availabe mappings: https://www.uniprot.org/help/api_idmapping
     Function is programmed to query gene IDs based on protein IDs.
-    
+
     Parameters
     ----------
     query_list : list
-        list of strings containing queries in format specified 
+        list of strings containing queries in format specified
         in FROM parameter.
     FROM : str, optional
         Format of string-ids in query_list, by default 'ACC+ID'
@@ -191,7 +191,7 @@ def query_uniprot_id_mapping(query_list: list, FROM='UniProtKB_AC-ID', TO='Gene_
         Format to which strings-ids should be matched with, by default 'GENENAME'
     FORMAT : str, optional
         Separator for Uniprot-ID, by default 'tab'
-        
+
     Returns
     -------
     list:
@@ -208,7 +208,7 @@ def query_uniprot_id_mapping(query_list: list, FROM='UniProtKB_AC-ID', TO='Gene_
 
 
 if __name__ == "__main__":
-    ids= ['A0A075B6I0', 'A0A075B6I1', 'A0A075B6I6', 'A0A075B6I9',]
+    ids = ['A0A075B6I0', 'A0A075B6I1', 'A0A075B6I6', 'A0A075B6I9',]
     results = query_uniprot_id_mapping(ids)
     print(results)
     # {'A0A075B6I0': 'IGLV8-61', 'A0A075B6I1': 'IGLV4-60', 'A0A075B6I6': 'IGLV1-50', 'A0A075B6I9': 'IGLV7-46'}

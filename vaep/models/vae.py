@@ -15,6 +15,7 @@ import torch.nn.functional as F
 
 leaky_relu_default = nn.LeakyReLU(.1)
 
+
 class VAE(nn.Module):
     def __init__(self,
                  n_features: int,
@@ -39,11 +40,11 @@ class VAE(nn.Module):
         # Encoder
         self.encoder = []
 
-        for i in range(len(self.layers)-1):
-            in_feat, out_feat = self.layers[i:i+2]
+        for i in range(len(self.layers) - 1):
+            in_feat, out_feat = self.layers[i:i + 2]
             self.encoder.extend(build_layer(in_feat=in_feat,
                                             out_feat=out_feat))
-        self.encoder.append(nn.Linear(out_feat, dim_latent*2))
+        self.encoder.append(nn.Linear(out_feat, dim_latent * 2))
 
         self.encoder = nn.Sequential(*self.encoder)
 
@@ -56,13 +57,13 @@ class VAE(nn.Module):
                                    out_feat=out_feat)
 
         i = -1  # in case a single hidden layer is passed
-        for i in range(len(self.layers_decoder)-2):
-            in_feat, out_feat = self.layers_decoder[i:i+2]
+        for i in range(len(self.layers_decoder) - 2):
+            in_feat, out_feat = self.layers_decoder[i:i + 2]
             self.decoder.extend(build_layer(in_feat=in_feat,
                                             out_feat=out_feat))
-        in_feat, out_feat = self.layers_decoder[i+1:i+3]
+        in_feat, out_feat = self.layers_decoder[i + 1:i + 3]
 
-        self.decoder.append(nn.Linear(in_feat, out_feat*2))
+        self.decoder.append(nn.Linear(in_feat, out_feat * 2))
         if last_decoder_activation is not None:
             self.append(last_decoder_activation)
 
@@ -84,7 +85,7 @@ class VAE(nn.Module):
         return x_mu, x_logvar
 
     def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5*logvar)
+        std = torch.exp(0.5 * logvar)
         return mu + torch.randn_like(std) * std
 
     def forward(self, x):
@@ -95,11 +96,11 @@ class VAE(nn.Module):
 
 
 def compute_kld(z_mu, z_logvar):
-    return 0.5*(z_mu**2 + torch.exp(z_logvar) - 1 - z_logvar)
+    return 0.5 * (z_mu**2 + torch.exp(z_logvar) - 1 - z_logvar)
 
 
 def gaussian_log_prob(z, mu, logvar):
-    return -0.5*(math.log(2*math.pi) + logvar + (z-mu)**2/torch.exp(logvar))
+    return -0.5 * (math.log(2 * math.pi) + logvar + (z - mu)**2 / torch.exp(logvar))
 
 
 def loss_fct(pred, y, reduction='sum', results: List = None, freebits=0.1):
@@ -108,7 +109,7 @@ def loss_fct(pred, y, reduction='sum', results: List = None, freebits=0.1):
 
     l_rec = -torch.sum(gaussian_log_prob(batch, x_mu, x_logvar))
     l_reg = torch.sum(F.relu(compute_kld(z_mu, z_logvar) -
-                      freebits*math.log(2))+freebits*math.log(2), 1)
+                      freebits * math.log(2)) + freebits * math.log(2), 1)
 
     if results is not None:
         results.append((l_rec.item(), torch.mean(l_reg).item()))

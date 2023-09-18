@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -44,7 +44,7 @@
 # find . -name '*.raw' -ls > all_raw_files_dump_2021_10_27.txt
 # ```
 #
-# which was executed in the 
+# which was executed in the
 
 # %%
 from pathlib import Path, PurePosixPath
@@ -75,7 +75,7 @@ logger = setup_logger(logger, fname_base='00_2_hela_all_raw_files_ipynb')
 # FN_ALL_RAW_FILES = config.FOLDER_DATA / config.FN_ALL_RAW_FILES
 FN_ALL_RAW_FILES: str = config.FOLDER_DATA / 'all_raw_files_dump_2021_10_29.txt'
 FN_ALL_SUMMARIES: str = config.FN_ALL_SUMMARIES
-FN_PEPTIDE_INTENSITIES = config.FOLDER_DATA / 'df_intensities_N07285_M01000' 
+FN_PEPTIDE_INTENSITIES = config.FOLDER_DATA / 'df_intensities_N07285_M01000'
 
 # %%
 cfg.FN_ALL_RAW_FILES = FN_ALL_RAW_FILES
@@ -88,7 +88,7 @@ RawFile = namedtuple('RawFile', 'name path bytes')
 data = []
 with open(cfg.FN_ALL_RAW_FILES) as f:
     for line in f:
-        line = line.split(maxsplit=8) # ignore white spaces in file names, example:
+        line = line.split(maxsplit=8)  # ignore white spaces in file names, example:
         #'-rw-r--r--. 1 501 501 282917566 Dec  3  2022 ./share_hela_raw/MNT_202220220921_EXLP1_Evo1_LiNi_ - Copy1.raw'
         path = Path(line[-1].strip())
         data.append(RawFile(path.stem, path, int(line[4])))
@@ -117,7 +117,7 @@ data['num_index'] = pd.RangeIndex(stop=len(data))
 mask_non_unique = data.reset_index().duplicated(subset=['name', 'bytes'])
 mask_non_unique.index = data.index
 idx_non_unique = data.loc[mask_non_unique].index.unique()
-idx_non_unique # min number of files to remove
+idx_non_unique  # min number of files to remove
 
 
 # %%
@@ -132,6 +132,7 @@ def check_for_duplicates(df):
         print(f'Number of files with more than 2 duplicates: {(non_unique > 2).sum()}')
         return non_unique
 
+
 non_unique = check_for_duplicates(df=data)
 non_unique
 
@@ -140,7 +141,7 @@ non_unique
 
 # %%
 data.loc[
-    non_unique.index.difference(idx_non_unique) ]
+    non_unique.index.difference(idx_non_unique)]
 
 # %% [markdown]
 # For same sized groups, remove first the onces in the `MNT` folder:
@@ -154,14 +155,15 @@ if not data.index.is_unique:
     non_unique_remaining = pd.DataFrame()
     for idx, g in _data_to_remove.groupby(level=0):
         mask = ['\\MNT' in str(x) for x in g.path]
-        assert len(mask) != sum(mask) , f'All files in MNT subfolders: {idx}'
+        assert len(mask) != sum(mask), f'All files in MNT subfolders: {idx}'
         data_in_MNT_to_remove = data_in_MNT_to_remove.append(g[mask])
-        non_unique_remaining = non_unique_remaining.append(g[[x!=True for x in mask]])
+        non_unique_remaining = non_unique_remaining.append(g[[x != True for x in mask]])
 
     del _data_to_remove, mask, idx, g
 
 assert len(data.loc[idx_non_unique]) == len(non_unique_remaining) + len(data_in_MNT_to_remove)
-assert len(non_unique_remaining.loc[['\\MNT' in str(x) for x in non_unique_remaining.path]]) == 0, "There are files in MNT folder left"
+assert len(non_unique_remaining.loc[['\\MNT' in str(x)
+           for x in non_unique_remaining.path]]) == 0, "There are files in MNT folder left"
 data_in_MNT_to_remove
 
 # %% [markdown]
@@ -178,7 +180,7 @@ non_unique_remaining.loc[non_unique_remaining_counts.index.unique()]
 mask_non_unique_remaining = non_unique_remaining.reset_index().duplicated(subset=['name', 'bytes'])
 mask_non_unique_remaining.index = non_unique_remaining.index
 data_to_remove = data_in_MNT_to_remove.append(
-                    non_unique_remaining.loc[mask_non_unique_remaining]
+    non_unique_remaining.loc[mask_non_unique_remaining]
 )
 data_to_remove
 
@@ -186,7 +188,8 @@ data_to_remove
 print(f"Save {data_to_remove['size_gb'].sum():1.0f} GB disk space by deleting {len(data_to_remove)} files.")
 
 # %%
-data_unique = data.reset_index().set_index('num_index').drop(data_to_remove.set_index('num_index').index).set_index('name')
+data_unique = data.reset_index().set_index('num_index').drop(
+    data_to_remove.set_index('num_index').index).set_index('name')
 data_unique
 
 # %% [markdown]
@@ -196,7 +199,7 @@ data_unique
 data_unique.loc[data_to_remove.index.unique()]
 
 # %%
-assert len(data_unique) + len(data_to_remove)  == len(data)
+assert len(data_unique) + len(data_to_remove) == len(data)
 
 # %% [markdown]
 # Show files which are duplicated, but have different sizes:
@@ -209,7 +212,9 @@ data_unique.loc[data_unique.index.duplicated(False)] if not data_unique.index.is
 # Save unique files
 
 # %%
-cfg.FN_ALL_RAW_FILES_UNIQUE = utils.append_to_filepath(cfg.FN_ALL_RAW_FILES, config.build_df_fname(data_unique, 'unique'), new_suffix='csv')
+cfg.FN_ALL_RAW_FILES_UNIQUE = utils.append_to_filepath(
+    cfg.FN_ALL_RAW_FILES, config.build_df_fname(
+        data_unique, 'unique'), new_suffix='csv')
 data_unique.to_csv(cfg.FN_ALL_RAW_FILES_UNIQUE)
 
 # %% [markdown]
@@ -280,13 +285,13 @@ frac_special_cases = [
     # continue with samples below 2019 (select in DropDown below)
     '20180508_QE3_nLC5_DBJ_DIAprot_HELA_500ng_GPF',
     '20180528_QE5_Evo2_DBJ_DIAprot_HeLa_500ng',
-    '20190108_QE7_Evo1_DBJ_SA_LFQpho_HELA_PACs_200ug', # s mssing in LFQphos
+    '20190108_QE7_Evo1_DBJ_SA_LFQpho_HELA_PACs_200ug',  # s mssing in LFQphos
     '20190108_QE7_Evo1_DBJ_SA_LFQphos_HELA_PAC_200ug',
     '20190108_QE7_Evo1_DBJ_SA_LFQphos_HELA_PAC_300ug',
     '20190108_QE7_Evo1_DBJ_SA_LFQphos_HELA_PAC_400ug',
     '20190212_QE5_Evo1_DBJ_LFQprot',
     '20190314_QE3_DBJ_Evo2_LFQphos_Hela_200ug_StageTip',
-    '20190314_QE3_DBJ_Evo2_LFQphos_Hela_380ug_StageTip', # first t missing in StagetTip
+    '20190314_QE3_DBJ_Evo2_LFQphos_Hela_380ug_StageTip',  # first t missing in StagetTip
     '20190314_QE3_DBJ_Evo2_LFQphos_Hela_380ug_StagetTip',
     '20190402_QE3_Evo1_DBJ_DIAprot_HELA',
     '20190402_QE3_Evo1_DBJ_LFQprot_HELA',
@@ -295,7 +300,7 @@ frac_special_cases = [
     '20190507_QE5_Evo1_DBJ_LFQprot_Subcell_HeLa_Ctrl',
     '20190507_QE5_Evo1_DBJ_LFQprot_Subcell_library_HeLa_Ctrl_Ani_Mix',
     '20190622_EXP1_Evo1_AMV_SubCell-library-HeLa_21min-30000',
-    '20190628_EXP1_Evo1_AMV_SubCell-library-HeLa_21min-30000',   
+    '20190628_EXP1_Evo1_AMV_SubCell-library-HeLa_21min-30000',
 ]
 
 # exclude keys and handle separately. Remaining keys can be used directly to create list of inputs.
@@ -305,7 +310,7 @@ frac_unique = sorted(list(set(frac_unique) - set(frac_special_cases)))
 w_data = widgets.Dropdown(options=frac_unique, index=0)
 show_fractions_frac = partial(show_fractions, df=df_selected)
 out_sel = widgets.interactive_output(show_fractions_frac, {'stub': w_data})
-widgets.VBox([w_data, out_sel]) # repr of class
+widgets.VBox([w_data, out_sel])  # repr of class
 #stub, export
 
 # %% [markdown]
@@ -406,7 +411,7 @@ print(f"Saved list of files to: {cfg.remote_files}")
 # ### From file name
 
 # %%
-analysis = AnalyzePeptides.from_csv(cfg.FN_ALL_RAW_FILES_UNIQUE,index_col='name') # ToDo: Add numbers to file names
+analysis = AnalyzePeptides.from_csv(cfg.FN_ALL_RAW_FILES_UNIQUE, index_col='name')  # ToDo: Add numbers to file names
 analysis.df
 
 # %%
@@ -416,12 +421,12 @@ analysis.add_metadata(add_prop_not_na=False)
 # Metadata has fewer cases due to duplicates with differnt file sizes ( see above)
 
 # %%
-analysis.df.loc[analysis.df.index.duplicated(False)] # keep the larger one
+analysis.df.loc[analysis.df.index.duplicated(False)]  # keep the larger one
 
 # %% [markdown]
 # ## cfg
 
 # %%
-vars(cfg) # return a dict which is rendered differently in ipython
+vars(cfg)  # return a dict which is rendered differently in ipython
 
 # %%

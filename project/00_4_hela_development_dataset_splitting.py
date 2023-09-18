@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -54,10 +54,10 @@ FIGSIZE = (15, 10)
 # %% tags=["parameters"]
 N_MIN_INSTRUMENT = 300
 META_DATA: str = 'data/files_selected_metadata.csv'
-FILE_EXT = 'pkl' # 'csv' or 'pkl'
+FILE_EXT = 'pkl'  # 'csv' or 'pkl'
 SAMPLE_ID = 'Sample ID'
 
-DUMP: str = erda_dumps.FN_PROTEIN_GROUPS # Filepath to erda dump
+DUMP: str = erda_dumps.FN_PROTEIN_GROUPS  # Filepath to erda dump
 OUT_NAME = 'protein group'  # for legends labels
 # DUMP: str = erda_dumps.FN_PEPTIDES
 # OUT_NAME = 'peptide' # for legends labels
@@ -118,7 +118,7 @@ data
 # feat_name = list(data.index.names)
 # feat_name.remove(SAMPLE_ID)
 feat_name = (OUT_NAME,)
-feat_name # index name(s) which are not the sample index
+feat_name  # index name(s) which are not the sample index
 
 # %%
 # M = len(data.index.levels[-1])
@@ -130,7 +130,7 @@ logger.info(f"Number of unqiue features: {M}")
 
 # %%
 # sample_ids = data.index.levels[0] # assume first index position is Sample ID?
-sample_ids = data.index.unique() #.get_level_values(SAMPLE_ID).unique()  # more explict
+sample_ids = data.index.unique()  # .get_level_values(SAMPLE_ID).unique()  # more explict
 sample_ids
 
 # %% [markdown]
@@ -151,10 +151,10 @@ df_meta
 # - drop metadata (entire)
 # %%
 idx_all = (pd.to_datetime(df_meta["Content Creation Date"]).dt.strftime("%Y_%m_%d_%H_%M")
-        + '_'
-        + df_meta["Thermo Scientific instrument model"].str.replace(' ', '-')
-        + '_'
-        + df_meta["instrument serial number"].str.split('#').str[-1])
+           + '_'
+           + df_meta["Thermo Scientific instrument model"].str.replace(' ', '-')
+           + '_'
+           + df_meta["instrument serial number"].str.split('#').str[-1])
 
 mask = idx_all.duplicated(keep=False)
 duplicated_sample_idx = idx_all.loc[mask].sort_values()  # duplicated dumps
@@ -162,9 +162,9 @@ duplicated_sample_idx
 
 #
 # %%
-data_duplicates = data.loc[duplicated_sample_idx.index] #.unstack()
+data_duplicates = data.loc[duplicated_sample_idx.index]  # .unstack()
 # data_duplicates.T.corr() # same samples are have corr. of 1
-data_duplicates.sum(axis=1) # keep only one seems okay
+data_duplicates.sum(axis=1)  # keep only one seems okay
 
 # %%
 idx_unique = idx_all.drop_duplicates()
@@ -191,7 +191,7 @@ logger.info(f"{fname = }")
 # ## Support per sample in entire data set
 
 # %%
-counts = data.count(axis=1) # wide format
+counts = data.count(axis=1)  # wide format
 N = len(counts)
 fname = FOLDER_DATASETS / 'support_all.json'
 files_out[fname.name] = fname
@@ -215,7 +215,7 @@ vaep.plotting.savefig(fig, fname)
 
 
 # %%
-counts = data.count(axis=0) # wide format
+counts = data.count(axis=0)  # wide format
 counts.to_json(FOLDER_DATASETS / 'feat_completeness_all.json', indent=4)
 ax = (counts
       .sort_values()  # will raise an error with a DataFrame
@@ -358,7 +358,7 @@ files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
-# ## Summary statistics for top 5 instruments 
+# ## Summary statistics for top 5 instruments
 
 # %%
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -399,7 +399,7 @@ vaep.savefig(fig, name=fname)
 
 
 # %%
-top_5_meta = df_meta.loc[mask_top_5] 
+top_5_meta = df_meta.loc[mask_top_5]
 top_5_meta[['injection volume setting', 'dilution factor']].describe()
 
 # %% [markdown]
@@ -407,7 +407,7 @@ top_5_meta[['injection volume setting', 'dilution factor']].describe()
 
 # %%
 for _instrument, _df_meta_instrument in top_5_meta.groupby(by=thermo_raw_files.cols_instrument):
-    print('#'* 80, ' - '.join(_instrument), sep='\n')
+    print('#' * 80, ' - '.join(_instrument), sep='\n')
     display(_df_meta_instrument.describe())
     display(_df_meta_instrument['injection volume setting'].value_counts())
     break
@@ -455,7 +455,7 @@ for values in selected_instruments.index:
 
     # calculate support
     counts = dataset.count(axis=1).squeeze()
-    ## to disk
+    # to disk
     fname_support = vaep.io.get_fname_from_keys(values,
                                                 folder='.',
                                                 file_ext="")
@@ -463,7 +463,7 @@ for values in selected_instruments.index:
                      (fname_support.stem + '_support.json').replace('Exactive_Series_slot_#', ''))
     files_out[fname_support.name] = fname_support
     logger.info(f"Dump support to: {fname_support.as_posix()}")
-    
+
     counts.to_json(fname_support, indent=4)
 
     # very slow alternative, but 100% correct
@@ -484,7 +484,7 @@ for values in selected_instruments.index:
                 ))
     vaep.plotting.add_prop_as_second_yaxis(ax, M)
     fig.tight_layout()
-    fname_support = fname_support.with_suffix('.pdf')    
+    fname_support = fname_support.with_suffix('.pdf')
     files_out[fname_support.name] = fname_support
     vaep.plotting.savefig(fig, name=fname_support)
 

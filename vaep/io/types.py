@@ -1,7 +1,9 @@
 """
 papermill strategy to determine type
-see: https://github.com/nteract/papermill/blob/76906a882bb5b3e719ad113c7b2447e0ddffb2c7/papermill/cli.py#L275-L307    
+see: https://github.com/nteract/papermill/blob/76906a882bb5b3e719ad113c7b2447e0ddffb2c7/papermill/cli.py#L275-L307
 """
+
+
 def resolve_type(value):
     if value == "True":
         return True

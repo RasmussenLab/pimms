@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -94,8 +94,8 @@ selected = metrics.loc[pd.IndexSlice[
     split,
     :, 'MAE']].stack(1)
 view_long = (selected.stack()
- .to_frame('MAE')
- .reset_index())
+             .to_frame('MAE')
+             .reset_index())
 view_long
 
 # %%

@@ -23,4 +23,3 @@ meta_raw_selected = [
     'injection volume setting',
     'dilution factor',
 ]
-

@@ -15,9 +15,10 @@ PathsList = namedtuple('PathsList', ['files', 'folder'])
 logger = logging.getLogger(__name__)
 logger.info(f"Calling from {__name__}")
 
+
 def search_files(path='.', query='.txt'):
-    """Uses Pathlib to find relative to path files 
-    with the query text in their file names. Returns 
+    """Uses Pathlib to find relative to path files
+    with the query text in their file names. Returns
     the path relative to the specified path.
 
     Parameters
@@ -30,7 +31,7 @@ def search_files(path='.', query='.txt'):
     Returns
     -------
     list
-        list with files as string containig query key. 
+        list with files as string containig query key.
     """
     path = Path(path)
     files = []
@@ -71,11 +72,11 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
     return directories
 
 
-def resolve_path(path:Union[str, Path], to:Union[str, Path]='.')-> Path:
+def resolve_path(path: Union[str, Path], to: Union[str, Path] = '.') -> Path:
     """Resolve a path partly overlapping with to another path."""
     pwd = Path(to).absolute()
     pwd = [p for p in pwd.parts]
-    ret = [p for p in Path(path).parts  if p not in pwd]
+    ret = [p for p in Path(path).parts if p not in pwd]
     return Path('/'.join(ret))
 
 
@@ -144,8 +145,8 @@ def parse_dict(input_dict: dict,
     d = dict()
     for k, v in input_dict.items():
         for (old_type, fct) in types:
-          if isinstance(v, old_type):
-              v = fct(v)
+            if isinstance(v, old_type):
+                v = fct(v)
         d[k] = v
     return d
 

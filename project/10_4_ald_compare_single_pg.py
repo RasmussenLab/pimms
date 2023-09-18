@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -49,7 +49,7 @@ args = dict(globals()).keys()
 # %% tags=["parameters"]
 folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
 fn_clinical_data = "data/ALD_study/processed/ald_metadata_cli.csv"
-make_plots = True # create histograms and swarmplots of diverging results
+make_plots = True  # create histograms and swarmplots of diverging results
 model_key = 'VAE'
 sample_id_col = 'Sample ID'
 target = 'kleiner'
@@ -58,7 +58,7 @@ out_folder = 'diff_analysis'
 file_format = 'csv'
 baseline = 'RSN'  # default is RSN, but could be any other trained model
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
-ref_method_score = None # filepath to reference method score
+ref_method_score = None  # filepath to reference method score
 
 
 # %%
@@ -99,7 +99,7 @@ scores
 
 # %%
 # Reference dump
-if args.ref_method_score:    
+if args.ref_method_score:
     scores_reference = (pd
                         .read_pickle(args.ref_method_score)
                         .rename({'None': 'None (100%)'},
@@ -123,7 +123,7 @@ qvalues = scores.loc[pd.IndexSlice[:, args.target],
                             ).set_index(
     ('data', 'frequency'), append=True)
 qvalues.index.names = qvalues.index.names[:-1] + ['frequency']
-fname  = args.out_folder / 'qvalues_target.pkl'
+fname = args.out_folder / 'qvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 qvalues.to_pickle(fname)
 qvalues.to_excel(writer, sheet_name='qvalues_all')
@@ -136,7 +136,7 @@ pvalues = scores.loc[pd.IndexSlice[:, args.target],
                             ).set_index(
     ('data', 'frequency'), append=True)
 pvalues.index.names = pvalues.index.names[:-1] + ['frequency']
-fname  = args.out_folder / 'pvalues_target.pkl'
+fname = args.out_folder / 'pvalues_target.pkl'
 files_out[fname.name] = fname.as_posix()
 pvalues.to_pickle(fname)
 pvalues.to_excel(writer, sheet_name='pvalues_all')
@@ -146,7 +146,7 @@ pvalues
 da_target = scores.loc[pd.IndexSlice[:, args.target],
                        pd.IndexSlice[:, 'rejected']
                        ].join(freq_feat
-                            ).set_index(
+                              ).set_index(
     ('data', 'frequency'), append=True)
 da_target.index.names = da_target.index.names[:-1] + ['frequency']
 fname = args.out_folder / 'equality_rejected_target.pkl'
@@ -378,7 +378,7 @@ for i, idx in enumerate(feat_sel):
     fig, ax = plt.subplots()
 
     # dummy plots, just to get the Path objects
-    tmp_dot = ax.scatter([1,2],[3,4], marker='X')
+    tmp_dot = ax.scatter([1, 2], [3, 4], marker='X')
     new_mk, = tmp_dot.get_paths()
     tmp_dot.remove()
 

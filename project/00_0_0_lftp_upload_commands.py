@@ -42,11 +42,11 @@ def rename(fname, new_sample_id, new_folder=None, ext=None):
 # ## Arguments
 
 # %% tags=["parameters"]
-fn_rawfile_metadata: str = 'data/rawfile_metadata.csv' # Machine parsed metadata from rawfile workflow
-fn_mq_summaries: str = 'data/samples_selected_summaries.csv' # MaxQuant summary files
-fn_files_selected: str = 'data/samples_selected.yaml' # selected files based on threshold of identified peptides
-out_folder: str = 'data/rename' # output folder
-fn_server_log: str = 'data/rename/mq_out_server.log' # server log of all uploaded files
+fn_rawfile_metadata: str = 'data/rawfile_metadata.csv'  # Machine parsed metadata from rawfile workflow
+fn_mq_summaries: str = 'data/samples_selected_summaries.csv'  # MaxQuant summary files
+fn_files_selected: str = 'data/samples_selected.yaml'  # selected files based on threshold of identified peptides
+out_folder: str = 'data/rename'  # output folder
+fn_server_log: str = 'data/rename/mq_out_server.log'  # server log of all uploaded files
 
 # %%
 out_folder = Path(out_folder)
@@ -79,14 +79,14 @@ meta_stats.T
 
 # %%
 cols_identifies = [('FileProperties', 'Pathname'),
- ('FileProperties', 'Version'),
- ('FileProperties', 'Content Creation Date'),
- ('InstrumentProperties', 'Thermo Scientific instrument model'),
- ('InstrumentProperties', 'instrument attribute'),
- ('InstrumentProperties', 'instrument serial number'),
- ('InstrumentProperties', 'Software Version'),
- ('InstrumentProperties', 'firmware version'),
-]
+                   ('FileProperties', 'Version'),
+                   ('FileProperties', 'Content Creation Date'),
+                   ('InstrumentProperties', 'Thermo Scientific instrument model'),
+                   ('InstrumentProperties', 'instrument attribute'),
+                   ('InstrumentProperties', 'instrument serial number'),
+                   ('InstrumentProperties', 'Software Version'),
+                   ('InstrumentProperties', 'firmware version'),
+                   ]
 
 df_meta = df_meta[cols_identifies]
 df_meta.columns = [t[-1] for t in cols_identifies]
@@ -113,17 +113,16 @@ df_meta["Instrument_name"].value_counts().index
 # %%
 date_col = "Content Creation Date"
 idx_all = (pd.to_datetime(df_meta[date_col]).dt.strftime("%Y_%m_%d_%H_%M")
-        + '_'
-        + df_meta["Instrument_name"]
-).str.replace(' ', '-')
+           + '_'
+           + df_meta["Instrument_name"]
+           ).str.replace(' ', '-')
 
 mask = idx_all.duplicated(keep=False)
 duplicated_sample_idx = idx_all.loc[mask].sort_values()  # duplicated dumps
 duplicated_sample_idx
 
 # %%
-df_meta['new_sample_id'] =  idx_all
-
+df_meta['new_sample_id'] = idx_all
 
 
 _n = df_meta.groupby("new_sample_id").cumcount().astype('string').str.replace('0', '')
@@ -182,10 +181,10 @@ def build_instrument_name(s):
             if string_ not in used_before:
                 ret += f'_{string_}'
         used_before |= set(strings_)
-    ret = (ret[1:] # remove _ from start
+    ret = (ret[1:]  # remove _ from start
            .replace('Slot_#', '')
            .replace('slot_#', '')
-          )
+           )
     return ret
 
 
@@ -195,7 +194,7 @@ def build_instrument_name(s):
             "instrument attribute",
             "instrument serial number",
         ]
-    ]
+]
     .sample(20)
     .apply(build_instrument_name, axis=1)
 )
@@ -217,8 +216,8 @@ df_meta.loc[selected][["Path_old", "new_sample_id"]]
  .loc[selected, "Path_old"]
  .iloc[:3]
  .to_csv(out_folder / 'rawfiles_to_checksum.txt',
-          index=False,
-            header=False)
+         index=False,
+         header=False)
  )
 
 # %% [markdown]
@@ -247,7 +246,7 @@ del df_summaries
 # ```
 # to allow parallell commands, use the runtime setting
 # ```bash
-# >>> cat ~/.lftprc 
+# >>> cat ~/.lftprc
 # set cmd:parallel 2
 # ```
 
@@ -269,11 +268,11 @@ commands.to_csv(fname, header=False, index=False)
 # %%
 commands = df_meta.loc[selected]
 commands = (
-    'put ' 
+    'put '
     + commands['Path_old'].astype('string')
-    + ' -o ' 
-    + "./raw_files/" 
-    + commands["Instrument_name"] 
+    + ' -o '
+    + "./raw_files/"
+    + commands["Instrument_name"]
     + '/'
     + commands['new_sample_id'] + '.raw'
 )
@@ -299,9 +298,9 @@ commands.to_csv(fname, header=False, index=False)
 # %%
 commands = df_meta.loc[selected]
 commands = (
-    "mirror -R --only-missing --log log_lftp_mirror.log --exclude-glob *.pdf " # command
-    + "mq_out/" + commands.index # source
-    + " ./MQ_tables/" + commands["Instrument_name"]+ "/" + commands["new_sample_id"] # dest
+    "mirror -R --only-missing --log log_lftp_mirror.log --exclude-glob *.pdf "  # command
+    + "mq_out/" + commands.index  # source
+    + " ./MQ_tables/" + commands["Instrument_name"] + "/" + commands["new_sample_id"]  # dest
 )
 
 print(commands.sample(10).to_csv(header=False, index=False))
@@ -312,4 +311,3 @@ print(commands.sample(10).to_csv(header=False, index=False))
 # %%
 fname = out_folder / 'lftp_commands_mq_output.txt'
 commands.to_csv(fname, header=False, index=False)
-

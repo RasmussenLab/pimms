@@ -17,7 +17,10 @@
 # # Collaborative Filtering
 
 # %%
+
+
 import logging
+
 from pprint import pprint
 
 from fastai.basics import *
@@ -28,22 +31,23 @@ from fastai.data.all import *
 from fastai.tabular.all import *
 from fastai.collab import *
 
-# overwriting Recorder callback with custom plot_loss
+import vaep
+import vaep.model
+import vaep.models as models
 from vaep.models import plot_loss, RecorderDump
+
+import vaep.nb
+from vaep import sampling
+from vaep.io import datasplits
+
+from vaep.logging import setup_logger
+
+# overwriting Recorder callback with custom plot_loss
 from fastai import learner
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
 
 
-import vaep
-import vaep.model
-import vaep.models as models
-from vaep.io import datasplits
-from vaep import sampling
-
-
-import vaep.nb
-from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'))
 logger.info(
     "Experiment 03 - Analysis of latent spaces and performance comparisions")
@@ -75,7 +79,7 @@ cuda: bool = True  # Use the GPU for training?
 # model
 # Dimensionality of encoding dimension (latent space of model)
 latent_dim: int = 10
-# hidden_layers:str = '128_64' # A space separated string of layers, '50 20' for the encoder, reverse will be use for decoder
+# hidden_layers:str = '128_64' # Underscore separated string of layers, '128 64' for the encoder, reversed for decoder
 sample_idx_position: int = 0  # position of index which is sample ID
 model: str = 'CF'  # model name
 model_key: str = 'CF'  # potentially alternative key for model (grid search)
@@ -121,6 +125,10 @@ data = datasplits.DataSplits.from_folder(
 
 # %%
 data.train_X.sample(5)
+
+# %%
+# ! add check that specified data is available
+# silent error in fastai if e.g. target column is not available
 
 # %% [markdown]
 # Infer index names from long format
@@ -192,7 +200,7 @@ ana_collab = models.collab.CollabAnalysis(
     target_column='intensity',
     model_kwargs=dict(n_factors=args.latent_dim,
                       y_range=(int(data.train_X.min()),
-                               int(data.train_X.max())+1)
+                               int(data.train_X.max()) + 1)
                       ),
     batch_size=args.batch_size)
 
@@ -317,7 +325,9 @@ added_metrics
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
+# Fake NAs : Artificially created NAs. Some data was sampled and set
+# explicitly to misssing before it was fed to the model for
+# reconstruction.
 
 # %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')

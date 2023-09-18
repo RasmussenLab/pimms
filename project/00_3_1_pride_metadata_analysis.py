@@ -55,41 +55,41 @@ df_meta['instrument_label'] = (
 # Orbitrap Fusion Lumos MS:1002732
 
 instrument_labels = {'Q-Exactive-Orbitrap_1': 'Q Exactive 1',
- 'Q-Exactive-Plus-Orbitrap_1': 'Exactive Plus 1',
- 'Q-Exactive-HF-Orbitrap_206': 'Q Exactive HF 206',
- 'Q-Exactive-Plus-Orbitrap_143': 'Exactive Plus 143',
- 'Q-Exactive-HF-Orbitrap_1': 'Q Exactive HF 1',
- 'Q-Exactive-HF-Orbitrap_147': 'Q Exactive HF 147',
- 'Q-Exactive-HF-Orbitrap_204': 'Q Exactive HF 204',
- 'Q-Exactive-HF-Orbitrap_148': 'Q Exactive HF 148',
- 'Q-Exactive-HF-Orbitrap_207': 'Q Exactive HF 207',
- 'Q-Exactive-HF-Orbitrap_143': 'Q Exactive HF 143',
- 'Orbitrap-Fusion-Lumos_FSN20115': 'Orbitrap Fusion Lumos FSN20115',
- 'Q-Exactive-HF-Orbitrap_2612': 'Q Exactive HF 2612',
- 'Q-Exactive-HF-X-Orbitrap_6016': 'Q Exactive HF-X 6016',
- 'Q-Exactive-HF-X-Orbitrap_6004': 'Q Exactive HF-X 6004',
- 'Q-Exactive-HF-X-Orbitrap_6075': 'Q Exactive HF-X 6075',
- 'Q-Exactive-HF-X-Orbitrap_6078': 'Q Exactive HF-X 6078',
- 'Q-Exactive-HF-X-Orbitrap_6070': 'Q Exactive HF-X 6070',
- 'Q-Exactive-HF-X-Orbitrap_6071': 'Q Exactive HF-X 6071',
- 'Q-Exactive-HF-X-Orbitrap_6011': 'Q Exactive HF-X 6011',
- 'Q-Exactive-HF-X-Orbitrap_6073': 'Q Exactive HF-X 6073',
- 'Q-Exactive-HF-X-Orbitrap_6101': 'Q Exactive HF-X 6101',
- 'Q-Exactive-HF-X-Orbitrap_6096': 'Q Exactive HF-X 6096',
- 'Exactive-Series-Orbitrap_6004': 'Exactive Series 6004',
- 'Q-Exactive-HF-X-Orbitrap_6043': 'Q Exactive HF-X 6043',
- 'Q-Exactive-HF-X-Orbitrap_6025': 'Q Exactive HF-X 6025',
- 'Q-Exactive-HF-X-Orbitrap_6022': 'Q Exactive HF-X 6022',
- 'Q-Exactive-HF-X-Orbitrap_6023': 'Q Exactive HF-X 6023',
- 'Q-Exactive-HF-X-Orbitrap_6028': 'Q Exactive HF-X 6028',
- 'Q-Exactive-HF-X-Orbitrap_6013': 'Q Exactive HF-X 6013',
- 'Q-Exactive-HF-X-Orbitrap_6044': 'Q Exactive HF-X 6044',
- 'Q-Exactive-HF-X-Orbitrap_6324': 'Q Exactive HF-X 6324',
- 'Orbitrap-Exploris-480_Invalid_SN_0001': 'Orbitrap Exploris 480 Invalid SN 0001',
- 'Orbitrap-Exploris-480_MA10134C': 'Orbitrap Exploris 480 MA10134C',
- 'Orbitrap-Exploris-480_MA10132C': 'Orbitrap Exploris 480 MA10132C',
- 'Orbitrap-Exploris-480_MA10130C': 'Orbitrap Exploris 480 MA10130C',
- 'Orbitrap-Exploris-480_MA10215C': 'Orbitrap Exploris 480 MA10215C'}
+                     'Q-Exactive-Plus-Orbitrap_1': 'Exactive Plus 1',
+                     'Q-Exactive-HF-Orbitrap_206': 'Q Exactive HF 206',
+                     'Q-Exactive-Plus-Orbitrap_143': 'Exactive Plus 143',
+                     'Q-Exactive-HF-Orbitrap_1': 'Q Exactive HF 1',
+                     'Q-Exactive-HF-Orbitrap_147': 'Q Exactive HF 147',
+                     'Q-Exactive-HF-Orbitrap_204': 'Q Exactive HF 204',
+                     'Q-Exactive-HF-Orbitrap_148': 'Q Exactive HF 148',
+                     'Q-Exactive-HF-Orbitrap_207': 'Q Exactive HF 207',
+                     'Q-Exactive-HF-Orbitrap_143': 'Q Exactive HF 143',
+                     'Orbitrap-Fusion-Lumos_FSN20115': 'Orbitrap Fusion Lumos FSN20115',
+                     'Q-Exactive-HF-Orbitrap_2612': 'Q Exactive HF 2612',
+                     'Q-Exactive-HF-X-Orbitrap_6016': 'Q Exactive HF-X 6016',
+                     'Q-Exactive-HF-X-Orbitrap_6004': 'Q Exactive HF-X 6004',
+                     'Q-Exactive-HF-X-Orbitrap_6075': 'Q Exactive HF-X 6075',
+                     'Q-Exactive-HF-X-Orbitrap_6078': 'Q Exactive HF-X 6078',
+                     'Q-Exactive-HF-X-Orbitrap_6070': 'Q Exactive HF-X 6070',
+                     'Q-Exactive-HF-X-Orbitrap_6071': 'Q Exactive HF-X 6071',
+                     'Q-Exactive-HF-X-Orbitrap_6011': 'Q Exactive HF-X 6011',
+                     'Q-Exactive-HF-X-Orbitrap_6073': 'Q Exactive HF-X 6073',
+                     'Q-Exactive-HF-X-Orbitrap_6101': 'Q Exactive HF-X 6101',
+                     'Q-Exactive-HF-X-Orbitrap_6096': 'Q Exactive HF-X 6096',
+                     'Exactive-Series-Orbitrap_6004': 'Exactive Series 6004',
+                     'Q-Exactive-HF-X-Orbitrap_6043': 'Q Exactive HF-X 6043',
+                     'Q-Exactive-HF-X-Orbitrap_6025': 'Q Exactive HF-X 6025',
+                     'Q-Exactive-HF-X-Orbitrap_6022': 'Q Exactive HF-X 6022',
+                     'Q-Exactive-HF-X-Orbitrap_6023': 'Q Exactive HF-X 6023',
+                     'Q-Exactive-HF-X-Orbitrap_6028': 'Q Exactive HF-X 6028',
+                     'Q-Exactive-HF-X-Orbitrap_6013': 'Q Exactive HF-X 6013',
+                     'Q-Exactive-HF-X-Orbitrap_6044': 'Q Exactive HF-X 6044',
+                     'Q-Exactive-HF-X-Orbitrap_6324': 'Q Exactive HF-X 6324',
+                     'Orbitrap-Exploris-480_Invalid_SN_0001': 'Orbitrap Exploris 480 Invalid SN 0001',
+                     'Orbitrap-Exploris-480_MA10134C': 'Orbitrap Exploris 480 MA10134C',
+                     'Orbitrap-Exploris-480_MA10132C': 'Orbitrap Exploris 480 MA10132C',
+                     'Orbitrap-Exploris-480_MA10130C': 'Orbitrap Exploris 480 MA10130C',
+                     'Orbitrap-Exploris-480_MA10215C': 'Orbitrap Exploris 480 MA10215C'}
 
 df_meta["instrument_label"] = df_meta["instrument_label"].replace(instrument_labels)
 
@@ -126,10 +126,10 @@ counts_instrument = (df_meta
 
 counts_instrument = counts_instrument.join(
     (df_meta
-    [[*thermo_raw_files.cols_instrument, 'instrument_label']]
-    .drop_duplicates()
-    .set_index(thermo_raw_files.cols_instrument)
-    )
+     [[*thermo_raw_files.cols_instrument, 'instrument_label']]
+     .drop_duplicates()
+     .set_index(thermo_raw_files.cols_instrument)
+     )
     .set_index('instrument_label', append=True)
 )
 counts_instrument.to_excel(
@@ -164,11 +164,11 @@ counts_instrument
 # %%
 fig, ax = plt.subplots()
 ax = (counts_instrument
-        .plot
-        .bar(
-                ax=ax,
-        )
-)
+      .plot
+      .bar(
+          ax=ax,
+      )
+      )
 ax.set_xlabel('')
 ax.set_ylabel('number of samples (runs)')
 fname = out_folder / 'number_of_samples_per_instrument.pdf'
@@ -197,7 +197,7 @@ ax = (df_meta
 ax = (df_meta
       .loc[mask, cols]
       .plot
-      .scatter(cols[0],  cols[1],
+      .scatter(cols[0], cols[1],
                color='orange',
                label='normal files',
                ylabel='filesize (in GB)',
@@ -221,7 +221,9 @@ cols = ['Number of MS1 spectra', 'Number of MS2 spectra',
 cols = vaep.pandas.get_columns_accessor_from_iterable(cols)
 
 view = df_meta.loc[mask_top10_instruments]
-view["instrument_label+N"] = view["instrument_label"].replace(counts_instrument.to_frame().apply( lambda s: f"{s.name} (N={s['count']:03d})" , axis=1))
+view["instrument_label+N"] = view["instrument_label"].replace(
+    counts_instrument.to_frame().apply(
+        lambda s: f"{s.name} (N={s['count']:03d})", axis=1))
 view
 
 # %%
@@ -241,7 +243,7 @@ _ = ax.legend(fontsize=5,
               title='instrument label',
               loc='upper right',
               # alignment='left',
-)
+              )
 ax.xaxis.set_major_formatter("{x:,.0f}")
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = out_folder / 'ms1_to_ms2_top10_instruments.pdf'

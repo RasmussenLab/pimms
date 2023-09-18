@@ -86,7 +86,7 @@ df.head()
 # # # # CollaborativeFilteringTransformer?
 
 # %% [markdown]
-# Let's set up collaborative filtering without a validation or test set, using 
+# Let's set up collaborative filtering without a validation or test set, using
 # all the data there is.
 
 # %%
@@ -117,39 +117,39 @@ df_imputed.head()
 # Let's plot the distribution of the imputed values vs the ones used for training:
 
 # %%
-df_imputed = df_imputed.stack() # long-format
+df_imputed = df_imputed.stack()  # long-format
 observed = df_imputed.loc[df.index]
 imputed = df_imputed.loc[df_imputed.index.difference(df.index)]
-df_imputed = df_imputed.unstack() # back to wide-format
+df_imputed = df_imputed.unstack()  # back to wide-format
 # some checks
 assert len(df) == len(observed)
 assert df_imputed.shape[0] * df_imputed.shape[1] == len(imputed) + len(observed)
 
 # %%
-fig, axes = plt.subplots(2, figsize=(8,4))
+fig, axes = plt.subplots(2, figsize=(8, 4))
 
 min_max = vaep.plotting.data.get_min_max_iterable(
     [observed, imputed])
 label_template = '{method} (N={n:,d})'
 ax, _ = vaep.plotting.data.plot_histogram_intensities(
-        observed,
-        ax=axes[0],
-        min_max=min_max,
-        label=label_template.format(method='measured',
-                                    n=len(observed),
-                ),
-        color='grey',
-        alpha=1)
+    observed,
+    ax=axes[0],
+    min_max=min_max,
+    label=label_template.format(method='measured',
+                                n=len(observed),
+                                ),
+    color='grey',
+    alpha=1)
 _ = ax.legend()
 ax, _ = vaep.plotting.data.plot_histogram_intensities(
-        imputed,
-        ax=axes[1],
-        min_max=min_max,
-        label=label_template.format(method='CF imputed',
-                                    n=len(imputed),
-                ),
-        color=color_model_mapping['CF'],
-        alpha=1)
+    imputed,
+    ax=axes[1],
+    min_max=min_max,
+    label=label_template.format(method='CF imputed',
+                                n=len(imputed),
+                                ),
+    color=color_model_mapping['CF'],
+    alpha=1)
 _ = ax.legend()
 
 # %% [markdown]
@@ -166,8 +166,8 @@ df.head()
 
 # %% [markdown]
 # The AutoEncoder model currently need validation data for training.
-# We will use 10% of the training data for validation. 
-# > Expect this limitation to be dropped in the next release. It will still be recommended 
+# We will use 10% of the training data for validation.
+# > Expect this limitation to be dropped in the next release. It will still be recommended
 # > to use validation data for early stopping.
 
 # %%
@@ -176,7 +176,7 @@ freq_feat.head()  # training data
 
 # %% [markdown]
 # We will use the `sampling` module to sample the validation data from the training data.
-# Could be split differently by providing another `weights` vector. 
+# Could be split differently by providing another `weights` vector.
 
 # %%
 val_X, train_X = vaep.sampling.sample_data(df.stack(),
@@ -204,7 +204,7 @@ train_X.notna().sum().sum(), val_X.notna().sum().sum(),
 # Select either `DAE` or `VAE` model:
 
 # %%
-model_selected = 'VAE' # 'DAE'
+model_selected = 'VAE'  # 'DAE'
 model = AETransformer(
     model=model_selected,
     hidden_layers=[512,],
@@ -257,36 +257,36 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
 df_imputed = df_imputed.replace(val_X)
 
 # %%
-df = df.stack() # long-format
-df_imputed = df_imputed.stack() # long-format
+df = df.stack()  # long-format
+df_imputed = df_imputed.stack()  # long-format
 observed = df_imputed.loc[df.index]
 imputed = df_imputed.loc[df_imputed.index.difference(df.index)]
 
 # %%
-fig, axes = plt.subplots(2, figsize=(8,4))
+fig, axes = plt.subplots(2, figsize=(8, 4))
 
 min_max = vaep.plotting.data.get_min_max_iterable(
     [observed, imputed])
 label_template = '{method} (N={n:,d})'
 ax, _ = vaep.plotting.data.plot_histogram_intensities(
-        observed,
-        ax=axes[0],
-        min_max=min_max,
-        label=label_template.format(method='measured',
-                                    n=len(observed),
-                ),
-        color='grey',
-        alpha=1)
+    observed,
+    ax=axes[0],
+    min_max=min_max,
+    label=label_template.format(method='measured',
+                                n=len(observed),
+                                ),
+    color='grey',
+    alpha=1)
 _ = ax.legend()
 ax, _ = vaep.plotting.data.plot_histogram_intensities(
-        imputed,
-        ax=axes[1],
-        min_max=min_max,
-        label=label_template.format(method=f'{model_selected} imputed',
-                                    n=len(imputed),
-                ),
-        color=color_model_mapping[model_selected],
-        alpha=1)
+    imputed,
+    ax=axes[1],
+    min_max=min_max,
+    label=label_template.format(method=f'{model_selected} imputed',
+                                n=len(imputed),
+                                ),
+    color=color_model_mapping[model_selected],
+    alpha=1)
 _ = ax.legend()
 
 

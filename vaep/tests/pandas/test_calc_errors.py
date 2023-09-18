@@ -6,7 +6,7 @@ from vaep.pandas import calc_errors
 
 @fixture
 def example_data():
-    """Example data with duplicated index values. Normally MulitIndex is used with 
+    """Example data with duplicated index values. Normally MulitIndex is used with
     unique combination of sample and feat values."""
     data = [[25.47317633, 27.23206642, 26.43510602, 28.40661375, 27.6536975],
             [30.57866718, 30.17035425, 30.22881888, 29.82725333, 30.1177242],
@@ -21,7 +21,7 @@ def example_data():
     data = pd.DataFrame(data,
                         index=(f'feat_{i}' for i in [
                                0, 0, 1, 1, 1, 2, 3, 4, 5, 6]),
-                        columns=['observed'] + ['model_' + str(i+1) for i in range(4)])
+                        columns=['observed'] + ['model_' + str(i + 1) for i in range(4)])
     data.columns.name = 'model'
     data.index.name = 'feat'
     data['freq_feat'] = [4, 5, 5, 4, 6, 7, 7, 9, 8, 6]

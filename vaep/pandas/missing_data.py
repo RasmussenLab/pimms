@@ -4,11 +4,14 @@ import math
 
 import pandas as pd
 
+
 def percent_missing(df: pd.DataFrame) -> float:
     return df.isna().sum().sum() / math.prod(df.shape)
 
+
 def percent_non_missing(df: pd.DataFrame) -> float:
     return df.notna().sum().sum() / math.prod(df.shape)
+
 
 def list_files(folder='.') -> list[str]:
     return [f.as_posix() for f in Path(folder).iterdir()]
@@ -29,4 +32,3 @@ def get_record(data: pd.DataFrame, columns_sample=False) -> dict:
                   N_mis=int(N_mis),
                   missing=float(missing), )
     return record
-
