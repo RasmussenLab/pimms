@@ -145,6 +145,7 @@ log_fct = getattr(np, params.logarithm)
 analysis.log_transform(log_fct)
 logger.info(f"{analysis = }")
 df = analysis.df
+del analysis.df  # free memory
 df
 
 # %%
@@ -424,6 +425,7 @@ sample_counts.name = 'identified features'
 # %%
 K = 2
 df = df.astype(float)
+analysis.df = df
 pcs = analysis.get_PCA(n_components=K)  # should be renamed to get_PCs
 pcs = pcs.iloc[:, :K].join(df_meta).join(sample_counts)
 
@@ -592,10 +594,9 @@ freq_per_feature.to_pickle(fname)
 # - select frac_mnar from intensities selected using threshold matrix
 
 # %%
-analysis.splits = DataSplits(is_wide_format=False)
-splits = analysis.splits
-print(f"{analysis.splits = }")
-analysis.splits.__annotations__
+splits = DataSplits(is_wide_format=False)
+print(f"{splits = }")
+splits.__annotations__
 
 
 # %% [markdown]
@@ -603,27 +604,27 @@ analysis.splits.__annotations__
 # Simulated missing values are not used for validation and testing.
 
 # %%
-analysis.to_long_format(inplace=True)
-analysis.df_long
+df_long = vaep.io.datasplits.long_format(df)
+df_long.head()
 
 # %%
 # if not mnar:
-#     fake_na, splits.train_X = sample_data(analysis.df_long.squeeze(),
+#     fake_na, splits.train_X = sample_data(df_long.squeeze(),
 #                                           sample_index_to_drop=0,
-#                                           #   weights=freq_per_feature,
+#                                           weights=freq_per_feature,
 #                                           frac=0.1,
 #                                           random_state=params.random_state,)
 #     assert len(splits.train_X) > len(fake_na)
 # ! move parameter checks to start of script
 if 0.0 <= params.frac_mnar <= 1.0:
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
-    quantile_frac = analysis.df_long.quantile(params.frac_non_train)
+    quantile_frac = df_long.quantile(params.frac_non_train)
     rng = np.random.default_rng(params.random_state)
     threshold = pd.Series(rng.normal(loc=float(quantile_frac),
-                                     scale=float(0.3 * analysis.df_long.std()),
-                                     size=len(analysis.df_long),
+                                     scale=float(0.3 * df_long.std()),
+                                     size=len(df_long),
                                      ),
-                          index=analysis.df_long.index,
+                          index=df_long.index,
                           )
     # plot data vs threshold data
     ax = axes[0]
@@ -632,7 +633,7 @@ if 0.0 <= params.frac_mnar <= 1.0:
                                          min_max=min_max,
                                          alpha=0.8)
     plot_histogram_intensities(
-        analysis.df_long.squeeze(),
+        df_long.squeeze(),
         ax=ax,
         label='observed')
     plot_histogram_intensities(
@@ -641,17 +642,17 @@ if 0.0 <= params.frac_mnar <= 1.0:
         label='thresholds')
     ax.legend()
     # select MNAR (intensity between randomly sampled threshold)
-    mask = analysis.df_long.squeeze() < threshold
+    mask = df_long.squeeze() < threshold
     # ! subsample to have exact fraction of MNAR?
-    N = len(analysis.df_long)
+    N = len(df_long)
     logger.info(f"{int(N * params.frac_non_train) = :,d}")
     N_MNAR = int(params.frac_non_train * params.frac_mnar * N)
-    fake_na_mnar = analysis.df_long.loc[mask]
+    fake_na_mnar = df_long.loc[mask]
     if len(fake_na_mnar) > N_MNAR:
         fake_na_mnar = fake_na_mnar.sample(N_MNAR,
                                            random_state=params.random_state)
-    splits.train_X = analysis.df_long.loc[
-        analysis.df_long.index.difference(
+    splits.train_X = df_long.loc[
+        df_long.index.difference(
             fake_na_mnar.index)
     ]
     logger.info(f"{len(fake_na_mnar) = :,d}")
@@ -682,7 +683,7 @@ if 0.0 <= params.frac_mnar <= 1.0:
         color='C3',
         label=f'MCAR ({N_MCAR:,d})')
     ax.legend()
-    assert len(fake_na) + len(splits.train_X) == len(analysis.df_long)
+    assert len(fake_na) + len(splits.train_X) == len(df_long)
 else:
     raise ValueError(f"Invalid MNAR float value (should be betw. 0 and 1): {params.frac_mnar}")
 
@@ -690,13 +691,14 @@ splits.val_y = fake_na.sample(frac=0.5, random_state=params.random_state)
 splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]
 
 # %%
-splits.test_y
+splits.test_y.groupby(level=-1).count().describe()
 
 # %%
 splits.val_y
 
 # %%
-splits.train_X
+# ! add option to retain at least N samples per feature
+splits.train_X.groupby(level=-1).count().describe()
 
 # %%
 # ToDo check that feature indices and sample indicies overlap
@@ -761,7 +763,7 @@ splits = DataSplits.from_folder(params.data, file_format=params.file_format)
 # ## plot distribution of splits
 
 # %%
-splits_df = pd.DataFrame(index=analysis.df_long.index)
+splits_df = pd.DataFrame(index=df_long.index)
 splits_df['train'] = splits.train_X
 splits_df['val'] = splits.val_y
 splits_df['test'] = splits.test_y
