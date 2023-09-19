@@ -21,3 +21,5 @@ NAGuideR_methods:
   - MICE-NORM # mice
   - MLE # norm
   - IRM # VIM - ~9mins
+  - TRKNN
+  - MSIMPUTE

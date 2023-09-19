@@ -170,12 +170,14 @@ nafunctions <- function(x,method="zero"){
     }
     else if(method=="trknn"){
       source('src/R_NAGuideR/Imput_funcs.r')
-      sim_trKNN_wrapper <- function(data) {
-        result <- data %>% as.matrix %>% t %>% imputeKNN(., k=10, distance='truncation', perc=0) %>% t
-        return(result)
-      }
-      df1x <- sim_trKNN_wrapper(t(df1))
-      df<-as.data.frame(t(df1x))
+      # sim_trKNN_wrapper <- function(data) {
+      #   result <- data %>% as.matrix %>% t %>% imputeKNN(., k=10, distance='truncation', perc=0) %>% t
+      #   return(result)
+      # }
+      # df1x <- sim_trKNN_wrapper(t(df1))
+      # df<-as.data.frame(t(df1x))
+      df <- imputeKNN(as.matrix(df), k=10, distance='truncation', perc=0)
+      df <- as.data.frame(df)
     }
     else if(method=="rf"){
       install_rpackage("missForest")
@@ -212,10 +214,15 @@ nafunctions <- function(x,method="zero"){
       
       df<-GMS.Lasso(df1,nfolds=3,log.scale=FALSE,TS.Lasso=TRUE)
     }
+    else if(method=="msimpute"){
+       install_bioconductor("msImpute")
+       df <- msImpute(as.matrix(df), method='v2')
+       df <- as.data.frame(df) 
+    }
     else{
       stop(paste("Unspported methods so far: ", method))
     }
-    df<-as.data.frame(df)
+    df <- as.data.frame(df)
     df
   }
 # -
@@ -269,8 +276,8 @@ df
 original_header <- colnames(
     readr::read_csv(train_split, n_max=1, col_names=TRUE, skip=0)
 )
-original_header
 feat_name <- original_header[1]
+original_header[1:5]
 # -
 
 # Uncomment to test certain methods (only for debugging, as at least one method per package is tested using Github Actions)
@@ -298,7 +305,9 @@ feat_name <- original_header[1]
  # 'MICE-CART',
  # 'RF',
  # 'PI',
- # 'GMS' # fails to install on Windows
+ # 'GMS', # fails to install on Windows
+ #  'trknn',
+ #  'msimpute'
 # )
 
 # for (method in to_test) {
@@ -316,7 +325,6 @@ pred <- tibble::as_tibble(
 )
 names(pred) <- original_header
 pred
-
 # + vscode={"languageId": "r"}
 pred <- reshape2::melt(pred, id.vars=feat_name)
 names(pred) <- c(feat_name, 'Sample ID', method)
