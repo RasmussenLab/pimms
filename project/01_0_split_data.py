@@ -91,8 +91,6 @@ meta_cat_col: str = None  # category column in meta data
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
 
-meta_date_col: str = 'Content Creation Date'
-meta_cat_col: str = 'Software Version'
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -128,7 +126,7 @@ logger.info(
     f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
 # %%
-# ! factor out file reading to a separate module, not class
+# # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
 constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
 analysis = constructor(fname=params.FN_INTENSITIES,
@@ -371,10 +369,11 @@ params.used_samples = df.index.to_list()
 # ### Histogram of features per sample
 
 # %%
+group = 1
 ax = df.notna().sum(axis=1).hist()
 ax.set_xlabel('features per eligable sample')
 ax.set_ylabel('observations')
-fname = params.out_figures / 'hist_features_per_sample'
+fname = params.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -385,7 +384,7 @@ _ = ax.set_xticklabels(_new_labels, rotation=45,
                        horizontalalignment='right')
 ax.set_xlabel('feature prevalence')
 ax.set_ylabel('observations')
-fname = params.out_figures / 'feature_prevalence'
+fname = params.out_figures / f'0_{group}_feature_prevalence'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -398,21 +397,21 @@ min_max = vaep.plotting.data.min_max(df.stack())
 ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
 
-fname = params.out_figures / 'intensity_distribution_overall'
+fname = params.out_figures / f'0_{group}_intensity_distribution_overall'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
-fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter'
+fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='boxplot')
-fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot'
+fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -443,7 +442,7 @@ if params.meta_cat_col:
     analyzers.seaborn_scatter(
         pcs[pcs_name], ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
     fname = (params.out_figures
-             / f'pca_sample_by_{"_".join(params.meta_cat_col.split())}')
+             / f'0_{group}_pca_sample_by_{"_".join(params.meta_cat_col.split())}')
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -452,7 +451,7 @@ if params.meta_date_col != 'PlaceholderTime':
     fig, ax = plt.subplots()
     analyzers.plot_date_map(
         df=pcs[pcs_name], ax=ax, dates=pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
-    fname = params.out_figures / 'pca_sample_by_date'
+    fname = params.out_figures / f'0_{group}_pca_sample_by_date'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -470,7 +469,7 @@ analyzers.plot_scatter(
     size=5,
 )
 fname = (params.out_figures
-         / f'pca_sample_by_{"_".join(col_identified_feat.split())}.pdf')
+         / f'0_{group}_pca_sample_by_{"_".join(col_identified_feat.split())}.pdf')
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
@@ -487,7 +486,7 @@ fig = px.scatter(
     height=600  # 2 inches x 300 dpi
 )
 fname = (params.out_figures
-         / f'pca_sample_by_{"_".join(col_identified_feat.split())}_plotly.pdf')
+         / f'0_{group}_pca_sample_by_{"_".join(col_identified_feat.split())}_plotly.pdf')
 figures[fname.stem] = fname
 fig.write_image(fname)
 fig  # stays interactive in html
@@ -515,7 +514,7 @@ ax = df_w_date.boxplot(rot=80,
                        )
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
-fname = params.out_figures / 'median_boxplot'
+fname = params.out_figures / f'0_{group}_median_boxplot'
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 del df_w_date
@@ -548,8 +547,9 @@ if not params.meta_date_col == 'PlaceholderTime':
                                                   median_sample_intensity[dates.name])
                                               )
     fig = ax.get_figure()
-    figures['median_scatter'] = params.out_figures / 'median_scatter'
-    vaep.savefig(fig, figures['median_scatter'])
+    fname = params.out_figures / f'0_{group}_median_scatter'
+    figures[fname.stem] = fname
+    vaep.savefig(fig, fname)
 
 # %% [markdown]
 # - the closer the labels are there denser the samples are measured around that time.
@@ -608,6 +608,7 @@ df_long = vaep.io.datasplits.long_format(df)
 df_long.head()
 
 # %%
+group = 2
 # if not mnar:
 #     fake_na, splits.train_X = sample_data(df_long.squeeze(),
 #                                           sample_index_to_drop=0,
@@ -684,6 +685,9 @@ if 0.0 <= params.frac_mnar <= 1.0:
         label=f'MCAR ({N_MCAR:,d})')
     ax.legend()
     assert len(fake_na) + len(splits.train_X) == len(df_long)
+    fname = params.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
+    figures[fname.stem] = fname
+    vaep.savefig(fig, fname)
 else:
     raise ValueError(f"Invalid MNAR float value (should be betw. 0 and 1): {params.frac_mnar}")
 
@@ -784,6 +788,7 @@ _legend = [
 print(_legend)
 
 # %%
+group = 3
 ax = (splits
       .train_X
       .plot
@@ -802,7 +807,7 @@ _ = (splits
            legend=True)
      )
 ax.legend(_legend[:-1])
-fname = params.out_figures / 'test_over_train_split.pdf'
+fname = params.out_figures / f'0_{group}_test_over_train_split.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -818,7 +823,7 @@ ax = splits_df.plot.hist(bins=bins,
 ax.legend(_legend)
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
-fname = params.out_figures / 'splits_freq_stacked.pdf'
+fname = params.out_figures / f'0_{group}_splits_freq_stacked.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -832,7 +837,7 @@ ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
 ax.legend(_legend[1:])
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
-fname = params.out_figures / 'val_test_split_freq_stacked_.pdf'
+fname = params.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -845,14 +850,14 @@ splits.to_wide_format()
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='scatter')
-fname = params.out_figures / 'intensity_median_vs_prop_missing_scatter_train'
+fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='boxplot')
-fname = params.out_figures / 'intensity_median_vs_prop_missing_boxplot_train'
+fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -873,7 +878,6 @@ s_axes = pd.DataFrame({'medians': medians,
                        'validation split': splits.val_y.notna().sum(),
                        'training split': splits.train_X.notna().sum()}
                       ).plot.box(by='medians',
-                                 subplots=True,
                                  boxprops=dict(linewidth=s),
                                  flierprops=dict(markersize=s),
                                  ax=ax)
@@ -881,6 +885,11 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
+
+fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
+figures[fname.stem] = fname
+vaep.savefig(ax.get_figure(), fname)
+
 # %% [markdown]
 # ## Save parameters
 

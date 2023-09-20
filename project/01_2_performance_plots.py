@@ -8,7 +8,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.15.0
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -27,6 +27,7 @@
 #     - top N based on validation data
 
 # %%
+import logging
 import yaml
 import random
 from pathlib import Path
@@ -44,14 +45,15 @@ from vaep.io import datasplits
 from vaep.analyzers import compare_predictions
 import vaep.nb
 
-pd.options.display.max_rows = 120
-pd.options.display.min_rows = 50
+pd.options.display.max_rows = 30
+pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
 plt.rcParams.update({'figure.figsize': (4, 2)})
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(6)
 
 logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
 def load_config_file(fname: Path, first_split='config_') -> dict:
@@ -138,8 +140,8 @@ vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
                                      title='Test split', size=1)
 
 fig.suptitle("Simulated missing values per sample", size=8)
-
-fname = args.out_figures / 'fake_na_val_test_splits.png'
+group = 1
+fname = args.out_figures / f'2_{group}_fake_na_val_test_splits.png'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
@@ -215,18 +217,15 @@ pred_val = compare_predictions.load_split_prediction_by_modelkey(
     shared_columns=[TARGET_COL])
 pred_val[MODELS]
 
+# %% [markdown]
+# Describe absolute error
+
 # %%
 errors_val = (pred_val
               .drop(TARGET_COL, axis=1)
               .sub(pred_val[TARGET_COL], axis=0)
               [MODELS])
-errors_val.describe()  # over all samples, and all features
-
-# %% [markdown]
-# Describe absolute error
-
-# %%
-errors_val.abs().describe()  # over all samples, and all features
+errors_val  # over all samples and all features
 
 # %% [markdown]
 # ## Select top N for plotting and set colors
@@ -274,7 +273,7 @@ ax = (pred_val_corr
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_val_overall.pdf'
+fname = args.out_figures / f'2_{group}_pred_corr_val_overall.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 pred_val_corr
@@ -289,7 +288,8 @@ corr_per_sample_val = (pred_val
                            lambda df: df.corr().loc[TARGET_COL]
                        )[ORDER_MODELS])
 
-kwargs = dict(ylim=(0.7, 1), rot=90,
+min_corr = int(corr_per_sample_val.min().min() * 10) / 10
+kwargs = dict(ylim=(min_corr, 1), rot=90,
               #     boxprops=dict(linewidth=1.5),
               flierprops=dict(markersize=3),
               # title='Corr. betw. fake NA and model pred. per sample on validation data',
@@ -297,11 +297,11 @@ kwargs = dict(ylim=(0.7, 1), rot=90,
 ax = corr_per_sample_val[TOP_N_ORDER].plot.box(**kwargs)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_val_per_sample.pdf'
+fname = args.out_figures / f'2_{group}_pred_corr_val_per_sample.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
-fname = args.out_figures / 'pred_corr_val_per_sample.xlsx'
+fname = args.out_figures / f'2_{group}_pred_corr_val_per_sample.xlsx'
 dumps[fname.stem] = fname
 with pd.ExcelWriter(fname) as w:
     corr_per_sample_val.describe().to_excel(w, sheet_name='summary')
@@ -323,14 +323,14 @@ corr_per_sample_val.loc[mask].style.highlight_min(
 # %%
 c_error_min = 4.5
 mask = (errors_val[MODELS].abs() > c_error_min).any(axis=1)
-errors_val.loc[mask].sort_index(level=1)
+errors_val.loc[mask].sort_index(level=1).head()
 
 # %%
 errors_val = errors_val.abs().groupby(
     freq_feat.index.name).mean()  # absolute error
 errors_val = errors_val.join(freq_feat)
 errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
-errors_val
+errors_val.head()
 
 # %% [markdown]
 # Some interpolated features are missing
@@ -358,7 +358,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,)
 ax.set_ylabel(f"Average error ({METRIC})")
-fname = args.out_figures / 'errors_binned_by_int_val.pdf'
+fname = args.out_figures / f'2_{group}_errors_binned_by_int_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
@@ -410,15 +410,15 @@ writer.close()
 
 # %% [markdown]
 # ## Intensity distribution as histogram
-# plot top 4 models
+# Plot top 4 models predictions for intensities in test data
 # %%
 min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
 top_n = 4
-fig, axes = plt.subplots(ncols=4, figsize=(8, 2), sharey=True)
+fig, axes = plt.subplots(ncols=top_n, figsize=(8, 2), sharey=True)
 
 for model, color, ax in zip(
-        ORDER_MODELS[:4],
-        COLORS_TO_USE[:4],
+        ORDER_MODELS[:top_n],
+        COLORS_TO_USE[:top_n],
         axes):
 
     ax, _ = vaep.plotting.data.plot_histogram_intensities(
@@ -440,7 +440,7 @@ for model, color, ax in zip(
 
 axes[0].set_ylabel('Number of observations')
 
-fname = args.out_figures / f'intensity_binned_top_{top_n}_models_test.pdf'
+fname = args.out_figures / f'2_{group}_intensity_binned_top_{top_n}_models_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
@@ -457,7 +457,7 @@ ax = pred_test_corr.loc[TARGET_COL, ORDER_MODELS].plot.bar(
 ax = vaep.plotting.add_height_to_barplot(ax)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_test_overall.pdf'
+fname = args.out_figures / f'2_{group}_pred_corr_test_overall.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 pred_test_corr
@@ -480,6 +480,7 @@ too_few_obs = corr_per_sample_test['n_obs'] < 3
 corr_per_sample_test.loc[~too_few_obs].describe()
 
 # %%
+# # ! add minimum
 kwargs = dict(ylim=(0.7, 1), rot=90,
               flierprops=dict(markersize=3),
               # title='Corr. betw. fake NA and model predictions per sample on test data',
@@ -490,7 +491,7 @@ ax = (corr_per_sample_test
       .box(**kwargs))
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_test_per_sample.pdf'
+fname = args.out_figures / f'2_{group}_pred_corr_test_per_sample.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
@@ -545,7 +546,7 @@ ax = (corr_per_feat_test
       )
 _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
-fname = args.out_figures / 'pred_corr_test_per_feat.pdf'
+fname = args.out_figures / f'2_{group}_pred_corr_test_per_feat.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.xlsx')
@@ -626,7 +627,7 @@ ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
 ax = vaep.plotting.add_height_to_barplot(ax, size=5)
 ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
 ax.set_xticklabels([])
-fname = args.out_figures / 'performance_test.pdf'
+fname = args.out_figures / f'2_{group}_performance_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
@@ -656,7 +657,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     palette=COLORS_TO_USE
 )
 
-fname = args.out_figures / 'errors_binned_by_feat_medians.pdf'
+fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
@@ -687,7 +688,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,
 )
-fname = args.out_figures / 'errors_binned_by_int_test.pdf'
+fname = args.out_figures / f'2_{group}_test_errors_binned_by_int.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
@@ -703,5 +704,3 @@ figures
 
 # %%
 dumps
-
-# %%
