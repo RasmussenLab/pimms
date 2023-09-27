@@ -47,8 +47,8 @@ dependencies:
   - jupyter-dash
   - papermill # execute ipynb's
   # R packages (listed in NAGuideR)
-  - r-base #=3.6
-  - r-devtools # is it needed for source installs on windows server? 
+  - r-base
+  - r-devtools # is it needed for source installs on windows server?
   - r-irkernel
   - r-reshape2
   - r-stringi # + rmarkdown hack for reshape2
@@ -66,6 +66,7 @@ dependencies:
   - r-rrcov
   - r-gmm
   - r-tmvtnorm
+  - r-igraph
   # - bioconductor-biocinstaller
   # - r-imputelcmd # bioconda
   # - bioconductor-impute
@@ -83,6 +84,5 @@ dependencies:
   # - jupyterlab_code_formatter
   # - jupyterlab-git
   - pip:
-    - -e .
-    - mrmr-selection
-    
+      - -e .
+      - mrmr-selection
