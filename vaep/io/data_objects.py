@@ -401,7 +401,7 @@ class Count():
 
 
 # # check df for redundant information (same feature value for all entries)
-usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE, 'PEP']
+usecols = mq.COLS_ + ['Potential contaminant', 'Reverse', mq.mq_col.SEQUENCE, 'PEP']
 
 
 def count_peptides(folders: List[Path], dump=True,
@@ -414,14 +414,17 @@ def count_peptides(folders: List[Path], dump=True,
         peptides = pd.read_table(folder / 'peptides.txt',
                                  usecols=usecols,
                                  index_col=0)
-        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (
-            peptides["Potential contaminant"] == '+')
+        mask = ((peptides[mq.mq_col.INTENSITY] == 0)
+                | (peptides["Potential contaminant"] == '+')
+                | (peptides["Reverse"] == '+')
+                )
         peptides = peptides.loc[~mask]
         c.update(peptides.index)
         if dump:
-            fpath_dict[folder.stem] = dump_to_csv(peptides.drop('Potential contaminant', axis=1),
-                                                  folder=folder, outfolder=outfolder,
-                                                  parent_folder_fct=parent_folder_fct)
+            fpath_dict[folder.stem] = dump_to_csv(peptides.drop(
+                ['Potential contaminant', 'Reverse'], axis=1),
+                folder=folder, outfolder=outfolder,
+                parent_folder_fct=parent_folder_fct)
     ret = {'counter': c, 'dumps': fpath_dict}
     return ret
 
