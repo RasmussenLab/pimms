@@ -28,6 +28,7 @@ MODELS = config["models"].copy()
 if config["NAGuideR_methods"]:
     MODELS += config["NAGuideR_methods"]
 
+nb_stem = "01_2_performance_summary"
 rule comparison:
     input:
         nb=nb,
@@ -37,12 +38,14 @@ rule comparison:
             model=MODELS,
         ),
     output:
-        xlsx="{folder_experiment}/01_2_performance_summary.xlsx",
+        xlsx=f"{{folder_experiment}}/{nb_stem}.xlsx",
         pdf="{folder_experiment}/figures/2_1_test_errors_binned_by_int.pdf",
         nb="{folder_experiment}" f"/{nb}",
     params:
         meta_data=config["fn_rawfile_metadata"],
         models=",".join(MODELS),
+        err = f"{{folder_experiment}}/logs/{nb_stem}.e",
+        out = f"{{folder_experiment}}/logs/{nb_stem}.o"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r fn_rawfile_metadata {params.meta_data:q}"
@@ -71,6 +74,8 @@ rule transform_NAGuideR_predictions:
     benchmark:
          "{folder_experiment}/"f"{nb_stem}.tsv",
     params:
+        err = f"{{folder_experiment}}/logs/{nb_stem}.e",
+        out = f"{{folder_experiment}}/logs/{nb_stem}.o",
         folder_experiment="{folder_experiment}",
         # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
         dumps_as_str=lambda wildcards, input: ','.join(input.dumps)
@@ -94,6 +99,8 @@ rule train_NAGuideR_model:
     benchmark:
         "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
     params:
+        err = "{folder_experiment}/logs/{method}.e",
+        out = "{folder_experiment}/logs/{method}.o",
         folder_experiment="{folder_experiment}",
         method="{method}",
     shell:
@@ -103,15 +110,18 @@ rule train_NAGuideR_model:
         " -r folder_experiment {params.folder_experiment}"
         " && jupyter nbconvert --to html {output.nb}"
 
+nb_stem = "01_0_transform_data_to_wide_format"
 rule transform_data_to_wide_format:
     input:
-        nb="01_0_transform_data_to_wide_format.ipynb",
+        nb=f"{nb_stem}.ipynb",
         train_split="{folder_experiment}/data/train_X.csv",
     output:
         nb="{folder_experiment}/01_0_transform_data_to_wide_format.ipynb",
         train_split=temp("{folder_experiment}/data/data_wide_sample_cols.csv"),
     params:
         folder_experiment="{folder_experiment}",
+        err = f"{{folder_experiment}}/logs/{nb_stem}.e",
+        out = f"{{folder_experiment}}/logs/{nb_stem}.o",
     shell:
         "papermill {input.nb} {output.nb}"
         " -r folder_experiment {params.folder_experiment}"
@@ -132,6 +142,8 @@ rule train_models:
     params:
         folder_experiment="{folder_experiment}",
         meta_data=config["fn_rawfile_metadata"],
+        err = "{folder_experiment}/logs/{model}.e",
+        out = "{folder_experiment}/logs/{model}.o"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -156,6 +168,8 @@ rule create_splits:
     params:
         folder_experiment="{folder_experiment}",
         meta_data=config["fn_rawfile_metadata"],
+        err = "{folder_experiment}/logs/create_splits.e",
+        out = "{folder_experiment}/logs/create_splits.o"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"

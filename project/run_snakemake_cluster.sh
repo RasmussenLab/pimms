@@ -21,11 +21,14 @@
 echo Working directory is $PBS_O_WORKDIR
 cd $PBS_O_WORKDIR
 
+. ~/setup_conda.sh
+conda activate vaep
 
 snakemake --jobs 10 -k -p --latency-wait 60 --rerun-incomplete \
+--default-resources walltime=3600 \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
-" -W group_list=cpr_10006 -A cpr_10006 "\
-# "-e {params.logdir} -o {params.logdir}" \
---cluster-status "python qsub-status.py" &&
+" -W group_list=cpr_10006 -A cpr_10006 -V"\
+" -e {params.err} -o {params.out}" \
+--cluster-status "python ../workflows/maxquant/qsub-status.py" &&
 echo "done" ||
 echo "failed"
