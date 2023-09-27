@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.15.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -24,6 +24,7 @@ import random
 import yaml
 
 import pandas as pd
+from tqdm.notebook import tqdm
 
 import vaep.pandas
 from vaep.io.data_objects import PeptideCounter
@@ -58,14 +59,14 @@ assert len(files) == len(folders_dict) == len(folders)
 
 # %%
 fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv'  # selected samples with pride and original id
-df_ids = pd.read_csv(fn_id_old_new)
+df_ids = pd.read_csv(fn_id_old_new, index_col=0)
 df_ids
 
 # %% [markdown]
 # Select files and create list of folders
 
 # %%
-folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in df_ids['Sample ID']}
+folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in df_ids.index}
 # folders_dict = {p.stem : p.parent / p.stem for p in folders_dict}
 # folders_dict
 folders = [Path(folder_path) for folder_path in folders_dict.values()]
@@ -130,16 +131,13 @@ else:
 c = peptide_counter.sum_over_files(folders=folders)
 
 # %%
-for k, v in peptide_counter.dumps.items():
+for k, v in tqdm(peptide_counter.dumps.items()):
     old_name = v
     new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
     try:
         os.rename(old_name, new_name)
     except FileNotFoundError:
         logging.warning(f"File not found: {old_name}")
-
-# %%
-new_name
 
 # %%
 c.most_common(10)  # peptide_counter.counter.most_common(10)
