@@ -56,7 +56,7 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
         Pandas DataFrame of concatenated samples of training and validation data.
         Fraction of samples originally in validation data.
     """
-    X = train_df.append(val_df).reset_index()
+    X = pd.concat([train_df, val_df]).reset_index()
     frac = len(val_df) / (len(train_df) + len(val_df))
     return X, frac
 

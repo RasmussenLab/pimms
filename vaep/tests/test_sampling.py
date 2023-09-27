@@ -53,5 +53,7 @@ def test_sample_data(random_data):
         series_sampled) + len(series_not_sampled)
     assert X.index.difference(
         series_sampled.index.append(series_not_sampled.index)).empty
-    assert series_sampled.loc[pd.IndexSlice[:, excluded_feat]].empty
-    assert not series_not_sampled.loc[pd.IndexSlice[:, excluded_feat]].empty
+    idx_excluded = series_sampled.index.isin(excluded_feat, level=1)
+    assert series_sampled.loc[idx_excluded].empty
+    idx_excluded = series_not_sampled.index.isin(excluded_feat, level=1)
+    assert not series_not_sampled.loc[idx_excluded].empty
