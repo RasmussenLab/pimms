@@ -5,9 +5,16 @@ from snakemake.logging import logger
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
+
+MAX_WALLTIME = '24:00:00'
+# Thinnode resources sharing: 40 cores and 196 GB RAM (minus 2GB for snakemake)
+# JOB_RAM_MB = int(204_800 / 40 * config['THREATS_MQ'])
+JOB_RAM_MB = '4gb'
 folder_experiment = config["folder_experiment"]
 logger.info(f"{folder_experiment = }")
 
+# local rules are excuted in the process (job) running snakemake
+localrules: all
 
 rule all:
     input:
@@ -80,6 +87,10 @@ rule train_NAGuideR_model:
     output:
         nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
         dump=temp("{folder_experiment}/preds/pred_all_{method}.csv")
+    resources:
+        mem_mb = JOB_RAM_MB, walltime = MAX_WALLTIME
+    threads:
+        1 # R is single threaded
     benchmark:
         "{folder_experiment}/01_1_train_NAGuideR_{method}.tsv"
     params:
