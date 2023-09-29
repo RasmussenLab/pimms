@@ -41,11 +41,26 @@ setup_nb_logger()
 logging.info(f"Search Raw-Files on path: {FOLDER_MQ_TXT_DATA}")
 
 # %% [markdown]
-# Use samples previously loaded.
+# Use samples previously loaded. Specified MQ output folders are in `eligable_files.yaml`
+#
+# ```yaml
+# # example of eligable_files.yaml
+# files:
+#  - example_folder
+# ```
+#
+# and the name to folder path are in `file_paths.yaml`
+#
+# ```yaml
+# # example of file_paths.yaml
+# example_folder: path/to/example_folder
+# ```
+#
+#
 
 # %%
-ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml')
-MAP_FOLDER_PATH = Path('config/file_paths')
+ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml') # acutally MQ txt folders, not files...
+MAP_FOLDER_PATH = Path('config/file_paths.yaml')
 
 with open(ELIGABLE_FILES_YAML) as f:
     files = set(yaml.safe_load(f)['files'])
@@ -66,10 +81,11 @@ df_ids
 # Select files and create list of folders
 
 # %%
-folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in df_ids.index}
+folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in files}
 # folders_dict = {p.stem : p.parent / p.stem for p in folders_dict}
 # folders_dict
 folders = [Path(folder_path) for folder_path in folders_dict.values()]
+len(folders)
 
 
 # %%
@@ -198,6 +214,7 @@ use_cols = [
     evidence_cols.Protein_group_IDs,
     evidence_cols.Intensity,
     evidence_cols.Score,
+    evidence_cols.Reverse,
     evidence_cols.Potential_contaminant]
 
 evidence_selected = vaep.io.data_objects.select_evidence(evidence[use_cols])

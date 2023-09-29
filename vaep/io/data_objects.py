@@ -467,8 +467,11 @@ evidence_cols = mq.mq_evidence_cols
 
 
 def select_evidence(df_evidence: pd.DataFrame) -> pd.DataFrame:
-    mask = (df_evidence[evidence_cols.Potential_contaminant]
-            == '+') | (df_evidence[evidence_cols.Intensity] == 0)
+    mask = ((df_evidence[['Reverse', 'Potential contaminant']]
+             .notna()
+             .any(axis=1))
+            | (df_evidence[evidence_cols.Intensity] == 0)
+            )
     evidence = df_evidence.loc[~mask].drop(
         evidence_cols.Potential_contaminant, axis=1)
     evidence = evidence.dropna(subset=[evidence_cols.Intensity])
@@ -580,7 +583,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     pg = pd.read_table(folder / 'proteinGroups.txt',
                        usecols=use_cols)
     mask = pg[[pg_cols.Only_identified_by_site, pg_cols.Reverse,
-               pg_cols.Potential_contaminant]].notna().sum(axis=1) > 0
+               pg_cols.Potential_contaminant]].notna().any(axis=1)
     pg = pg.loc[~mask]
     mask = pg[pg_cols.Intensity] > 1
     pg = pg.loc[mask]
