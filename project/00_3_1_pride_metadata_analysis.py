@@ -103,7 +103,7 @@ excel_writer = pd.ExcelWriter(fname)
 # ## Varying data between runs
 
 # %%
-meta_stats = df_meta.describe(include='all', datetime_is_numeric=True)
+meta_stats = df_meta.describe(include='all')
 meta_stats.T.to_excel(excel_writer, sheet_name='des_stats', **writer_args)
 
 view = meta_stats.loc[:, (meta_stats.loc['unique'] > 1)

@@ -58,7 +58,7 @@ msg = f"A total of {len(df_meta_rawfiles)} raw files could be read using the The
 print(msg)
 
 # %%
-meta_stats = df_meta_rawfiles.describe(include='all', datetime_is_numeric=True)
+meta_stats = df_meta_rawfiles.describe(include='all')
 meta_stats.T
 
 # %% [markdown]

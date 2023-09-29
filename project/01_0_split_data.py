@@ -227,8 +227,7 @@ df_meta
 
 
 # %%
-df_meta.describe(datetime_is_numeric=True,
-                 percentiles=np.linspace(0.05, 0.95, 10))
+df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
 
 # %% [markdown]
 # select samples with a minimum retention time
@@ -251,7 +250,7 @@ else:
 df_meta = df_meta.sort_values(params.meta_date_col)
 
 # %%
-meta_stats = df_meta.describe(include='all', datetime_is_numeric=True)
+meta_stats = df_meta.describe(include='all')
 meta_stats
 
 # %% [markdown]
@@ -434,7 +433,7 @@ pcs = pcs.reset_index()
 pcs
 
 # %%
-pcs.describe(include='all', datetime_is_numeric=True).T
+pcs.describe(include='all').T
 
 # %%
 if params.meta_cat_col:
