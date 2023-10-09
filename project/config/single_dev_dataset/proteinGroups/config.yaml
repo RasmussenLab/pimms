@@ -2,7 +2,7 @@ config_split: config/single_dev_dataset/proteinGroups/split.yaml
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
 folder_experiment: runs/dev_dataset_large/proteinGroups
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv
-cuda: True
+cuda: False
 models:
  - Median
  - CF

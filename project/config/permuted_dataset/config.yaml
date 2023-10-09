@@ -3,7 +3,7 @@ config_split: config/permuted_dataset/split.yaml  # proteinGroups
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
 folder_experiment: runs/permuted #/proteinGroups
 fn_rawfile_metadata: # no metadata for permuted data
-cuda: True
+cuda: False
 models:
  - Median
  - CF

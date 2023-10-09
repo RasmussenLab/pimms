@@ -5,5 +5,5 @@ batch_size: 64
 epochs_max: 100
 hidden_layers: "512"
 sample_idx_position: 0
-cuda: True
+cuda: False
 save_pred_real_na: True

@@ -3,7 +3,7 @@ config_train: runs/knn_comparison/hela_pgs_large/configs_train/train_{model}.yam
 folder_experiment: runs/knn_comparison/hela_pgs_large
 fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv
 file_format: csv
-cuda: True
+cuda: False
 models:
     - Median:
           model: Median

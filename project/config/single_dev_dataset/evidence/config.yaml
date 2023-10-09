@@ -2,6 +2,7 @@ config_split: config/single_dev_dataset/evidence/split.yaml
 config_train: config/single_dev_dataset/evidence/train_{model}.yaml
 folder_experiment: runs/dev_dataset_large/evidence
 fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
+cuda: False
 models:
  - Median
  - CF
