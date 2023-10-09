@@ -498,7 +498,9 @@ def count_evidence(folders: List[Path],
                              evidence_cols.Protein_group_IDs,
                              evidence_cols.Intensity,
                              evidence_cols.Score,
-                             evidence_cols.Potential_contaminant],
+                             evidence_cols.Potential_contaminant,
+                             evidence_cols.Reverse,
+                            ],
                    parent_folder_fct: Callable = create_parent_folder_name,
                    outfolder=FOLDER_PROCESSED / 'evidence_dumps'):
     outfolder = Path(outfolder)

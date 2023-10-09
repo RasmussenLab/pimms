@@ -59,7 +59,7 @@ logging.info(f"Search Raw-Files on path: {FOLDER_MQ_TXT_DATA}")
 #
 
 # %%
-ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml') # acutally MQ txt folders, not files...
+ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml')  # acutally MQ txt folders, not files...
 MAP_FOLDER_PATH = Path('config/file_paths.yaml')
 
 with open(ELIGABLE_FILES_YAML) as f:
@@ -81,6 +81,7 @@ df_ids
 # Select files and create list of folders
 
 # %%
+files = [file for file in files if file in df_ids.index]
 folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in files}
 # folders_dict = {p.stem : p.parent / p.stem for p in folders_dict}
 # folders_dict
@@ -96,7 +97,7 @@ OVERWRITE = True
 FNAME_C_PEPTIDES, FNAME_C_EVIDENCE, FNAME_C_PG, FNAME_C_GENES
 
 # %% [markdown]
-# ## Random example
+# ## Random example - peptides
 
 # %%
 pd.set_option('display.max_columns', 60)
@@ -175,7 +176,7 @@ with open(FOLDER_PROCESSED / f'most_common_{10}_peptides.py', 'w') as f:
     f.write("pd.DataFrame.from_records(most_common, index='Sequence', columns=['Sequence', 'counts'])\n")
 
 # %% [markdown] Collapsed="false"
-# ## Peptides by charge
+# ## Random example - precursors
 #
 # - count peptides by charge state (which are aggregated in `peptides.txt`)
 
@@ -256,11 +257,20 @@ evidence[evidence_cols.Type].value_counts()
 evidence[evidence_cols.Protein_group_IDs].value_counts()
 
 # %% [markdown]
-# ## Count peptides based on evidence files
+# ## Count precursors based on evidence files
 
 # %%
 evidence_counter = vaep.io.data_objects.EvidenceCounter(FNAME_C_EVIDENCE, overwrite=OVERWRITE)
 c = evidence_counter.sum_over_files(folders=folders)
+
+# %%
+for k, v in tqdm(evidence_counter.dumps.items()):
+    old_name = v
+    new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
+    try:
+        os.rename(old_name, new_name)
+    except FileNotFoundError:
+        logging.warning(f"File not found: {old_name}")
 
 # %% [markdown]
 # ## Protein Groups
@@ -382,17 +392,39 @@ mask = selection[cols.Gene_names].isin(non_unique_genes)
 selection.loc[mask]
 
 # %%
-selection = selection.append(selection_no_gene)
+selection = pd.concat([selection, selection_no_gene])
+selection
+
+# %% [markdown]
+# The above is done in the function for loading and processing protein groups
+
+# %%
+vaep.io.data_objects.load_and_process_proteinGroups(random_path)
+
+# %% [markdown]
+# ## Count protein groups (genes) based on proteinGroups files
 
 # %%
 protein_groups_counter = vaep.io.data_objects.ProteinGroupsCounter(FNAME_C_PG, overwrite=OVERWRITE)
 c = protein_groups_counter.sum_over_files(folders=folders)
 
 # %%
+for k, v in tqdm(protein_groups_counter.dumps.items()):
+    old_name = v
+    new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
+    try:
+        os.rename(old_name, new_name)
+    except FileNotFoundError:
+        logging.warning(f"File not found: {old_name}")
+
+# %% [markdown]
+# Over 400,000 protein groups were only identified once (as exactly this group).
+
+# %%
 vaep.pandas.counts_with_proportion(pd.Series(c))  # Most proteinGroups are unique
 
 # %% [markdown]
-# ### Count genes
+# ## Count genes
 # Genes sets could be used to identify common features.
 #
 # > The assignment of isoforms to one proteinGroup or another might be volatile.
