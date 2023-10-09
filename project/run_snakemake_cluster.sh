@@ -28,7 +28,8 @@ snakemake --jobs 10 -k -p --latency-wait 60 --rerun-incomplete \
 --default-resources walltime=3600 \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 -V"\
-" -e {params.err} -o {params.out}" \
+" -e {params.err} -o {params.out}"\
+" -N ${prefix}.{params.name}" \
 --cluster-status "python ../workflows/maxquant/qsub-status.py" &&
 echo "done" ||
 echo "failed"
