@@ -597,7 +597,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     pg = vaep.pandas.select_max_by(df=pg.loc[~mask_no_gene],
                                    grouping_columns=[pg_cols.Gene_names],
                                    selection_column=pg_cols.Score)
-    pg = pg.append(pg_no_gene)
+    pg = pd.concat([pg, pg_no_gene])
     pg = pg.set_index(pg_cols.Protein_IDs)
     return pg
 
