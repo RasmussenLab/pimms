@@ -21,10 +21,33 @@
 echo Working directory is $PBS_O_WORKDIR
 cd $PBS_O_WORKDIR
 
+cd pimms/project # throws an error, but is not consequential.
+
+# Get the values of the parameters from the environment variables
+prefix=${prefix:-""}
+configfile=${configfile:-""}
+
+# Check if the values are empty
+if [ -z "$prefix" ]; then
+  echo "Error: Missing required parameters: prefix"
+  exit 1
+# Check if the values are empty
+elif [ -z "$configfile" ]; then
+  echo "Error: Missing required parameters: configfile"
+  exit 1
+else
+    echo " # found parameters, see above:"
+    echo prefix: $prefix
+    echo configfile: $configfile
+    echo '####################################################################'
+fi
+
+
 . ~/setup_conda.sh
 conda activate vaep
 
 snakemake --jobs 10 -k -p --latency-wait 60 --rerun-incomplete \
+--configfile $configfile \
 --default-resources walltime=3600 \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 -V"\
