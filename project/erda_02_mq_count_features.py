@@ -13,7 +13,7 @@
 # ---
 
 # %% [markdown]
-# # Count peptides over all files
+# # Count and select features of all samples
 
 # %%
 from collections import Counter
@@ -28,6 +28,7 @@ from tqdm.notebook import tqdm
 
 import vaep.pandas
 from vaep.io.data_objects import PeptideCounter
+from vaep.io import mq
 from vaep.io.mq import MaxQuantOutputDynamic
 
 ##### CONFIG #####
@@ -112,18 +113,23 @@ df = mq_output.peptides[use_columns].convert_dtypes()  # .to_json('test.json')
 df
 
 # %%
-df_json_string = df.to_json(orient='index', indent=4)
-df_json_string[:1000]
-
-# %%
-df_csv = df.to_csv()
-df_csv[:1000]
-
-# %%
-pd.read_json(df_json_string, orient='index')
-
-# %%
 mq_output.peptides.Intensity  # as is in peptides.txt, comma seperated thousands
+
+# %% [markdown]
+# The above is done in the function for loading and processing peptides
+
+# %%
+# internals: processing file (includes filtering)
+peptides = vaep.io.data_objects.load_process_peptides(random_path,
+                                                      use_cols=mq.COLS_ + ['Potential contaminant',
+                                                                           'Reverse',
+                                                                           mq.mq_col.SEQUENCE,
+                                                                           'PEP',
+                                                                           'id',
+                                                                           'Protein group IDs',
+                                                                           'Evidence IDs',
+                                                                           ])
+peptides
 
 # %% [markdown]
 # ## Count aggregated peptides
@@ -255,6 +261,24 @@ evidence[evidence_cols.Type].value_counts()
 
 # %%
 evidence[evidence_cols.Protein_group_IDs].value_counts()
+
+# %% [markdown]
+# The above is done in the function for loading and processing precursors
+
+# %%
+# internals: processing file (includes filtering)
+evidence = vaep.io.data_objects.load_process_evidence(random_path,
+                                                      use_cols=[
+                                                          mq.mq_evidence_cols.mz,
+                                                          mq.mq_evidence_cols.id,
+                                                          mq.mq_evidence_cols.Peptide_ID,
+                                                          mq.mq_evidence_cols.Protein_group_IDs,
+                                                          mq.mq_evidence_cols.Intensity,
+                                                          mq.mq_evidence_cols.Score,
+                                                          mq.mq_evidence_cols.Potential_contaminant,
+                                                          mq.mq_evidence_cols.Reverse],
+                                                      select_by='Score')
+evidence
 
 # %% [markdown]
 # ## Count precursors based on evidence files
