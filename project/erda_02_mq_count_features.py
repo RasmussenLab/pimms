@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.15.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -13,7 +13,7 @@
 # ---
 
 # %% [markdown]
-# # Count peptides over all files
+# # Count and select features of all samples
 
 # %%
 from collections import Counter
@@ -24,9 +24,11 @@ import random
 import yaml
 
 import pandas as pd
+from tqdm.notebook import tqdm
 
 import vaep.pandas
 from vaep.io.data_objects import PeptideCounter
+from vaep.io import mq
 from vaep.io.mq import MaxQuantOutputDynamic
 
 ##### CONFIG #####
@@ -40,11 +42,26 @@ setup_nb_logger()
 logging.info(f"Search Raw-Files on path: {FOLDER_MQ_TXT_DATA}")
 
 # %% [markdown]
-# Use samples previously loaded.
+# Use samples previously loaded. Specified MQ output folders are in `eligable_files.yaml`
+#
+# ```yaml
+# # example of eligable_files.yaml
+# files:
+#  - example_folder
+# ```
+#
+# and the name to folder path are in `file_paths.yaml`
+#
+# ```yaml
+# # example of file_paths.yaml
+# example_folder: path/to/example_folder
+# ```
+#
+#
 
 # %%
-ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml')
-MAP_FOLDER_PATH = Path('config/file_paths')
+ELIGABLE_FILES_YAML = Path('config/eligable_files.yaml')  # acutally MQ txt folders, not files...
+MAP_FOLDER_PATH = Path('config/file_paths.yaml')
 
 with open(ELIGABLE_FILES_YAML) as f:
     files = set(yaml.safe_load(f)['files'])
@@ -58,17 +75,19 @@ assert len(files) == len(folders_dict) == len(folders)
 
 # %%
 fn_id_old_new: str = 'data/rename/selected_old_new_id_mapping.csv'  # selected samples with pride and original id
-df_ids = pd.read_csv(fn_id_old_new)
+df_ids = pd.read_csv(fn_id_old_new, index_col=0)
 df_ids
 
 # %% [markdown]
 # Select files and create list of folders
 
 # %%
-folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in df_ids['Sample ID']}
+files = [file for file in files if file in df_ids.index]
+folders_dict = {sample_id: FOLDER_MQ_TXT_DATA / sample_id for sample_id in files}
 # folders_dict = {p.stem : p.parent / p.stem for p in folders_dict}
 # folders_dict
 folders = [Path(folder_path) for folder_path in folders_dict.values()]
+len(folders)
 
 
 # %%
@@ -79,7 +98,7 @@ OVERWRITE = True
 FNAME_C_PEPTIDES, FNAME_C_EVIDENCE, FNAME_C_PG, FNAME_C_GENES
 
 # %% [markdown]
-# ## Random example
+# ## Random example - peptides
 
 # %%
 pd.set_option('display.max_columns', 60)
@@ -94,18 +113,23 @@ df = mq_output.peptides[use_columns].convert_dtypes()  # .to_json('test.json')
 df
 
 # %%
-df_json_string = df.to_json(orient='index', indent=4)
-df_json_string[:1000]
-
-# %%
-df_csv = df.to_csv()
-df_csv[:1000]
-
-# %%
-pd.read_json(df_json_string, orient='index')
-
-# %%
 mq_output.peptides.Intensity  # as is in peptides.txt, comma seperated thousands
+
+# %% [markdown]
+# The above is done in the function for loading and processing peptides
+
+# %%
+# internals: processing file (includes filtering)
+peptides = vaep.io.data_objects.load_process_peptides(random_path,
+                                                      use_cols=mq.COLS_ + ['Potential contaminant',
+                                                                           'Reverse',
+                                                                           mq.mq_col.SEQUENCE,
+                                                                           'PEP',
+                                                                           'id',
+                                                                           'Protein group IDs',
+                                                                           'Evidence IDs',
+                                                                           ])
+peptides
 
 # %% [markdown]
 # ## Count aggregated peptides
@@ -130,16 +154,13 @@ else:
 c = peptide_counter.sum_over_files(folders=folders)
 
 # %%
-for k, v in peptide_counter.dumps.items():
+for k, v in tqdm(peptide_counter.dumps.items()):
     old_name = v
     new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
     try:
         os.rename(old_name, new_name)
     except FileNotFoundError:
         logging.warning(f"File not found: {old_name}")
-
-# %%
-new_name
 
 # %%
 c.most_common(10)  # peptide_counter.counter.most_common(10)
@@ -161,7 +182,7 @@ with open(FOLDER_PROCESSED / f'most_common_{10}_peptides.py', 'w') as f:
     f.write("pd.DataFrame.from_records(most_common, index='Sequence', columns=['Sequence', 'counts'])\n")
 
 # %% [markdown] Collapsed="false"
-# ## Peptides by charge
+# ## Random example - precursors
 #
 # - count peptides by charge state (which are aggregated in `peptides.txt`)
 
@@ -200,6 +221,7 @@ use_cols = [
     evidence_cols.Protein_group_IDs,
     evidence_cols.Intensity,
     evidence_cols.Score,
+    evidence_cols.Reverse,
     evidence_cols.Potential_contaminant]
 
 evidence_selected = vaep.io.data_objects.select_evidence(evidence[use_cols])
@@ -241,11 +263,38 @@ evidence[evidence_cols.Type].value_counts()
 evidence[evidence_cols.Protein_group_IDs].value_counts()
 
 # %% [markdown]
-# ## Count peptides based on evidence files
+# The above is done in the function for loading and processing precursors
+
+# %%
+# internals: processing file (includes filtering)
+evidence = vaep.io.data_objects.load_process_evidence(random_path,
+                                                      use_cols=[
+                                                          mq.mq_evidence_cols.mz,
+                                                          mq.mq_evidence_cols.id,
+                                                          mq.mq_evidence_cols.Peptide_ID,
+                                                          mq.mq_evidence_cols.Protein_group_IDs,
+                                                          mq.mq_evidence_cols.Intensity,
+                                                          mq.mq_evidence_cols.Score,
+                                                          mq.mq_evidence_cols.Potential_contaminant,
+                                                          mq.mq_evidence_cols.Reverse],
+                                                      select_by='Score')
+evidence
+
+# %% [markdown]
+# ## Count precursors based on evidence files
 
 # %%
 evidence_counter = vaep.io.data_objects.EvidenceCounter(FNAME_C_EVIDENCE, overwrite=OVERWRITE)
 c = evidence_counter.sum_over_files(folders=folders)
+
+# %%
+for k, v in tqdm(evidence_counter.dumps.items()):
+    old_name = v
+    new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
+    try:
+        os.rename(old_name, new_name)
+    except FileNotFoundError:
+        logging.warning(f"File not found: {old_name}")
 
 # %% [markdown]
 # ## Protein Groups
@@ -367,17 +416,39 @@ mask = selection[cols.Gene_names].isin(non_unique_genes)
 selection.loc[mask]
 
 # %%
-selection = selection.append(selection_no_gene)
+selection = pd.concat([selection, selection_no_gene])
+selection
+
+# %% [markdown]
+# The above is done in the function for loading and processing protein groups
+
+# %%
+vaep.io.data_objects.load_and_process_proteinGroups(random_path)
+
+# %% [markdown]
+# ## Count protein groups (genes) based on proteinGroups files
 
 # %%
 protein_groups_counter = vaep.io.data_objects.ProteinGroupsCounter(FNAME_C_PG, overwrite=OVERWRITE)
 c = protein_groups_counter.sum_over_files(folders=folders)
 
 # %%
+for k, v in tqdm(protein_groups_counter.dumps.items()):
+    old_name = v
+    new_name = v.parent / (df_ids.loc[k, 'new_sample_id'] + '.csv')
+    try:
+        os.rename(old_name, new_name)
+    except FileNotFoundError:
+        logging.warning(f"File not found: {old_name}")
+
+# %% [markdown]
+# Over 400,000 protein groups were only identified once (as exactly this group).
+
+# %%
 vaep.pandas.counts_with_proportion(pd.Series(c))  # Most proteinGroups are unique
 
 # %% [markdown]
-# ### Count genes
+# ## Count genes
 # Genes sets could be used to identify common features.
 #
 # > The assignment of isoforms to one proteinGroup or another might be volatile.

@@ -401,7 +401,26 @@ class Count():
 
 
 # # check df for redundant information (same feature value for all entries)
-usecols = mq.COLS_ + ['Potential contaminant', mq.mq_col.SEQUENCE, 'PEP']
+usecols = mq.COLS_ + ['Potential contaminant', 'Reverse', mq.mq_col.SEQUENCE, 'PEP',
+                      'id', 'Protein group IDs', 'Evidence IDs',]
+
+
+def select_peptides(peptides: pd.DataFrame) -> pd.DataFrame:
+    mask = ((peptides[mq.mq_col.INTENSITY] == 0)
+            | (peptides["Potential contaminant"] == '+')
+            | (peptides["Reverse"] == '+')
+            )
+    peptides = peptides.loc[~mask]
+    return peptides
+
+
+def load_process_peptides(folder: Path, use_cols):
+    peptides = pd.read_table(folder / 'peptides.txt',
+                             usecols=use_cols,
+                             index_col=0,
+                             low_memory=False)
+    peptides = select_peptides(peptides)
+    return peptides.drop(['Potential contaminant', 'Reverse'], axis=1)
 
 
 def count_peptides(folders: List[Path], dump=True,
@@ -411,15 +430,10 @@ def count_peptides(folders: List[Path], dump=True,
     c = Counter()
     fpath_dict = {}
     for folder in folders:
-        peptides = pd.read_table(folder / 'peptides.txt',
-                                 usecols=usecols,
-                                 index_col=0)
-        mask = (peptides[mq.mq_col.INTENSITY] == 0) | (
-            peptides["Potential contaminant"] == '+')
-        peptides = peptides.loc[~mask]
+        peptides = load_process_peptides(folder, usecols)
         c.update(peptides.index)
         if dump:
-            fpath_dict[folder.stem] = dump_to_csv(peptides.drop('Potential contaminant', axis=1),
+            fpath_dict[folder.stem] = dump_to_csv(peptides,
                                                   folder=folder, outfolder=outfolder,
                                                   parent_folder_fct=parent_folder_fct)
     ret = {'counter': c, 'dumps': fpath_dict}
@@ -464,10 +478,14 @@ evidence_cols = mq.mq_evidence_cols
 
 
 def select_evidence(df_evidence: pd.DataFrame) -> pd.DataFrame:
-    mask = (df_evidence[evidence_cols.Potential_contaminant]
-            == '+') | (df_evidence[evidence_cols.Intensity] == 0)
+    mask = ((df_evidence[['Reverse', 'Potential contaminant']]
+             .notna()
+             .any(axis=1))
+            | (df_evidence[evidence_cols.Intensity] == 0)
+            )
     evidence = df_evidence.loc[~mask].drop(
-        evidence_cols.Potential_contaminant, axis=1)
+        [evidence_cols.Potential_contaminant,
+         evidence_cols.Reverse], axis=1)
     evidence = evidence.dropna(subset=[evidence_cols.Intensity])
     return evidence
 
@@ -477,7 +495,8 @@ idx_columns_evidence = [evidence_cols.Sequence, evidence_cols.Charge]
 
 def load_process_evidence(folder: Path, use_cols, select_by):
     evidence = pd.read_table(folder / 'evidence.txt',
-                             usecols=idx_columns_evidence + use_cols)
+                             usecols=idx_columns_evidence + use_cols,
+                             low_memory=False)
     evidence = select_evidence(evidence)
     evidence = vaep.pandas.select_max_by(
         evidence, grouping_columns=idx_columns_evidence, selection_column=select_by)
@@ -489,10 +508,14 @@ def count_evidence(folders: List[Path],
                    select_by: str = 'Score',
                    dump=True,
                    use_cols=[evidence_cols.mz,
+                             evidence_cols.id,
+                             evidence_cols.Peptide_ID,
                              evidence_cols.Protein_group_IDs,
                              evidence_cols.Intensity,
                              evidence_cols.Score,
-                             evidence_cols.Potential_contaminant],
+                             evidence_cols.Potential_contaminant,
+                             evidence_cols.Reverse,
+                             ],
                    parent_folder_fct: Callable = create_parent_folder_name,
                    outfolder=FOLDER_PROCESSED / 'evidence_dumps'):
     outfolder = Path(outfolder)
@@ -564,6 +587,7 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
                                    use_cols: List = [
                                        pg_cols.Protein_IDs,
                                        pg_cols.Majority_protein_IDs,
+                                       pg_cols.id,
                                        pg_cols.Gene_names,
                                        pg_cols.Evidence_IDs,
                                        pg_cols.Q_value,
@@ -575,9 +599,10 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
 ]):
     folder = Path(folder)
     pg = pd.read_table(folder / 'proteinGroups.txt',
-                       usecols=use_cols)
+                       usecols=use_cols,
+                       low_memory=False)
     mask = pg[[pg_cols.Only_identified_by_site, pg_cols.Reverse,
-               pg_cols.Potential_contaminant]].notna().sum(axis=1) > 0
+               pg_cols.Potential_contaminant]].notna().any(axis=1)
     pg = pg.loc[~mask]
     mask = pg[pg_cols.Intensity] > 1
     pg = pg.loc[mask]
@@ -591,8 +616,12 @@ def load_and_process_proteinGroups(folder: Union[str, Path],
     pg = vaep.pandas.select_max_by(df=pg.loc[~mask_no_gene],
                                    grouping_columns=[pg_cols.Gene_names],
                                    selection_column=pg_cols.Score)
-    pg = pg.append(pg_no_gene)
+    pg = pd.concat([pg, pg_no_gene])
     pg = pg.set_index(pg_cols.Protein_IDs)
+    pg = pg.drop([pg_cols.Only_identified_by_site,
+                  pg_cols.Reverse,
+                  pg_cols.Potential_contaminant,],
+                 axis=1)
     return pg
 
 
