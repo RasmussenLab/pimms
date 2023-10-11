@@ -71,7 +71,7 @@ df_meta
 
 
 # %%
-meta_stats = df_meta.describe(include='all', datetime_is_numeric=True)
+meta_stats = df_meta.describe(include='all')
 meta_stats.T
 
 # %% [markdown]

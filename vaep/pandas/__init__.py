@@ -73,7 +73,7 @@ def unique_cols(s: pd.Series) -> bool:
 
 
 def show_columns_with_variation(df: pd.DataFrame) -> pd.DataFrame:
-    df_describe = df.describe(include='all', datetime_is_numeric=True)
+    df_describe = df.describe(include='all')
     col_mask = (df_describe.loc['unique'] > 1) | (
         df_describe.loc['std'] > 0.01)
     return df.loc[:, col_mask]
