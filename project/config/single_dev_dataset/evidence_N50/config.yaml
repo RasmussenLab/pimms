@@ -10,24 +10,25 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  - ZERO
-  - MINIMUM
-  - COLMEDIAN
-  - ROWMEDIAN
-  - KNN_IMPUTE
-  # - SEQKNN # error
   - BPCA
-  - SVDMETHOD
-  # - LLS # stopped after 30mins
-  - MLE
-  - QRILC # fails for N=10
-  - MINDET
-  - MINPROB
-  # - IRM # stopped after 30mins
-  # - IMPSEQ # error
+  - COLMEDIAN
+  - IMPSEQ
   - IMPSEQROB
+  - IRM # stopped after 24h
+  - KNN_IMPUTE
+  - LLS # stopped after 24h
+  - MICE-CART
   - MICE-NORM
-  # - MICE-CART # stopped after 30mins
-  # - TRKNN # error
-  # - RF # stopped after 30mins
+  - MINDET
+  - MINIMUM
+  - MINPROB
+  - MLE
+  - MSIMPUTE
   - PI
+  - QRILC
+  - RF # stopped after 24h
+  - ROWMEDIAN
+  - SEQKNN
+  - SVDMETHOD
+  - TRKNN # stopped after 24h
+  - ZERO

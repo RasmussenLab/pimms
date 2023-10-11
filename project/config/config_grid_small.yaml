@@ -19,7 +19,7 @@ levels:
 config_split: 'config/single_dev_dataset/{level}/split.yaml'
 file_format: csv
 config_train: 'placeholder.yaml'
-cuda: True
+cuda: False
 NAGuideR_methods:
 models:
   - Median

@@ -33,7 +33,7 @@ config_split: 'config/single_dev_dataset/{level}/split.yaml'
 file_format: csv
 config_train: 'placeholder.yaml'
 name_template: run/LD_{latent_dim}_E_{epochs_max}
-cuda: True
+cuda: False
 NAGuideR_methods:
 models:
   - CF

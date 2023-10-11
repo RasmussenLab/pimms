@@ -4,5 +4,5 @@ latent_dim: 50
 batch_size: 32768
 epochs_max: 100
 sample_idx_position: 0
-cuda: True
+cuda: False
 save_pred_real_na: True
