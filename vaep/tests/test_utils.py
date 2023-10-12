@@ -1,8 +1,5 @@
 import pathlib
-from vaep.utils import append_to_filepath, sample_iterable
-
-# def test_sample_iterable():
-#     pass
+from vaep.utils import append_to_filepath
 
 
 def test_append_to_filepath():

@@ -2,6 +2,8 @@ from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple, Union, List
+
+import logging
 import random
 
 
@@ -21,8 +23,8 @@ from vaep.analyzers import Analysis
 from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
 
-from . import metadata
 
+logger = logging.getLogger(__name__)
 
 __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 
@@ -243,18 +245,6 @@ class AnalyzePeptides(SimpleNamespace):
         """Get prop. of not NA values for each sample."""
         return self.df.notna().sum(axis=1) / self.df.shape[-1]
 
-    def add_metadata(self, add_prop_not_na=True):
-        d_meta = metadata.get_metadata_from_filenames(self.df.index)
-        self.df_meta = pd.DataFrame.from_dict(
-            d_meta, orient='index')
-        self.df_meta.index.name = self.df.index.name
-        print(f'Created metadata DataFrame attribute `df_meta`.')
-        # add proportion on not NA to meta data
-        if add_prop_not_na:
-            self.df_meta['prop_not_na'] = self.get_prop_not_na()
-        print(f'Added proportion of not NA values based on `df` intensities.')
-        return self.df_meta
-
     def get_PCA(self, n_components=2, imputer=SimpleImputer):
         self.imputer_ = imputer()
         X = self.imputer_.fit_transform(self.df)
@@ -263,11 +253,14 @@ class AnalyzePeptides(SimpleNamespace):
 
         PCs, self.pca_ = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
-            _ = self.add_metadata()
+            logger.warning('No metadata available, please set "df_meta" first.')
         try:
             PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
         except KeyError:
-            print("No MS instrument added.")
+            logger.warning("No MS instrument added.")
+        except AttributeError:
+            logger.warning("No metadata available, please set 'df_meta' first.")
+            logger.warning("No MS instrument added.")
         return PCs
 
     def calculate_PCs(self, new_df, is_wide=True):
@@ -289,7 +282,7 @@ class AnalyzePeptides(SimpleNamespace):
             self.is_wide_format = True
 
         if not hasattr(self, 'df_meta'):
-            _ = self.add_metadata()
+            raise AttributeError('No metadata available, please set "df_meta" first.')
 
         PCs = self.get_PCA()
         cols = list(PCs.columns)
@@ -415,26 +408,6 @@ class LatentAnalysis(Analysis):
 
 # def read_csv(fname:str, nrows:int, index_col:str=None)-> pd.DataFrame:
 #     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
-
-def build_metadata_df(filenames: pd.Index) -> pd.DataFrame:
-    """Build a DataFrame based on a list of strings (an Index) to parse.
-    Is strongly coupled to the analysis context.
-
-    Parameters
-    ----------
-    filenames : pd.Index
-        An Iterable with strings.
-
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame with the parsed metadata.
-    """
-
-    d_meta = metadata.get_metadata_from_filenames(filenames)
-    df_meta = pd.DataFrame.from_dict(d_meta, orient='index')
-    df_meta.index.name = filenames.name
-    return df_meta
 
 
 def get_consecutive_data_indices(df, n_samples):

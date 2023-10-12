@@ -1,8 +1,0 @@
-# example for all config entires
-# can be separated into several configfiles for snakemake
-remote_in: erda:folder/path
-out_folder: metadata
-thermo_raw_file_parser_exe: mono path/to/ThermoRawFileParser/ThermoRawFileParser.exe
-files:
-- remote/path/file1.raw
-- remote/path/file2.raw

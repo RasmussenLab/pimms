@@ -1,18 +1,9 @@
-from random import sample
 import pathlib
 from typing import Union
 import numpy as np
 import pandas as pd
 
 from vaep.io.datasplits import long_format
-
-
-def sample_iterable(iterable: dict, n=10) -> list:
-    """Sample some keys from a given dictionary."""
-    n_examples_ = n if len(iterable) > n else len(iterable)
-    keys = list(iterable)
-    sample_ = sample(keys, n_examples_)
-    return sample_
 
 
 def append_to_filepath(filepath: Union[pathlib.Path, str],
