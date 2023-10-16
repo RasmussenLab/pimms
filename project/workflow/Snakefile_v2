@@ -32,8 +32,10 @@ rule all:
 
 nb = "01_2_performance_plots.ipynb"
 
-print(config["models"])
+if "frac_mnar" in config:
+    config["split_data"]["frac_mnar"] = config["frac_mnar"]
 
+# print(config['split_data'])
 # MODELS = config["models"].copy()
 
 MODELS = list()
@@ -164,7 +166,9 @@ rule transform_data_to_wide_format:
 # train models in python
 rule train_models:
     input:
-        nb=lambda wildcards: "01_1_train_{}.ipynb".format(model_configs[wildcards.model]["model"]),
+        nb=lambda wildcards: "01_1_train_{}.ipynb".format(
+            model_configs[wildcards.model]["model"]
+        ),
         train_split="{folder_experiment}/data/train_X.csv",
         configfile=config["config_train"],
     output:
@@ -225,3 +229,17 @@ rule create_splits:
         " -r folder_experiment {params.folder_experiment}"
         " -p fn_rawfile_metadata {params.meta_data}"
         " && jupyter nbconvert --to html {output.nb}"
+
+
+##########################################################################################
+# create config file dumps for each model
+
+
+rule dump_split_config:
+    output:
+        configfile=f"{folder_experiment}/{nb_stem}.yaml",
+    run:
+        import yaml
+
+        with open(output.configfile, "w") as f:
+            yaml.dump(config["split_data"], f)
