@@ -1,9 +1,9 @@
 import collections.abc
 from collections import namedtuple
-import numbers
+
 
 from types import SimpleNamespace
-import typing
+
 from typing import Iterable
 
 import numpy as np
@@ -40,20 +40,6 @@ def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
     return freq_targets
 
 
-def counts_with_proportion(s: pd.Series) -> pd.DataFrame:
-    """Counts with proportion of counts(!).
-
-    Note: In case of missing values the proportion is not based on the total number of
-    rows in the DataFrame.
-    """
-    s = s.value_counts()
-    s.index.name = 'value'
-    N = s.sum()
-    ret = s.to_frame('counts')
-    ret['prop.'] = s / N
-    return ret
-
-
 def unique_cols(s: pd.Series) -> bool:
     """Check all entries are equal in pandas.Series
 
@@ -70,13 +56,6 @@ def unique_cols(s: pd.Series) -> bool:
         Boolean on if all values are equal.
     """
     return (s.iloc[0] == s).all()
-
-
-def show_columns_with_variation(df: pd.DataFrame) -> pd.DataFrame:
-    df_describe = df.describe(include='all')
-    col_mask = (df_describe.loc['unique'] > 1) | (
-        df_describe.loc['std'] > 0.01)
-    return df.loc[:, col_mask]
 
 
 def get_unique_non_unique_columns(df: pd.DataFrame) -> SimpleNamespace:
@@ -225,30 +204,6 @@ def interpolate(wide_df: pd.DataFrame, name='interpolated') -> pd.DataFrame:
 
     ret = ret[mask].stack().dropna().squeeze()  # does not work with MultiIndex columns
     ret.rename(name, inplace=True)
-    return ret
-
-
-def create_dict_of_dicts(d: dict, verbose=False,
-                         # maybe this should not be here...
-                         transform_values: typing.Union[typing.Callable, numbers.Number] = None):
-    """Unpack a dictionary with tuple keys to a nested dictonary
-    of single tuple keys.
-    """
-    ret = dict()
-    for keys, v in d.items():
-        if verbose:
-            print(f"current key: {str(keys):90}: {len(v):>5}")
-        current_dict = ret
-        for k in keys[:-1]:
-            if k not in current_dict:
-                current_dict[k] = dict()
-            current_dict = current_dict[k]
-        last_key = keys[-1]
-        if last_key not in current_dict:
-            current_dict[last_key] = transform_values(
-                v) if transform_values else v
-        else:
-            raise KeyError(f"Key already in dict: {last_key}")
     return ret
 
 

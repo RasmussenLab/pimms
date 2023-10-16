@@ -227,21 +227,6 @@ From the brief description in the table the exact procedure is not always clear.
 
 
 
-## Workflows
-
-The workflows folder in the repository contains snakemake workflows used for rawfile data processing, 
-both for running MaxQuant over a large set of HeLa raw files 
-and ThermoRawFileParser on a list of raw files to extract their meta data. For details see:
-
->  Webel, Henry, Yasset Perez-Riverol, Annelaura Bach Nielson, and Simon Rasmussen. 2023. “Mass Spectrometry-Based Proteomics Data from Thousands of HeLa Control Samples.” Research Square. https://doi.org/10.21203/rs.3.rs-3083547/v1.
-
-### MaxQuant
-
-Process single raw files using MaxQuant. See [README](workflows/maxquant/README.md) for details.
-
-### Metadata
-
-Read metadata from single raw files using MaxQuant. See [README](workflows/metadata/README.md) for details.
 
 ## Build status
 [![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)

@@ -16,13 +16,15 @@
 # # Figures for Illustration of concepts
 
 # %%
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import scipy.stats
 
 # %%
-import config as cfg
+FIGUREFOLDER = Path('figures')
+FIGUREFOLDER.mkdir(exist_ok=True, parents=True)
+
 
 # %%
 plt.rcParams.update({'xtick.labelsize': 'xx-large',
