@@ -428,7 +428,7 @@ def corr_lower_triangle(df):
 
 def plot_corr_histogram(corr_lower_triangle, bins=10):
     fig, axes = plt.subplots(ncols=2, gridspec_kw={"width_ratios": [
-        5, 1], "wspace": 0.2}, figsize=(10, 4))
+        5, 1], "wspace": 0.2}, figsize=(8, 4))
     values = pd.Series(corr_lower_triangle.to_numpy().flatten()).dropna()
     ax = axes[0]
     ax = values.hist(ax=ax, bins=bins)
