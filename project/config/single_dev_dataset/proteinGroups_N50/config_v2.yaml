@@ -1,0 +1,73 @@
+config_split: config/single_dev_dataset/proteinGroups_N50/split.yaml # ! will be build
+config_train: config/single_dev_dataset/proteinGroups_N50/train_{model}.yaml # ! will be build
+folder_experiment: runs/dev_dataset_small/proteinGroups_N50_Snakefile_v2
+fn_rawfile_metadata: data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv
+file_format: csv
+split_data:
+  FN_INTENSITIES: data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv
+  fn_rawfile_metadata: data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv
+  sample_completeness: 0.5
+  min_RT_time: 120
+  column_names:
+    - Gene Names
+  index_col: 0
+  meta_date_col: Content Creation Date
+models:
+  - Median:
+      model: Median # needs to set at least one parameter
+  - CF:
+      model: CF
+      file_format: csv
+      latent_dim: 50
+      batch_size: 4096
+      epochs_max: 20
+      sample_idx_position: 0
+      cuda: False
+      save_pred_real_na: True
+  - DAE:
+      model: DAE
+      file_format: csv
+      latent_dim: 10
+      batch_size: 10
+      epochs_max: 200
+      hidden_layers: "512"
+      sample_idx_position: 0
+      cuda: False
+      save_pred_real_na: True
+  - VAE:
+      model: VAE
+      file_format: csv
+      latent_dim: 25
+      batch_size: 10
+      epochs_max: 200
+      hidden_layers: "512_256"
+      sample_idx_position: 0
+      cuda: False
+      save_pred_real_na: True
+  - KNN:
+      model: KNN
+      neighbors: 3
+      file_format: csv
+NAGuideR_methods:
+  - BPCA
+  - COLMEDIAN
+  - IMPSEQ
+  - IMPSEQROB
+  - IRM
+  - KNN_IMPUTE
+  - LLS
+  - MICE-CART
+  - MICE-NORM
+  - MINDET
+  - MINIMUM
+  - MINPROB
+  - MLE
+  - MSIMPUTE
+  - PI
+  - QRILC
+  - RF
+  - ROWMEDIAN
+  - SEQKNN
+  - SVDMETHOD
+  - TRKNN
+  - ZERO

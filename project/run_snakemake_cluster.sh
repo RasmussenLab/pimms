@@ -10,7 +10,7 @@
 ### Email notification: a=aborts, b=begins, e=ends, n=no notifications
 #PBS -m ae -M henry.webel@cpr.ku.dk
 ### Number of nodes
-#PBS -l nodes=1:ppn=1,mem=8gb
+#PBS -l nodes=1:ppn=1,mem=16gb
 ### Requesting timeformat is <days>:<hours>:<minutes>:<seconds>
 #PBS -l walltime=1:12:00:00
 ### Forward all environment variables
@@ -46,13 +46,15 @@ fi
 . ~/setup_conda.sh
 conda activate vaep
 
-snakemake --jobs 10 -k -p --latency-wait 60 --rerun-incomplete \
+snakemake -s workflow/Snakefile --jobs 10 -k -p --latency-wait 60 --rerun-incomplete \
 --configfile $configfile \
+--max-status-checks-per-second 0.5 \
+--use-conda \
 --default-resources walltime=3600 \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
-" -W group_list=cpr_10006 -A cpr_10006 -V"\
+" -W group_list=cpr_10006 -A cpr_10006 "\
 " -e {params.err} -o {params.out}"\
 " -N ${prefix}.{params.name}" \
---cluster-status "python ../workflows/maxquant/qsub-status.py" &&
+--cluster-status "python workflow/bin/qsub-status_v2.py" &&
 echo "done" ||
 echo "failed"
