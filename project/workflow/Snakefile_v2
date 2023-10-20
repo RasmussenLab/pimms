@@ -10,9 +10,10 @@ configfile: "config/single_dev_dataset/proteinGroups_N50/config_v2.yaml"
 MAX_WALLTIME = "24:00:00"
 # Thinnode resources sharing: 40 cores and 196 GB RAM (minus 2GB for snakemake)
 # JOB_RAM_MB = int(204_800 / 40 * config['THREATS_MQ'])
-JOB_RAM_MB = "4gb"
+JOB_RAM_MB = "8gb"
 folder_experiment = config["folder_experiment"]
 logger.info(f"{folder_experiment = }")
+logger.info(f"{config = }")
 
 
 # local rules are excuted in the process (job) running snakemake
@@ -180,6 +181,9 @@ rule train_models:
         pred="{folder_experiment}/preds/pred_test_{model}.csv",
     benchmark:
         "{folder_experiment}/01_1_train_{model}.tsv"
+    resources:
+        mem_mb=JOB_RAM_MB,
+        walltime=MAX_WALLTIME,
     params:
         folder_experiment="{folder_experiment}",
         meta_data=config["fn_rawfile_metadata"],
