@@ -4,7 +4,7 @@ from snakemake.utils import min_version
 min_version("6.0")
 
 
-configfile: "config/config_grid_small.yaml"
+configfile: "config/grid_search_large_data/config_grid_small.yaml"
 
 # prefix: "grid_search" # could be used to redirect all outputs
 
@@ -229,6 +229,8 @@ rule train_ae_models:
     params:
         folder_dataset=f"{root_model}/{run_id_template}",
         # model_key="HL_{hidden_layers}_LD_{hidden_layers}",  # ToDo
+    # add log
+    # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#log-files
     threads: 10
     shell:
         "papermill {input.nb} {output.nb}"

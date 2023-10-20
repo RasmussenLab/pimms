@@ -29,7 +29,7 @@ levels:
 - proteinGroups
 - peptides
 - evidence 
-config_split: 'config/single_dev_dataset/{level}/split.yaml'
+config_split: config/grid_search_large_data/{level}_split.yaml
 file_format: csv
 config_train: 'placeholder.yaml'
 name_template: run/LD_{latent_dim}_E_{epochs_max}
