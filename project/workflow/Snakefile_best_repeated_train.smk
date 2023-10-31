@@ -10,6 +10,7 @@ config["folder_experiment"] = folder_experiment
 
 MODELS = ["DAE", "VAE", "CF"]
 
+
 rule all:
     input:
         f"{config['folder']}/model_performance_repeated_runs.pdf",
@@ -53,8 +54,8 @@ rule collect_metrics:
         "notebooks/best_repeated_train_collect_metrics.ipynb"
 
 
-
 nb = "01_0_split_data.ipynb"
+
 
 rule create_splits:
     input:
@@ -74,6 +75,7 @@ rule create_splits:
         " -r fn_rawfile_metadata {params.meta_data}"
         " -r file_format {params.file_format}"
         " && jupyter nbconvert --to html {output.nb}"
+
 
 rule train_models:
     input:

@@ -6,6 +6,7 @@ min_version("6.0")
 
 configfile: "config/grid_search_large_data/config_grid_small.yaml"
 
+
 # prefix: "grid_search" # could be used to redirect all outputs
 
 
@@ -236,8 +237,8 @@ rule train_ae_models:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
         " -r folder_experiment {params.folder_dataset}"
-        # " -r model_key {params.model_key}"
         " && jupyter nbconvert --to html {output.nb}"
+
 
 
 rule build_train_config_ae:
@@ -311,7 +312,7 @@ rule train_CF_model:
         metric=f"{root_model}/{run_id_template}/metrics_{_model}.json",
         config=f"{root_model}/{run_id_template}/model_config_{_model}.yaml",
     benchmark:
-        f"{root_model}/{run_id_template}/01_1_train_{_model}.tsv",
+        f"{root_model}/{run_id_template}/01_1_train_{_model}.tsv"
     threads: 10
     params:
         folder_experiment=f"{root_model}/{run_id_template}",
@@ -324,7 +325,6 @@ rule train_CF_model:
         " -p fn_rawfile_metadata {params.meta_data}"
         " -r model_key {params.model_key}"
         " && jupyter nbconvert --to html {output.nb}"
-
 
 
 rule build_train_config_collab:

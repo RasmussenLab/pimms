@@ -8,6 +8,7 @@ min_version("6.0")
 
 configfile: "config/single_dev_dataset/proteinGroups_N50/config.yaml"
 
+
 # prefix: "grid_search" # could be used to redirect all outputs
 
 
@@ -20,6 +21,7 @@ module single_experiment:
     config:
         config
 
+
 root_experiment = Path(config["folder_experiment"])
 
 # runs/dev_dataset_small/proteinGroups_N50
@@ -27,12 +29,14 @@ folder_experiment = config["folder_experiment"][:-2] + "{N}"
 config["folder_experiment"] = folder_experiment
 
 
-
 logger.info(f"{folder_experiment = }")
 logger.info(f"{root_experiment = }")
 
+
 rule all:
-    input: combined_xlsx=f"{root_experiment.parent}/{root_experiment.name}_all_small.xlsx"
+    input:
+        combined_xlsx=f"{root_experiment.parent}/{root_experiment.name}_all_small.xlsx",
+
 
 rule combine_result_tables:
     input:
@@ -65,7 +69,6 @@ MODELS = single_experiment.MODELS
 # logger.info(f"{config['NAGuideR_methods'] = }")
 
 
-
 # # MODELS = config["models"].copy()
 # # # ! needed to run NAGuideR methods, but needs to be switched off for comparison nb
 # # # ? how is the original config imported here?
@@ -74,6 +77,7 @@ MODELS = single_experiment.MODELS
 
 
 nb = "01_2_performance_plots.ipynb"
+
 
 use rule comparison from single_experiment as adapted_comparison with:
     input:
