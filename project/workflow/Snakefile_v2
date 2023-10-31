@@ -225,7 +225,7 @@ nb_stem = "01_0_split_data"
 rule create_splits:
     input:
         nb=f"{nb_stem}.ipynb",
-        configfile=config["config_split"], #f"{folder_experiment}/{nb_stem}.yaml",
+        configfile=config["config_split"],
     output:
         train_split="{folder_experiment}/data/train_X.csv",
         nb="{folder_experiment}" f"/{nb_stem}.ipynb",
@@ -248,7 +248,7 @@ rule create_splits:
 
 rule dump_split_config:
     output:
-        configfile=config["config_split"], #f"{folder_experiment}/{nb_stem}.yaml",
+        configfile=config["config_split"],
     run:
         import yaml
 
