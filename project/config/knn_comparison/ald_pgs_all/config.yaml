@@ -1,3 +1,4 @@
+# config for Snakefile_v2
 config_train: runs/knn_comparison/ald_pgs_all/configs_train/train_{model}.yaml
 folder_experiment: runs/knn_comparison/ald_pgs_all
 fn_rawfile_metadata: data/ALD_study/processed/raw_meta.csv
