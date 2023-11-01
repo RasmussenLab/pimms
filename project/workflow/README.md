@@ -93,3 +93,7 @@ Executes both workflows for model training and comparison ten times:
 ```bash
 snakemake -s workflow\Snakefile_ald_comparison_repeated.smk -p -c1 --nolock --drop-metadata -F -n
 ```
+
+## Test `misc_` notebook
+
+`TestNotebooks.smk` test the `misc_*` notebooks in the project folder.
