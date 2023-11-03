@@ -90,7 +90,7 @@ use rule comparison from single_experiment as adapted_comparison with:
         ),
     output:
         xlsx="{folder_experiment}/01_2_performance_summary.xlsx",
-        pdf="{folder_experiment}/figures/errors_binned_by_int_test.pdf",
+        pdf="{folder_experiment}/figures/2_1_test_errors_binned_by_int.pdf",
         nb="{folder_experiment}" f"/{nb}",
 
 
