@@ -260,8 +260,74 @@ nafunctions <- function(x, method = "zero") {
   }
   else if (method == "msimpute") {
     install_bioconductor("msImpute")
-    df <- msImpute(as.matrix(df), method = 'v2')
+    df <- msImpute(as.matrix(df),
+                   method = 'v2')
     df <- as.data.frame(df)
+  }
+  else if (method == "msimpute_mnar") {
+    install_bioconductor("msImpute")
+    df <-
+      msImpute(as.matrix(df),
+               method = 'v2-mnar',
+               group = rep(1, dim(df)[2]))
+    df <- as.data.frame(df)
+  }
+  else if (method == "gsimp") {
+    options(stringsAsFactors = F)
+    # dependencies parly for sourced file
+    
+    install_bioconductor("impute")
+    install_bioconductor("pcaMethods")
+    install_rpackage('imputeLCMD')
+    install_rpackage("magrittr")
+    install_rpackage("glmnet")
+    install_rpackage("abind")
+    install_rpackage("foreach")
+    install_rpackage("doParallel")
+    source('src/R_NAGuideR/GSimp.R')
+    
+    # wrapper function with data pre-processing
+    pre_processing_GS_wrapper <- function(data_raw_log) {
+      # samples in rows, features in columns #
+      # Initialization #
+      data_raw_log_qrilc <- as.data.frame(data_raw_log) %>%
+        impute.QRILC() %>% extract2(1)
+      # Centralization and scaling #
+      data_raw_log_qrilc_sc <-
+        scale_recover(data_raw_log_qrilc, method = 'scale')
+      # Data after centralization and scaling #
+      data_raw_log_qrilc_sc_df <- data_raw_log_qrilc_sc[[1]]
+      # Parameters for centralization and scaling (for scaling recovery) #
+      data_raw_log_qrilc_sc_df_param <- data_raw_log_qrilc_sc[[2]]
+      # NA position #
+      NA_pos <- which(is.na(data_raw_log), arr.ind = T)
+      # NA introduced to log-scaled-initialized data #
+      data_raw_log_sc <- data_raw_log_qrilc_sc_df
+      data_raw_log_sc[NA_pos] <- NA
+      # Feed initialized and missing data into GSimp imputation #
+      result <-
+        data_raw_log_sc %>% GS_impute(
+          .,
+          iters_each = 50,
+          iters_all = 10,
+          initial = data_raw_log_qrilc_sc_df,
+          lo = -Inf,
+          hi = 'min',
+          n_cores = 1,
+          imp_model = 'glmnet_pred'
+        )
+      data_imp_log_sc <- result$data_imp
+      # Data recovery #
+      data_imp <- data_imp_log_sc %>%
+        scale_recover(., method = 'recover',
+                      param_df = data_raw_log_qrilc_sc_df_param) %>%
+        extract2(1)
+      return(data_imp)
+    }
+    df <- t(df) # samples in rows, feature in columns
+    df <- pre_processing_GS_wrapper(df)
+    df <- t(df) # features in rows, samples in columns
+    
   }
   else{
     stop(paste("Unspported methods so far: ", method))
@@ -273,7 +339,9 @@ nafunctions <- function(x, method = "zero") {
 
 # ## Parameters
 #
-# Choose one of the available methods. Some methods might fail for your dataset for unknown reasons (and the error won't always be easy to under)
+# Choose one of the available methods. 
+# Some methods might fail for your dataset for unknown reasons
+# (and the error won't always be easy to understand)
 # ```method
 # method = 'ZERO'
 # method = 'MINIMUM'
@@ -297,6 +365,10 @@ nafunctions <- function(x, method = "zero") {
 # method = 'RF'
 # method = 'PI'
 # method = 'GMS'
+# method = 'TRKNN',
+# method = 'MSIMPUTE'
+# method = 'MSIMPUTE_MNAR'
+# method = 'GSIMP'
 # ```
 
 # + tags=["parameters"] vscode={"languageId": "r"}
@@ -319,7 +391,8 @@ df
 # -
 
 # - `data.frame` does not allow abritary column names, but only valid column names...
-# - tibbles don't support rownames, and the imputation methods rely on normal `data.frame`s. Save the header row for later use.
+# - tibbles don't support rownames, and the imputation methods rely on normal `data.frame`s.
+# Save the header row for later use.
 
 # + vscode={"languageId": "r"}
 original_header <- colnames(readr::read_csv(
@@ -358,8 +431,10 @@ original_header[1:5]
 # 'RF',
 # 'PI',
 # 'GMS', # fails to install on Windows
-#  'trknn',
-#  'msimpute'
+# 'TRKNN',
+# 'MSIMPUTE'
+# 'MSIMPUTE_MNAR'
+# 'GSIMP'
 # )
 
 # for (method in to_test) {
