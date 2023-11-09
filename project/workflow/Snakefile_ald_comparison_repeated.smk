@@ -12,19 +12,21 @@ sub_folder = "diff_analysis"
 N = 10
 make_plots = False
 
+
 rule all:
     input:
         f"{folder_experiment}/agg_differences_compared.xlsx",
 
+
 rule compare_repetitions:
     input:
-        qvalues = expand(
+        qvalues=expand(
             f"{out_folder}/qvalues_target.pkl",
             target=target,
             sub_folder=sub_folder,
             run=range(N),
         ),
-        equality_rejected_target = expand(
+        equality_rejected_target=expand(
             f"{out_folder}/equality_rejected_target.pkl",
             target=target,
             sub_folder=sub_folder,
@@ -38,6 +40,7 @@ rule compare_repetitions:
         folder_experiment=folder_experiment,
     notebook:
         "../10_5_comp_diff_analysis_repetitions.ipynb"
+
 
 rule run_comparison_workflow:
     input:

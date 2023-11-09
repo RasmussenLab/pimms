@@ -22,7 +22,8 @@ target_cutoff = dict(kleiner="2")
 
 target = "kleiner"
 
-all_methods = [config["baseline"], 'None', *config["methods"]]
+all_methods = [config["baseline"], "None", *config["methods"]]
+
 
 wildcard_constraints:
     target=target,
@@ -34,13 +35,14 @@ wildcard_constraints:
 rule all:
     input:
         expand(
-            out_folder + 'diff_analysis_compare_DA.xlsx',
+            out_folder + "diff_analysis_compare_DA.xlsx",
             target=target,
-            out_folder=config["out_folder"],),
+            out_folder=config["out_folder"],
+        ),
         expand(
             [
                 out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
-                out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx"
+                out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx",
             ],
             target=[target],
             baseline=config["baseline"],
@@ -48,21 +50,23 @@ rule all:
             out_folder=config["out_folder"],
         ),
 
+
 ##########################################################################################
 # Create plots for featues where decisions between model differ (if computed)
 
 nb = "10_4_ald_compare_single_pg.ipynb"
 
+
 rule plot_intensities_for_diverging_results:
     input:
-        expand(folder_experiment + "/preds/pred_real_na_{method}.csv",
-        method=[
-            config["baseline"],
-            *config["methods"]],),
         expand(
-        [
-            out_folder + "scores/diff_analysis_scores_{model}.pkl",
-        ],
+            folder_experiment + "/preds/pred_real_na_{method}.csv",
+            method=[config["baseline"], *config["methods"]],
+        ),
+        expand(
+            [
+                out_folder + "scores/diff_analysis_scores_{model}.pkl",
+            ],
             target=[target],
             baseline=config["baseline"],
             model=all_methods,
@@ -71,19 +75,19 @@ rule plot_intensities_for_diverging_results:
         nb=nb,
         fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
     output:
-        diff_da = out_folder + 'diff_analysis_compare_DA.xlsx',
-        qvalues =  out_folder + 'qvalues_target.pkl',
-        nb=out_folder + nb
+        diff_da=out_folder + "diff_analysis_compare_DA.xlsx",
+        qvalues=out_folder + "qvalues_target.pkl",
+        nb=out_folder + nb,
     params:
         baseline=config["baseline"],
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
         make_plots=config["make_plots"],
-        ref_method_score = config['ref_method_score'] # None, 
+        ref_method_score=config["ref_method_score"],  # None, 
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
         " -r target {wildcards.target}"
-        " -r baseline {params.baseline}" # not yet used
+        " -r baseline {params.baseline}"
         " -r out_folder {wildcards.out_folder}"
         " -p cutoff_target {params.cutoff}"
         " -p make_plots {params.make_plots}"
@@ -119,16 +123,18 @@ rule ml_comparison:
         " -r fn_clinical_data {input.fn_clinical_data}"
         " && jupyter nbconvert --to html {output.nb}"
 
+
 ##########################################################################################
 # basemethod vs other methods
 nb = "10_2_ald_compare_methods.ipynb"
 nb_stem = "10_2_ald_compare_methods"
 
+
 rule compare_diff_analysis:
     input:
         nb=nb,
         score_base=out_folder + "scores/diff_analysis_scores_{baseline}.pkl",
-        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl"
+        score_model=out_folder + "scores/diff_analysis_scores_{model}.pkl",
     output:
         nb=out_folder_two_methods_cp + nb,
         figure=out_folder_two_methods_cp + "diff_analysis_comparision_2_{model}.pdf",
@@ -136,7 +142,7 @@ rule compare_diff_analysis:
         disease_ontology=lambda wildcards: config["disease_ontology"][wildcards.target],
         annotaitons_gene_col=config["annotaitons_gene_col"],
     benchmark:
-         out_folder_two_methods_cp + f"{nb_stem}.tsv",
+        out_folder_two_methods_cp + f"{nb_stem}.tsv"
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -172,6 +178,3 @@ rule differential_analysis:
         " -r model_key {wildcards.model}"
         " -r out_folder {wildcards.out_folder}"
         " && jupyter nbconvert --to html {output.nb}"
-
-
-

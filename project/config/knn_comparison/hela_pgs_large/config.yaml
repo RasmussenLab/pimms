@@ -1,3 +1,4 @@
+# config for Snakefile_v2
 config_split: config/knn_comparison/hela_pgs_large/split.yaml
 config_train: runs/knn_comparison/hela_pgs_large/configs_train/train_{model}.yaml
 folder_experiment: runs/knn_comparison/hela_pgs_large

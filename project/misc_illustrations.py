@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -67,9 +67,9 @@ for y, c in zip([y_normal, y_impute], colors):
 fig.tight_layout()
 # %%
 
-fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation')
-fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation.pdf')
-fig.savefig(cfg.FIGUREFOLDER / 'illustration_normal_imputation_highres', dpi=600)
+fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation')
+fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation.pdf')
+fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation_highres', dpi=600)
 
 
 # %% [markdown]

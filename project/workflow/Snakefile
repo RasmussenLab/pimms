@@ -120,6 +120,8 @@ rule train_NAGuideR_model:
         folder_experiment="{folder_experiment}",
         method="{method}",
         name="{method}",
+    conda:
+        "vaep"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r train_split {input.train_split}"
@@ -166,6 +168,8 @@ rule train_models:
         err="{folder_experiment}/01_1_train_{model}.e",
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
+    conda:
+        "vaep"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"

@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 config_split: config/single_dev_dataset/proteinGroups/split.yaml
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
 folder_experiment: runs/dev_dataset_large/proteinGroups
@@ -5,20 +6,20 @@ fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadat
 cuda: False
 models:
  - Median
- - CF
- - DAE
- - VAE
+ - CF  # 2min
+ - DAE # 2min
+ - VAE # 2min
  - KNN
 NAGuideR_methods:
- - BPCA
+ - BPCA #6h41min
  - COLMEDIAN
- - IMPSEQ
+ - IMPSEQ # 1min
  - IMPSEQROB
- - IRM
+ - IRM # 7h52min
  - KNN_IMPUTE
  - LLS
- - MICE-CART # stopped after 24h
- - MICE-NORM # stopped after 24h
+ # - MICE-CART # stopped after 24h
+ # - MICE-NORM # stopped after 24h
  - MINDET
  - MINIMUM
  - MINPROB
@@ -26,9 +27,9 @@ NAGuideR_methods:
  - MSIMPUTE
  - PI
  - QRILC
- - RF
+ - RF # 58min
  - ROWMEDIAN
- - SEQKNN
- - SVDMETHOD
- - TRKNN
+ # - SEQKNN # Error in x[od, ismiss, drop = FALSE]: subscript out of bounds
+ - SVDMETHOD # 16min
+ - TRKNN # 5h38min
  - ZERO

@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 # fit permuted data to the same model as the original data
 config_split: config/permuted_dataset/split.yaml  # proteinGroups
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml

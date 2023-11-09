@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 config_split: config/single_dev_dataset/peptides_N50/split.yaml
 config_train: config/single_dev_dataset/peptides_N50/train_{model}.yaml
 folder_experiment: runs/dev_dataset_small/peptides_N50
@@ -6,20 +7,20 @@ cuda: False
 file_format: csv
 models:
   - Median # maps to median on file system?
-  - CF
-  - DAE
-  - VAE
+  - CF # 3min
+  - DAE # 3min
+  - VAE # 5min
   - KNN
 NAGuideR_methods:
- - BPCA
+ - BPCA #27min
  - COLMEDIAN
  - IMPSEQ
  - IMPSEQROB
- - IRM
+ - IRM # 8h55min
  - KNN_IMPUTE
- - LLS
- - MICE-CART # stopped after 24h
- - MICE-NORM # stopped after 24h
+ - LLS # 10h21min
+ - MICE-CART # 2h20min
+ - MICE-NORM # 4h25min
  - MINDET
  - MINIMUM
  - MINPROB
@@ -27,9 +28,9 @@ NAGuideR_methods:
  - MSIMPUTE
  - PI
  - QRILC
- - RF
+ - RF # 5h38min
  - ROWMEDIAN
- - SEQKNN
+ - SEQKNN # 17min
  - SVDMETHOD
- - TRKNN
+ - TRKNN #4h15min
  - ZERO

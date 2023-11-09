@@ -1,1 +1,2 @@
-file_format: csv
+# Build in Snakemake workflow
+model: Median

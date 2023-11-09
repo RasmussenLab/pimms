@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 config_split: config/single_dev_dataset/example/split.yaml
 config_train: config/single_dev_dataset/example/train_{model}.yaml
 folder_experiment: runs/example

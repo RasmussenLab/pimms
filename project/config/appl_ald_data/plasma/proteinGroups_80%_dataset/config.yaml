@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 config_split: config/appl_ald_data/plasma/proteinGroups_80%_dataset/split.yaml
 config_train: config/appl_ald_data/plasma/proteinGroups/train_{model}.yaml
 folder_experiment: runs/appl_ald_data/plasma/proteinGroups_80%_dataset

@@ -1,3 +1,4 @@
+# config for Snakefile_v1
 config_split: config/single_dev_dataset/proteinGroups_N50/split.yaml
 config_train: config/single_dev_dataset/proteinGroups_N50/train_{model}.yaml
 folder_experiment: runs/dev_dataset_small/proteinGroups_N50

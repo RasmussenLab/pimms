@@ -55,6 +55,7 @@ rule collect_metrics:
 
         REPITITION_NAME = params.repitition_name
 
+
         # key fully specified in path
         def key_from_fname(fname):
             key = (fname.parents[2].name, fname.parents[1].name)
