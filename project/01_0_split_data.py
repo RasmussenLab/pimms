@@ -32,7 +32,7 @@ import plotly.express as px
 
 import vaep
 from vaep.io.datasplits import DataSplits
-from vaep.sampling import feature_frequency, sample_data
+from vaep.sampling import feature_frequency
 
 from vaep.analyzers import analyzers
 from vaep.analyzers.analyzers import AnalyzePeptides
@@ -174,7 +174,8 @@ data_stats_original
 
 
 # %% [markdown]
-# In case there are multiple features for each intensity values (currenlty: peptide sequence and charge), combine the column names to a single str index.
+# In case there are multiple features for each intensity values (currenlty: peptide sequence and charge),
+# combine the column names to a single str index.
 #
 # > The Collaborative Modeling approach will need a single feature column.
 
@@ -203,7 +204,7 @@ if isinstance(df.columns, pd.MultiIndex):
 if params.fn_rawfile_metadata:
     df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
 else:
-    logger.warning(f"No metadata for samples provided, create placeholder.")
+    logger.warning("No metadata for samples provided, create placeholder.")
     if params.meta_date_col:
         raise ValueError(
             f"No metadata provided, but data column set: {params.meta_date_col}")
@@ -236,7 +237,8 @@ df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
 if params.min_RT_time:
     logger.info(
         "Metadata should have 'MS max RT' entry from ThermoRawFileParser")
-    msg = f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes (to exclude too short runs, which are potentially fractions)."
+    msg = (f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes"
+           " (to exclude too short runs, which are potentially fractions).")
     # can be integrated into query string
     mask_RT = df_meta['MS max RT'] >= params.min_RT_time
     msg += f" Total number of samples retained: {int(mask_RT.sum())}"
@@ -378,7 +380,7 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = df.notna().sum(axis=0).sort_values().plot()
-_new_labels = [l.get_text().split(';')[0] for l in ax.get_xticklabels()]
+_new_labels = [l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()]
 _ = ax.set_xticklabels(_new_labels, rotation=45,
                        horizontalalignment='right')
 ax.set_xlabel('feature prevalence')
@@ -608,13 +610,6 @@ df_long.head()
 
 # %%
 group = 2
-# if not mnar:
-#     fake_na, splits.train_X = sample_data(df_long.squeeze(),
-#                                           sample_index_to_drop=0,
-#                                           weights=freq_per_feature,
-#                                           frac=0.1,
-#                                           random_state=params.random_state,)
-#     assert len(splits.train_X) > len(fake_na)
 # ! move parameter checks to start of script
 if 0.0 <= params.frac_mnar <= 1.0:
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
@@ -743,6 +738,30 @@ if diff:
     splits.test_y = splits.test_y.drop(to_remove.index)
 diff
 
+# %% [markdown]
+# Some tools require at least 4 observation in the training data,
+# which is a good requirment. Due to "MNAR" sampling, most measurments
+# of a features can end up in the validation or test data.
+#
+# In that case: Move the validation measurments back to the training data.
+# If after this procedure the condition is still not met, a value error is raised.
+
+# %%
+mask_min_4_measurments = splits.train_X.groupby(level=1).count() < 4
+if mask_min_4_measurments.any():
+    idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
+    logger.warning(f"Features with less than 4 measurments in training data: {idx.to_list()}")
+    to_remove = splits.val_y.loc[pd.IndexSlice[:, idx]]
+    print("To remove from validation data: ")
+    display(to_remove)
+    splits.train_X = pd.concat([splits.train_X, to_remove])
+    splits.val_y = splits.val_y.drop(to_remove.index)
+    # check condition again
+    mask_min_4_measurments = splits.train_X.groupby(level=1).count() < 4
+    if mask_min_4_measurments.any():
+        idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
+        raise ValueError("Some features still have less than 4 measurments in training data"
+                         f" after removing the features from the validation data: {idx.to_list()}")
 
 # %% [markdown]
 # ### Save in long format
