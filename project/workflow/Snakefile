@@ -57,11 +57,11 @@ rule comparison:
         err=f"{{folder_experiment}}/{nb_stem}.e",
         out=f"{{folder_experiment}}/{nb_stem}.o",
     shell:
-        "papermill {input.nb} {output.nb}"
+        "papermill {input.nb} {output.nb:q}"
         " -r fn_rawfile_metadata {params.meta_data:q}"
         " -r folder_experiment {wildcards.folder_experiment:q}"
         " -r models {params.models:q}"
-        " && jupyter nbconvert --to html {output.nb}"
+        " && jupyter nbconvert --to html {output.nb:q}"
 
 
 ##########################################################################################
@@ -95,10 +95,10 @@ rule transform_NAGuideR_predictions:
         # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
         dumps_as_str=lambda wildcards, input: ",".join(input.dumps),
     shell:
-        "papermill {input.nb} {output.nb}"
-        " -r folder_experiment {params.folder_experiment}"
+        "papermill {input.nb} {output.nb:q}"
+        " -r folder_experiment {params.folder_experiment:q}"
         " -p dumps {params.dumps_as_str}"
-        " && jupyter nbconvert --to html {output.nb}"
+        " && jupyter nbconvert --to html {output.nb:q}"
 
 
 rule train_NAGuideR_model:
@@ -121,16 +121,16 @@ rule train_NAGuideR_model:
         method="{method}",
         name="{method}",
     log:
-        err="{folder_experiment}/01_1_train_NAGuideR_{method}.log"
+        err="{folder_experiment}/01_1_train_NAGuideR_{method}.log",
     conda:
         "vaep"
     shell:
-        "papermill {input.nb} {output.nb}"
-        " -r train_split {input.train_split}"
+        "papermill {input.nb} {output.nb:q}"
+        " -r train_split {input.train_split:q}"
         " -r method {params.method}"
-        " -r folder_experiment {params.folder_experiment}"
+        " -r folder_experiment {params.folder_experiment:q}"
         " 2> {log.err}"
-        " && jupyter nbconvert --to html {output.nb}"
+        " && jupyter nbconvert --to html {output.nb:q}"
 
 
 nb_stem = "01_0_transform_data_to_wide_format"
@@ -148,9 +148,9 @@ rule transform_data_to_wide_format:
         err=f"{{folder_experiment}}/{nb_stem}.e",
         out=f"{{folder_experiment}}/{nb_stem}.o",
     shell:
-        "papermill {input.nb} {output.nb}"
-        " -r folder_experiment {params.folder_experiment}"
-        " && jupyter nbconvert --to html {output.nb}"
+        "papermill {input.nb} {output.nb:q}"
+        " -r folder_experiment {params.folder_experiment:q}"
+        " && jupyter nbconvert --to html {output.nb:q}"
 
 
 ##########################################################################################
@@ -172,17 +172,17 @@ rule train_models:
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
     log:
-        err="{folder_experiment}/01_1_train_{model}.log"
+        err="{folder_experiment}/01_1_train_{model}.log",
     conda:
         "vaep"
     shell:
-        "papermill {input.nb} {output.nb}"
-        " -f {input.configfile}"
-        " -r folder_experiment {params.folder_experiment}"
-        " -p fn_rawfile_metadata {params.meta_data}"
-        " -r model_key {wildcards.model}"
+        "papermill {input.nb:q} {output.nb:q}"
+        " -f {input.configfile:q}"
+        " -r folder_experiment {params.folder_experiment:q}"
+        " -r fn_rawfile_metadata {params.meta_data:q}"
+        " -r model_key {wildcards.model:q}"
         " 2> {log.err}"
-        " && jupyter nbconvert --to html {output.nb}"
+        " && jupyter nbconvert --to html {output.nb:q}"
 
 
 ##########################################################################################
@@ -205,7 +205,7 @@ rule create_splits:
         out=f"{{folder_experiment}}/{nb_stem}.o",
     shell:
         "papermill {input.nb} {output.nb}"
-        " -f {input.configfile}"
-        " -r folder_experiment {params.folder_experiment}"
-        " -p fn_rawfile_metadata {params.meta_data}"
-        " && jupyter nbconvert --to html {output.nb}"
+        " -f {input.configfile:q}"
+        " -r folder_experiment {params.folder_experiment:q}"
+        " -p fn_rawfile_metadata {params.meta_data:q}"
+        " && jupyter nbconvert --to html {output.nb:q}"
