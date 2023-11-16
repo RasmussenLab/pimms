@@ -90,7 +90,7 @@ ORDER_MODELS = metrics.mean().sort_values().index.to_list()
 metrics = metrics.loc[ORDER_DATA, ORDER_MODELS]
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
-matplotlib.rcParams.update({'font.size': 5})
+matplotlib.rcParams.update({'font.size': 6})
 
 ax = (metrics
       .plot
@@ -99,7 +99,7 @@ ax = (metrics
            ylabel=f"{METRIC} (log2 intensities)",
            color=COLORS_TO_USE_MAPPTING,
            width=.85,
-           fontsize=8
+           fontsize=7
            ))
 
 ax = vaep.plotting.add_height_to_barplot(ax, size=5)
