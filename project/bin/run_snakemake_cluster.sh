@@ -41,16 +41,21 @@ else
     echo '####################################################################'
 fi
 
+echo folder_experiment $folder_experiment
+echo config_split $config_split
+echo config_train $config_train
 
 . ~/setup_conda.sh
 conda activate vaep
 
 snakemake -s workflow/Snakefile_v2 --jobs 10 -k -p -c2 --latency-wait 60 --rerun-incomplete \
 --configfile $configfile \
+--config frac_mnar=$frac_mnar folder_experiment=$folder_experiment config_split=$config_split config_train=$config_train \
 --max-status-checks-per-second 0.1 \
 --max-jobs-per-second 1 \
 --use-conda \
 --default-resources walltime=3600 \
+--rerun-trigger mtime \
 --cluster "qsub -l walltime={resources.walltime},nodes=1:ppn={threads},mem={resources.mem_mb}mb"\
 " -W group_list=cpr_10006 -A cpr_10006 "\
 " -e {params.err} -o {params.out}"\
