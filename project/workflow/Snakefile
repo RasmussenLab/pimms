@@ -120,8 +120,8 @@ rule train_NAGuideR_model:
         folder_experiment="{folder_experiment}",
         method="{method}",
         name="{method}",
-    log:
-        err="{folder_experiment}/01_1_train_NAGuideR_{method}.log",
+    # log:
+    #     err="{folder_experiment}/01_1_train_NAGuideR_{method}.log",
     conda:
         "vaep"
     shell:
@@ -129,7 +129,7 @@ rule train_NAGuideR_model:
         " -r train_split {input.train_split:q}"
         " -r method {params.method}"
         " -r folder_experiment {params.folder_experiment:q}"
-        " 2> {log.err}"
+        # " 2> {log.err}"
         " && jupyter nbconvert --to html {output.nb:q}"
 
 
