@@ -5,18 +5,18 @@ folder_experiment: runs/dev_dataset_large/peptides
 fn_rawfile_metadata: data/dev_datasets/df_intensities_peptides_long/metadata.csv
 cuda: False
 models:
- - Median # ~ 1:20 min
- - CF # ~ 12:07 min
- - DAE # 4:36 mins
- - VAE #  ~ 3:32 min
- - KNN  # ~ 2:20 min
+  - Median # ~ 1:20 min
+  - CF # ~ 12:07 min
+  - DAE # 4:36 mins
+  - VAE #  ~ 3:32 min
+  - KNN # ~ 2:20 min
 NAGuideR_methods:
   # - BPCA # stopped after 24h
   - COLMEDIAN
   - IMPSEQ
   - IMPSEQROB
   # - IRM # stopped after 24h
-  # - KNN_IMPUTE
+  - KNN_IMPUTE
   # - LLS # error
   # - MICE-CART # stopped after 24h
   # - MICE-NORM # stopped after 24h
