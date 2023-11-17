@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -33,19 +33,21 @@ logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 # %%
 # parameters
-FOLDER = Path('runs/dev_dataset_large/')
+FOLDER = Path('runs/mnar_mcar/')
+SIZE = 'l'
 files_in = {
-    'protein groups': FOLDER / 'proteinGroups/figures/performance_test.csv',
-    'peptides': FOLDER / 'peptides/figures/performance_test.csv',
-    'precursors': FOLDER / 'evidence/figures/performance_test.csv'
+    'protein groups': FOLDER / 'pg_l_25MNAR/figures/2_1_performance_test.csv',
+    'peptides': FOLDER / 'pep_l_25MNAR/figures/2_1_performance_test.csv',
+    'precursors': FOLDER / 'evi_l_25MNAR/figures/2_1_performance_test.csv'
 }
 
 # %%
-FOLDER = Path('runs/dev_dataset_small/')
+FOLDER = Path('runs/mnar_mcar/')
+SIZE = 'm'
 files_in = {
-    'protein groups': FOLDER / 'proteinGroups_N50/figures/performance_test.csv',
-    'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
-    'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
+    'protein groups': FOLDER / 'pg_m_25MNAR/figures/2_1_performance_test.csv',
+    'peptides': FOLDER / 'pep_m_25MNAR/figures/2_1_performance_test.csv',
+    'precursors': FOLDER / 'evi_m_25MNAR/figures/2_1_performance_test.csv'
 }
 
 # %%
@@ -84,7 +86,7 @@ df = df.rename(index=data_levels_annotated)
 df
 
 # %%
-fname = FOLDER / 'best_models_1_test_mpl.pdf'
+fname = FOLDER / f'best_models_{SIZE}_test_mpl.pdf'
 metrics = df['metric_value'].unstack('model')
 ORDER_MODELS = metrics.mean().sort_values().index.to_list()
 metrics = metrics.loc[ORDER_DATA, ORDER_MODELS]
@@ -148,6 +150,6 @@ perf = perf.loc[order]
 perf
 
 # %%
-fname = FOLDER / 'performance_summary.xlsx'
+fname = FOLDER / f'performance_summary_{SIZE}.xlsx'
 perf.to_excel(fname)
 fname.as_posix()

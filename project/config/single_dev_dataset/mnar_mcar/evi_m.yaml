@@ -30,7 +30,8 @@ models:
                   model: DAE
                   file_format: csv
                   latent_dim: 25
-                  batch_size: 10
+                  batch_size: 25
+                  patience: 50
                   epochs_max: 200
                   hidden_layers: "256"
                   sample_idx_position: 0
@@ -40,7 +41,7 @@ models:
                   model: VAE
                   file_format: csv
                   latent_dim: 10
-                  batch_size: 10
+                  batch_size: 25
                   epochs_max: 200
                   hidden_layers: "256"
                   sample_idx_position: 0
