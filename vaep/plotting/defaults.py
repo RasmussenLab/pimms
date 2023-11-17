@@ -31,7 +31,7 @@ color_model_mapping['MSIMPUTE'] = other_colors[6]
 color_model_mapping['MSIMPUTE_MNAR'] = other_colors[7]
 color_model_mapping['TRKNN'] = other_colors[8]
 color_model_mapping['SVDMETHOD'] = other_colors[9]
-other_colors = sns.color_palette()[10:]
+other_colors = other_colors[10:]
 
 
 def assign_colors(models):
