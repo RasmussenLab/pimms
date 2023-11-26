@@ -41,7 +41,9 @@ jobs:
       run: |
         conda info
         conda list
-        conda info -e
+        conda env export --from-history --no-builds > environment.yml
+        conda env export --no-builds
+        conda env export --no-builds > environment_w_versions.yml
     - name: test-r-kernel-imports
       run: |
         Rscript -e "library(stringi)"
@@ -67,10 +69,14 @@ jobs:
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
        snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
+    # https://github.com/actions/upload-artifact
       uses: actions/upload-artifact@v3
       with:
         name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/example/01_2_performance_plots.html
+        path: |
+          project/runs/example/
+          environment.yml
+          environment_w_versions.yml
 
   test_pip_pkg_install:
     runs-on: ${{ matrix.os }}
