@@ -37,8 +37,8 @@ FOLDER = Path('runs/mnar_mcar/')
 SIZE = 'l'
 files_in = {
     'protein groups': FOLDER / 'pg_l_25MNAR/figures/2_1_performance_test_sel.csv',
-    'peptides': FOLDER / 'pep_l_25MNAR/figures/2_1_performance_test_sel.csv',
-    'precursors': FOLDER / 'evi_l_25MNAR/figures/2_1_performance_test_sel.csv'
+    'peptides': FOLDER / 'pep_l_25MNAR/figures/2_1_performance_test.csv',
+    'precursors': FOLDER / 'evi_l_25MNAR/figures/2_1_performance_test.csv'
 }
 
 # %%
@@ -155,3 +155,5 @@ perf
 fname = FOLDER / f'performance_summary_{SIZE}.xlsx'
 perf.to_excel(fname)
 fname.as_posix()
+
+# %%
