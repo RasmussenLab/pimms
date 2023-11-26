@@ -251,7 +251,10 @@ rule dump_split_config:
         configfile=config["config_split"],
     run:
         import yaml
-
+        # recreating dict, otherwise Null becomes string "Null" in yaml dump...
+        cfg = dict()
+        for k, v in config["split_data"].items():
+            cfg[k] = v
         with open(output.configfile, "w") as f:
-            f.write("# Build in Snakemake workflow\n")
-            yaml.dump(config["split_data"], f, sort_keys=False)
+            f.write("# Build in Snakemake workflow (from v2)\n")
+            yaml.dump(cfg, f, sort_keys=False)

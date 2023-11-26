@@ -17,11 +17,21 @@ color_model_mapping = {
     'None': sns.color_palette()[7],
     'BPCA': sns.color_palette()[8],
     'MICE-CART': sns.color_palette()[9],
-    'SEQKNN': sns.color_palette()[6],
-    'MICE-NORM': sns.color_palette()[1],
+
 }
 # other_colors = sns.color_palette()[8:]
 other_colors = sns.color_palette("husl", 20)
+color_model_mapping['IMPSEQ'] = other_colors[0]
+color_model_mapping['IMPSEQROB'] = other_colors[1]
+color_model_mapping['MICE-NORM'] = other_colors[2]
+color_model_mapping['SEQKNN'] = other_colors[3]
+color_model_mapping['QRILC'] = other_colors[4]
+color_model_mapping['GSIMP'] = other_colors[5]
+color_model_mapping['MSIMPUTE'] = other_colors[6]
+color_model_mapping['MSIMPUTE_MNAR'] = other_colors[7]
+color_model_mapping['TRKNN'] = other_colors[8]
+color_model_mapping['SVDMETHOD'] = other_colors[9]
+other_colors = other_colors[10:]
 
 
 def assign_colors(models):

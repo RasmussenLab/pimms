@@ -5,18 +5,18 @@ folder_experiment: runs/dev_dataset_large/evidence
 fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
 cuda: False
 models:
- - Median
- - CF
- - DAE
- - VAE
- - KNN
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - KNN
 NAGuideR_methods:
   # - BPCA # stopped after 24h
   - COLMEDIAN
   - IMPSEQ
   - IMPSEQROB
   # - IRM # stopped after 24h
-  # - KNN_IMPUTE
+  - KNN_IMPUTE
   # - LLS # error
   # - MICE-CART # stopped after 24h
   # - MICE-NORM # stopped after 24h
