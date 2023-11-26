@@ -12,24 +12,27 @@ models:
   - VAE
   - KNN
 NAGuideR_methods:
-  - ZERO
-  - MINIMUM
-  - COLMEDIAN
-  - ROWMEDIAN
-  - KNN_IMPUTE
-  # - SEQKNN # error
   - BPCA
-  - SVDMETHOD
-  - LLS
-  - MLE
-  - QRILC
-  - MINDET
-  - MINPROB
-  - IRM
-  # - IMPSEQ # error
+  - COLMEDIAN
+  - GSIMP
+  - IMPSEQ
   - IMPSEQROB
-  # - MICE-NORM # stopped after 30mins
-  # - MICE-CART # stopped after 30mins
-  # - TRKNN # error
-  - RF
+  - IRM
+  - KNN_IMPUTE
+  - LLS
+  # - MICE-CART # stopped after 24h
+  # - MICE-NORM # stopped after 24h
+  - MINDET
+  - MINIMUM
+  - MINPROB
+  - MLE
+  - MSIMPUTE
+  - MSIMPUTE_MNAR
   - PI
+  - QRILC
+  - RF
+  - ROWMEDIAN
+  # - SEQKNN # Error in x[od, ismiss, drop = FALSE]: subscript out of bounds
+  - SVDMETHOD
+  - TRKNN
+  - ZERO

@@ -21,6 +21,7 @@
 # %%
 from pathlib import Path
 
+import logging
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -33,10 +34,10 @@ import vaep.io.datasplits
 import vaep.imputation
 
 logger = vaep.logging.setup_nb_logger()
-
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 plt.rcParams['figure.figsize'] = [4, 2.5]  # [16.0, 7.0] , [4, 3]
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(7)
 
 # %% [markdown]
 # ## Parameters
@@ -313,58 +314,6 @@ target_name = target.columns[0]
 
 min_max, target_name
 
-# %%
-for idx in feat_sel:
-    fig, ax = plt.subplots()
-
-    feat_observed = data[idx].dropna()
-
-    label_template = '{method} (N={n:,d}, q={q:.3f})'
-    # observed data
-    vaep.plotting.data.plot_histogram_intensities(
-        feat_observed,
-        ax=ax,
-        min_max=min_max,
-        label=label_template.format(method='measured',
-                                    n=len(feat_observed),
-                                    q=float(qvalues.loc[idx, ('None', 'qvalue')])),
-        color='grey',
-        alpha=0.6)
-
-    # all models
-    for i, method in enumerate(model_keys):
-        try:
-            pred = pred_real_na.loc[pd.IndexSlice[:, idx], method].dropna()
-            if len(pred) == 0:
-                # in case no values was imputed -> qvalue is as based on measured
-                label = label_template.format(method=method,
-                                              n=len(pred),
-                                              q=float(qvalues.loc[idx, ('None', 'qvalue')]
-                                                      ))
-            else:
-                label = label_template.format(method=method,
-                                              n=len(pred),
-                                              q=float(qvalues.loc[idx, (method, 'qvalue')]
-                                                      ))
-            ax, bins = vaep.plotting.data.plot_histogram_intensities(
-                pred,
-                ax=ax,
-                min_max=min_max,
-                label=label,
-                color=f'C{i}',
-                alpha=0.6)
-        except KeyError:
-            print(f"No missing values for {idx}: {method}")
-            continue
-    first_pg = idx.split(";")[0]
-    ax.set_title(
-        f'Imputation for protein group {first_pg} with target {target_name} (N= {len(data):,d} samples)')
-    ax.set_ylabel('count measurments')
-    _ = ax.legend()
-    files_out[fname.name] = fname.as_posix()
-    vaep.savefig(
-        fig, folder / f'{first_pg}_hist.pdf')
-    plt.close(fig)
 
 # %% [markdown]
 # ## Compare with target annotation
@@ -383,8 +332,8 @@ for i, idx in enumerate(feat_sel):
     tmp_dot.remove()
 
     feat_observed = data[idx].dropna()
-    label_template = '{method} (N={n:,d}, q={q:.3f})'
-    key = label_template.format(method='measured',
+    label_template = '{method}\n(N={n:,d}, q={q:.3f})'
+    key = label_template.format(method='observed',
                                 n=len(feat_observed),
                                 q=float(qvalues.loc[idx, ('None', 'qvalue')])
                                 )
@@ -427,7 +376,7 @@ for i, idx in enumerate(feat_sel):
                            order=groups_order,
                            dodge=True,
                            hue=args.target,
-                           size=1,
+                           size=2,
                            ax=ax)
     first_pg = idx.split(";")[0]
     ax.set_title(
@@ -448,7 +397,6 @@ for i, idx in enumerate(feat_sel):
     _ = ax.collections[0].set_paths([new_mk])
     _ = ax.collections[1].set_paths([new_mk])
 
-    # import matplotlib.lines as mlines
     label_target_0, label_target_1 = ax.collections[-2].get_label(), ax.collections[-1].get_label()
     _ = ax.collections[-2].set_label(f'imputed, {label_target_0}')
     _ = ax.collections[-1].set_label(f'imputed, {label_target_1}')
