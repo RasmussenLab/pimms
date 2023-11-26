@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import partial
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -155,30 +156,44 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     return ax2
 
 
-def add_height_to_barplot(ax, size=5):
+def add_height_to_barplot(ax, size=5, rotated=False):
+    ax.annotate = partial(ax.annotate, text='NA',
+                          xytext=(0, int(size / 2)),
+                          ha='center',
+                          size=size,
+                          textcoords='offset points')
+    ax.annotate = partial(ax.annotate,
+                          rotation=0,
+                          va='center')
+    if rotated:
+        ax.annotate = partial(ax.annotate,
+                              xytext=(1, int(size / 3)),
+                              rotation=90,
+                              va='bottom')
     for bar in ax.patches:
         if not bar.get_height():
+            xy = (bar.get_x() + bar.get_width() / 2,
+                  0.0)
+            ax.annotate(text='NA',
+                        xy=xy,
+                        )
             continue
         ax.annotate(text=format(bar.get_height(), '.2f'),
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, int(size / 2)),
-                    ha='center',
-                    va='center',
-                    size=size,
-                    textcoords='offset points')
+                    )
     return ax
 
 
 def add_text_to_barplot(ax, text, size=5):
-    for bar, text in zip(ax.patches, text):
+    for bar, text_ in zip(ax.patches, text):
         logger.debug(f"{bar = }, f{text = }, {bar.get_height() = }")
         if not bar.get_height():
             continue
-        ax.annotate(text=text,
+        ax.annotate(text=text_,
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, -5),
+                    xytext=(1, -5),
                     rotation=90,
                     ha='center',
                     va='top',
