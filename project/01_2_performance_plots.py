@@ -265,7 +265,7 @@ mae_stats_ordered_val.T
 
 # %%
 COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
-sns.color_palette(COLORS_TO_USE)
+vaep.plotting.defaults.ModelColorVisualizer(ORDER_MODELS, COLORS_TO_USE)
 
 # %%
 TOP_N_ORDER = ORDER_MODELS[:args.plot_to_n]
