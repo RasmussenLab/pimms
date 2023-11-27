@@ -716,7 +716,8 @@ if SEL_MODELS:
         rot=0,
         ylabel=f"{METRIC} for {feature_names.name} ({n_in_comparison:,} intensities)",
         # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
-        color=COLORS_TO_USE,
+        color=vaep.plotting.defaults.assign_colors(
+            list(k.upper() for k in SEL_MODELS)),
         ax=ax,
         width=.8)
     ax = vaep.plotting.add_height_to_barplot(ax, size=5)
@@ -748,7 +749,8 @@ if SEL_MODELS:
         feat_medians=data.train_X.median(),
         ax=ax,
         metric_name=METRIC,
-        palette=COLORS_TO_USE
+        palette=vaep.plotting.defaults.assign_colors(
+            list(k.upper() for k in SEL_MODELS))
     )
     ax.set_ylim(0, 1.5)
     # for text in ax.legend().get_texts():
