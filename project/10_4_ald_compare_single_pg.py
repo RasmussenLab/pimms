@@ -332,11 +332,20 @@ for i, idx in enumerate(feat_sel):
     tmp_dot.remove()
 
     feat_observed = data[idx].dropna()
-    label_template = '{method}\n(N={n:,d}, q={q:.3f})'
-    key = label_template.format(method='observed',
-                                n=len(feat_observed),
-                                q=float(qvalues.loc[idx, ('None', 'qvalue')])
-                                )
+
+    def get_centered_label(method, n, q):
+        model_str = f'{method}'
+        stats_str = f'(N={n:,d}, q={q:.3f})'
+        if len(model_str) > len(stats_str):
+            stats_str = f"{stats_str:<{len(model_str)}}"
+        else:
+            model_str = f"{model_str:<{len(stats_str)}}"
+        return f'{model_str}\n{stats_str}'
+
+    key = get_centered_label(method='observed',
+                             n=len(feat_observed),
+                             q=float(qvalues.loc[idx, ('None', 'qvalue')])
+                             )
     to_plot = {key: feat_observed}
     for method in model_keys:
         try:
@@ -344,15 +353,15 @@ for i, idx in enumerate(feat_sel):
                                                   idx], method].dropna().droplevel(-1)
             if len(pred) == 0:
                 # in case no values was imputed -> qvalue is as based on measured
-                key = label_template.format(method=method,
-                                            n=len(pred),
-                                            q=float(qvalues.loc[idx, ('None', 'qvalue')]
-                                                    ))
+                key = get_centered_label(method=method,
+                                         n=len(pred),
+                                         q=float(qvalues.loc[idx, ('None', 'qvalue')]
+                                                 ))
             elif qvalues.loc[idx, (method, 'qvalue')].notna().all():
-                key = label_template.format(method=method,
-                                            n=len(pred),
-                                            q=float(qvalues.loc[idx, (method, 'qvalue')]
-                                                    ))
+                key = get_centered_label(method=method,
+                                         n=len(pred),
+                                         q=float(qvalues.loc[idx, (method, 'qvalue')]
+                                                 ))
             elif qvalues.loc[idx, (method, 'qvalue')].isna().all():
                 logger.info(f"NA qvalues for {idx}: {method}")
                 continue
