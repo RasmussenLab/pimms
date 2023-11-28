@@ -661,6 +661,7 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 # ### Plot error by median feature intensity
 
 # %%
+vaep.plotting.make_large_descriptors(7)
 fig, ax = plt.subplots(figsize=(8, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
@@ -672,7 +673,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     metric_name=METRIC,
     palette=COLORS_TO_USE
 )
-
+vaep.plotting.make_large_descriptors(6)
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -739,7 +740,7 @@ if SEL_MODELS:
 # %%
 # custom selection
 if SEL_MODELS:
-    vaep.plotting.make_large_descriptors(6)
+    vaep.plotting.make_large_descriptors(7)
     fig, ax = plt.subplots(figsize=(8, 2))
 
     ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
@@ -752,15 +753,16 @@ if SEL_MODELS:
         palette=vaep.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS))
     )
-    ax.set_ylim(0, 1.5)
+    # ax.set_ylim(0, 1.5)
     # for text in ax.legend().get_texts():
     #     text.set_fontsize(6)
     fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
     figures[fname.stem] = fname
     vaep.savefig(ax.get_figure(), name=fname)
-    # vaep.plotting.make_large_descriptors(6)
     dumps[fname.stem] = fname.with_suffix('.csv')
     errors_binned.to_csv(fname.with_suffix('.csv'))
+    vaep.plotting.make_large_descriptors(6)
+    # ax.xaxis.set_tick_params(rotation=0) # horizontal
     display(errors_binned)
 
 # %%

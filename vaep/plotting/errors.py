@@ -24,7 +24,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
     len_max_bin = len(str(int(errors_binned['bin'].max())))
     n_obs = (errors_binned[meta_cols]
              .apply(
-        lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+        lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
     )
         .rename('intensity bin')
         .astype('category')
@@ -43,7 +43,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
                      x='intensity bin', y=metric_name, hue='model',
                      palette=palette,
                      errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors_binned
 
 
@@ -83,7 +83,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
     errors[x_axis_name] = (
         errors[['bin', 'n_obs']]
         .apply(
-            lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+            lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
         )
         .rename('intensity bin')
         .astype('category')
@@ -98,7 +98,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                 hue='model',
                 palette=palette,
                 errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors
 
 
