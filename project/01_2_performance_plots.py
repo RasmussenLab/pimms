@@ -36,7 +36,6 @@ from IPython.display import display
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 import vaep
 import vaep.imputation
@@ -98,7 +97,7 @@ models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
 sel_models: str = ''  # user defined comparison (comma separated)
 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 plot_to_n: int = 5
-
+feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
 
 # %% [markdown]
 # Some argument transformations
@@ -121,6 +120,7 @@ METRIC = 'MAE'
 MIN_FREQ = None
 MODELS_PASSED = args.models.split(',')
 MODELS = MODELS_PASSED.copy()
+FEAT_NAME_DISPLAY = args.feat_name_display
 SEL_MODELS = None
 if args.sel_models:
     SEL_MODELS = args.sel_models.split(',')
@@ -227,6 +227,9 @@ pred_val = compare_predictions.load_split_prediction_by_modelkey(
     split='val',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
+SAMPLE_ID, FEAT_NAME = pred_val.index.names
+if not FEAT_NAME_DISPLAY:
+    FEAT_NAME_DISPLAY = FEAT_NAME
 pred_val[MODELS]
 
 # %% [markdown]
@@ -370,6 +373,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     ],
     feat_medians=data.train_X.median(),
     ax=ax,
+    feat_name=FEAT_NAME_DISPLAY,
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,)
 ax.set_ylabel(f"Average error ({METRIC})")
@@ -393,7 +397,7 @@ pred_test = compare_predictions.load_split_prediction_by_modelkey(
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
-SAMPLE_ID, FEAT_NAME = pred_test.index.names
+
 pred_test
 
 # %% [markdown]
@@ -553,7 +557,7 @@ corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
 # %%
 kwargs = dict(rot=90,
               flierprops=dict(markersize=1),
-              ylabel=f'correlation per {FEAT_NAME}')
+              ylabel=f'correlation per {FEAT_NAME_DISPLAY}')
 ax = (corr_per_feat_test
       .loc[~too_few_obs, TOP_N_ORDER]
       .plot
@@ -635,7 +639,7 @@ _to_plot
 fig, ax = plt.subplots(figsize=(4, 2))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(
     rot=0,
-    ylabel=f"{METRIC} for {feature_names.name} ({n_in_comparison:,} intensities)",
+    ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
     # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
     color=COLORS_TO_USE,
     ax=ax,
@@ -670,6 +674,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     ],
     feat_medians=data.train_X.median(),
     ax=ax,
+    feat_name=FEAT_NAME_DISPLAY,
     metric_name=METRIC,
     palette=COLORS_TO_USE
 )
@@ -681,6 +686,14 @@ vaep.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned
+
+# %%
+(errors_binned
+ .set_index(
+     ['model', errors_binned.columns[-1]]
+ )
+ .loc[ORDER_MODELS[0]]
+ .sort_values(by=METRIC))
 
 # %% [markdown]
 # ### Custom model selection
@@ -715,7 +728,7 @@ if SEL_MODELS:
     fig, ax = plt.subplots(figsize=(4, 2))
     ax = _to_plot.loc[[feature_names.name]].plot.bar(
         rot=0,
-        ylabel=f"{METRIC} for {feature_names.name} ({n_in_comparison:,} intensities)",
+        ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
         # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
         color=vaep.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS)),
@@ -750,6 +763,7 @@ if SEL_MODELS:
         feat_medians=data.train_X.median(),
         ax=ax,
         metric_name=METRIC,
+        feat_name=FEAT_NAME_DISPLAY,
         palette=vaep.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS))
     )
@@ -764,14 +778,6 @@ if SEL_MODELS:
     vaep.plotting.make_large_descriptors(6)
     # ax.xaxis.set_tick_params(rotation=0) # horizontal
     display(errors_binned)
-
-# %%
-(errors_binned
- .set_index(
-     ['model', errors_binned.columns[-1]]
- )
- .loc[ORDER_MODELS[0]]
- .sort_values(by=METRIC))
 
 # %% [markdown]
 # ### Error by non-decimal number of intensity

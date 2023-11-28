@@ -52,6 +52,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                           target_col='observed',
                           ax: Axes = None,
                           palette: dict = None,
+                          feat_name: str = None,
                           metric_name: Optional[str] = None,
                           errwidth: float = 1.2) -> tuple[Axes, pd.DataFrame]:
     # calculate absolute errors
@@ -74,9 +75,10 @@ def plot_errors_by_median(pred: pd.DataFrame,
 
     errors = errors.join(n_obs, on="bin")
 
-    feat_name = feat_medians.index.name
-    if not feat_name:
-        feat_name = 'feature'
+    if feat_name is None:
+        feat_name = feat_medians.index.name
+        if not feat_name:
+            feat_name = 'feature'
 
     x_axis_name = f'intensity binned by median of {feat_name}'
     len_max_bin = len(str(int(errors['bin'].max())))
