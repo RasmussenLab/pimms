@@ -4,3 +4,4 @@ sample_completeness: 0.5
 min_RT_time: 20
 column_names:
   - PG.ProteinAccessions
+frac_mnar: 0.25

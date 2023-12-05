@@ -191,7 +191,22 @@ feat_idx_w_diff
 (qvalues
  .loc[feat_idx_w_diff]
  .sort_values(('None', 'qvalue'))
- .to_excel(writer, sheet_name='qvalues_diff'))
+ .to_excel(writer, sheet_name='qvalues_diff')
+ )
+
+(qvalues
+ .loc[feat_idx_w_diff]
+ .loc[mask_common]  # mask automatically aligned
+ .sort_values(('None', 'qvalue'))
+ .to_excel(writer, sheet_name='qvalues_diff_common')
+ )
+
+(qvalues
+ .loc[feat_idx_w_diff]
+ .loc[~mask_common]  # mask automatically aligned
+ .sort_values(('None', 'qvalue'))
+ .to_excel(writer, sheet_name='qvalues_diff_new')
+ )
 writer.close()
 
 # %% [markdown]
