@@ -97,6 +97,7 @@ rule train_models:
         model_key="{model}",
         meta_data=config["fn_rawfile_metadata"],
         file_format=config["file_format"],
+        cuda=config["cuda"],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -104,4 +105,5 @@ rule train_models:
         " -r fn_rawfile_metadata {params.meta_data}"
         " -r file_format {params.file_format}"
         " -r model_key {params.model_key}"
+        " -p cuda {params.cuda}"
         " && jupyter nbconvert --to html {output.nb}"

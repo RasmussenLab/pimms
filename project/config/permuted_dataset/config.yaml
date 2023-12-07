@@ -1,18 +1,16 @@
 # config for Snakefile_v1
 # fit permuted data to the same model as the original data
-config_split: config/permuted_dataset/split.yaml  # proteinGroups
+config_split: config/permuted_dataset/split.yaml # proteinGroups
 config_train: config/single_dev_dataset/proteinGroups/train_{model}.yaml
 folder_experiment: runs/permuted #/proteinGroups
 fn_rawfile_metadata: # no metadata for permuted data
 cuda: False
 models:
- - Median
- - CF
- - DAE
- - VAE
- - KNN
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - KNN
 NAGuideR_methods:
-  - lls
-  - knnmethod
-  - rf
-  # - impseq # fails
+  - KNN_IMPUTE
+  # - RF
