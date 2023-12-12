@@ -196,7 +196,7 @@ Packages either are based on this repository, or were referenced by NAGuideR (Ta
 From the brief description in the table the exact procedure is not always clear.
 
 | Method        | Package           | source       | status | name              |
-| ------------- | ----------------- | ------       | --- |------------------ | 
+| ------------- | ----------------- | ------       | ------ |------------------ | 
 | CF            | pimms             | pip          | | Collaborative Filtering |
 | DAE           | pimms             | pip          | | Denoising Autoencoder   |
 | VAE           | pimms             | pip          | | Variational Autoencoder |     
@@ -206,7 +206,7 @@ From the brief description in the table the exact procedure is not always clear.
 | COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
 | ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
 | KNN_IMPUTE    | impute            | BIOCONDUCTOR | | k nearest neighbor imputation   |
-| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> start with feature with least missing values and re-use imputed values for not yet imputed features
+| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> starts with feature with least missing values and re-use imputed values for not yet imputed features
 | BPCA          | pcaMethods        | BIOCONDUCTOR | | Bayesian PCA missing value imputation
 | SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
 | LLS           | pcaMethods        | BIOCONDUCTOR | | Local least squares imputation of a feature based on k most correlated features
@@ -222,10 +222,11 @@ From the brief description in the table the exact procedure is not always clear.
 | TRKNN         | -                 | script       | | truncation k-nearest neighbor imputation 
 | RF            | missForest        | CRAN         | | Random Forest imputation (one feature at a time)
 | PI            | -                 | -            | | Downshifted normal distribution (per sample)
+| GSIMP         | -                 | script       | | QRILC initialization and iterative Gibbs sampling with generalized linear models (glmnet)
+| MSIMPUTE      | msImpute          | BIOCONDUCTOR | | Missing at random algorithm using low rank approximation
+| MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | | Missing not at random algorithm using low rank approximation
 | ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
 | ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
-
-
 
 
 ## Build status
