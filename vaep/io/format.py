@@ -11,7 +11,7 @@ def classname(obj):
     """
     Return entire object's class name (repr notation) as str.
     Source: https://gist.github.com/clbarnes/edd28ea32010eb159b34b075687bb49e
-    
+
     Parameters
     ----------
     obj : object

@@ -1,0 +1,3 @@
+FN_INTENSITIES: data/dev_datasets/df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070.pkl
+sample_completeness: 0.5
+frac_mnar: 0.25

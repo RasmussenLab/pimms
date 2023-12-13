@@ -10,7 +10,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import torch 
+import torch
 from fastcore.foundation import L
 from fastai import learner
 import sklearn.metrics as sklm
@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 
 def plot_loss(recorder: learner.Recorder,
-              norm_train:np.int64=np.int64(1),
-              norm_val:np.int64=np.int64(1),
+              norm_train: np.int64 = np.int64(1),
+              norm_val: np.int64 = np.int64(1),
               skip_start: int = 5,
               with_valid: bool = True,
               ax: plt.Axes = None) -> plt.Axes:
@@ -39,9 +39,9 @@ def plot_loss(recorder: learner.Recorder,
     recorder : learner.Recorder
         fastai Recorder object, learn.recorder
     norm_train: np.int64, optional
-        Normalize epoch loss by number of training samples, by default 1 
+        Normalize epoch loss by number of training samples, by default 1
     norm_val: np.int64, optional
-        Normalize epoch loss by number of validation samples, by default 1 
+        Normalize epoch loss by number of validation samples, by default 1
     skip_start : int, optional
         Skip N first batch metrics, by default 5
     with_valid : bool, optional
@@ -61,7 +61,7 @@ def plot_loss(recorder: learner.Recorder,
     if with_valid:
         idx = (np.array(recorder.iters) < skip_start).sum()
         ax.plot(recorder.iters[idx:], L(
-            recorder.values[idx:]).itemgot(1) / norm_val , label='valid') 
+            recorder.values[idx:]).itemgot(1) / norm_val, label='valid')
         ax.legend()
     return ax
 
@@ -70,7 +70,7 @@ def plot_training_losses(learner: learner.Learner,
                          name: str,
                          ax=None,
                          save_recorder: bool = True,
-                         norm_factors = np.array([1,1], dtype='int'),
+                         norm_factors=np.array([1, 1], dtype='int'),
                          folder='figures',
                          figsize=(15, 8)):
     if ax is None:
@@ -96,6 +96,7 @@ def calc_net_weight_count(model: torch.nn.modules.module.Module) -> int:
         weight_count += np.prod(param.size())
     return int(weight_count)
 
+
 class RecorderDump:
     """Simple Class to hold fastai Recorder Callback data for serialization using pickle.
     """
@@ -118,8 +119,6 @@ class RecorderDump:
         return ret
 
     plot_loss = plot_loss
-
-
 
 
 def split_prediction_by_mask(pred: pd.DataFrame,
@@ -152,17 +151,17 @@ def split_prediction_by_mask(pred: pd.DataFrame,
 def compare_indices(first_index: pd.Index, second_index: pd.Index) -> pd.Index:
     """Show difference of indices in other index wrt. to first. First should be the larger
     collection wrt to the second. This is the set difference of two Index objects.
-    
+
     If second index is a superset of indices of the first, the set will be empty,
     although there  are differences (default behaviour in pandas).
-    
+
     Parameters
     ----------
     first_index : pd.Index
         Index, should be superset
     second_index : pd.Index
         Index, should be the subset
-        
+
     Returns
     -------
     pd.Index
@@ -181,8 +180,7 @@ scoring = [('MSE', sklm.mean_squared_error),
            ('MAE', sklm.mean_absolute_error)]
 
 
-
-def collect_metrics(metrics_jsons:List, key_fct: Callable) -> dict:
+def collect_metrics(metrics_jsons: List, key_fct: Callable) -> dict:
     """Collect and aggregate a bunch of json metrics.
 
     Parameters
@@ -207,7 +205,7 @@ def collect_metrics(metrics_jsons:List, key_fct: Callable) -> dict:
         fname = Path(fname)
         logger.info(f"Load file: {fname = }")
 
-        key = key_fct(fname) # level, repeat
+        key = key_fct(fname)  # level, repeat
 
         logger.debug(f"{key = }")
         with open(fname) as f:

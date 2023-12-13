@@ -1,3 +1,4 @@
+# # config for Snakefile_best_across_datasets
 epochs_max:
 - 100
 batch_size: 64

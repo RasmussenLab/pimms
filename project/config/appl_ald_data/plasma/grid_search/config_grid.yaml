@@ -29,4 +29,4 @@ levels:
 config_split: 'config/appl_ald_data/plasma/{level}/split.yaml'
 config_train: 'placeholder.yaml'
 name_template: run_LD_{latent_dim}_E_{epochs_max}
-cuda: True
+cuda: False

@@ -17,6 +17,7 @@ FILE_FORMAT_TO_DUMP_FCT = {'pkl': ('to_pickle', 'read_pickle'),
                            # 'pickle': 'to_pickle',
                            'csv': ('to_csv', 'read_csv')}
 
+
 def long_format(df: pd.DataFrame,
                 colname_values: str = 'intensity',
                 # index_name: str = 'Sample ID'
@@ -49,7 +50,6 @@ class DataSplits():
     train_X: pd.DataFrame = None
     val_y: pd.DataFrame = None
     test_y: pd.DataFrame = None
-    
 
     def __post_init__(self):
         self._items = sorted(self.__dict__)
@@ -64,12 +64,12 @@ class DataSplits():
         return ['dump', 'from_folder', 'interpolate', 'load', 'test_X', 'test_y',
                 'to_long_format', 'to_wide_format', 'train_X', 'val_X', 'val_y']
 
-    def dump(self, folder='data', file_format='csv')-> dict:
+    def dump(self, folder='data', file_format='csv') -> dict:
         """dump in long format."""
         folder = Path(folder)
         folder.mkdir(parents=True, exist_ok=True)
 
-        if not file_format in FILE_FORMAT_TO_DUMP_FCT:
+        if file_format not in FILE_FORMAT_TO_DUMP_FCT:
             raise ValueError(f"Select one of these formats: {', '.join(FILE_FORMAT_TO_DUMP_FCT.keys())}")
         dumps = {}
         n_dumped = 0
@@ -128,11 +128,11 @@ class DataSplits():
             _df = _series.unstack()
             setattr(self, _attr, _df)
         self._is_wide = True
-    
-    def to_long_format(self, name_values:str='intensity'):
-        if not self._is_wide: 
+
+    def to_long_format(self, name_values: str = 'intensity'):
+        if not self._is_wide:
             return
-        
+
         for _attr, _df in self:
             if _df is None:
                 continue
@@ -142,7 +142,7 @@ class DataSplits():
         self._is_wide = False
 
     # singledispatch possible
-    def interpolate(self, dataset:Union[str, pd.DataFrame]):
+    def interpolate(self, dataset: Union[str, pd.DataFrame]):
         if issubclass(type(dataset), pd.DataFrame):
             ds = dataset
         elif issubclass(type(dataset), pd.Series):
@@ -152,7 +152,7 @@ class DataSplits():
                 ds = getattr(self, dataset)
             except AttributeError:
                 raise AttributeError(f"Please provide a valid attribute, not '{dataset}'. "
-                "Valid attributes are {}".format(', '.join(x for x in self._items)))
+                                     "Valid attributes are {}".format(', '.join(x for x in self._items)))
             if dataset[-1] in ['y', 'Y']:
                 logger.warning(
                     f'Attempting to interpolate target: {dataset} '
@@ -160,15 +160,13 @@ class DataSplits():
             if ds is None:
                 raise ValueError(f'Attribute is None: {dataset!r}.')
             if not self._is_wide:
-                ds = ds.unstack() # series is unstack to DataFrame
+                ds = ds.unstack()  # series is unstack to DataFrame
         else:
             raise TypeError(f"Unknown type: {classname(dataset)}."
-            f" None of str, {class_full_module(pd.DataFrame)}, {class_full_module(pd.Series)}"
-            )
- 
+                            f" None of str, {class_full_module(pd.DataFrame)}, {class_full_module(pd.Series)}"
+                            )
+
         return interpolate(wide_df=ds)
-
-
 
 
 def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv') -> dict:
@@ -184,7 +182,8 @@ def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv
         read_fct = getattr(pd, FILE_FORMAT_TO_DUMP_FCT[file_format][1])
         _df = read_fct(fname)
         # logic below is suited for csv reader -> maybe split up loading and saving later?
-        if len(_df.shape) == 1: _df = _df.to_frame().reset_index() # in case Series was pickled
+        if len(_df.shape) == 1:
+            _df = _df.to_frame().reset_index()  # in case Series was pickled
         cols = list(_df.columns)
         if use_wide_format:
             _df = wide_format(_df.set_index(cols[1:-1]), columns=cols[0], name_values=cols[-1])
@@ -196,7 +195,7 @@ def load_items(folder: str, items: dict, use_wide_format=False, file_format='csv
 
 
 # set default file name -> intergrate into DataSplits?
-def load_freq(folder:str, file='freq_features.pkl'):
+def load_freq(folder: str, file='freq_features.pkl'):
     folder = Path(folder)
     fname = folder / file
     if fname.suffix == '.json':

@@ -19,6 +19,7 @@ expected_repr = """Autoencoder(
   )
 )"""
 
+
 def test_basic_repr():
     model = ae.Autoencoder(n_features=100, n_neurons=30)
     actual_repr = repr(model)
@@ -26,6 +27,3 @@ def test_basic_repr():
     assert model.dim_latent == 10
     assert model.n_neurons == [30]
     assert model.n_features == 100
-
-
-

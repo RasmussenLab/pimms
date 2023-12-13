@@ -2,6 +2,8 @@ from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Tuple, Union, List
+
+import logging
 import random
 
 
@@ -21,8 +23,8 @@ from vaep.analyzers import Analysis
 from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
 
-from . import metadata
 
+logger = logging.getLogger(__name__)
 
 __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 
@@ -31,22 +33,22 @@ ALPHA = 0.5
 
 
 def verify_df(df,
-           fname,
-           index_col:str,  # could be potentially 0 for the first column
-           verify_fname: bool = False,
-           usecols=None,
-           ):
+              fname,
+              index_col: str,  # could be potentially 0 for the first column
+              verify_fname: bool = False,
+              usecols=None,
+              ):
     if usecols and isinstance(index_col, str):
         assert index_col in usecols, 'Add index_col to usecols Sequence'
     if verify_fname:
         if not len(df.shape) == 2:
             raise ValueError(f"Expected 2 -dimensional array, not {len(df.shape)} -dimensional,"
-            f" of type: {type(df)}")
+                             f" of type: {type(df)}")
         N, M = df.shape
         assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
             ("Filename number don't match loaded numbers: "
                 f"{fname} should contain N{N} and M{M}")
-    
+
 
 class AnalyzePeptides(SimpleNamespace):
     """Namespace for current analysis
@@ -61,7 +63,7 @@ class AnalyzePeptides(SimpleNamespace):
     Many more attributes are set dynamically depending on the concrete analysis.
     """
 
-    def __init__(self, data:pd.DataFrame,
+    def __init__(self, data: pd.DataFrame,
                  is_log_transformed: bool = False,
                  is_wide_format: bool = True, ind_unstack: str = '',):
         if not is_wide_format:
@@ -115,7 +117,7 @@ class AnalyzePeptides(SimpleNamespace):
 
     def get_consecutive_dates(self, n_samples, seed=42):
         """Select n consecutive samples using a seed.
-        
+
         Updated the original DataFrame attribute: df
         """
         self.df.sort_index(inplace=True)
@@ -138,7 +140,11 @@ class AnalyzePeptides(SimpleNamespace):
             return self._df_long
         return self.to_long_format(colname_values='intensity', index_name=self.index_col)
 
-    def to_long_format(self, colname_values: str = 'intensity', index_name: str = 'Sample ID', inplace: str = False) -> pd.DataFrame:
+    def to_long_format(
+            self,
+            colname_values: str = 'intensity',
+            index_name: str = 'Sample ID',
+            inplace: str = False) -> pd.DataFrame:
         """[summary]
 
         Parameters
@@ -178,7 +184,11 @@ class AnalyzePeptides(SimpleNamespace):
     def df_wide(self):
         return self.to_wide_format()
 
-    def to_wide_format(self, columns: str = 'Sample ID', name_values: str = 'intensity', inplace: bool = False) -> pd.DataFrame:
+    def to_wide_format(
+            self,
+            columns: str = 'Sample ID',
+            name_values: str = 'intensity',
+            inplace: bool = False) -> pd.DataFrame:
         """[summary]
 
         Parameters
@@ -197,11 +207,11 @@ class AnalyzePeptides(SimpleNamespace):
         """
 
         """Build wide data view.
-        
+
         Return df attribute in case this is in wide-format. If df attribute is in long-format
         this is used. If df is wide, but long-format exist, then the wide format is build.
-        
-        
+
+
         """
         if self.is_wide_format:
             return self.df
@@ -235,18 +245,6 @@ class AnalyzePeptides(SimpleNamespace):
         """Get prop. of not NA values for each sample."""
         return self.df.notna().sum(axis=1) / self.df.shape[-1]
 
-    def add_metadata(self, add_prop_not_na=True):
-        d_meta = metadata.get_metadata_from_filenames(self.df.index)
-        self.df_meta = pd.DataFrame.from_dict(
-            d_meta, orient='index')
-        self.df_meta.index.name = self.df.index.name
-        print(f'Created metadata DataFrame attribute `df_meta`.')
-        # add proportion on not NA to meta data
-        if add_prop_not_na:
-            self.df_meta['prop_not_na'] = self.get_prop_not_na()
-        print(f'Added proportion of not NA values based on `df` intensities.')
-        return self.df_meta
-
     def get_PCA(self, n_components=2, imputer=SimpleImputer):
         self.imputer_ = imputer()
         X = self.imputer_.fit_transform(self.df)
@@ -255,24 +253,26 @@ class AnalyzePeptides(SimpleNamespace):
 
         PCs, self.pca_ = run_pca(X, n_components=n_components)
         if not hasattr(self, 'df_meta'):
-            _ = self.add_metadata()
+            logger.warning('No metadata available, please set "df_meta" first.')
         try:
             PCs['ms_instrument'] = self.df_meta['ms_instrument'].astype('category')
         except KeyError:
-            print("No MS instrument added.")
+            logger.warning("No MS instrument added.")
+        except AttributeError:
+            logger.warning("No metadata available, please set 'df_meta' first.")
+            logger.warning("No MS instrument added.")
         return PCs
 
     def calculate_PCs(self, new_df, is_wide=True):
         if not is_wide:
-            new_df = new_df.unstack(new_df.index.names[1:]) 
-        
+            new_df = new_df.unstack(new_df.index.names[1:])
+
         X = self.imputer_.transform(new_df)
         X = _add_indices(X, new_df)
         PCs = self.pca_.transform(X)
         PCs = _add_indices(PCs, new_df, index_only=True)
         PCs.columns = [f'PC {i+1}' for i in range(PCs.shape[-1])]
-        return PCs  
-
+        return PCs
 
     def plot_pca(self,):
         """Create principal component plot with three heatmaps showing
@@ -282,7 +282,7 @@ class AnalyzePeptides(SimpleNamespace):
             self.is_wide_format = True
 
         if not hasattr(self, 'df_meta'):
-            _ = self.add_metadata()
+            raise AttributeError('No metadata available, please set "df_meta" first.')
 
         PCs = self.get_PCA()
         cols = list(PCs.columns)
@@ -294,7 +294,8 @@ class AnalyzePeptides(SimpleNamespace):
         self.dim = Dim(*self.df.shape)
 
         fig.suptitle(
-            f'First two Principal Components of {self.dim.M} most abundant peptides \n for {self.dim.N} samples', fontsize=30)
+            f'First two Principal Components of {self.dim.M} most abundant peptides \n for {self.dim.N} samples',
+            fontsize=30)
 
         # by instrument
         ax = axes[0]
@@ -401,38 +402,19 @@ class LatentAnalysis(Analysis):
                 title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
         if save:
             vaep.plotting._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
-                                    folder=self.folder)
+                                   folder=self.folder)
         return fig, ax
 
 
 # def read_csv(fname:str, nrows:int, index_col:str=None)-> pd.DataFrame:
 #     return pd.read_csv(fname, index_col=index_col, low_memory=False, nrows=nrows)
 
-def build_metadata_df(filenames:pd.Index) -> pd.DataFrame:
-    """Build a DataFrame based on a list of strings (an Index) to parse.
-    Is strongly coupled to the analysis context.
-
-    Parameters
-    ----------
-    filenames : pd.Index
-        An Iterable with strings.
-
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame with the parsed metadata.
-    """
-    
-    d_meta = metadata.get_metadata_from_filenames(filenames)
-    df_meta = pd.DataFrame.from_dict(d_meta, orient='index')
-    df_meta.index.name = filenames.name
-    return df_meta
 
 def get_consecutive_data_indices(df, n_samples):
     index = df.sort_index().index
     start_sample = len(index) - n_samples
     start_sample = random.randint(0, start_sample)
-    return df.loc[index[start_sample:start_sample+n_samples]]
+    return df.loc[index[start_sample:start_sample + n_samples]]
 
 
 def corr_lower_triangle(df):
@@ -446,20 +428,20 @@ def corr_lower_triangle(df):
 
 def plot_corr_histogram(corr_lower_triangle, bins=10):
     fig, axes = plt.subplots(ncols=2, gridspec_kw={"width_ratios": [
-        5, 1], "wspace": 0.2}, figsize=(10, 4))
+        5, 1], "wspace": 0.2}, figsize=(8, 4))
     values = pd.Series(corr_lower_triangle.to_numpy().flatten()).dropna()
     ax = axes[0]
     ax = values.hist(ax=ax, bins=bins)
     ax.yaxis.set_major_formatter("{x:,.0f}")
     ax = axes[1]
     plt.axis('off')
-    data = values.describe(percentiles=np.linspace(0.1,1,10)).round(2)
+    data = values.describe(percentiles=np.linspace(0.1, 1, 10)).round(2)
     data.name = ''
     _ = pd.plotting.table(ax=ax, data=data, loc="best", edges="open")
     return fig, axes
 
 
-def run_pca(df_wide:pd.DataFrame, n_components:int=2) -> Tuple[pd.DataFrame, PCA]:
+def run_pca(df_wide: pd.DataFrame, n_components: int = 2) -> Tuple[pd.DataFrame, PCA]:
     """Run PCA on DataFrame and return result.
 
     Parameters
@@ -531,10 +513,10 @@ def seaborn_scatter(df, ax,
     seaborn.scatterplot(x=df[cols[0]], y=df[cols[1]],
                         hue=meta, ax=ax, palette='deep', s=size, alpha=alpha)
     _ = ax.legend(fontsize=fontsize,
-              title_fontsize=fontsize,
-              markerscale=0.4,
-              title=meta.name,
-              )
+                  title_fontsize=fontsize,
+                  markerscale=0.4,
+                  title=meta.name,
+                  )
     ax.set_title(title, fontsize=fontsize)
     return ax
 
@@ -546,9 +528,9 @@ def scatter_plot_w_dates(ax, df,
                          size=2):
     """plot first vs. second column in DataFrame.
     Use dates to color data.
-    
-    
-    
+
+
+
     errors : {'ignore', 'raise', 'coerce'}, default 'raise'
         Passed on to pandas.to_datetime
         - If 'raise', then invalid parsing will raise an exception.
@@ -576,7 +558,7 @@ def scatter_plot_w_dates(ax, df,
 def add_date_colorbar(mappable, ax):
     loc = mdates.AutoDateLocator()
     cbar = ax.get_figure().colorbar(mappable, ax=ax, ticks=loc,
-                     format=mdates.AutoDateFormatter(loc))
+                                    format=mdates.AutoDateFormatter(loc))
     return cbar
 
 

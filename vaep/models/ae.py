@@ -28,8 +28,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-
 def get_preds_from_df(df: pd.DataFrame,
                       learn: fastai.learner.Learner,
                       transformer: vaep.transform.VaepPipeline,
@@ -60,7 +58,7 @@ def get_preds_from_df(df: pd.DataFrame,
     dl = vaep.io.dataloaders.get_test_dl(df=df,
                                          transformer=transformer,
                                          dataset=dataset)
-    res = learn.get_preds(dl=dl) # -> dl could be int
+    res = learn.get_preds(dl=dl)  # -> dl could be int
     if position_pred_tuple is not None and issubclass(type(res[0]), tuple):
         res = (res[0][position_pred_tuple], *res[1:])
     res = L(res).map(lambda x: pd.DataFrame(
@@ -69,8 +67,8 @@ def get_preds_from_df(df: pd.DataFrame,
     return res
 
 
-
 leaky_relu_default = nn.LeakyReLU(.1)
+
 
 class Autoencoder(nn.Module):
     """Autoencoder base class.
@@ -116,8 +114,8 @@ class Autoencoder(nn.Module):
         # Encoder
         self.encoder = []
 
-        for i in range(len(self.layers)-1):
-            in_feat, out_feat = self.layers[i:i+2]
+        for i in range(len(self.layers) - 1):
+            in_feat, out_feat = self.layers[i:i + 2]
             self.encoder.extend(build_layer(in_feat=in_feat,
                                             out_feat=out_feat))
         self.encoder.append(nn.Linear(out_feat, dim_latent))
@@ -133,11 +131,11 @@ class Autoencoder(nn.Module):
                                    out_feat=out_feat)
 
         i = -1  # in case a single hidden layer is passed
-        for i in range(len(self.layers_decoder)-2):
-            in_feat, out_feat = self.layers_decoder[i:i+2]
+        for i in range(len(self.layers_decoder) - 2):
+            in_feat, out_feat = self.layers_decoder[i:i + 2]
             self.decoder.extend(build_layer(in_feat=in_feat,
                                             out_feat=out_feat))
-        in_feat, out_feat = self.layers_decoder[i+1:i+3]
+        in_feat, out_feat = self.layers_decoder[i + 1:i + 3]
 
         self.decoder.append(nn.Linear(in_feat, out_feat))
         if last_decoder_activation is not None:
@@ -159,7 +157,7 @@ def get_missing_values(df_train_wide: pd.DataFrame,
     Parameters
     ----------
     df_train_wide : pd.DataFrame
-        Training data in wide format. 
+        Training data in wide format.
     val_idx : pd.Index
         Indices (MultiIndex of Sample and Feature) of validation split
     test_idx : pd.Index
@@ -170,7 +168,7 @@ def get_missing_values(df_train_wide: pd.DataFrame,
     Returns
     -------
     pd.Series
-        Multiindex series of missing values in training data which are not 
+        Multiindex series of missing values in training data which are not
         in validiation and test split.
     """
     # all idx missing in training data
@@ -215,7 +213,7 @@ def get_missing_values(df_train_wide: pd.DataFrame,
 #         assert self.layers_decoder is not self.layers
 #         assert out_feat == self.layers_decoder[0]
 #         self.decoder = [nn.Linear(self.dim_latent, out_feat),
-#                         activation(), 
+#                         activation(),
 #                         nn.BatchNorm1d(out_feat)]
 #         for i in range(len(self.layers_decoder)-1):
 #             in_feat, out_feat = self.layers_decoder[i:i+2]
@@ -278,9 +276,9 @@ class DatasetWithTargetAdapter(Callback):
 
 
 class ModelAdapterFlatPred(DatasetWithTargetAdapter):
-    """Models forward only expects on input matrix. 
+    """Models forward only expects on input matrix.
     Apply mask from dataloader to both pred and targets.
-    
+
     Return only predictions and target for non NA inputs.
     """
 
@@ -302,9 +300,9 @@ class ModelAdapterFlatPred(DatasetWithTargetAdapter):
 
 
 class ModelAdapter(ModelAdapterFlatPred):
-    """Models forward only expects on input matrix. 
+    """Models forward only expects on input matrix.
     Apply mask from dataloader to both pred and targets.
-    
+
     Keep original dimension, i.e. also predictions for NA."""
 
     def after_pred(self):
@@ -321,7 +319,7 @@ class ModelAdapter(ModelAdapterFlatPred):
 
 
 class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
-    """Models forward method only expects one input matrix. 
+    """Models forward method only expects one input matrix.
     Apply mask from dataloader to both pred and targets."""
 
     def before_batch(self):
@@ -336,7 +334,7 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
             pred, mu, logvar = self.pred  # return predictions
             self.learn.pred = (pred[self._mask], mu, logvar)  # is this flat?
         elif len(self.pred) == 4:
-            x_mu,x_logvar, z_mu, z_logvar = self.pred
+            x_mu, x_logvar, z_mu, z_logvar = self.pred
             self.learn.pred = (x_mu[self._mask], x_logvar[self._mask], z_mu, z_logvar)
 
 # same as ModelAdapter. Inheritence is limiting composition here
@@ -356,43 +354,39 @@ class ModelAdapterVAE(ModelAdapterVAEFlat):
             self.learn.yb = (self._all_y,)
 
 
-
-
-
 class AutoEncoderAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
-                 train_df:pd.DataFrame,
-                 val_df:pd.DataFrame, # values to use for validation
-                 model:torch.nn.modules.module.Module,
-                 model_kwargs:dict,
+                 train_df: pd.DataFrame,
+                 val_df: pd.DataFrame,  # values to use for validation
+                 model: torch.nn.modules.module.Module,
+                 model_kwargs: dict,
                  transform: sklearn.pipeline.Pipeline,
                  decode: List[str],
                  bs=64
                  ):
-        self.transform =  vaep.transform.VaepPipeline(
-                                      df_train=train_df,
-                                      encode=transform,
-                                      decode=decode)
+        self.transform = vaep.transform.VaepPipeline(
+            df_train=train_df,
+            encode=transform,
+            decode=decode)
         self.dls = vaep.io.dataloaders.get_dls(
-                        train_X=train_df,
-                        valid_X=val_df,
-                        transformer=self.transform, bs=bs)
+            train_X=train_df,
+            valid_X=val_df,
+            transformer=self.transform, bs=bs)
 
         # M = data.train_X.shape[-1]
         self.kwargs_model = model_kwargs
         self.params = dict(self.kwargs_model)
         self.model = model(**self.kwargs_model)
-        
+
         self.n_params_ae = vaep.models.calc_net_weight_count(self.model)
         self.params['n_parameters'] = self.n_params_ae
         self.learn = None
 
-        
-    def get_preds_from_df(self, df_wide:pd.DataFrame) -> pd.DataFrame:
-        if self.learn is None: raise ValueError("Assign Learner first as learn attribute.")
-        return get_preds_from_df(df=df_wide, learn=self.learn, transformer=self.transform) 
-    
-    def get_test_dl(self, df_wide:pd.DataFrame, bs:int=64) -> pd.DataFrame:
-        return vaep.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)
+    def get_preds_from_df(self, df_wide: pd.DataFrame) -> pd.DataFrame:
+        if self.learn is None:
+            raise ValueError("Assign Learner first as learn attribute.")
+        return get_preds_from_df(df=df_wide, learn=self.learn, transformer=self.transform)
 
+    def get_test_dl(self, df_wide: pd.DataFrame, bs: int = 64) -> pd.DataFrame:
+        return vaep.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)

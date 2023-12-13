@@ -10,8 +10,10 @@ config["folder_experiment"] = folder_experiment
 
 MODELS = ["DAE", "VAE", "CF"]
 
+
 wildcard_constraints:
-    model="|".join(MODELS)
+    model="|".join(MODELS),
+
 
 rule all:
     input:
@@ -58,6 +60,7 @@ rule collect_metrics:
 
 nb = "01_0_split_data.ipynb"
 
+
 rule create_splits:
     input:
         nb=nb,
@@ -69,7 +72,7 @@ rule create_splits:
         folder_experiment=f"{folder_experiment}",
         meta_data=config["fn_rawfile_metadata"],
         file_format=config["file_format"],
-        random_state="{repeat}"
+        random_state="{repeat}",
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -78,6 +81,7 @@ rule create_splits:
         " -r file_format {params.file_format}"
         " -p random_state {params.random_state}"
         " && jupyter nbconvert --to html {output.nb}"
+
 
 rule train_models:
     input:
@@ -93,6 +97,7 @@ rule train_models:
         model_key="{model}",
         meta_data=config["fn_rawfile_metadata"],
         file_format=config["file_format"],
+        cuda=config["cuda"],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -100,4 +105,5 @@ rule train_models:
         " -r fn_rawfile_metadata {params.meta_data}"
         " -r file_format {params.file_format}"
         " -r model_key {params.model_key}"
+        " -p cuda {params.cuda}"
         " && jupyter nbconvert --to html {output.nb}"

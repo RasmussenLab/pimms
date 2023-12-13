@@ -38,7 +38,7 @@ class DotProductBias(Module):
 
 
 def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
-    """Helper function to combine training and validation data in long-format. The 
+    """Helper function to combine training and validation data in long-format. The
     training and validation data will be mixed up in CF training as the sample
     embeddings have to be trained for all samples. The returned frac can be used to have
     the same number of (non-missing) validation samples as before.
@@ -56,8 +56,8 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
         Pandas DataFrame of concatenated samples of training and validation data.
         Fraction of samples originally in validation data.
     """
-    X = train_df.append(val_df).reset_index()
-    frac = len(val_df) / (len(train_df)+len(val_df))
+    X = pd.concat([train_df, val_df]).reset_index()
+    frac = len(val_df) / (len(train_df) + len(val_df))
     return X, frac
 
 
@@ -100,7 +100,7 @@ def collab_dot_product(sample_embeddings: torch.tensor, sample_bias: torch.tenso
     res = res.detach()
     if y_range is None:
         return res
-    return torch.sigmoid(res) * (y_range[1]-y_range[0]) + y_range[0]
+    return torch.sigmoid(res) * (y_range[1] - y_range[0]) + y_range[0]
 
 
 def collab_prediction(idx_samples: torch.tensor,
@@ -112,20 +112,20 @@ def collab_prediction(idx_samples: torch.tensor,
     Parameters
     ----------
     idx_samples : torch.tensor
-        An array containing the neighreast neighbors in the training data for 
+        An array containing the neighreast neighbors in the training data for
         set of list of test samples. Normallay obtained from a sklearn KNN search.
     learn : fastai.learner.Learner
         The learner used for collab training
     index_samples : pd.Index, optional
         The pandas.Index for the training samples.
         If no index_samples is provided, the samples will just be numbered,
-        by default None 
+        by default None
 
     Returns
     -------
     pd.DataFrame
         predictions as DataFrame for all features encoded by the model for all samples.
-        
+
     """
     # Matrix multiplication way
     test_sample_embeddings = learn.u_weight(
@@ -141,7 +141,7 @@ def collab_prediction(idx_samples: torch.tensor,
     res = res + feat_biases.T + test_sample_biases
 
     if learn.y_range is not None:
-        res = torch.sigmoid(res) * (learn.y_range[1]-learn.y_range[0]
+        res = torch.sigmoid(res) * (learn.y_range[1] - learn.y_range[0]
                                     ) + learn.y_range[0]
 
     res = pd.DataFrame(res,
@@ -162,7 +162,7 @@ class CollabAnalysis(analysis.ModelAnalysis):
                  batch_size=64):
         if datasplits.val_y is not None:
             self.X, self.frac = combine_data(datasplits.train_X,
-                                         datasplits.val_y)
+                                             datasplits.val_y)
         else:
             self.X, self.frac = datasplits.train_X.reset_index(), 0.0
         self.batch_size = batch_size
@@ -172,16 +172,23 @@ class CollabAnalysis(analysis.ModelAnalysis):
                                              item_name=item_column,
                                              rating_name=target_column,
                                              bs=self.batch_size)
-        user_name=sample_column
-        item_name=item_column
-        rating_name=target_column
-        cat_names = [user_name,item_name]
+        user_name = sample_column
+        item_name = item_column
+        rating_name = target_column
+        cat_names = [user_name, item_name]
         ratings = self.X
         splits = None
         if datasplits.val_y is not None:
-            idx_splitter = IndexSplitter(list(range(len(datasplits.train_X), len(datasplits.train_X)+ len(datasplits.val_y) )))
+            idx_splitter = IndexSplitter(
+                list(range(len(datasplits.train_X), len(datasplits.train_X) + len(datasplits.val_y))))
             splits = idx_splitter(self.X)
-        to = TabularCollab(ratings, [Categorify], cat_names, y_names=[rating_name], y_block=TransformBlock(), splits=splits)
+        to = TabularCollab(
+            ratings,
+            [Categorify],
+            cat_names,
+            y_names=[rating_name],
+            y_block=TransformBlock(),
+            splits=splits)
         self.dls = to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}
         self.model_kwargs = model_kwargs

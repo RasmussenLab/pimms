@@ -33,7 +33,7 @@ class DataLoadersCreator():
         scaler : [type]
             A pipeline of transform to apply to the dataset.
         DataSetClass : torch.utils.data.Dataset
-            Type of dataset to use for generating single samples based on 
+            Type of dataset to use for generating single samples based on
             DataFrames.
         batch_size : int
             Batch size to use.
@@ -49,7 +49,10 @@ class DataLoadersCreator():
         self.scaler = scaler
         self.batch_size = batch_size
 
-    def get_dls(self, shuffle_train: bool = True, **kwargs) -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
+    def get_dls(self,
+                shuffle_train: bool = True,
+                **kwargs) -> Tuple[torch.utils.data.DataLoader,
+                                   torch.utils.data.DataLoader]:
         self.shuffle_train = shuffle_train
         dl_train = DataLoader(
             dataset=self.data_train,
@@ -106,7 +109,7 @@ def get_dls(train_X: pandas.DataFrame,
     transforms = VaepPipeline(df_train=train_X,
                                   encode=dae_default_pipeline,
                                   decode=['normalize'])
-    dls = get_dls(train_X, val_X, transforms, bs=4)    
+    dls = get_dls(train_X, val_X, transforms, bs=4)
     """
     train_ds = datasets.DatasetWithTarget(df=train_X,
                                           transformer=transformer)

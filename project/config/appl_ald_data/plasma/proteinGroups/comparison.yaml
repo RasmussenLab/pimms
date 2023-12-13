@@ -1,8 +1,8 @@
-folder_experiment: runs/appl_ald_data/plasma/proteinGroups
+folder_experiment: runs/appl_ald_data_2023_11/plasma/proteinGroups
 out_folder: diff_analysis # subfolder of experiment folder
-fn_rawfile_metadata: 'data/ALD_study/processed/raw_meta.csv'
+fn_rawfile_metadata: "data/ALD_study/processed/raw_meta.csv"
 make_plots: True
-covar: 
+covar:
   kleiner: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
   inflammation: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
   steatosis: age,bmi,gender_num,abstinent_num,kleiner,nas_inflam
@@ -19,9 +19,10 @@ annotaitons_gene_col: PG.Genes
 baseline: RSN
 ref_method_score:
 methods:
- - Median
- - CF
- - DAE
- - VAE
- - rf
- - KNN
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - QRILC
+  - TRKNN
+  - RF

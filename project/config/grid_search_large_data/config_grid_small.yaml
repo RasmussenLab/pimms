@@ -1,0 +1,28 @@
+# runs in ~30 mins
+epochs_max:
+- 15
+batch_size: 64
+batch_size_collab: 32768
+hidden_layers:
+- '512'
+- '256_128'
+latent_dim:
+- 50
+folder_grid_search: "runs/optimize"
+# folder_experiment2: "runs/optimize/{{level}}"
+folder_experiment: "runs/optimize/{level}" # used by Snakefile of single experiment
+fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
+levels:
+- proteinGroups
+- peptides
+# - evidence 
+config_split: 'config/grid_search_large_data/{level}_split.yaml'
+file_format: csv
+config_train: 'placeholder.yaml'
+cuda: False
+NAGuideR_methods:
+models:
+  - Median
+  - CF
+  - DAE
+  - VAE

@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -23,7 +23,7 @@ import pandas as pd
 # Use parent folder name as key
 
 # %%
-files = {Path(f).parent.name: f for f in snakemake.input }
+files = {Path(f).parent.name: f for f in snakemake.input}
 files
 
 # %%
@@ -41,10 +41,10 @@ table
 
 # %%
 order = (table
-    .loc[:, pd.IndexSlice[:, 'val']]
-    .mean(axis=1)
-    .sort_values()
-)
+         .loc[:, pd.IndexSlice[:, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         )
 order
 
 # %%

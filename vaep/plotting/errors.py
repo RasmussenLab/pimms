@@ -24,7 +24,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
     len_max_bin = len(str(int(errors_binned['bin'].max())))
     n_obs = (errors_binned[meta_cols]
              .apply(
-        lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+        lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
     )
         .rename('intensity bin')
         .astype('category')
@@ -43,7 +43,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
                      x='intensity bin', y=metric_name, hue='model',
                      palette=palette,
                      errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors_binned
 
 
@@ -52,6 +52,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                           target_col='observed',
                           ax: Axes = None,
                           palette: dict = None,
+                          feat_name: str = None,
                           metric_name: Optional[str] = None,
                           errwidth: float = 1.2) -> tuple[Axes, pd.DataFrame]:
     # calculate absolute errors
@@ -74,16 +75,17 @@ def plot_errors_by_median(pred: pd.DataFrame,
 
     errors = errors.join(n_obs, on="bin")
 
-    feat_name = feat_medians.index.name
-    if not feat_name:
-        feat_name = 'feature'
+    if feat_name is None:
+        feat_name = feat_medians.index.name
+        if not feat_name:
+            feat_name = 'feature'
 
     x_axis_name = f'intensity binned by median of {feat_name}'
     len_max_bin = len(str(int(errors['bin'].max())))
     errors[x_axis_name] = (
         errors[['bin', 'n_obs']]
         .apply(
-            lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+            lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
         )
         .rename('intensity bin')
         .astype('category')
@@ -98,7 +100,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                 hue='model',
                 palette=palette,
                 errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors
 
 

@@ -196,7 +196,7 @@ Packages either are based on this repository, or were referenced by NAGuideR (Ta
 From the brief description in the table the exact procedure is not always clear.
 
 | Method        | Package           | source       | status | name              |
-| ------------- | ----------------- | ------       | --- |------------------ | 
+| ------------- | ----------------- | ------       | ------ |------------------ | 
 | CF            | pimms             | pip          | | Collaborative Filtering |
 | DAE           | pimms             | pip          | | Denoising Autoencoder   |
 | VAE           | pimms             | pip          | | Variational Autoencoder |     
@@ -206,7 +206,7 @@ From the brief description in the table the exact procedure is not always clear.
 | COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
 | ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
 | KNN_IMPUTE    | impute            | BIOCONDUCTOR | | k nearest neighbor imputation   |
-| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> start with feature with least missing values and re-use imputed values for not yet imputed features
+| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> starts with feature with least missing values and re-use imputed values for not yet imputed features
 | BPCA          | pcaMethods        | BIOCONDUCTOR | | Bayesian PCA missing value imputation
 | SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
 | LLS           | pcaMethods        | BIOCONDUCTOR | | Local least squares imputation of a feature based on k most correlated features
@@ -222,26 +222,12 @@ From the brief description in the table the exact procedure is not always clear.
 | TRKNN         | -                 | script       | | truncation k-nearest neighbor imputation 
 | RF            | missForest        | CRAN         | | Random Forest imputation (one feature at a time)
 | PI            | -                 | -            | | Downshifted normal distribution (per sample)
+| GSIMP         | -                 | script       | | QRILC initialization and iterative Gibbs sampling with generalized linear models (glmnet)
+| MSIMPUTE      | msImpute          | BIOCONDUCTOR | | Missing at random algorithm using low rank approximation
+| MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | | Missing not at random algorithm using low rank approximation
 | ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
 | ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
 
-
-
-## Workflows
-
-The workflows folder in the repository contains snakemake workflows used for rawfile data processing, 
-both for running MaxQuant over a large set of HeLa raw files 
-and ThermoRawFileParser on a list of raw files to extract their meta data. For details see:
-
->  Webel, Henry, Yasset Perez-Riverol, Annelaura Bach Nielson, and Simon Rasmussen. 2023. “Mass Spectrometry-Based Proteomics Data from Thousands of HeLa Control Samples.” Research Square. https://doi.org/10.21203/rs.3.rs-3083547/v1.
-
-### MaxQuant
-
-Process single raw files using MaxQuant. See [README](workflows/maxquant/README.md) for details.
-
-### Metadata
-
-Read metadata from single raw files using MaxQuant. See [README](workflows/metadata/README.md) for details.
 
 ## Build status
 [![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)

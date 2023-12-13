@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -22,18 +22,18 @@ import pandas as pd
 import plotly.express as px
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-
+import vaep.plotting.plotly as px_vaep
+from vaep.analyzers import compare_predictions
+from vaep import sampling
+from vaep.io import datasplits
+import vaep.utils
+import vaep.pandas
+import vaep.io
 import vaep.nb
 matplotlib.rcParams['figure.figsize'] = [12.0, 6.0]
 
-import vaep.io
-import vaep.pandas
-import vaep.utils
-from vaep.io import datasplits
-from vaep import sampling
-from vaep.analyzers import compare_predictions
-import vaep.plotting.plotly as px_vaep
 
 pd.options.display.max_columns = 45
 pd.options.display.max_rows = 100
@@ -48,8 +48,8 @@ logger = vaep.logging.setup_nb_logger()
 # papermill parameters:
 
 # %% tags=["parameters"]
-metrics_csv:str = "path/to/all_metrics.csv" # file path to metrics
-configs_csv:str = "path/to/all_configs.csv" # file path to configs ("meta data")
+metrics_csv: str = "path/to/all_metrics.csv"  # file path to metrics
+configs_csv: str = "path/to/all_configs.csv"  # file path to configs ("meta data")
 
 # %%
 try:
@@ -92,7 +92,7 @@ metrics.stack('model')
 # %%
 # ToDo: integrate as parameters
 metric_columns = ['MSE', 'MAE']
-model_keys = metrics.stack('model').index.levels[-1].unique().to_list() # not used
+model_keys = metrics.stack('model').index.levels[-1].unique().to_list()  # not used
 subset = metrics.columns.levels[0][0]
 print(f"{subset = }")
 
@@ -107,22 +107,23 @@ meta = pd.read_csv(path_configs)
 meta['hidden_layers'] = (meta
                          .loc[meta['hidden_layers'].notna(), 'hidden_layers']
                          .apply(lambda x: tuple(eval(x)))
-)
+                         )
 meta['n_hidden_layers'] = (meta
                            .loc[meta['hidden_layers'].notna(), 'hidden_layers']
                            .apply(len)
-)
+                           )
 meta['n_hidden_layers'] = (meta
                            ['n_hidden_layers']
                            .fillna(0)
                            .astype(int)
-)
+                           )
 meta.loc[meta['hidden_layers'].isna(), 'hidden_layers'] = None
 meta = meta.set_index('id')
 meta
 
 # %% [markdown]
-# Batch size for collab models depends on a factor (as the data in long format has roughly  N samples * M features entries).
+# Batch size for collab models depends on a factor (as the data in long
+# format has roughly  N samples * M features entries).
 
 # %% [markdown]
 # ## Colorcoded metrics
@@ -141,19 +142,19 @@ cmap = 'cividis_r'
 # %%
 # ToDo: To make it cleaner: own config for each model (interpolated and median)
 metrics_styled = (metrics
-                 .set_index(
-                     pd.MultiIndex
-                     .from_frame(
-                         meta
-                        .loc[metrics.index, ['latent_dim', 'hidden_layers', 'batch_size']]
-                        # .loc[metrics.index]
-                     )
-                 )
-                .sort_index()
-                .stack('model')
-                .drop_duplicates()
-                .style.background_gradient(cmap)
-)
+                  .set_index(
+                      pd.MultiIndex
+                      .from_frame(
+                          meta
+                          .loc[metrics.index, ['latent_dim', 'hidden_layers', 'batch_size']]
+                          # .loc[metrics.index]
+                      )
+                  )
+                  .sort_index()
+                  .stack('model')
+                  .drop_duplicates()
+                  .style.background_gradient(cmap)
+                  )
 
 metrics = metrics_styled.data
 metrics_styled
@@ -189,7 +190,7 @@ vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
 # Rebuild metrics from dictionary
 
 # %%
-metrics_long = pd.read_csv(path_metrics, index_col=[0], header=[0,1,2])
+metrics_long = pd.read_csv(path_metrics, index_col=[0], header=[0, 1, 2])
 # columns_names = ['subset', 'data_split', 'model', 'metric_name']
 columns_names = list(metrics_long.columns.names)
 metrics_long.sample(5) if len(metrics_long) > 15 else metrics_long
@@ -210,13 +211,13 @@ metrics_N
 
 # %%
 metrics_prop = (metrics_long
-             .loc[:, pd.IndexSlice[:, :, 'prop']]
-             .stack(['data_split', 'model'])
-             .reset_index()
-             .drop_duplicates()
-             .set_index(['id', 'data_split', 'model'])
-             .astype(int)
-             )
+                .loc[:, pd.IndexSlice[:, :, 'prop']]
+                .stack(['data_split', 'model'])
+                .reset_index()
+                .drop_duplicates()
+                .set_index(['id', 'data_split', 'model'])
+                .astype(int)
+                )
 metrics_prop
 
 # %% [markdown]
@@ -229,7 +230,7 @@ metrics_long = (metrics_long
                 .to_frame('metric_value')
                 .reset_index('metric_name')
                 .join(metrics_N)
-)
+                )
 metrics_long
 
 # %% [markdown]
@@ -239,7 +240,7 @@ metrics_long
 metrics_long = (metrics_long
                 .reset_index(['data_split'])
                 .join(meta.set_index('model', append=True))
-               ).reset_index('model')
+                ).reset_index('model')
 # metrics_long.index.name = 'id'
 metrics_long.sample(5)
 
@@ -286,7 +287,7 @@ metrics_long.to_csv(fname)  # Should all the plots be done without the metrics?
 logger.info(f"Saved metrics in long format: {fname}")
 
 # %% [markdown]
-# # Collection of Performance plots 
+# # Collection of Performance plots
 #
 # - specify `labels_dict` for plotly plotting
 #
@@ -316,7 +317,6 @@ hover_data['data_split'] = True
 hover_data['metric_value'] = ':.4f'
 
 # %%
-import seaborn as sns
 plt.rcParams['figure.figsize'] = (8, 4)
 plt.rcParams['lines.linewidth'] = 2
 plt.rcParams['lines.markersize'] = 3
@@ -329,9 +329,9 @@ fg = sns.relplot(
     x='n_params',
     y='metric_value',
     col="data_split",
-    col_order = col_order,
+    col_order=col_order,
     row="metric_name",
-    row_order = row_order,
+    row_order=row_order,
     hue="model",
     # style="day",
     palette=vaep.plotting.defaults.color_model_mapping,
@@ -344,9 +344,9 @@ fg.fig.get_size_inches()
 (ax_00, ax_01), (ax_10, ax_11) = fg.axes
 ax_00.set_ylabel(row_order[0])
 ax_10.set_ylabel(row_order[1])
-_ = ax_00.set_title('validation data') # col_order[0]
-_ = ax_01.set_title('test data') # col_order[1]
-ax_10.set_xlabel('number of parameters') # n_params
+_ = ax_00.set_title('validation data')  # col_order[0]
+_ = ax_01.set_title('test data')  # col_order[1]
+ax_10.set_xlabel('number of parameters')  # n_params
 ax_11.set_xlabel('number of parameters')
 ax_10.xaxis.set_major_formatter("{x:,.0f}")
 ax_11.xaxis.set_major_formatter("{x:,.0f}")
@@ -388,6 +388,7 @@ def plot_by_params(data_split: str = '', subset: str = ''):
         yaxis={'title': {'standoff': 6}})
     return fig
 
+
 dataset = "test_fake_na"
 fig = plot_by_params(dataset)
 fname = FOLDER / f"hyperpar_{dataset}_results_by_parameters.pdf"
@@ -412,8 +413,8 @@ fig
 # %%
 group_by = ['data_split', 'latent_dim', 'metric_name', 'model']
 metrics_long_sel_min = metrics_long.reset_index(
-        ).groupby(by=group_by
-        ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
+).groupby(by=group_by
+          ).apply(lambda df: df.sort_values(by='metric_value').iloc[0])
 metrics_long_sel_min
 
 
@@ -469,7 +470,7 @@ fig.show()
 # %%
 dataset = 'valid_fake_na'
 group_by = ['data_split', 'metric_name', 'model', 'latent_dim']
-METRIC = 'MAE' # params.metric
+METRIC = 'MAE'  # params.metric
 selected = (metrics_long
             .reset_index()
             .groupby(by=group_by)
@@ -494,11 +495,11 @@ model_with_latent
 
 # %%
 min_latent = (selected
-                      .loc[METRIC]
-                      .loc[model_with_latent]
-                      .groupby(level='latent_dim')
-                      .agg({'metric_value': 'mean'})
-                      .sort_values('metric_value')
+              .loc[METRIC]
+              .loc[model_with_latent]
+              .groupby(level='latent_dim')
+              .agg({'metric_value': 'mean'})
+              .sort_values('metric_value')
               )
 min_latent
 
@@ -581,10 +582,10 @@ ax = (errors['n_obs']
       .value_counts()
       .sort_index()
       .plot(style='.',
-       xlabel='number of samples',
-       ylabel='observations')
-)
-vaep.savefig(ax.get_figure(),  files_out[f'n_obs_error_counts_{dataset}.pdf'])
+            xlabel='number of samples',
+            ylabel='observations')
+      )
+vaep.savefig(ax.get_figure(), files_out[f'n_obs_error_counts_{dataset}.pdf'])
 
 # %%
 ax = errors.plot.scatter('freq', 'n_obs')
@@ -621,8 +622,8 @@ ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
 msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size: {window_size})"
 print(msg_annotation)
 
-files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = (FOLDER /
-                                                                    f'best_models_ld_{min_latent}_rolling_errors_by_freq')
+files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = (
+    FOLDER / f'best_models_ld_{min_latent}_rolling_errors_by_freq')
 vaep.savefig(
     ax.get_figure(),
     name=files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'])
@@ -647,8 +648,8 @@ fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name]
                    )
 fig = px_vaep.apply_default_layout(fig)
 fig.update_layout(legend_title_text='')  # remove legend title
-files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = (FOLDER /
-                                                                        f'best_models_ld_{min_latent}_errors_by_freq_plotly.html')
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = (
+    FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.html')
 fig.write_html(
     files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'])
 fig
@@ -673,8 +674,8 @@ ax = errors_smoothed.loc[errors_smoothed['freq'] >= FREQ_MIN].groupby(by='freq'
     # title='mean error for features averaged for each frequency'
     xlim=(FREQ_MIN, freq_feat.max())
 )
-files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'] = (FOLDER /
-                                                                     f'best_models_ld_{min_latent}_errors_by_freq_averaged')
+files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'] = (
+    FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_averaged')
 vaep.savefig(
     ax.get_figure(),
     files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'])

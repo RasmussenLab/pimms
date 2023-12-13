@@ -9,14 +9,16 @@ import pandas as pd
 root_folder: str = 'runs/dev_dataset_small'
 
 # large
-# root_folder: str = 'runs/dev_dataset_large'
-# root_folder: str = 'runs/appl_ald_data/plasma'
+root_folder: str = 'runs/mnar_mcar'
+root_folder: str = 'runs/appl_ald_data_2023_11/plasma'
 
 # %%
 root_folder = Path(root_folder)
 
 # %%
 # find folders in root folder and get files with tsv extension
+
+
 def find_tsv_benchmarks(root_folder: Path):
     """Find snakemake benchmark files in subfolders of root_folder (pimms workflow)
 
@@ -39,6 +41,7 @@ def find_tsv_benchmarks(root_folder: Path):
             if file.suffix == '.tsv':
                 yield file
 
+
 files = find_tsv_benchmarks(root_folder)
 
 # %%
@@ -47,7 +50,7 @@ files = find_tsv_benchmarks(root_folder)
 # files = (x for x in files if x.is_file())
 
 # %%
-COL = 'h:m:s' # 's' for seconds
+COL = 'h:m:s'  # 's' for seconds
 SPLIT_TERM = '_train_'
 data = dict()
 for file in files:
@@ -64,7 +67,7 @@ for file in files:
 data = (pd
         .DataFrame(data)
         .drop('PRED')
-)
+        )
 data
 
 # %%
@@ -78,9 +81,8 @@ fname.as_posix()
 
 # %%
 runtime_dumps = [
-    'runs/dev_dataset_large/runtimes.xlsx',
-    'runs/dev_dataset_small/runtimes.xlsx',
-    'runs/appl_ald_data/plasma/runtimes.xlsx'
+    'runs/mnar_mcar/runtimes.xlsx',
+    'runs/appl_ald_data_2023_11/plasma/runtimes.xlsx'
 ]
 runtime_dumps = [pd.read_excel(fname, index_col=0) for fname in runtime_dumps]
 runtime_dumps = pd.concat(runtime_dumps, axis=1)

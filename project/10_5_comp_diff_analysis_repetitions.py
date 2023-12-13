@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: vaep
 #     language: python
@@ -29,15 +29,18 @@ writer = pd.ExcelWriter(fname)
 fname
 
 # %%
-def _load_pickle(pfath, run:int):
+
+
+def _load_pickle(pfath, run: int):
     df = pd.read_pickle(pfath)
     df['run'] = f'run{run:02d}'
     df = df.set_index('run', append=True)
     return df
 
+
 df_long_qvalues = pd.concat(
-    [_load_pickle(f,i) for i,f  in enumerate(pickled_qvalues)]
-    )
+    [_load_pickle(f, i) for i, f in enumerate(pickled_qvalues)]
+)
 df_long_qvalues
 
 # %% [markdown]
@@ -77,7 +80,7 @@ idx_different = (da_target_same
                  [~da_target_same]
                  .index
                  .get_level_values(0)
-)
+                 )
 
 # %%
 da_counts = da_counts.loc[idx_different]
@@ -90,7 +93,7 @@ da_counts
 qvalue_stats = (qvalue_stats
                 .loc[idx_different]
                 .sort_values(('None', 'qvalue', 'mean'))
-)
+                )
 qvalue_stats
 
 # %% [markdown]
@@ -123,15 +126,15 @@ mask_pgs_included_in_ald_study
 # %%
 # pgs included in original ald study
 tab_diff_rejec_counts_old = (da_counts
- .loc[mask_pgs_included_in_ald_study]
- .reset_index()
- .groupby(
-     by=da_counts.columns.to_list())
- .size()
- .to_frame('N')
-)
+                             .loc[mask_pgs_included_in_ald_study]
+                             .reset_index()
+                             .groupby(
+                                 by=da_counts.columns.to_list())
+                             .size()
+                             .to_frame('N')
+                             )
 tab_diff_rejec_counts_old.to_excel(writer,
-                             sheet_name='tab_diff_rejec_counts_old')
+                                   sheet_name='tab_diff_rejec_counts_old')
 tab_diff_rejec_counts_old
 
 # %%
@@ -147,17 +150,16 @@ qvalue_stats.loc[mask_pgs_included_in_ald_study
 # %%
 # new pgs
 tab_diff_rejec_counts_new = (da_counts
- .loc[~mask_pgs_included_in_ald_study]
- .reset_index()
- .drop('RSN', axis=1)
- .groupby(
-     by=
-     [m for m in da_counts.columns if m != 'RSN'])
- .size()
- .to_frame('N')
-)
+                             .loc[~mask_pgs_included_in_ald_study]
+                             .reset_index()
+                             .drop('RSN', axis=1)
+                             .groupby(
+                                 by=[m for m in da_counts.columns if m != 'RSN'])
+                             .size()
+                             .to_frame('N')
+                             )
 tab_diff_rejec_counts_new.to_excel(writer,
-                                sheet_name='tab_diff_rejec_counts_new')
+                                   sheet_name='tab_diff_rejec_counts_new')
 tab_diff_rejec_counts_new
 
 # %%
@@ -172,7 +174,7 @@ qvalue_stats.loc[~mask_pgs_included_in_ald_study
 
 # %%
 mask_new_da_with_imp = mask_new_da_with_imputation = ((~mask_pgs_included_in_ald_study)
-                               & (da_counts['None'] != 10))
+                                                      & (da_counts['None'] != 10))
 
 tab_new_da_with_imp = vaep.pandas.combine_value_counts(
     da_counts

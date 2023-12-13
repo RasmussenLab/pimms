@@ -9,14 +9,15 @@ logger = logging.getLogger()
 
 
 class Config():
-    """Config class with a setter enforcing that config entries cannot 
+    """Config class with a setter enforcing that config entries cannot
     be overwritten.
 
 
     Can contain configs, which are itself configs:
     keys, paths,
-    
+
     """
+
     def __setattr__(self, entry, value):
         """Set if attribute not in instance."""
         if hasattr(self, entry) and getattr(self, entry) != value:
@@ -45,7 +46,7 @@ class Config():
         logger.info(f"Dumped config to: {fname}")
 
     @classmethod
-    def from_dict(cls, d:dict):
+    def from_dict(cls, d: dict):
         cfg = cls()
         for k, v in d.items():
             setattr(cfg, k, v)
@@ -57,17 +58,18 @@ class Config():
                 setattr(self, k, v)
             except AttributeError:
                 logger.info(f"Already set attribute: {k} has value {v}")
-    
+
     def keys(self):
         return vars(self).keys()
 
     def items(self):
         return vars(self).items()
-    
+
     def values(self):
         return vars(self).values()
 
-def get_params(args:dict.keys, globals, remove=True) -> dict:
+
+def get_params(args: dict.keys, globals, remove=True) -> dict:
     params = {k: v for k, v in globals.items() if k not in args and k[0] != '_'}
     if not remove:
         return params

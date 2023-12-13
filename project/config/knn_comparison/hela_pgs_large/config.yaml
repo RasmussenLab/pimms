@@ -1,0 +1,24 @@
+# config for Snakefile_v2
+config_split: config/knn_comparison/hela_pgs_large/split.yaml
+config_train: runs/knn_comparison/hela_pgs_large/configs_train/train_{model}.yaml
+folder_experiment: runs/knn_comparison/hela_pgs_large
+fn_rawfile_metadata: None
+file_format: csv
+cuda: False
+models:
+      - Median:
+              model: Median
+      - 3NN:
+              neighbors: 3
+              model: KNN
+      - 5NN:
+              neighbors: 5
+              model: KNN
+      - 10NN:
+              neighbors: 10
+              model: KNN
+      - 15NN:
+              neighbors: 15
+              model: KNN
+NAGuideR_methods:
+      - KNN_IMPUTE

@@ -1,2 +1,4 @@
+# Build in Snakemake workflow
+model: KNN
 neighbors: 3
 file_format: csv

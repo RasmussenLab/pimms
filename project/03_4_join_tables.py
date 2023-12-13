@@ -5,34 +5,24 @@ import pandas as pd
 
 
 # %%
-fname = 'runs/appl_ald_data/plasma/proteinGroups_all/01_2_performance_summary.xlsx'
+fname = 'runs/appl_ald_data_2023_11/plasma/proteinGroups/01_2_performance_summary.xlsx'
 ald_pg_perf = pd.read_excel(fname, sheet_name=-1, index_col=0)
-ald_pg_perf.columns = pd.MultiIndex.from_tuples([('ALD data','protein groups', x) for x in ald_pg_perf.columns])
+ald_pg_perf.columns = pd.MultiIndex.from_tuples([('ALD protein groups', x) for x in ald_pg_perf.columns])
 ald_pg_perf
 
 # %%
-files = {
-    'small HeLa': 'runs/dev_dataset_small/performance_summary.xlsx',
-    'large HeLa': 'runs/dev_dataset_large/performance_summary.xlsx',
-}
-files
-
-table = []
-for key, file in files.items():
-    df = pd.read_excel(file, index_col=0, header=[0, 1])
-    df.columns = pd.MultiIndex.from_tuples([(key, *x) for x in df.columns])
-    table.append(df)
-
+file = 'runs/mnar_mcar/all_results.xlsx'
+table = [pd.read_excel(file, index_col=0, header=[0, 1])]
 table.append(ald_pg_perf)
 table = pd.concat(table, axis=1)
 table
 
 # %%
 order = (table
-    .loc[:, pd.IndexSlice[:, :, 'val']]
-    .mean(axis=1)
-    .sort_values()
-)
+         .loc[:, pd.IndexSlice[ :, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         )
 order
 
 # %%
@@ -63,10 +53,10 @@ table
 # %%
 # %%
 order = (table
-    .loc[:, pd.IndexSlice[:, 'val']]
-    .mean(axis=1)
-    .sort_values()
-)
+         .loc[:, pd.IndexSlice[:, 'val']]
+         .mean(axis=1)
+         .sort_values()
+         )
 order
 
 # %%

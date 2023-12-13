@@ -24,7 +24,7 @@ def load_pred_from_run(run_folder: Path,
 # %%
 reps_folder = 'runs/appl_ald_data/plasma/proteinGroups/reps'
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
-model_keys = ['CF', 'DAE', 'KNN', 'Median', 'RSN', 'VAE','rf']
+model_keys = ['CF', 'DAE', 'KNN', 'Median', 'RSN', 'VAE', 'rf']
 
 
 # %%
@@ -52,12 +52,12 @@ pred_real_na_cvs = pd.DataFrame()
 for method in model_keys:
     pred_real_na_cvs[method] = pred_real_na[(
         method, 'std')] / pred_real_na[(method, 'mean')]
-    
+
 pred_real_na_cvs.to_excel(writer, float_format='%.3f', sheet_name='CVs')
 
 ax = pred_real_na_cvs.plot.hist(bins=15,
                                 color=vaep.plotting.defaults.assign_colors(model_keys),
-                                 alpha=0.5)
+                                alpha=0.5)
 ax.yaxis.set_major_formatter('{x:,.0f}')
 ax.set_xlabel(f'Coefficient of variation of imputed intensites (N={len(pred_real_na):,d})')
 fname = reps_folder / 'pred_real_na_cvs.png'

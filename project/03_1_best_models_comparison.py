@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -29,7 +29,7 @@ from vaep.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(7)
 
 # %%
 IDX = [['proteinGroups', 'peptides', 'evidence'],
@@ -63,7 +63,10 @@ selected
 min_max_MAE = (selected
                .loc[pd.IndexSlice[:, 'MAE', :]]
                .groupby('model')
-               .agg(['min', 'max']))
+               .agg(['min', 'max'])
+               .stack()
+               .T
+               .loc[IDX[0]])
 min_max_MAE.to_excel(writer, sheet_name='min_max_MAE')
 min_max_MAE
 
@@ -94,8 +97,8 @@ selected = metrics.loc[pd.IndexSlice[
     split,
     :, 'MAE']].stack(1)
 view_long = (selected.stack()
- .to_frame('MAE')
- .reset_index())
+             .to_frame('MAE')
+             .reset_index())
 view_long
 
 # %%
@@ -112,5 +115,8 @@ fig = ax.get_figure()
 
 # %%
 vaep.savefig(fig, FOLDER / "model_performance_repeated_runs.pdf")
+
+# %%
+writer.close()
 
 # %%

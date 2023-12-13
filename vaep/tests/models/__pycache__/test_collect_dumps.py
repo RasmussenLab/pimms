@@ -7,7 +7,3 @@ def test_select_content():
                   'model_metrics_collab']
     for test_case in test_cases:
         assert select_content(test_case, first_split='metrics_') == test_case.split('metrics_')[1]
-
-
-
-

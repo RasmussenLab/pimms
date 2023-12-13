@@ -1,0 +1,41 @@
+epochs_max:
+- 100
+batch_size: 64
+batch_size_collab: 32768
+hidden_layers:
+- '256'
+- '512'
+- '1024'
+# - '2056'
+- '128_64'
+- '256_128'
+- '512_256'
+- '512_512'
+- '512_256_128'
+# - '1024_512_256'
+# - '128_128_128'
+# - '256_256_128_128'
+latent_dim:
+- 10
+- 25
+- 50
+- 75
+- 100
+folder_grid_search: "runs/grid_search"
+folder_experiment2: "runs/grid_search/{{level}}"
+folder_experiment: "runs/grid_search/{level}"
+fn_rawfile_metadata: data/dev_datasets/df_intensities_proteinGroups_long/metadata.csv # global metadata file... 
+levels:
+- proteinGroups
+- peptides
+- evidence 
+config_split: config/grid_search_large_data/{level}_split.yaml
+file_format: csv
+config_train: 'placeholder.yaml'
+name_template: run/LD_{latent_dim}_E_{epochs_max}
+cuda: False
+NAGuideR_methods:
+models:
+  - CF
+  - DAE
+  - VAE

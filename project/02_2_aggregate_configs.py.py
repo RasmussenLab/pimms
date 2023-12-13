@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -20,10 +20,12 @@
 # %%
 from pathlib import Path
 import pandas as pd
-pd.options.display.max_columns = 30 
 
-from vaep.models.collect_dumps import collect_configs
 from vaep.logging import setup_nb_logger
+from vaep.models.collect_dumps import collect_configs
+
+pd.options.display.max_columns = 30
+
 logger = setup_nb_logger()
 
 # %%

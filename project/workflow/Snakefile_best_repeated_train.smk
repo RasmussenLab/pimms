@@ -10,6 +10,7 @@ config["folder_experiment"] = folder_experiment
 
 MODELS = ["DAE", "VAE", "CF"]
 
+
 rule all:
     input:
         f"{config['folder']}/model_performance_repeated_runs.pdf",
@@ -53,8 +54,8 @@ rule collect_metrics:
         "notebooks/best_repeated_train_collect_metrics.ipynb"
 
 
-
 nb = "01_0_split_data.ipynb"
+
 
 rule create_splits:
     input:
@@ -75,6 +76,7 @@ rule create_splits:
         " -r file_format {params.file_format}"
         " && jupyter nbconvert --to html {output.nb}"
 
+
 rule train_models:
     input:
         nb="01_1_train_{model}.ipynb",
@@ -89,6 +91,7 @@ rule train_models:
         model_key="{model}_{repeat}",
         meta_data=config["fn_rawfile_metadata"],
         file_format=config["file_format"],
+        cuda=config['cuda'],
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -96,4 +99,5 @@ rule train_models:
         " -r fn_rawfile_metadata {params.meta_data}"
         " -r file_format {params.file_format}"
         " -r model_key {params.model_key}"
+        " -p cuda {params.cuda}"
         " && jupyter nbconvert --to html {output.nb}"

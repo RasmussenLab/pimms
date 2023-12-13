@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,30 +24,31 @@ from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
 
+import sklearn
+from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
+
+import vaep
+from vaep import sampling
+from vaep.io import datasplits
+from vaep.models import ae
+import vaep.models as models
+import vaep.model
+from vaep.analyzers import analyzers
+
 # overwriting Recorder callback with custom plot_loss
 from vaep.models import plot_loss
 from fastai import learner
+
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
 
-import sklearn
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
 
-import vaep
-from vaep.analyzers import analyzers
-import vaep.model
-import vaep.models as models
-from vaep.models import ae
 # from vaep.models import collab as vaep_collab
 # from vaep.io.datasets import DatasetWithTarget
 # from vaep.transform import VaepPipeline
-from vaep.io import datasplits
 # from vaep.io.dataloaders import get_dls, get_test_dl
-from vaep import sampling
 
-import vaep.nb as config
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info(
     "Experiment 03 - Analysis of latent spaces and performance comparisions")
@@ -257,7 +258,9 @@ analysis.learn = Learner(dls=analysis.dls,
 analysis.learn.show_training_loop()
 
 # %% [markdown]
-# Adding a `EarlyStoppingCallback` results in an error.  Potential fix in [PR3509](https://github.com/fastai/fastai/pull/3509) is not yet in current version. Try again later
+# Adding a `EarlyStoppingCallback` results in an error.  Potential fix in
+# [PR3509](https://github.com/fastai/fastai/pull/3509) is not yet in
+# current version. Try again later
 
 # %%
 # learn.summary()
@@ -393,7 +396,9 @@ added_metrics
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
+# Fake NAs : Artificially created NAs. Some data was sampled and set
+# explicitly to misssing before it was fed to the model for
+# reconstruction.
 
 # %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')

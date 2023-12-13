@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -44,25 +44,26 @@ args = dict(globals()).keys()
 
 # %% tags=["parameters"]
 # files and folders
-folder_experiment:str = 'runs/example' # Datasplit folder with data for experiment
-folder_data:str = '' # specify data directory if needed
-file_format: str = 'csv' # file format of create splits, default pickle (pkl)
-fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv' # Machine parsed metadata from rawfile workflow
+folder_experiment: str = 'runs/example'  # Datasplit folder with data for experiment
+folder_data: str = ''  # specify data directory if needed
+file_format: str = 'csv'  # file format of create splits, default pickle (pkl)
+# Machine parsed metadata from rawfile workflow
+fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 # training
-epochs_max:int = 50  # Maximum number of epochs
+epochs_max: int = 50  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
-batch_size:int = 64 # Batch size for training (and evaluation)
-cuda:bool = True # Whether to use a GPU for training
+batch_size: int = 64  # Batch size for training (and evaluation)
+cuda: bool = True  # Whether to use a GPU for training
 # model
-neighbors:int = 3 # number of neigherst neighbors to use
-force_train:bool = True # Force training when saved model could be used. Per default re-train model
-sample_idx_position: int = 0 # position of index which is sample ID
-model: str = 'KNN' # model name
-model_key: str = 'KNN' # potentially alternative key for model (grid search)
-save_pred_real_na: bool = True # Save all predictions for missing values
+neighbors: int = 3  # number of neigherst neighbors to use
+force_train: bool = True  # Force training when saved model could be used. Per default re-train model
+sample_idx_position: int = 0  # position of index which is sample ID
+model: str = 'KNN'  # model name
+model_key: str = 'KNN'  # potentially alternative key for model (grid search)
+save_pred_real_na: bool = True  # Save all predictions for missing values
 # metadata -> defaults for metadata extracted from machine data
-meta_date_col: str = None # date column in meta data
-meta_cat_col: str = None # category column in meta data
+meta_date_col: str = None  # date column in meta data
+meta_cat_col: str = None  # category column in meta data
 
 # %% [markdown]
 # Some argument transformations
@@ -83,7 +84,7 @@ TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 # ## Load data in long format
 
 # %%
-data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format) 
+data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
@@ -106,13 +107,13 @@ else:
 
 # %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
-freq_feat.head() # training data
+freq_feat.head()  # training data
 
 # %% [markdown]
 # ### Simulated missing values
 
 # %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance. 
+# The validation fake NA is used to by all models to evaluate training performance.
 
 # %%
 val_pred_fake_na = data.val_y.to_frame(name='observed')
@@ -152,11 +153,11 @@ pred = pd.DataFrame(pred, index=data.train_X.index, columns=data.train_X.columns
 pred
 
 # %%
-val_pred_fake_na[args.model] = pred
+val_pred_fake_na[args.model_key] = pred
 val_pred_fake_na
 
 # %%
-test_pred_fake_na[args.model] = pred
+test_pred_fake_na[args.model_key] = pred
 test_pred_fake_na
 
 # %% [markdown]
@@ -182,8 +183,8 @@ if args.save_pred_real_na:
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)  
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)  
+# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
+# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
 # > Could be changed.
 
 # %% [markdown]
@@ -191,7 +192,7 @@ if args.save_pred_real_na:
 #
 # - all measured (identified, observed) peptides in validation data
 #
-# > Does not make to much sense to compare collab and AEs,  
+# > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
 # %%
@@ -208,7 +209,9 @@ added_metrics
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set explicitly to misssing before it was fed to the model for reconstruction.
+# Fake NAs : Artificially created NAs. Some data was sampled and set
+# explicitly to misssing before it was fed to the model for
+# reconstruction.
 
 # %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
@@ -237,9 +240,9 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # ## Config
 
 # %%
-figures # switch to fnames?
+figures  # switch to fnames?
 
 # %%
-args.n_params = 1 # the number of neighbors to consider
-args.dump(fname=args.out_models/ f"model_config_{args.model_key}.yaml")
+args.n_params = 1  # the number of neighbors to consider
+args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args

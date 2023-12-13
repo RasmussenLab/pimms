@@ -26,6 +26,7 @@
 # %%
 from __future__ import annotations
 import json
+import logging
 from pathlib import Path
 
 import numpy as np
@@ -42,8 +43,9 @@ import vaep.data_handling
 from vaep.analyzers import analyzers
 
 logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
-matplotlib.rcParams.update({'font.size': 5,
+matplotlib.rcParams.update({'font.size': 6,
                             'figure.figsize': [4.0, 2.0]})
 
 
@@ -189,7 +191,7 @@ data.columns.name = COL_INDEX_NAME
 # %%
 min_samples_per_feat = int(len(data) * COMPLETENESS_OVER_SAMPLES)
 print(f"{min_samples_per_feat = }")
-mask = data.notna().sum(axis=0) > min_samples_per_feat
+mask = data.notna().sum(axis=0) >= min_samples_per_feat
 print(f"drop = {(~mask).sum()} features")
 selected = data.loc[:, mask]
 selected.shape
@@ -305,7 +307,7 @@ vaep.savefig(ax.get_figure(), fname)
 # %%time
 corr_lower_triangle = analyzers.corr_lower_triangle(data)
 fig, axes = analyzers.plot_corr_histogram(corr_lower_triangle, bins=40)
-fname = FIGUREFOLDER / f'corr_histogram_feat.pdf'
+fname = FIGUREFOLDER / 'corr_histogram_feat.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
@@ -317,7 +319,7 @@ vaep.savefig(fig, name=fname)
 cv = data.std() / data.mean()
 # biological coefficient of variation: standard deviation (variation) w.r.t mean
 ax = cv.hist(bins=30)
-fname = FIGUREFOLDER / f'CV_histogram_features.pdf'
+fname = FIGUREFOLDER / 'CV_histogram_features.pdf'
 files_out[fname.name] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
@@ -328,7 +330,10 @@ vaep.savefig(ax.get_figure(), name=fname)
 # needs to deal with duplicates
 # notna = data.notna().T.drop_duplicates().T
 # get index and column names
-cg = sns.clustermap(data.notna(), cbar_pos=None)
+vaep.plotting.make_large_descriptors(8)
+cg = sns.clustermap(data.notna(),
+                    cbar_pos=None,
+                    figsize=(8, 8))
 ax = cg.ax_heatmap
 if PG_SEPARATOR is not None:
     _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
@@ -341,7 +346,8 @@ fname = FIGUREFOLDER / 'clustermap_present_absent_pattern.png'
 files_out[fname.name] = fname
 vaep.savefig(cg.fig,
              name=fname,
-             pdf=False)
+             pdf=False,
+             dpi=600)
 
 # %% [markdown]
 # based on cluster, plot heatmaps of features and samples
@@ -351,10 +357,12 @@ assert (len(cg.dendrogram_row.reordered_ind), len(
     cg.dendrogram_col.reordered_ind)) == data.shape
 
 # %%
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(8)
+fig, ax = plt.subplots(figsize=(4, 4))
 ax = sns.heatmap(
     data.iloc[cg.dendrogram_row.reordered_ind,
               cg.dendrogram_col.reordered_ind],
+    ax=ax,
 )
 only_every_x_ticks(ax, x=2)
 use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
@@ -367,7 +375,7 @@ if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_yticks([])
 fname = FIGUREFOLDER / 'heatmap_intensities_ordered_by_missing_pattern.png'
 files_out[fname.name] = fname
-vaep.savefig(ax.get_figure(), name=fname, pdf=False)
+vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 # ax.get_figure().savefig(fname, dpi=300)
 
 # %% [markdown]
@@ -378,6 +386,9 @@ fig, ax = plt.subplots(figsize=(4, 4))
 ax = sns.heatmap(
     analyzers.corr_lower_triangle(
         data.iloc[:, cg.dendrogram_col.reordered_ind]),
+    vmin=-1,
+    vmax=1,
+    cbar_kws={'shrink': 0.75},
     ax=ax,
     square=True,
 )
@@ -392,14 +403,19 @@ if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_yticks([])
 fname = FIGUREFOLDER / 'heatmap_feature_correlation.png'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname, pdf=False)
+vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 
+# %%
+lower_corr = analyzers.corr_lower_triangle(
+    data.T.iloc[:, cg.dendrogram_row.reordered_ind])
 # %%
 fig, ax = plt.subplots(figsize=(4, 4))
 ax = sns.heatmap(
-    analyzers.corr_lower_triangle(
-        data.T.iloc[:, cg.dendrogram_row.reordered_ind]),
+    data=lower_corr,
     ax=ax,
+    vmin=-1,
+    vmax=1,
+    cbar_kws={'shrink': 0.75},
     square=True,
 )
 _ = only_every_x_ticks(ax, x=2)
@@ -409,9 +425,10 @@ if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_yticks([])
 fname = FIGUREFOLDER / 'heatmap_sample_correlation.png'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname, pdf=False)
+vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 
 # %%
+vaep.plotting.make_large_descriptors(12)
 kwargs = dict()
 if NO_TICK_LABELS_ON_HEATMAP:
     kwargs['xticklabels'] = False
@@ -446,6 +463,7 @@ sample_stats = vaep.data_handling.compute_stats_missing(
 sample_stats
 
 # %%
+vaep.plotting.make_large_descriptors(8)
 fig_ident = sns.relplot(
     x='SampleID_int', y=COL_NO_IDENTIFIED, data=sample_stats)
 fig_ident.set_axis_labels('Sample ID', f'Frequency of identified {TYPE}')
@@ -491,3 +509,5 @@ dynamic_range
 
 # %%
 files_out
+
+# %%

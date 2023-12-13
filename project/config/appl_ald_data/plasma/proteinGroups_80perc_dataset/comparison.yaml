@@ -1,0 +1,30 @@
+folder_experiment: runs/appl_ald_data_2023_11/plasma/proteinGroups_80perc_25MNAR
+out_folder: diff_analysis # subfolder of experiment folder
+fn_rawfile_metadata: "data/ALD_study/processed/raw_meta.csv"
+covar:
+  kleiner: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
+  inflammation: age,bmi,gender_num,nas_steatosis_ordinal,abstinent_num
+  steatosis: age,bmi,gender_num,abstinent_num,kleiner,nas_inflam
+cutoffs:
+  kleiner: 2
+  inflammation: 2
+  steatosis: 1
+disease_ontology: # code from https://disease-ontology.org/
+  kleiner: 5082 # liver cirrhosis
+  inflammation: 9452 #fatty liver disease
+  steatosis: 9452 #fatty liver disease
+f_annotations: data/ALD_study/processed/ald_plasma_proteinGroups_id_mappings.csv # snakemake -> copy to experiment folder
+annotaitons_gene_col: PG.Genes
+baseline: RSN
+# ! needs analysis full dataset:
+ref_method_score: runs/appl_ald_data_2023_11/plasma/proteinGroups/diff_analysis/kleiner/scores/diff_analysis_scores_None.pkl
+# ! # needs to be false if ref method is specified in current setup
+make_plots: False
+methods:
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - QRILC
+  - TRKNN
+  - RF

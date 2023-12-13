@@ -6,7 +6,8 @@ import helpers
 
 from vaep.io.datasets import DatasetWithMaskAndNoTarget
 
-def test_DatasetWithMaskAndNoTarget():    
+
+def test_DatasetWithMaskAndNoTarget():
 
     with pytest.raises(ValueError):
         DatasetWithMaskAndNoTarget(df=np.random.rand(10, 5))

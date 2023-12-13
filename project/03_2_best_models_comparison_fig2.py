@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -33,19 +33,21 @@ logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 # %%
 # parameters
-FOLDER = Path('runs/dev_dataset_large/')
+FOLDER = Path('runs/mnar_mcar/')
+SIZE = 'l'
 files_in = {
-    'protein groups': FOLDER / 'proteinGroups/figures/performance_test.csv',
-    'peptides': FOLDER / 'peptides/figures/performance_test.csv',
-    'precursors': FOLDER / 'evidence/figures/performance_test.csv'
+    'protein groups': FOLDER / 'pg_l_25MNAR/figures/2_1_performance_test_sel.csv',
+    'peptides': FOLDER / 'pep_l_25MNAR/figures/2_1_performance_test.csv',
+    'precursors': FOLDER / 'evi_l_25MNAR/figures/2_1_performance_test.csv'
 }
 
 # %%
-FOLDER = Path('runs/dev_dataset_small/')
+FOLDER = Path('runs/mnar_mcar/')
+SIZE = 'm'
 files_in = {
-    'protein groups': FOLDER / 'proteinGroups_N50/figures/performance_test.csv',
-    'peptides': FOLDER / 'peptides_N50/figures/performance_test.csv',
-    'precursors': FOLDER / 'evidence_N50/figures/performance_test.csv'
+    'protein groups': FOLDER / 'pg_m_25MNAR/figures/2_1_performance_test_sel.csv',
+    'peptides': FOLDER / 'pep_m_25MNAR/figures/2_1_performance_test_sel.csv',
+    'precursors': FOLDER / 'evi_m_25MNAR/figures/2_1_performance_test_sel.csv'
 }
 
 # %%
@@ -84,13 +86,13 @@ df = df.rename(index=data_levels_annotated)
 df
 
 # %%
-fname = FOLDER / 'best_models_1_test_mpl.pdf'
+fname = FOLDER / f'best_models_{SIZE}_test_mpl.pdf'
 metrics = df['metric_value'].unstack('model')
 ORDER_MODELS = metrics.mean().sort_values().index.to_list()
 metrics = metrics.loc[ORDER_DATA, ORDER_MODELS]
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
-matplotlib.rcParams.update({'font.size': 5})
+matplotlib.rcParams.update({'font.size': 6})
 
 ax = (metrics
       .plot
@@ -99,10 +101,12 @@ ax = (metrics
            ylabel=f"{METRIC} (log2 intensities)",
            color=COLORS_TO_USE_MAPPTING,
            width=.85,
-           fontsize=8
+           fontsize=7
            ))
 
-ax = vaep.plotting.add_height_to_barplot(ax, size=5)
+
+ax = vaep.plotting.add_height_to_barplot(ax, size=6, rotated=True)
+ax.set_ylim((0, 0.75))
 ax.legend(fontsize=5, loc='lower right')
 text = (
     df['text']
@@ -111,7 +115,7 @@ text = (
     .stack().loc[pd.IndexSlice[ORDER_MODELS, ORDER_DATA]]
 
 )
-ax = vaep.plotting.add_text_to_barplot(ax, text, size=5)
+ax = vaep.plotting.add_text_to_barplot(ax, text, size=6)
 fig = ax.get_figure()
 fig.tight_layout()
 vaep.savefig(fig, fname)
@@ -148,6 +152,8 @@ perf = perf.loc[order]
 perf
 
 # %%
-fname = FOLDER / 'performance_summary.xlsx'
+fname = FOLDER / f'performance_summary_{SIZE}.xlsx'
 perf.to_excel(fname)
 fname.as_posix()
+
+# %%

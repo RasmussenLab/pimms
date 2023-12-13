@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -98,18 +98,20 @@ idx_real_na = (idx_real_na
                .drop(test_pred_fake_na.index))
 
 for fpath in entire_pred:
+    logger.info(f"Load {fpath = }")
     col_name = fpath.stem.split('_all_')[-1]
     pred = pd.read_csv(fpath, index_col=[1, 0])
     val_pred_fake_na[col_name] = pred
     fname = args.out_preds / f'pred_val_{col_name}.csv'
     files_out[fname.name] = fname.as_posix()
     val_pred_fake_na[['observed', col_name]].to_csv(fname)
+    logger.info(f"Save {fname = }")
 
     test_pred_fake_na[col_name] = pred
     fname = args.out_preds / f'pred_test_{col_name}.csv'
     files_out[fname.name] = fname.as_posix()
     test_pred_fake_na[['observed', col_name]].to_csv(fname)
-
+    logger.info(f"Save {fname = }")
     # hacky, but works:
     pred_real_na = (pd.Series(0, index=idx_real_na, name='placeholder')
                     .to_frame()
@@ -119,6 +121,7 @@ for fpath in entire_pred:
     fname = args.out_preds / f'pred_real_na_{col_name}.csv'
     files_out[fname.name] = fname.as_posix()
     pred_real_na.to_csv(fname)
+    logger.info(f"Save {fname = }")
 
 # del pred
 # %%
@@ -132,15 +135,15 @@ val_pred_fake_na
 d_metrics = vaep.models.Metrics()
 
 # %%
-added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
-added_metrics
+added_metrics = d_metrics.add_metrics(val_pred_fake_na.dropna(how='all', axis=1), 'valid_fake_na')
+pd.DataFrame(added_metrics)
 
 # %% [markdown]
 # ### Test Datasplit
 
 # %%
-added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
-added_metrics
+added_metrics = d_metrics.add_metrics(test_pred_fake_na.dropna(how='all', axis=1), 'test_fake_na')
+pd.DataFrame(added_metrics)
 
 # %%
 metrics_df = vaep.models.get_df_from_nested_dict(

@@ -3,7 +3,8 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-def get_disease_association(doid:int, limit:int=1000):
+
+def get_disease_association(doid: int, limit: int = 1000):
     params = {'type1': -26,
               'type2': 'value2',
               'id1': f'DOID:{doid}',
@@ -11,8 +12,8 @@ def get_disease_association(doid:int, limit:int=1000):
               'limit': limit,
               'format': 'json'}
     diseases_url_all = 'https://api.jensenlab.org/Integration'
-    
-    r = requests.get(diseases_url_all, params=params)    
+
+    r = requests.get(diseases_url_all, params=params)
     if r.status_code == 200:
         data, is_there_more = r.json()
     else:

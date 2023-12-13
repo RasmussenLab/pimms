@@ -3,3 +3,5 @@ fn_rawfile_metadata: data/dev_datasets/df_intensities_evidence_long/metadata.csv
 sample_completeness: 0.5
 min_RT_time: 120
 column_names: null
+frac_mnar: 0.25
+frac_non_train: 0.1

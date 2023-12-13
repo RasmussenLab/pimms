@@ -31,7 +31,7 @@ def select_raw_data(df: pd.DataFrame,
     return df, Cutoffs(min_sample_for_feat, min_feat_per_sample)
 
 
-def select_feat(df_qc:pd.DataFrame, threshold:float=0.4, axis:int=0):
+def select_feat(df_qc: pd.DataFrame, threshold: float = 0.4, axis: int = 0):
     qc_cv_feat = df_qc.std(axis=axis) / df_qc.mean(axis=axis)
     mask = qc_cv_feat < threshold
     return qc_cv_feat.loc[mask].index

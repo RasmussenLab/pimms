@@ -24,7 +24,7 @@ def load_predictions(pred_files: List, shared_columns=['observed']):
 
 def load_split_prediction_by_modelkey(experiment_folder: Path,
                                       split: str,
-                                      model_keys:list[str],
+                                      model_keys: list[str],
                                       allow_missing=False,
                                       shared_columns: list[str] = None):
     """Load predictions from a list of models.
@@ -63,7 +63,7 @@ def load_split_prediction_by_modelkey(experiment_folder: Path,
     return load_predictions(pred_files, shared_columns=shared_columns)
 
 
-def load_single_csv_pred_file(fname:str|Path, value_name:str='intensity') -> pd.Series:
+def load_single_csv_pred_file(fname: str | Path, value_name: str = 'intensity') -> pd.Series:
     """Load a single pred file from a single model.
      Last column are measurments, other are index.
 
@@ -79,7 +79,7 @@ def load_single_csv_pred_file(fname:str|Path, value_name:str='intensity') -> pd.
     pd.Series
         measurments as a single column with set indices
     """
-    pred = pd.read_csv(fname) # getattr for other file formats
+    pred = pd.read_csv(fname)  # getattr for other file formats
     pred = pred.set_index(pred.columns[:-1].tolist())
     pred = pred.squeeze()
     pred.name = value_name
