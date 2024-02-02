@@ -1,30 +1,31 @@
 # config for Snakefile_v2
 config_train: runs/knn_comparison/ald_pgs_all/configs_train/train_{model}.yaml
+config_split: runs/knn_comparison/ald_pgs_all/config_split.yaml
 folder_experiment: runs/knn_comparison/ald_pgs_all
 fn_rawfile_metadata: data/ALD_study/processed/raw_meta.csv
 file_format: pkl
 cuda: False
 split_data:
-    FN_INTENSITIES: data/ALD_study/processed/ald_plasma_proteinGroups.pkl
-    sample_completeness: 0.5
-    min_RT_time: 20
-    column_names:
-        - PG.ProteinAccessions
-# frac_mnar: 0.0
+        FN_INTENSITIES: data/ALD_study/processed/ald_plasma_proteinGroups.pkl
+        sample_completeness: 0.5
+        min_RT_time: 20
+        column_names:
+                - PG.ProteinAccessions
+        frac_mnar: 0.25
 models:
-    - Median:
-          model: Median
-    - 3NN:
-          neighbors: 3
-          model: KNN
-    - 5NN:
-          neighbors: 5
-          model: KNN
-    - 10NN:
-          neighbors: 10
-          model: KNN
-    - 15NN:
-          neighbors: 15
-          model: KNN
+        - Median:
+                  model: Median
+        - 3NN:
+                  neighbors: 3
+                  model: KNN
+        - 5NN:
+                  neighbors: 5
+                  model: KNN
+        - 10NN:
+                  neighbors: 10
+                  model: KNN
+        - 15NN:
+                  neighbors: 15
+                  model: KNN
 NAGuideR_methods:
-    - KNN_IMPUTE
+        - KNN_IMPUTE
