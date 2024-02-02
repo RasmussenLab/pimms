@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: vaep
 #     language: python
@@ -179,6 +179,7 @@ if len(data.columns.names) > 1:
                    f"{_levels_dropped}")
 # allows overwriting of index name, also to None
 data.columns.name = COL_INDEX_NAME
+data
 
 
 # %% [markdown]

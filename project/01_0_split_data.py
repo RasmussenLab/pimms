@@ -54,9 +54,9 @@ def add_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 
 
 pd.options.display.max_columns = 32
-plt.rcParams['figure.figsize'] = [4, 2]
+plt.rcParams['figure.figsize'] = [3, 2]
 
-vaep.plotting.make_large_descriptors(6)
+vaep.plotting.make_large_descriptors(7)
 
 figures = {}  # collection of ax or figures
 dumps = {}  # collection of data dumps
@@ -507,12 +507,14 @@ df_w_date = df_w_date.T
 df_w_date
 
 # %%
-ax = df_w_date.boxplot(rot=80,
-                       figsize=(8, 3),
-                       fontsize=6,
-                       showfliers=False,
-                       showcaps=False
-                       )
+ax = df_w_date.plot.box(rot=80,
+                        figsize=(7, 3),
+                        fontsize=7,
+                        showfliers=False,
+                        showcaps=False,
+                        boxprops=dict(linewidth=.4, color='darkblue'),
+                        flierprops=dict(markersize=.4, color='lightblue'),
+                        )
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
 fname = params.out_figures / f'0_{group}_median_boxplot'
@@ -612,7 +614,7 @@ df_long.head()
 group = 2
 # ! move parameter checks to start of script
 if 0.0 <= params.frac_mnar <= 1.0:
-    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
+    fig, axes = plt.subplots(1, 2, figsize=(6, 2))
     quantile_frac = df_long.quantile(params.frac_non_train)
     rng = np.random.default_rng(params.random_state)
     threshold = pd.Series(rng.normal(loc=float(quantile_frac),
@@ -890,7 +892,7 @@ feat_with_median = medians.groupby('median_floor').size().rename('M feat')
 medians = medians.join(feat_with_median, on='median_floor')
 medians = medians.apply(lambda s: "{:02,d} (N={:3,d})".format(*s), axis=1)
 
-fig, ax = plt.subplots(figsize=(8, 2))
+fig, ax = plt.subplots(figsize=(6, 2))
 s = 1
 s_axes = pd.DataFrame({'medians': medians,
                        'validation split': splits.val_y.notna().sum(),

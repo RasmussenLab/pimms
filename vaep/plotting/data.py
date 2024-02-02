@@ -262,6 +262,7 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
 
 def plot_feat_median_over_prop_missing(data: pd.DataFrame,
                                        type: str = 'scatter',
+                                       ax=None,
                                        s=1) -> matplotlib.axes.Axes:
     """Plot feature median over proportion missing in that feature.
     Sorted by feature median into bins."""
@@ -295,6 +296,7 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
     if type == 'scatter':
         ax = missing_by_median.plot.scatter(x_col, y_col,
                                             ylim=(-.03, 1.03),
+                                            ax=ax,
                                             s=s,)
         # # for some reason this does not work as it does elswhere:
         # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
@@ -306,6 +308,7 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
             by=x_col,
             boxprops=dict(linewidth=s),
             flierprops=dict(markersize=s),
+            ax=ax,
         )
         ax = ax[0]  # returned series due to by argument?
         _ = ax.set_title('')

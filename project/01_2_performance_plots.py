@@ -49,8 +49,8 @@ pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
-plt.rcParams.update({'figure.figsize': (4, 2)})
-vaep.plotting.make_large_descriptors(6)
+plt.rcParams.update({'figure.figsize': (3, 2)})
+vaep.plotting.make_large_descriptors(7)
 
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
@@ -636,7 +636,8 @@ _to_plot
 
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 2))
+
+fig, ax = plt.subplots(figsize=(6, 2))
 ax = _to_plot.loc[[feature_names.name]].plot.bar(
     rot=0,
     ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
@@ -644,8 +645,8 @@ ax = _to_plot.loc[[feature_names.name]].plot.bar(
     color=COLORS_TO_USE,
     ax=ax,
     width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax, size=5)
-ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
+ax = vaep.plotting.add_height_to_barplot(ax, size=7)
+ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=7)
 ax.set_xticklabels([])
 fname = args.out_figures / f'2_{group}_performance_test.pdf'
 figures[fname.stem] = fname
@@ -666,7 +667,7 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 
 # %%
 vaep.plotting.make_large_descriptors(7)
-fig, ax = plt.subplots(figsize=(8, 2))
+fig, ax = plt.subplots(figsize=(6, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred=pred_test[

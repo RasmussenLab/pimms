@@ -17,6 +17,7 @@
 # # Analyis of grid hyperparameter search
 
 # %%
+import logging
 import pathlib
 import pandas as pd
 import plotly.express as px
@@ -40,6 +41,7 @@ pd.options.display.max_rows = 100
 pd.options.display.multi_sparse = False
 
 logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 # %% [markdown]
 # ## Papermill parameters
@@ -317,10 +319,10 @@ hover_data['data_split'] = True
 hover_data['metric_value'] = ':.4f'
 
 # %%
-plt.rcParams['figure.figsize'] = (8, 4)
+plt.rcParams['figure.figsize'] = (7, 4)
 plt.rcParams['lines.linewidth'] = 2
 plt.rcParams['lines.markersize'] = 3
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(7)
 
 col_order = ('valid_fake_na', 'test_fake_na')
 row_order = ('MAE', 'MSE')
@@ -337,16 +339,21 @@ fg = sns.relplot(
     palette=vaep.plotting.defaults.color_model_mapping,
     height=2,
     aspect=1.8,
-    kind="scatter"
+    kind="scatter",
 )
-fg.fig.get_size_inches()
 
 (ax_00, ax_01), (ax_10, ax_11) = fg.axes
 ax_00.set_ylabel(row_order[0])
 ax_10.set_ylabel(row_order[1])
 _ = ax_00.set_title('validation data')  # col_order[0]
 _ = ax_01.set_title('test data')  # col_order[1]
+ax_10.set_xticklabels(ax_10.get_xticklabels(),
+                      rotation=45,
+                      horizontalalignment='right')
 ax_10.set_xlabel('number of parameters')  # n_params
+ax_11.set_xticklabels(ax_11.get_xticklabels(),
+                      rotation=45,
+                      horizontalalignment='right')
 ax_11.set_xlabel('number of parameters')
 ax_10.xaxis.set_major_formatter("{x:,.0f}")
 ax_11.xaxis.set_major_formatter("{x:,.0f}")
@@ -354,12 +361,14 @@ _ = ax_10.set_title('')
 _ = ax_11.set_title('')
 fg.tight_layout()
 fname
-fname = FOLDER / f"hyperpar_results_by_parameters_val+test.pdf"
+fname = FOLDER / "hyperpar_results_by_parameters_val+test.pdf"
 files_out[fname.name] = fname.as_posix()
 fg.savefig(fname)
 fg.savefig(fname.with_suffix('.png'), dpi=300)
 
 # %%
+
+
 def plot_by_params(data_split: str = '', subset: str = ''):
     selected = metrics_long
     if data_split:
@@ -611,13 +620,16 @@ errors_smoothed
 
 # %%
 mask = errors_smoothed[freq_feat.name] >= FREQ_MIN
-ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
-                                                            xlabel='freq/feature prevalence (across samples)',
-                                                            ylabel=f'rolling average error ({METRIC})',
-                                                            xlim=(
-                                                                FREQ_MIN, errors_smoothed[freq_feat.name].max()),
-                                                            # title=f'Rolling average error by feature frequency {msg_annotation}'
-                                                            )
+ax = (errors_smoothed
+      .loc[mask]
+      .rename_axis('', axis=1)
+      .plot(x=freq_feat.name,
+            xlabel='freq/feature prevalence (across samples)',
+            ylabel=f'rolling average error ({METRIC})',
+            xlim=(
+                FREQ_MIN, errors_smoothed[freq_feat.name].max()),
+            # title=f'Rolling average error by feature frequency {msg_annotation}'
+            ))
 
 msg_annotation = f"(Latend dim: {min_latent}, No. of feat: {M_feat}, window_size: {window_size})"
 print(msg_annotation)
@@ -637,7 +649,10 @@ errors_smoothed_long
 # Save html versin of curve with annotation of errors
 
 # %%
-fig = px_vaep.line(errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN].join(n_obs_error_is_based_on).sort_values(by='freq'),
+fig = px_vaep.line((errors_smoothed_long
+                    .loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
+                    .join(n_obs_error_is_based_on)
+                    .sort_values(by='freq')),
                    x=freq_feat.name,
                    color='model',
                    y='rolling error average',
@@ -788,13 +803,16 @@ errors_smoothed = errors.copy()
 errors_smoothed[order_models] = errors[order_models].rolling(
     window=window_size, min_periods=1).mean()
 mask = errors_smoothed[freq_feat.name] >= FREQ_MIN
-ax = errors_smoothed.loc[mask].rename_axis('', axis=1).plot(x=freq_feat.name,
-                                                            ylabel='rolling error average',
-                                                            xlabel='freq/feature prevalence (across samples)',
-                                                            xlim=(
-                                                                FREQ_MIN, freq_feat.max()),
-                                                            # title=f'Rolling average error by feature frequency {msg_annotation}'
-                                                            )
+ax = (errors_smoothed
+      .loc[mask]
+      .rename_axis('', axis=1)
+      .plot(x=freq_feat.name,
+            ylabel='rolling error average',
+            xlabel='freq/feature prevalence (across samples)',
+            xlim=(
+                FREQ_MIN, freq_feat.max()),
+            # title=f'Rolling average error by feature frequency {msg_annotation}'
+            ))
 
 vaep.savefig(
     ax.get_figure(),
