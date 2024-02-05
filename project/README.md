@@ -5,6 +5,7 @@
 Required is abundance data in wide or long format in order to run the models. 
 
 | Sample ID | Protein A | Protein B | Protein C | ... |
+| --- | --- | --- | --- | --- |
 | sample_01 | 0.1       | 0.2       | 0.3       | ... |
 | sample_02 | 0.2       | 0.1       | 0.4       | ... |
 | sample_03 | 0.3       | 0.2       | 0.1       | ... |
@@ -12,6 +13,7 @@ Required is abundance data in wide or long format in order to run the models.
 or as long formated data.
 
 | Sample ID | Protein | Abundance |
+| --- | --- | --- |
 | sample_01 | Protein A | 0.1       |
 | sample_01 | Protein B | 0.2       |
 | sample_01 | Protein C | 0.3       |
