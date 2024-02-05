@@ -53,7 +53,9 @@ myst_enable_extensions = [
 html_js_files = ["https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"]
 
 #  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
-nb_execution_mode = "off"
+nb_execution_mode = "auto"
+# https://myst-nb.readthedocs.io/en/latest/configuration.html#global-configuration
+nb_execution_timeout = 240  # otherwise it's a 30 seconds maximum per cell,
 
 # https://myst-nb.readthedocs.io/en/latest/configuration.html
 # Execution
