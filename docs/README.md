@@ -8,12 +8,17 @@ In order to build the docs you need to
 
 Command to be run from `path/to/pimms/docs`, i.e. from within the `docs` package folder: 
 
-```cmd
+```bash
 # pip install pimms[docs]
 # pwd: ./vaep/docs
 conda env update -f environment.yml
-sphinx-apidoc -o reference ../vaep
-make html
+```
+
+If you prefer pip, run 
+
+```bash
+# pwd: ./vaep
+pip install .[docs]
 ```
 
 ## Build docs
@@ -23,7 +28,7 @@ Using Sphinx command line tools.
 Options:
   - `--separate` to build separate pages for each (sub-)module
 
-```cmd	
+```bash	
 # pwd: ./pimms/docs
 # apidoc
 sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../vaep

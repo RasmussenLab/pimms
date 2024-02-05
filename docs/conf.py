@@ -32,16 +32,34 @@ release = PACKAGE_VERSION
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['myst_parser',
-              # 'sphinx_mdinclude',
-              'sphinx.ext.napoleon',
-              'sphinx.ext.autodoc',
-              'sphinx.ext.autodoc.typehints',
-              ]
+extensions = [
+    'sphinx.ext.napoleon',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autodoc.typehints',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
+    'myst_nb',
+]
 
 myst_enable_extensions = [
-        "strikethrough",
+    "strikethrough",
+    "dollarmath",
+    "amsmath"
 ]
+
+
+# Plolty support through require javascript library
+# https://myst-nb.readthedocs.io/en/latest/render/interactive.html#plotly
+html_js_files = ["https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"]
+
+#  https://myst-nb.readthedocs.io/en/latest/computation/execute.html
+nb_execution_mode = "off"
+
+# https://myst-nb.readthedocs.io/en/latest/configuration.html
+# Execution
+nb_execution_raise_on_error = True
+# Rendering
+nb_merge_streams = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -49,8 +67,21 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
+exclude_patterns = ['_build',
+                    'Thumbs.db',
+                    '.DS_Store',
+                    # 'README.md',
+                    ]
 
+# Intersphinx options
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "scikit-learn": ("https://scikit-learn.org/stable/", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "torch": ("https://pytorch.org/docs/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+}
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -59,8 +90,29 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
 
 html_theme = 'sphinx_book_theme'  # pip install sphinx-book-theme
 
+# See:
+# https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
 # check https://github.com/executablebooks/sphinx-book-theme/blob/master/docs/conf.py
 html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
+
+html_theme_options = {
+    "github_url": "https://github.com/RasmussenLab/python_package",
+    "repository_url": "https://github.com/RasmussenLab/python_package",
+    "repository_branch": "main",
+    "home_page_in_toc": True,
+    "path_to_docs": "docs",
+    "show_navbar_depth": 1,
+    "use_edit_page_button": True,
+    "use_repository_button": True,
+    "use_download_button": True,
+    "launch_buttons": {
+        "colab_url": "https://colab.research.google.com"
+        #     "binderhub_url": "https://mybinder.org",
+        #     "notebook_interface": "jupyterlab",
+    },
+    "navigation_with_keys": False,
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
