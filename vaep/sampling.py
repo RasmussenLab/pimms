@@ -1,6 +1,14 @@
+import logging
 from typing import Union, Tuple
 
+
+import numpy as np
 import pandas as pd
+
+from vaep.io.datasplits import DataSplits
+
+
+logger = logging.getLogger(__name__)
 
 
 def feature_frequency(df_wide: pd.DataFrame, measure_name: str = 'freq') -> pd.Series:
@@ -89,3 +97,120 @@ def sample_data(series: pd.Series, sample_index_to_drop: Union[str, int],
     idx_diff = series.index.difference(series_sampled.index)
     series_not_sampled = series.loc[idx_diff]
     return series_sampled, series_not_sampled
+
+
+def sample_mnar_mcar(df_long: pd.DataFrame,
+                     frac_non_train: float,
+                     frac_mnar: float,
+                     random_state: int = 42
+                     ) -> Tuple[DataSplits, pd.Series, pd.Series, pd.Series]:
+    """Sampling of data for MNAR/MCAR simulation. The function samples from the df_long
+    DataFrame and returns the training, validation and test splits in dhte DataSplits object.
+
+
+    Select features as described in
+    > Lazar, Cosmin, Laurent Gatto, Myriam Ferro, Christophe Bruley, and Thomas Burger. 2016.
+    > “Accounting for the Multiple Natures of Missing Values in Label-Free Quantitative
+    > Proteomics Data Sets to Compare Imputation Strategies.”
+    > Journal of Proteome Research 15 (4): 1116–25.
+
+    - select MNAR based on threshold matrix on quantile
+    - specify MNAR and MCAR proportions in validation and test set
+    - use needed MNAR as specified by `frac_mnar`
+    - sample MCAR from the remaining data
+    - distribute MNAR and MCAR in validation and test set
+
+    Parameters
+    ----------
+    df_long : pd.DataFrame
+        intensities in long format with unique index.
+    frac_non_train : float
+        proprotion of data in df_long to be used for evaluation in total
+        in validation and test split
+    frac_mnar : float
+        Frac of simulated data to be missing not at random (MNAR)
+    random_state : int, optional
+        random seed for reproducibility, by default 42
+
+    Returns
+    -------
+    Tuple[DataSplits, pd.Series, pd.Series, pd.Series]
+        datasplits, thresholds, fake_na_mcar, fake_na_mnar
+
+        Containing training, validation and test splits, as well as the thresholds,
+        mcar and mnar simulated missing intensities.
+    """
+    assert 0.0 <= frac_mnar <= 1.0, "Fraction must be between 0 and 1"
+
+    thresholds = get_thresholds(df_long, frac_non_train, random_state)
+    mask = df_long.squeeze() < thresholds
+    N = len(df_long)
+    logger.info(f"{int(N * frac_non_train) = :,d}")
+    # Sample MNAR based on threshold matrix and desired share
+    N_MNAR = int(frac_non_train * frac_mnar * N)
+    fake_na_mnar = df_long.loc[mask]
+    if len(fake_na_mnar) > N_MNAR:
+        fake_na_mnar = fake_na_mnar.sample(N_MNAR,
+                                           random_state=random_state)
+    # select MCAR from remaining intensities
+    splits = DataSplits(is_wide_format=False)
+    splits.train_X = df_long.loc[
+        df_long.index.difference(
+            fake_na_mnar.index)
+    ]
+    logger.info(f"{len(fake_na_mnar) = :,d}")
+    N_MCAR = int(N * (1 - frac_mnar) * frac_non_train)
+    fake_na_mcar = splits.train_X.sample(N_MCAR,
+                                         random_state=random_state)
+    logger.info(f"{len(splits.train_X) = :,d}")
+
+    fake_na = pd.concat([fake_na_mcar, fake_na_mnar]).squeeze()
+    logger.info(f"{len(fake_na) = :,d}")
+
+    logger.info(f"{len(fake_na_mcar) = :,d}")
+    splits.train_X = (splits
+                      .train_X
+                      .loc[splits
+                           .train_X
+                           .index
+                           .difference(
+                               fake_na_mcar.index)]
+                      ).squeeze()
+    # Distribute MNAR and MCAR in validation and test set
+    splits.val_y = fake_na.sample(frac=0.5, random_state=random_state)
+    splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]
+
+    assert len(fake_na) + len(splits.train_X) == len(df_long)
+    return splits, thresholds, fake_na_mcar, fake_na_mnar
+
+
+def get_thresholds(df_long: pd.DataFrame,
+                   frac_non_train: float,
+                   random_state: int) -> pd.Series:
+    """Get thresholds for MNAR/MCAR sampling. Thresholds are sampled from a normal
+    distrubiton with a mean of the quantile of the simulated missing data.
+
+    Parameters
+    ----------
+    df_long : pd.DataFrame
+        Long-format data in pd.DataFrame. Index name is feature name. 2 dimensional
+        MultiIndex.
+    frac_non_train : float
+        Percentage of single unit (sample) to sample.
+    random_state : int
+        Random state to use for sampling procedure.
+
+    Returns
+    -------
+    pd.Series
+        Thresholds for MNAR/MCAR sampling.
+    """
+    quantile_frac = df_long.quantile(frac_non_train)
+    rng = np.random.default_rng(random_state)
+    thresholds = pd.Series(rng.normal(loc=float(quantile_frac),
+                                      scale=float(0.3 * df_long.std()),
+                                      size=len(df_long),
+                                      ),
+                           index=df_long.index,
+                           )
+    return thresholds
