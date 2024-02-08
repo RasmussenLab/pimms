@@ -22,18 +22,7 @@
 # -
 #
 # Does not save filtered data, this is done by splitting notebook. Only visualisations.
-#
-# Expected current format:
-# - wide format (samples x features)
-# > not the default output in MS-based proteomics
-#
-# An example of peptides in wide format would be:
-#
-# | Sample ID | pep A | pep B | pep C | ... |
-# | --- | --- | --- | --- | --- |
-# | sample_01 | 0.1       | 0.2       | 0.3       | ... |
-# | sample_02 | 0.2       | NA       | 0.4       | ... |
-# | sample_03 | 0.3       | 0.2       | 0.1       | ... |
+
 
 # %%
 from __future__ import annotations
@@ -53,6 +42,7 @@ from vaep import plotting
 from vaep.pandas import missing_data
 import vaep.data_handling
 from vaep.analyzers import analyzers
+from vaep.utils import create_random_df
 
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
@@ -125,6 +115,16 @@ def get_dynamic_range(min_max):
     dynamic_range = dynamic_range.T
     return dynamic_range
 
+
+# %% [markdown]
+# Expected current format:
+# - wide format (samples x features)
+# > not the default output in MS-based proteomics
+#
+# An example of peptides in wide format would be:
+
+# %%
+create_random_df(5, 8, prop_na=.2)
 
 # %% [markdown]
 # ## Parameters
