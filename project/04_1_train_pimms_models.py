@@ -63,18 +63,66 @@ df.columns.name = 'protein group'  # not set due to csv disk file format
 df.head()
 
 # %% [markdown]
+#
+
+# %% [markdown]
+# Transform the data using the logarithm, here using base 2:
+
+# %%
+df = np.log2(df + 1)
+df.head()
+
+
+# %% [markdown]
+# two plots on data availability:
+#
+# 1. proportion of missing values per feature median (N = protein groups)
+# 2. CDF of available intensities per protein group
+
+# %%
+ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=df, type='boxplot')
+
+
+# %%
+df.notna().sum().sort_values().plot()
+
+
+# %% [markdown]
+# define a minimum feature and sample frequency for a feature to be included
+
+# %%
+SELECT_FEAT = True
+
+
+def select_features(df, feat_prevalence=.2, axis=0):
+    N = df.shape[axis]
+    minimum_freq = N * feat_prevalence
+    freq = df.notna().sum(axis=axis)
+    mask = freq >= minimum_freq
+    print(f"Drop {(~mask).sum()} along axis {axis}.")
+    freq = freq.loc[mask]
+    if axis == 0:
+        df = df.loc[:, mask]
+    else:
+        df = df.loc[mask]
+    return df
+
+
+if SELECT_FEAT:
+    # potentially this can take a few iterations to stabilize.
+    df = select_features(df, feat_prevalence=.2)
+    df = select_features(df=df, feat_prevalence=.3, axis=1)
+df.shape
+
+
+# %% [markdown]
 # Transform to long-data format:
 
 # %%
 df = df.stack().to_frame('intensity')
 df.head()
 
-# %% [markdown]
-# Transform the data using the logarithm, here using base 2:
-
-# %%
-df = np.log2(df)
-df.head()
 
 # %% [markdown]
 # The resulting DataFrame with one column has an `MulitIndex` with the sample and feature identifier.
@@ -161,7 +209,7 @@ _ = ax.legend()
 df = pd.read_csv(fn_intensities, index_col=0)
 df.index.name = 'Sample ID'  # already set
 df.columns.name = 'protein group'  # not set due to csv disk file format
-df = np.log2(df)  # log transform
+df = np.log2(df + 1)  # log transform
 df.head()
 
 # %% [markdown]
