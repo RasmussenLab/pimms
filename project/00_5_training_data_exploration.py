@@ -22,6 +22,18 @@
 # -
 #
 # Does not save filtered data, this is done by splitting notebook. Only visualisations.
+#
+# Expected current format:
+# - wide format (samples x features)
+# > not the default output in MS-based proteomics
+#
+# An example of peptides in wide format would be:
+#
+# | Sample ID | pep A | pep B | pep C | ... |
+# | --- | --- | --- | --- | --- |
+# | sample_01 | 0.1       | 0.2       | 0.3       | ... |
+# | sample_02 | 0.2       | NA       | 0.4       | ... |
+# | sample_03 | 0.3       | 0.2       | 0.1       | ... |
 
 # %%
 from __future__ import annotations
@@ -67,11 +79,11 @@ def only_every_x_ticks(ax, x=2, axis=None):
 def use_first_n_chars_in_labels(ax, x=2):
     """Take first N characters of labels and use them as new labels"""
     # xaxis
-    _new_labels = [l.get_text()[:x]
-                   for l in ax.get_xticklabels()]
+    _new_labels = [_l.get_text()[:x]
+                   for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
     # yaxis
-    _new_labels = [l.get_text()[:x] for l in ax.get_yticklabels()]
+    _new_labels = [_l.get_text()[:x] for _l in ax.get_yticklabels()]
     _ = ax.set_yticklabels(_new_labels)
     return ax
 
@@ -79,8 +91,8 @@ def use_first_n_chars_in_labels(ax, x=2):
 def split_xticklabels(ax, PG_SEPARATOR=';'):
     """Split labels by PG_SEPARATOR and only use first part"""
     if PG_SEPARATOR is not None:
-        _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
-                       for l in ax.get_xticklabels()]
+        _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                       for _l in ax.get_xticklabels()]
         _ = ax.set_xticklabels(_new_labels)
     return ax
 
@@ -134,6 +146,7 @@ PG_SEPARATOR: str = ';'
 SAMPLE_FIRST_N_CHARS: int = 16  # number of characters used for sample names
 # if True, do not use tick on heatmap - only label
 NO_TICK_LABELS_ON_HEATMAP: bool = True
+FEATURES_CUTOFF: int = 10_000  # cutoff for number of features to plot in clustermaps or heatmaps, randomly selected
 
 
 # %% [markdown]
@@ -160,11 +173,12 @@ if FN_INTENSITIES.suffix == '.pkl':
 elif FN_INTENSITIES.suffix == '.csv':
     data = pd.read_csv(FN_INTENSITIES, index_col=INDEX_COL, nrows=N_FIRST_ROWS)
 data
+
 # %%
 if LONG_FORMAT:
     data = data.squeeze().unstack()
 if LOG_TRANSFORM:
-    data = np.log2(data).astype(float)
+    data = np.log2(data + 1).astype(float)
 
 
 # drop entrily missing rows or columns
@@ -240,13 +254,13 @@ with open(fname, 'w') as f:
 fig = plotting.data.plot_missing_dist_highdim(data,
                                               min_feat_per_sample=min_feat_per_sample,
                                               min_samples_per_feat=min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_lineplot_w_cutoffs.pdf'
+fname = FIGUREFOLDER / 'dist_all_lineplot_w_cutoffs.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
 fig = plotting.data.plot_missing_dist_highdim(data)
-fname = FIGUREFOLDER / f'dist_all_lineplot_wo_cutoffs.pdf'
+fname = FIGUREFOLDER / 'dist_all_lineplot_wo_cutoffs.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
@@ -254,13 +268,13 @@ vaep.savefig(fig, name=fname)
 fig = plotting.data.plot_missing_pattern_histogram(data,
                                                    min_feat_per_sample=min_feat_per_sample,
                                                    min_samples_per_feat=min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_histogram_w_cutoffs.pdf'
+fname = FIGUREFOLDER / 'dist_all_histogram_w_cutoffs.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
 fig = plotting.data.plot_missing_pattern_histogram(data)
-fname = FIGUREFOLDER / f'dist_all_histogram_wo_cutoffs.pdf'
+fname = FIGUREFOLDER / 'dist_all_histogram_wo_cutoffs.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
@@ -269,7 +283,7 @@ vaep.savefig(fig, name=fname)
 
 # %%
 fig = plotting.data.plot_missing_dist_boxplots(data)
-fname = FIGUREFOLDER / f'dist_all_boxplots.pdf'
+fname = FIGUREFOLDER / 'dist_all_boxplots.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
@@ -279,7 +293,7 @@ vaep.savefig(fig, name=fname)
 # %%
 fig = plotting.data.plot_missing_pattern_violinplot(
     data, min_feat_per_sample, min_samples_per_feat)
-fname = FIGUREFOLDER / f'dist_all_violin_plot.pdf'
+fname = FIGUREFOLDER / 'dist_all_violin_plot.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
@@ -306,8 +320,19 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 # %%time
-corr_lower_triangle = analyzers.corr_lower_triangle(data)
+if data.shape[1] > FEATURES_CUTOFF:
+    selected = data.sample(n=FEATURES_CUTOFF, axis=1, random_state=42)
+    FEATURES_CUTOFF_TEXT = f'{FEATURES_CUTOFF:,d} randomly selected {COL_INDEX_NAME}'
+else:
+    FEATURES_CUTOFF = data.shape[1]
+    FEATURES_CUTOFF_TEXT = f'{FEATURES_CUTOFF:,d} {COL_INDEX_NAME}'
+    selected = data
+FEATURES_CUTOFF_TEXT
+
+# %%
+corr_lower_triangle = analyzers.corr_lower_triangle(selected)
 fig, axes = analyzers.plot_corr_histogram(corr_lower_triangle, bins=40)
+fig.suptitle(f'Histogram of correlations based on {FEATURES_CUTOFF_TEXT}')
 fname = FIGUREFOLDER / 'corr_histogram_feat.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
@@ -320,6 +345,7 @@ vaep.savefig(fig, name=fname)
 cv = data.std() / data.mean()
 # biological coefficient of variation: standard deviation (variation) w.r.t mean
 ax = cv.hist(bins=30)
+ax.set_title(f'Histogram of coefficient of variation (CV) of {FEATURES_CUTOFF_TEXT}')
 fname = FIGUREFOLDER / 'CV_histogram_features.pdf'
 files_out[fname.name] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -331,18 +357,22 @@ vaep.savefig(ax.get_figure(), name=fname)
 # needs to deal with duplicates
 # notna = data.notna().T.drop_duplicates().T
 # get index and column names
-vaep.plotting.make_large_descriptors(8)
-cg = sns.clustermap(data.notna(),
+vaep.plotting.make_large_descriptors(5)
+
+cg = sns.clustermap(selected.notna(),
                     cbar_pos=None,
                     figsize=(8, 8))
 ax = cg.ax_heatmap
 if PG_SEPARATOR is not None:
-    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
-                   for l in ax.get_xticklabels()]
+    _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                   for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
 if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_xticks([])
     ax.set_yticks([])
+# cg.fig.suptitle(f'Present-absent pattern of {FEATURES_CUTOFF_TEXT}')
+ax.set_title(f'Present-absent pattern of {FEATURES_CUTOFF_TEXT}')
+cg.fig.tight_layout()
 fname = FIGUREFOLDER / 'clustermap_present_absent_pattern.png'
 files_out[fname.name] = fname
 vaep.savefig(cg.fig,
@@ -355,21 +385,23 @@ vaep.savefig(cg.fig,
 
 # %%
 assert (len(cg.dendrogram_row.reordered_ind), len(
-    cg.dendrogram_col.reordered_ind)) == data.shape
+    cg.dendrogram_col.reordered_ind)) == selected.shape
 
 # %%
-vaep.plotting.make_large_descriptors(8)
-fig, ax = plt.subplots(figsize=(4, 4))
+vaep.plotting.make_large_descriptors(5)
+fig, ax = plt.subplots(figsize=(8, 8))
 ax = sns.heatmap(
-    data.iloc[cg.dendrogram_row.reordered_ind,
-              cg.dendrogram_col.reordered_ind],
+    selected.iloc[cg.dendrogram_row.reordered_ind,
+                  cg.dendrogram_col.reordered_ind],
     ax=ax,
 )
+ax.set_title(f'Heatmap of intensities clustered by missing pattern of {FEATURES_CUTOFF_TEXT}',
+             fontsize=8)
 only_every_x_ticks(ax, x=2)
 use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if PG_SEPARATOR is not None:
-    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
-                   for l in ax.get_xticklabels()]
+    _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                   for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
 if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_xticks([])
@@ -386,18 +418,20 @@ vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 fig, ax = plt.subplots(figsize=(4, 4))
 ax = sns.heatmap(
     analyzers.corr_lower_triangle(
-        data.iloc[:, cg.dendrogram_col.reordered_ind]),
+        selected.iloc[:, cg.dendrogram_col.reordered_ind]),
     vmin=-1,
     vmax=1,
     cbar_kws={'shrink': 0.75},
     ax=ax,
     square=True,
 )
+ax.set_title(f'Heatmap of feature correlation of {FEATURES_CUTOFF_TEXT}',
+             fontsize=8)
 _ = only_every_x_ticks(ax, x=2)
 _ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if PG_SEPARATOR is not None:
-    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
-                   for l in ax.get_xticklabels()]
+    _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                   for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
 if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_xticks([])
@@ -408,7 +442,8 @@ vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 
 # %%
 lower_corr = analyzers.corr_lower_triangle(
-    data.T.iloc[:, cg.dendrogram_row.reordered_ind])
+    selected.T.iloc[:, cg.dendrogram_row.reordered_ind])
+
 # %%
 fig, ax = plt.subplots(figsize=(4, 4))
 ax = sns.heatmap(
@@ -424,29 +459,31 @@ _ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_xticks([])
     ax.set_yticks([])
+ax.set_title(f'Heatmap of sample correlation based on {FEATURES_CUTOFF_TEXT}', fontsize=7)
 fname = FIGUREFOLDER / 'heatmap_sample_correlation.png'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname, pdf=False, dpi=600)
 
 # %%
-vaep.plotting.make_large_descriptors(12)
+vaep.plotting.make_large_descriptors(6)
 kwargs = dict()
 if NO_TICK_LABELS_ON_HEATMAP:
     kwargs['xticklabels'] = False
     kwargs['yticklabels'] = False
-cg = get_clustermap(data, **kwargs)
+cg = get_clustermap(selected, **kwargs)
 ax = cg.ax_heatmap
 if PG_SEPARATOR is not None:
-    _new_labels = [l.get_text().split(PG_SEPARATOR)[0]
-                   for l in ax.get_xticklabels()]
+    _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                   for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
 _ = only_every_x_ticks(ax, x=2, axis=0)
 _ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
-
+# ax.set_title(f'Clustermap of intensities based on {FEATURES_CUTOFF_TEXT}', fontsize=7)
+# cg.fig.tight_layout()  # tight_layout makes the cbar a bit ugly
+cg.fig.suptitle(f'Clustermap of intensities based on {FEATURES_CUTOFF_TEXT}', fontsize=7)
 fname = FIGUREFOLDER / 'clustermap_intensities_normalized.png'
 files_out[fname.name] = fname
 cg.fig.savefig(fname, dpi=300)  # avoid tight_layout
-# tight_layout makes the cbar a bit ugly
 # vaep.savefig(cg.fig,
 #              name=fname,
 #              pdf=False)

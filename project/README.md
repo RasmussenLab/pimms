@@ -107,6 +107,16 @@ misc | misc_sampling_in_pandas.ipynb        | How to sample in pandas
 
 # Notebook descriptions (To be completed)
 
+## Inspect dataset
+
+### `00_5_training_data_exploration.py`
+
+Can be execute manually
+
+```bash
+jupytext 00_5_training_data_exploration.py --to ipynb -o - | papermill - runs/example/00_5_training_data_exploration.ipynb -f config/single_dev_dataset/example/inspect_data.yaml
+```
+
 ## Single experiment run
 ### `01_0_split_data.ipynb`
 

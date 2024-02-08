@@ -130,7 +130,7 @@ def plot_missing_dist_highdim(data: pd.DataFrame,
           .size()
           .sort_index()
           .plot
-          .line(style='-',
+          .line(style='.',
                 ax=axes[0])
           )
     ax.set_ylabel('observations (samples)')
@@ -146,7 +146,7 @@ def plot_missing_dist_highdim(data: pd.DataFrame,
           .size()
           .sort_index()
           .plot
-          .line(style='-',
+          .line(style='.',
                 ax=axes[1])
           )
     if min_samples_per_feat is not None:
