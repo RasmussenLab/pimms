@@ -178,7 +178,7 @@ data
 if LONG_FORMAT:
     data = data.squeeze().unstack()
 if LOG_TRANSFORM:
-    data = np.log2(data + 1).astype(float)
+    data = np.log2(data).astype(float)
 
 
 # drop entrily missing rows or columns

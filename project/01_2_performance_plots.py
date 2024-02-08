@@ -349,8 +349,6 @@ errors_val = errors_val.join(freq_feat)
 errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
 errors_val.head()
 
-# %% [markdown]
-# Some interpolated features are missing
 
 # %%
 errors_val.describe()[ORDER_MODELS].T  # mean of means

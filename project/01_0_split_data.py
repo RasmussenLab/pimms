@@ -445,7 +445,7 @@ pcs.describe(include='all').T
 
 # %%
 if args.meta_cat_col:
-    fig, ax = plt.subplots(figsize=(2, 2))
+    fig, ax = plt.subplots(figsize=(3, 3))
     analyzers.seaborn_scatter(
         pcs[pcs_name], ax, meta=pcs[args.meta_cat_col], title=f"by {args.meta_cat_col}")
     fname = (args.out_figures
@@ -767,7 +767,7 @@ splits_df['train'] = splits.train_X
 splits_df['val'] = splits.val_y
 splits_df['test'] = splits.test_y
 stats_splits = splits_df.describe()
-# stats_splits.to_excel(writer, 'stats_splits', float_format='%.2f')
+stats_splits.to_excel(writer, 'stats_splits', float_format='%.3f')
 stats_splits
 
 # %%
