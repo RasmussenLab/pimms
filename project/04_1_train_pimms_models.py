@@ -263,7 +263,7 @@ model = AETransformer(
 
 # %%
 model.fit(train_X, val_X,
-          epochs_max=30,
+          epochs_max=50,
           cuda=False)
 
 # %%
