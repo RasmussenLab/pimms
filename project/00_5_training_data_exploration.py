@@ -236,6 +236,7 @@ records.update({'params':
                      min_feat_per_sample=int(min_feat_per_sample),
                      min_samples_per_feat=int(min_samples_per_feat),)
                 })
+del selected  # try to free memory (in case a copy was created in pandas 3.0)
 records
 
 # %%
