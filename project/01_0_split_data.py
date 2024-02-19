@@ -36,14 +36,15 @@ from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
 
 from vaep.analyzers import analyzers
-from vaep.analyzers.analyzers import AnalyzePeptides
+from vaep.sklearn import get_PCA
+import vaep.io.load
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
-def add_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
+def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
     try:
         df = df.loc[df_meta.index]
     except KeyError as e:
@@ -134,22 +135,20 @@ logger.info(
 # %%
 # # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
-constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
-analysis = constructor(fname=args.FN_INTENSITIES,
-                       index_col=args.index_col,
-                       )
+constructor = getattr(vaep.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
+df = constructor(fname=args.FN_INTENSITIES,
+                 index_col=args.index_col,
+                 )
 if args.column_names:
-    analysis.df.columns.names = args.column_names
+    df.columns.names = args.column_names
 
-if not analysis.df.index.name:
+if not df.index.name:
     logger.warning("No sample index name found, setting to 'Sample ID'")
-    analysis.df.index.name = 'Sample ID'
+    df.index.name = 'Sample ID'
 
-log_fct = getattr(np, args.logarithm)
-analysis.log_transform(log_fct)
-logger.info(f"{analysis = }")
-df = analysis.df
-del analysis.df  # free memory
+if args.logarithm:
+    log_fct = getattr(np, args.logarithm)
+    df = log_fct(df)  # ! potentially add check to increase value by 1 if 0 is present (should be part of preprocessing)
 df
 
 # %%
@@ -191,8 +190,6 @@ def join_as_str(seq):
     return ret
 
 
-# ToDo: join multiindex samples indices (pkl dumps)
-# if hasattr(df.columns, "levels"):
 if isinstance(df.columns, pd.MultiIndex):
     logger.warning("combine MultiIndex columns to one feature column")
     print(df.columns[:10].map(join_as_str))
@@ -276,13 +273,13 @@ except KeyError:
 
 
 # %%
-df_meta = add_meta_data(df, df_meta=df_meta)
+df_meta = align_meta_data(df, df_meta=df_meta)
 
 # %% [markdown]
 # Ensure unique indices
 
 # %%
-assert df.index.is_unique, "Duplicates in index"
+assert df.index.is_unique, "Duplicates in index."
 
 # %% [markdown]
 # ## Select a subset of samples if specified (reduce the number of samples)
@@ -310,6 +307,7 @@ if args.select_N is not None:
 
 
 # %%
+# ! add function
 freq_per_feature = df.notna().sum()  # on wide format
 if isinstance(args.feat_prevalence, float):
     N_samples = len(df)
@@ -327,8 +325,6 @@ mask = freq_per_feature >= args.feat_prevalence
 logger.info(f"Drop {(~mask).sum()} features")
 freq_per_feature = freq_per_feature.loc[mask]
 df = df.loc[:, mask]
-analysis.N, analysis.M = df.shape
-# # potentially create freq based on DataFrame
 df
 
 # %%
@@ -431,8 +427,7 @@ sample_counts.name = 'identified features'
 # %%
 K = 2
 df = df.astype(float)
-analysis.df = df
-pcs = analysis.get_PCA(n_components=K)  # should be renamed to get_PCs
+pcs = get_PCA(df, n_components=K)  # should be renamed to get_PCs
 pcs = pcs.iloc[:, :K].join(df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
@@ -485,7 +480,7 @@ fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {analysis.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} features for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
@@ -626,6 +621,8 @@ splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
     frac_mnar=args.frac_mnar,
     random_state=args.random_state,
 )
+
+# ! add option to only add/keep simulated missing values in a subset of the samples?
 
 N = len(df_long)
 N_MCAR = len(fake_na_mcar)

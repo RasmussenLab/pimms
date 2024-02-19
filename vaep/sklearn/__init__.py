@@ -2,13 +2,23 @@
 
 Might be moved to a separate package in the future.
 """
+import logging
 import pandas as pd
 import sklearn
 import sklearn.model_selection
+from sklearn.impute import SimpleImputer
+
+from njab.sklearn import run_pca
 
 from mrmr import mrmr_classif
 
+
+from vaep.io import add_indices
+
+
 from .types import Splits, ResultsSplit, Results, AucRocCurve, PrecisionRecallCurve
+
+logger = logging.getLogger(__name__)
 
 default_model: sklearn.linear_model.LogisticRegression = sklearn.linear_model.LogisticRegression(
     random_state=42,
@@ -81,3 +91,13 @@ def find_n_best_features(X, y, name,
         summary.append(results)
     summary_n_features = pd.concat(summary)
     return summary_n_features
+
+
+def get_PCA(df, n_components=2, imputer=SimpleImputer):
+    imputer_ = imputer()
+    X = imputer_.fit_transform(df)
+    X = add_indices(X, df)
+    assert all(X.notna())
+
+    PCs, _ = run_pca(X, n_components=n_components)
+    return PCs

@@ -1,4 +1,5 @@
 """Plot data distribution based on pandas `DataFrames` or `Series`."""
+import logging
 from typing import Tuple, Iterable
 
 import matplotlib
@@ -6,6 +7,9 @@ import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 import pandas as pd
 import seaborn as sns
+
+
+logger = logging.getLogger(__name__)
 
 
 def min_max(s: pd.Series) -> Tuple[int]:

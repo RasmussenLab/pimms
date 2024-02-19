@@ -86,3 +86,4 @@ dependencies:
   - pip:
       - -e .
       - mrmr-selection
+      - njab

@@ -17,12 +17,14 @@ import seaborn
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 
+from njab.sklearn import run_pca
+
 import vaep
 from vaep.analyzers import Analysis
 
 from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
-
+from vaep.io.load import verify_df
 
 logger = logging.getLogger(__name__)
 
@@ -31,23 +33,7 @@ __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 
 ALPHA = 0.5
 
-
-def verify_df(df,
-              fname,
-              index_col: str,  # could be potentially 0 for the first column
-              verify_fname: bool = False,
-              usecols=None,
-              ):
-    if usecols and isinstance(index_col, str):
-        assert index_col in usecols, 'Add index_col to usecols Sequence'
-    if verify_fname:
-        if not len(df.shape) == 2:
-            raise ValueError(f"Expected 2 -dimensional array, not {len(df.shape)} -dimensional,"
-                             f" of type: {type(df)}")
-        N, M = df.shape
-        assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
-            ("Filename number don't match loaded numbers: "
-                f"{fname} should contain N{N} and M{M}")
+# ! deprecate AnalyzePeptides
 
 
 class AnalyzePeptides(SimpleNamespace):
@@ -439,30 +425,6 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
     data.name = ''
     _ = pd.plotting.table(ax=ax, data=data, loc="best", edges="open")
     return fig, axes
-
-
-def run_pca(df_wide: pd.DataFrame, n_components: int = 2) -> Tuple[pd.DataFrame, PCA]:
-    """Run PCA on DataFrame and return result.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame in wide format to fit features on.
-    n_components : int, optional
-        Number of Principal Components to fit, by default 2
-
-    Returns
-    -------
-    Tuple[pd.DataFrame, PCA]
-        principal compoments of DataFrame with same indices as in original DataFrame,
-        and fitted PCA model of sklearn
-    """
-    pca = PCA(n_components=n_components)
-    PCs = pca.fit_transform(df_wide)
-    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
-            var_explained in enumerate(pca.explained_variance_ratio_)]
-    PCs = pd.DataFrame(PCs, index=df_wide.index, columns=cols)
-    return PCs, pca
 
 
 def plot_date_map(df, ax,
