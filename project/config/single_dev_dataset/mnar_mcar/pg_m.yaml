@@ -9,7 +9,6 @@ split_data:
   FN_INTENSITIES: data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv
   sample_completeness: 0.4
   feat_prevalence: 0.25
-  min_RT_time: 120
   column_names:
     - Gene Names
   index_col: 0

@@ -81,7 +81,6 @@ sample_completeness: Union[int, float] = 0.5  # Minimum number or fraction of to
 select_N: int = None  # only use latest N samples
 sample_N: bool = False  # if select_N, sample N randomly instead of using latest N
 random_state: int = 42  # random state for reproducibility of splits
-min_RT_time: Union[int, float] = None  # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2'  # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = 'runs/example'  # folder to save figures and data dumps
 folder_data: str = ''  # specify special data directory if needed
@@ -232,24 +231,6 @@ df_meta
 
 # %%
 df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
-
-# %% [markdown]
-# select samples with a minimum retention time
-
-# %%
-if args.min_RT_time:
-    logger.info(
-        "Metadata should have 'MS max RT' entry from ThermoRawFileParser")
-    msg = (f"Minimum RT time maxiumum is set to {args.min_RT_time} minutes"
-           " (to exclude too short runs, which are potentially fractions).")
-    # can be integrated into query string
-    mask_RT = df_meta['MS max RT'] >= args.min_RT_time
-    msg += f" Total number of samples retained: {int(mask_RT.sum())}"
-    msg += f" ({int(len(mask_RT) - mask_RT.sum())} excluded)."
-    logger.info(msg)
-    df_meta = df_meta.loc[mask_RT]
-else:
-    logger.warning("Retention time filtering deactivated.")
 
 # %%
 df_meta = df_meta.sort_values(args.meta_date_col)
