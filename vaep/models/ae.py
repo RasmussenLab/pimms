@@ -237,7 +237,7 @@ class ModelAdapter(DatasetWithTargetAdapter):
             self.learn.yb = (self._all_y,)
 
 
-class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
+class ModelAdapterVAE(DatasetWithTargetAdapter):
     """Models forward method only expects one input matrix.
     Apply mask from dataloader to both pred and targets."""
 
@@ -248,6 +248,10 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         # data augmentation here?
 
     def after_pred(self):
+        self.learn._all_pred = self.pred[0].detach().clone()
+        self.learn._all_y = None
+        if len(self.yb):
+            self.learn._all_y = self.y.detach().clone()
         super().after_pred()
         if len(self.pred) == 3:
             pred, mu, logvar = self.pred  # return predictions
@@ -255,17 +259,6 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         elif len(self.pred) == 4:
             x_mu, x_logvar, z_mu, z_logvar = self.pred
             self.learn.pred = (x_mu[self._mask], x_logvar[self._mask], z_mu, z_logvar)
-
-# same as ModelAdapter. Inheritence is limiting composition here
-
-
-class ModelAdapterVAE(ModelAdapterVAEFlat):
-    def after_pred(self):
-        self.learn._all_pred = self.pred[0].detach().clone()
-        self.learn._all_y = None
-        if len(self.yb):
-            self.learn._all_y = self.y.detach().clone()
-        super().after_pred()
 
     def after_loss(self):
         self.learn.pred = (self.learn._all_pred, *self.learn.pred[1:])
