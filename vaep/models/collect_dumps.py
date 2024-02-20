@@ -1,3 +1,4 @@
+""" Collects metrics and config files from the experiment directory structure."""
 from functools import partial, update_wrapper
 import logging
 from pathlib import Path
