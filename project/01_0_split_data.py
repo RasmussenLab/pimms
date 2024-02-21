@@ -28,7 +28,7 @@ from IPython.display import display
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from sklearn.model_selection import train_test_split
 import plotly.express as px
 
 import vaep
@@ -92,7 +92,7 @@ meta_cat_col: str = None  # category column in meta data
 # train, validation and test data splits
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
-
+prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -340,7 +340,7 @@ sample_counts.describe()
 # %%
 mask = sample_counts > args.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
-print(msg)
+logger.info(msg)
 df = df.loc[mask]
 df = df.dropna(
     axis=1, how='all')  # drop now missing features
@@ -545,7 +545,7 @@ if not args.meta_date_col == 'PlaceholderTime':
 
 # %%
 msg = "Total number of samples in data: {}"
-print(msg.format(len(df)))
+logger.info(msg.format(len(df)))
 
 
 # %% [markdown]
@@ -581,7 +581,7 @@ freq_per_feature.to_pickle(fname)
 
 # %%
 splits = DataSplits(is_wide_format=False)
-print(f"{splits = }")
+logger.info(f"{splits = }")
 splits.__annotations__
 
 
@@ -602,9 +602,9 @@ splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
     frac_mnar=args.frac_mnar,
     random_state=args.random_state,
 )
+logger.info(f"{splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
 
-# ! add option to only add/keep simulated missing values in a subset of the samples?
-
+# %%
 N = len(df_long)
 N_MCAR = len(fake_na_mcar)
 N_MNAR = len(fake_na_mnar)
@@ -643,6 +643,39 @@ fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
+
+# %% [markdown]
+# ### Keep simulated samples only in a subset of the samples
+# In case only a subset of the samples should be used for validation and testing,
+# although these samples can be used for fitting the models,
+# the following cell will select samples stratified by the eventually set `meta_cat_col` column.
+#
+# The procedure is experimental and turned off by default.
+
+# %%
+if 0.0 < args.prop_sample_w_sim < 1.0:
+    to_stratify = None
+    if args.meta_cat_col and df_meta is not None:
+        to_stratify = df_meta[args.meta_cat_col].fillna(-1)  # ! fillna with -1 as separate category (sofisticate check)
+    train_idx, val_test_idx = train_test_split(splits.train_X.index.levels[0],
+                                               test_size=args.prop_sample_w_sim,
+                                               stratify=to_stratify,
+                                               random_state=42)
+    val_idx, test_idx = train_test_split(val_test_idx,
+                                         test_size=.5,
+                                         stratify=to_stratify.loc[val_test_idx] if to_stratify is not None else None,
+                                         random_state=42)
+    logger.info(f"Sample in Train: {len(train_idx):,d} - Validation: {len(val_idx):,d} - Test: {len(test_idx):,d}")
+    # reassign some simulated missing values to training data:
+    splits.train_X = pd.concat(
+        [splits.train_X,
+         splits.val_y.loc[train_idx],
+         splits.test_y.loc[train_idx]
+         ])
+    splits.val_y = splits.val_y.loc[val_idx]
+    splits.test_y = splits.test_y.loc[test_idx]
+    logger.info(f"New shapes: {splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
+
 # %%
 splits.test_y.groupby(level=-1).count().describe()
 
@@ -650,11 +683,10 @@ splits.test_y.groupby(level=-1).count().describe()
 splits.val_y
 
 # %%
-# ! add option to retain at least N samples per feature
 splits.train_X.groupby(level=-1).count().describe()
 
 # %%
-# ToDo check that feature indices and sample indicies overlap
+# Check that feature indices and sample indicies overlap between splits
 # -> a single feature cannot be only in the validation or test split
 # -> single features should be put into the training data
 # -> or raise error as feature completness treshold is so low that less than 3 samples
@@ -707,7 +739,7 @@ if mask_min_4_measurments.any():
     idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
     logger.warning(f"Features with less than 4 measurments in training data: {idx.to_list()}")
     to_remove = splits.val_y.loc[pd.IndexSlice[:, idx]]
-    print("To remove from validation data: ")
+    logger.info("To remove from validation data: ")
     display(to_remove)
     splits.train_X = pd.concat([splits.train_X, to_remove])
     splits.val_y = splits.val_y.drop(to_remove.index)
@@ -890,4 +922,5 @@ figures
 # %%
 writer.close()
 dumps
+
 # %%
