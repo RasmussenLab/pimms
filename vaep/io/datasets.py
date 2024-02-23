@@ -104,7 +104,7 @@ class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
         ----------
         df : pd.DataFrame
             DataFrame, indexed as targets
-        targets : _type_, optional
+        targets : Targets to use for evaluation
             DataFrame, indexed as df
         transformer : sklearn.pipeline.Pipeline, optional
             transformation pipeline to use, by default None

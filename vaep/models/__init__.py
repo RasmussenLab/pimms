@@ -55,7 +55,7 @@ def plot_loss(recorder: learner.Recorder,
         [description]
     """
     if not ax:
-        fig, ax = plt.subplots()
+        _, ax = plt.subplots()
     ax.plot(list(range(skip_start, len(recorder.losses))),
             recorder.losses[skip_start:] / norm_train, label='train')
     if with_valid:
@@ -79,7 +79,10 @@ def plot_training_losses(learner: learner.Learner,
         fig = ax.get_figure()
     ax.set_title(f'{name} loss')
     norm_train, norm_val = norm_factors  # exactly two
-    learner.recorder.plot_loss(skip_start=5, ax=ax,
+    with_valid = True
+    if norm_val is None:
+        with_valid = False
+    learner.recorder.plot_loss(skip_start=5, ax=ax, with_valid=with_valid,
                                norm_train=norm_train, norm_val=norm_val)
     name = name.lower()
     _ = RecorderDump(learner.recorder, name).save(folder)
