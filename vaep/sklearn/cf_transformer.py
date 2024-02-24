@@ -81,7 +81,8 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
             y_range=(int(X.squeeze().min()),
                      int(X.squeeze().max()) + 1)
         )
-
+        if not cuda:
+            default_device(use=False)  # set to cpu
         if y is not None:
             X, frac = collab.combine_data(X, y)
         else:
