@@ -12,11 +12,16 @@
 
 # %%
 import os
+from importlib import metadata
 IN_COLAB = 'COLAB_GPU' in os.environ
 if IN_COLAB:
-    print("Install PIMMS...")
-    # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
-    # !pip install pimms-learn
+    try:
+        _v = metadata.version('pimms-learn')
+        print(f"Running in colab and pimms-learn ({_v}) is installed.")
+    except metadata.PackageNotFoundError:
+        print("Install PIMMS...")
+        # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
+        # !pip install pimms-learn   
 
 # %% [markdown]
 # If on colab, please restart the environment and run everything from here on.
@@ -96,6 +101,7 @@ SELECT_FEAT = True
 
 
 def select_features(df, feat_prevalence=.2, axis=0):
+    # # ! vaep.filter.select_features
     N = df.shape[axis]
     minimum_freq = N * feat_prevalence
     freq = df.notna().sum(axis=axis)

@@ -1,13 +1,24 @@
 """Scikit-learn style interface for Collaborative Filtering model."""
 from __future__ import annotations
+from fastai.collab import CollabDataLoaders
 
 from pathlib import Path
 
+from fastai.torch_core import default_device
+from fastai.losses import MSELossFlat
+from fastai.data.transforms import IndexSplitter
+from fastai.data.block import TransformBlock
+from fastai.callback.tracker import EarlyStoppingCallback
+from fastai.tabular.core import Categorify
 from fastai.tabular.all import *
+from fastai.collab import EmbeddingDotBias
+from fastai.collab import TabularCollab
 from fastai.collab import *
 
+from fastai.learner import Learner
 from fastai import learner
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 from sklearn.utils.validation import check_is_fitted
@@ -52,6 +63,7 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         self.sample_column = sample_column
         self.n_factors = n_factors
         self.out_folder = Path(out_folder)
+        self.out_folder.mkdir(exist_ok=True, parents=True)
         self.batch_size = batch_size
 
     def fit(self, X: pd.Series, y: pd.Series = None,
