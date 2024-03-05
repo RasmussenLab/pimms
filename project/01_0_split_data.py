@@ -28,7 +28,7 @@ from IPython.display import display
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from sklearn.model_selection import train_test_split
 import plotly.express as px
 
 import vaep
@@ -36,14 +36,15 @@ from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
 
 from vaep.analyzers import analyzers
-from vaep.analyzers.analyzers import AnalyzePeptides
+from vaep.sklearn import get_PCA
+import vaep.io.load
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
-def add_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
+def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
     try:
         df = df.loc[df_meta.index]
     except KeyError as e:
@@ -80,7 +81,6 @@ sample_completeness: Union[int, float] = 0.5  # Minimum number or fraction of to
 select_N: int = None  # only use latest N samples
 sample_N: bool = False  # if select_N, sample N randomly instead of using latest N
 random_state: int = 42  # random state for reproducibility of splits
-min_RT_time: Union[int, float] = None  # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2'  # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = 'runs/example'  # folder to save figures and data dumps
 folder_data: str = ''  # specify special data directory if needed
@@ -92,7 +92,7 @@ meta_cat_col: str = None  # category column in meta data
 # train, validation and test data splits
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
-
+prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -134,22 +134,20 @@ logger.info(
 # %%
 # # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
-constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
-analysis = constructor(fname=args.FN_INTENSITIES,
-                       index_col=args.index_col,
-                       )
+constructor = getattr(vaep.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
+df = constructor(fname=args.FN_INTENSITIES,
+                 index_col=args.index_col,
+                 )
 if args.column_names:
-    analysis.df.columns.names = args.column_names
+    df.columns.names = args.column_names
 
-if not analysis.df.index.name:
+if not df.index.name:
     logger.warning("No sample index name found, setting to 'Sample ID'")
-    analysis.df.index.name = 'Sample ID'
+    df.index.name = 'Sample ID'
 
-log_fct = getattr(np, args.logarithm)
-analysis.log_transform(log_fct)
-logger.info(f"{analysis = }")
-df = analysis.df
-del analysis.df  # free memory
+if args.logarithm:
+    log_fct = getattr(np, args.logarithm)
+    df = log_fct(df)  # ! potentially add check to increase value by 1 if 0 is present (should be part of preprocessing)
 df
 
 # %%
@@ -191,8 +189,6 @@ def join_as_str(seq):
     return ret
 
 
-# ToDo: join multiindex samples indices (pkl dumps)
-# if hasattr(df.columns, "levels"):
 if isinstance(df.columns, pd.MultiIndex):
     logger.warning("combine MultiIndex columns to one feature column")
     print(df.columns[:10].map(join_as_str))
@@ -236,24 +232,6 @@ df_meta
 # %%
 df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
 
-# %% [markdown]
-# select samples with a minimum retention time
-
-# %%
-if args.min_RT_time:
-    logger.info(
-        "Metadata should have 'MS max RT' entry from ThermoRawFileParser")
-    msg = (f"Minimum RT time maxiumum is set to {args.min_RT_time} minutes"
-           " (to exclude too short runs, which are potentially fractions).")
-    # can be integrated into query string
-    mask_RT = df_meta['MS max RT'] >= args.min_RT_time
-    msg += f" Total number of samples retained: {int(mask_RT.sum())}"
-    msg += f" ({int(len(mask_RT) - mask_RT.sum())} excluded)."
-    logger.info(msg)
-    df_meta = df_meta.loc[mask_RT]
-else:
-    logger.warning("Retention time filtering deactivated.")
-
 # %%
 df_meta = df_meta.sort_values(args.meta_date_col)
 
@@ -276,13 +254,13 @@ except KeyError:
 
 
 # %%
-df_meta = add_meta_data(df, df_meta=df_meta)
+df_meta = align_meta_data(df, df_meta=df_meta)
 
 # %% [markdown]
 # Ensure unique indices
 
 # %%
-assert df.index.is_unique, "Duplicates in index"
+assert df.index.is_unique, "Duplicates in index."
 
 # %% [markdown]
 # ## Select a subset of samples if specified (reduce the number of samples)
@@ -310,6 +288,7 @@ if args.select_N is not None:
 
 
 # %%
+# ! add function
 freq_per_feature = df.notna().sum()  # on wide format
 if isinstance(args.feat_prevalence, float):
     N_samples = len(df)
@@ -327,8 +306,6 @@ mask = freq_per_feature >= args.feat_prevalence
 logger.info(f"Drop {(~mask).sum()} features")
 freq_per_feature = freq_per_feature.loc[mask]
 df = df.loc[:, mask]
-analysis.N, analysis.M = df.shape
-# # potentially create freq based on DataFrame
 df
 
 # %%
@@ -363,7 +340,7 @@ sample_counts.describe()
 # %%
 mask = sample_counts > args.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
-print(msg)
+logger.info(msg)
 df = df.loc[mask]
 df = df.dropna(
     axis=1, how='all')  # drop now missing features
@@ -431,8 +408,7 @@ sample_counts.name = 'identified features'
 # %%
 K = 2
 df = df.astype(float)
-analysis.df = df
-pcs = analysis.get_PCA(n_components=K)  # should be renamed to get_PCs
+pcs = get_PCA(df, n_components=K)  # should be renamed to get_PCs
 pcs = pcs.iloc[:, :K].join(df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
@@ -485,7 +461,7 @@ fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {analysis.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} features for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
@@ -569,7 +545,7 @@ if not args.meta_date_col == 'PlaceholderTime':
 
 # %%
 msg = "Total number of samples in data: {}"
-print(msg.format(len(df)))
+logger.info(msg.format(len(df)))
 
 
 # %% [markdown]
@@ -605,7 +581,7 @@ freq_per_feature.to_pickle(fname)
 
 # %%
 splits = DataSplits(is_wide_format=False)
-print(f"{splits = }")
+logger.info(f"{splits = }")
 splits.__annotations__
 
 
@@ -626,7 +602,9 @@ splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
     frac_mnar=args.frac_mnar,
     random_state=args.random_state,
 )
+logger.info(f"{splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
 
+# %%
 N = len(df_long)
 N_MCAR = len(fake_na_mcar)
 N_MNAR = len(fake_na_mnar)
@@ -665,6 +643,39 @@ fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
+
+# %% [markdown]
+# ### Keep simulated samples only in a subset of the samples
+# In case only a subset of the samples should be used for validation and testing,
+# although these samples can be used for fitting the models,
+# the following cell will select samples stratified by the eventually set `meta_cat_col` column.
+#
+# The procedure is experimental and turned off by default.
+
+# %%
+if 0.0 < args.prop_sample_w_sim < 1.0:
+    to_stratify = None
+    if args.meta_cat_col and df_meta is not None:
+        to_stratify = df_meta[args.meta_cat_col].fillna(-1)  # ! fillna with -1 as separate category (sofisticate check)
+    train_idx, val_test_idx = train_test_split(splits.train_X.index.levels[0],
+                                               test_size=args.prop_sample_w_sim,
+                                               stratify=to_stratify,
+                                               random_state=42)
+    val_idx, test_idx = train_test_split(val_test_idx,
+                                         test_size=.5,
+                                         stratify=to_stratify.loc[val_test_idx] if to_stratify is not None else None,
+                                         random_state=42)
+    logger.info(f"Sample in Train: {len(train_idx):,d} - Validation: {len(val_idx):,d} - Test: {len(test_idx):,d}")
+    # reassign some simulated missing values to training data:
+    splits.train_X = pd.concat(
+        [splits.train_X,
+         splits.val_y.loc[train_idx],
+         splits.test_y.loc[train_idx]
+         ])
+    splits.val_y = splits.val_y.loc[val_idx]
+    splits.test_y = splits.test_y.loc[test_idx]
+    logger.info(f"New shapes: {splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
+
 # %%
 splits.test_y.groupby(level=-1).count().describe()
 
@@ -672,11 +683,10 @@ splits.test_y.groupby(level=-1).count().describe()
 splits.val_y
 
 # %%
-# ! add option to retain at least N samples per feature
 splits.train_X.groupby(level=-1).count().describe()
 
 # %%
-# ToDo check that feature indices and sample indicies overlap
+# Check that feature indices and sample indicies overlap between splits
 # -> a single feature cannot be only in the validation or test split
 # -> single features should be put into the training data
 # -> or raise error as feature completness treshold is so low that less than 3 samples
@@ -729,7 +739,7 @@ if mask_min_4_measurments.any():
     idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
     logger.warning(f"Features with less than 4 measurments in training data: {idx.to_list()}")
     to_remove = splits.val_y.loc[pd.IndexSlice[:, idx]]
-    print("To remove from validation data: ")
+    logger.info("To remove from validation data: ")
     display(to_remove)
     splits.train_X = pd.concat([splits.train_X, to_remove])
     splits.val_y = splits.val_y.drop(to_remove.index)
@@ -912,4 +922,5 @@ figures
 # %%
 writer.close()
 dumps
+
 # %%

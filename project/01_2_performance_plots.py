@@ -98,6 +98,8 @@ sel_models: str = ''  # user defined comparison (comma separated)
 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 plot_to_n: int = 5
 feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
+save_agg_pred: bool = False  # save aggregated predictions of validation and test data
+
 
 # %% [markdown]
 # Some argument transformations
@@ -254,6 +256,15 @@ ORDER_MODELS = (errors_val
 ORDER_MODELS
 
 # %%
+pred_val = pred_val[[TARGET_COL] + ORDER_MODELS]
+if args.save_agg_pred:
+    fname = args.folder_experiment / '01_2_agg_pred_val.csv'
+    dumps[fname.stem] = fname
+    pred_val.to_csv(fname)
+    logger.info(f"Saved aggregated predictions to: {fname}")
+pred_val
+
+# %%
 mae_stats_ordered_val = errors_val.abs().describe()[ORDER_MODELS]
 mae_stats_ordered_val.to_excel(writer, sheet_name='mae_stats_ordered_val', float_format='%.5f')
 mae_stats_ordered_val.T
@@ -394,8 +405,13 @@ pred_test = compare_predictions.load_split_prediction_by_modelkey(
     split='test',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
+pred_test = pred_test[[TARGET_COL] + ORDER_MODELS]
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
-
+if args.save_agg_pred:
+    fname = args.folder_experiment / '01_2_agg_pred_test.csv'
+    dumps[fname.stem] = fname
+    pred_test.to_csv(fname)
+    logger.info(f"Saved aggregated predictions to: {fname}")
 pred_test
 
 # %% [markdown]

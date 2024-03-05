@@ -2,7 +2,6 @@ FN_INTENSITIES: data/dev_datasets/HeLa_6070/protein_groups_wide_N50_M454.csv
 fn_rawfile_metadata: data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv
 sample_completeness: 0.5
 feat_prevalence: 0.6
-min_RT_time: 120
 column_names:
   - Gene Names
 index_col: 0

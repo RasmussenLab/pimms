@@ -10,7 +10,6 @@ split_data:
         sample_completeness: 0.4
         feat_prevalence: 0.25
         select_N: 50
-        min_RT_time: 120
         index_col: 0
         meta_date_col: Content Creation Date
         column_names: null

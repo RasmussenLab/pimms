@@ -172,3 +172,29 @@ def extend_name(fname: Union[str, Path], extend_by: str, ext: str = None) -> Pat
     fname = fname.parent / f"{fname.stem}{extend_by}"
     fname = fname.with_suffix(ext)
     return fname
+
+
+def add_indices(array: np.array, original_df: pd.DataFrame,
+                index_only: bool = False) -> pd.DataFrame:
+    """Add indices to array using provided origional DataFrame.
+
+    Parameters
+    ----------
+    array : np.array
+        Array of data to add indices to.
+    original_df : pd.DataFrame
+        Original DataFrame data was generated from.
+    index_only : bool, optional
+        Only add row index, by default False
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with array data and original indices.
+    """
+
+    index = original_df.index
+    columns = None
+    if not index_only:
+        columns = original_df.columns
+    return pd.DataFrame(array, index=index, columns=columns)

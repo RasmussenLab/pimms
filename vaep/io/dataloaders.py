@@ -3,13 +3,15 @@ import torch
 from typing import Tuple
 
 from torch.utils.data import Dataset
-# from fastai.data.load import DataLoader
-# from fastai.data.core import DataLoaders
+from fastai.data.load import DataLoader
+from fastai.data.core import DataLoaders
 from fastai.data.all import *
 
 from vaep.io import datasets
 from vaep.io.datasets import DatasetWithTarget
 from vaep.transform import VaepPipeline
+
+import pandas as pd
 
 
 class DataLoadersCreator():
@@ -82,10 +84,10 @@ def get_dls(train_X: pandas.DataFrame,
         Validation data, won't be shuffled.
     transformer : VaepPipeline
         Pipeline with separate encode and decode
-    dataset : torch.utils.data.Dataset, optional
-        torch Dataset to yield encoded samples, by default DatasetWithTarget
     bs : int, optional
         batch size, by default 64
+    num_workers : int, optional
+        number of workers to use for data loading, by default 0
 
     Returns
     -------
@@ -113,9 +115,13 @@ def get_dls(train_X: pandas.DataFrame,
     """
     train_ds = datasets.DatasetWithTarget(df=train_X,
                                           transformer=transformer)
-    valid_ds = datasets.DatasetWithTargetSpecifyTarget(df=train_X,
-                                                       targets=valid_X,
-                                                       transformer=transformer)
+    if valid_X is not None:
+        valid_ds = datasets.DatasetWithTargetSpecifyTarget(df=train_X,
+                                                           targets=valid_X,
+                                                           transformer=transformer)
+    else:
+        # empty dataset will be ignored by fastai in training loops
+        valid_ds = datasets.DatasetWithTarget(df=pd.DataFrame())
     # ! Need for script exection (as plain python file)
     # https://pytorch.org/docs/stable/notes/windows.html#multiprocessing-error-without-if-clause-protection
     return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=False,
