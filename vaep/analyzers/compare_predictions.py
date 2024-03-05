@@ -14,8 +14,10 @@ def load_predictions(pred_files: List, shared_columns=['observed']):
 
     for fname in pred_files:
         _pred_file = pd.read_csv(fname, index_col=[0, 1])
+        idx_shared = pred.index.intersection(_pred_file.index)
+        assert len(idx_shared), f'No shared index between already loaded models {pred.columns} and {fname}'
         if shared_columns:
-            assert all(pred[shared_columns] == _pred_file[shared_columns])
+            assert all(pred.loc[idx_shared, shared_columns] == _pred_file.loc[idx_shared, shared_columns])
             pred = pred.join(_pred_file.drop(shared_columns, axis=1))
         else:
             pred = pred.join(_pred_file)
