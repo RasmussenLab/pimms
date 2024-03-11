@@ -3,30 +3,26 @@
 Variational Autencoder model adapter should be moved to vaep.models.vae.
 Or model class could be put somewhere else.
 """
-from typing import Union, List
+import logging
+from typing import List, Union
 
-import torch.utils.data
-
-from fastai.basics import L
 import fastai.learner
-
-from fastai.callback.core import Callback
-
 import pandas as pd
-
 import sklearn.pipeline
-
 import torch
+import torch.utils.data
+from fastai.basics import L
+from fastai.callback.core import Callback
 from torch import nn
 
-from . import analysis
-import vaep.models
-import vaep.io.datasplits
-import vaep.io.datasets
 import vaep.io.dataloaders
+import vaep.io.datasets
+import vaep.io.datasplits
+import vaep.models
 import vaep.transform
 
-import logging
+from . import analysis
+
 logger = logging.getLogger(__name__)
 
 
@@ -193,7 +189,6 @@ class DatasetWithTargetAdapter(Callback):
         return data
 
     def after_pred(self):
-        M = self._mask.shape[-1]
         if len(self.yb):
             try:
                 self.learn.yb = (self.y[self.learn._mask],)
