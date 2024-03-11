@@ -31,16 +31,11 @@ def create_random_missing_data(N, M,
         mask = np.random.choice([False, True],
                                 size=data.shape,
                                 p=[prop_missing, 1 - prop_missing])
-        # # Deterministic version (more or less exact proportion of missing)
-        # mask = np.full(N*M, True)
-        # mask[:int(N*M*prop_missing)] = False
-        # np.random.shuffle(mask)
-        # mask = mask.reshape(N, M)
         data = np.where(mask, data, np.nan)
     return data
 
 
-def create_long_df(N: int, M: int, prop_missing=0.1):
+def create_random_missing_data_long(N: int, M: int, prop_missing=0.1):
     """Build example long"""
     data = create_random_missing_data(N=N, M=M, prop_missing=prop_missing)
     df_long = long_format(pd.DataFrame(data))
