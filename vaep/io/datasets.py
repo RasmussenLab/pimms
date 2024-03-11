@@ -1,11 +1,10 @@
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
-
 import sklearn.pipeline
-
 import torch
 from torch.utils.data import Dataset
-from typing import Tuple
 
 DEFAULT_DTYPE = torch.get_default_dtype()
 
@@ -133,5 +132,3 @@ class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
         mask_isna, data = super().__getitem__(idx)
         target = to_tensor(self.target.iloc[idx])
         return mask_isna, data, target
-
-
