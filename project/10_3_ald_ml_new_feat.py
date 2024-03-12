@@ -25,28 +25,30 @@
 # 1. different set of features which were classified "significant" (is there signal)?
 
 # %%
+import logging
 from pathlib import Path
+
 import matplotlib.pyplot as plt
+import njab.sklearn
 import pandas as pd
 import sklearn
+from njab.plotting.metrics import plot_split_auc, plot_split_prc
+from njab.sklearn.types import Splits
 
 import vaep
 import vaep.analyzers
 import vaep.io.datasplits
 
-
-import vaep.sklearn
-from vaep.sklearn.types import Splits
-from vaep.plotting.metrics import plot_split_auc, plot_split_prc
-
 plt.rcParams['figure.figsize'] = (2.5, 2.5)
 plt.rcParams['lines.linewidth'] = 1
+plt.rcParams['lines.markersize'] = 2
 fontsize = 5
 figsize = (2.5, 2.5)
 vaep.plotting.make_large_descriptors(fontsize)
 
 
 logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.ERROR)
 
 # %%
 # catch passed parameters
@@ -211,19 +213,19 @@ pd.crosstab(target.squeeze(), target_to_group.squeeze())
 # ## Best number of parameters by CV
 
 # %%
-cv_feat_ald = vaep.sklearn.find_n_best_features(X=ald_study, y=target, name=args.target,
+cv_feat_ald = njab.sklearn.find_n_best_features(X=ald_study, y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_ald = cv_feat_ald.groupby('n_features').agg(['mean', 'std'])
 cv_feat_ald
 
 # %%
-cv_feat_all = vaep.sklearn.find_n_best_features(X=X, y=target, name=args.target,
+cv_feat_all = njab.sklearn.find_n_best_features(X=X, y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_all = cv_feat_all.groupby('n_features').agg(['mean', 'std'])
 cv_feat_all
 
 # %%
-cv_feat_new = vaep.sklearn.find_n_best_features(X=X.loc[:, new_features],
+cv_feat_new = njab.sklearn.find_n_best_features(X=X.loc[:, new_features],
                                                 y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_new = cv_feat_new.groupby('n_features').agg(['mean', 'std'])
@@ -252,23 +254,10 @@ idx_train = X_train.index
 idx_test = X_test.index
 
 # %%
-vaep.pandas.combine_value_counts(
+njab.pandas.combine_value_counts(
     pd.concat([y_train, y_test],
               axis=1,
               ignore_index=True,
-              )
-    .rename(columns={0: 'train', 1: 'test'})
-)
-
-# %%
-# y_train = y_train >= args.cutoff_target
-# y_test = y_test >= args.cutoff_target
-
-# %%
-vaep.pandas.combine_value_counts(
-    pd.concat([y_train, y_test],
-              axis=1,
-              ignore_index=True
               )
     .rename(columns={0: 'train', 1: 'test'})
 )
@@ -287,13 +276,13 @@ splits = Splits(X_train=X.loc[idx_train],
                 X_test=X.loc[idx_test],
                 y_train=y_train,
                 y_test=y_test)
-results_model_full = vaep.sklearn.run_model(
+results_model_full = njab.sklearn.run_model(
     splits,
     n_feat_to_select=n_feat_best.loc['test_roc_auc', 'all'])
 results_model_full.name = f'{args.model_key} all'
 fname = args.out_folder / f'results_{results_model_full.name}.pkl'
 files_out[fname.name] = fname
-results_model_full.to_pickle(fname)
+vaep.io.to_pickle(results_model_full, fname)
 
 
 # %%
@@ -306,13 +295,13 @@ splits = Splits(X_train=X.loc[idx_train, new_features],
                 X_test=X.loc[idx_test, new_features],
                 y_train=y_train,
                 y_test=y_test)
-results_model_new = vaep.sklearn.run_model(
+results_model_new = njab.sklearn.run_model(
     splits,
     n_feat_to_select=n_feat_best.loc['test_roc_auc', 'new'])
 results_model_new.name = f'{args.model_key} new'
 fname = args.out_folder / f'results_{results_model_new.name}.pkl'
 files_out[fname.name] = fname
-results_model_new.to_pickle(fname)
+vaep.io.to_pickle(results_model_new, fname)
 
 # %%
 splits_ald = Splits(
@@ -320,13 +309,13 @@ splits_ald = Splits(
     X_test=ald_study.loc[idx_test],
     y_train=y_train,
     y_test=y_test)
-results_ald_full = vaep.sklearn.run_model(
+results_ald_full = njab.sklearn.run_model(
     splits_ald,
     n_feat_to_select=n_feat_best.loc['test_roc_auc', 'ald'])
 results_ald_full.name = 'ALD study all'
 fname = args.out_folder / f'results_{results_ald_full.name}.pkl'
 files_out[fname.name] = fname
-results_ald_full.to_pickle(fname)
+vaep.io.to_pickle(results_ald_full, fname)
 
 # %% [markdown]
 # ### ROC-AUC
