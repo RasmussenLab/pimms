@@ -1,11 +1,10 @@
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
-
 import sklearn.pipeline
-
 import torch
 from torch.utils.data import Dataset
-from typing import Tuple
 
 DEFAULT_DTYPE = torch.get_default_dtype()
 
@@ -133,57 +132,3 @@ class DatasetWithTargetSpecifyTarget(DatasetWithMaskAndNoTarget):
         mask_isna, data = super().__getitem__(idx)
         target = to_tensor(self.target.iloc[idx])
         return mask_isna, data, target
-
-
-class PeptideDatasetInMemoryMasked(DatasetWithMaskAndNoTarget):
-    """Peptide Dataset fully in memory.
-
-    Dataset: torch.utils.data.Dataset
-    """
-
-    def __init__(self, *args, fill_na=0, **kwargs):
-        """[summary]
-
-        Parameters
-        ----------
-        data : pandas.DataFrame
-            Features. Each row contains a set of intensity values.
-        fill_na : int, optional
-            value to fill missing values, by default 0
-        """
-        self.fill_na = fill_na
-        super().__init__(*args, **kwargs)
-        self.data.fillna(self.fill_na, inplace=True)
-
-
-class PeptideDatasetInMemoryNoMissings(Dataset):
-    """Peptide Dataset fully in memory.
-
-    Dataset: torch.utils.data.Dataset
-    """
-
-    def __init__(self, data: pd.DataFrame, transform=None):
-        """Create {} instance.
-
-        Parameters
-        ----------
-        data : pandas.DataFrame
-            Features. Each row contains a set of intensity values.
-            No missings expected.
-        transform : Callable
-            Series of transform to be performed on the training data
-        """.format(self.__class__.__name__)
-        assert np.isnan(data).sum().sum(
-        ) == 0, f"There are {int(np.isnan(data).sum())} missing values."
-        self.peptides = np.array(data)
-        self.transform = transform
-        self.length_ = len(data)
-
-    def __len__(self):
-        return self.length_
-
-    def __getitem__(self, idx):
-        _peptide_intensities = self.peptides[idx]
-        if self.transform:
-            _peptide_intensities = self.transform(_peptide_intensities)
-        return _peptide_intensities
