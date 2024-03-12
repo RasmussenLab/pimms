@@ -19,19 +19,19 @@
 # - dumps top5
 
 # %%
+import logging
 from pathlib import Path
 
-import logging
-import matplotlib.pyplot as plt
-import pandas as pd
-
 import matplotlib
+import matplotlib.pyplot as plt
+import njab
+import pandas as pd
 import seaborn
 
 import vaep
 import vaep.analyzers
-import vaep.io.datasplits
 import vaep.imputation
+import vaep.io.datasplits
 
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
@@ -153,24 +153,22 @@ da_target.index.names = da_target.index.names[:-1] + ['frequency']
 fname = args.out_folder / 'equality_rejected_target.pkl'
 files_out[fname.name] = fname.as_posix()
 da_target.to_pickle(fname)
-
-count_rejected = vaep.pandas.combine_value_counts(da_target.droplevel(-1, axis=1))
+count_rejected = njab.pandas.combine_value_counts(da_target.droplevel(-1, axis=1))
 count_rejected.to_excel(writer, sheet_name='count_rejected')
 count_rejected
 
 # %%
-# ! This uses implicitly that RSN is not available for some protein groups
-# ! Make an explicit list of the 313 protein groups available in original data
+# # ! This uses implicitly that RSN is not available for some protein groups
+# # ! Make an explicit list of the 313 protein groups available in original data
 mask_common = da_target.notna().all(axis=1)
-count_rejected_common = vaep.pandas.combine_value_counts(da_target.loc[mask_common].droplevel(-1, axis=1))
+count_rejected_common = njab.pandas.combine_value_counts(da_target.loc[mask_common].droplevel(-1, axis=1))
 count_rejected_common.to_excel(writer, sheet_name='count_rejected_common')
 count_rejected_common
 
 # %%
-count_rejected_new = vaep.pandas.combine_value_counts(da_target.loc[~mask_common].droplevel(-1, axis=1))
+count_rejected_new = njab.pandas.combine_value_counts(da_target.loc[~mask_common].droplevel(-1, axis=1))
 count_rejected_new.to_excel(writer, sheet_name='count_rejected_new')
 count_rejected_new
-
 
 # %%
 da_target.to_excel(writer, sheet_name='equality_rejected_all')

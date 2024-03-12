@@ -3,10 +3,13 @@
 
 # %%
 from pathlib import Path
+
 import matplotlib.pyplot as plt
+import njab
 import pandas as pd
 
 import vaep
+
 plt.rcParams['figure.figsize'] = [4, 2]  # [16.0, 7.0] , [4, 3]
 vaep.plotting.make_large_descriptors(6)
 
@@ -52,7 +55,6 @@ files_out = dict()
 fname = out_folder / 'ald_reduced_dataset_plots.xlsx'
 files_out[fname.name] = fname.as_posix()
 writer = pd.ExcelWriter(fname)
-
 
 
 # %%
@@ -124,7 +126,7 @@ da_target_sel_counts = (da_target_sel[ORDER_MODELS]
      1: 'TP'}
 ).droplevel(-1, axis=1)
 )
-da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
+da_target_sel_counts = njab.pandas.combine_value_counts(da_target_sel_counts)
 ax = da_target_sel_counts.T.plot.bar(ylabel='count')
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'lost_signal_da_counts.pdf'
@@ -168,7 +170,7 @@ da_target_sel_counts = (da_target_sel[ORDER_MODELS]
      1: 'FP'}
 ).droplevel(-1, axis=1)
 )
-da_target_sel_counts = vaep.pandas.combine_value_counts(da_target_sel_counts)
+da_target_sel_counts = njab.pandas.combine_value_counts(da_target_sel_counts)
 ax = da_target_sel_counts.T.plot.bar(ylabel='count')
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'gained_signal_da_counts.pdf'
