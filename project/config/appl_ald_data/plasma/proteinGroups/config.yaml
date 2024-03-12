@@ -2,7 +2,7 @@
 config_split: config/appl_ald_data/plasma/proteinGroups/split.yaml
 config_train: config/appl_ald_data/plasma/proteinGroups/train_{model}.yaml
 folder_experiment: runs/appl_ald_data_2023_11/plasma/proteinGroups
-fn_rawfile_metadata: data/ALD_study/processed/raw_meta.csv
+fn_rawfile_metadata: data/ALD_study/processed/ald_metadata_cli.csv
 file_format: pkl
 models:
   - RSN

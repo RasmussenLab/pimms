@@ -18,16 +18,20 @@
 
 # %%
 import logging
+
 import pandas as pd
 import sklearn
+import sklearn.impute
+from IPython.display import display
+
 import vaep
 import vaep.model
 import vaep.models as models
-from vaep.models import ae
-from vaep.io import datasplits
-from vaep import sampling
-
 import vaep.nb
+from vaep import sampling
+from vaep.io import datasplits
+from vaep.models import ae
+
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
@@ -183,9 +187,6 @@ if args.save_pred_real_na:
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
-# > Could be changed.
 
 # %% [markdown]
 # ### Validation data
@@ -236,6 +237,7 @@ metrics_df
 # save simulated missing values for both splits
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+
 # %% [markdown]
 # ## Config
 

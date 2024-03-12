@@ -171,8 +171,8 @@ rule train_models:
         err="{folder_experiment}/01_1_train_{model}.e",
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
-    log:
-        err="{folder_experiment}/01_1_train_{model}.log",
+    # log:
+    #     err="{folder_experiment}/01_1_train_{model}.log",
     conda:
         "vaep"
     shell:
@@ -181,7 +181,7 @@ rule train_models:
         " -r folder_experiment {params.folder_experiment:q}"
         " -p fn_rawfile_metadata {params.meta_data:q}"
         " -r model_key {wildcards.model:q}"
-        " 2> {log.err}"
+        # " 2> {log.err}"
         " && jupyter nbconvert --to html {output.nb:q}"
 
 
