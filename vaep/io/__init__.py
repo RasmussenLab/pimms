@@ -1,8 +1,9 @@
-from collections import namedtuple
-import logging
-from typing import List, Tuple, Union
 import json
+import logging
+import pickle
+from collections import namedtuple
 from pathlib import Path, PurePath, PurePosixPath
+from typing import List, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -118,6 +119,16 @@ def dump_json(data_dict: dict, filename: Union[str, Path]):
     """
     with open(filename, 'w') as f:
         json.dump(obj=data_dict, fp=f, indent=4)
+
+
+def to_pickle(obj, fname):
+    with open(fname, 'wb') as f:
+        pickle.dump(obj, f)
+
+
+def from_pickle(fname):
+    with open(fname, 'rb') as f:
+        return pickle.load(f)
 
 
 def load_json(fname: Union[str, Path]) -> dict:
