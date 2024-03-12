@@ -23,17 +23,16 @@
 # %%
 import logging
 from pathlib import Path
-import matplotlib.pyplot as plt
-from IPython.display import display
 
+import matplotlib.pyplot as plt
+import njab.stats
 import pandas as pd
+from IPython.display import display
 
 import vaep
 import vaep.analyzers
-import vaep.io.datasplits
 import vaep.imputation
-import vaep.stats
-
+import vaep.io.datasplits
 import vaep.nb
 
 logger = vaep.logging.setup_nb_logger()
@@ -352,13 +351,14 @@ if pred_real_na is not None:
 
 # %% [markdown]
 # Targets - Clinical variables
-# %%
-scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
-                                          df_clinic=df_clinic,
-                                          target=args.target,
-                                          covar=args.covar,
-                                          value_name=args.value_name)
 
+# %%
+scores = njab.stats.ancova.AncovaAll(df_proteomics=df,
+                                     df_clinic=df_clinic,
+                                     target=args.target,
+                                     covar=args.covar,
+                                     value_name=args.value_name
+                                     ).ancova()
 scores
 
 # %%
