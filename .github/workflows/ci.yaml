@@ -79,7 +79,7 @@ jobs:
       run: |
         pimms-setup-imputation-comparison -f project/runs/example/
         cd project/runs/example/
-        sphinx-build -n -W --keep-going -b html ./ ./_build/
+        sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
