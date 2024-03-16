@@ -77,7 +77,6 @@ jobs:
         pip install .[docs]
     - name: Build imputation comparison website
       run: |
-        cd project
         pimms-setup-imputation-comparison -f project/runs/example/
         cd project/runs/example/
         sphinx-build -n -W --keep-going -b html ./ ./_build/
