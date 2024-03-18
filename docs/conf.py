@@ -12,9 +12,6 @@
 #
 import os
 from importlib import metadata
-# import sys
-# sys.path.insert(0, os.path.abspath('../.'))
-
 
 # -- Project information -----------------------------------------------------
 
@@ -39,6 +36,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'myst_nb',
+    'sphinx_new_tab_link',
 ]
 
 myst_enable_extensions = [
@@ -72,7 +70,7 @@ templates_path = ['_templates']
 exclude_patterns = ['_build',
                     'Thumbs.db',
                     '.DS_Store',
-                    # 'README.md',
+                    'jupyter_execute',  # avoid local re-execution of written nbs during development
                     ]
 
 # Intersphinx options
