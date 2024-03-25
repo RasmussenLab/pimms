@@ -19,25 +19,24 @@
 # Create data splits
 
 # %%
+import logging
 from functools import partial
 from pathlib import Path
-import logging
-from typing import Union, List
+from typing import List, Union
 
-from IPython.display import display
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 import plotly.express as px
+from IPython.display import display
+from sklearn.model_selection import train_test_split
 
 import vaep
+import vaep.io.load
+from vaep.analyzers import analyzers
 from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
-
-from vaep.analyzers import analyzers
 from vaep.sklearn import get_PCA
-import vaep.io.load
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
@@ -56,7 +55,7 @@ def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 
 
 pd.options.display.max_columns = 32
-plt.rcParams['figure.figsize'] = [3, 2]
+plt.rcParams['figure.figsize'] = [4, 2]
 
 vaep.plotting.make_large_descriptors(7)
 
@@ -93,6 +92,8 @@ meta_cat_col: str = None  # category column in meta data
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
 prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
+feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
+
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -101,7 +102,6 @@ args
 # %%
 args = vaep.nb.args_from_dict(args)
 args
-
 
 # %%
 if not 0.0 <= args.frac_mnar <= 1.0:
@@ -382,6 +382,7 @@ ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
 
 fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
+
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -389,21 +390,34 @@ vaep.savefig(ax.get_figure(), fname)
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
+if args.feat_name_display:
+    ax.set_xlabel(
+        f'{args.feat_name_display.capitalize()} binned by their median intensity'
+        f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
-    data=df, type='boxplot')
+ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
+if args.feat_name_display:
+    ax.set_xlabel(
+        f'{args.feat_name_display.capitalize()} binned by their median intensity'
+        f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+_data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
+# _data_feat_median_over_prop_missing.to_excel(fname.with_suffix('.xlsx'))
+del _data_feat_median_over_prop_missing
 
 # %% [markdown]
 # ### Interactive and Single plots
 
 # %%
-sample_counts.name = 'identified features'
+_feature_display_name = 'identified features'
+if args.feat_name_display:
+    _feature_display_name = f'identified {args.feature_name_display}'
 
 # %%
 K = 2
@@ -448,7 +462,7 @@ analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
     pcs[col_identified_feat],
-    title=f'by {col_identified_feat}',
+    title=f'by {_feature_display_name}',
     size=5,
 )
 fname = (args.out_figures
