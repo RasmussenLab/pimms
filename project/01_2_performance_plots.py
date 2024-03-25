@@ -28,22 +28,22 @@
 
 # %%
 import logging
-import yaml
 import random
 from pathlib import Path
 
-from IPython.display import display
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import yaml
+from IPython.display import display
 
 import vaep
 import vaep.imputation
 import vaep.models
-from vaep.models.collect_dumps import collect, select_content
-from vaep.io import datasplits
-from vaep.analyzers import compare_predictions
 import vaep.nb
+from vaep.analyzers import compare_predictions
+from vaep.io import datasplits
+from vaep.models.collect_dumps import collect, select_content
 
 pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
@@ -547,7 +547,7 @@ corr_per_sample_test.loc[mask].style.highlight_min(
 feature_names = pred_test.index.levels[-1]
 N_SAMPLES = pred_test.index
 M = len(feature_names)
-pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
+pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M - 1)]], :]
 
 # %%
 options = random.sample(set(feature_names), 1)
