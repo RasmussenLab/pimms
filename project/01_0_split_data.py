@@ -417,7 +417,8 @@ del _data_feat_median_over_prop_missing
 # %%
 _feature_display_name = 'identified features'
 if args.feat_name_display:
-    _feature_display_name = f'identified {args.feature_name_display}'
+    _feature_display_name = f'identified {args.feat_name_display}'
+sample_counts.name = _feature_display_name
 
 # %%
 K = 2
@@ -457,7 +458,7 @@ if args.meta_date_col != 'PlaceholderTime':
 
 # %%
 fig, ax = plt.subplots()
-col_identified_feat = 'identified features'
+col_identified_feat = _feature_display_name
 analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
@@ -471,11 +472,14 @@ figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
 # %%
+_feature_name = 'features'
+if args.feat_name_display:
+    _feature_name = args.feat_name_display
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {args.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} {_feature_name} for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
