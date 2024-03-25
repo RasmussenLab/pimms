@@ -49,7 +49,7 @@ pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
-plt.rcParams.update({'figure.figsize': (3, 2)})
+plt.rcParams.update({'figure.figsize': (4, 2)})
 vaep.plotting.make_large_descriptors(7)
 
 logger = vaep.logging.setup_nb_logger()
@@ -650,15 +650,14 @@ _to_plot
 
 
 # %%
-
-fig, ax = plt.subplots(figsize=(6, 2))
+fig, ax = plt.subplots(figsize=(4, 2))  # size of the plot can be adjusted
 ax = _to_plot.loc[[feature_names.name]].plot.bar(
     rot=0,
-    ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
+    ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY}\n({n_in_comparison:,} intensities)",
     # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
     color=COLORS_TO_USE,
     ax=ax,
-    width=.8)
+    width=.7)
 ax = vaep.plotting.add_height_to_barplot(ax, size=7)
 ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=7)
 ax.set_xticklabels([])
@@ -694,6 +693,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     palette=COLORS_TO_USE
 )
 vaep.plotting.make_large_descriptors(6)
+ax.legend(loc='upper right', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -748,10 +748,11 @@ if SEL_MODELS:
         color=vaep.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS)),
         ax=ax,
-        width=.8)
+        width=.7)
     ax = vaep.plotting.add_height_to_barplot(ax, size=5)
     ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
     ax.set_xticklabels([])
+
     fname = args.out_figures / f'2_{group}_performance_test_sel.pdf'
     figures[fname.stem] = fname
     vaep.savefig(fig, name=fname)
@@ -783,6 +784,7 @@ if SEL_MODELS:
             list(k.upper() for k in SEL_MODELS))
     )
     # ax.set_ylim(0, 1.5)
+    ax.legend(loc='upper right', ncols=len(SEL_MODELS))
     # for text in ax.legend().get_texts():
     #     text.set_fontsize(6)
     fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
