@@ -904,8 +904,8 @@ medians = medians.apply(lambda s: "{:02,d} (N={:3,d})".format(*s), axis=1)
 fig, ax = plt.subplots(figsize=(6, 2))
 s = 1
 s_axes = pd.DataFrame({'medians': medians,
-                       'validation split': splits.val_y.notna().sum(),
-                       'training split': splits.train_X.notna().sum()}
+                       'Validation split': splits.val_y.notna().sum(),
+                       'Training split': splits.train_X.notna().sum()}
                       ).plot.box(by='medians',
                                  boxprops=dict(linewidth=s),
                                  flierprops=dict(markersize=s),
@@ -914,7 +914,7 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
-
+    _ = ax.set_ylabel('Frequency')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
