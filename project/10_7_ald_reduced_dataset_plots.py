@@ -25,6 +25,10 @@ CUTOFF = 0.05
 COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
 COLORS_TO_USE_MAPPTING[NONE_COL_NAME] = COLORS_TO_USE_MAPPTING['None']
 
+COLORS_CONTIGENCY_TABLE = {
+    k: f'C{i}' for i, k in enumerate(['FP', 'TN', 'TP', 'FN'])
+}
+
 
 def plot_qvalues(df, x: str, y: list, ax=None, cutoff=0.05,
                  alpha=1.0, style='.', markersize=3):
@@ -127,7 +131,9 @@ da_target_sel_counts = (da_target_sel[ORDER_MODELS]
 ).droplevel(-1, axis=1)
 )
 da_target_sel_counts = njab.pandas.combine_value_counts(da_target_sel_counts)
-ax = da_target_sel_counts.T.plot.bar(ylabel='count')
+ax = da_target_sel_counts.T.plot.bar(ylabel='count',
+                                     color=[COLORS_CONTIGENCY_TABLE['FN'],
+                                            COLORS_CONTIGENCY_TABLE['TP']])
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'lost_signal_da_counts.pdf'
 files_out[fname.name] = fname.as_posix()
@@ -171,7 +177,9 @@ da_target_sel_counts = (da_target_sel[ORDER_MODELS]
 ).droplevel(-1, axis=1)
 )
 da_target_sel_counts = njab.pandas.combine_value_counts(da_target_sel_counts)
-ax = da_target_sel_counts.T.plot.bar(ylabel='count')
+ax = da_target_sel_counts.T.plot.bar(ylabel='count',
+                                     color=[COLORS_CONTIGENCY_TABLE['TN'],
+                                            COLORS_CONTIGENCY_TABLE['FP']])
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'gained_signal_da_counts.pdf'
 files_out[fname.name] = fname.as_posix()

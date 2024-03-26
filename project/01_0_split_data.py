@@ -19,25 +19,24 @@
 # Create data splits
 
 # %%
+import logging
 from functools import partial
 from pathlib import Path
-import logging
-from typing import Union, List
+from typing import List, Union
 
-from IPython.display import display
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 import plotly.express as px
+from IPython.display import display
+from sklearn.model_selection import train_test_split
 
 import vaep
+import vaep.io.load
+from vaep.analyzers import analyzers
 from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
-
-from vaep.analyzers import analyzers
 from vaep.sklearn import get_PCA
-import vaep.io.load
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
@@ -56,7 +55,7 @@ def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 
 
 pd.options.display.max_columns = 32
-plt.rcParams['figure.figsize'] = [3, 2]
+plt.rcParams['figure.figsize'] = [4, 2]
 
 vaep.plotting.make_large_descriptors(7)
 
@@ -93,6 +92,8 @@ meta_cat_col: str = None  # category column in meta data
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
 prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
+feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
+
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -101,7 +102,6 @@ args
 # %%
 args = vaep.nb.args_from_dict(args)
 args
-
 
 # %%
 if not 0.0 <= args.frac_mnar <= 1.0:
@@ -382,6 +382,7 @@ ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
 
 fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
+
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -389,21 +390,35 @@ vaep.savefig(ax.get_figure(), fname)
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
+if args.feat_name_display:
+    ax.set_xlabel(
+        f'{args.feat_name_display.capitalize()} binned by their median intensity'
+        f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
-    data=df, type='boxplot')
+ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
+if args.feat_name_display:
+    ax.set_xlabel(
+        f'{args.feat_name_display.capitalize()} binned by their median intensity'
+        f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+_data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
+# _data_feat_median_over_prop_missing.to_excel(fname.with_suffix('.xlsx'))
+del _data_feat_median_over_prop_missing
 
 # %% [markdown]
 # ### Interactive and Single plots
 
 # %%
-sample_counts.name = 'identified features'
+_feature_display_name = 'identified features'
+if args.feat_name_display:
+    _feature_display_name = f'identified {args.feat_name_display}'
+sample_counts.name = _feature_display_name
 
 # %%
 K = 2
@@ -443,12 +458,12 @@ if args.meta_date_col != 'PlaceholderTime':
 
 # %%
 fig, ax = plt.subplots()
-col_identified_feat = 'identified features'
+col_identified_feat = _feature_display_name
 analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
     pcs[col_identified_feat],
-    title=f'by {col_identified_feat}',
+    title=f'by {_feature_display_name}',
     size=5,
 )
 fname = (args.out_figures
@@ -457,11 +472,14 @@ figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
 # %%
+_feature_name = 'features'
+if args.feat_name_display:
+    _feature_name = args.feat_name_display
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {args.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} {_feature_name} for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
@@ -886,8 +904,8 @@ medians = medians.apply(lambda s: "{:02,d} (N={:3,d})".format(*s), axis=1)
 fig, ax = plt.subplots(figsize=(6, 2))
 s = 1
 s_axes = pd.DataFrame({'medians': medians,
-                       'validation split': splits.val_y.notna().sum(),
-                       'training split': splits.train_X.notna().sum()}
+                       'Validation split': splits.val_y.notna().sum(),
+                       'Training split': splits.train_X.notna().sum()}
                       ).plot.box(by='medians',
                                  boxprops=dict(linewidth=s),
                                  flierprops=dict(markersize=s),
@@ -896,7 +914,7 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
-
+    _ = ax.set_ylabel('Frequency')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
