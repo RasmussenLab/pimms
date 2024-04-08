@@ -140,6 +140,11 @@ df = constructor(fname=args.FN_INTENSITIES,
                  )
 if args.column_names:
     df.columns.names = args.column_names
+if args.feat_name_display is None:
+    args.overwrite_entry('feat_name_display', 'features')
+    if args.column_names:
+        args.overwrite_entry('feat_name_display', args.column_names[0])
+
 
 if not df.index.name:
     logger.warning("No sample index name found, setting to 'Sample ID'")
@@ -158,7 +163,7 @@ ax = (df
       .plot
       .box()
       )
-ax.set_ylabel('number of observation across samples')
+ax.set_ylabel('Frequency')
 
 
 # %%
@@ -355,7 +360,7 @@ args.used_samples = df.index.to_list()
 # %%
 group = 1
 ax = df.notna().sum(axis=1).hist()
-ax.set_xlabel('features per eligable sample')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} per eligable sample')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
@@ -366,7 +371,7 @@ ax = df.notna().sum(axis=0).sort_values().plot()
 _new_labels = [l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()]
 _ = ax.set_xticklabels(_new_labels, rotation=45,
                        horizontalalignment='right')
-ax.set_xlabel('feature prevalence')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} prevalence')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_feature_prevalence'
 figures[fname.stem] = fname
@@ -380,7 +385,7 @@ vaep.savefig(ax.get_figure(), fname)
 min_max = vaep.plotting.data.min_max(df.stack())
 ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
-
+ax.set_xlabel('Intensity binned')
 fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
 
 figures[fname.stem] = fname
@@ -390,10 +395,9 @@ vaep.savefig(ax.get_figure(), fname)
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
-if args.feat_name_display:
-    ax.set_xlabel(
-        f'{args.feat_name_display.capitalize()} binned by their median intensity'
-        f' (N {args.feat_name_display})')
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -401,10 +405,9 @@ vaep.savefig(ax.get_figure(), fname)
 ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
-if args.feat_name_display:
-    ax.set_xlabel(
-        f'{args.feat_name_display.capitalize()} binned by their median intensity'
-        f' (N {args.feat_name_display})')
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 _data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
@@ -415,9 +418,7 @@ del _data_feat_median_over_prop_missing
 # ### Interactive and Single plots
 
 # %%
-_feature_display_name = 'identified features'
-if args.feat_name_display:
-    _feature_display_name = f'identified {args.feat_name_display}'
+_feature_display_name = f'identified {args.feat_name_display}'
 sample_counts.name = _feature_display_name
 
 # %%
@@ -463,7 +464,7 @@ analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
     pcs[col_identified_feat],
-    title=f'by {_feature_display_name}',
+    feat_name_display=args.feat_name_display,
     size=5,
 )
 fname = (args.out_figures
@@ -472,14 +473,15 @@ figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
 # %%
-_feature_name = 'features'
-if args.feat_name_display:
-    _feature_name = args.feat_name_display
+# # ! write principal components to excel (if needed)
+# pcs.set_index([df.index.name])[[*pcs_name, col_identified_feat]].to_excel(fname.with_suffix('.xlsx'))
+
+# %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {args.M} {_feature_name} for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} {args.feat_name_display} for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
@@ -832,7 +834,8 @@ _ = (splits
 ax.legend(_legend[:-1])
 if args.use_every_nth_xtick > 1:
     ax.set_xticks(ax.get_xticks()[::2])
-fname = args.out_figures / f'0_{group}_test_over_train_split.pdf'
+ax.set_xlabel('Intensity bins')
+fname = args.out_figures / f'0_{group}_val_over_train_split.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -914,6 +917,8 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
+    ax.set_xlabel(f'{args.feat_name_display.capitalize()} binned by their median intensity '
+                  f'(N {args.feat_name_display})')
     _ = ax.set_ylabel('Frequency')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
