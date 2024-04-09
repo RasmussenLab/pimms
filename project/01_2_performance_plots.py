@@ -97,7 +97,7 @@ models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
 sel_models: str = ''  # user defined comparison (comma separated)
 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 plot_to_n: int = 5
-feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
+feat_name_display: str = None  # display name for feature name in plural (e.g. 'protein groups')
 save_agg_pred: bool = False  # save aggregated predictions of validation and test data
 
 
@@ -386,9 +386,21 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,)
 ax.set_ylabel(f"Average error ({METRIC})")
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_errors_binned_by_feat_median_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
+
+# %%
+# # ! only used for reporting
+plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+    errors=errors_binned,
+    feat_name=FEAT_NAME_DISPLAY,
+    metric_name=METRIC
+)
+plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+plotted
+
 
 # %%
 errors_binned.head()
@@ -680,7 +692,7 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 
 # %%
 vaep.plotting.make_large_descriptors(7)
-fig, ax = plt.subplots(figsize=(6, 2))
+fig, ax = plt.subplots(figsize=(8, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred=pred_test[
@@ -692,8 +704,8 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     metric_name=METRIC,
     palette=COLORS_TO_USE
 )
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 vaep.plotting.make_large_descriptors(6)
-ax.legend(loc='upper right', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -701,6 +713,17 @@ vaep.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned
+
+# %%
+# # ! only used for reporting
+plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+    errors=errors_binned,
+    feat_name=FEAT_NAME_DISPLAY,
+    metric_name=METRIC
+)
+plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+plotted
+
 
 # %%
 (errors_binned
@@ -749,6 +772,7 @@ if SEL_MODELS:
             list(k.upper() for k in SEL_MODELS)),
         ax=ax,
         width=.7)
+    ax.legend(loc='best', ncols=len(SEL_MODELS))
     ax = vaep.plotting.add_height_to_barplot(ax, size=5)
     ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
     ax.set_xticklabels([])
@@ -784,7 +808,7 @@ if SEL_MODELS:
             list(k.upper() for k in SEL_MODELS))
     )
     # ax.set_ylim(0, 1.5)
-    ax.legend(loc='upper right', ncols=len(SEL_MODELS))
+    ax.legend(loc='best', ncols=len(SEL_MODELS))
     # for text in ax.legend().get_texts():
     #     text.set_fontsize(6)
     fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
@@ -795,6 +819,16 @@ if SEL_MODELS:
     vaep.plotting.make_large_descriptors(6)
     # ax.xaxis.set_tick_params(rotation=0) # horizontal
     display(errors_binned)
+    # %%
+    # # ! only used for reporting
+    plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+        errors=errors_binned,
+        feat_name=FEAT_NAME_DISPLAY,
+        metric_name=METRIC
+    )
+    plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+    plotted
+
 
 # %% [markdown]
 # ### Error by non-decimal number of intensity
@@ -811,6 +845,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,
 )
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_int.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
