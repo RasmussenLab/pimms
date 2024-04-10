@@ -139,14 +139,17 @@ data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
 # %%
-fig, axes = plt.subplots(1, 2, sharey=True)
+fig, axes = plt.subplots(1, 2, sharey=True, sharex=True)
 
 vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
-                                     title='Validation split', size=1)
+                                     title='Validation split', size=1, xlabel='')
 vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
-                                     title='Test split', size=1)
-
+                                     title='Test split', size=1, xlabel='')
 fig.suptitle("Simulated missing values per sample", size=8)
+# hide axis and use only for common x label
+fig.add_subplot(111, frameon=False)
+plt.tick_params(labelcolor='none', which='both', top=False, bottom=False, left=False, right=False)
+plt.xlabel(f'Samples ordered by identified {data.val_y.index.names[-1]}')
 group = 1
 fname = args.out_figures / f'2_{group}_fake_na_val_test_splits.png'
 figures[fname.stem] = fname
@@ -163,7 +166,9 @@ freq_feat.head()  # training data
 
 # %%
 prop = freq_feat / len(data.train_X.index.levels[0])
-prop.sort_values().to_frame().plot()
+prop.sort_values().to_frame().plot(
+    xlabel=f'{data.val_y.index.names[-1]}',
+    ylabel='Proportion of identification in samples')
 
 # %% [markdown]
 # View training data in wide format
@@ -287,24 +292,6 @@ TOP_N_COLOR_PALETTE = {model: color for model,
                        color in zip(TOP_N_ORDER, COLORS_TO_USE)}
 TOP_N_ORDER
 
-# %% [markdown]
-# ### Correlation overall
-
-# %%
-pred_val_corr = pred_val.corr()
-ax = (pred_val_corr
-      .loc[TARGET_COL, ORDER_MODELS]
-      .plot
-      .bar(
-          # title='Correlation between Fake NA and model predictions on validation data',
-          ylabel='correlation overall'))
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                   horizontalalignment='right')
-fname = args.out_figures / f'2_{group}_pred_corr_val_overall.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-pred_val_corr
 
 # %% [markdown]
 # ### Correlation per sample
@@ -466,7 +453,7 @@ for model, color, ax in zip(
         COLORS_TO_USE[:top_n],
         axes):
 
-    ax, _ = vaep.plotting.data.plot_histogram_intensities(
+    ax, bins = vaep.plotting.data.plot_histogram_intensities(
         pred_test[TARGET_COL],
         color='grey',
         min_max=min_max,
@@ -489,23 +476,18 @@ fname = args.out_figures / f'2_{group}_intensity_binned_top_{top_n}_models_test.
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
-# %% [markdown]
-# ### Correlation overall
-
 # %%
-pred_test_corr = pred_test.corr()
-ax = pred_test_corr.loc[TARGET_COL, ORDER_MODELS].plot.bar(
-    # title='Corr. between Fake NA and model predictions on test data',
-    ylabel='correlation coefficient overall',
-    ylim=(0.7, 1)
-)
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                   horizontalalignment='right')
-fname = args.out_figures / f'2_{group}_pred_corr_test_overall.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-pred_test_corr
+counts_per_bin = dict()
+for col in [TARGET_COL, *ORDER_MODELS[:top_n]]:
+    _series = (pd.cut(pred_test[col], bins=bins)
+               .to_frame()
+               .groupby(col)
+               .size())
+    _series.index.name = 'bin'
+    counts_per_bin[col] = _series
+counts_per_bin = pd.DataFrame(counts_per_bin)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %% [markdown]
 # ### Correlation per sample
@@ -628,6 +610,7 @@ if not view.empty:
             )
 else:
     print("None found")
+
 # %% [markdown]
 # ### Error plot
 
@@ -814,12 +797,13 @@ if SEL_MODELS:
     fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
     figures[fname.stem] = fname
     vaep.savefig(ax.get_figure(), name=fname)
+    plt.show(fig)
+
     dumps[fname.stem] = fname.with_suffix('.csv')
     errors_binned.to_csv(fname.with_suffix('.csv'))
     vaep.plotting.make_large_descriptors(6)
     # ax.xaxis.set_tick_params(rotation=0) # horizontal
-    display(errors_binned)
-    # %%
+
     # # ! only used for reporting
     plotted = vaep.plotting.errors.get_data_for_errors_by_median(
         errors=errors_binned,
@@ -827,7 +811,7 @@ if SEL_MODELS:
         metric_name=METRIC
     )
     plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
-    plotted
+    display(plotted)
 
 
 # %% [markdown]
