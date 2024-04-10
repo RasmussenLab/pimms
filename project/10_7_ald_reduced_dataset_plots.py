@@ -115,7 +115,7 @@ mask_lost_sign = (
 )
 sel = qvalues_sel.loc[mask_lost_sign.squeeze()]
 sel.columns = sel.columns.droplevel(-1)
-sel = sel[ORDER_MODELS + [REF_MODEL]]
+sel = sel[ORDER_MODELS + [REF_MODEL]].sort_values(REF_MODEL)
 sel.to_excel(writer, sheet_name='lost_signal_qvalues')
 sel
 
@@ -136,6 +136,7 @@ ax = da_target_sel_counts.T.plot.bar(ylabel='count',
                                             COLORS_CONTIGENCY_TABLE['TP']])
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'lost_signal_da_counts.pdf'
+da_target_sel_counts.fillna(0).to_excel(writer, sheet_name=fname.stem)
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(ax.figure, fname)
 
@@ -163,7 +164,7 @@ mask_gained_signal = (
 )
 sel = qvalues_sel.loc[mask_gained_signal.squeeze()]
 sel.columns = sel.columns.droplevel(-1)
-sel = sel[ORDER_MODELS + [REF_MODEL]]
+sel = sel[ORDER_MODELS + [REF_MODEL]].sort_values(REF_MODEL)
 sel.to_excel(writer, sheet_name='gained_signal_qvalues')
 sel
 
@@ -182,6 +183,7 @@ ax = da_target_sel_counts.T.plot.bar(ylabel='count',
                                             COLORS_CONTIGENCY_TABLE['FP']])
 ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'gained_signal_da_counts.pdf'
+da_target_sel_counts.fillna(0).to_excel(writer, sheet_name=fname.stem)
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(ax.figure, fname)
 
