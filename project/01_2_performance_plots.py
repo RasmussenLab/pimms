@@ -477,15 +477,10 @@ figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
 # %%
-counts_per_bin = dict()
-for col in [TARGET_COL, *ORDER_MODELS[:top_n]]:
-    _series = (pd.cut(pred_test[col], bins=bins)
-               .to_frame()
-               .groupby(col)
-               .size())
-    _series.index.name = 'bin'
-    counts_per_bin[col] = _series
-counts_per_bin = pd.DataFrame(counts_per_bin)
+counts_per_bin = vaep.pandas.get_counts_per_bin(df=pred_test,
+                                                bins=bins,
+                                                columns=[TARGET_COL, *ORDER_MODELS[:top_n]])
+
 counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
 counts_per_bin
 

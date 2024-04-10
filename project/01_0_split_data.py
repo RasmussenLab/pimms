@@ -858,6 +858,11 @@ figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
+counts_per_bin = vaep.pandas.get_counts_per_bin(df=splits_df, bins=bins)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
+
+# %%
 ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
                                                xticks=list(bins),
                                                color=['C1', 'C2'],
@@ -872,6 +877,22 @@ ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = args.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
+
+# %%
+# Save binned counts
+
+# %%
+counts_per_bin = dict()
+for col in splits_df.columns:
+    _series = (pd.cut(splits_df[col], bins=bins)
+               .to_frame()
+               .groupby(col)
+               .size())
+    _series.index.name = 'bin'
+    counts_per_bin[col] = _series
+counts_per_bin = pd.DataFrame(counts_per_bin)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %% [markdown]
 # plot training data missing plots

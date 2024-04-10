@@ -1,7 +1,7 @@
 import collections.abc
 from collections import namedtuple
 from types import SimpleNamespace
-from typing import Iterable
+from typing import Iterable, List, Optional
 
 import numpy as np
 import omegaconf
@@ -283,3 +283,19 @@ def get_lower_whiskers(df: pd.DataFrame, factor: float = 1.5) -> pd.Series:
     iqr = ret.loc['75%'] - ret.loc['25%']
     ret = ret.loc['25%'] - iqr * factor
     return ret
+
+
+def get_counts_per_bin(df: pd.DataFrame, bins: range, columns: Optional[List[str]] = None):
+    """Return counts per bin for selected columns in DataFrame."""
+    counts_per_bin = dict()
+    if columns is None:
+        columns = df.columns.to_list()
+    for col in columns:
+        _series = (pd.cut(df[col], bins=bins)
+                   .to_frame()
+                   .groupby(col)
+                   .size())
+        _series.index.name = 'bin'
+        counts_per_bin[col] = _series
+    counts_per_bin = pd.DataFrame(counts_per_bin)
+    return counts_per_bin
