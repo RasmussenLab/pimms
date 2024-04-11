@@ -14,18 +14,18 @@
 # ---
 
 # %%
+import logging
 from pathlib import Path
-import pandas as pd
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import seaborn as sns
 
-import vaep.pandas
 import vaep.nb
-
-import logging
+import vaep.pandas
 import vaep.plotting
 from vaep.logging import setup_logger
+
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
@@ -102,19 +102,37 @@ view_long = (selected.stack()
 view_long
 
 # %%
-ax = sns.barplot(x='data level',
-                 y='MAE',
-                 hue='model',
-                 order=IDX[0],
-                 palette=vaep.plotting.defaults.color_model_mapping,
-                 ci=95,
-                 errwidth=1.5,
-                 data=view_long)
-ax.set_xlabel('')
-fig = ax.get_figure()
+# individual points overlaid on bar plot:
+# seaborn 12.2
+# https://stackoverflow.com/a/69398767/9684872
+sns.set_theme(context='paper', )  # font_scale=.8)
+sns.set_style("whitegrid")
+g = sns.catplot(x="data level", y="MAE", hue='model', data=view_long,
+                kind="bar",
+                errorbar="ci",  # ! 95% confidence interval bootstrapped (using 1000 draws by default)
+                edgecolor="black",
+                errcolor="black",
+                hue_order=IDX[1],
+                order=IDX[0],
+                palette=vaep.plotting.defaults.color_model_mapping,
+                alpha=0.9,
+                height=2,  # set the height of the figure
+                aspect=1.8  # set the aspect ratio of the figure
+                )
+
+# map data to stripplot
+g.map(sns.stripplot, 'data level', 'MAE', 'model',
+      hue_order=IDX[1], order=IDX[0],
+      palette=vaep.plotting.defaults.color_model_mapping,
+      dodge=True, alpha=1, ec='k', linewidth=1,
+      s=2)
+
+fig = g.figure
+ax = fig.get_axes()[0]
+_ = ax.set_xlabel('')
 
 # %%
-vaep.savefig(fig, FOLDER / "model_performance_repeated_runs.pdf")
+vaep.savefig(fig, FOLDER / "model_performance_repeated_runs.pdf", tight_layout=False)
 
 # %%
 writer.close()
