@@ -1,21 +1,21 @@
 from __future__ import annotations
 
-from functools import partial
-import numpy as np
-import pandas as pd
-import matplotlib
 import logging
 import pathlib
+from functools import partial
+
+import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn
 
 import vaep.pandas
 
+from . import data, defaults, errors, plotly
 from .errors import plot_rolling_error
-from . import errors
-from . import data
-from . import plotly
-from . defaults import order_categories, labels_dict, IDX_ORDER
+
+# from . defaults import order_categories, labels_dict, IDX_ORDER
 
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = ['plotly',
            'data',
+           'defaults',
            'errors',
            'plot_rolling_error',
            # define in this file

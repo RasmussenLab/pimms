@@ -3,16 +3,16 @@ import logging
 from typing import Tuple
 
 import pandas as pd
-
-from fastai.tabular.all import *
-from fastai.collab import *
 # import explicit objects for functional annotations
-from fastai.collab import (CollabDataLoaders, IndexSplitter, TabularCollab, Categorify, TransformBlock)
+from fastai.collab import *
+from fastai.collab import (Categorify, CollabDataLoaders, IndexSplitter,
+                           TabularCollab, TransformBlock)
+from fastai.tabular.all import *
+
+import vaep.io.dataloaders
+import vaep.io.datasplits
 
 from . import analysis
-import vaep.io.datasplits
-import vaep.io.dataloaders
-
 
 logger = logging.getLogger(__name__)
 
@@ -45,11 +45,11 @@ class CollabAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
                  datasplits: vaep.io.datasplits.DataSplits,
-                 sample_column='Sample ID',
-                 item_column='peptide',
-                 target_column='intensity',
-                 model_kwargs=dict(),
-                 batch_size=64):
+                 sample_column: str = 'Sample ID',
+                 item_column: str = 'peptide',
+                 target_column: str = 'intensity',
+                 model_kwargs: dict = None,
+                 batch_size: int = 64):
         if datasplits.val_y is not None:
             self.X, self.frac = combine_data(datasplits.train_X,
                                              datasplits.val_y)
@@ -81,6 +81,8 @@ class CollabAnalysis(analysis.ModelAnalysis):
             splits=splits)
         self.dls = to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}
+        if model_kwargs is None:
+            model_kwargs = {}
         self.model_kwargs = model_kwargs
         self.params['model_kwargs'] = self.model_kwargs
 

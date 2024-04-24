@@ -1,15 +1,10 @@
 import logging
 from typing import List
 
-import numpy as np
 import pandas as pd
 import sklearn
 import torch
 from sklearn import preprocessing
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-
-from vaep.io.datasets import to_tensor
 
 logger = logging.getLogger(__name__)
 
@@ -65,11 +60,11 @@ def inverse_transform(self, X, **kwargs):
     if isinstance(X, pd.DataFrame):
         return pd.DataFrame(res, columns=X.columns, index=X.index)
     return res
-# could become factory function, build args dictionary
 
 
 def make_pandas_compatible(cls):
     """Patch transform and inverse_transform."""
+    # ? could become factory function, build args dictionary
     _fcts = ['transform', 'inverse_transform']
     for _fct in _fcts:
         if not hasattr(cls, _fct):

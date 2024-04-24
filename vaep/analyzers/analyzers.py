@@ -207,7 +207,7 @@ class AnalyzePeptides(SimpleNamespace):
             self.is_wide_format = True
             return self.df
         self._df_wide = df_wide
-        print(f"Set attribute: df_wide")
+        print("Set attribute: df_wide")
         return df_wide
 
     def describe_peptides(self, sample_n: int = None):
@@ -264,7 +264,6 @@ class AnalyzePeptides(SimpleNamespace):
             raise AttributeError('No metadata available, please set "df_meta" first.')
 
         PCs = self.get_PCA()
-        cols = list(PCs.columns)
 
         fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(
             15, 20), constrained_layout=True)
@@ -332,7 +331,7 @@ class AnalyzePeptides(SimpleNamespace):
 
     def __repr__(self):
         keys = sorted(self.__dict__)
-        items = ("{}".format(k, self.__dict__[k]) for k in keys)
+        items = ("{}".format(k) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
 
     # def __dir__(self):
@@ -438,7 +437,7 @@ def plot_date_map(df, ax,
     ax.set_ylabel(cols[1])
     path_collection = scatter_plot_w_dates(
         ax, df, dates=dates, errors='raise')
-    cbar = add_date_colorbar(path_collection, ax=ax)
+    _ = add_date_colorbar(path_collection, ax=ax)
 
 
 def plot_scatter(df, ax,

@@ -1,33 +1,33 @@
-from functools import reduce
+import json
 import logging
-from operator import mul
-from pathlib import Path
 import pickle
 import pprint
-from typing import Tuple, List, Callable, Union
-import json
+from functools import reduce
+from operator import mul
+from pathlib import Path
+from typing import Callable, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import torch
-from fastcore.foundation import L
-from fastai import learner
 import sklearn.metrics as sklm
-
-from . import ae
-from . import analysis
-from . import collab
-from . import vae
+import torch
+from fastai import learner
+from fastcore.foundation import L
 
 import vaep
 
+from . import ae, analysis, collab, vae
+
 logger = logging.getLogger(__name__)
+
+NUMPY_ONE = np.int64(1)
+
 
 
 def plot_loss(recorder: learner.Recorder,
-              norm_train: np.int64 = np.int64(1),
-              norm_val: np.int64 = np.int64(1),
+              norm_train: np.int64 = NUMPY_ONE,
+              norm_val: np.int64 = NUMPY_ONE,
               skip_start: int = 5,
               with_valid: bool = True,
               ax: plt.Axes = None) -> plt.Axes:
@@ -66,11 +66,13 @@ def plot_loss(recorder: learner.Recorder,
     return ax
 
 
+NORM_ONES = np.array([1, 1], dtype='int')
+
+
 def plot_training_losses(learner: learner.Learner,
                          name: str,
                          ax=None,
-                         save_recorder: bool = True,
-                         norm_factors=np.array([1, 1], dtype='int'),
+                         norm_factors=NORM_ONES,
                          folder='figures',
                          figsize=(15, 8)):
     if ax is None:
@@ -111,7 +113,7 @@ class RecorderDump:
         self.iters = recorder.iters
         self.name = name
 
-    def save(self, folder=Path('.')):
+    def save(self, folder='.'):
         with open(Path(folder) / self.filename_tmp.format(self.name), 'wb') as f:
             pickle.dump(self, f)
 
@@ -310,7 +312,7 @@ class Metrics():
 
 
 def get_df_from_nested_dict(nested_dict,
-                            column_levels=['data_split', 'model', 'metric_name'],
+                            column_levels=('data_split', 'model', 'metric_name'),
                             row_name='subset'):
     metrics = {}
     for k, run_metrics in nested_dict.items():
