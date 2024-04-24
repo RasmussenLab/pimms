@@ -1,6 +1,6 @@
 """Plot data distribution based on pandas `DataFrames` or `Series`."""
 import logging
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, Optional, Tuple, Union
 
 import matplotlib
 import matplotlib.pyplot as plt
