@@ -1,6 +1,6 @@
 """Plot data distribution based on pandas `DataFrames` or `Series`."""
 import logging
-from typing import Iterable, Tuple, Union
+from typing import Iterable, Optional, Tuple
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -60,8 +60,8 @@ def plot_observations(df: pd.DataFrame,
                       title: str = '',
                       axis: int = 1,
                       size: int = 1,
-                      ylabel: str = 'number of features',
-                      xlabel: str = 'Samples ordered by number of features') -> Axes:
+                      ylabel: str = 'Frequency',
+                      xlabel: Optional[str] = None) -> Axes:
     """Plot non missing observations by row (axis=1) or column (axis=0) in
     order of number of available observations.
     No binning is applied, only counts of non-missing values are plotted.
@@ -86,6 +86,12 @@ def plot_observations(df: pd.DataFrame,
     Axes
         Axes on which plot was plotted
     """
+    if xlabel is None:
+        if df.columns.name:
+            xlabel = f'Samples ordered by identified {df.columns.name}'
+        else:
+            xlabel = 'Samples ordered by identified features'
+
     ax = (df
           .notna()
           .sum(axis=axis)
