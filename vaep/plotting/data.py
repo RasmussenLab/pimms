@@ -1,13 +1,12 @@
 """Plot data distribution based on pandas `DataFrames` or `Series`."""
 import logging
-from typing import Tuple, Iterable
+from typing import Iterable, Tuple, Union
 
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
 import pandas as pd
 import seaborn as sns
-
+from matplotlib.axes import Axes
 
 logger = logging.getLogger(__name__)
 
@@ -266,12 +265,15 @@ def plot_missing_pattern_histogram(data: pd.DataFrame,
 
 def plot_feat_median_over_prop_missing(data: pd.DataFrame,
                                        type: str = 'scatter',
-                                       ax=None,
-                                       s=1) -> matplotlib.axes.Axes:
+                                       ax: matplotlib.axes.Axes = None,
+                                       s: int = 1,
+                                       return_plot_data: bool = False
+                                       ) -> Union[matplotlib.axes.Axes,
+                                                  Tuple[matplotlib.axes.Axes, pd.DataFrame]]:
     """Plot feature median over proportion missing in that feature.
     Sorted by feature median into bins."""
     y_col = 'prop. missing'
-    x_col = 'Feature median intensity binned (based on N feature medians)'
+    x_col = 'Features binned by their median intensity (N features)'
 
     missing_by_median = {
         'median feat value': data.median(),
@@ -305,8 +307,8 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
         # # for some reason this does not work as it does elswhere:
         # _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
         # # do it manually:
-        _ = [(l.set_rotation(45), l.set_horizontalalignment('right'))
-             for l in ax.get_xticklabels()]
+        _ = [(_l.set_rotation(45), _l.set_horizontalalignment('right'))
+             for _l in ax.get_xticklabels()]
     elif type == 'boxplot':
         ax = missing_by_median[[x_col, y_col]].plot.box(
             by=x_col,
@@ -324,4 +326,6 @@ def plot_feat_median_over_prop_missing(data: pd.DataFrame,
     else:
         raise ValueError(
             f'Unknown plot type: {type}, choose from: scatter, boxplot')
+    if return_plot_data:
+        return ax, missing_by_median
     return ax

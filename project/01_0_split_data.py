@@ -19,25 +19,24 @@
 # Create data splits
 
 # %%
+import logging
 from functools import partial
 from pathlib import Path
-import logging
-from typing import Union, List
+from typing import List, Union
 
-from IPython.display import display
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 import plotly.express as px
+from IPython.display import display
+from sklearn.model_selection import train_test_split
 
 import vaep
+import vaep.io.load
+from vaep.analyzers import analyzers
 from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
-
-from vaep.analyzers import analyzers
 from vaep.sklearn import get_PCA
-import vaep.io.load
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
@@ -56,7 +55,7 @@ def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 
 
 pd.options.display.max_columns = 32
-plt.rcParams['figure.figsize'] = [3, 2]
+plt.rcParams['figure.figsize'] = [4, 2]
 
 vaep.plotting.make_large_descriptors(7)
 
@@ -93,6 +92,8 @@ meta_cat_col: str = None  # category column in meta data
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
 prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
+feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
+
 
 # %%
 args = vaep.nb.get_params(args, globals=globals())
@@ -101,7 +102,6 @@ args
 # %%
 args = vaep.nb.args_from_dict(args)
 args
-
 
 # %%
 if not 0.0 <= args.frac_mnar <= 1.0:
@@ -140,6 +140,11 @@ df = constructor(fname=args.FN_INTENSITIES,
                  )
 if args.column_names:
     df.columns.names = args.column_names
+if args.feat_name_display is None:
+    args.overwrite_entry('feat_name_display', 'features')
+    if args.column_names:
+        args.overwrite_entry('feat_name_display', args.column_names[0])
+
 
 if not df.index.name:
     logger.warning("No sample index name found, setting to 'Sample ID'")
@@ -158,7 +163,7 @@ ax = (df
       .plot
       .box()
       )
-ax.set_ylabel('number of observation across samples')
+ax.set_ylabel('Frequency')
 
 
 # %%
@@ -355,7 +360,7 @@ args.used_samples = df.index.to_list()
 # %%
 group = 1
 ax = df.notna().sum(axis=1).hist()
-ax.set_xlabel('features per eligable sample')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} per eligable sample')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
@@ -366,7 +371,7 @@ ax = df.notna().sum(axis=0).sort_values().plot()
 _new_labels = [l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()]
 _ = ax.set_xticklabels(_new_labels, rotation=45,
                        horizontalalignment='right')
-ax.set_xlabel('feature prevalence')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} prevalence')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_feature_prevalence'
 figures[fname.stem] = fname
@@ -380,8 +385,9 @@ vaep.savefig(ax.get_figure(), fname)
 min_max = vaep.plotting.data.min_max(df.stack())
 ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
-
+ax.set_xlabel('Intensity binned')
 fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
+
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -389,21 +395,31 @@ vaep.savefig(ax.get_figure(), fname)
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
-    data=df, type='boxplot')
+ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+_data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
+# _data_feat_median_over_prop_missing.to_excel(fname.with_suffix('.xlsx'))
+del _data_feat_median_over_prop_missing
 
 # %% [markdown]
 # ### Interactive and Single plots
 
 # %%
-sample_counts.name = 'identified features'
+_feature_display_name = f'identified {args.feat_name_display}'
+sample_counts.name = _feature_display_name
 
 # %%
 K = 2
@@ -443,12 +459,12 @@ if args.meta_date_col != 'PlaceholderTime':
 
 # %%
 fig, ax = plt.subplots()
-col_identified_feat = 'identified features'
+col_identified_feat = _feature_display_name
 analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
     pcs[col_identified_feat],
-    title=f'by {col_identified_feat}',
+    feat_name_display=args.feat_name_display,
     size=5,
 )
 fname = (args.out_figures
@@ -457,11 +473,15 @@ figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
 # %%
+# # ! write principal components to excel (if needed)
+# pcs.set_index([df.index.name])[[*pcs_name, col_identified_feat]].to_excel(fname.with_suffix('.xlsx'))
+
+# %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {args.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} {args.feat_name_display} for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
@@ -814,7 +834,8 @@ _ = (splits
 ax.legend(_legend[:-1])
 if args.use_every_nth_xtick > 1:
     ax.set_xticks(ax.get_xticks()[::2])
-fname = args.out_figures / f'0_{group}_test_over_train_split.pdf'
+ax.set_xlabel('Intensity bins')
+fname = args.out_figures / f'0_{group}_val_over_train_split.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -837,6 +858,11 @@ figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
+counts_per_bin = vaep.pandas.get_counts_per_bin(df=splits_df, bins=bins)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
+
+# %%
 ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
                                                xticks=list(bins),
                                                color=['C1', 'C2'],
@@ -851,6 +877,22 @@ ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = args.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
+
+# %%
+# Save binned counts
+
+# %%
+counts_per_bin = dict()
+for col in splits_df.columns:
+    _series = (pd.cut(splits_df[col], bins=bins)
+               .to_frame()
+               .groupby(col)
+               .size())
+    _series.index.name = 'bin'
+    counts_per_bin[col] = _series
+counts_per_bin = pd.DataFrame(counts_per_bin)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %% [markdown]
 # plot training data missing plots
@@ -886,8 +928,8 @@ medians = medians.apply(lambda s: "{:02,d} (N={:3,d})".format(*s), axis=1)
 fig, ax = plt.subplots(figsize=(6, 2))
 s = 1
 s_axes = pd.DataFrame({'medians': medians,
-                       'validation split': splits.val_y.notna().sum(),
-                       'training split': splits.train_X.notna().sum()}
+                       'Validation split': splits.val_y.notna().sum(),
+                       'Training split': splits.train_X.notna().sum()}
                       ).plot.box(by='medians',
                                  boxprops=dict(linewidth=s),
                                  flierprops=dict(markersize=s),
@@ -896,7 +938,9 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
-
+    ax.set_xlabel(f'{args.feat_name_display.capitalize()} binned by their median intensity '
+                  f'(N {args.feat_name_display})')
+    _ = ax.set_ylabel('Frequency')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)

@@ -45,14 +45,16 @@ __all__ = ['plotly',
 
 def _savefig(fig, name, folder: pathlib.Path = '.',
              pdf=True,
-             dpi=300  # default 'figure'
+             dpi=300,  # default 'figure',
+             tight_layout=True,
              ):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
     folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
-    fig.tight_layout()
+    if tight_layout:
+        fig.tight_layout()
     fig.savefig(fname.with_suffix('.png'), dpi=dpi)
     if pdf:
         fig.savefig(fname.with_suffix('.pdf'), dpi=dpi)

@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -139,7 +139,7 @@ added_metrics = d_metrics.add_metrics(val_pred_fake_na.dropna(how='all', axis=1)
 pd.DataFrame(added_metrics)
 
 # %% [markdown]
-# ### Test Datasplit
+# ## Test Datasplit
 
 # %%
 added_metrics = d_metrics.add_metrics(test_pred_fake_na.dropna(how='all', axis=1), 'test_fake_na')

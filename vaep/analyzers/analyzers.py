@@ -1,30 +1,23 @@
+import logging
+import random
 from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Tuple, Union, List
+from typing import List, Optional, Tuple, Union
 
-import logging
-import random
-
-
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import seaborn
-
-from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
-
 from njab.sklearn import run_pca
+from sklearn.impute import SimpleImputer
 
 import vaep
 from vaep.analyzers import Analysis
-
-from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
 from vaep.io.load import verify_df
+from vaep.pandas import _add_indices
 
 logger = logging.getLogger(__name__)
 
@@ -450,18 +443,26 @@ def plot_date_map(df, ax,
 
 def plot_scatter(df, ax,
                  meta: pd.Series,
-                 title: str = 'by some metadata',
+                 feat_name_display: str = 'features',
+                 title: Optional[str] = None,
                  alpha=ALPHA,
                  fontsize=8,
                  size=2):
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
+    if not title:
+        title = f'by identified {feat_name_display}'
     ax.set_title(title, fontsize=fontsize)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = ax.scatter(
         x=cols[0], y=cols[1], s=size, c=meta, data=df, alpha=alpha)
-    cbar = ax.get_figure().colorbar(path_collection, ax=ax)
+    _ = ax.get_figure().colorbar(path_collection, ax=ax,
+                                 label=f'Identified {feat_name_display}',
+                                 #  ticklocation='left', # ignored by matplotlib
+                                 location='right',  # ! left does not put colobar without overlapping y ticks
+                                 format="{x:,.0f}",
+                                 )
 
 
 def seaborn_scatter(df, ax,
