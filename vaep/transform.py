@@ -3,6 +3,7 @@ from typing import List
 
 import pandas as pd
 import sklearn
+import sklearn.pipeline
 import torch
 from sklearn import preprocessing
 
