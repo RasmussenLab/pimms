@@ -1,3 +1,5 @@
+"""General classes formalizing an experiment.
+"""
 from types import SimpleNamespace
 
 from . import diff_analysis

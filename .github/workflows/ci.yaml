@@ -72,6 +72,14 @@ jobs:
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
        snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
+    - name: Install website dependencies
+      run: |
+        pip install .[docs]
+    - name: Build imputation comparison website
+      run: |
+        pimms-setup-imputation-comparison -f project/runs/example/
+        cd project/runs/example/
+        sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
