@@ -1,0 +1,1769 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.2.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '01_1_transfer_NAGuideR_pred';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_MICE-NORM.html" />
+    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_IMPSEQ.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pimms_workflow 0.2.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Comparison Workflow Notebooks
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_2_performance_plots.html">Compare models</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/01_1_transfer_NAGuideR_pred.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Transfer predictions from NAGuideR</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-datasplit">Test Datasplit</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="transfer-predictions-from-naguider">
+<h1>Transfer predictions from NAGuideR<a class="headerlink" href="#transfer-predictions-from-naguider" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">vaep</span>
+<span class="kn">import</span> <span class="nn">vaep.models</span>
+<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">vaep.pandas</span>
+
+<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;vaep&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
+<span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Papermill script parameters:</p>
+<div class="cell tag_parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># files and folders</span>
+<span class="c1"># Datasplit folder with data for experiment</span>
+<span class="n">folder_experiment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;runs/example&#39;</span>
+<span class="n">folder_data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># specify data directory if needed</span>
+<span class="n">file_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;csv&#39;</span>  <span class="c1"># file format of create splits, default pickle (csv)</span>
+<span class="n">identifer_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;_all_&#39;</span>  <span class="c1"># identifier for prediction files to be filtered</span>
+<span class="n">dumps</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># list of dumps to be used</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_injected-parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
+<span class="n">dumps</span> <span class="o">=</span> <span class="s2">&quot;runs/example/preds/pred_all_ROWMEDIAN.csv,runs/example/preds/pred_all_KNN_IMPUTE.csv,runs/example/preds/pred_all_SEQKNN.csv,runs/example/preds/pred_all_RF.csv,runs/example/preds/pred_all_IMPSEQ.csv,runs/example/preds/pred_all_QRILC.csv,runs/example/preds/pred_all_SVDMETHOD.csv,runs/example/preds/pred_all_MICE-NORM.csv,runs/example/preds/pred_all_MLE.csv,runs/example/preds/pred_all_IRM.csv,runs/example/preds/pred_all_TRKNN.csv,runs/example/preds/pred_all_MSIMPUTE_MNAR.csv,runs/example/preds/pred_all_GSIMP.csv&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/example&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Some argument transformations</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">args</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/example/data&#39;),
+ &#39;dumps&#39;: &#39;runs/example/preds/pred_all_ROWMEDIAN.csv,runs/example/preds/pred_all_KNN_IMPUTE.csv,runs/example/preds/pred_all_SEQKNN.csv,runs/example/preds/pred_all_RF.csv,runs/example/preds/pred_all_IMPSEQ.csv,runs/example/preds/pred_all_QRILC.csv,runs/example/preds/pred_all_SVDMETHOD.csv,runs/example/preds/pred_all_MICE-NORM.csv,runs/example/preds/pred_all_MLE.csv,runs/example/preds/pred_all_IRM.csv,runs/example/preds/pred_all_TRKNN.csv,runs/example/preds/pred_all_MSIMPUTE_MNAR.csv,runs/example/preds/pred_all_GSIMP.csv&#39;,
+ &#39;file_format&#39;: &#39;csv&#39;,
+ &#39;folder_data&#39;: &#39;&#39;,
+ &#39;folder_experiment&#39;: Path(&#39;runs/example&#39;),
+ &#39;identifer_str&#39;: &#39;_all_&#39;,
+ &#39;out_figures&#39;: Path(&#39;runs/example/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/example&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/example&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/example&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/example/preds&#39;)}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span> <span class="o">=</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>load data splits</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/example/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/example/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/data/test_y.csv
+</pre></div>
+</div>
+</div>
+</div>
+<p>Validation and test data split of simulated missing values</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
+<span class="n">val_pred_fake_na</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>observed</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th>Gene Names</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>GEMIN5</th>
+      <td>30.946</td>
+    </tr>
+    <tr>
+      <th>2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>AAR2</th>
+      <td>27.248</td>
+    </tr>
+    <tr>
+      <th>2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ADAM10</th>
+      <td>29.310</td>
+    </tr>
+    <tr>
+      <th>2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>NDUFAF4</th>
+      <td>24.352</td>
+    </tr>
+    <tr>
+      <th>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>EPN1</th>
+      <td>29.250</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>PRRC2B</th>
+      <td>24.294</td>
+    </tr>
+    <tr>
+      <th>2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ARGLU1</th>
+      <td>28.471</td>
+    </tr>
+    <tr>
+      <th>2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>GBF1</th>
+      <td>29.470</td>
+    </tr>
+    <tr>
+      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>DENR</th>
+      <td>27.902</td>
+    </tr>
+    <tr>
+      <th>2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SNRPF</th>
+      <td>27.487</td>
+    </tr>
+  </tbody>
+</table>
+<p>859 rows × 1 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
+<span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>observed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>28.270</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.543</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>22.254</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>26.477</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>28.068</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>30.064</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>35.919</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find and load prediction files, filter for validation and test data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">entire_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">entire_pred</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+                       <span class="k">if</span> <span class="s1">&#39;_all_&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+<span class="n">entire_pred</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Path(&#39;runs/example/preds/pred_all_ROWMEDIAN.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_KNN_IMPUTE.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_SEQKNN.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_RF.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_IMPSEQ.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_QRILC.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_SVDMETHOD.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_MICE-NORM.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_MLE.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_IRM.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_TRKNN.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_MSIMPUTE_MNAR.csv&#39;),
+ Path(&#39;runs/example/preds/pred_all_GSIMP.csv&#39;)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+<span class="n">idx_real_na</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">idx_real_na</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx_real_na</span>
+               <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">val_pred_fake_na</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">entire_pred</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Load </span><span class="si">{</span><span class="n">fpath</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">col_name</span> <span class="o">=</span> <span class="n">fpath</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_all_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">val_pred_fake_na</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pred</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;pred_val_</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">.csv&#39;</span>
+    <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">val_pred_fake_na</span><span class="p">[[</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="n">col_name</span><span class="p">]]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Save </span><span class="si">{</span><span class="n">fname</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">test_pred_fake_na</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pred</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;pred_test_</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">.csv&#39;</span>
+    <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">test_pred_fake_na</span><span class="p">[[</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="n">col_name</span><span class="p">]]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Save </span><span class="si">{</span><span class="n">fname</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># hacky, but works:</span>
+    <span class="n">pred_real_na</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">idx_real_na</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;placeholder&#39;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;placeholder&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># pred_real_na.name = &#39;intensity&#39;</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;pred_real_na_</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s1">.csv&#39;</span>
+    <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">pred_real_na</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Save </span><span class="si">{</span><span class="n">fname</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># del pred</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_ROWMEDIAN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_SEQKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_SEQKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_SEQKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_SEQKNN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_RF.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_IMPSEQ.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_QRILC.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_SVDMETHOD.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_MICE-NORM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_MICE-NORM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_MICE-NORM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_MICE-NORM.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_MLE.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_IRM.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_TRKNN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/example/preds/pred_all_GSIMP.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_val_GSIMP.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_test_GSIMP.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>observed</th>
+      <th>ROWMEDIAN</th>
+      <th>KNN_IMPUTE</th>
+      <th>SEQKNN</th>
+      <th>RF</th>
+      <th>IMPSEQ</th>
+      <th>QRILC</th>
+      <th>SVDMETHOD</th>
+      <th>MICE-NORM</th>
+      <th>MLE</th>
+      <th>IRM</th>
+      <th>TRKNN</th>
+      <th>MSIMPUTE_MNAR</th>
+      <th>GSIMP</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th>Gene Names</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>GEMIN5</th>
+      <td>30.946</td>
+      <td>30.547</td>
+      <td>30.783</td>
+      <td>30.551</td>
+      <td>30.851</td>
+      <td>29.521</td>
+      <td>27.817</td>
+      <td>28.035</td>
+      <td>30.902</td>
+      <td>2,355.271</td>
+      <td>30.817</td>
+      <td>30.756</td>
+      <td>27.604</td>
+      <td>27.354</td>
+    </tr>
+    <tr>
+      <th>2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>AAR2</th>
+      <td>27.248</td>
+      <td>26.880</td>
+      <td>26.674</td>
+      <td>26.599</td>
+      <td>26.313</td>
+      <td>26.302</td>
+      <td>24.556</td>
+      <td>27.960</td>
+      <td>26.823</td>
+      <td>26.870</td>
+      <td>26.769</td>
+      <td>26.961</td>
+      <td>24.141</td>
+      <td>23.907</td>
+    </tr>
+    <tr>
+      <th>2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ADAM10</th>
+      <td>29.310</td>
+      <td>26.528</td>
+      <td>28.596</td>
+      <td>28.428</td>
+      <td>28.862</td>
+      <td>29.055</td>
+      <td>24.610</td>
+      <td>29.658</td>
+      <td>28.842</td>
+      <td>2,348.865</td>
+      <td>28.606</td>
+      <td>28.814</td>
+      <td>25.575</td>
+      <td>22.373</td>
+    </tr>
+    <tr>
+      <th>2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>NDUFAF4</th>
+      <td>24.352</td>
+      <td>27.521</td>
+      <td>24.573</td>
+      <td>25.095</td>
+      <td>26.302</td>
+      <td>23.806</td>
+      <td>25.754</td>
+      <td>27.192</td>
+      <td>25.472</td>
+      <td>27.860</td>
+      <td>25.942</td>
+      <td>25.077</td>
+      <td>23.621</td>
+      <td>25.248</td>
+    </tr>
+    <tr>
+      <th>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>EPN1</th>
+      <td>29.250</td>
+      <td>26.839</td>
+      <td>28.883</td>
+      <td>28.931</td>
+      <td>28.903</td>
+      <td>28.563</td>
+      <td>24.076</td>
+      <td>29.782</td>
+      <td>28.702</td>
+      <td>2,288.717</td>
+      <td>28.718</td>
+      <td>29.564</td>
+      <td>26.459</td>
+      <td>22.691</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>PRRC2B</th>
+      <td>24.294</td>
+      <td>25.077</td>
+      <td>24.958</td>
+      <td>25.168</td>
+      <td>24.006</td>
+      <td>23.614</td>
+      <td>23.321</td>
+      <td>28.481</td>
+      <td>24.419</td>
+      <td>2,418.402</td>
+      <td>23.729</td>
+      <td>24.058</td>
+      <td>22.626</td>
+      <td>22.303</td>
+    </tr>
+    <tr>
+      <th>2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ARGLU1</th>
+      <td>28.471</td>
+      <td>27.816</td>
+      <td>28.949</td>
+      <td>28.965</td>
+      <td>28.678</td>
+      <td>28.680</td>
+      <td>23.080</td>
+      <td>28.633</td>
+      <td>29.740</td>
+      <td>2,523.064</td>
+      <td>29.048</td>
+      <td>29.097</td>
+      <td>25.716</td>
+      <td>24.793</td>
+    </tr>
+    <tr>
+      <th>2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>GBF1</th>
+      <td>29.470</td>
+      <td>28.381</td>
+      <td>28.976</td>
+      <td>29.058</td>
+      <td>29.124</td>
+      <td>28.880</td>
+      <td>25.868</td>
+      <td>28.893</td>
+      <td>29.235</td>
+      <td>-719.987</td>
+      <td>28.939</td>
+      <td>29.213</td>
+      <td>26.863</td>
+      <td>24.657</td>
+    </tr>
+    <tr>
+      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>DENR</th>
+      <td>27.902</td>
+      <td>27.380</td>
+      <td>27.377</td>
+      <td>27.731</td>
+      <td>27.661</td>
+      <td>27.311</td>
+      <td>24.111</td>
+      <td>28.033</td>
+      <td>26.679</td>
+      <td>2,355.271</td>
+      <td>27.429</td>
+      <td>27.107</td>
+      <td>25.220</td>
+      <td>23.951</td>
+    </tr>
+    <tr>
+      <th>2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SNRPF</th>
+      <td>27.487</td>
+      <td>29.669</td>
+      <td>28.076</td>
+      <td>28.127</td>
+      <td>27.947</td>
+      <td>27.666</td>
+      <td>27.604</td>
+      <td>26.690</td>
+      <td>27.380</td>
+      <td>26.635</td>
+      <td>27.643</td>
+      <td>27.898</td>
+      <td>25.641</td>
+      <td>26.957</td>
+    </tr>
+  </tbody>
+</table>
+<p>859 rows × 14 columns</p>
+</div></div></div>
+</div>
+<p>Metrics for simulated missing values (NA)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
+<span class="n">d_metrics</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">val_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ROWMEDIAN</th>
+      <th>KNN_IMPUTE</th>
+      <th>SEQKNN</th>
+      <th>RF</th>
+      <th>IMPSEQ</th>
+      <th>QRILC</th>
+      <th>SVDMETHOD</th>
+      <th>MICE-NORM</th>
+      <th>MLE</th>
+      <th>IRM</th>
+      <th>TRKNN</th>
+      <th>MSIMPUTE_MNAR</th>
+      <th>GSIMP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>MSE</th>
+      <td>1.766</td>
+      <td>0.695</td>
+      <td>0.778</td>
+      <td>0.695</td>
+      <td>1.910</td>
+      <td>10.331</td>
+      <td>5.059</td>
+      <td>0.774</td>
+      <td>4,519,870.934</td>
+      <td>0.876</td>
+      <td>0.626</td>
+      <td>7.406</td>
+      <td>11.391</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>1.028</td>
+      <td>0.554</td>
+      <td>0.580</td>
+      <td>0.550</td>
+      <td>0.914</td>
+      <td>2.780</td>
+      <td>1.763</td>
+      <td>0.593</td>
+      <td>1,893.032</td>
+      <td>0.642</td>
+      <td>0.511</td>
+      <td>2.536</td>
+      <td>2.988</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="test-datasplit">
+<h2>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;test_fake_na&#39;</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ROWMEDIAN</th>
+      <th>KNN_IMPUTE</th>
+      <th>SEQKNN</th>
+      <th>RF</th>
+      <th>IMPSEQ</th>
+      <th>QRILC</th>
+      <th>SVDMETHOD</th>
+      <th>MICE-NORM</th>
+      <th>MLE</th>
+      <th>IRM</th>
+      <th>TRKNN</th>
+      <th>MSIMPUTE_MNAR</th>
+      <th>GSIMP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>MSE</th>
+      <td>1.760</td>
+      <td>0.534</td>
+      <td>0.559</td>
+      <td>0.541</td>
+      <td>1.829</td>
+      <td>9.952</td>
+      <td>5.293</td>
+      <td>0.586</td>
+      <td>4,482,158.000</td>
+      <td>0.675</td>
+      <td>0.507</td>
+      <td>7.133</td>
+      <td>11.466</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>1.040</td>
+      <td>0.506</td>
+      <td>0.524</td>
+      <td>0.508</td>
+      <td>0.850</td>
+      <td>2.743</td>
+      <td>1.829</td>
+      <td>0.543</td>
+      <td>1,890.152</td>
+      <td>0.597</td>
+      <td>0.474</td>
+      <td>2.491</td>
+      <td>2.985</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
+    <span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">column_levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">metrics_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subset</th>
+      <th>valid_fake_na</th>
+      <th>test_fake_na</th>
+    </tr>
+    <tr>
+      <th>model</th>
+      <th>metric_name</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th rowspan="4" valign="top">ROWMEDIAN</th>
+      <th>MSE</th>
+      <td>1.766</td>
+      <td>1.760</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>1.028</td>
+      <td>1.040</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">KNN_IMPUTE</th>
+      <th>MSE</th>
+      <td>0.695</td>
+      <td>0.534</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.554</td>
+      <td>0.506</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">SEQKNN</th>
+      <th>MSE</th>
+      <td>0.778</td>
+      <td>0.559</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.580</td>
+      <td>0.524</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">RF</th>
+      <th>MSE</th>
+      <td>0.695</td>
+      <td>0.541</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.550</td>
+      <td>0.508</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">IMPSEQ</th>
+      <th>MSE</th>
+      <td>1.910</td>
+      <td>1.829</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.914</td>
+      <td>0.850</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">QRILC</th>
+      <th>MSE</th>
+      <td>10.331</td>
+      <td>9.952</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>2.780</td>
+      <td>2.743</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">SVDMETHOD</th>
+      <th>MSE</th>
+      <td>5.059</td>
+      <td>5.293</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>1.763</td>
+      <td>1.829</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">MICE-NORM</th>
+      <th>MSE</th>
+      <td>0.774</td>
+      <td>0.586</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.593</td>
+      <td>0.543</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">MLE</th>
+      <th>MSE</th>
+      <td>4,519,870.934</td>
+      <td>4,482,158.000</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>1,893.032</td>
+      <td>1,890.152</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">IRM</th>
+      <th>MSE</th>
+      <td>0.876</td>
+      <td>0.675</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.642</td>
+      <td>0.597</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">TRKNN</th>
+      <th>MSE</th>
+      <td>0.626</td>
+      <td>0.507</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>0.511</td>
+      <td>0.474</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">MSIMPUTE_MNAR</th>
+      <th>MSE</th>
+      <td>7.406</td>
+      <td>7.133</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>2.536</td>
+      <td>2.491</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th rowspan="4" valign="top">GSIMP</th>
+      <th>MSE</th>
+      <td>11.391</td>
+      <td>11.466</td>
+    </tr>
+    <tr>
+      <th>MAE</th>
+      <td>2.988</td>
+      <td>2.985</td>
+    </tr>
+    <tr>
+      <th>N</th>
+      <td>859.000</td>
+      <td>859.000</td>
+    </tr>
+    <tr>
+      <th>prop</th>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">order_methods</span> <span class="o">=</span> <span class="n">metrics_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span>
+                                             <span class="s1">&#39;MAE&#39;</span><span class="p">],</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+<span class="n">order_methods</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
+TRKNN          MAE               0.511
+RF             MAE               0.550
+KNN_IMPUTE     MAE               0.554
+SEQKNN         MAE               0.580
+MICE-NORM      MAE               0.593
+IRM            MAE               0.642
+IMPSEQ         MAE               0.914
+ROWMEDIAN      MAE               1.028
+SVDMETHOD      MAE               1.763
+MSIMPUTE_MNAR  MAE               2.536
+QRILC          MAE               2.780
+GSIMP          MAE               2.988
+MLE            MAE           1,893.032
+Name: valid_fake_na, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_5</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">order_methods</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">6</span><span class="p">]]</span>
+<span class="n">top_5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;observed&#39;, &#39;TRKNN&#39;, &#39;RF&#39;, &#39;KNN_IMPUTE&#39;, &#39;SEQKNN&#39;, &#39;MICE-NORM&#39;, &#39;IRM&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">,</span> <span class="n">errors_bind</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">plot_errors_binned</span><span class="p">(</span>
+    <span class="n">val_pred_fake_na</span><span class="p">[</span><span class="n">top_5</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="s1">&#39;NAGuideR_errors_per_bin_val.png&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/NAGuideR_errors_per_bin_val.png
+</pre></div>
+</div>
+<img alt="_images/1a422ca2914fce007b5222b718951f45b5d90f897783ff21f09f781717ef8af6.png" src="_images/1a422ca2914fce007b5222b718951f45b5d90f897783ff21f09f781717ef8af6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;pred_val_ROWMEDIAN.csv&#39;: &#39;runs/example/preds/pred_val_ROWMEDIAN.csv&#39;,
+ &#39;pred_test_ROWMEDIAN.csv&#39;: &#39;runs/example/preds/pred_test_ROWMEDIAN.csv&#39;,
+ &#39;pred_real_na_ROWMEDIAN.csv&#39;: &#39;runs/example/preds/pred_real_na_ROWMEDIAN.csv&#39;,
+ &#39;pred_val_KNN_IMPUTE.csv&#39;: &#39;runs/example/preds/pred_val_KNN_IMPUTE.csv&#39;,
+ &#39;pred_test_KNN_IMPUTE.csv&#39;: &#39;runs/example/preds/pred_test_KNN_IMPUTE.csv&#39;,
+ &#39;pred_real_na_KNN_IMPUTE.csv&#39;: &#39;runs/example/preds/pred_real_na_KNN_IMPUTE.csv&#39;,
+ &#39;pred_val_SEQKNN.csv&#39;: &#39;runs/example/preds/pred_val_SEQKNN.csv&#39;,
+ &#39;pred_test_SEQKNN.csv&#39;: &#39;runs/example/preds/pred_test_SEQKNN.csv&#39;,
+ &#39;pred_real_na_SEQKNN.csv&#39;: &#39;runs/example/preds/pred_real_na_SEQKNN.csv&#39;,
+ &#39;pred_val_RF.csv&#39;: &#39;runs/example/preds/pred_val_RF.csv&#39;,
+ &#39;pred_test_RF.csv&#39;: &#39;runs/example/preds/pred_test_RF.csv&#39;,
+ &#39;pred_real_na_RF.csv&#39;: &#39;runs/example/preds/pred_real_na_RF.csv&#39;,
+ &#39;pred_val_IMPSEQ.csv&#39;: &#39;runs/example/preds/pred_val_IMPSEQ.csv&#39;,
+ &#39;pred_test_IMPSEQ.csv&#39;: &#39;runs/example/preds/pred_test_IMPSEQ.csv&#39;,
+ &#39;pred_real_na_IMPSEQ.csv&#39;: &#39;runs/example/preds/pred_real_na_IMPSEQ.csv&#39;,
+ &#39;pred_val_QRILC.csv&#39;: &#39;runs/example/preds/pred_val_QRILC.csv&#39;,
+ &#39;pred_test_QRILC.csv&#39;: &#39;runs/example/preds/pred_test_QRILC.csv&#39;,
+ &#39;pred_real_na_QRILC.csv&#39;: &#39;runs/example/preds/pred_real_na_QRILC.csv&#39;,
+ &#39;pred_val_SVDMETHOD.csv&#39;: &#39;runs/example/preds/pred_val_SVDMETHOD.csv&#39;,
+ &#39;pred_test_SVDMETHOD.csv&#39;: &#39;runs/example/preds/pred_test_SVDMETHOD.csv&#39;,
+ &#39;pred_real_na_SVDMETHOD.csv&#39;: &#39;runs/example/preds/pred_real_na_SVDMETHOD.csv&#39;,
+ &#39;pred_val_MICE-NORM.csv&#39;: &#39;runs/example/preds/pred_val_MICE-NORM.csv&#39;,
+ &#39;pred_test_MICE-NORM.csv&#39;: &#39;runs/example/preds/pred_test_MICE-NORM.csv&#39;,
+ &#39;pred_real_na_MICE-NORM.csv&#39;: &#39;runs/example/preds/pred_real_na_MICE-NORM.csv&#39;,
+ &#39;pred_val_MLE.csv&#39;: &#39;runs/example/preds/pred_val_MLE.csv&#39;,
+ &#39;pred_test_MLE.csv&#39;: &#39;runs/example/preds/pred_test_MLE.csv&#39;,
+ &#39;pred_real_na_MLE.csv&#39;: &#39;runs/example/preds/pred_real_na_MLE.csv&#39;,
+ &#39;pred_val_IRM.csv&#39;: &#39;runs/example/preds/pred_val_IRM.csv&#39;,
+ &#39;pred_test_IRM.csv&#39;: &#39;runs/example/preds/pred_test_IRM.csv&#39;,
+ &#39;pred_real_na_IRM.csv&#39;: &#39;runs/example/preds/pred_real_na_IRM.csv&#39;,
+ &#39;pred_val_TRKNN.csv&#39;: &#39;runs/example/preds/pred_val_TRKNN.csv&#39;,
+ &#39;pred_test_TRKNN.csv&#39;: &#39;runs/example/preds/pred_test_TRKNN.csv&#39;,
+ &#39;pred_real_na_TRKNN.csv&#39;: &#39;runs/example/preds/pred_real_na_TRKNN.csv&#39;,
+ &#39;pred_val_MSIMPUTE_MNAR.csv&#39;: &#39;runs/example/preds/pred_val_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_test_MSIMPUTE_MNAR.csv&#39;: &#39;runs/example/preds/pred_test_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_real_na_MSIMPUTE_MNAR.csv&#39;: &#39;runs/example/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_val_GSIMP.csv&#39;: &#39;runs/example/preds/pred_val_GSIMP.csv&#39;,
+ &#39;pred_test_GSIMP.csv&#39;: &#39;runs/example/preds/pred_test_GSIMP.csv&#39;,
+ &#39;pred_real_na_GSIMP.csv&#39;: &#39;runs/example/preds/pred_real_na_GSIMP.csv&#39;,
+ &#39;NAGuideR_errors_per_bin_val.png&#39;: &#39;runs/example/figures/NAGuideR_errors_per_bin_val.png&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_1_train_NAGuideR_IMPSEQ.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">NAGuide R methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01_1_train_NAGuideR_MICE-NORM.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">NAGuide R methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-datasplit">Test Datasplit</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PIMMS
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Henry Webel.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

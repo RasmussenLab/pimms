@@ -1,0 +1,1252 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>NAGuide R methods &#8212; pimms_workflow 0.2.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_NAGuideR_RF';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_KNN_IMPUTE.html" />
+    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_SEQKNN.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pimms_workflow 0.2.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="index.html">
+                    Comparison Workflow Notebooks
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_2_performance_plots.html">Compare models</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/01_1_train_NAGuideR_RF.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>NAGuide R methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dump-predictions">Dump predictions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="naguide-r-methods">
+<h1>NAGuide R methods<a class="headerlink" href="#naguide-r-methods" title="Permalink to this heading">#</a></h1>
+<p>Setup basic methods and packages used for all methods</p>
+<ul class="simple">
+<li><p>BiocManager could be moved to methods who are installed from BioConductor</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">packages_base_R</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">  </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reshape2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data.table&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;readr&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tibble&quot;</span><span class="p">)</span>
+
+<span class="n">install_rpackage</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># If not installed, install the package</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span><span class="w"> </span><span class="n">character.only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install.packages</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">library</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span><span class="w"> </span><span class="n">character.only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="p">}</span>
+
+<span class="c1"># used in the large imputation function for two packages</span>
+<span class="n">install_bioconductor</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># If not installed, install the package</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span><span class="w"> </span><span class="n">character.only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">BiocManager</span><span class="o">::</span><span class="nf">install</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">library</span><span class="p">(</span><span class="n">pkg</span><span class="p">,</span><span class="w"> </span><span class="n">character.only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span>
+<span class="p">}</span>
+
+
+<span class="nf">for </span><span class="p">(</span><span class="n">package</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">packages_base_R</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1"># Check if the package is already installed</span>
+<span class="w">  </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="n">pkg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">package</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading required package: BiocManager
+
+Loading required package: reshape2
+
+Loading required package: data.table
+
+Warning message:
+“package ‘data.table’ was built under R version 4.3.3”
+
+Attaching package: ‘data.table’
+
+
+The following objects are masked from ‘package:reshape2’:
+
+    dcast, melt
+
+
+Loading required package: readr
+
+Warning message:
+“package ‘readr’ was built under R version 4.3.2”
+Loading required package: tibble
+</pre></div>
+</div>
+</div>
+</div>
+<p>setup can be tricky… trying to integrate as much as possible into conda environment</p>
+<p>Copied from <a class="reference external" href="https://github.com/wangshisheng/NAguideR/blob/15ec86263d5821990ad39a8d9f378cf4d76b25fb/inst/NAguideRapp/app.R#L1705-L1849" rel="noopener noreferrer" target="_blank">NAGuideR’s github</a> RShiny application. Adapted to run as standalone function in context of the Snakemake workflow.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">df</span></code> and <code class="docutils literal notranslate"><span class="pre">df1</span></code> ?</p></li>
+<li><p>seems quite hacky</p></li>
+<li><p>code is only slightly adapted from repo to run here, mainly to install packages on the fly</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">nafunctions</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zero&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="n">method</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">tolower</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+<span class="w">  </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;zero&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">df</span><span class="p">[</span><span class="nf">is.na</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;minimum&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">df</span><span class="p">[</span><span class="nf">is.na</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;colmedian&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;e1071&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">impute</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">what</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;median&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;rowmedian&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;e1071&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">dfx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">impute</span><span class="p">(</span><span class="nf">t</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span><span class="w"> </span><span class="n">what</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;median&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">dfx</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;knn_impute&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&#39;impute&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="nf">impute.knn</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span>
+<span class="w">                 </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">rowmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">colmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="c1">#rowmax = 0.9, colmax = 0.9</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_zero1</span><span class="o">$</span><span class="n">data</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;seqknn&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="n">SeqKnn</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nf">install.packages</span><span class="p">(</span><span class="s">&quot;src/R_NAGuideR/SeqKnn_1.0.1.tar.gz&quot;</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">repos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="nf">library</span><span class="p">(</span><span class="n">SeqKnn</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">SeqKNN</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;bpca&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&#39;pcaMethods&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="n">pcaMethods</span><span class="o">::</span><span class="nf">pca</span><span class="p">(</span>
+<span class="w">        </span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span>
+<span class="w">        </span><span class="n">nPcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ncol</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">        </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bpca&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">maxSteps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">completeObs</span><span class="p">(</span><span class="n">data_zero1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;svdmethod&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&#39;pcaMethods&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="n">pcaMethods</span><span class="o">::</span><span class="nf">pca</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span>
+<span class="w">                      </span><span class="n">nPcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ncol</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;svdImpute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">completeObs</span><span class="p">(</span><span class="n">data_zero1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;lls&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&#39;pcaMethods&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">llsImpute</span><span class="p">(</span><span class="nf">t</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="nf">completeObs</span><span class="p">(</span><span class="n">data_zero1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;mle&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;norm&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">xxm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">ss</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">norm</span><span class="o">::</span><span class="nf">prelim.norm</span><span class="p">(</span><span class="n">xxm</span><span class="p">)</span>
+<span class="w">    </span><span class="n">thx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">norm</span><span class="o">::</span><span class="nf">em.norm</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+<span class="w">    </span><span class="n">norm</span><span class="o">::</span><span class="nf">rngseed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">norm</span><span class="o">::</span><span class="nf">imp.norm</span><span class="p">(</span><span class="n">ss</span><span class="p">,</span><span class="w"> </span><span class="n">thx</span><span class="p">,</span><span class="w"> </span><span class="n">xxm</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;qrilc&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;impute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;pcaMethods&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;imputeLCMD&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">xxm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="n">imputeLCMD</span><span class="o">::</span><span class="nf">impute.QRILC</span><span class="p">(</span><span class="n">xxm</span><span class="p">,</span><span class="w"> </span><span class="n">tune.sigma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">data_zero1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;mindet&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;impute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;pcaMethods&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;imputeLCMD&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">xxm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">imputeLCMD</span><span class="o">::</span><span class="nf">impute.MinDet</span><span class="p">(</span><span class="n">xxm</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.01</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;minprob&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;impute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;pcaMethods&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;imputeLCMD&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">xxm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="n">imputeLCMD</span><span class="o">::</span><span class="nf">impute.MinProb</span><span class="p">(</span><span class="n">xxm</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.01</span><span class="p">,</span><span class="w"> </span><span class="n">tune.sigma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;irm&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;VIM&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">irmi</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">imp_var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;impseq&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;rrcovNA&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">impSeq</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;impseqrob&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;rrcovNA&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">impSeqRob</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.9</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_zero1</span><span class="o">$</span><span class="n">x</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;mice-norm&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;mice&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">minum</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">5</span>
+<span class="w">    </span><span class="n">datareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">mice</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">minum</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1234</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;norm&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="nf">for </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">minum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="n">datareadmi</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">newdatareadmi</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">minum</span>
+<span class="w">    </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;mice-cart&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;mice&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">minum</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">5</span>
+<span class="w">    </span><span class="n">datareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">mice</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">minum</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1234</span><span class="p">,</span>
+<span class="w">                       </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cart&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="nf">for </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">minum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="n">datareadmi</span><span class="p">,</span><span class="w"> </span><span class="n">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">newdatareadmi</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">newdatareadmi</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">minum</span>
+<span class="w">    </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rownames</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;trknn&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">source</span><span class="p">(</span><span class="s">&#39;src/R_NAGuideR/Imput_funcs.r&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="c1"># sim_trKNN_wrapper &lt;- function(data) {</span>
+<span class="w">    </span><span class="c1">#   result &lt;- data %&gt;% as.matrix %&gt;% t %&gt;% imputeKNN(., k=10, distance=&#39;truncation&#39;, perc=0) %&gt;% t</span>
+<span class="w">    </span><span class="c1">#   return(result)</span>
+<span class="w">    </span><span class="c1"># }</span>
+<span class="w">    </span><span class="c1"># df1x &lt;- sim_trKNN_wrapper(t(df1))</span>
+<span class="w">    </span><span class="c1"># df&lt;-as.data.frame(t(df1x))</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="nf">imputeKNN</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+<span class="w">                </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">                </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;truncation&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">perc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;rf&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;missForest&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">data_zero1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">missForest</span><span class="p">(</span>
+<span class="w">      </span><span class="nf">t</span><span class="p">(</span><span class="n">df1</span><span class="p">),</span>
+<span class="w">      </span><span class="n">maxiter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">      </span><span class="n">ntree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="c1"># input$rfntrees</span>
+<span class="w">      </span><span class="p">,</span>
+<span class="w">      </span><span class="n">mtry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">floor</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">3</span><span class="p">)),</span>
+<span class="w">      </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">data_zero1</span><span class="o">$</span><span class="n">ximp</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;pi&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">width</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0.3</span><span class="w"> </span><span class="c1"># input$piwidth</span>
+<span class="w">    </span><span class="n">downshift</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1.8</span><span class="w"> </span><span class="c1"># input$pidownshift</span>
+<span class="w">    </span><span class="nf">for </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="nf">ncol</span><span class="p">(</span><span class="n">df1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">temp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df1</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span>
+<span class="w">      </span><span class="nf">if </span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">temp.sd</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">)],</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">        </span><span class="n">temp.mean</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">          </span><span class="nf">mean</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">)],</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">downshift</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">sd</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">)],</span><span class="w"> </span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">        </span><span class="n">n.missing</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">))</span>
+<span class="w">        </span><span class="n">temp</span><span class="p">[</span><span class="nf">is.na</span><span class="p">(</span><span class="n">temp</span><span class="p">)]</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">          </span><span class="nf">rnorm</span><span class="p">(</span><span class="n">n.missing</span><span class="p">,</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp.mean</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp.sd</span><span class="p">)</span>
+<span class="w">        </span><span class="n">df</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">temp</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">df</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1"># else if(method==&quot;grr&quot;){</span>
+<span class="w">  </span><span class="c1">#   library(DreamAI)</span>
+<span class="w">  </span><span class="c1">#   df&lt;-impute.RegImpute(data=as.matrix(df1), fillmethod = &quot;row_mean&quot;, maxiter_RegImpute = 10,conv_nrmse = 1e-03)</span>
+<span class="w">  </span><span class="c1"># }</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;gms&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1"># install.packages(&#39;GMSimpute&#39;)</span>
+<span class="w">    </span><span class="nf">if </span><span class="p">(</span><span class="o">!</span><span class="nf">require</span><span class="p">(</span><span class="n">GMSimpute</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nf">install.packages</span><span class="p">(</span>
+<span class="w">        </span><span class="s">&quot;src/R_NAGuideR/GMSimpute_0.0.1.1.tar.gz&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">repos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;source&quot;</span>
+<span class="w">      </span><span class="p">)</span>
+<span class="w">      </span>
+<span class="w">      </span><span class="nf">library</span><span class="p">(</span><span class="n">GMSimpute</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">GMS.Lasso</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">nfolds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">log.scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">TS.Lasso</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;msimpute&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;msImpute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">msImpute</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+<span class="w">                   </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;v2&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;msimpute_mnar&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;msImpute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">      </span><span class="nf">msImpute</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+<span class="w">               </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;v2-mnar&#39;</span><span class="p">,</span>
+<span class="w">               </span><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="nf">dim</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="m">2</span><span class="p">]))</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="w"> </span><span class="nf">if </span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;gsimp&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">options</span><span class="p">(</span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">F</span><span class="p">)</span>
+<span class="w">    </span><span class="c1"># dependencies parly for sourced file</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;impute&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_bioconductor</span><span class="p">(</span><span class="s">&quot;pcaMethods&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&#39;imputeLCMD&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;magrittr&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;glmnet&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;abind&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;foreach&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">install_rpackage</span><span class="p">(</span><span class="s">&quot;doParallel&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nf">source</span><span class="p">(</span><span class="s">&#39;src/R_NAGuideR/GSimp.R&#39;</span><span class="p">)</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="c1"># wrapper function with data pre-processing</span>
+<span class="w">    </span><span class="n">pre_processing_GS_wrapper</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">data_raw_log</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1"># samples in rows, features in columns #</span>
+<span class="w">      </span><span class="c1"># Initialization #</span>
+<span class="w">      </span><span class="n">data_raw_log_qrilc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">data_raw_log</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">        </span><span class="nf">impute.QRILC</span><span class="p">()</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">extract2</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="w">      </span><span class="c1"># Centralization and scaling #</span>
+<span class="w">      </span><span class="n">data_raw_log_qrilc_sc</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">        </span><span class="nf">scale_recover</span><span class="p">(</span><span class="n">data_raw_log_qrilc</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;scale&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="c1"># Data after centralization and scaling #</span>
+<span class="w">      </span><span class="n">data_raw_log_qrilc_sc_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_raw_log_qrilc_sc</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+<span class="w">      </span><span class="c1"># Parameters for centralization and scaling (for scaling recovery) #</span>
+<span class="w">      </span><span class="n">data_raw_log_qrilc_sc_df_param</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_raw_log_qrilc_sc</span><span class="p">[[</span><span class="m">2</span><span class="p">]]</span>
+<span class="w">      </span><span class="c1"># NA position #</span>
+<span class="w">      </span><span class="n">NA_pos</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">which</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">data_raw_log</span><span class="p">),</span><span class="w"> </span><span class="n">arr.ind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">T</span><span class="p">)</span>
+<span class="w">      </span><span class="c1"># NA introduced to log-scaled-initialized data #</span>
+<span class="w">      </span><span class="n">data_raw_log_sc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_raw_log_qrilc_sc_df</span>
+<span class="w">      </span><span class="n">data_raw_log_sc</span><span class="p">[</span><span class="n">NA_pos</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NA</span>
+<span class="w">      </span><span class="c1"># Feed initialized and missing data into GSimp imputation #</span>
+<span class="w">      </span><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">        </span><span class="n">data_raw_log_sc</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">GS_impute</span><span class="p">(</span>
+<span class="w">          </span><span class="n">.</span><span class="p">,</span>
+<span class="w">          </span><span class="n">iters_each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">50</span><span class="p">,</span>
+<span class="w">          </span><span class="n">iters_all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span>
+<span class="w">          </span><span class="n">initial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_raw_log_qrilc_sc_df</span><span class="p">,</span>
+<span class="w">          </span><span class="n">lo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="kc">Inf</span><span class="p">,</span>
+<span class="w">          </span><span class="n">hi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;min&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="n">n_cores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">          </span><span class="n">imp_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;glmnet_pred&#39;</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">      </span><span class="n">data_imp_log_sc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">data_imp</span>
+<span class="w">      </span><span class="c1"># Data recovery #</span>
+<span class="w">      </span><span class="n">data_imp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data_imp_log_sc</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">        </span><span class="nf">scale_recover</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;recover&#39;</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">param_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_raw_log_qrilc_sc_df_param</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span>
+<span class="w">        </span><span class="nf">extract2</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="w">      </span><span class="nf">return</span><span class="p">(</span><span class="n">data_imp</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="c1"># samples in rows, feature in columns</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">pre_processing_GS_wrapper</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">t</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="w"> </span><span class="c1"># features in rows, samples in columns</span>
+<span class="w">    </span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">else</span><span class="p">{</span>
+<span class="w">    </span><span class="nf">stop</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;Unspported methods so far: &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p">))</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="w">  </span><span class="n">df</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<p>Choose one of the available methods.
+Some methods might fail for your dataset for unknown reasons
+(and the error won’t always be easy to understand)</p>
+<div class="highlight-method notranslate"><div class="highlight"><pre><span></span>method = &#39;ZERO&#39;
+method = &#39;MINIMUM&#39;
+method = &#39;COLMEDIAN&#39;
+method = &#39;ROWMEDIAN&#39;
+method = &#39;KNN_IMPUTE&#39;
+method = &#39;SEQKNN&#39;
+method = &#39;BPCA&#39;
+method = &#39;SVDMETHOD&#39;
+method = &#39;LLS&#39;
+method = &#39;MLE&#39;
+mehtod = &#39;LLS&#39;
+method = &#39;QRILC&#39;
+method = &#39;MINDET&#39;
+method = &#39;MINPROB&#39;
+method = &#39;IRM&#39;
+method = &#39;IMPSEQ&#39;
+method = &#39;IMPSEQROB&#39;
+method = &#39;MICE-NORM&#39;
+method = &#39;MICE-CART&#39;
+method = &#39;RF&#39;
+method = &#39;PI&#39;
+method = &#39;GMS&#39;
+method = &#39;TRKNN&#39;,
+method = &#39;MSIMPUTE&#39;
+method = &#39;MSIMPUTE_MNAR&#39;
+method = &#39;GSIMP&#39;
+</pre></div>
+</div>
+<div class="cell tag_parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train_split</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;runs/example/data/data_wide_sample_cols.csv&#39;</span><span class="w"> </span><span class="c1"># test</span>
+<span class="n">folder_experiment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;runs/example/&#39;</span>
+<span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;KNN_IMPUTE&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_injected-parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
+<span class="n">train_split</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;runs/example/data/data_wide_sample_cols.csv&quot;</span>
+<span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;RF&quot;</span>
+<span class="n">folder_experiment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;runs/example&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="dump-predictions">
+<h2>Dump predictions<a class="headerlink" href="#dump-predictions" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span>
+<span class="w">  </span><span class="n">utils</span><span class="o">::</span><span class="nf">read.csv</span><span class="p">(</span>
+<span class="w">    </span><span class="n">train_split</span><span class="p">,</span>
+<span class="w">    </span><span class="n">row.names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="dataframe">
+<caption>A data.frame: 376 × 50</caption>
+<thead>
+	<tr><th></th><th scope=col>X2019_12_18_14_35_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2019_12_19_19_48_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2019_12_20_14_15_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2019_12_27_12_29_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2019_12_29_15_06_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2019_12_29_18_18_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_01_02_17_38_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_01_03_11_17_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_01_03_16_58_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_01_03_20_10_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>⋯</th><th scope=col>X2020_05_20_12_33_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_20_15_35_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_22_14_57_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_22_17_43_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_26_14_20_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_27_13_57_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_05_28_04_06_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_06_01_10_22_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_06_01_15_41_Q.Exactive.HF.X.Orbitrap_6070</th><th scope=col>X2020_06_02_09_41_Q.Exactive.HF.X.Orbitrap_6070</th></tr>
+	<tr><th></th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>AAR2</th><td>27.24780</td><td>27.21067</td><td>27.37741</td><td>      NA</td><td>26.51979</td><td>26.91696</td><td>      NA</td><td>24.84589</td><td>25.97128</td><td>26.89654</td><td>⋯</td><td>25.89322</td><td>26.72637</td><td>25.69277</td><td>25.53641</td><td>27.26284</td><td>28.29443</td><td>28.02290</td><td>      NA</td><td>      NA</td><td>28.08796</td></tr>
+	<tr><th scope=row>ABCB6</th><td>24.47166</td><td>23.77505</td><td>26.85246</td><td>24.04702</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>⋯</td><td>      NA</td><td>25.64072</td><td>24.13414</td><td>24.68758</td><td>26.63090</td><td>27.25845</td><td>27.66939</td><td>      NA</td><td>      NA</td><td>24.14359</td></tr>
+	<tr><th scope=row>ABHD11</th><td>25.71406</td><td>      NA</td><td>26.04554</td><td>24.78816</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>⋯</td><td>      NA</td><td>      NA</td><td>25.06275</td><td>      NA</td><td>25.49146</td><td>27.38574</td><td>      NA</td><td>      NA</td><td>      NA</td><td>25.99529</td></tr>
+	<tr><th scope=row>ACAD9</th><td>28.54226</td><td>28.43667</td><td>28.90693</td><td>27.89394</td><td>      NA</td><td>      NA</td><td>27.11158</td><td>27.67040</td><td>28.52798</td><td>28.55457</td><td>⋯</td><td>28.87634</td><td>      NA</td><td>28.46669</td><td>28.37484</td><td>28.84882</td><td>30.67143</td><td>30.90806</td><td>27.88524</td><td>      NA</td><td>28.92190</td></tr>
+	<tr><th scope=row>ACTL6A</th><td>29.33516</td><td>29.69167</td><td>30.36942</td><td>29.35853</td><td>30.16387</td><td>30.62567</td><td>27.46894</td><td>29.39041</td><td>      NA</td><td>      NA</td><td>⋯</td><td>29.29566</td><td>29.42134</td><td>29.23683</td><td>29.77700</td><td>30.63858</td><td>31.67139</td><td>32.04505</td><td>      NA</td><td>29.79982</td><td>30.72761</td></tr>
+	<tr><th scope=row>ACTN1</th><td>30.83726</td><td>30.63478</td><td>31.25175</td><td>29.99604</td><td>33.14268</td><td>33.36724</td><td>31.48448</td><td>      NA</td><td>32.32141</td><td>32.44850</td><td>⋯</td><td>30.56156</td><td>30.27420</td><td>30.36359</td><td>30.60753</td><td>30.77203</td><td>32.60096</td><td>32.83077</td><td>32.26064</td><td>32.66778</td><td>      NA</td></tr>
+	<tr><th scope=row>ACTR3</th><td>29.71286</td><td>30.33958</td><td>30.71506</td><td>29.68579</td><td>30.98509</td><td>31.56901</td><td>29.71290</td><td>30.08702</td><td>30.20501</td><td>30.47702</td><td>⋯</td><td>29.41643</td><td>29.80215</td><td>30.01837</td><td>30.13663</td><td>31.14047</td><td>32.22334</td><td>32.35713</td><td>30.11148</td><td>31.47957</td><td>31.18866</td></tr>
+	<tr><th scope=row>ADAM10</th><td>26.70187</td><td>25.92934</td><td>26.40279</td><td>      NA</td><td>25.82435</td><td>25.33043</td><td>      NA</td><td>      NA</td><td>      NA</td><td>25.10717</td><td>⋯</td><td>22.39430</td><td>25.92316</td><td>26.40224</td><td>27.51073</td><td>28.17255</td><td>29.02836</td><td>      NA</td><td>      NA</td><td>      NA</td><td>27.32706</td></tr>
+	<tr><th scope=row>AHSA1</th><td>31.69603</td><td>31.29581</td><td>      NA</td><td>30.88242</td><td>31.14486</td><td>31.10062</td><td>29.22371</td><td>30.44352</td><td>30.98970</td><td>30.45875</td><td>⋯</td><td>30.21025</td><td>31.30411</td><td>30.62462</td><td>30.71162</td><td>      NA</td><td>      NA</td><td>32.79021</td><td>29.86223</td><td>31.12435</td><td>31.78367</td></tr>
+	<tr><th scope=row>AK3</th><td>26.33661</td><td>25.41490</td><td>25.55447</td><td>22.49770</td><td>29.20962</td><td>28.93007</td><td>      NA</td><td>28.85082</td><td>28.65523</td><td>28.39517</td><td>⋯</td><td>24.77691</td><td>24.70894</td><td>24.61975</td><td>25.80858</td><td>26.59548</td><td>27.43770</td><td>      NA</td><td>27.58749</td><td>28.29815</td><td>27.25268</td></tr>
+	<tr><th scope=row>AKR1A1</th><td>29.81277</td><td>30.06818</td><td>      NA</td><td>29.66032</td><td>30.88765</td><td>31.12897</td><td>      NA</td><td>30.25935</td><td>30.33319</td><td>30.54490</td><td>⋯</td><td>29.52154</td><td>29.55823</td><td>29.50586</td><td>29.83810</td><td>30.37607</td><td>31.65438</td><td>31.89143</td><td>29.95213</td><td>31.38257</td><td>30.49658</td></tr>
+	<tr><th scope=row>ALDH16A1</th><td>26.43207</td><td>25.45930</td><td>26.40882</td><td>      NA</td><td>27.25899</td><td>26.75939</td><td>25.80681</td><td>      NA</td><td>25.30581</td><td>26.28138</td><td>⋯</td><td>25.16534</td><td>25.64856</td><td>      NA</td><td>      NA</td><td>26.91547</td><td>27.98408</td><td>28.41567</td><td>26.84134</td><td>27.67815</td><td>27.05165</td></tr>
+	<tr><th scope=row>ALDOA</th><td>34.61621</td><td>34.58660</td><td>35.12902</td><td>34.33031</td><td>35.81962</td><td>35.87676</td><td>      NA</td><td>35.80773</td><td>36.02379</td><td>36.00144</td><td>⋯</td><td>34.16743</td><td>34.74169</td><td>34.93930</td><td>34.83738</td><td>35.40166</td><td>36.27801</td><td>36.51030</td><td>35.70187</td><td>36.41222</td><td>35.67333</td></tr>
+	<tr><th scope=row>ANKZF1</th><td>25.03578</td><td>      NA</td><td>25.97751</td><td>24.09289</td><td>26.24425</td><td>25.43425</td><td>25.04222</td><td>      NA</td><td>26.19124</td><td>25.90208</td><td>⋯</td><td>23.25508</td><td>25.38765</td><td>24.76309</td><td>24.67707</td><td>25.77311</td><td>27.57203</td><td>27.79228</td><td>25.76593</td><td>26.29630</td><td>25.54607</td></tr>
+	<tr><th scope=row>ANO6</th><td>23.60953</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.87319</td><td>25.90199</td><td>      NA</td><td>      NA</td><td>24.49844</td><td>25.65160</td><td>⋯</td><td>      NA</td><td>25.01495</td><td>24.22310</td><td>25.95400</td><td>      NA</td><td>      NA</td><td>27.85353</td><td>24.52151</td><td>      NA</td><td>      NA</td></tr>
+	<tr><th scope=row>AP2A2</th><td>27.44269</td><td>26.27650</td><td>27.21965</td><td>25.41674</td><td>27.54245</td><td>28.20182</td><td>25.64760</td><td>26.71253</td><td>27.81072</td><td>26.74509</td><td>⋯</td><td>25.86363</td><td>27.06312</td><td>26.83461</td><td>27.10580</td><td>27.35557</td><td>      NA</td><td>29.54665</td><td>26.07574</td><td>28.16471</td><td>27.95344</td></tr>
+	<tr><th scope=row>AP2M1</th><td>28.78388</td><td>27.68458</td><td>28.72942</td><td>28.47599</td><td>30.39489</td><td>30.74943</td><td>28.43885</td><td>28.41772</td><td>29.95060</td><td>      NA</td><td>⋯</td><td>28.13325</td><td>28.56333</td><td>28.77994</td><td>28.86897</td><td>29.46192</td><td>30.56047</td><td>30.66856</td><td>30.10262</td><td>31.24258</td><td>29.56376</td></tr>
+	<tr><th scope=row>AP2S1</th><td>26.33475</td><td>25.45202</td><td>26.37458</td><td>      NA</td><td>27.80495</td><td>28.23082</td><td>      NA</td><td>      NA</td><td>27.52910</td><td>27.68933</td><td>⋯</td><td>      NA</td><td>24.67627</td><td>25.02690</td><td>25.39878</td><td>      NA</td><td>      NA</td><td>27.91336</td><td>24.56576</td><td>28.69388</td><td>26.20026</td></tr>
+	<tr><th scope=row>APEX1</th><td>31.65821</td><td>30.88402</td><td>32.07285</td><td>30.89649</td><td>31.80124</td><td>      NA</td><td>30.46061</td><td>31.15768</td><td>31.23421</td><td>31.59593</td><td>⋯</td><td>30.61886</td><td>31.04414</td><td>31.37865</td><td>31.35026</td><td>31.51803</td><td>33.27337</td><td>      NA</td><td>31.55604</td><td>31.87225</td><td>32.09795</td></tr>
+	<tr><th scope=row>AQR</th><td>27.43349</td><td>27.94564</td><td>      NA</td><td>      NA</td><td>29.31244</td><td>29.43950</td><td>26.81641</td><td>25.55248</td><td>27.88501</td><td>28.08603</td><td>⋯</td><td>27.79532</td><td>28.19061</td><td>28.48953</td><td>      NA</td><td>28.31311</td><td>30.49028</td><td>30.72004</td><td>27.51736</td><td>28.39950</td><td>30.33969</td></tr>
+	<tr><th scope=row>ARAF</th><td>      NA</td><td>23.45224</td><td>      NA</td><td>25.69432</td><td>24.35043</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>⋯</td><td>26.30227</td><td>25.22718</td><td>26.27106</td><td>25.47896</td><td>27.17588</td><td>27.91296</td><td>27.80169</td><td>      NA</td><td>      NA</td><td>27.58949</td></tr>
+	<tr><th scope=row>ARGLU1</th><td>26.90438</td><td>      NA</td><td>27.86402</td><td>      NA</td><td>28.33560</td><td>28.57719</td><td>27.31415</td><td>      NA</td><td>29.35590</td><td>28.66102</td><td>⋯</td><td>      NA</td><td>28.62370</td><td>      NA</td><td>28.21507</td><td>27.24109</td><td>29.08076</td><td>      NA</td><td>27.98245</td><td>      NA</td><td>      NA</td></tr>
+	<tr><th scope=row>ARL6IP4</th><td>25.63768</td><td>25.81235</td><td>      NA</td><td>24.63068</td><td>27.50635</td><td>27.04270</td><td>      NA</td><td>      NA</td><td>26.20425</td><td>      NA</td><td>⋯</td><td>24.11331</td><td>23.19853</td><td>26.39180</td><td>      NA</td><td>27.28727</td><td>27.63989</td><td>29.00182</td><td>23.90500</td><td>26.14433</td><td>27.91348</td></tr>
+	<tr><th scope=row>ARMCX3</th><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>27.25196</td><td>27.07938</td><td>      NA</td><td>      NA</td><td>27.42230</td><td>26.59946</td><td>⋯</td><td>23.37172</td><td>24.56302</td><td>22.60454</td><td>      NA</td><td>      NA</td><td>24.24619</td><td>26.79675</td><td>24.06176</td><td>25.70277</td><td>      NA</td></tr>
+	<tr><th scope=row>ARPC1A</th><td>24.64207</td><td>      NA</td><td>24.89143</td><td>      NA</td><td>28.18324</td><td>31.34297</td><td>26.97967</td><td>26.57245</td><td>25.85381</td><td>25.73006</td><td>⋯</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.40756</td><td>      NA</td><td>      NA</td><td>25.49112</td><td>25.13931</td><td>28.32509</td><td>      NA</td></tr>
+	<tr><th scope=row>ASB6</th><td>25.07496</td><td>      NA</td><td>25.47778</td><td>25.94822</td><td>24.26614</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>⋯</td><td>      NA</td><td>26.25633</td><td>      NA</td><td>25.45070</td><td>      NA</td><td>28.52806</td><td>28.82975</td><td>      NA</td><td>      NA</td><td>27.05383</td></tr>
+	<tr><th scope=row>ATIC</th><td>32.01903</td><td>31.49719</td><td>      NA</td><td>31.45650</td><td>      NA</td><td>33.18151</td><td>31.44658</td><td>32.13495</td><td>32.64843</td><td>32.70075</td><td>⋯</td><td>31.01485</td><td>31.69971</td><td>32.06150</td><td>31.76501</td><td>32.46334</td><td>33.70306</td><td>33.99951</td><td>32.81942</td><td>33.47593</td><td>32.80447</td></tr>
+	<tr><th scope=row>ATP13A1</th><td>27.60364</td><td>26.92116</td><td>28.61224</td><td>26.44818</td><td>27.75805</td><td>27.24961</td><td>      NA</td><td>24.33640</td><td>27.17350</td><td>      NA</td><td>⋯</td><td>26.56793</td><td>26.79736</td><td>27.36160</td><td>27.58327</td><td>27.83002</td><td>29.84506</td><td>29.38835</td><td>      NA</td><td>27.70695</td><td>      NA</td></tr>
+	<tr><th scope=row>ATP1A1</th><td>      NA</td><td>31.66607</td><td>32.24720</td><td>31.29373</td><td>32.11883</td><td>32.31792</td><td>30.40141</td><td>31.09194</td><td>      NA</td><td>31.99850</td><td>⋯</td><td>31.15708</td><td>31.55705</td><td>31.55083</td><td>      NA</td><td>32.78638</td><td>33.28265</td><td>33.77549</td><td>31.19055</td><td>32.37283</td><td>32.53825</td></tr>
+	<tr><th scope=row>ATP5J</th><td>28.50998</td><td>29.20557</td><td>29.68048</td><td>28.75627</td><td>29.99564</td><td>30.22883</td><td>28.45097</td><td>      NA</td><td>29.28072</td><td>      NA</td><td>⋯</td><td>29.08674</td><td>28.65997</td><td>      NA</td><td>27.50385</td><td>29.75358</td><td>30.03486</td><td>30.34308</td><td>24.97972</td><td>      NA</td><td>28.85338</td></tr>
+	<tr><th scope=row>⋮</th><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋱</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td></tr>
+	<tr><th scope=row>TUBG1;TUBG2</th><td>29.35315</td><td>29.20273</td><td>29.05090</td><td>28.74394</td><td>29.41599</td><td>30.00196</td><td>27.69046</td><td>28.92818</td><td>29.57281</td><td>29.16569</td><td>⋯</td><td>28.55786</td><td>29.15767</td><td>28.51544</td><td>28.94442</td><td>29.06386</td><td>31.02228</td><td>31.29942</td><td>      NA</td><td>      NA</td><td>30.03078</td></tr>
+	<tr><th scope=row>TUFM</th><td>33.27198</td><td>      NA</td><td>33.78312</td><td>32.93826</td><td>33.50723</td><td>33.91519</td><td>32.07846</td><td>33.20328</td><td>33.50486</td><td>33.32469</td><td>⋯</td><td>32.84883</td><td>33.10986</td><td>33.07511</td><td>33.37516</td><td>34.07790</td><td>35.07212</td><td>35.32056</td><td>33.03297</td><td>34.32429</td><td>33.94192</td></tr>
+	<tr><th scope=row>TWISTNB</th><td>24.81358</td><td>26.41500</td><td>26.17409</td><td>23.66633</td><td>25.98761</td><td>25.90830</td><td>      NA</td><td>      NA</td><td>26.08695</td><td>26.66221</td><td>⋯</td><td>25.10969</td><td>23.75297</td><td>25.80727</td><td>25.08594</td><td>26.64471</td><td>28.39526</td><td>28.90999</td><td>      NA</td><td>      NA</td><td>26.78943</td></tr>
+	<tr><th scope=row>TXN</th><td>33.92769</td><td>33.78117</td><td>33.90149</td><td>32.67164</td><td>34.08544</td><td>34.25075</td><td>32.71676</td><td>33.30742</td><td>33.73045</td><td>33.79217</td><td>⋯</td><td>33.51630</td><td>33.59857</td><td>33.69312</td><td>      NA</td><td>34.37458</td><td>34.94498</td><td>35.42905</td><td>33.54029</td><td>34.76416</td><td>34.19960</td></tr>
+	<tr><th scope=row>TXNL4A</th><td>25.93324</td><td>      NA</td><td>26.14519</td><td>26.55925</td><td>26.96862</td><td>25.45205</td><td>      NA</td><td>24.20494</td><td>26.93932</td><td>26.89354</td><td>⋯</td><td>25.00453</td><td>      NA</td><td>26.14361</td><td>25.74455</td><td>      NA</td><td>26.23794</td><td>      NA</td><td>      NA</td><td>23.91077</td><td>26.54053</td></tr>
+	<tr><th scope=row>UBA6</th><td>      NA</td><td>27.77957</td><td>28.96008</td><td>27.79135</td><td>30.36682</td><td>30.38772</td><td>28.77191</td><td>28.15562</td><td>29.59919</td><td>29.44152</td><td>⋯</td><td>28.79538</td><td>28.51905</td><td>28.06497</td><td>28.39272</td><td>28.95953</td><td>30.25519</td><td>30.74895</td><td>28.92057</td><td>30.16902</td><td>28.64007</td></tr>
+	<tr><th scope=row>UBE2Z</th><td>      NA</td><td>27.09577</td><td>      NA</td><td>27.02507</td><td>28.65506</td><td>28.94902</td><td>      NA</td><td>      NA</td><td>      NA</td><td>28.72149</td><td>⋯</td><td>26.86384</td><td>26.76661</td><td>26.59804</td><td>27.38204</td><td>      NA</td><td>29.08866</td><td>29.48408</td><td>26.75481</td><td>27.61253</td><td>      NA</td></tr>
+	<tr><th scope=row>UBE4A</th><td>27.90925</td><td>26.64568</td><td>      NA</td><td>25.84778</td><td>24.19925</td><td>25.09844</td><td>      NA</td><td>      NA</td><td>24.89818</td><td>23.91843</td><td>⋯</td><td>26.86136</td><td>27.38903</td><td>27.11038</td><td>27.78531</td><td>28.40799</td><td>28.94868</td><td>29.78831</td><td>      NA</td><td>23.50531</td><td>28.41985</td></tr>
+	<tr><th scope=row>UFSP2</th><td>25.12707</td><td>23.37079</td><td>23.97622</td><td>      NA</td><td>26.73079</td><td>27.14472</td><td>      NA</td><td>25.13297</td><td>26.23263</td><td>26.37723</td><td>⋯</td><td>      NA</td><td>24.49924</td><td>24.63976</td><td>23.09210</td><td>25.05250</td><td>27.26186</td><td>27.12337</td><td>      NA</td><td>26.01820</td><td>24.92615</td></tr>
+	<tr><th scope=row>USP5</th><td>      NA</td><td>30.05621</td><td>      NA</td><td>29.56656</td><td>31.24491</td><td>31.44658</td><td>29.34174</td><td>30.46110</td><td>30.97746</td><td>30.97992</td><td>⋯</td><td>30.07495</td><td>30.41226</td><td>29.82778</td><td>30.47808</td><td>30.95989</td><td>      NA</td><td>32.51364</td><td>30.72712</td><td>31.77796</td><td>31.09648</td></tr>
+	<tr><th scope=row>UTP3</th><td>26.56097</td><td>26.48683</td><td>27.18830</td><td>25.68046</td><td>26.22164</td><td>27.79098</td><td>25.04485</td><td>26.75506</td><td>27.15673</td><td>24.06825</td><td>⋯</td><td>25.96998</td><td>      NA</td><td>25.48188</td><td>26.36413</td><td>27.15798</td><td>28.68388</td><td>29.44170</td><td>26.20523</td><td>28.73957</td><td>27.07989</td></tr>
+	<tr><th scope=row>UTRN</th><td>      NA</td><td>26.91787</td><td>      NA</td><td>      NA</td><td>26.82941</td><td>30.11682</td><td>      NA</td><td>      NA</td><td>26.39842</td><td>27.19704</td><td>⋯</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.28468</td><td>      NA</td><td>26.99043</td><td>26.93562</td><td>25.60600</td><td>26.41235</td><td>      NA</td></tr>
+	<tr><th scope=row>VCP</th><td>33.26333</td><td>32.96299</td><td>      NA</td><td>32.65333</td><td>34.04588</td><td>34.22475</td><td>32.90611</td><td>      NA</td><td>34.33118</td><td>34.13017</td><td>⋯</td><td>32.70845</td><td>32.80912</td><td>33.02883</td><td>33.00449</td><td>33.64377</td><td>34.99568</td><td>35.45626</td><td>33.84763</td><td>34.97293</td><td>34.09844</td></tr>
+	<tr><th scope=row>VPS11</th><td>25.67209</td><td>25.09200</td><td>25.03465</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.10446</td><td>⋯</td><td>24.05283</td><td>24.98820</td><td>24.53243</td><td>26.08592</td><td>26.55235</td><td>      NA</td><td>28.09763</td><td>      NA</td><td>      NA</td><td>      NA</td></tr>
+	<tr><th scope=row>VPS29</th><td>29.96540</td><td>29.46867</td><td>29.78675</td><td>      NA</td><td>30.27897</td><td>30.34488</td><td>28.16591</td><td>28.97336</td><td>29.74844</td><td>30.15617</td><td>⋯</td><td>29.35920</td><td>29.43514</td><td>30.25158</td><td>29.58174</td><td>30.49075</td><td>31.14297</td><td>31.96922</td><td>28.88640</td><td>      NA</td><td>30.34361</td></tr>
+	<tr><th scope=row>VPS33A</th><td>26.46148</td><td>25.78990</td><td>      NA</td><td>25.80146</td><td>25.78144</td><td>26.55529</td><td>      NA</td><td>      NA</td><td>25.23129</td><td>23.63267</td><td>⋯</td><td>24.65365</td><td>25.79305</td><td>28.72335</td><td>25.90254</td><td>29.08545</td><td>27.94960</td><td>28.50006</td><td>      NA</td><td>      NA</td><td>27.61996</td></tr>
+	<tr><th scope=row>VTA1</th><td>28.09456</td><td>27.35085</td><td>28.12613</td><td>27.20508</td><td>28.97150</td><td>28.78575</td><td>27.72136</td><td>24.63278</td><td>27.85270</td><td>27.94866</td><td>⋯</td><td>25.47692</td><td>27.24463</td><td>28.03444</td><td>27.31034</td><td>28.98329</td><td>28.50548</td><td>29.57028</td><td>      NA</td><td>29.87584</td><td>28.48416</td></tr>
+	<tr><th scope=row>VWA8</th><td>25.89982</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.17851</td><td>24.71120</td><td>      NA</td><td>      NA</td><td>24.97775</td><td>24.79670</td><td>⋯</td><td>23.23056</td><td>24.60958</td><td>26.89943</td><td>25.45274</td><td>24.79099</td><td>27.97416</td><td>28.38299</td><td>24.62349</td><td>      NA</td><td>      NA</td></tr>
+	<tr><th scope=row>VWA9</th><td>26.28947</td><td>27.05610</td><td>27.64279</td><td>27.10699</td><td>25.47460</td><td>25.79035</td><td>24.65715</td><td>25.53493</td><td>25.33953</td><td>25.85716</td><td>⋯</td><td>26.35907</td><td>27.43651</td><td>26.84242</td><td>27.00796</td><td>27.05920</td><td>29.69360</td><td>29.54311</td><td>26.59946</td><td>29.32586</td><td>27.30687</td></tr>
+	<tr><th scope=row>WBP2</th><td>      NA</td><td>26.74650</td><td>      NA</td><td>25.35904</td><td>27.26249</td><td>27.33697</td><td>      NA</td><td>24.62377</td><td>22.95915</td><td>23.36546</td><td>⋯</td><td>      NA</td><td>      NA</td><td>25.32337</td><td>      NA</td><td>26.76395</td><td>      NA</td><td>26.30362</td><td>      NA</td><td>      NA</td><td>25.99505</td></tr>
+	<tr><th scope=row>WBSCR16</th><td>26.35988</td><td>      NA</td><td>27.14734</td><td>      NA</td><td>      NA</td><td>      NA</td><td>      NA</td><td>24.95669</td><td>24.55298</td><td>24.56622</td><td>⋯</td><td>25.04068</td><td>25.61801</td><td>25.83456</td><td>      NA</td><td>27.25638</td><td>27.00571</td><td>27.43261</td><td>25.16722</td><td>      NA</td><td>24.59069</td></tr>
+	<tr><th scope=row>WDR18</th><td>28.25831</td><td>      NA</td><td>28.33505</td><td>28.22807</td><td>      NA</td><td>28.03543</td><td>27.49990</td><td>      NA</td><td>27.95931</td><td>28.01324</td><td>⋯</td><td>27.50832</td><td>28.00550</td><td>26.83425</td><td>28.77524</td><td>28.23681</td><td>30.13210</td><td>30.00451</td><td>      NA</td><td>      NA</td><td>29.10037</td></tr>
+	<tr><th scope=row>WDR33</th><td>25.50661</td><td>23.61986</td><td>      NA</td><td>      NA</td><td>26.81763</td><td>26.85031</td><td>      NA</td><td>23.52934</td><td>26.92524</td><td>      NA</td><td>⋯</td><td>      NA</td><td>25.11184</td><td>      NA</td><td>25.12048</td><td>26.52743</td><td>28.04213</td><td>28.05497</td><td>      NA</td><td>      NA</td><td>26.00123</td></tr>
+	<tr><th scope=row>WDR36</th><td>30.00892</td><td>29.34826</td><td>30.56265</td><td>29.49673</td><td>29.37389</td><td>29.93495</td><td>26.46219</td><td>28.02596</td><td>28.55658</td><td>28.70540</td><td>⋯</td><td>29.70061</td><td>29.72407</td><td>29.66524</td><td>29.45325</td><td>30.77761</td><td>31.76715</td><td>31.61741</td><td>      NA</td><td>30.35594</td><td>30.59317</td></tr>
+	<tr><th scope=row>WDR61</th><td>28.34469</td><td>28.72842</td><td>28.85881</td><td>27.71614</td><td>29.40724</td><td>29.51471</td><td>26.90999</td><td>27.17560</td><td>28.21563</td><td>28.43157</td><td>⋯</td><td>28.17408</td><td>28.65301</td><td>28.37252</td><td>28.73182</td><td>28.93247</td><td>30.77282</td><td>30.61999</td><td>28.16768</td><td>28.60746</td><td>29.54534</td></tr>
+	<tr><th scope=row>WNK1</th><td>27.70088</td><td>      NA</td><td>28.40458</td><td>27.34875</td><td>28.90038</td><td>28.97766</td><td>26.93360</td><td>27.06641</td><td>27.64952</td><td>28.71715</td><td>⋯</td><td>27.03370</td><td>27.74073</td><td>27.16749</td><td>      NA</td><td>28.58749</td><td>29.51345</td><td>30.39877</td><td>26.70596</td><td>28.16461</td><td>27.44435</td></tr>
+	<tr><th scope=row>YBX1</th><td>32.37446</td><td>      NA</td><td>32.32761</td><td>31.79424</td><td>32.44290</td><td>32.58374</td><td>      NA</td><td>31.60678</td><td>31.86393</td><td>32.57720</td><td>⋯</td><td>32.07750</td><td>31.99068</td><td>31.70198</td><td>32.15560</td><td>32.92475</td><td>33.77960</td><td>34.00051</td><td>31.97347</td><td>32.73703</td><td>32.60452</td></tr>
+	<tr><th scope=row>YTHDF1</th><td>24.92542</td><td>      NA</td><td>25.49802</td><td>24.70123</td><td>      NA</td><td>25.87594</td><td>26.34452</td><td>27.56856</td><td>26.36113</td><td>      NA</td><td>⋯</td><td>28.39329</td><td>25.26180</td><td>25.07993</td><td>24.59092</td><td>24.37604</td><td>26.04987</td><td>28.35338</td><td>26.94815</td><td>      NA</td><td>25.54793</td></tr>
+	<tr><th scope=row>YWHAH</th><td>29.60909</td><td>29.02718</td><td>30.17021</td><td>29.23199</td><td>30.61465</td><td>31.32523</td><td>29.82466</td><td>30.54554</td><td>30.03944</td><td>30.64298</td><td>⋯</td><td>29.30365</td><td>29.04560</td><td>      NA</td><td>29.48658</td><td>30.48212</td><td>31.64989</td><td>31.47808</td><td>30.80747</td><td>31.86541</td><td>30.41850</td></tr>
+	<tr><th scope=row>ZNF326</th><td>28.75583</td><td>28.39301</td><td>29.20820</td><td>28.13892</td><td>29.18863</td><td>29.38792</td><td>27.15740</td><td>24.25241</td><td>26.31841</td><td>27.80673</td><td>⋯</td><td>27.81836</td><td>28.29430</td><td>28.80501</td><td>28.97186</td><td>29.54156</td><td>30.83861</td><td>      NA</td><td>25.09491</td><td>26.91843</td><td>29.72004</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data.frame</span></code> does not allow abritary column names, but only valid column names…</p></li>
+<li><p>tibbles don’t support rownames, and the imputation methods rely on normal <code class="docutils literal notranslate"><span class="pre">data.frame</span></code>s.
+Save the header row for later use.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">original_header</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">colnames</span><span class="p">(</span><span class="n">readr</span><span class="o">::</span><span class="nf">read_csv</span><span class="p">(</span>
+<span class="w">  </span><span class="n">train_split</span><span class="p">,</span>
+<span class="w">  </span><span class="n">n_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">col_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">skip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">))</span>
+<span class="n">feat_name</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">original_header</span><span class="p">[</span><span class="m">1</span><span class="p">]</span>
+<span class="n">original_header</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">Rows: </span><span class=" -Color -Color-Blue">1</span> <span class=" -Color -Color-Bold">Columns: </span><span class=" -Color -Color-Blue">51</span>
+<span class=" -Color -Color-Cyan">──</span> <span class=" -Color -Color-Bold">Column specification</span> <span class=" -Color -Color-Cyan">────────────────────────────────────────────────────────</span>
+<span class=" -Color -Color-Bold">Delimiter:</span> &quot;,&quot;
+<span class=" -Color -Color-Red">chr</span>  (1): Gene Names
+<span class=" -Color -Color-Green">dbl</span> (40): 2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070, 2019_12_19_19_48_Q...
+<span class=" -Color -Color-Yellow">lgl</span> (10): 2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070, 2020_01_02_17_38_Q...
+
+<span class=" -Color -Color-Cyan">ℹ</span> Use `spec()` to retrieve the full column specification for this data.
+<span class=" -Color -Color-Cyan">ℹ</span> Specify the column types or set `show_col_types = FALSE` to quiet this message.
+</pre></div>
+</div>
+<div class="output text_html"><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class=list-inline><li>'Gene Names'</li><li>'2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070'</li><li>'2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070'</li><li>'2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070'</li><li>'2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070'</li></ol>
+</div></div>
+</div>
+<p>Uncomment to test certain methods (only for debugging, as at least one method per package is tested using Github Actions)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># to_test &lt;- c(</span>
+<span class="c1"># &#39;ZERO&#39;,</span>
+<span class="c1"># &#39;MINIMUM&#39;,</span>
+<span class="c1"># &#39;COLMEDIAN&#39;,</span>
+<span class="c1"># &#39;ROWMEDIAN&#39;,</span>
+<span class="c1"># &#39;KNN_IMPUTE&#39;,</span>
+<span class="c1"># &#39;SEQKNN&#39;,</span>
+<span class="c1"># &#39;BPCA&#39;,</span>
+<span class="c1"># &#39;SVDMETHOD&#39;,</span>
+<span class="c1"># &#39;LLS&#39;,</span>
+<span class="c1"># &#39;MLE&#39;,</span>
+<span class="c1"># &#39;LLS&#39;,</span>
+<span class="c1"># &#39;QRILC&#39;,</span>
+<span class="c1"># &#39;MINDET&#39;,</span>
+<span class="c1"># &#39;MINPROB&#39;,</span>
+<span class="c1"># &#39;IRM&#39;,</span>
+<span class="c1"># &#39;IMPSEQ&#39;,</span>
+<span class="c1"># &#39;IMPSEQROB&#39;,</span>
+<span class="c1"># &#39;MICE-NORM&#39;,</span>
+<span class="c1"># &#39;MICE-CART&#39;,</span>
+<span class="c1"># &#39;RF&#39;,</span>
+<span class="c1"># &#39;PI&#39;,</span>
+<span class="c1"># &#39;GMS&#39;, # fails to install on Windows</span>
+<span class="c1"># &#39;TRKNN&#39;,</span>
+<span class="c1"># &#39;MSIMPUTE&#39;</span>
+<span class="c1"># &#39;MSIMPUTE_MNAR&#39;</span>
+<span class="c1"># &#39;GSIMP&#39;</span>
+<span class="c1"># )</span>
+
+<span class="c1"># for (method in to_test) {</span>
+<span class="c1">#     print(method)</span>
+<span class="c1">#     pred &lt;- nafunctions(df, method)</span>
+<span class="c1"># }</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Impute and save predictions with original feature and column names</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">nafunctions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p">)</span>
+<span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tibble</span><span class="o">::</span><span class="nf">as_tibble</span><span class="p">(</span><span class="nf">cbind</span><span class="p">(</span><span class="nf">rownames</span><span class="p">(</span><span class="n">pred</span><span class="p">),</span><span class="w"> </span><span class="n">pred</span><span class="p">))</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">original_header</span>
+<span class="n">pred</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  missForest iteration 1 in progress...done!
+    estimated error(s): 0.3218268 
+    difference(s): 0.0002583516 
+    time: 0.916 seconds
+
+  missForest iteration 2 in progress...done!
+    estimated error(s): 0.3159266 
+    difference(s): 2.122621e-05 
+    time: 0.879 seconds
+
+  missForest iteration 3 in progress...done!
+    estimated error(s): 0.3142945 
+    difference(s): 2.101678e-05 
+    time: 0.886 seconds
+
+  missForest iteration 4 in progress...done!
+    estimated error(s): 0.3146808 
+    difference(s): 2.277956e-05 
+    time: 0.883 seconds
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading required package: missForest
+</pre></div>
+</div>
+<div class="output text_html"><table class="dataframe">
+<caption>A tibble: 376 × 51</caption>
+<thead>
+	<tr><th scope=col>Gene Names</th><th scope=col>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2019_12_29_18_18_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_01_02_17_38_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>⋯</th><th scope=col>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_22_14_57_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_22_17_43_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_26_14_20_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_05_28_04_06_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_06_01_10_22_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_06_01_15_41_Q-Exactive-HF-X-Orbitrap_6070</th><th scope=col>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th></tr>
+	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>AAR2    </td><td>27.24780</td><td>27.21067</td><td>27.37741</td><td>26.41135</td><td>26.51979</td><td>26.91696</td><td>25.24913</td><td>24.84589</td><td>25.97128</td><td>⋯</td><td>25.89322</td><td>26.72637</td><td>25.69277</td><td>25.53641</td><td>27.26284</td><td>28.29443</td><td>28.02290</td><td>25.72261</td><td>26.96766</td><td>28.08796</td></tr>
+	<tr><td>ABCB6   </td><td>24.47166</td><td>23.77505</td><td>26.85246</td><td>24.04702</td><td>24.80497</td><td>24.67723</td><td>23.93398</td><td>24.05332</td><td>24.58040</td><td>⋯</td><td>24.22840</td><td>25.64072</td><td>24.13414</td><td>24.68758</td><td>26.63090</td><td>27.25845</td><td>27.66939</td><td>24.01625</td><td>24.45337</td><td>24.14359</td></tr>
+	<tr><td>ABHD11  </td><td>25.71406</td><td>24.74254</td><td>26.04554</td><td>24.78816</td><td>25.12194</td><td>25.30942</td><td>23.40362</td><td>24.56793</td><td>25.17350</td><td>⋯</td><td>24.19160</td><td>24.98494</td><td>25.06275</td><td>24.90850</td><td>25.49146</td><td>27.38574</td><td>26.96973</td><td>24.73315</td><td>25.18688</td><td>25.99529</td></tr>
+	<tr><td>ACAD9   </td><td>28.54226</td><td>28.43667</td><td>28.90693</td><td>27.89394</td><td>28.83397</td><td>29.49768</td><td>27.11158</td><td>27.67040</td><td>28.52798</td><td>⋯</td><td>28.87634</td><td>28.48244</td><td>28.46669</td><td>28.37484</td><td>28.84882</td><td>30.67143</td><td>30.90806</td><td>27.88524</td><td>29.32314</td><td>28.92190</td></tr>
+	<tr><td>ACTL6A  </td><td>29.33516</td><td>29.69167</td><td>30.36942</td><td>29.35853</td><td>30.16387</td><td>30.62567</td><td>27.46894</td><td>29.39041</td><td>29.84624</td><td>⋯</td><td>29.29566</td><td>29.42134</td><td>29.23683</td><td>29.77700</td><td>30.63858</td><td>31.67139</td><td>32.04505</td><td>29.12748</td><td>29.79982</td><td>30.72761</td></tr>
+	<tr><td>ACTN1   </td><td>30.83726</td><td>30.63478</td><td>31.25175</td><td>29.99604</td><td>33.14268</td><td>33.36724</td><td>31.48448</td><td>31.62654</td><td>32.32141</td><td>⋯</td><td>30.56156</td><td>30.27420</td><td>30.36359</td><td>30.60753</td><td>30.77203</td><td>32.60096</td><td>32.83077</td><td>32.26064</td><td>32.66778</td><td>32.14185</td></tr>
+	<tr><td>ACTR3   </td><td>29.71286</td><td>30.33958</td><td>30.71506</td><td>29.68579</td><td>30.98509</td><td>31.56901</td><td>29.71290</td><td>30.08702</td><td>30.20501</td><td>⋯</td><td>29.41643</td><td>29.80215</td><td>30.01837</td><td>30.13663</td><td>31.14047</td><td>32.22334</td><td>32.35713</td><td>30.11148</td><td>31.47957</td><td>31.18866</td></tr>
+	<tr><td>ADAM10  </td><td>26.70187</td><td>25.92934</td><td>26.40279</td><td>25.87603</td><td>25.82435</td><td>25.33043</td><td>25.30399</td><td>25.87339</td><td>25.27521</td><td>⋯</td><td>22.39430</td><td>25.92316</td><td>26.40224</td><td>27.51073</td><td>28.17255</td><td>29.02836</td><td>28.71864</td><td>25.50367</td><td>25.81854</td><td>27.32706</td></tr>
+	<tr><td>AHSA1   </td><td>31.69603</td><td>31.29581</td><td>31.06572</td><td>30.88242</td><td>31.14486</td><td>31.10062</td><td>29.22371</td><td>30.44352</td><td>30.98970</td><td>⋯</td><td>30.21025</td><td>31.30411</td><td>30.62462</td><td>30.71162</td><td>31.59504</td><td>32.18173</td><td>32.79021</td><td>29.86223</td><td>31.12435</td><td>31.78367</td></tr>
+	<tr><td>AK3     </td><td>26.33661</td><td>25.41490</td><td>25.55447</td><td>22.49770</td><td>29.20962</td><td>28.93007</td><td>26.70652</td><td>28.85082</td><td>28.65523</td><td>⋯</td><td>24.77691</td><td>24.70894</td><td>24.61975</td><td>25.80858</td><td>26.59548</td><td>27.43770</td><td>27.81157</td><td>27.58749</td><td>28.29815</td><td>27.25268</td></tr>
+	<tr><td>AKR1A1  </td><td>29.81277</td><td>30.06818</td><td>30.25341</td><td>29.66032</td><td>30.88765</td><td>31.12897</td><td>28.89710</td><td>30.25935</td><td>30.33319</td><td>⋯</td><td>29.52154</td><td>29.55823</td><td>29.50586</td><td>29.83810</td><td>30.37607</td><td>31.65438</td><td>31.89143</td><td>29.95213</td><td>31.38257</td><td>30.49658</td></tr>
+	<tr><td>ALDH16A1</td><td>26.43207</td><td>25.45930</td><td>26.40882</td><td>25.61264</td><td>27.25899</td><td>26.75939</td><td>25.80681</td><td>25.81843</td><td>25.30581</td><td>⋯</td><td>25.16534</td><td>25.64856</td><td>25.89128</td><td>26.00067</td><td>26.91547</td><td>27.98408</td><td>28.41567</td><td>26.84134</td><td>27.67815</td><td>27.05165</td></tr>
+	<tr><td>ALDOA   </td><td>34.61621</td><td>34.58660</td><td>35.12902</td><td>34.33031</td><td>35.81962</td><td>35.87676</td><td>34.42496</td><td>35.80773</td><td>36.02379</td><td>⋯</td><td>34.16743</td><td>34.74169</td><td>34.93930</td><td>34.83738</td><td>35.40166</td><td>36.27801</td><td>36.51030</td><td>35.70187</td><td>36.41222</td><td>35.67333</td></tr>
+	<tr><td>ANKZF1  </td><td>25.03578</td><td>24.65425</td><td>25.97751</td><td>24.09289</td><td>26.24425</td><td>25.43425</td><td>25.04222</td><td>25.24222</td><td>26.19124</td><td>⋯</td><td>23.25508</td><td>25.38765</td><td>24.76309</td><td>24.67707</td><td>25.77311</td><td>27.57203</td><td>27.79228</td><td>25.76593</td><td>26.29630</td><td>25.54607</td></tr>
+	<tr><td>ANO6    </td><td>23.60953</td><td>24.38688</td><td>25.39666</td><td>24.00306</td><td>24.87319</td><td>25.90199</td><td>23.57372</td><td>24.57870</td><td>24.49844</td><td>⋯</td><td>23.98152</td><td>25.01495</td><td>24.22310</td><td>25.95400</td><td>25.62349</td><td>27.09714</td><td>27.85353</td><td>24.52151</td><td>24.83551</td><td>25.93347</td></tr>
+	<tr><td>AP2A2   </td><td>27.44269</td><td>26.27650</td><td>27.21965</td><td>25.41674</td><td>27.54245</td><td>28.20182</td><td>25.64760</td><td>26.71253</td><td>27.81072</td><td>⋯</td><td>25.86363</td><td>27.06312</td><td>26.83461</td><td>27.10580</td><td>27.35557</td><td>28.80497</td><td>29.54665</td><td>26.07574</td><td>28.16471</td><td>27.95344</td></tr>
+	<tr><td>AP2M1   </td><td>28.78388</td><td>27.68458</td><td>28.72942</td><td>28.47599</td><td>30.39489</td><td>30.74943</td><td>28.43885</td><td>28.41772</td><td>29.95060</td><td>⋯</td><td>28.13325</td><td>28.56333</td><td>28.77994</td><td>28.86897</td><td>29.46192</td><td>30.56047</td><td>30.66856</td><td>30.10262</td><td>31.24258</td><td>29.56376</td></tr>
+	<tr><td>AP2S1   </td><td>26.33475</td><td>25.45202</td><td>26.37458</td><td>25.32489</td><td>27.80495</td><td>28.23082</td><td>24.42282</td><td>25.14391</td><td>27.52910</td><td>⋯</td><td>25.27661</td><td>24.67627</td><td>25.02690</td><td>25.39878</td><td>25.81334</td><td>27.05642</td><td>27.91336</td><td>24.56576</td><td>28.69388</td><td>26.20026</td></tr>
+	<tr><td>APEX1   </td><td>31.65821</td><td>30.88402</td><td>32.07285</td><td>30.89649</td><td>31.80124</td><td>31.92236</td><td>30.46061</td><td>31.15768</td><td>31.23421</td><td>⋯</td><td>30.61886</td><td>31.04414</td><td>31.37865</td><td>31.35026</td><td>31.51803</td><td>33.27337</td><td>32.94856</td><td>31.55604</td><td>31.87225</td><td>32.09795</td></tr>
+	<tr><td>AQR     </td><td>27.43349</td><td>27.94564</td><td>28.56503</td><td>27.52118</td><td>29.31244</td><td>29.43950</td><td>26.81641</td><td>25.55248</td><td>27.88501</td><td>⋯</td><td>27.79532</td><td>28.19061</td><td>28.48953</td><td>28.05485</td><td>28.31311</td><td>30.49028</td><td>30.72004</td><td>27.51736</td><td>28.39950</td><td>30.33969</td></tr>
+	<tr><td>ARAF    </td><td>26.29849</td><td>23.45224</td><td>26.83807</td><td>25.69432</td><td>24.35043</td><td>25.93882</td><td>25.39821</td><td>25.54216</td><td>25.32554</td><td>⋯</td><td>26.30227</td><td>25.22718</td><td>26.27106</td><td>25.47896</td><td>27.17588</td><td>27.91296</td><td>27.80169</td><td>25.40340</td><td>25.69313</td><td>27.58949</td></tr>
+	<tr><td>ARGLU1  </td><td>26.90438</td><td>27.69691</td><td>27.86402</td><td>27.11018</td><td>28.33560</td><td>28.57719</td><td>27.31415</td><td>27.87547</td><td>29.35590</td><td>⋯</td><td>27.12110</td><td>28.62370</td><td>27.82139</td><td>28.21507</td><td>27.24109</td><td>29.08076</td><td>29.00842</td><td>27.98245</td><td>28.69462</td><td>27.92926</td></tr>
+	<tr><td>ARL6IP4 </td><td>25.63768</td><td>25.81235</td><td>26.97782</td><td>24.63068</td><td>27.50635</td><td>27.04270</td><td>25.42514</td><td>25.32782</td><td>26.20425</td><td>⋯</td><td>24.11331</td><td>23.19853</td><td>26.39180</td><td>26.43586</td><td>27.28727</td><td>27.63989</td><td>29.00182</td><td>23.90500</td><td>26.14433</td><td>27.91348</td></tr>
+	<tr><td>ARMCX3  </td><td>24.76561</td><td>23.98472</td><td>25.42069</td><td>23.86924</td><td>27.25196</td><td>27.07938</td><td>23.88262</td><td>25.49411</td><td>27.42230</td><td>⋯</td><td>23.37172</td><td>24.56302</td><td>22.60454</td><td>24.34134</td><td>25.34497</td><td>24.24619</td><td>26.79675</td><td>24.06176</td><td>25.70277</td><td>25.29315</td></tr>
+	<tr><td>ARPC1A  </td><td>24.64207</td><td>25.37636</td><td>24.89143</td><td>24.25716</td><td>28.18324</td><td>31.34297</td><td>26.97967</td><td>26.57245</td><td>25.85381</td><td>⋯</td><td>23.86738</td><td>24.50803</td><td>24.85849</td><td>24.40756</td><td>25.78362</td><td>27.89667</td><td>25.49112</td><td>25.13931</td><td>28.32509</td><td>26.10215</td></tr>
+	<tr><td>ASB6    </td><td>25.07496</td><td>25.50581</td><td>25.47778</td><td>25.94822</td><td>24.26614</td><td>25.11769</td><td>24.59387</td><td>24.82036</td><td>24.84107</td><td>⋯</td><td>24.81844</td><td>26.25633</td><td>25.33218</td><td>25.45070</td><td>26.58557</td><td>28.52806</td><td>28.82975</td><td>24.91209</td><td>25.36126</td><td>27.05383</td></tr>
+	<tr><td>ATIC    </td><td>32.01903</td><td>31.49719</td><td>32.34935</td><td>31.45650</td><td>32.89352</td><td>33.18151</td><td>31.44658</td><td>32.13495</td><td>32.64843</td><td>⋯</td><td>31.01485</td><td>31.69971</td><td>32.06150</td><td>31.76501</td><td>32.46334</td><td>33.70306</td><td>33.99951</td><td>32.81942</td><td>33.47593</td><td>32.80447</td></tr>
+	<tr><td>ATP13A1 </td><td>27.60364</td><td>26.92116</td><td>28.61224</td><td>26.44818</td><td>27.75805</td><td>27.24961</td><td>26.19992</td><td>24.33640</td><td>27.17350</td><td>⋯</td><td>26.56793</td><td>26.79736</td><td>27.36160</td><td>27.58327</td><td>27.83002</td><td>29.84506</td><td>29.38835</td><td>26.77244</td><td>27.70695</td><td>28.17684</td></tr>
+	<tr><td>ATP1A1  </td><td>32.00306</td><td>31.66607</td><td>32.24720</td><td>31.29373</td><td>32.11883</td><td>32.31792</td><td>30.40141</td><td>31.09194</td><td>31.94305</td><td>⋯</td><td>31.15708</td><td>31.55705</td><td>31.55083</td><td>31.88278</td><td>32.78638</td><td>33.28265</td><td>33.77549</td><td>31.19055</td><td>32.37283</td><td>32.53825</td></tr>
+	<tr><td>ATP5J   </td><td>28.50998</td><td>29.20557</td><td>29.68048</td><td>28.75627</td><td>29.99564</td><td>30.22883</td><td>28.45097</td><td>28.04412</td><td>29.28072</td><td>⋯</td><td>29.08674</td><td>28.65997</td><td>28.22334</td><td>27.50385</td><td>29.75358</td><td>30.03486</td><td>30.34308</td><td>24.97972</td><td>29.47412</td><td>28.85338</td></tr>
+	<tr><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋱</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td></tr>
+	<tr><td>TUBG1;TUBG2</td><td>29.35315</td><td>29.20273</td><td>29.05090</td><td>28.74394</td><td>29.41599</td><td>30.00196</td><td>27.69046</td><td>28.92818</td><td>29.57281</td><td>⋯</td><td>28.55786</td><td>29.15767</td><td>28.51544</td><td>28.94442</td><td>29.06386</td><td>31.02228</td><td>31.29942</td><td>28.75701</td><td>29.61089</td><td>30.03078</td></tr>
+	<tr><td>TUFM       </td><td>33.27198</td><td>32.98221</td><td>33.78312</td><td>32.93826</td><td>33.50723</td><td>33.91519</td><td>32.07846</td><td>33.20328</td><td>33.50486</td><td>⋯</td><td>32.84883</td><td>33.10986</td><td>33.07511</td><td>33.37516</td><td>34.07790</td><td>35.07212</td><td>35.32056</td><td>33.03297</td><td>34.32429</td><td>33.94192</td></tr>
+	<tr><td>TWISTNB    </td><td>24.81358</td><td>26.41500</td><td>26.17409</td><td>23.66633</td><td>25.98761</td><td>25.90830</td><td>24.84005</td><td>24.93548</td><td>26.08695</td><td>⋯</td><td>25.10969</td><td>23.75297</td><td>25.80727</td><td>25.08594</td><td>26.64471</td><td>28.39526</td><td>28.90999</td><td>25.27520</td><td>26.57386</td><td>26.78943</td></tr>
+	<tr><td>TXN        </td><td>33.92769</td><td>33.78117</td><td>33.90149</td><td>32.67164</td><td>34.08544</td><td>34.25075</td><td>32.71676</td><td>33.30742</td><td>33.73045</td><td>⋯</td><td>33.51630</td><td>33.59857</td><td>33.69312</td><td>33.57114</td><td>34.37458</td><td>34.94498</td><td>35.42905</td><td>33.54029</td><td>34.76416</td><td>34.19960</td></tr>
+	<tr><td>TXNL4A     </td><td>25.93324</td><td>25.55304</td><td>26.14519</td><td>26.55925</td><td>26.96862</td><td>25.45205</td><td>24.70444</td><td>24.20494</td><td>26.93932</td><td>⋯</td><td>25.00453</td><td>25.59389</td><td>26.14361</td><td>25.74455</td><td>26.40924</td><td>26.23794</td><td>27.10914</td><td>26.03458</td><td>23.91077</td><td>26.54053</td></tr>
+	<tr><td>UBA6       </td><td>28.50652</td><td>27.77957</td><td>28.96008</td><td>27.79135</td><td>30.36682</td><td>30.38772</td><td>28.77191</td><td>28.15562</td><td>29.59919</td><td>⋯</td><td>28.79538</td><td>28.51905</td><td>28.06497</td><td>28.39272</td><td>28.95953</td><td>30.25519</td><td>30.74895</td><td>28.92057</td><td>30.16902</td><td>28.64007</td></tr>
+	<tr><td>UBE2Z      </td><td>27.54284</td><td>27.09577</td><td>28.24454</td><td>27.02507</td><td>28.65506</td><td>28.94902</td><td>26.88135</td><td>27.04604</td><td>28.06396</td><td>⋯</td><td>26.86384</td><td>26.76661</td><td>26.59804</td><td>27.38204</td><td>28.44389</td><td>29.08866</td><td>29.48408</td><td>26.75481</td><td>27.61253</td><td>28.51913</td></tr>
+	<tr><td>UBE4A      </td><td>27.90925</td><td>26.64568</td><td>27.72865</td><td>25.84778</td><td>24.19925</td><td>25.09844</td><td>24.97177</td><td>24.20120</td><td>24.89818</td><td>⋯</td><td>26.86136</td><td>27.38903</td><td>27.11038</td><td>27.78531</td><td>28.40799</td><td>28.94868</td><td>29.78831</td><td>24.99073</td><td>23.50531</td><td>28.41985</td></tr>
+	<tr><td>UFSP2      </td><td>25.12707</td><td>23.37079</td><td>23.97622</td><td>23.68757</td><td>26.73079</td><td>27.14472</td><td>23.95082</td><td>25.13297</td><td>26.23263</td><td>⋯</td><td>23.81435</td><td>24.49924</td><td>24.63976</td><td>23.09210</td><td>25.05250</td><td>27.26186</td><td>27.12337</td><td>24.79211</td><td>26.01820</td><td>24.92615</td></tr>
+	<tr><td>USP5       </td><td>30.68825</td><td>30.05621</td><td>30.97471</td><td>29.56656</td><td>31.24491</td><td>31.44658</td><td>29.34174</td><td>30.46110</td><td>30.97746</td><td>⋯</td><td>30.07495</td><td>30.41226</td><td>29.82778</td><td>30.47808</td><td>30.95989</td><td>31.96824</td><td>32.51364</td><td>30.72712</td><td>31.77796</td><td>31.09648</td></tr>
+	<tr><td>UTP3       </td><td>26.56097</td><td>26.48683</td><td>27.18830</td><td>25.68046</td><td>26.22164</td><td>27.79098</td><td>25.04485</td><td>26.75506</td><td>27.15673</td><td>⋯</td><td>25.96998</td><td>26.00621</td><td>25.48188</td><td>26.36413</td><td>27.15798</td><td>28.68388</td><td>29.44170</td><td>26.20523</td><td>28.73957</td><td>27.07989</td></tr>
+	<tr><td>UTRN       </td><td>24.58503</td><td>26.91787</td><td>25.07389</td><td>24.10730</td><td>26.82941</td><td>30.11682</td><td>23.43555</td><td>24.60945</td><td>26.39842</td><td>⋯</td><td>23.59257</td><td>24.58910</td><td>24.61057</td><td>24.28468</td><td>25.53931</td><td>26.99043</td><td>26.93562</td><td>25.60600</td><td>26.41235</td><td>25.04470</td></tr>
+	<tr><td>VCP        </td><td>33.26333</td><td>32.96299</td><td>33.57868</td><td>32.65333</td><td>34.04588</td><td>34.22475</td><td>32.90611</td><td>33.46800</td><td>34.33118</td><td>⋯</td><td>32.70845</td><td>32.80912</td><td>33.02883</td><td>33.00449</td><td>33.64377</td><td>34.99568</td><td>35.45626</td><td>33.84763</td><td>34.97293</td><td>34.09844</td></tr>
+	<tr><td>VPS11      </td><td>25.67209</td><td>25.09200</td><td>25.03465</td><td>24.57730</td><td>26.01627</td><td>25.96729</td><td>24.08654</td><td>24.48702</td><td>25.38662</td><td>⋯</td><td>24.05283</td><td>24.98820</td><td>24.53243</td><td>26.08592</td><td>26.55235</td><td>27.63450</td><td>28.09763</td><td>24.72257</td><td>25.99796</td><td>26.74124</td></tr>
+	<tr><td>VPS29      </td><td>29.96540</td><td>29.46867</td><td>29.78675</td><td>29.07849</td><td>30.27897</td><td>30.34488</td><td>28.16591</td><td>28.97336</td><td>29.74844</td><td>⋯</td><td>29.35920</td><td>29.43514</td><td>30.25158</td><td>29.58174</td><td>30.49075</td><td>31.14297</td><td>31.96922</td><td>28.88640</td><td>30.13133</td><td>30.34361</td></tr>
+	<tr><td>VPS33A     </td><td>26.46148</td><td>25.78990</td><td>27.57407</td><td>25.80146</td><td>25.78144</td><td>26.55529</td><td>24.86253</td><td>25.46878</td><td>25.23129</td><td>⋯</td><td>24.65365</td><td>25.79305</td><td>28.72335</td><td>25.90254</td><td>29.08545</td><td>27.94960</td><td>28.50006</td><td>25.61982</td><td>25.65737</td><td>27.61996</td></tr>
+	<tr><td>VTA1       </td><td>28.09456</td><td>27.35085</td><td>28.12613</td><td>27.20508</td><td>28.97150</td><td>28.78575</td><td>27.72136</td><td>24.63278</td><td>27.85270</td><td>⋯</td><td>25.47692</td><td>27.24463</td><td>28.03444</td><td>27.31034</td><td>28.98329</td><td>28.50548</td><td>29.57028</td><td>27.88610</td><td>29.87584</td><td>28.48416</td></tr>
+	<tr><td>VWA8       </td><td>25.89982</td><td>24.65401</td><td>25.47587</td><td>24.61427</td><td>24.17851</td><td>24.71120</td><td>22.63952</td><td>23.85641</td><td>24.97775</td><td>⋯</td><td>23.23056</td><td>24.60958</td><td>26.89943</td><td>25.45274</td><td>24.79099</td><td>27.97416</td><td>28.38299</td><td>24.62349</td><td>25.62230</td><td>26.42851</td></tr>
+	<tr><td>VWA9       </td><td>26.28947</td><td>27.05610</td><td>27.64279</td><td>27.10699</td><td>25.47460</td><td>25.79035</td><td>24.65715</td><td>25.53493</td><td>25.33953</td><td>⋯</td><td>26.35907</td><td>27.43651</td><td>26.84242</td><td>27.00796</td><td>27.05920</td><td>29.69360</td><td>29.54311</td><td>26.59946</td><td>29.32586</td><td>27.30687</td></tr>
+	<tr><td>WBP2       </td><td>26.02400</td><td>26.74650</td><td>26.48206</td><td>25.35904</td><td>27.26249</td><td>27.33697</td><td>24.74094</td><td>24.62377</td><td>22.95915</td><td>⋯</td><td>25.96054</td><td>26.03455</td><td>25.32337</td><td>26.17934</td><td>26.76395</td><td>26.85387</td><td>26.30362</td><td>25.20268</td><td>26.26373</td><td>25.99505</td></tr>
+	<tr><td>WBSCR16    </td><td>26.35988</td><td>25.60528</td><td>27.14734</td><td>25.78125</td><td>25.65241</td><td>25.77838</td><td>24.34924</td><td>24.95669</td><td>24.55298</td><td>⋯</td><td>25.04068</td><td>25.61801</td><td>25.83456</td><td>25.89702</td><td>27.25638</td><td>27.00571</td><td>27.43261</td><td>25.16722</td><td>25.58305</td><td>24.59069</td></tr>
+	<tr><td>WDR18      </td><td>28.25831</td><td>28.02528</td><td>28.33505</td><td>28.22807</td><td>28.22514</td><td>28.03543</td><td>27.49990</td><td>27.24914</td><td>27.95931</td><td>⋯</td><td>27.50832</td><td>28.00550</td><td>26.83425</td><td>28.77524</td><td>28.23681</td><td>30.13210</td><td>30.00451</td><td>27.72145</td><td>28.12723</td><td>29.10037</td></tr>
+	<tr><td>WDR33      </td><td>25.50661</td><td>23.61986</td><td>25.37668</td><td>24.84001</td><td>26.81763</td><td>26.85031</td><td>25.12266</td><td>23.52934</td><td>26.92524</td><td>⋯</td><td>24.87526</td><td>25.11184</td><td>25.00007</td><td>25.12048</td><td>26.52743</td><td>28.04213</td><td>28.05497</td><td>25.85191</td><td>26.33828</td><td>26.00123</td></tr>
+	<tr><td>WDR36      </td><td>30.00892</td><td>29.34826</td><td>30.56265</td><td>29.49673</td><td>29.37389</td><td>29.93495</td><td>26.46219</td><td>28.02596</td><td>28.55658</td><td>⋯</td><td>29.70061</td><td>29.72407</td><td>29.66524</td><td>29.45325</td><td>30.77761</td><td>31.76715</td><td>31.61741</td><td>28.75369</td><td>30.35594</td><td>30.59317</td></tr>
+	<tr><td>WDR61      </td><td>28.34469</td><td>28.72842</td><td>28.85881</td><td>27.71614</td><td>29.40724</td><td>29.51471</td><td>26.90999</td><td>27.17560</td><td>28.21563</td><td>⋯</td><td>28.17408</td><td>28.65301</td><td>28.37252</td><td>28.73182</td><td>28.93247</td><td>30.77282</td><td>30.61999</td><td>28.16768</td><td>28.60746</td><td>29.54534</td></tr>
+	<tr><td>WNK1       </td><td>27.70088</td><td>27.16091</td><td>28.40458</td><td>27.34875</td><td>28.90038</td><td>28.97766</td><td>26.93360</td><td>27.06641</td><td>27.64952</td><td>⋯</td><td>27.03370</td><td>27.74073</td><td>27.16749</td><td>27.71594</td><td>28.58749</td><td>29.51345</td><td>30.39877</td><td>26.70596</td><td>28.16461</td><td>27.44435</td></tr>
+	<tr><td>YBX1       </td><td>32.37446</td><td>31.93545</td><td>32.32761</td><td>31.79424</td><td>32.44290</td><td>32.58374</td><td>30.84140</td><td>31.60678</td><td>31.86393</td><td>⋯</td><td>32.07750</td><td>31.99068</td><td>31.70198</td><td>32.15560</td><td>32.92475</td><td>33.77960</td><td>34.00051</td><td>31.97347</td><td>32.73703</td><td>32.60452</td></tr>
+	<tr><td>YTHDF1     </td><td>24.92542</td><td>25.06833</td><td>25.49802</td><td>24.70123</td><td>26.51052</td><td>25.87594</td><td>26.34452</td><td>27.56856</td><td>26.36113</td><td>⋯</td><td>28.39329</td><td>25.26180</td><td>25.07993</td><td>24.59092</td><td>24.37604</td><td>26.04987</td><td>28.35338</td><td>26.94815</td><td>26.92747</td><td>25.54793</td></tr>
+	<tr><td>YWHAH      </td><td>29.60909</td><td>29.02718</td><td>30.17021</td><td>29.23199</td><td>30.61465</td><td>31.32523</td><td>29.82466</td><td>30.54554</td><td>30.03944</td><td>⋯</td><td>29.30365</td><td>29.04560</td><td>29.40828</td><td>29.48658</td><td>30.48212</td><td>31.64989</td><td>31.47808</td><td>30.80747</td><td>31.86541</td><td>30.41850</td></tr>
+	<tr><td>ZNF326     </td><td>28.75583</td><td>28.39301</td><td>29.20820</td><td>28.13892</td><td>29.18863</td><td>29.38792</td><td>27.15740</td><td>24.25241</td><td>26.31841</td><td>⋯</td><td>27.81836</td><td>28.29430</td><td>28.80501</td><td>28.97186</td><td>29.54156</td><td>30.83861</td><td>30.05362</td><td>25.09491</td><td>26.91843</td><td>29.72004</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">id.vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">feat_name</span><span class="p">)</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">feat_name</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;Sample ID&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p">)</span>
+<span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">pred</span><span class="p">[</span><span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">df</span><span class="p">))[</span><span class="s">&#39;value&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="p">]</span>
+<span class="n">pred</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><table class="dataframe">
+<caption>A data.frame: 3334 × 3</caption>
+<thead>
+	<tr><th></th><th scope=col>Gene Names</th><th scope=col>Sample ID</th><th scope=col>RF</th></tr>
+	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;fct&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>21</th><td>ARAF        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.29849</td></tr>
+	<tr><th scope=row>24</th><td>ARMCX3      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>24.76561</td></tr>
+	<tr><th scope=row>29</th><td>ATP1A1      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>32.00306</td></tr>
+	<tr><th scope=row>34</th><td>BDH2        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>24.59877</td></tr>
+	<tr><th scope=row>42</th><td>CASK        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.18867</td></tr>
+	<tr><th scope=row>44</th><td>CCBL2       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.45562</td></tr>
+	<tr><th scope=row>52</th><td>CENPH       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.04395</td></tr>
+	<tr><th scope=row>61</th><td>CLPP        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.26995</td></tr>
+	<tr><th scope=row>64</th><td>COMMD5      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.07984</td></tr>
+	<tr><th scope=row>66</th><td>COPS4       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>29.08823</td></tr>
+	<tr><th scope=row>71</th><td>CRTAP       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.83854</td></tr>
+	<tr><th scope=row>81</th><td>DDX46       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>31.43696</td></tr>
+	<tr><th scope=row>83</th><td>DENR        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.66076</td></tr>
+	<tr><th scope=row>88</th><td>DNAJC10     </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.92826</td></tr>
+	<tr><th scope=row>94</th><td>ECT2        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.17858</td></tr>
+	<tr><th scope=row>96</th><td>EIF1B       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.27641</td></tr>
+	<tr><th scope=row>97</th><td>EIF3C;EIF3CL</td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>31.25350</td></tr>
+	<tr><th scope=row>106</th><td>EXOC1       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>24.61144</td></tr>
+	<tr><th scope=row>115</th><td>FKBP14      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.34318</td></tr>
+	<tr><th scope=row>124</th><td>GEMIN5      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>30.85105</td></tr>
+	<tr><th scope=row>127</th><td>GNAI1       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.75629</td></tr>
+	<tr><th scope=row>139</th><td>HMGB2       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.82266</td></tr>
+	<tr><th scope=row>157</th><td>KIAA1143    </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.32268</td></tr>
+	<tr><th scope=row>169</th><td>LLGL1       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>24.12093</td></tr>
+	<tr><th scope=row>173</th><td>LSM12       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.90243</td></tr>
+	<tr><th scope=row>175</th><td>MAGT1       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>24.78304</td></tr>
+	<tr><th scope=row>176</th><td>MALT1       </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>23.76020</td></tr>
+	<tr><th scope=row>208</th><td>NIT2        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.43453</td></tr>
+	<tr><th scope=row>213</th><td>NPM3        </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>30.25399</td></tr>
+	<tr><th scope=row>218</th><td>NSMCE2      </td><td>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.67758</td></tr>
+	<tr><th scope=row>⋮</th><td>⋮</td><td>⋮</td><td>⋮</td></tr>
+	<tr><th scope=row>18601</th><td>MARCH5     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.13036</td></tr>
+	<tr><th scope=row>18611</th><td>MRPL19     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.00498</td></tr>
+	<tr><th scope=row>18616</th><td>MRPS28     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.58924</td></tr>
+	<tr><th scope=row>18622</th><td>NACC1      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.65625</td></tr>
+	<tr><th scope=row>18630</th><td>NELFCD;TH1L</td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.28427</td></tr>
+	<tr><th scope=row>18644</th><td>NUDT9      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.65355</td></tr>
+	<tr><th scope=row>18673</th><td>PPP1R13L   </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.00551</td></tr>
+	<tr><th scope=row>18676</th><td>PPP4C      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.11434</td></tr>
+	<tr><th scope=row>18684</th><td>PRPF6      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>30.67094</td></tr>
+	<tr><th scope=row>18688</th><td>PSMD5      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>30.80800</td></tr>
+	<tr><th scope=row>18691</th><td>PTPN1      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.97161</td></tr>
+	<tr><th scope=row>18700</th><td>RDH13      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.98204</td></tr>
+	<tr><th scope=row>18702</th><td>RNASEH2C   </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.86605</td></tr>
+	<tr><th scope=row>18703</th><td>RNF114     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.63713</td></tr>
+	<tr><th scope=row>18705</th><td>RPL18A     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>32.79631</td></tr>
+	<tr><th scope=row>18709</th><td>RPP38      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.95545</td></tr>
+	<tr><th scope=row>18725</th><td>SEPT2      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>30.69577</td></tr>
+	<tr><th scope=row>18727</th><td>SERF2      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.59800</td></tr>
+	<tr><th scope=row>18731</th><td>SH3BGRL3   </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>29.33426</td></tr>
+	<tr><th scope=row>18732</th><td>SLC16A7    </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.34567</td></tr>
+	<tr><th scope=row>18737</th><td>SLC7A1     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.06563</td></tr>
+	<tr><th scope=row>18746</th><td>SRM        </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>31.24072</td></tr>
+	<tr><th scope=row>18756</th><td>TIMM9      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>27.49431</td></tr>
+	<tr><th scope=row>18758</th><td>TMEM261    </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.53216</td></tr>
+	<tr><th scope=row>18767</th><td>TRMT2A     </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.94719</td></tr>
+	<tr><th scope=row>18770</th><td>TSNAX;DISC1</td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.34101</td></tr>
+	<tr><th scope=row>18777</th><td>UBE2Z      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>28.51913</td></tr>
+	<tr><th scope=row>18782</th><td>UTRN       </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>25.04470</td></tr>
+	<tr><th scope=row>18784</th><td>VPS11      </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.74124</td></tr>
+	<tr><th scope=row>18788</th><td>VWA8       </td><td>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</td><td>26.42851</td></tr>
+</tbody>
+</table>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dim</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class=list-inline><li>3334</li><li>3</li></ol>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">file.path</span><span class="p">(</span><span class="n">folder_experiment</span><span class="p">,</span>
+<span class="w">                  </span><span class="s">&#39;preds&#39;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&#39;pred_all_&#39;</span><span class="p">,</span><span class="w"> </span><span class="nf">toupper</span><span class="p">(</span><span class="n">method</span><span class="p">),</span><span class="w"> </span><span class="s">&#39;.csv&#39;</span><span class="p">))</span>
+<span class="n">fname</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">'runs/example/preds/pred_all_RF.csv'</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">write_csv</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning message:
+“The `path` argument of `write_csv()` is deprecated as of readr 1.4.0.
+<span class=" -Color -Color-Cyan">ℹ</span> Please use the `file` argument instead.”
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_1_train_NAGuideR_SEQKNN.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">NAGuide R methods</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01_1_train_NAGuideR_KNN_IMPUTE.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">NAGuide R methods</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dump-predictions">Dump predictions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PIMMS
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Henry Webel.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
