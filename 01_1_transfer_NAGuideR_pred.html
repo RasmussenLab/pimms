@@ -49,8 +49,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_transfer_NAGuideR_pred';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_MICE-NORM.html" />
-    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_IMPSEQ.html" />
+    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_IMPSEQ.html" />
+    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_GSIMP.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -154,27 +154,27 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -803,16 +803,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>30.547</td>
       <td>30.783</td>
       <td>30.551</td>
-      <td>30.851</td>
+      <td>30.651</td>
       <td>29.521</td>
-      <td>27.817</td>
+      <td>28.382</td>
       <td>28.035</td>
       <td>30.902</td>
       <td>2,355.271</td>
-      <td>30.817</td>
+      <td>30.830</td>
       <td>30.756</td>
-      <td>27.604</td>
-      <td>27.354</td>
+      <td>27.635</td>
+      <td>27.353</td>
     </tr>
     <tr>
       <th>2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -821,16 +821,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>26.880</td>
       <td>26.674</td>
       <td>26.599</td>
-      <td>26.313</td>
+      <td>26.562</td>
       <td>26.302</td>
-      <td>24.556</td>
+      <td>24.419</td>
       <td>27.960</td>
       <td>26.823</td>
       <td>26.870</td>
-      <td>26.769</td>
+      <td>26.605</td>
       <td>26.961</td>
-      <td>24.141</td>
-      <td>23.907</td>
+      <td>24.500</td>
+      <td>23.845</td>
     </tr>
     <tr>
       <th>2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -839,16 +839,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>26.528</td>
       <td>28.596</td>
       <td>28.428</td>
-      <td>28.862</td>
+      <td>28.714</td>
       <td>29.055</td>
-      <td>24.610</td>
+      <td>21.648</td>
       <td>29.658</td>
       <td>28.842</td>
       <td>2,348.865</td>
-      <td>28.606</td>
+      <td>28.892</td>
       <td>28.814</td>
-      <td>25.575</td>
-      <td>22.373</td>
+      <td>25.745</td>
+      <td>22.388</td>
     </tr>
     <tr>
       <th>2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -857,16 +857,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>27.521</td>
       <td>24.573</td>
       <td>25.095</td>
-      <td>26.302</td>
+      <td>26.431</td>
       <td>23.806</td>
-      <td>25.754</td>
+      <td>24.590</td>
       <td>27.192</td>
       <td>25.472</td>
       <td>27.860</td>
-      <td>25.942</td>
+      <td>25.958</td>
       <td>25.077</td>
-      <td>23.621</td>
-      <td>25.248</td>
+      <td>23.474</td>
+      <td>25.273</td>
     </tr>
     <tr>
       <th>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -875,16 +875,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>26.839</td>
       <td>28.883</td>
       <td>28.931</td>
-      <td>28.903</td>
+      <td>28.480</td>
       <td>28.563</td>
-      <td>24.076</td>
+      <td>24.510</td>
       <td>29.782</td>
       <td>28.702</td>
       <td>2,288.717</td>
-      <td>28.718</td>
+      <td>28.457</td>
       <td>29.564</td>
-      <td>26.459</td>
-      <td>22.691</td>
+      <td>26.330</td>
+      <td>22.626</td>
     </tr>
     <tr>
       <th>...</th>
@@ -911,16 +911,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>25.077</td>
       <td>24.958</td>
       <td>25.168</td>
-      <td>24.006</td>
+      <td>24.544</td>
       <td>23.614</td>
-      <td>23.321</td>
+      <td>22.795</td>
       <td>28.481</td>
       <td>24.419</td>
       <td>2,418.402</td>
-      <td>23.729</td>
+      <td>23.800</td>
       <td>24.058</td>
-      <td>22.626</td>
-      <td>22.303</td>
+      <td>22.365</td>
+      <td>22.309</td>
     </tr>
     <tr>
       <th>2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -929,16 +929,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>27.816</td>
       <td>28.949</td>
       <td>28.965</td>
-      <td>28.678</td>
+      <td>28.087</td>
       <td>28.680</td>
-      <td>23.080</td>
+      <td>24.878</td>
       <td>28.633</td>
       <td>29.740</td>
       <td>2,523.064</td>
-      <td>29.048</td>
+      <td>29.059</td>
       <td>29.097</td>
-      <td>25.716</td>
-      <td>24.793</td>
+      <td>25.545</td>
+      <td>24.799</td>
     </tr>
     <tr>
       <th>2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -947,16 +947,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>28.381</td>
       <td>28.976</td>
       <td>29.058</td>
-      <td>29.124</td>
+      <td>29.273</td>
       <td>28.880</td>
-      <td>25.868</td>
+      <td>25.959</td>
       <td>28.893</td>
       <td>29.235</td>
       <td>-719.987</td>
-      <td>28.939</td>
+      <td>28.938</td>
       <td>29.213</td>
-      <td>26.863</td>
-      <td>24.657</td>
+      <td>26.188</td>
+      <td>24.541</td>
     </tr>
     <tr>
       <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -965,16 +965,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>27.380</td>
       <td>27.377</td>
       <td>27.731</td>
-      <td>27.661</td>
+      <td>27.167</td>
       <td>27.311</td>
-      <td>24.111</td>
+      <td>24.214</td>
       <td>28.033</td>
       <td>26.679</td>
       <td>2,355.271</td>
-      <td>27.429</td>
+      <td>27.483</td>
       <td>27.107</td>
-      <td>25.220</td>
-      <td>23.951</td>
+      <td>24.910</td>
+      <td>23.975</td>
     </tr>
     <tr>
       <th>2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070</th>
@@ -983,16 +983,16 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>29.669</td>
       <td>28.076</td>
       <td>28.127</td>
-      <td>27.947</td>
+      <td>27.995</td>
       <td>27.666</td>
-      <td>27.604</td>
+      <td>27.538</td>
       <td>26.690</td>
       <td>27.380</td>
       <td>26.635</td>
-      <td>27.643</td>
+      <td>27.663</td>
       <td>27.898</td>
-      <td>25.641</td>
-      <td>26.957</td>
+      <td>25.378</td>
+      <td>27.026</td>
     </tr>
   </tbody>
 </table>
@@ -1058,32 +1058,32 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>1.766</td>
       <td>0.695</td>
       <td>0.778</td>
-      <td>0.695</td>
+      <td>0.692</td>
       <td>1.910</td>
-      <td>10.331</td>
+      <td>9.745</td>
       <td>5.059</td>
       <td>0.774</td>
       <td>4,519,870.934</td>
-      <td>0.876</td>
+      <td>0.884</td>
       <td>0.626</td>
-      <td>7.406</td>
-      <td>11.391</td>
+      <td>8.134</td>
+      <td>11.430</td>
     </tr>
     <tr>
       <th>MAE</th>
       <td>1.028</td>
       <td>0.554</td>
       <td>0.580</td>
-      <td>0.550</td>
+      <td>0.549</td>
       <td>0.914</td>
-      <td>2.780</td>
+      <td>2.740</td>
       <td>1.763</td>
       <td>0.593</td>
       <td>1,893.032</td>
-      <td>0.642</td>
+      <td>0.646</td>
       <td>0.511</td>
-      <td>2.536</td>
-      <td>2.988</td>
+      <td>2.671</td>
+      <td>2.992</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1173,32 +1173,32 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
       <td>1.760</td>
       <td>0.534</td>
       <td>0.559</td>
-      <td>0.541</td>
+      <td>0.496</td>
       <td>1.829</td>
-      <td>9.952</td>
+      <td>9.494</td>
       <td>5.293</td>
       <td>0.586</td>
       <td>4,482,158.000</td>
-      <td>0.675</td>
+      <td>0.678</td>
       <td>0.507</td>
-      <td>7.133</td>
-      <td>11.466</td>
+      <td>7.900</td>
+      <td>11.444</td>
     </tr>
     <tr>
       <th>MAE</th>
       <td>1.040</td>
       <td>0.506</td>
       <td>0.524</td>
-      <td>0.508</td>
+      <td>0.493</td>
       <td>0.850</td>
-      <td>2.743</td>
+      <td>2.705</td>
       <td>1.829</td>
       <td>0.543</td>
       <td>1,890.152</td>
-      <td>0.597</td>
+      <td>0.596</td>
       <td>0.474</td>
-      <td>2.491</td>
-      <td>2.985</td>
+      <td>2.636</td>
+      <td>2.986</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1341,13 +1341,13 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
     <tr>
       <th rowspan="4" valign="top">RF</th>
       <th>MSE</th>
-      <td>0.695</td>
-      <td>0.541</td>
+      <td>0.692</td>
+      <td>0.496</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.550</td>
-      <td>0.508</td>
+      <td>0.549</td>
+      <td>0.493</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1383,13 +1383,13 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
     <tr>
       <th rowspan="4" valign="top">QRILC</th>
       <th>MSE</th>
-      <td>10.331</td>
-      <td>9.952</td>
+      <td>9.745</td>
+      <td>9.494</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>2.780</td>
-      <td>2.743</td>
+      <td>2.740</td>
+      <td>2.705</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1467,13 +1467,13 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
     <tr>
       <th rowspan="4" valign="top">IRM</th>
       <th>MSE</th>
-      <td>0.876</td>
-      <td>0.675</td>
+      <td>0.884</td>
+      <td>0.678</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.642</td>
-      <td>0.597</td>
+      <td>0.646</td>
+      <td>0.596</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1509,13 +1509,13 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
     <tr>
       <th rowspan="4" valign="top">MSIMPUTE_MNAR</th>
       <th>MSE</th>
-      <td>7.406</td>
-      <td>7.133</td>
+      <td>8.134</td>
+      <td>7.900</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>2.536</td>
-      <td>2.491</td>
+      <td>2.671</td>
+      <td>2.636</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1530,13 +1530,13 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
     <tr>
       <th rowspan="4" valign="top">GSIMP</th>
       <th>MSE</th>
-      <td>11.391</td>
-      <td>11.466</td>
+      <td>11.430</td>
+      <td>11.444</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>2.988</td>
-      <td>2.985</td>
+      <td>2.992</td>
+      <td>2.986</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1563,17 +1563,17 @@ vaep - INFO     Save fname = Path(&#39;runs/example/preds/pred_real_na_GSIMP.csv
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
 TRKNN          MAE               0.511
-RF             MAE               0.550
+RF             MAE               0.549
 KNN_IMPUTE     MAE               0.554
 SEQKNN         MAE               0.580
 MICE-NORM      MAE               0.593
-IRM            MAE               0.642
+IRM            MAE               0.646
 IMPSEQ         MAE               0.914
 ROWMEDIAN      MAE               1.028
 SVDMETHOD      MAE               1.763
-MSIMPUTE_MNAR  MAE               2.536
-QRILC          MAE               2.780
-GSIMP          MAE               2.988
+MSIMPUTE_MNAR  MAE               2.671
+QRILC          MAE               2.740
+GSIMP          MAE               2.992
 MLE            MAE           1,893.032
 Name: valid_fake_na, dtype: float64
 </pre></div>
@@ -1610,7 +1610,7 @@ Name: valid_fake_na, dtype: float64
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/NAGuideR_errors_per_bin_val.png
 </pre></div>
 </div>
-<img alt="_images/1a422ca2914fce007b5222b718951f45b5d90f897783ff21f09f781717ef8af6.png" src="_images/1a422ca2914fce007b5222b718951f45b5d90f897783ff21f09f781717ef8af6.png" />
+<img alt="_images/254ffc9dc8ab524548ad46b24de28e678826f1da0019a7f9b73ce22c65944108.png" src="_images/254ffc9dc8ab524548ad46b24de28e678826f1da0019a7f9b73ce22c65944108.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1679,7 +1679,7 @@ Name: valid_fake_na, dtype: float64
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_NAGuideR_IMPSEQ.html"
+       href="01_1_train_NAGuideR_GSIMP.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
@@ -1688,7 +1688,7 @@ Name: valid_fake_na, dtype: float64
       </div>
     </a>
     <a class="right-next"
-       href="01_1_train_NAGuideR_MICE-NORM.html"
+       href="01_1_train_NAGuideR_IMPSEQ.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
