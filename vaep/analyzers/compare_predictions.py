@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import List
 
 import pandas as pd
-from typing import List
 
 
 def load_predictions(pred_files: List, shared_columns=['observed']):
@@ -42,7 +42,7 @@ def load_split_prediction_by_modelkey(experiment_folder: Path,
     allow_missing : bool, optional
         Ignore missing pred files of requested model, default False
     shared_columns : List, optional
-        List of columns that are shared between all models, by default ['observed']
+        List of columns that are shared between all models, by default None
 
     Returns
     -------
@@ -60,8 +60,7 @@ def load_split_prediction_by_modelkey(experiment_folder: Path,
             else:
                 raise FileNotFoundError(f'{file} does not exist')
     if to_remove:
-        for file in to_remove:
-            pred_files.remove(to_remove)
+        pred_files.remove(to_remove)
     return load_predictions(pred_files, shared_columns=shared_columns)
 
 

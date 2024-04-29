@@ -3,7 +3,7 @@ import logging
 import pickle
 from collections import namedtuple
 from pathlib import Path, PurePath, PurePosixPath
-from typing import List, Tuple, Union
+from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -54,8 +54,7 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
 
     def get_subfolders(path):
         return [x for x in path.iterdir()
-                if x.is_dir() and
-                not any(x.match(excl) for excl in EXCLUDED)
+                if x.is_dir() and not any(x.match(excl) for excl in EXCLUDED)
                 ]
 
     directories_previous = directories.copy()
@@ -81,7 +80,7 @@ def resolve_path(path: Union[str, Path], to: Union[str, Path] = '.') -> Path:
     return Path('/'.join(ret))
 
 
-def get_fname_from_keys(keys, folder=Path('.'), file_ext='.pkl', remove_duplicates=True):
+def get_fname_from_keys(keys, folder='.', file_ext='.pkl', remove_duplicates=True):
     if remove_duplicates:
         # https://stackoverflow.com/a/53657523/9684872
         keys = list(dict.fromkeys(keys))
@@ -150,8 +149,8 @@ def load_json(fname: Union[str, Path]) -> dict:
 
 
 def parse_dict(input_dict: dict,
-               types: List[Tuple] = [(PurePath, lambda p: str(PurePosixPath(p))),
-                                     (np.ndarray, lambda a: a.to_list())]):
+               types: Tuple[Tuple] = ((PurePath, lambda p: str(PurePosixPath(p))),
+                                      (np.ndarray, lambda a: a.to_list()))):
     """Transform a set of items (instances) to their string representation"""
     d = dict()
     for k, v in input_dict.items():

@@ -2,8 +2,7 @@
 """
 from types import SimpleNamespace
 
-from . import diff_analysis
-from . import compare_predictions
+from . import compare_predictions, diff_analysis
 
 __all__ = ['diff_analysis', 'compare_predictions', 'Analysis']
 
