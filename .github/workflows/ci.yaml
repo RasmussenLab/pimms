@@ -84,7 +84,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/example/01_2_performance_plots.html
+        path: project/runs/example/_build/
+    - name: Publish workflow as website
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: project/runs/example/_build/
 
   test_pip_pkg_install:
     runs-on: ${{ matrix.os }}
