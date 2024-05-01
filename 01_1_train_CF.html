@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g1003911.d20240501 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+gaf3d69e documentation</title>
   
   
   
@@ -49,8 +49,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_CF';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_QRILC.html" />
-    <link rel="prev" title="Variational Autoencoder" href="01_1_train_VAE.html" />
+    <link rel="next" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN.html" />
+    <link rel="prev" title="Variational Autoencoder" href="01_1_train_Median.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g1003911.d20240501 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gaf3d69e documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -154,27 +154,27 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -879,7 +879,7 @@ Name: intensity, Length: 15466, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00525
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00631
 vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
 </pre></div>
 </div>
@@ -911,25 +911,25 @@ vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
   <tbody>
     <tr>
       <td>0</td>
-      <td>6.682509</td>
-      <td>6.000039</td>
+      <td>6.647017</td>
+      <td>5.977154</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>6.606604</td>
-      <td>5.749110</td>
+      <td>6.471821</td>
+      <td>5.665716</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>6.500225</td>
-      <td>5.636068</td>
+      <td>6.342062</td>
+      <td>5.521956</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/66b461ccda1a303de99c957e3f3647f35e113fb9afb222e6e406207819f93e2a.png" src="_images/66b461ccda1a303de99c957e3f3647f35e113fb9afb222e6e406207819f93e2a.png" />
-<img alt="_images/44182fd67b0f63d913c2f8d041989e4fbbedb25f0bdcd7bb43cf201fe6d14ee3.png" src="_images/44182fd67b0f63d913c2f8d041989e4fbbedb25f0bdcd7bb43cf201fe6d14ee3.png" />
+</table></div><img alt="_images/6da4398a4238d53629cd9bfee17eb1054475d2d79f3f65db47377d8e7d114dfb.png" src="_images/6da4398a4238d53629cd9bfee17eb1054475d2d79f3f65db47377d8e7d114dfb.png" />
+<img alt="_images/a66717a66316e86fae58f7ba119cf0c5ca526c1b4f3395f089b620b7f95b8f37.png" src="_images/a66717a66316e86fae58f7ba119cf0c5ca526c1b4f3395f089b620b7f95b8f37.png" />
 </div>
 </div>
 </section>
@@ -998,31 +998,31 @@ vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
       <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>GEMIN5</th>
       <td>30.946</td>
-      <td>28.596</td>
+      <td>28.616</td>
     </tr>
     <tr>
       <th>2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>AAR2</th>
       <td>27.248</td>
-      <td>28.371</td>
+      <td>28.311</td>
     </tr>
     <tr>
       <th>2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ADAM10</th>
       <td>29.310</td>
-      <td>28.487</td>
+      <td>28.471</td>
     </tr>
     <tr>
       <th>2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>NDUFAF4</th>
       <td>24.352</td>
-      <td>28.321</td>
+      <td>28.276</td>
     </tr>
     <tr>
       <th>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>EPN1</th>
       <td>29.250</td>
-      <td>28.401</td>
+      <td>28.415</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1034,31 +1034,31 @@ vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
       <th>2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>PRRC2B</th>
       <td>24.294</td>
-      <td>28.343</td>
+      <td>28.295</td>
     </tr>
     <tr>
       <th>2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ARGLU1</th>
       <td>28.471</td>
-      <td>28.532</td>
+      <td>28.533</td>
     </tr>
     <tr>
       <th>2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>GBF1</th>
       <td>29.470</td>
-      <td>28.490</td>
+      <td>28.470</td>
     </tr>
     <tr>
       <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>DENR</th>
       <td>27.902</td>
-      <td>28.292</td>
+      <td>28.253</td>
     </tr>
     <tr>
       <th>2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SNRPF</th>
       <td>27.487</td>
-      <td>28.551</td>
+      <td>28.545</td>
     </tr>
   </tbody>
 </table>
@@ -1125,27 +1125,27 @@ vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
       <th rowspan="5" valign="top">2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ARAF</th>
       <td>23.248</td>
-      <td>28.320</td>
+      <td>28.280</td>
     </tr>
     <tr>
       <th>CENPH</th>
       <td>25.045</td>
-      <td>28.311</td>
+      <td>28.284</td>
     </tr>
     <tr>
       <th>CLPP</th>
       <td>27.745</td>
-      <td>28.373</td>
+      <td>28.364</td>
     </tr>
     <tr>
       <th>GNAI1</th>
       <td>24.335</td>
-      <td>28.337</td>
+      <td>28.297</td>
     </tr>
     <tr>
       <th>KIAA1143</th>
       <td>26.901</td>
-      <td>28.395</td>
+      <td>28.373</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1157,27 +1157,27 @@ vaep.plotting - INFO     Saved Figures to runs/example/figures/collab_training
       <th rowspan="5" valign="top">2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>NUDT9</th>
       <td>27.658</td>
-      <td>28.529</td>
+      <td>28.564</td>
     </tr>
     <tr>
       <th>PTPN1</th>
       <td>29.024</td>
-      <td>28.582</td>
+      <td>28.713</td>
     </tr>
     <tr>
       <th>RDH13</th>
       <td>28.720</td>
-      <td>28.511</td>
+      <td>28.540</td>
     </tr>
     <tr>
       <th>RNASEH2C</th>
       <td>26.742</td>
-      <td>28.499</td>
+      <td>28.528</td>
     </tr>
     <tr>
       <th>SH3BGRL3</th>
       <td>29.162</td>
-      <td>28.735</td>
+      <td>28.797</td>
     </tr>
   </tbody>
 </table>
@@ -1451,8 +1451,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 5.636067978047425,
-  &#39;MAE&#39;: 1.905711169341015,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 5.521956504465182,
+  &#39;MAE&#39;: 1.8824644240995982,
   &#39;N&#39;: 859,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1476,8 +1476,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 6.018447190121331,
-  &#39;MAE&#39;: 1.988147491992709,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 5.890175159537102,
+  &#39;MAE&#39;: 1.9626318619017487,
   &#39;N&#39;: 859,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1535,13 +1535,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>5.636</td>
-      <td>6.018</td>
+      <td>5.522</td>
+      <td>5.890</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>1.906</td>
-      <td>1.988</td>
+      <td>1.882</td>
+      <td>1.963</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1622,7 +1622,7 @@ reconstruction.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_VAE.html"
+       href="01_1_train_Median.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
@@ -1631,11 +1631,11 @@ reconstruction.</p>
       </div>
     </a>
     <a class="right-next"
-       href="01_1_train_NAGuideR_QRILC.html"
+       href="01_1_train_KNN.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">NAGuide R methods</p>
+        <p class="prev-next-title">K- Nearest Neighbors (KNN)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
