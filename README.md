@@ -44,15 +44,15 @@ papermill 01_0_split_data.ipynb --help-notebook
 papermill 01_1_train_vae.ipynb --help-notebook
 ```
 
-> Misstyped argument names won't throw an error when using papermill
+> Mistyped argument names won't throw an error when using papermill
 
 
 
 
 ## Setup for PIMMS comparison workflow
 
-The package is available as a standalone software on pypi. However, running the entire snakemake workflow in enabled using 
-conda (or mamba) and pip to setup the environment. For a detailed description of setting up
+The core funtionality is available as a standalone software on PyPI under the name `pimms-learn`. However, running the entire snakemake workflow in enabled using 
+conda (or mamba) and pip to setup an analysis environment. For a detailed description of setting up
 conda (or mamba), see [instructions on setting up a virtual environment](https://github.com/RasmussenLab/pimms/blob/HEAD/docs/venv_setup.md).
 
 Download the repository
@@ -70,24 +70,27 @@ conda env create -n pimms -f environment.yml # slower
 mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment.
+If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment:
 
 ### Install development dependencies
 
-Check how to install pytorch for your system [here](https://pytorch.org/get-started/previous-versions/#v1131).
+Check how to install pytorch for your system [here](https://pytorch.org/get-started).
 
-- select the version compatible with your cuda version if you have an nvidia gpu
+- select the version compatible with your cuda version if you have an nvidia gpu or a Mac M-chip.
 
 ```bash
-conda create -n vaep_manuel python=3.8 pip
-conda activate vaep_manuel
-conda update pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia # might be different
-pip install . # pimms-learn
-pip install papermill jupyterlab # use run notebook interactive or as a script
+conda create -n vaep python=3.8 pip
+conda activate vaep
+# Follow instructions on https://pytorch.org/get-started 
+# conda env update -f environment.yml -n vaep # should not install the rest.
+pip install pimms-learn
+pip install jupyterlab papermill # use run notebook interactively or as a script
+
 cd project
+# choose one of the following to test the code
+jupyter lab # open 04_1_train_pimms_models.ipynb
 papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_test.ipynb # second notebook is output
-python 04_1_train_pimms_models.ipynb # just execute the code
-# jupyter lab # open 04_1_train_pimms_models.ipynb
+python 04_1_train_pimms_models.py # just execute the code
 ```
 
 ### Entire development installation
@@ -120,8 +123,9 @@ Trouble shoot your R installation by opening jupyter lab
 ```
 # in projects folder
 jupyter lab # open 01_1_train_NAGuideR.ipynb
+```
 
-## Run Demo
+## Run an analysis
 
 Change to the [`project` folder](./project) and see it's [README](project/README.md)
 
@@ -196,7 +200,7 @@ Packages either are based on this repository, or were referenced by NAGuideR (Ta
 From the brief description in the table the exact procedure is not always clear.
 
 | Method        | Package           | source       | status | name              |
-| ------------- | ----------------- | ------       | --- |------------------ | 
+| ------------- | ----------------- | ------       | ------ |------------------ | 
 | CF            | pimms             | pip          | | Collaborative Filtering |
 | DAE           | pimms             | pip          | | Denoising Autoencoder   |
 | VAE           | pimms             | pip          | | Variational Autoencoder |     
@@ -206,7 +210,7 @@ From the brief description in the table the exact procedure is not always clear.
 | COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
 | ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
 | KNN_IMPUTE    | impute            | BIOCONDUCTOR | | k nearest neighbor imputation   |
-| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> start with feature with least missing values and re-use imputed values for not yet imputed features
+| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> starts with feature with least missing values and re-use imputed values for not yet imputed features
 | BPCA          | pcaMethods        | BIOCONDUCTOR | | Bayesian PCA missing value imputation
 | SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
 | LLS           | pcaMethods        | BIOCONDUCTOR | | Local least squares imputation of a feature based on k most correlated features
@@ -222,10 +226,11 @@ From the brief description in the table the exact procedure is not always clear.
 | TRKNN         | -                 | script       | | truncation k-nearest neighbor imputation 
 | RF            | missForest        | CRAN         | | Random Forest imputation (one feature at a time)
 | PI            | -                 | -            | | Downshifted normal distribution (per sample)
+| GSIMP         | -                 | script       | | QRILC initialization and iterative Gibbs sampling with generalized linear models (glmnet)
+| MSIMPUTE      | msImpute          | BIOCONDUCTOR | | Missing at random algorithm using low rank approximation
+| MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | | Missing not at random algorithm using low rank approximation
 | ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
 | ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
-
-
 
 
 ## Build status

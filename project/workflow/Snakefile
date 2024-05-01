@@ -58,7 +58,7 @@ rule comparison:
         out=f"{{folder_experiment}}/{nb_stem}.o",
     shell:
         "papermill {input.nb} {output.nb:q}"
-        " -r fn_rawfile_metadata {params.meta_data:q}"
+        " -p fn_rawfile_metadata {params.meta_data:q}"
         " -r folder_experiment {wildcards.folder_experiment:q}"
         " -r models {params.models:q}"
         " && jupyter nbconvert --to html {output.nb:q}"
@@ -171,17 +171,17 @@ rule train_models:
         err="{folder_experiment}/01_1_train_{model}.e",
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
-    log:
-        err="{folder_experiment}/01_1_train_{model}.log",
+    # log:
+    #     err="{folder_experiment}/01_1_train_{model}.log",
     conda:
         "vaep"
     shell:
         "papermill {input.nb:q} {output.nb:q}"
         " -f {input.configfile:q}"
         " -r folder_experiment {params.folder_experiment:q}"
-        " -r fn_rawfile_metadata {params.meta_data:q}"
+        " -p fn_rawfile_metadata {params.meta_data:q}"
         " -r model_key {wildcards.model:q}"
-        " 2> {log.err}"
+        # " 2> {log.err}"
         " && jupyter nbconvert --to html {output.nb:q}"
 
 

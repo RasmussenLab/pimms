@@ -36,7 +36,7 @@ logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 FOLDER = Path('runs/mnar_mcar/')
 SIZE = 'l'
 files_in = {
-    'protein groups': FOLDER / 'pg_l_25MNAR/figures/2_1_performance_test.csv',
+    'protein groups': FOLDER / 'pg_l_25MNAR/figures/2_1_performance_test_sel.csv',
     'peptides': FOLDER / 'pep_l_25MNAR/figures/2_1_performance_test.csv',
     'precursors': FOLDER / 'evi_l_25MNAR/figures/2_1_performance_test.csv'
 }
@@ -45,9 +45,9 @@ files_in = {
 FOLDER = Path('runs/mnar_mcar/')
 SIZE = 'm'
 files_in = {
-    'protein groups': FOLDER / 'pg_m_25MNAR/figures/2_1_performance_test.csv',
-    'peptides': FOLDER / 'pep_m_25MNAR/figures/2_1_performance_test.csv',
-    'precursors': FOLDER / 'evi_m_25MNAR/figures/2_1_performance_test.csv'
+    'protein groups': FOLDER / 'pg_m_25MNAR/figures/2_1_performance_test_sel.csv',
+    'peptides': FOLDER / 'pep_m_25MNAR/figures/2_1_performance_test_sel.csv',
+    'precursors': FOLDER / 'evi_m_25MNAR/figures/2_1_performance_test_sel.csv'
 }
 
 # %%
@@ -104,7 +104,9 @@ ax = (metrics
            fontsize=7
            ))
 
-ax = vaep.plotting.add_height_to_barplot(ax, size=5)
+
+ax = vaep.plotting.add_height_to_barplot(ax, size=6, rotated=True)
+ax.set_ylim((0, 0.75))
 ax.legend(fontsize=5, loc='lower right')
 text = (
     df['text']
@@ -113,7 +115,7 @@ text = (
     .stack().loc[pd.IndexSlice[ORDER_MODELS, ORDER_DATA]]
 
 )
-ax = vaep.plotting.add_text_to_barplot(ax, text, size=5)
+ax = vaep.plotting.add_text_to_barplot(ax, text, size=6)
 fig = ax.get_figure()
 fig.tight_layout()
 vaep.savefig(fig, fname)
@@ -153,3 +155,5 @@ perf
 fname = FOLDER / f'performance_summary_{SIZE}.xlsx'
 perf.to_excel(fname)
 fname.as_posix()
+
+# %%

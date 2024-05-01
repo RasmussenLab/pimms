@@ -21,20 +21,22 @@
 #   (default: draw from shifted normal distribution. short RSN)
 
 # %%
+import logging
 from pathlib import Path
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
+import njab.stats
 import pandas as pd
+from IPython.display import display
 
 import vaep
 import vaep.analyzers
-import vaep.io.datasplits
 import vaep.imputation
-import vaep.stats
-
+import vaep.io.datasplits
 import vaep.nb
 
 logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 # %%
 # catch passed parameters
@@ -174,7 +176,7 @@ files_out['feat_freq_observed'] = fname.as_posix()
 logger.info(fname)
 feat_freq_observed.to_csv(fname)
 ax = feat_freq_observed.sort_values().plot(marker='.', rot=90)
-_ = ax.set_xticklabels([l.get_text().split(';')[0] for l in ax.get_xticklabels()])
+_ = ax.set_xticklabels([l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()])
 
 # %% [markdown]
 # ## ALD study approach using all measurments
@@ -266,7 +268,7 @@ def plot_distributions(observed: pd.Series,
                        sharex=True):
     """Plots distributions of intensities provided as dictionary of labels to pd.Series."""
     series_ = [observed, imputation] if imputation is not None else [observed]
-    min_bin, max_bin = vaep.plotting.data.get_min_max_iterable(series_)
+    min_bin, max_bin = vaep.plotting.data.get_min_max_iterable([observed])
 
     if imputation is not None:
         fig, axes = plt.subplots(len(series_), figsize=figsize, sharex=sharex)
@@ -297,7 +299,7 @@ def plot_distributions(observed: pd.Series,
     return fig
 
 
-vaep.plotting.make_large_descriptors(5)
+vaep.plotting.make_large_descriptors(6)
 fig = plot_distributions(observed,
                          imputation=pred_real_na,
                          model_key=args.model_key, figsize=(2.5, 2))
@@ -349,13 +351,14 @@ if pred_real_na is not None:
 
 # %% [markdown]
 # Targets - Clinical variables
-# %%
-scores = vaep.stats.diff_analysis.analyze(df_proteomics=df,
-                                          df_clinic=df_clinic,
-                                          target=args.target,
-                                          covar=args.covar,
-                                          value_name=args.value_name)
 
+# %%
+scores = njab.stats.ancova.AncovaAll(df_proteomics=df,
+                                     df_clinic=df_clinic,
+                                     target=args.target,
+                                     covar=args.covar,
+                                     value_name=args.value_name
+                                     ).ancova()
 scores
 
 # %%

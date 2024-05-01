@@ -1,15 +1,15 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
+
 import logging
+from dataclasses import dataclass, field
 from functools import partial
 from pathlib import Path
-from typing import Protocol
+from typing import Union
 
 import pandas as pd
-from pandas.core.algorithms import isin
 
+from vaep.io.format import class_full_module, classname
 from vaep.pandas import interpolate
-from vaep.io.format import classname, class_full_module
 
 logger = logging.getLogger(__name__)
 

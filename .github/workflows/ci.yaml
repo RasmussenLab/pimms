@@ -63,11 +63,25 @@ jobs:
         papermill 01_1_train_VAE.ipynb --help-notebook
         papermill 01_1_train_DAE.ipynb --help-notebook
         papermill 01_1_train_CF.ipynb --help-notebook
+    - name: Run tutorial notebooks
+      run: |
+        cd project
+        mkdir runs
+        papermill 04_1_train_DAE_VAE_wo_val_data.ipynb runs/04_1_train_DAE_VAE_wo_val_data.ipynb
+        papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models.ipynb
     - name: Run demo workflow (integration test)
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
        snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
+    - name: Install website dependencies
+      run: |
+        pip install .[docs]
+    - name: Build imputation comparison website
+      run: |
+        pimms-setup-imputation-comparison -f project/runs/example/
+        cd project/runs/example/
+        sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
     # https://github.com/actions/upload-artifact
       uses: actions/upload-artifact@v3
@@ -77,6 +91,11 @@ jobs:
           project/runs/example/
           environment.yml
           environment_w_versions.yml
+    - name: Publish workflow as website
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: project/runs/example/_build/
 
   test_pip_pkg_install:
     runs-on: ${{ matrix.os }}

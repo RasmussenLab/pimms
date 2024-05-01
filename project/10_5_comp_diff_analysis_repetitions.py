@@ -14,7 +14,10 @@
 
 # %%
 from pathlib import Path
+
+import njab
 import pandas as pd
+
 import vaep
 
 # %%
@@ -176,7 +179,7 @@ qvalue_stats.loc[~mask_pgs_included_in_ald_study
 mask_new_da_with_imp = mask_new_da_with_imputation = ((~mask_pgs_included_in_ald_study)
                                                       & (da_counts['None'] != 10))
 
-tab_new_da_with_imp = vaep.pandas.combine_value_counts(
+tab_new_da_with_imp = njab.pandas.combine_value_counts(
     da_counts
     .loc[mask_new_da_with_imputation]
 ).fillna(0).astype(int)

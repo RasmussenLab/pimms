@@ -3,30 +3,36 @@ VAEP
 Variatonal autoencoder for proteomics
 """
 from __future__ import annotations
+
 # Set default logging handler to avoid "No handler found" warnings.
-import logging
-from logging import NullHandler
+import logging as _logging
+from importlib import metadata
 
-logging.getLogger(__name__).addHandler(NullHandler())
-
-# put into some pandas_cfg.py file and import all
 import pandas as pd
 import pandas.io.formats.format as pf
 
+# from . import logging, nb, pandas, plotting
+import vaep.logging
+import vaep.nb
 import vaep.pandas
 import vaep.plotting
-import vaep.logging
-import vaep.plotting
 
-import vaep.nb
+_logging.getLogger(__name__).addHandler(_logging.NullHandler())
+
+
+# put into some pandas_cfg.py file and import all
+
 
 savefig = vaep.plotting.savefig
 
 __license__ = 'GPLv3'
-__version__ = (0, 1, 0)
+__version__ = metadata.version("pimms-learn")
 
+__all__ = ['logging', 'nb', 'pandas', 'plotting', 'savefig']
 
 # set some defaults
+
+
 class IntArrayFormatter(pf.GenericArrayFormatter):
     def _format_strings(self):
         formatter = self.formatter or '{:,d}'.format

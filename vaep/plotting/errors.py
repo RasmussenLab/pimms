@@ -1,10 +1,15 @@
 """Plot errors based on DataFrame with model predictions."""
 from __future__ import annotations
-import pandas as pd
 
+import itertools
 from typing import Optional
-from matplotlib.axes import Axes
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+from matplotlib.axes import Axes
+from seaborn.categorical import _BarPlotter
 
 import vaep.pandas.calc_errors
 
@@ -24,7 +29,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
     len_max_bin = len(str(int(errors_binned['bin'].max())))
     n_obs = (errors_binned[meta_cols]
              .apply(
-        lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+        lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
     )
         .rename('intensity bin')
         .astype('category')
@@ -43,7 +48,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
                      x='intensity bin', y=metric_name, hue='model',
                      palette=palette,
                      errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors_binned
 
 
@@ -52,6 +57,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                           target_col='observed',
                           ax: Axes = None,
                           palette: dict = None,
+                          feat_name: str = None,
                           metric_name: Optional[str] = None,
                           errwidth: float = 1.2) -> tuple[Axes, pd.DataFrame]:
     # calculate absolute errors
@@ -74,16 +80,17 @@ def plot_errors_by_median(pred: pd.DataFrame,
 
     errors = errors.join(n_obs, on="bin")
 
-    feat_name = feat_medians.index.name
-    if not feat_name:
-        feat_name = 'feature'
+    if feat_name is None:
+        feat_name = feat_medians.index.name
+        if not feat_name:
+            feat_name = 'feature'
 
     x_axis_name = f'intensity binned by median of {feat_name}'
     len_max_bin = len(str(int(errors['bin'].max())))
     errors[x_axis_name] = (
         errors[['bin', 'n_obs']]
         .apply(
-            lambda x: f"{x.bin:0{len_max_bin}} (N={x.n_obs:,d})", axis=1
+            lambda x: f"{x.bin:0{len_max_bin}}\n(N={x.n_obs:,d})", axis=1
         )
         .rename('intensity bin')
         .astype('category')
@@ -98,8 +105,36 @@ def plot_errors_by_median(pred: pd.DataFrame,
                 hue='model',
                 palette=palette,
                 errwidth=errwidth,)
-    ax.xaxis.set_tick_params(rotation=-90)
+    ax.xaxis.set_tick_params(rotation=90)
     return ax, errors
+
+
+def get_data_for_errors_by_median(errors: pd.DataFrame, feat_name, metric_name):
+    """Extract Bars with confidence intervals from seaborn plot.
+      Confident intervals are calculated with bootstrapping (sampling the mean).
+
+    Relies on internal seaborn class. only used for reporting of source data in the paper.
+    """
+    x_axis_name = f'intensity binned by median of {feat_name}'
+
+    plotter = _BarPlotter(data=errors, x=x_axis_name, y=metric_name, hue='model',
+                          order=None, hue_order=None,
+                          estimator="mean", errorbar=("ci", 95), n_boot=1000, units=None, seed=None,
+                          orient=None, color=None, palette=None, saturation=.75, width=.8,
+                          errcolor=".26", errwidth=None, capsize=None, dodge=True)
+    ax = plt.gca()
+    plotter.plot(ax, {})
+    plt.close(ax.get_figure())
+    mean, cf_interval = plotter.statistic.flatten(), plotter.confint.reshape(-1, 2)
+    plotted = pd.DataFrame(np.concatenate((mean.reshape(-1, 1), cf_interval), axis=1), columns=[
+        'mean', 'ci_low', 'ci_high'])
+    _index = pd.DataFrame(list(itertools.product(
+        (_l.get_text() for _l in ax.get_xticklabels()),  # bins x-axis
+        (_l.get_text() for _l in ax.get_legend().get_texts()),  # models legend
+    )
+    ), columns=['bin', 'model'])
+    plotted = pd.concat([_index, plotted], axis=1)
+    return plotted
 
 
 def plot_rolling_error(errors: pd.DataFrame, metric_name: str, window: int = 200,

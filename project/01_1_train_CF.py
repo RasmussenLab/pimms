@@ -17,19 +17,16 @@
 # # Collaborative Filtering
 
 # %%
-
-
 import logging
 
 from pprint import pprint
 
-from fastai.basics import *
-from fastai.callback.all import *
-from fastai.torch_basics import *
-from fastai.data.all import *
+import matplotlib.pyplot as plt
 
 from fastai.tabular.all import *
 from fastai.collab import *
+
+from fastai.collab import (EmbeddingDotBias, Learner, MSELossFlat, EarlyStoppingCallback, default_device)
 
 import vaep
 import vaep.model
@@ -68,8 +65,6 @@ args = dict(globals()).keys()
 folder_experiment: str = 'runs/example'
 folder_data: str = ''  # specify data directory if needed
 file_format: str = 'csv'  # change default to pickled files
-# Machine parsed metadata from rawfile workflow
-fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 # training
 epochs_max: int = 20  # Maximum number of epochs
 # early_stopping:bool = True # Wheather to use early stopping or not
@@ -124,10 +119,10 @@ data = datasplits.DataSplits.from_folder(
 # data is loaded in long format
 
 # %%
-data.train_X.sample(5)
+data.train_X
 
 # %%
-# ! add check that specified data is available
+# # ! add check that specified data is available
 # silent error in fastai if e.g. target column is not available
 
 # %% [markdown]
@@ -149,40 +144,20 @@ else:
     raise NotImplementedError(
         "More than one feature: Needs to be implemented. see above logging output.")
 
-# %% [markdown]
-# load meta data for splits
-
-# %%
-# df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
-# df_meta.loc[data.train_X.index.levels[0]]
-
 
 # %% [markdown]
-# ## Initialize Comparison
-#
-# - replicates idea for truely missing values: Define truth as by using n=3 replicates to impute
-#   each sample
-# - real test data:
-#     - Not used for predictions or early stopping.
-#     - [x] add some additional NAs based on distribution of data
-
-# %%
-freq_peptides = sampling.frequency_by_index(data.train_X, 0)
-freq_peptides.head()  # training data
+# ### Use some simulated missing for evaluation
 
 # %% [markdown]
-# ### Produce some addional fake samples
-
-# %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance.
+# The validation simulated NA is used to by all models to evaluate training performance.
 
 # %%
-val_pred_fake_na = data.val_y.to_frame(name='observed')
-val_pred_fake_na
+val_pred_simulated_na = data.val_y.to_frame(name='observed')
+val_pred_simulated_na
 
 # %%
-test_pred_fake_na = data.test_y.to_frame(name='observed')
-test_pred_fake_na.describe()
+test_pred_simulated_na = data.test_y.to_frame(name='observed')
+test_pred_simulated_na.describe()
 
 
 # %% [markdown]
@@ -257,15 +232,15 @@ vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
 # ### Predictions
 
 # %% [markdown]
-# Compare fake_na data predictions to original values
+# Compare simulated_na data predictions to original values
 
 # %%
 # this could be done using the validation data laoder now
 ana_collab.test_dl = ana_collab.dls.test_dl(
     data.val_y.reset_index())  # test_dl is here validation data
-val_pred_fake_na['CF'], _ = ana_collab.learn.get_preds(
+val_pred_simulated_na['CF'], _ = ana_collab.learn.get_preds(
     dl=ana_collab.test_dl)
-val_pred_fake_na
+val_pred_simulated_na
 
 
 # %% [markdown]
@@ -273,8 +248,8 @@ val_pred_fake_na
 
 # %%
 ana_collab.test_dl = ana_collab.dls.test_dl(data.test_y.reset_index())
-test_pred_fake_na['CF'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
-test_pred_fake_na
+test_pred_simulated_na['CF'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
+test_pred_simulated_na
 
 # %%
 if args.save_pred_real_na:
@@ -296,12 +271,6 @@ data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
 
-# %% [markdown]
-# ## Comparisons
-#
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
-# > Could be changed.
 
 # %% [markdown]
 # ### Validation data
@@ -316,21 +285,21 @@ data.train_X.head()
 d_metrics = models.Metrics()
 
 # %% [markdown]
-# The fake NA for the validation step are real test data (not used for training nor early stopping)
+# The simulated NA for the validation step are real test data (not used for training nor early stopping)
 
 # %%
-added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
+added_metrics = d_metrics.add_metrics(val_pred_simulated_na, 'valid_simulated_na')
 added_metrics
 
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set
+# Simulated NAs : Artificially created NAs. Some data was sampled and set
 # explicitly to misssing before it was fed to the model for
 # reconstruction.
 
 # %%
-added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
+added_metrics = d_metrics.add_metrics(test_pred_simulated_na, 'test_simulated_na')
 added_metrics
 
 # %% [markdown]
@@ -351,8 +320,8 @@ metrics_df
 
 # %%
 # save simulated missing values for both splits
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+val_pred_simulated_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
+test_pred_simulated_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 
 # %% [markdown]
 # ## Config

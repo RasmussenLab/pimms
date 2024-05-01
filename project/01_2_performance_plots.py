@@ -28,29 +28,29 @@
 
 # %%
 import logging
-import yaml
 import random
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
+import yaml
+from IPython.display import display
 
 import vaep
 import vaep.imputation
 import vaep.models
-from vaep.models.collect_dumps import collect, select_content
-from vaep.io import datasplits
-from vaep.analyzers import compare_predictions
 import vaep.nb
+from vaep.analyzers import compare_predictions
+from vaep.io import datasplits
+from vaep.models.collect_dumps import collect, select_content
 
 pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
 plt.rcParams.update({'figure.figsize': (4, 2)})
-vaep.plotting.make_large_descriptors(6)
+vaep.plotting.make_large_descriptors(7)
 
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
@@ -94,8 +94,11 @@ file_format: str = 'csv'  # change default to pickled files
 # Machine parsed metadata from rawfile workflow
 fn_rawfile_metadata: str = 'data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv'
 models: str = 'Median,CF,DAE,VAE'  # picked models to compare (comma separated)
+sel_models: str = ''  # user defined comparison (comma separated)
 # Restrict plotting to top N methods for imputation based on error of validation data, maximum 10
 plot_to_n: int = 5
+feat_name_display: str = None  # display name for feature name in plural (e.g. 'protein groups')
+save_agg_pred: bool = False  # save aggregated predictions of validation and test data
 
 
 # %% [markdown]
@@ -119,6 +122,10 @@ METRIC = 'MAE'
 MIN_FREQ = None
 MODELS_PASSED = args.models.split(',')
 MODELS = MODELS_PASSED.copy()
+FEAT_NAME_DISPLAY = args.feat_name_display
+SEL_MODELS = None
+if args.sel_models:
+    SEL_MODELS = args.sel_models.split(',')
 
 
 # %%
@@ -132,48 +139,62 @@ data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
 # %%
-fig, axes = plt.subplots(1, 2, sharey=True)
+fig, axes = plt.subplots(1, 2, sharey=True, sharex=True)
 
 vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
-                                     title='Validation split', size=1)
+                                     title='Validation split', size=1, xlabel='')
 vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
-                                     title='Test split', size=1)
-
+                                     title='Test split', size=1, xlabel='')
 fig.suptitle("Simulated missing values per sample", size=8)
+# hide axis and use only for common x label
+fig.add_subplot(111, frameon=False)
+plt.tick_params(labelcolor='none', which='both', top=False, bottom=False, left=False, right=False)
+plt.xlabel(f'Samples ordered by identified {data.val_y.index.names[-1]}')
 group = 1
 fname = args.out_figures / f'2_{group}_fake_na_val_test_splits.png'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
-# ## Across data completeness
+# ## data completeness across entire data
 
 # %%
 # load frequency of training features...
 # needs to be pickle -> index.name needed
 freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')
-
 freq_feat.head()  # training data
 
 # %%
 prop = freq_feat / len(data.train_X.index.levels[0])
-prop.to_frame()
+prop.sort_values().to_frame().plot(
+    xlabel=f'{data.val_y.index.names[-1]}',
+    ylabel='Proportion of identification in samples')
+
+# %% [markdown]
+# View training data in wide format
 
 # %%
 data.to_wide_format()
 data.train_X
 
+# %% [markdown]
+# Number of samples and features:
+
 # %%
 N_SAMPLES, M_FEAT = data.train_X.shape
 print(f"N samples: {N_SAMPLES:,d}, M features: {M_FEAT}")
+
+# %% [markdown]
+# Collect outputs in excel file:
 
 # %%
 fname = args.folder_experiment / '01_2_performance_summary.xlsx'
 dumps[fname.stem] = fname
 writer = pd.ExcelWriter(fname)
+print(f"Saving to: {fname}")
 
 # %% [markdown]
-# # Model specifications
+# ## Model specifications
 # - used for bar plot annotations
 
 # %%
@@ -196,9 +217,7 @@ model_configs.T
 # %%
 # index name
 freq_feat.index.name = data.train_X.columns.name
-
-# %%
-# index name
+# sample index name
 sample_index_name = data.train_X.index.name
 
 # %% [markdown]
@@ -215,6 +234,9 @@ pred_val = compare_predictions.load_split_prediction_by_modelkey(
     split='val',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
+SAMPLE_ID, FEAT_NAME = pred_val.index.names
+if not FEAT_NAME_DISPLAY:
+    FEAT_NAME_DISPLAY = FEAT_NAME
 pred_val[MODELS]
 
 # %% [markdown]
@@ -228,7 +250,7 @@ errors_val = (pred_val
 errors_val  # over all samples and all features
 
 # %% [markdown]
-# ## Select top N for plotting and set colors
+# ### Select top N for plotting and set colors
 # %%
 ORDER_MODELS = (errors_val
                 .abs()
@@ -239,44 +261,37 @@ ORDER_MODELS = (errors_val
 ORDER_MODELS
 
 # %%
+pred_val = pred_val[[TARGET_COL] + ORDER_MODELS]
+if args.save_agg_pred:
+    fname = args.folder_experiment / '01_2_agg_pred_val.csv'
+    dumps[fname.stem] = fname
+    pred_val.to_csv(fname)
+    logger.info(f"Saved aggregated predictions to: {fname}")
+pred_val
+
+# %%
 mae_stats_ordered_val = errors_val.abs().describe()[ORDER_MODELS]
 mae_stats_ordered_val.to_excel(writer, sheet_name='mae_stats_ordered_val', float_format='%.5f')
-mae_stats_ordered_val
+mae_stats_ordered_val.T
 
 # %% [markdown]
-# Hack color order, by assing CF, DAE and VAE unique colors no matter their order
-# Could be extended to all supported imputation methods
+# Some model have fixed colors, others are assigned randomly
+#
+# > Note
+# >
+# > 1. The order of "new" models is important for the color assignment.
+# > 2. User defined model keys for the same model with two configuration will yield different colors.
+
 # %%
 COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
-sns.color_palette(COLORS_TO_USE)
+vaep.plotting.defaults.ModelColorVisualizer(ORDER_MODELS, COLORS_TO_USE)
 
 # %%
-# For top_N -> define colors
 TOP_N_ORDER = ORDER_MODELS[:args.plot_to_n]
-
 TOP_N_COLOR_PALETTE = {model: color for model,
                        color in zip(TOP_N_ORDER, COLORS_TO_USE)}
-
 TOP_N_ORDER
 
-# %% [markdown]
-# ### Correlation overall
-
-# %%
-pred_val_corr = pred_val.corr()
-ax = (pred_val_corr
-      .loc[TARGET_COL, ORDER_MODELS]
-      .plot
-      .bar(
-          # title='Correlation between Fake NA and model predictions on validation data',
-          ylabel='correlation overall'))
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                   horizontalalignment='right')
-fname = args.out_figures / f'2_{group}_pred_corr_val_overall.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-pred_val_corr
 
 # %% [markdown]
 # ### Correlation per sample
@@ -332,15 +347,13 @@ errors_val = errors_val.join(freq_feat)
 errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
 errors_val.head()
 
-# %% [markdown]
-# Some interpolated features are missing
 
 # %%
-errors_val.describe()  # mean of means
+errors_val.describe()[ORDER_MODELS].T  # mean of means
 
 # %%
 c_avg_error = 2
-mask = (errors_val[MODELS] >= c_avg_error).any(axis=1)
+mask = (errors_val[TOP_N_ORDER] >= c_avg_error).any(axis=1)
 errors_val.loc[mask]
 
 
@@ -350,17 +363,31 @@ errors_val.loc[mask]
 
 # %%
 fig, ax = plt.subplots(figsize=(8, 3))
-ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
+ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred_val[
         [TARGET_COL] + TOP_N_ORDER
     ],
+    feat_medians=data.train_X.median(),
     ax=ax,
+    feat_name=FEAT_NAME_DISPLAY,
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,)
 ax.set_ylabel(f"Average error ({METRIC})")
-fname = args.out_figures / f'2_{group}_errors_binned_by_int_val.pdf'
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
+fname = args.out_figures / f'2_{group}_errors_binned_by_feat_median_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
+
+# %%
+# # ! only used for reporting
+plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+    errors=errors_binned,
+    feat_name=FEAT_NAME_DISPLAY,
+    metric_name=METRIC
+)
+plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+plotted
+
 
 # %%
 errors_binned.head()
@@ -377,8 +404,13 @@ pred_test = compare_predictions.load_split_prediction_by_modelkey(
     split='test',
     model_keys=MODELS_PASSED,
     shared_columns=[TARGET_COL])
+pred_test = pred_test[[TARGET_COL] + ORDER_MODELS]
 pred_test = pred_test.join(freq_feat, on=freq_feat.index.name)
-SAMPLE_ID, FEAT_NAME = pred_test.index.names
+if args.save_agg_pred:
+    fname = args.folder_experiment / '01_2_agg_pred_test.csv'
+    dumps[fname.stem] = fname
+    pred_test.to_csv(fname)
+    logger.info(f"Saved aggregated predictions to: {fname}")
 pred_test
 
 # %% [markdown]
@@ -409,7 +441,7 @@ cp_mean_perf
 writer.close()
 
 # %% [markdown]
-# ## Intensity distribution as histogram
+# ### Intensity distribution as histogram
 # Plot top 4 models predictions for intensities in test data
 # %%
 min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
@@ -421,7 +453,7 @@ for model, color, ax in zip(
         COLORS_TO_USE[:top_n],
         axes):
 
-    ax, _ = vaep.plotting.data.plot_histogram_intensities(
+    ax, bins = vaep.plotting.data.plot_histogram_intensities(
         pred_test[TARGET_COL],
         color='grey',
         min_max=min_max,
@@ -434,8 +466,8 @@ for model, color, ax in zip(
         ax=ax,
         alpha=0.5,
     )
-    _ = [(l.set_rotation(90))
-         for l in ax.get_xticklabels()]
+    _ = [(l_.set_rotation(90))
+         for l_ in ax.get_xticklabels()]
     ax.legend()
 
 axes[0].set_ylabel('Number of observations')
@@ -444,23 +476,13 @@ fname = args.out_figures / f'2_{group}_intensity_binned_top_{top_n}_models_test.
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
-# %% [markdown]
-# ### Correlation overall
-
 # %%
-pred_test_corr = pred_test.corr()
-ax = pred_test_corr.loc[TARGET_COL, ORDER_MODELS].plot.bar(
-    # title='Corr. between Fake NA and model predictions on test data',
-    ylabel='correlation coefficient overall',
-    ylim=(0.7, 1)
-)
-ax = vaep.plotting.add_height_to_barplot(ax)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
-                   horizontalalignment='right')
-fname = args.out_figures / f'2_{group}_pred_corr_test_overall.pdf'
-figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
-pred_test_corr
+counts_per_bin = vaep.pandas.get_counts_per_bin(df=pred_test,
+                                                bins=bins,
+                                                columns=[TARGET_COL, *ORDER_MODELS[:top_n]])
+
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %% [markdown]
 # ### Correlation per sample
@@ -514,7 +536,7 @@ corr_per_sample_test.loc[mask].style.highlight_min(
 feature_names = pred_test.index.levels[-1]
 N_SAMPLES = pred_test.index
 M = len(feature_names)
-pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M)]], :]
+pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M - 1)]], :]
 
 # %%
 options = random.sample(set(feature_names), 1)
@@ -538,7 +560,7 @@ corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
 # %%
 kwargs = dict(rot=90,
               flierprops=dict(markersize=1),
-              ylabel=f'correlation per {FEAT_NAME}')
+              ylabel=f'correlation per {FEAT_NAME_DISPLAY}')
 ax = (corr_per_feat_test
       .loc[~too_few_obs, TOP_N_ORDER]
       .plot
@@ -583,6 +605,7 @@ if not view.empty:
             )
 else:
     print("None found")
+
 # %% [markdown]
 # ### Error plot
 
@@ -608,7 +631,7 @@ try:
         build_text,
         axis=1)
 except KeyError:
-    logger.warning("No model PIMMS models in comparsion. Using empty text")
+    logger.warning("No PIMMS models in comparsion. Using empty text")
     text = pd.Series('', index=model_configs.columns)
 
 _to_plot.loc["text"] = text
@@ -617,15 +640,16 @@ _to_plot
 
 
 # %%
-fig, ax = plt.subplots(figsize=(4, 2))
-ax = _to_plot.loc[[feature_names.name]].plot.bar(rot=0,
-                                                 ylabel=f"{METRIC} for {feature_names.name} ({n_in_comparison:,} intensities)",
-                                                 # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
-                                                 color=COLORS_TO_USE,
-                                                 ax=ax,
-                                                 width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax, size=5)
-ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
+fig, ax = plt.subplots(figsize=(4, 2))  # size of the plot can be adjusted
+ax = _to_plot.loc[[feature_names.name]].plot.bar(
+    rot=0,
+    ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY}\n({n_in_comparison:,} intensities)",
+    # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
+    color=COLORS_TO_USE,
+    ax=ax,
+    width=.7)
+ax = vaep.plotting.add_height_to_barplot(ax, size=7)
+ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=7)
 ax.set_xticklabels([])
 fname = args.out_figures / f'2_{group}_performance_test.pdf'
 figures[fname.stem] = fname
@@ -642,9 +666,10 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 
 
 # %% [markdown]
-# Plot error by median feature intensity
+# ### Plot error by median feature intensity
 
 # %%
+vaep.plotting.make_large_descriptors(7)
 fig, ax = plt.subplots(figsize=(8, 2))
 
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
@@ -653,10 +678,12 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     ],
     feat_medians=data.train_X.median(),
     ax=ax,
+    feat_name=FEAT_NAME_DISPLAY,
     metric_name=METRIC,
     palette=COLORS_TO_USE
 )
-
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
+vaep.plotting.make_large_descriptors(6)
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
@@ -666,12 +693,121 @@ errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned
 
 # %%
+# # ! only used for reporting
+plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+    errors=errors_binned,
+    feat_name=FEAT_NAME_DISPLAY,
+    metric_name=METRIC
+)
+plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+plotted
+
+
+# %%
 (errors_binned
  .set_index(
      ['model', errors_binned.columns[-1]]
  )
  .loc[ORDER_MODELS[0]]
  .sort_values(by=METRIC))
+
+# %% [markdown]
+# ### Custom model selection
+
+# %%
+if SEL_MODELS:
+    metrics = vaep.models.Metrics()
+    test_metrics = metrics.add_metrics(
+        pred_test[['observed', *SEL_MODELS]], key='test data')
+    test_metrics = pd.DataFrame(test_metrics)[SEL_MODELS]
+    test_metrics
+
+    n_in_comparison = int(test_metrics.loc['N'].unique()[0])
+    n_in_comparison
+
+    _to_plot = test_metrics.loc[METRIC].to_frame().T
+    _to_plot.index = [feature_names.name]
+    _to_plot
+
+    try:
+        text = model_configs[["latent_dim", "hidden_layers"]].apply(
+            build_text,
+            axis=1)
+    except KeyError:
+        logger.warning("No PIMMS models in comparsion. Using empty text")
+        text = pd.Series('', index=model_configs.columns)
+
+    _to_plot.loc["text"] = text
+    _to_plot = _to_plot.fillna('')
+    _to_plot
+
+    fig, ax = plt.subplots(figsize=(4, 2))
+    ax = _to_plot.loc[[feature_names.name]].plot.bar(
+        rot=0,
+        ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
+        # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
+        color=vaep.plotting.defaults.assign_colors(
+            list(k.upper() for k in SEL_MODELS)),
+        ax=ax,
+        width=.7)
+    ax.legend(loc='best', ncols=len(SEL_MODELS))
+    ax = vaep.plotting.add_height_to_barplot(ax, size=5)
+    ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
+    ax.set_xticklabels([])
+
+    fname = args.out_figures / f'2_{group}_performance_test_sel.pdf'
+    figures[fname.stem] = fname
+    vaep.savefig(fig, name=fname)
+
+    dumps[fname.stem] = fname.with_suffix('.csv')
+    _to_plot_long = _to_plot.T
+    _to_plot_long = _to_plot_long.rename(
+        {feature_names.name: 'metric_value'}, axis=1)
+    _to_plot_long['data level'] = feature_names.name
+    _to_plot_long = _to_plot_long.set_index('data level', append=True)
+    _to_plot_long.to_csv(fname.with_suffix('.csv'))
+
+
+# %%
+# custom selection
+if SEL_MODELS:
+    vaep.plotting.make_large_descriptors(7)
+    fig, ax = plt.subplots(figsize=(8, 2))
+
+    ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+        pred=pred_test[
+            [TARGET_COL] + SEL_MODELS
+        ],
+        feat_medians=data.train_X.median(),
+        ax=ax,
+        metric_name=METRIC,
+        feat_name=FEAT_NAME_DISPLAY,
+        palette=vaep.plotting.defaults.assign_colors(
+            list(k.upper() for k in SEL_MODELS))
+    )
+    # ax.set_ylim(0, 1.5)
+    ax.legend(loc='best', ncols=len(SEL_MODELS))
+    # for text in ax.legend().get_texts():
+    #     text.set_fontsize(6)
+    fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
+    figures[fname.stem] = fname
+    vaep.savefig(ax.get_figure(), name=fname)
+    plt.show(fig)
+
+    dumps[fname.stem] = fname.with_suffix('.csv')
+    errors_binned.to_csv(fname.with_suffix('.csv'))
+    vaep.plotting.make_large_descriptors(6)
+    # ax.xaxis.set_tick_params(rotation=0) # horizontal
+
+    # # ! only used for reporting
+    plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+        errors=errors_binned,
+        feat_name=FEAT_NAME_DISPLAY,
+        metric_name=METRIC
+    )
+    plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
+    display(plotted)
+
 
 # %% [markdown]
 # ### Error by non-decimal number of intensity
@@ -688,6 +824,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     palette=TOP_N_COLOR_PALETTE,
     metric_name=METRIC,
 )
+ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_int.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)

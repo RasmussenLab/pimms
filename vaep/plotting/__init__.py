@@ -1,20 +1,21 @@
 from __future__ import annotations
 
-import numpy as np
-import pandas as pd
-import matplotlib
 import logging
 import pathlib
+from functools import partial
+
+import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn
 
 import vaep.pandas
 
+from . import data, defaults, errors, plotly
 from .errors import plot_rolling_error
-from . import errors
-from . import data
-from . import plotly
-from . defaults import order_categories, labels_dict, IDX_ORDER
+
+# from . defaults import order_categories, labels_dict, IDX_ORDER
 
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
@@ -30,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = ['plotly',
            'data',
+           'defaults',
            'errors',
            'plot_rolling_error',
            # define in this file
@@ -44,14 +46,16 @@ __all__ = ['plotly',
 
 def _savefig(fig, name, folder: pathlib.Path = '.',
              pdf=True,
-             dpi=300  # default 'figure'
+             dpi=300,  # default 'figure',
+             tight_layout=True,
              ):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
     folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
-    fig.tight_layout()
+    if tight_layout:
+        fig.tight_layout()
     fig.savefig(fname.with_suffix('.png'), dpi=dpi)
     if pdf:
         fig.savefig(fname.with_suffix('.pdf'), dpi=dpi)
@@ -155,30 +159,44 @@ def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
     return ax2
 
 
-def add_height_to_barplot(ax, size=5):
+def add_height_to_barplot(ax, size=5, rotated=False):
+    ax.annotate = partial(ax.annotate, text='NA',
+                          xytext=(0, int(size / 2)),
+                          ha='center',
+                          size=size,
+                          textcoords='offset points')
+    ax.annotate = partial(ax.annotate,
+                          rotation=0,
+                          va='center')
+    if rotated:
+        ax.annotate = partial(ax.annotate,
+                              xytext=(1, int(size / 3)),
+                              rotation=90,
+                              va='bottom')
     for bar in ax.patches:
         if not bar.get_height():
+            xy = (bar.get_x() + bar.get_width() / 2,
+                  0.0)
+            ax.annotate(text='NA',
+                        xy=xy,
+                        )
             continue
         ax.annotate(text=format(bar.get_height(), '.2f'),
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, int(size / 2)),
-                    ha='center',
-                    va='center',
-                    size=size,
-                    textcoords='offset points')
+                    )
     return ax
 
 
 def add_text_to_barplot(ax, text, size=5):
-    for bar, text in zip(ax.patches, text):
+    for bar, text_ in zip(ax.patches, text):
         logger.debug(f"{bar = }, f{text = }, {bar.get_height() = }")
         if not bar.get_height():
             continue
-        ax.annotate(text=text,
+        ax.annotate(text=text_,
                     xy=(bar.get_x() + bar.get_width() / 2,
                         bar.get_height()),
-                    xytext=(0, -5),
+                    xytext=(1, -5),
                     rotation=90,
                     ha='center',
                     va='top',

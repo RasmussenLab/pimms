@@ -1,8 +1,9 @@
-from collections import namedtuple
-import logging
-from typing import List, Tuple, Union
 import json
+import logging
+import pickle
+from collections import namedtuple
 from pathlib import Path, PurePath, PurePosixPath
+from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -53,8 +54,7 @@ def search_subfolders(path='.', depth: int = 1, exclude_root: bool = False):
 
     def get_subfolders(path):
         return [x for x in path.iterdir()
-                if x.is_dir() and
-                not any(x.match(excl) for excl in EXCLUDED)
+                if x.is_dir() and not any(x.match(excl) for excl in EXCLUDED)
                 ]
 
     directories_previous = directories.copy()
@@ -80,7 +80,7 @@ def resolve_path(path: Union[str, Path], to: Union[str, Path] = '.') -> Path:
     return Path('/'.join(ret))
 
 
-def get_fname_from_keys(keys, folder=Path('.'), file_ext='.pkl', remove_duplicates=True):
+def get_fname_from_keys(keys, folder='.', file_ext='.pkl', remove_duplicates=True):
     if remove_duplicates:
         # https://stackoverflow.com/a/53657523/9684872
         keys = list(dict.fromkeys(keys))
@@ -120,6 +120,16 @@ def dump_json(data_dict: dict, filename: Union[str, Path]):
         json.dump(obj=data_dict, fp=f, indent=4)
 
 
+def to_pickle(obj, fname):
+    with open(fname, 'wb') as f:
+        pickle.dump(obj, f)
+
+
+def from_pickle(fname):
+    with open(fname, 'rb') as f:
+        return pickle.load(f)
+
+
 def load_json(fname: Union[str, Path]) -> dict:
     """Load JSON from disc.
 
@@ -139,8 +149,8 @@ def load_json(fname: Union[str, Path]) -> dict:
 
 
 def parse_dict(input_dict: dict,
-               types: List[Tuple] = [(PurePath, lambda p: str(PurePosixPath(p))),
-                                     (np.ndarray, lambda a: a.to_list())]):
+               types: Tuple[Tuple] = ((PurePath, lambda p: str(PurePosixPath(p))),
+                                      (np.ndarray, lambda a: a.to_list()))):
     """Transform a set of items (instances) to their string representation"""
     d = dict()
     for k, v in input_dict.items():
@@ -172,3 +182,29 @@ def extend_name(fname: Union[str, Path], extend_by: str, ext: str = None) -> Pat
     fname = fname.parent / f"{fname.stem}{extend_by}"
     fname = fname.with_suffix(ext)
     return fname
+
+
+def add_indices(array: np.array, original_df: pd.DataFrame,
+                index_only: bool = False) -> pd.DataFrame:
+    """Add indices to array using provided origional DataFrame.
+
+    Parameters
+    ----------
+    array : np.array
+        Array of data to add indices to.
+    original_df : pd.DataFrame
+        Original DataFrame data was generated from.
+    index_only : bool, optional
+        Only add row index, by default False
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with array data and original indices.
+    """
+
+    index = original_df.index
+    columns = None
+    if not index_only:
+        columns = original_df.columns
+    return pd.DataFrame(array, index=index, columns=columns)

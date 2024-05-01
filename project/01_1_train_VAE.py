@@ -19,12 +19,17 @@
 # %%
 
 import logging
+from functools import partial
 
-
-# import partial, Learner, EarlyStoppingCallback
 from fastai.basics import *
+from fastai.learner import Learner
 from fastai.callback.all import *
+from fastai.callback.all import EarlyStoppingCallback
 from fastai.torch_basics import *
+
+import torch
+
+from IPython.display import display
 
 from torch.nn import Sigmoid
 
@@ -173,18 +178,18 @@ freq_feat = vaep.io.datasplits.load_freq(args.data)
 freq_feat.head()  # training data
 
 # %% [markdown]
-# ### Produce some addional fake samples
+# ### Produce some addional simulated samples
 
 # %% [markdown]
-# The validation fake NA is used to by all models to evaluate training performance.
+# The validation simulated NA is used to by all models to evaluate training performance.
 
 # %%
-val_pred_fake_na = data.val_y.to_frame(name='observed')
-val_pred_fake_na
+val_pred_simulated_na = data.val_y.to_frame(name='observed')
+val_pred_simulated_na
 
 # %%
-test_pred_fake_na = data.test_y.to_frame(name='observed')
-test_pred_fake_na.describe()
+test_pred_simulated_na = data.test_y.to_frame(name='observed')
+test_pred_simulated_na.describe()
 
 
 # %% [markdown]
@@ -334,13 +339,13 @@ pred = pred.stack()
 pred
 
 # %%
-val_pred_fake_na['VAE'] = pred  # 'model_key' ?
-val_pred_fake_na
+val_pred_simulated_na['VAE'] = pred  # 'model_key' ?
+val_pred_simulated_na
 
 
 # %%
-test_pred_fake_na['VAE'] = pred  # model_key?
-test_pred_fake_na
+test_pred_simulated_na['VAE'] = pred  # model_key?
+test_pred_simulated_na
 
 # %% [markdown]
 # save missing values predictions
@@ -348,8 +353,8 @@ test_pred_fake_na
 # %%
 if args.save_pred_real_na:
     pred_real_na = ae.get_missing_values(df_train_wide=data.train_X,
-                                         val_idx=val_pred_fake_na.index,
-                                         test_idx=test_pred_fake_na.index,
+                                         val_idx=val_pred_simulated_na.index,
+                                         test_idx=test_pred_simulated_na.index,
                                          pred=pred)
     display(pred_real_na)
     pred_real_na.to_csv(args.out_preds / f"pred_real_na_{args.model_key}.csv")
@@ -382,20 +387,16 @@ if args.meta_cat_col and df_meta is not None:
         args.meta_cat_col)
 
 # %%
-feat_freq_val = val_pred_fake_na['observed'].groupby(level=-1).count()
+feat_freq_val = val_pred_simulated_na['observed'].groupby(level=-1).count()
 feat_freq_val.name = 'freq_val'
 ax = feat_freq_val.plot.box()
-
-# %%
-# # scatter plot between overall feature freq and split freq
-# freq_feat.to_frame('overall').join(feat_freq_val).plot.scatter(x='overall', y='freq_val')
 
 # %%
 feat_freq_val.value_counts().sort_index().head()  # require more than one feat?
 
 # %%
-errors_val = val_pred_fake_na.drop('observed', axis=1).sub(
-    val_pred_fake_na['observed'], axis=0)
+errors_val = val_pred_simulated_na.drop('observed', axis=1).sub(
+    val_pred_simulated_na['observed'], axis=0)
 errors_val = errors_val.abs().groupby(level=-1).mean()
 errors_val = errors_val.join(freq_feat).sort_values(by='freq', ascending=True)
 
@@ -407,8 +408,8 @@ ax = errors_val_smoothed.plot(x='freq', figsize=(15, 10))
 # errors_val_smoothed
 
 # %%
-errors_val = val_pred_fake_na.drop('observed', axis=1).sub(
-    val_pred_fake_na['observed'], axis=0)
+errors_val = val_pred_simulated_na.drop('observed', axis=1).sub(
+    val_pred_simulated_na['observed'], axis=0)
 errors_val.abs().groupby(level=-1).agg(['mean', 'count'])
 
 # %%
@@ -417,17 +418,14 @@ errors_val
 # %% [markdown]
 # ## Comparisons
 #
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
-# > Could be changed.
+# Simulated NAs : Artificially created NAs. Some data was sampled and set
+# explicitly to misssing before it was fed to the model for
+# reconstruction.
 
 # %% [markdown]
 # ### Validation data
 #
 # - all measured (identified, observed) peptides in validation data
-#
-# > Does not make to much sense to compare collab and AEs,
-# > as the setup differs of training and validation data differs
 
 # %%
 # papermill_description=metrics
@@ -435,21 +433,19 @@ errors_val
 d_metrics = models.Metrics()
 
 # %% [markdown]
-# The fake NA for the validation step are real test data (not used for training nor early stopping)
+# The simulated NA for the validation step are real test data (not used for training nor early stopping)
 
 # %%
-added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
+added_metrics = d_metrics.add_metrics(val_pred_simulated_na, 'valid_simulated_na')
 added_metrics
 
 # %% [markdown]
 # ### Test Datasplit
 #
-# Fake NAs : Artificially created NAs. Some data was sampled and set
-# explicitly to misssing before it was fed to the model for
-# reconstruction.
+
 
 # %%
-added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
+added_metrics = d_metrics.add_metrics(test_pred_simulated_na, 'test_simulated_na')
 added_metrics
 
 # %% [markdown]
@@ -470,8 +466,9 @@ metrics_df
 
 # %%
 # save simulated missing values for both splits
-val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
-test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+val_pred_simulated_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
+test_pred_simulated_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
+
 # %% [markdown]
 # ## Config
 

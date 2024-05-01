@@ -3,7 +3,7 @@ Try to execute several time the same Snakemake workflow using another Snakemake 
 
 - one by one? (-> one process at a time?)
 """
-folder_experiment = "runs/appl_ald_data/plasma/proteinGroups/reps"
+folder_experiment = "runs/appl_ald_data_2023_11/reps/plasma/proteinGroups"
 folder_run = folder_experiment + "/run_{run}"
 out_folder = folder_run + "/{sub_folder}/{target}"
 
@@ -44,7 +44,7 @@ rule compare_repetitions:
 
 rule run_comparison_workflow:
     input:
-        f"{folder_run}/figures/errors_binned_by_int_test.pdf",
+        f"{folder_run}/figures/2_1_test_errors_binned_by_feat_medians.pdf",
     output:
         excel=f"{out_folder}/equality_rejected_target.pkl",
         qvalues=f"{out_folder}/qvalues_target.pkl",
@@ -62,9 +62,9 @@ rule run_comparison_workflow:
 
 rule run_models:
     output:
-        f"{folder_run}/figures/errors_binned_by_int_test.pdf",
+        f"{folder_run}/figures/2_1_test_errors_binned_by_feat_medians.pdf",
     params:
-        configfile="config/appl_ald_data/plasma/proteinGroups/config.yaml",
+        configfile="config/appl_ald_data/plasma/proteinGroups/config_reps.yaml",
         folder_experiment=folder_run,
     shell:
         "snakemake --configfile {params.configfile}"

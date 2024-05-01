@@ -19,30 +19,31 @@
 # Create data splits
 
 # %%
-from pathlib import Path
 import logging
-from typing import Union, List
+from functools import partial
+from pathlib import Path
+from typing import List, Union
 
-from IPython.display import display
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-
 import plotly.express as px
+from IPython.display import display
+from sklearn.model_selection import train_test_split
 
 import vaep
+import vaep.io.load
+from vaep.analyzers import analyzers
 from vaep.io.datasplits import DataSplits
 from vaep.sampling import feature_frequency
-
-from vaep.analyzers import analyzers
-from vaep.analyzers.analyzers import AnalyzePeptides
+from vaep.sklearn import get_PCA
 
 logger = vaep.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
-def add_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
+def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
     try:
         df = df.loc[df_meta.index]
     except KeyError as e:
@@ -56,7 +57,7 @@ def add_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 pd.options.display.max_columns = 32
 plt.rcParams['figure.figsize'] = [4, 2]
 
-vaep.plotting.make_large_descriptors(6)
+vaep.plotting.make_large_descriptors(7)
 
 figures = {}  # collection of ax or figures
 dumps = {}  # collection of data dumps
@@ -79,17 +80,19 @@ sample_completeness: Union[int, float] = 0.5  # Minimum number or fraction of to
 select_N: int = None  # only use latest N samples
 sample_N: bool = False  # if select_N, sample N randomly instead of using latest N
 random_state: int = 42  # random state for reproducibility of splits
-min_RT_time: Union[int, float] = None  # based on raw file meta data, only take samples with RT > min_RT_time
 logarithm: str = 'log2'  # Log transformation of initial data (select one of the existing in numpy)
 folder_experiment: str = 'runs/example'  # folder to save figures and data dumps
 folder_data: str = ''  # specify special data directory if needed
 file_format: str = 'csv'  # file format of create splits, default pickle (pkl)
+use_every_nth_xtick: int = 1  # use every nth xtick in plots (default 1, i.e. every xtick is kept)
 # metadata -> defaults for metadata extracted from machine data, used for plotting
 meta_date_col: str = None  # date column in meta data
 meta_cat_col: str = None  # category column in meta data
 # train, validation and test data splits
 frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
 frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
+prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing values
+feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
 
 
 # %%
@@ -97,14 +100,17 @@ args = vaep.nb.get_params(args, globals=globals())
 args
 
 # %%
-params = vaep.nb.args_from_dict(args)
-params
-
+args = vaep.nb.args_from_dict(args)
+args
 
 # %%
-if isinstance(params.index_col, str) or isinstance(params.index_col, int):
-    params.overwrite_entry('index_col', [params.index_col])
-params.index_col  # make sure it is an iterable
+if not 0.0 <= args.frac_mnar <= 1.0:
+    raise ValueError("Invalid MNAR float value (should be betw. 0 and 1):"
+                     f" {args.frac_mnar}")
+
+if isinstance(args.index_col, str) or isinstance(args.index_col, int):
+    args.overwrite_entry('index_col', [args.index_col])
+args.index_col  # make sure it is an iterable
 
 # %% [markdown]
 # ## Raw data
@@ -113,7 +119,7 @@ params.index_col  # make sure it is an iterable
 # process arguments
 
 # %%
-logger.info(f"{params.FN_INTENSITIES = }")
+logger.info(f"{args.FN_INTENSITIES = }")
 
 
 FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
@@ -121,29 +127,32 @@ FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'from_csv',
                               'pickle': 'from_pickle',
                               }
 
-FILE_EXT = Path(params.FN_INTENSITIES).suffix[1:]
+FILE_EXT = Path(args.FN_INTENSITIES).suffix[1:]
 logger.info(
     f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
 # %%
 # # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
-constructor = getattr(AnalyzePeptides, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
-analysis = constructor(fname=params.FN_INTENSITIES,
-                       index_col=params.index_col,
-                       )
-if params.column_names:
-    analysis.df.columns.names = params.column_names
+constructor = getattr(vaep.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
+df = constructor(fname=args.FN_INTENSITIES,
+                 index_col=args.index_col,
+                 )
+if args.column_names:
+    df.columns.names = args.column_names
+if args.feat_name_display is None:
+    args.overwrite_entry('feat_name_display', 'features')
+    if args.column_names:
+        args.overwrite_entry('feat_name_display', args.column_names[0])
 
-if not analysis.df.index.name:
+
+if not df.index.name:
     logger.warning("No sample index name found, setting to 'Sample ID'")
-    analysis.df.index.name = 'Sample ID'
+    df.index.name = 'Sample ID'
 
-log_fct = getattr(np, params.logarithm)
-analysis.log_transform(log_fct)
-logger.info(f"{analysis = }")
-df = analysis.df
-del analysis.df  # free memory
+if args.logarithm:
+    log_fct = getattr(np, args.logarithm)
+    df = log_fct(df)  # ! potentially add check to increase value by 1 if 0 is present (should be part of preprocessing)
 df
 
 # %%
@@ -154,11 +163,11 @@ ax = (df
       .plot
       .box()
       )
-ax.set_ylabel('number of observation across samples')
+ax.set_ylabel('Frequency')
 
 
 # %%
-fname = params.out_folder / '01_0_data_stats.xlsx'
+fname = args.out_folder / '01_0_data_stats.xlsx'
 dumps[fname.name] = fname.as_posix()
 writer = pd.ExcelWriter(fname)
 
@@ -185,8 +194,6 @@ def join_as_str(seq):
     return ret
 
 
-# ToDo: join multiindex samples indices (pkl dumps)
-# if hasattr(df.columns, "levels"):
 if isinstance(df.columns, pd.MultiIndex):
     logger.warning("combine MultiIndex columns to one feature column")
     print(df.columns[:10].map(join_as_str))
@@ -201,55 +208,37 @@ if isinstance(df.columns, pd.MultiIndex):
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
 # %%
-if params.fn_rawfile_metadata:
-    df_meta = pd.read_csv(params.fn_rawfile_metadata, index_col=0)
+if args.fn_rawfile_metadata:
+    df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
 else:
     logger.warning("No metadata for samples provided, create placeholder.")
-    if params.meta_date_col:
+    if args.meta_date_col:
         raise ValueError(
-            f"No metadata provided, but data column set: {params.meta_date_col}")
-    if params.meta_cat_col:
+            f"No metadata provided, but data column set: {args.meta_date_col}")
+    if args.meta_cat_col:
         raise ValueError(
-            f"No metadata provided, but data column set: {params.meta_cat_col}")
+            f"No metadata provided, but data column set: {args.meta_cat_col}")
     df_meta = pd.DataFrame(index=df.index)
 df_meta = df_meta.loc[df.index.to_list()]  # index is sample index
 if df_meta.index.name is None:
-    df_meta.index.name = params.index_col[0]
+    df_meta.index.name = args.index_col[0]
 df_meta
 
 # %%
-if params.meta_date_col:
-    df_meta[params.meta_date_col] = pd.to_datetime(
-        df_meta[params.meta_date_col])
+if args.meta_date_col:
+    df_meta[args.meta_date_col] = pd.to_datetime(
+        df_meta[args.meta_date_col])
 else:
-    params.overwrite_entry('meta_date_col', 'PlaceholderTime')
-    df_meta[params.meta_date_col] = range(len(df_meta))
+    args.overwrite_entry('meta_date_col', 'PlaceholderTime')
+    df_meta[args.meta_date_col] = range(len(df_meta))
 df_meta
 
 
 # %%
 df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
 
-# %% [markdown]
-# select samples with a minimum retention time
-
 # %%
-if params.min_RT_time:
-    logger.info(
-        "Metadata should have 'MS max RT' entry from ThermoRawFileParser")
-    msg = (f"Minimum RT time maxiumum is set to {params.min_RT_time} minutes"
-           " (to exclude too short runs, which are potentially fractions).")
-    # can be integrated into query string
-    mask_RT = df_meta['MS max RT'] >= params.min_RT_time
-    msg += f" Total number of samples retained: {int(mask_RT.sum())}"
-    msg += f" ({int(len(mask_RT) - mask_RT.sum())} excluded)."
-    logger.info(msg)
-    df_meta = df_meta.loc[mask_RT]
-else:
-    logger.warning("Retention time filtering deactivated.")
-
-# %%
-df_meta = df_meta.sort_values(params.meta_date_col)
+df_meta = df_meta.sort_values(args.meta_date_col)
 
 # %%
 meta_stats = df_meta.describe(include='all')
@@ -270,13 +259,13 @@ except KeyError:
 
 
 # %%
-df_meta = add_meta_data(df, df_meta=df_meta)
+df_meta = align_meta_data(df, df_meta=df_meta)
 
 # %% [markdown]
 # Ensure unique indices
 
 # %%
-assert df.index.is_unique, "Duplicates in index"
+assert df.index.is_unique, "Duplicates in index."
 
 # %% [markdown]
 # ## Select a subset of samples if specified (reduce the number of samples)
@@ -286,12 +275,12 @@ assert df.index.is_unique, "Duplicates in index"
 #   - take N most recent samples (-> check that this makes sense for your case)
 
 # %%
-if params.select_N is not None:
-    params.select_N = min(params.select_N, len(df_meta))
-    if params.sample_N:
-        df_meta = df_meta.sample(params.select_N)
+if args.select_N is not None:
+    args.select_N = min(args.select_N, len(df_meta))
+    if args.sample_N:
+        df_meta = df_meta.sample(args.select_N)
     else:
-        df_meta = df_meta.iloc[-params.select_N:]
+        df_meta = df_meta.iloc[-args.select_N:]
 
     df = df.loc[df_meta.index].dropna(
         how='all', axis=1)
@@ -304,25 +293,24 @@ if params.select_N is not None:
 
 
 # %%
+# ! add function
 freq_per_feature = df.notna().sum()  # on wide format
-if isinstance(params.feat_prevalence, float):
+if isinstance(args.feat_prevalence, float):
     N_samples = len(df)
     logger.info(f"Current number of samples: {N_samples}")
     logger.info(
-        f"Feature has to be present in at least {params.feat_prevalence:.2%} of samples")
-    params.overwrite_entry('feat_prevalence', int(
-        N_samples * params.feat_prevalence))
-assert isinstance(params.feat_prevalence, int)
+        f"Feature has to be present in at least {args.feat_prevalence:.2%} of samples")
+    args.overwrite_entry('feat_prevalence', int(
+        N_samples * args.feat_prevalence))
+assert isinstance(args.feat_prevalence, int)
 # ! check that feature prevalence is greater equal to 3 (otherwise train, val, test split is not possible)
 logger.info(
-    f"Feature has to be present in at least {params.feat_prevalence} of samples")
+    f"Feature has to be present in at least {args.feat_prevalence} of samples")
 # select features
-mask = freq_per_feature >= params.feat_prevalence
+mask = freq_per_feature >= args.feat_prevalence
 logger.info(f"Drop {(~mask).sum()} features")
 freq_per_feature = freq_per_feature.loc[mask]
 df = df.loc[:, mask]
-analysis.N, analysis.M = df.shape
-# # potentially create freq based on DataFrame
 df
 
 # %%
@@ -343,28 +331,28 @@ data_stats_filtered
 # Select samples based on completeness
 
 # %%
-if isinstance(params.sample_completeness, float):
-    msg = f'Fraction of minimum sample completeness over all features specified with: {params.sample_completeness}\n'
+if isinstance(args.sample_completeness, float):
+    msg = f'Fraction of minimum sample completeness over all features specified with: {args.sample_completeness}\n'
     # assumes df in wide format
-    params.overwrite_entry('sample_completeness', int(
-        df.shape[1] * params.sample_completeness))
-    msg += f'This translates to a minimum number of features per sample (to be included): {params.sample_completeness}'
+    args.overwrite_entry('sample_completeness', int(
+        df.shape[1] * args.sample_completeness))
+    msg += f'This translates to a minimum number of features per sample (to be included): {args.sample_completeness}'
     logger.info(msg)
 
 sample_counts = df.notna().sum(axis=1)  # if DataFrame
 sample_counts.describe()
 
 # %%
-mask = sample_counts > params.sample_completeness
+mask = sample_counts > args.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
-print(msg)
+logger.info(msg)
 df = df.loc[mask]
 df = df.dropna(
     axis=1, how='all')  # drop now missing features
 
 # %%
-params.N, params.M = df.shape  # save data dimensions
-params.used_samples = df.index.to_list()
+args.N, args.M = df.shape  # save data dimensions
+args.used_samples = df.index.to_list()
 
 # %% [markdown]
 # ### Histogram of features per sample
@@ -372,9 +360,9 @@ params.used_samples = df.index.to_list()
 # %%
 group = 1
 ax = df.notna().sum(axis=1).hist()
-ax.set_xlabel('features per eligable sample')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} per eligable sample')
 ax.set_ylabel('observations')
-fname = params.out_figures / f'0_{group}_hist_features_per_sample'
+fname = args.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -383,9 +371,9 @@ ax = df.notna().sum(axis=0).sort_values().plot()
 _new_labels = [l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()]
 _ = ax.set_xticklabels(_new_labels, rotation=45,
                        horizontalalignment='right')
-ax.set_xlabel('feature prevalence')
+ax.set_xlabel(f'{args.feat_name_display.capitalize()} prevalence')
 ax.set_ylabel('observations')
-fname = params.out_figures / f'0_{group}_feature_prevalence'
+fname = args.out_figures / f'0_{group}_feature_prevalence'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -397,36 +385,46 @@ vaep.savefig(ax.get_figure(), fname)
 min_max = vaep.plotting.data.min_max(df.stack())
 ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
+ax.set_xlabel('Intensity binned')
+fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
 
-fname = params.out_figures / f'0_{group}_intensity_distribution_overall'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
-fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
+fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
-    data=df, type='boxplot')
-fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
+ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
+    data=df, type='boxplot', return_plot_data=True)
+fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
+ax.set_xlabel(
+    f'{args.feat_name_display.capitalize()} binned by their median intensity'
+    f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
+_data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
+# _data_feat_median_over_prop_missing.to_excel(fname.with_suffix('.xlsx'))
+del _data_feat_median_over_prop_missing
 
 # %% [markdown]
 # ### Interactive and Single plots
 
 # %%
-sample_counts.name = 'identified features'
+_feature_display_name = f'identified {args.feat_name_display}'
+sample_counts.name = _feature_display_name
 
 # %%
 K = 2
 df = df.astype(float)
-analysis.df = df
-pcs = analysis.get_PCA(n_components=K)  # should be renamed to get_PCs
+pcs = get_PCA(df, n_components=K)  # should be renamed to get_PCs
 pcs = pcs.iloc[:, :K].join(df_meta).join(sample_counts)
 
 pcs_name = pcs.columns[:2]
@@ -438,21 +436,21 @@ pcs
 pcs.describe(include='all').T
 
 # %%
-if params.meta_cat_col:
-    fig, ax = plt.subplots(figsize=(2, 2))
+if args.meta_cat_col:
+    fig, ax = plt.subplots(figsize=(3, 3))
     analyzers.seaborn_scatter(
-        pcs[pcs_name], ax, meta=pcs[params.meta_cat_col], title=f"by {params.meta_cat_col}")
-    fname = (params.out_figures
-             / f'0_{group}_pca_sample_by_{"_".join(params.meta_cat_col.split())}')
+        pcs[pcs_name], ax, meta=pcs[args.meta_cat_col], title=f"by {args.meta_cat_col}")
+    fname = (args.out_figures
+             / f'0_{group}_pca_sample_by_{"_".join(args.meta_cat_col.split())}')
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
 # %%
-if params.meta_date_col != 'PlaceholderTime':
+if args.meta_date_col != 'PlaceholderTime':
     fig, ax = plt.subplots()
     analyzers.plot_date_map(
-        df=pcs[pcs_name], ax=ax, dates=pcs[params.meta_date_col], title=f'by {params.meta_date_col}')
-    fname = params.out_figures / f'0_{group}_pca_sample_by_date'
+        df=pcs[pcs_name], ax=ax, dates=pcs[args.meta_date_col], title=f'by {args.meta_date_col}')
+    fname = args.out_figures / f'0_{group}_pca_sample_by_date'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -461,32 +459,36 @@ if params.meta_date_col != 'PlaceholderTime':
 
 # %%
 fig, ax = plt.subplots()
-col_identified_feat = 'identified features'
+col_identified_feat = _feature_display_name
 analyzers.plot_scatter(
     pcs[pcs_name],
     ax,
     pcs[col_identified_feat],
-    title=f'by {col_identified_feat}',
+    feat_name_display=args.feat_name_display,
     size=5,
 )
-fname = (params.out_figures
+fname = (args.out_figures
          / f'0_{group}_pca_sample_by_{"_".join(col_identified_feat.split())}.pdf')
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
+
+# %%
+# # ! write principal components to excel (if needed)
+# pcs.set_index([df.index.name])[[*pcs_name, col_identified_feat]].to_excel(fname.with_suffix('.xlsx'))
 
 # %%
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
     # hover_data=analysis.df_meta,
-    title=f'First two Principal Components of {analysis.M} features for {pcs.shape[0]} samples',
+    title=f'First two Principal Components of {args.M} {args.feat_name_display} for {pcs.shape[0]} samples',
     # color=pcs['Software Version'],
     color=col_identified_feat,
     template='none',
     width=1200,  # 4 inches x 300 dpi
     height=600  # 2 inches x 300 dpi
 )
-fname = (params.out_figures
+fname = (args.out_figures
          / f'0_{group}_pca_sample_by_{"_".join(col_identified_feat.split())}_plotly.pdf')
 figures[fname.stem] = fname
 fig.write_image(fname)
@@ -499,23 +501,26 @@ fig  # stays interactive in html
 df.head()
 
 # %%
-df_w_date = df.join(df_meta[params.meta_date_col])
-df_w_date = df_w_date.set_index(params.meta_date_col).sort_index()
-if not params.meta_date_col == 'PlaceholderTime':
+df_w_date = df.join(df_meta[args.meta_date_col])
+df_w_date = df_w_date.set_index(args.meta_date_col).sort_index()
+if not args.meta_date_col == 'PlaceholderTime':
     df_w_date.to_period('min')
 df_w_date = df_w_date.T
 df_w_date
 
 # %%
-ax = df_w_date.boxplot(rot=80,
-                       figsize=(8, 3),
-                       fontsize=6,
-                       showfliers=False,
-                       showcaps=False
-                       )
+ax = df_w_date.plot.box(rot=80,
+                        figsize=(7, 3),
+                        fontsize=7,
+                        showfliers=False,
+                        showcaps=False,
+                        boxprops=dict(linewidth=.4, color='darkblue'),
+                        flierprops=dict(markersize=.4, color='lightblue'),
+                        )
 _ = vaep.plotting.select_xticks(ax)
 fig = ax.get_figure()
-fname = params.out_figures / f'0_{group}_median_boxplot'
+fname = args.out_figures / f'0_{group}_median_boxplot'
+df_w_date.to_pickle(fname.with_suffix('.pkl'))
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 del df_w_date
@@ -532,8 +537,8 @@ df.stack().describe(percentiles=np.linspace(0.05, 0.95, 19).round(2))
 #   - the machine will be not use for intermediate periods
 
 # %%
-if not params.meta_date_col == 'PlaceholderTime':
-    dates = df_meta[params.meta_date_col].sort_values()
+if not args.meta_date_col == 'PlaceholderTime':
+    dates = df_meta[args.meta_date_col].sort_values()
     median_sample_intensity = (df
                                .median(axis=1)
                                .to_frame('median intensity'))
@@ -548,7 +553,7 @@ if not params.meta_date_col == 'PlaceholderTime':
                                                   median_sample_intensity[dates.name])
                                               )
     fig = ax.get_figure()
-    fname = params.out_figures / f'0_{group}_median_scatter'
+    fname = args.out_figures / f'0_{group}_median_scatter'
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
@@ -560,7 +565,7 @@ if not params.meta_date_col == 'PlaceholderTime':
 
 # %%
 msg = "Total number of samples in data: {}"
-print(msg.format(len(df)))
+logger.info(msg.format(len(df)))
 
 
 # %% [markdown]
@@ -573,7 +578,7 @@ freq_per_feature
 # %%
 # freq_per_feature.name = 'Gene names freq' # name it differently?
 # index.name is lost when data is stored
-fname = params.data / 'freq_features.json'
+fname = args.data / 'freq_features.json'
 dumps[fname.name] = fname
 freq_per_feature.to_json(fname)
 fname = fname.with_suffix('.pkl')
@@ -596,7 +601,7 @@ freq_per_feature.to_pickle(fname)
 
 # %%
 splits = DataSplits(is_wide_format=False)
-print(f"{splits = }")
+logger.info(f"{splits = }")
 splits.__annotations__
 
 
@@ -610,83 +615,86 @@ df_long.head()
 
 # %%
 group = 2
-# ! move parameter checks to start of script
-if 0.0 <= params.frac_mnar <= 1.0:
-    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
-    quantile_frac = df_long.quantile(params.frac_non_train)
-    rng = np.random.default_rng(params.random_state)
-    threshold = pd.Series(rng.normal(loc=float(quantile_frac),
-                                     scale=float(0.3 * df_long.std()),
-                                     size=len(df_long),
-                                     ),
-                          index=df_long.index,
-                          )
-    # plot data vs threshold data
-    ax = axes[0]
-    from functools import partial
-    plot_histogram_intensities = partial(vaep.plotting.data.plot_histogram_intensities,
-                                         min_max=min_max,
-                                         alpha=0.8)
-    plot_histogram_intensities(
-        df_long.squeeze(),
-        ax=ax,
-        label='observed')
-    plot_histogram_intensities(
-        threshold,
-        ax=ax,
-        label='thresholds')
-    ax.legend()
-    # select MNAR (intensity between randomly sampled threshold)
-    mask = df_long.squeeze() < threshold
-    # ! subsample to have exact fraction of MNAR?
-    N = len(df_long)
-    logger.info(f"{int(N * params.frac_non_train) = :,d}")
-    N_MNAR = int(params.frac_non_train * params.frac_mnar * N)
-    fake_na_mnar = df_long.loc[mask]
-    if len(fake_na_mnar) > N_MNAR:
-        fake_na_mnar = fake_na_mnar.sample(N_MNAR,
-                                           random_state=params.random_state)
-    splits.train_X = df_long.loc[
-        df_long.index.difference(
-            fake_na_mnar.index)
-    ]
-    logger.info(f"{len(fake_na_mnar) = :,d}")
-    N_MCAR = int(N * (1 - params.frac_mnar) * params.frac_non_train)
-    fake_na_mcar = splits.train_X.sample(N_MCAR,
-                                         random_state=params.random_state)
-    logger.info(f"{len(fake_na_mcar) = :,d}")
-    splits.train_X = (splits
-                      .train_X
-                      .loc[splits
-                           .train_X
-                           .index
-                           .difference(
-                               fake_na_mcar.index)]
-                      ).squeeze()
-    logger.info(f"{len(splits.train_X) = :,d}")
-    fake_na = pd.concat([fake_na_mcar, fake_na_mnar]).squeeze()
-    logger.info(f"{len(fake_na) = :,d}")
-    ax = axes[1]
-    plot_histogram_intensities(
-        fake_na_mnar.squeeze(),
-        ax=ax,
-        label=f'MNAR ({N_MNAR:,d})',
-        color='C2')
-    plot_histogram_intensities(
-        fake_na_mcar.squeeze(),
-        ax=ax,
-        color='C3',
-        label=f'MCAR ({N_MCAR:,d})')
-    ax.legend()
-    assert len(fake_na) + len(splits.train_X) == len(df_long)
-    fname = params.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
-    figures[fname.stem] = fname
-    vaep.savefig(fig, fname)
-else:
-    raise ValueError(f"Invalid MNAR float value (should be betw. 0 and 1): {params.frac_mnar}")
 
-splits.val_y = fake_na.sample(frac=0.5, random_state=params.random_state)
-splits.test_y = fake_na.loc[fake_na.index.difference(splits.val_y.index)]
+splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
+    df_long=df_long,
+    frac_non_train=args.frac_non_train,
+    frac_mnar=args.frac_mnar,
+    random_state=args.random_state,
+)
+logger.info(f"{splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
+
+# %%
+N = len(df_long)
+N_MCAR = len(fake_na_mcar)
+N_MNAR = len(fake_na_mnar)
+
+fig, axes = plt.subplots(1, 2, figsize=(6, 2))
+ax = axes[0]
+plot_histogram_intensities = partial(vaep.plotting.data.plot_histogram_intensities,
+                                     min_max=min_max,
+                                     alpha=0.8)
+plot_histogram_intensities(
+    df_long.squeeze(),
+    ax=ax,
+    label='observed')
+plot_histogram_intensities(
+    thresholds,
+    ax=ax,
+    label='thresholds')
+if args.use_every_nth_xtick > 1:
+    ax.set_xticks(ax.get_xticks()[::2])
+ax.legend()
+ax = axes[1]
+plot_histogram_intensities(
+    fake_na_mnar.squeeze(),
+    ax=ax,
+    label=f'MNAR ({N_MNAR:,d})',
+    color='C2')
+plot_histogram_intensities(
+    fake_na_mcar.squeeze(),
+    ax=ax,
+    color='C3',
+    label=f'MCAR ({N_MCAR:,d})')
+if args.use_every_nth_xtick > 1:
+    ax.set_xticks(ax.get_xticks()[::2])
+ax.legend()
+fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
+figures[fname.stem] = fname
+vaep.savefig(fig, fname)
+
+
+# %% [markdown]
+# ### Keep simulated samples only in a subset of the samples
+# In case only a subset of the samples should be used for validation and testing,
+# although these samples can be used for fitting the models,
+# the following cell will select samples stratified by the eventually set `meta_cat_col` column.
+#
+# The procedure is experimental and turned off by default.
+
+# %%
+if 0.0 < args.prop_sample_w_sim < 1.0:
+    to_stratify = None
+    if args.meta_cat_col and df_meta is not None:
+        to_stratify = df_meta[args.meta_cat_col].fillna(-1)  # ! fillna with -1 as separate category (sofisticate check)
+    train_idx, val_test_idx = train_test_split(splits.train_X.index.levels[0],
+                                               test_size=args.prop_sample_w_sim,
+                                               stratify=to_stratify,
+                                               random_state=42)
+    val_idx, test_idx = train_test_split(val_test_idx,
+                                         test_size=.5,
+                                         stratify=to_stratify.loc[val_test_idx] if to_stratify is not None else None,
+                                         random_state=42)
+    logger.info(f"Sample in Train: {len(train_idx):,d} - Validation: {len(val_idx):,d} - Test: {len(test_idx):,d}")
+    # reassign some simulated missing values to training data:
+    splits.train_X = pd.concat(
+        [splits.train_X,
+         splits.val_y.loc[train_idx],
+         splits.test_y.loc[train_idx]
+         ])
+    splits.val_y = splits.val_y.loc[val_idx]
+    splits.test_y = splits.test_y.loc[test_idx]
+    logger.info(f"New shapes: {splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
 
 # %%
 splits.test_y.groupby(level=-1).count().describe()
@@ -695,11 +703,10 @@ splits.test_y.groupby(level=-1).count().describe()
 splits.val_y
 
 # %%
-# ! add option to retain at least N samples per feature
 splits.train_X.groupby(level=-1).count().describe()
 
 # %%
-# ToDo check that feature indices and sample indicies overlap
+# Check that feature indices and sample indicies overlap between splits
 # -> a single feature cannot be only in the validation or test split
 # -> single features should be put into the training data
 # -> or raise error as feature completness treshold is so low that less than 3 samples
@@ -752,7 +759,7 @@ if mask_min_4_measurments.any():
     idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
     logger.warning(f"Features with less than 4 measurments in training data: {idx.to_list()}")
     to_remove = splits.val_y.loc[pd.IndexSlice[:, idx]]
-    print("To remove from validation data: ")
+    logger.info("To remove from validation data: ")
     display(to_remove)
     splits.train_X = pd.concat([splits.train_X, to_remove])
     splits.val_y = splits.val_y.drop(to_remove.index)
@@ -771,7 +778,7 @@ if mask_min_4_measurments.any():
 
 # %%
 # dumps data in long-format
-splits_dumped = splits.dump(folder=params.data, file_format=params.file_format)
+splits_dumped = splits.dump(folder=args.data, file_format=args.file_format)
 dumps.update(splits_dumped)
 splits_dumped
 
@@ -779,7 +786,7 @@ splits_dumped
 # ### Reload from disk
 
 # %%
-splits = DataSplits.from_folder(params.data, file_format=params.file_format)
+splits = DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %% [markdown]
 # ## plot distribution of splits
@@ -790,7 +797,7 @@ splits_df['train'] = splits.train_X
 splits_df['val'] = splits.val_y
 splits_df['test'] = splits.test_y
 stats_splits = splits_df.describe()
-# stats_splits.to_excel(writer, 'stats_splits', float_format='%.2f')
+stats_splits.to_excel(writer, 'stats_splits', float_format='%.3f')
 stats_splits
 
 # %%
@@ -825,7 +832,10 @@ _ = (splits
            legend=True)
      )
 ax.legend(_legend[:-1])
-fname = params.out_figures / f'0_{group}_test_over_train_split.pdf'
+if args.use_every_nth_xtick > 1:
+    ax.set_xticks(ax.get_xticks()[::2])
+ax.set_xlabel('Intensity bins')
+fname = args.out_figures / f'0_{group}_val_over_train_split.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -838,12 +848,19 @@ ax = splits_df.plot.hist(bins=bins,
                          stacked=True,
                          color=['C0', 'C1', 'C2'],
                          )
+if args.use_every_nth_xtick > 1:
+    ax.set_xticks(ax.get_xticks()[::2])
 ax.legend(_legend)
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
-fname = params.out_figures / f'0_{group}_splits_freq_stacked.pdf'
+fname = args.out_figures / f'0_{group}_splits_freq_stacked.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
+
+# %%
+counts_per_bin = vaep.pandas.get_counts_per_bin(df=splits_df, bins=bins)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %%
 ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
@@ -852,12 +869,30 @@ ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
                                                legend=False,
                                                stacked=True,
                                                )
+if args.use_every_nth_xtick > 1:
+    ax.set_xticks(ax.get_xticks()[::2])
 ax.legend(_legend[1:])
 ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
-fname = params.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
+fname = args.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
+
+# %%
+# Save binned counts
+
+# %%
+counts_per_bin = dict()
+for col in splits_df.columns:
+    _series = (pd.cut(splits_df[col], bins=bins)
+               .to_frame()
+               .groupby(col)
+               .size())
+    _series.index.name = 'bin'
+    counts_per_bin[col] = _series
+counts_per_bin = pd.DataFrame(counts_per_bin)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
 
 # %% [markdown]
 # plot training data missing plots
@@ -868,14 +903,14 @@ splits.to_wide_format()
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='scatter')
-fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter_train'
+fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
 # %%
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='boxplot')
-fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_train'
+fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -890,11 +925,11 @@ feat_with_median = medians.groupby('median_floor').size().rename('M feat')
 medians = medians.join(feat_with_median, on='median_floor')
 medians = medians.apply(lambda s: "{:02,d} (N={:3,d})".format(*s), axis=1)
 
-fig, ax = plt.subplots(figsize=(8, 2))
+fig, ax = plt.subplots(figsize=(6, 2))
 s = 1
 s_axes = pd.DataFrame({'medians': medians,
-                       'validation split': splits.val_y.notna().sum(),
-                       'training split': splits.train_X.notna().sum()}
+                       'Validation split': splits.val_y.notna().sum(),
+                       'Training split': splits.train_X.notna().sum()}
                       ).plot.box(by='medians',
                                  boxprops=dict(linewidth=s),
                                  flierprops=dict(markersize=s),
@@ -903,8 +938,10 @@ for ax in s_axes:
     _ = ax.set_xticklabels(ax.get_xticklabels(),
                            rotation=45,
                            horizontalalignment='right')
-
-fname = params.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
+    ax.set_xlabel(f'{args.feat_name_display.capitalize()} binned by their median intensity '
+                  f'(N {args.feat_name_display})')
+    _ = ax.set_ylabel('Frequency')
+fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
@@ -912,9 +949,9 @@ vaep.savefig(ax.get_figure(), fname)
 # ## Save parameters
 
 # %%
-fname = params.folder_experiment / 'data_config.yaml'
-params.dump(fname)
-params
+fname = args.folder_experiment / 'data_config.yaml'
+args.dump(fname)
+args
 
 # %% [markdown]
 # ## Saved Figures
@@ -929,4 +966,5 @@ figures
 # %%
 writer.close()
 dumps
+
 # %%

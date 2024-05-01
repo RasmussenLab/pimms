@@ -5,6 +5,7 @@
 Required is abundance data in wide or long format in order to run the models. 
 
 | Sample ID | Protein A | Protein B | Protein C | ... |
+| --- | --- | --- | --- | --- |
 | sample_01 | 0.1       | 0.2       | 0.3       | ... |
 | sample_02 | 0.2       | 0.1       | 0.4       | ... |
 | sample_03 | 0.3       | 0.2       | 0.1       | ... |
@@ -12,6 +13,7 @@ Required is abundance data in wide or long format in order to run the models.
 or as long formated data.
 
 | Sample ID | Protein | Abundance |
+| --- | --- | --- |
 | sample_01 | Protein A | 0.1       |
 | sample_01 | Protein B | 0.2       |
 | sample_01 | Protein C | 0.3       |
@@ -54,7 +56,7 @@ snakemake --snakefile Snakemake_project.smk -p -n # dry-run
 
 Single Experiment with config files
 
-```cmd
+```bash
 # cwd: project folder (this folder)
 snakemake --configfile config/single_dev_dataset/aggpeptides/config.yaml -p -n 
 ```
@@ -62,7 +64,7 @@ snakemake --configfile config/single_dev_dataset/aggpeptides/config.yaml -p -n
 ### Single notebooks using papermill
 
 execute single notebooks
-```cmd
+```bash
 set DATASET=df_intensities_proteinGroups_long/Q_Exactive_HF_X_Orbitrap_6070 
 papermill  01_0_split_data.ipynb --help-notebook # check parameters
 papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data.ipynb -p MIN_SAMPLE 0.5 -p fn_rawfile_metadata data/dev_datasets/%DATASET%.csv -p index_col "Sample ID" -p columns_name peptide
@@ -104,6 +106,16 @@ misc | misc_pytorch_fastai_dataloaders.ipynb| Dataloading functionality
 misc | misc_sampling_in_pandas.ipynb        | How to sample in pandas
 
 # Notebook descriptions (To be completed)
+
+## Inspect dataset
+
+### `00_5_training_data_exploration.py`
+
+Can be execute manually
+
+```bash
+jupytext 00_5_training_data_exploration.py --to ipynb -o - | papermill - runs/example/00_5_training_data_exploration.ipynb -f config/single_dev_dataset/example/inspect_data.yaml
+```
 
 ## Single experiment run
 ### `01_0_split_data.ipynb`
