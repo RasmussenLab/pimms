@@ -1,4 +1,4 @@
-name: Run tests
+name: Build workflow website on smaller development dataset (for protein groups)
 on:
   pull_request:
     branches: [main, dev]
@@ -7,18 +7,12 @@ on:
     - cron: '0 2 * * 3,6'
 jobs:
   run-tests:
-    runs-on: ${{ matrix.os }}
+    runs-on: "ubuntu-latest"
     defaults:
       run:
         shell: bash -el {0}
     strategy:
       fail-fast: false
-      matrix:
-        os: ["ubuntu-latest",
-            #  "macos-13",
-             # "windows-latest" # rrcovNA cannot be build from source on windows-server
-             ]
-        python-version: ["3.9"]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -30,7 +24,7 @@ jobs:
         # miniforge-version: latest
         use-mamba: true
         channel-priority: disabled
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.8"
         environment-file: environment.yml
         activate-environment: vaep
         auto-activate-base: true

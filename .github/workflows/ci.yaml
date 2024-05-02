@@ -1,4 +1,4 @@
-name: Run tests
+name: Run unit tests, integration tests, and publish package if tagged
 on:
   push:
     branches: [main, dev]
