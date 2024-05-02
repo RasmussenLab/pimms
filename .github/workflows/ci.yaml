@@ -72,24 +72,6 @@ jobs:
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
        snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
-    - name: Install website dependencies
-      run: |
-        pip install .[docs]
-    - name: Build imputation comparison website
-      run: |
-        pimms-setup-imputation-comparison -f project/runs/example/
-        cd project/runs/example/
-        sphinx-build -n --keep-going -b html ./ ./_build/
-    - name: Archive results
-      uses: actions/upload-artifact@v3
-      with:
-        name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/example/_build/
-    - name: Publish workflow as website
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: project/runs/example/_build/
 
   test_pip_pkg_install:
     runs-on: ${{ matrix.os }}
