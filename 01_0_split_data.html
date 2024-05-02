@@ -154,27 +154,27 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_GSIMP.html">GSIMP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -2554,7 +2554,7 @@ root - INFO     File format (extension): csv  (!specifies data loading function!
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Frequency&#39;)
 </pre></div>
 </div>
-<img alt="_images/a7bc5c3aacd871dcaf9e57bdfc04d6244f5270b834a25f1ac215d5e1b9a6dc37.png" src="_images/a7bc5c3aacd871dcaf9e57bdfc04d6244f5270b834a25f1ac215d5e1b9a6dc37.png" />
+<img alt="_images/f4dc7617d4bd5350ebf1f0a73cc4b9d46dd9ef6115dc5d387b6f26a75f1c0c18.png" src="_images/f4dc7617d4bd5350ebf1f0a73cc4b9d46dd9ef6115dc5d387b6f26a75f1c0c18.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -7793,8 +7793,9 @@ combine the column names to a single str index.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/bin/sh: 1: add: not found
-/usr/bin/sh: 1: Syntax error: &quot;(&quot; unexpected
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/bin/bash: add: command not found
+/bin/bash: -c: line 0: syntax error near unexpected token `(&#39;
+/bin/bash: -c: line 0: ` check that feature prevalence is greater equal to 3 (otherwise train, val, test split is not possible)&#39;
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Current number of samples: 50
@@ -9860,7 +9861,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_hist_features_per_sample
 </pre></div>
 </div>
-<img alt="_images/9648577005cfe09f5baed91203c43f3ce7d9961718b83acdd648ce3993c867b5.png" src="_images/9648577005cfe09f5baed91203c43f3ce7d9961718b83acdd648ce3993c867b5.png" />
+<img alt="_images/422303922835759beb2bca51838405e4f4430083c87cc1001684e08ca49d44df.png" src="_images/422303922835759beb2bca51838405e4f4430083c87cc1001684e08ca49d44df.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -9881,7 +9882,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_feature_prevalence
 </pre></div>
 </div>
-<img alt="_images/fa27077f03ea22aafa8f69916acf2a9404c4426d65272fed33bbf84b004b3edc.png" src="_images/fa27077f03ea22aafa8f69916acf2a9404c4426d65272fed33bbf84b004b3edc.png" />
+<img alt="_images/ef8a41ec44bb6d02a5ed49536ab9037459401ce8910234af404ba3a5f7418b14.png" src="_images/ef8a41ec44bb6d02a5ed49536ab9037459401ce8910234af404ba3a5f7418b14.png" />
 </div>
 </div>
 </section>
@@ -9904,7 +9905,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_intensity_distribution_overall
 </pre></div>
 </div>
-<img alt="_images/cc785dbd35f6ca190018a09fd01fbbc4e000e520b1cc8e5567211e5af9a76f4b.png" src="_images/cc785dbd35f6ca190018a09fd01fbbc4e000e520b1cc8e5567211e5af9a76f4b.png" />
+<img alt="_images/cac19d756c9dadc8863a2fd3ce5b8a1230386d19642edb17ce3ec357d54fb43a.png" src="_images/cac19d756c9dadc8863a2fd3ce5b8a1230386d19642edb17ce3ec357d54fb43a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -9924,7 +9925,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_intensity_median_vs_prop_missing_scatter
 </pre></div>
 </div>
-<img alt="_images/c6678476292819b2057dd3f4c1d8abb538eeb4edd77094de7894cd82d80437d6.png" src="_images/c6678476292819b2057dd3f4c1d8abb538eeb4edd77094de7894cd82d80437d6.png" />
+<img alt="_images/16d37b64902d0e7a91006235de8b89b51fa5f7ba1a7837d638961fc6904d73ae.png" src="_images/16d37b64902d0e7a91006235de8b89b51fa5f7ba1a7837d638961fc6904d73ae.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -9947,7 +9948,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_intensity_median_vs_prop_missing_boxplot
 </pre></div>
 </div>
-<img alt="_images/3d2a3e0cb29e8cd9805c634f30de64cd207d8b333fd199ef56f6f6be0bb0abec.png" src="_images/3d2a3e0cb29e8cd9805c634f30de64cd207d8b333fd199ef56f6f6be0bb0abec.png" />
+<img alt="_images/7ddf2b88db3305bf3a8bbfd71f0dd06a9d4f5edbc5003bc7b35b8e6a4889615f.png" src="_images/7ddf2b88db3305bf3a8bbfd71f0dd06a9d4f5edbc5003bc7b35b8e6a4889615f.png" />
 </div>
 </div>
 </section>
@@ -12534,7 +12535,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_pca_sample_by_date
 </pre></div>
 </div>
-<img alt="_images/0530d1054dc2eec1f0265f9c8eb8aa2f85d1aa52c2eba0db4f16f326abb9e9af.png" src="_images/0530d1054dc2eec1f0265f9c8eb8aa2f85d1aa52c2eba0db4f16f326abb9e9af.png" />
+<img alt="_images/e643e1c1846e2d752c3ae2aec736a3aa7dabf0a7cdf311b76fca11d95f162623.png" src="_images/e643e1c1846e2d752c3ae2aec736a3aa7dabf0a7cdf311b76fca11d95f162623.png" />
 </div>
 </div>
 <ul class="simple">
@@ -12562,7 +12563,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_pca_sample_by_identified_Gene_Names.pdf
 </pre></div>
 </div>
-<img alt="_images/cc6347f2b282b8970dd61412f9fc957989a57b8a74a14626c0f9fd6275b3cefb.png" src="_images/cc6347f2b282b8970dd61412f9fc957989a57b8a74a14626c0f9fd6275b3cefb.png" />
+<img alt="_images/a9b348672e03664662262ded635f46f2246670a674e2e56e6ba81a381aabf25f.png" src="_images/a9b348672e03664662262ded635f46f2246670a674e2e56e6ba81a381aabf25f.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -12615,9 +12616,9 @@ dtype: float64
         });
         }
         </script>
-        </div><div class="output text_html"><div>                            <div id="fa2eeaf3-a55f-494e-b19f-ca387ba201ae" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("fa2eeaf3-a55f-494e-b19f-ca387ba201ae")) {                    Plotly.newPlot(                        "fa2eeaf3-a55f-494e-b19f-ca387ba201ae",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (52.71 %)=%{x}\u003cbr\u003eprincipal component 2 (14.81 %)=%{y}\u003cbr\u003eidentified Gene Names=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070","2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070","2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070","2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070","2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070","2019_12_29_18_18_Q-Exactive-HF-X-Orbitrap_6070","2020_01_02_17_38_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_20_10_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070","2020_01_06_20_17_Q-Exactive-HF-X-Orbitrap_6070","2020_01_08_16_43_Q-Exactive-HF-X-Orbitrap_6070","2020_01_09_11_07_Q-Exactive-HF-X-Orbitrap_6070","2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070","2020_01_20_15_10_Q-Exactive-HF-X-Orbitrap_6070","2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_10_15_41_Q-Exactive-HF-X-Orbitrap_6070","2020_02_11_10_35_Q-Exactive-HF-X-Orbitrap_6070","2020_02_12_05_06_Q-Exactive-HF-X-Orbitrap_6070","2020_02_13_00_26_Q-Exactive-HF-X-Orbitrap_6070","2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070","2020_02_17_13_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_18_01_25_Q-Exactive-HF-X-Orbitrap_6070","2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070","2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070","2020_03_06_16_22_Q-Exactive-HF-X-Orbitrap_6070","2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070","2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070","2020_05_04_11_39_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_15_13_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_18_10_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_14_46_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_17_28_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_20_11_Q-Exactive-HF-X-Orbitrap_6070","2020_05_15_10_30_Q-Exactive-HF-X-Orbitrap_6070","2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070","2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070","2020_05_22_14_57_Q-Exactive-HF-X-Orbitrap_6070","2020_05_22_17_43_Q-Exactive-HF-X-Orbitrap_6070","2020_05_26_14_20_Q-Exactive-HF-X-Orbitrap_6070","2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070","2020_05_28_04_06_Q-Exactive-HF-X-Orbitrap_6070","2020_06_01_10_22_Q-Exactive-HF-X-Orbitrap_6070","2020_06_01_15_41_Q-Exactive-HF-X-Orbitrap_6070","2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070"],"legendgroup":"","marker":{"color":[356,336,357,336,350,350,268,272,337,340,348,231,274,347,297,320,330,364,358,369,368,369,367,363,361,361,361,368,364,325,345,369,362,367,367,367,355,351,350,370,339,362,354,358,352,369,369,293,291,347],"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[-0.26732738631118,-6.332165384113474,6.1660774499065845,-10.28655821217239,7.509343289378357,13.53892485062788,-20.6219586489415,-11.283731902968254,0.22227969232414072,0.7597245942899294,8.97849458450928,-28.604739412622518,-23.32449995402697,16.131156590705046,-12.564238890283741,-6.1737185338067375,-23.599825631317024,24.958550012670454,18.001612790758717,26.086677145410675,22.05072805119484,26.402150025477596,28.028676698698128,29.244337840490306,8.166999462901737,3.09721582653816,6.000633126412277,-1.341173006237955,-9.627995160549991,-25.885334083329624,-3.7842064132750086,4.668475699717618,-19.589405553374757,-19.55116636039018,-25.206553727026503,-23.17792023868845,-17.490787062961434,-16.1352906617117,-11.775160301763549,-0.3216793206259424,-12.500565702984819,-5.382524394131506,-6.827511369334245,-1.5848238609522385,10.523146507885771,33.608183594347565,38.907860935247044,-8.33695898915446,6.246898987153226,12.279672406410874],"xaxis":"x","y":[-7.501989180409632,-7.023510674489807,-7.058585466682887,-5.999600134572774,14.4192412956213,14.583917508593316,8.019227795831998,10.095813643568023,13.738536105809969,14.402331693272487,15.266851431598456,1.1848223183643172,8.916455018097276,13.08010566576104,10.404877123783132,13.020935803204253,-5.4729068698778205,15.608704215670347,13.720288494200593,-6.877426495848647,-6.834812408333198,-6.615561088686826,-6.244350933444023,-7.0781956671930395,-5.2724278396097795,-4.714002599809556,-7.597290537791322,-6.879849903519386,-7.800658852710181,12.209695877022439,12.37437519115079,-7.722443582608777,-6.221774938201691,-9.72918188229219,-9.292265571913763,-7.37051135951145,-5.833348264379399,-5.725022585587231,-6.464314705900673,-5.9714775133341655,-5.002544265590155,-5.413926614444314,-6.261439105515147,-6.980789070039302,-6.719894284029959,-5.970319751814078,-6.482137184794123,9.236507482381155,11.206730452471401,-5.356857783466973],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (52.71 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (14.81 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified Gene Names"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 376 Gene Names for 50 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
+        </div><div class="output text_html"><div>                            <div id="196172ff-0a12-4add-851e-c8954db6f5c3" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("196172ff-0a12-4add-851e-c8954db6f5c3")) {                    Plotly.newPlot(                        "196172ff-0a12-4add-851e-c8954db6f5c3",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (52.71 %)=%{x}\u003cbr\u003eprincipal component 2 (14.81 %)=%{y}\u003cbr\u003eidentified Gene Names=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070","2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070","2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070","2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070","2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070","2019_12_29_18_18_Q-Exactive-HF-X-Orbitrap_6070","2020_01_02_17_38_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070","2020_01_03_20_10_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070","2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070","2020_01_06_20_17_Q-Exactive-HF-X-Orbitrap_6070","2020_01_08_16_43_Q-Exactive-HF-X-Orbitrap_6070","2020_01_09_11_07_Q-Exactive-HF-X-Orbitrap_6070","2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070","2020_01_20_15_10_Q-Exactive-HF-X-Orbitrap_6070","2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_10_15_41_Q-Exactive-HF-X-Orbitrap_6070","2020_02_11_10_35_Q-Exactive-HF-X-Orbitrap_6070","2020_02_12_05_06_Q-Exactive-HF-X-Orbitrap_6070","2020_02_13_00_26_Q-Exactive-HF-X-Orbitrap_6070","2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070","2020_02_17_13_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_18_01_25_Q-Exactive-HF-X-Orbitrap_6070","2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070","2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070","2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070","2020_03_06_16_22_Q-Exactive-HF-X-Orbitrap_6070","2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070","2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070","2020_05_04_11_39_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_15_13_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_18_10_Q-Exactive-HF-X-Orbitrap_6070","2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_14_46_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_17_28_Q-Exactive-HF-X-Orbitrap_6070","2020_05_14_20_11_Q-Exactive-HF-X-Orbitrap_6070","2020_05_15_10_30_Q-Exactive-HF-X-Orbitrap_6070","2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070","2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070","2020_05_22_14_57_Q-Exactive-HF-X-Orbitrap_6070","2020_05_22_17_43_Q-Exactive-HF-X-Orbitrap_6070","2020_05_26_14_20_Q-Exactive-HF-X-Orbitrap_6070","2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070","2020_05_28_04_06_Q-Exactive-HF-X-Orbitrap_6070","2020_06_01_10_22_Q-Exactive-HF-X-Orbitrap_6070","2020_06_01_15_41_Q-Exactive-HF-X-Orbitrap_6070","2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070"],"legendgroup":"","marker":{"color":[356,336,357,336,350,350,268,272,337,340,348,231,274,347,297,320,330,364,358,369,368,369,367,363,361,361,361,368,364,325,345,369,362,367,367,367,355,351,350,370,339,362,354,358,352,369,369,293,291,347],"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[-0.2673273863112168,-6.332165384113468,6.166077449906606,-10.286558212172379,7.509343289378354,13.538924850627867,-20.62195864894147,-11.283731902968245,0.22227969232413455,0.759724594289927,8.978494584509273,-28.6047394126225,-23.32449995402699,16.131156590705036,-12.564238890283741,-6.173718533806743,-23.59982563131701,24.95855001267044,18.00161279075871,26.086677145410693,22.050728051194817,26.402150025477592,28.028676698698106,29.24433784049025,8.166999462901732,3.0972158265381604,6.000633126412276,-1.3411730062379534,-9.627995160549979,-25.88533408332961,-3.784206413275024,4.668475699717624,-19.589405553374743,-19.551166360390184,-25.20655372702648,-23.17792023868844,-17.49078706296143,-16.135290661711682,-11.775160301763535,-0.3216793206259325,-12.50056570298481,-5.382524394131502,-6.827511369334238,-1.5848238609522358,10.523146507885773,33.60818359434753,38.90786093524704,-8.336958989154455,6.246898987153226,12.279672406410885],"xaxis":"x","y":[-7.501989180409636,-7.023510674489801,-7.05858546668289,-5.999600134572772,14.419241295621298,14.583917508593323,8.019227795831988,10.095813643568018,13.73853610580997,14.402331693272481,15.266851431598452,1.1848223183642999,8.916455018097281,13.080105665761044,10.40487712378313,13.020935803204255,-5.472906869877815,15.608704215670336,13.720288494200592,-6.877426495848649,-6.834812408333192,-6.615561088686819,-6.244350933444015,-7.078195667193037,-5.272427839609781,-4.71400259980955,-7.597290537791318,-6.879849903519384,-7.800658852710184,12.209695877022435,12.374375191150783,-7.722443582608777,-6.221774938201693,-9.72918188229219,-9.292265571913765,-7.370511359511449,-5.8333482643794,-5.725022585587229,-6.464314705900674,-5.971477513334167,-5.00254426559016,-5.413926614444314,-6.2614391055151435,-6.980789070039301,-6.7198942840299605,-5.970319751814078,-6.48213718479413,9.236507482381155,11.20673045247141,-5.356857783466969],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (52.71 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (14.81 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified Gene Names"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 376 Gene Names for 50 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('fa2eeaf3-a55f-494e-b19f-ca387ba201ae');
+var gd = document.getElementById('196172ff-0a12-4add-851e-c8954db6f5c3');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -13418,7 +13419,7 @@ if (outputEl) {{
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_median_boxplot
 </pre></div>
 </div>
-<img alt="_images/c0ac79fb2395a1f13839f5b1656eedf20e6c761f31c8412cc3674aa2eb5f74ff.png" src="_images/c0ac79fb2395a1f13839f5b1656eedf20e6c761f31c8412cc3674aa2eb5f74ff.png" />
+<img alt="_images/bfec7ff314ae9fd165de96f72a472520eb93efcba86b13edb881e7f3bc13c06b.png" src="_images/bfec7ff314ae9fd165de96f72a472520eb93efcba86b13edb881e7f3bc13c06b.png" />
 </div>
 </div>
 <p>Percentiles of intensities in dataset</p>
@@ -13492,7 +13493,7 @@ dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_1_median_scatter
 </pre></div>
 </div>
-<img alt="_images/51f04a9c5305a5b860b57a8947148f53d4bdb1362129c58f1a1c2030681fa752.png" src="_images/51f04a9c5305a5b860b57a8947148f53d4bdb1362129c58f1a1c2030681fa752.png" />
+<img alt="_images/b69880bb4cdffdf321a893d1a0c74d338e3d853c5145f3033692239fcc46f08f.png" src="_images/b69880bb4cdffdf321a893d1a0c74d338e3d853c5145f3033692239fcc46f08f.png" />
 </div>
 </div>
 <ul class="simple">
@@ -13724,7 +13725,7 @@ root - INFO     splits.train_X.shape = (15466,) - splits.val_y.shape = (859,) - 
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_2_mnar_mcar_histograms.pdf
 </pre></div>
 </div>
-<img alt="_images/9bdc40703dc03011a798124920e9967e2f4aff9c382eb38bd9f3ecfac859f2ad.png" src="_images/9bdc40703dc03011a798124920e9967e2f4aff9c382eb38bd9f3ecfac859f2ad.png" />
+<img alt="_images/c6c46ba57642950c0e745ba8152cc05ec2f1eab5d13324e48e4a8b630ffb8b32.png" src="_images/c6c46ba57642950c0e745ba8152cc05ec2f1eab5d13324e48e4a8b630ffb8b32.png" />
 </div>
 </div>
 <section id="keep-simulated-samples-only-in-a-subset-of-the-samples">
@@ -14106,7 +14107,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_val_over_train_split.pdf
 </pre></div>
 </div>
-<img alt="_images/79e01c92d4c87b94c259848998f3a82d90ca89d30769d21e06d2fd03185a342a.png" src="_images/79e01c92d4c87b94c259848998f3a82d90ca89d30769d21e06d2fd03185a342a.png" />
+<img alt="_images/3b528d8fff588876b998e4daa57a906ec1308aebc239dee1c54f2d6a21d569c2.png" src="_images/3b528d8fff588876b998e4daa57a906ec1308aebc239dee1c54f2d6a21d569c2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -14134,7 +14135,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_splits_freq_stacked.pdf
 </pre></div>
 </div>
-<img alt="_images/a46f8f437f59b7260314e917a3c93c1a65906ed1ea9aa0be3cb3763298f9f247.png" src="_images/a46f8f437f59b7260314e917a3c93c1a65906ed1ea9aa0be3cb3763298f9f247.png" />
+<img alt="_images/5f778e15980844965971b15a15c1b57b314379736912f2fe1587d956c577b56b.png" src="_images/5f778e15980844965971b15a15c1b57b314379736912f2fe1587d956c577b56b.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -14299,7 +14300,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_val_test_split_freq_stacked_.pdf
 </pre></div>
 </div>
-<img alt="_images/cc87262662451a5344fa1c0929e0503e22429b35ff19bc1a6f3d71d90a5be972.png" src="_images/cc87262662451a5344fa1c0929e0503e22429b35ff19bc1a6f3d71d90a5be972.png" />
+<img alt="_images/8651c329848b1ebed9cc9f3255a75d5e43aa6f85ae0c3f2b6a8186d86679ae19.png" src="_images/8651c329848b1ebed9cc9f3255a75d5e43aa6f85ae0c3f2b6a8186d86679ae19.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -14478,7 +14479,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_intensity_median_vs_prop_missing_scatter_train
 </pre></div>
 </div>
-<img alt="_images/3af7a842f8317bd6f0df25876e416d20dc446632d27d14a63fe4352c9f7819fe.png" src="_images/3af7a842f8317bd6f0df25876e416d20dc446632d27d14a63fe4352c9f7819fe.png" />
+<img alt="_images/efcdc077cdfe0b56d85ddcd122d09cb6e1acc7bef9e3422ecd09d6f8794c96b9.png" src="_images/efcdc077cdfe0b56d85ddcd122d09cb6e1acc7bef9e3422ecd09d6f8794c96b9.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -14495,7 +14496,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_intensity_median_vs_prop_missing_boxplot_train
 </pre></div>
 </div>
-<img alt="_images/dcde4848182604a859c05e88cce9cd200551bcd956c7d6c68196dd1ab35cf5ee.png" src="_images/dcde4848182604a859c05e88cce9cd200551bcd956c7d6c68196dd1ab35cf5ee.png" />
+<img alt="_images/ae46e2430eba10a1982911051dec0646b536489f031ad6c87e8a2d07de293486.png" src="_images/ae46e2430eba10a1982911051dec0646b536489f031ad6c87e8a2d07de293486.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -14536,7 +14537,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/example/da
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/example/figures/0_3_intensity_median_vs_prop_missing_boxplot_val_train
 </pre></div>
 </div>
-<img alt="_images/5528e46b171a96273a90c274a7e8db92b929ddccad2630787b1d9e0174ddbc11.png" src="_images/5528e46b171a96273a90c274a7e8db92b929ddccad2630787b1d9e0174ddbc11.png" />
+<img alt="_images/a7b03ef9d77bf66d5a42bf6aeb6084faba5de22675da5d2c5b93c918198ccddd.png" src="_images/a7b03ef9d77bf66d5a42bf6aeb6084faba5de22675da5d2c5b93c918198ccddd.png" />
 </div>
 </div>
 </section>
