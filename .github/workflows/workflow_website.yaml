@@ -45,16 +45,16 @@ jobs:
         pip install .[docs]
     - name: Build imputation comparison website
       run: |
-        pimms-setup-imputation-comparison -f project/runs/example/
-        cd project/runs/example/
+        pimms-setup-imputation-comparison -f project/runs/dev_dataset_small/proteinGroups_N50/
+        cd project/runs/dev_dataset_small/proteinGroups_N50/
         sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/example/_build/
+        path: project/runs/dev_dataset_small/proteinGroups_N50/_build/
     - name: Publish workflow as website
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: project/runs/example/_build/
+        publish_dir: project/runs/dev_dataset_small/proteinGroups_N50/_build/
