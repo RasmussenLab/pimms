@@ -1,4 +1,3 @@
-import numpy as np
 import numpy.testing as npt
 import pandas as pd
 import pytest
@@ -6,15 +5,7 @@ import sklearn
 from sklearn import impute, preprocessing
 
 from vaep.io.datasets import to_tensor
-from vaep.transform import StandardScaler, VaepPipeline
-
-
-def test_StandardScaler():
-    X = pd.DataFrame(np.array([[2, None], [3, 2], [4, 6]]))
-    npt.assert_almost_equal(
-        preprocessing.StandardScaler().fit(X).transform(X),
-        StandardScaler().fit(X).transform(X).to_numpy()
-    )
+from vaep.transform import VaepPipeline
 
 
 def test_Vaep_Pipeline():

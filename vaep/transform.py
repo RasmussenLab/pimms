@@ -10,44 +10,7 @@ from sklearn import preprocessing
 logger = logging.getLogger(__name__)
 
 
-# ? Can this be a MixIn class?
-class StandardScaler(preprocessing.StandardScaler):
-    def transform(self, X, copy=None):
-        res = super().transform(X, copy)
-        if isinstance(X, pd.DataFrame):
-            return pd.DataFrame(res, columns=X.columns, index=X.index)
-        return res
-
-    def inverse_transform(self, X, copy=None):
-        res = super().inverse_transform(X, copy)
-        if isinstance(X, pd.DataFrame):
-            return pd.DataFrame(res, columns=X.columns, index=X.index)
-        return res
-
-
-msg_return_docstring = """
-
-        Returns
-        -------
-        Y: array-like
-            If X is a pandas DataFrame, Y will be a DataFrame with the initial
-            Indix and column Index objects.
-"""
-
-StandardScaler.transform.__doc__ = preprocessing.StandardScaler.transform.__doc__ + \
-    msg_return_docstring
-StandardScaler.inverse_transform.__doc__ = preprocessing.StandardScaler.inverse_transform.__doc__ + msg_return_docstring
-
-# # this could be a class method
-
-# @make_pandas_compatible
-# class MinMaxScaler(preprocessing.MinMaxScaler):
-#     pass
-
-# # look at fastcore to see if **kwargs could be replaced with original
-# # arguments, see https://fastcore.fast.ai/meta.html#Metaprogramming
-# # decorate()
-
+# ! general transform and inverse_transform needs to move somewhere else
 
 def transform(self, X, **kwargs):
     res = super(self.__class__, self).transform(X, **kwargs)
@@ -63,6 +26,16 @@ def inverse_transform(self, X, **kwargs):
     return res
 
 
+msg_return_docstring = """
+
+        Returns
+        -------
+        Y: array-like
+            If X is a pandas DataFrame, Y will be a DataFrame with the initial
+            Indix and column Index objects.
+"""
+
+
 def make_pandas_compatible(cls):
     """Patch transform and inverse_transform."""
     # ? could become factory function, build args dictionary
@@ -76,6 +49,16 @@ def make_pandas_compatible(cls):
     new_class.transform.__doc__ = cls.transform.__doc__ + msg_return_docstring
     new_class.inverse_transform.__doc__ = cls.inverse_transform.__doc__ + msg_return_docstring
     return new_class
+
+# ? Can this be a MixIn class?
+# # this could be a class method
+# @make_pandas_compatible
+# class MinMaxScaler(preprocessing.MinMaxScaler):
+#     pass
+
+# # look at fastcore to see if **kwargs could be replaced with original
+# # arguments, see https://fastcore.fast.ai/meta.html#Metaprogramming
+# # decorate()
 
 
 MinMaxScaler = make_pandas_compatible(preprocessing.MinMaxScaler)
