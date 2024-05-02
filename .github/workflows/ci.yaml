@@ -8,7 +8,7 @@ on:
   schedule:
     - cron: '0 2 * * 3,6'
 jobs:
-  run-tests:
+  run-unit-and-integration-tests-with-conda-install:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -73,7 +73,7 @@ jobs:
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
        snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
 
-  test_pip_pkg_install:
+  run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
     name: test-pip-installation
     strategy:
@@ -102,8 +102,8 @@ jobs:
     name: Publish package
     if: startsWith(github.event.ref, 'refs/tags/v')
     needs:
-      - run-tests
-      - test_pip_pkg_install
+      - run-unit-and-integration-tests-with-conda-install
+      - run-unit-local-pip-installation
     runs-on: ubuntu-latest
 
     steps:
