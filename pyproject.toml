@@ -6,7 +6,7 @@ name = "pimms-learn"
 # See the section below: [tools.setuptools.dynamic]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.8, <3.9"
+requires-python = ">=3.8"
 # These are keywords
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
