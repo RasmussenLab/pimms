@@ -30,10 +30,16 @@ jobs:
         auto-activate-base: true
         # auto-update-conda: true
     - name: Run demo workflow (integration test)
+      continue-on-error: true
       run: | 
-       cd project
-       snakemake -p -c1 -n
-       snakemake -p -c4 -k
+        cd project
+        snakemake -p -c1 -n
+        snakemake -p -c4 -k
+    - name: Run demo workflow again (in case of installation issues)
+      run: | 
+        cd project
+        snakemake -p -c1 -n
+        snakemake -p -c4 -k
     - name: Install website dependencies
       run: |
         pip install .[docs]
