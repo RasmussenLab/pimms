@@ -173,24 +173,33 @@ def main():
 
     msg = f"""\
     The index.rst file has been created in {folder_experiment}:
+    ```bash
     {folder_experiment / 'index.rst'}
+    ```
     The conf.py file has been created in {folder_experiment}:
+    ```bash
     {folder_experiment / 'conf.py'}
+    ```
 
     The dependencies for the website can be installed using pip
 
+    ```bash
     pip install pimms-learn[docs]
+    ```
 
     To create the html website run the following command in the terminal:
 
+    ```bash
     cd {folder_experiment}
     sphinx-build -n -W --keep-going -b html ./ ./_build/
+    ```
 
     This will build a website in the _build folder in the {folder_experiment} directory.
 
-    Open the index.html file in the _build folder to view the website.
+    Open the `index.html` file in the `_build` folder to view the website.
 
     Find these instructions in the README.md file in the {folder_experiment} directory:
+
     {folder_experiment / 'README.md'}
     """
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 import logging as _logging
 from importlib import metadata
 
+import njab
 import pandas as pd
 import pandas.io.formats.format as pf
 
@@ -33,14 +34,6 @@ __all__ = ['logging', 'nb', 'pandas', 'plotting', 'savefig']
 # set some defaults
 
 
-class IntArrayFormatter(pf.GenericArrayFormatter):
-    def _format_strings(self):
-        formatter = self.formatter or '{:,d}'.format
-        fmt_values = [formatter(x) for x in self.values]
-        return fmt_values
-
-
-pd.options.display.float_format = '{:,.3f}'.format
-pf.IntArrayFormatter = IntArrayFormatter
+njab.pandas.set_pandas_number_formatting(float_format='{:,.3f}')
 
 vaep.plotting.make_large_descriptors('x-large')
