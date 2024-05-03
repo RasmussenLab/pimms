@@ -1,4 +1,6 @@
 # PIMMS
+[![Read the Docs](https://img.shields.io/readthedocs/pimms)](https://readthedocs.org/projects/pimms/) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RasmussenLab/pimms/ci.yaml)](https://github.com/RasmussenLab/pimms/actions)
+
 
 PIMMS stands for Proteomics Imputation Modeling Mass Spectrometry 
 and is a hommage to our dear British friends 
@@ -7,14 +9,13 @@ who are missing as part of the EU for far too long already
 
 The pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
-
 > `PIMMS` was called `vaep` during development.  
 > Before entire refactoring has to been completed the imported package will be
 `vaep`.
 
 We provide functionality as a python package, an excutable workflow and notebooks.
 
-The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
 
 
 ## Python package
@@ -23,14 +24,12 @@ For interactive use of the models provided in PIMMS, you can use our
 [python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
 The interface is similar to scikit-learn.
 
-
 ```
 pip install pimms-learn
 ```
 
-
 Then you can use the models on a pandas DataFrame with missing values. Try this in the tutorial on Colab:
-[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
 
 ## Notebooks as scripts using papermill
 
@@ -46,10 +45,13 @@ papermill 01_1_train_vae.ipynb --help-notebook
 
 > Mistyped argument names won't throw an error when using papermill
 
+## PIMMS comparison workflow
 
+The PIMMS comparison workflow is a snakemake workflow that runs the all selected PIMMS models and R-models on 
+a user-provided dataset and compares the results. An example for the smaller HeLa development dataset on the 
+protein groups level is re-built regularly and available at: [rasmussenlab.org/pimms](https://www.rasmussenlab.org/pimms/)
 
-
-## Setup for PIMMS comparison workflow
+### Setup comparison workflow
 
 The core funtionality is available as a standalone software on PyPI under the name `pimms-learn`. However, running the entire snakemake workflow in enabled using 
 conda (or mamba) and pip to setup an analysis environment. For a detailed description of setting up
@@ -128,11 +130,6 @@ jupyter lab # open 01_1_train_NAGuideR.ipynb
 ## Run an analysis
 
 Change to the [`project` folder](./project) and see it's [README](project/README.md)
-
-> Currently there are only notebooks and scripts under `project`, 
-> but shared functionality will be added under `vaep` folder-package: This can 
-> then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
-
 You can subselect models by editing the config file:  [`config.yaml`](project/config/single_dev_dataset/proteinGroups_N50/config.yaml) file.
 
 ```
