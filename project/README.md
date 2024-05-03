@@ -1,4 +1,7 @@
 # Paper project
+The PIMMS comparison workflow is a snakemake workflow that runs the all selected PIMMS models and R-models on 
+a user-provided dataset and compares the results. An example for the smaller HeLa development dataset on the 
+protein groups level is re-built regularly and available at: [rasmussenlab.org/pimms](https://www.rasmussenlab.org/pimms/)
 
 ## Data requirements
 
@@ -33,7 +36,7 @@ along further as e.g. clinical metadata for each sample.
 
 ## Workflows
 
-> snakefile stored in [workflow](workflow/README.md)
+> `Snakefile` stored in [workflow](workflow/README.md) folder ([link](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow))
 
 Execute example data (50 runs of HeLa lysate on protein groups level):
 

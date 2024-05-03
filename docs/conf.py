@@ -93,7 +93,7 @@ html_theme = 'sphinx_book_theme'  # pip install sphinx-book-theme
 # See:
 # https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
 # check https://github.com/executablebooks/sphinx-book-theme/blob/master/docs/conf.py
-html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
+# html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
 
 html_theme_options = {
     "github_url": "https://github.com/RasmussenLab/python_package",
