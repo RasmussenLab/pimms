@@ -1,0 +1,60 @@
+name: Build workflow website on smaller development dataset (for protein groups)
+on:
+  pull_request:
+    branches: [main, dev]
+  release:
+  schedule:
+    - cron: '0 2 * * 3,6'
+jobs:
+  run-workflow-and-build-website:
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        shell: bash -el {0}
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Miniconda
+      # ! change action https://github.com/mamba-org/setup-micromamba
+      uses: conda-incubator/setup-miniconda@v2
+      with: 
+        miniforge-variant: Mambaforge
+        # miniforge-version: latest
+        use-mamba: true
+        channel-priority: disabled
+        python-version: "3.8"
+        environment-file: environment.yml
+        activate-environment: vaep
+        auto-activate-base: true
+        # auto-update-conda: true
+    - name: Run demo workflow (integration test)
+      continue-on-error: true
+      run: | 
+        cd project
+        snakemake -p -c1 -n
+        snakemake -p -c4 -k
+    - name: Run demo workflow again (in case of installation issues)
+      run: | 
+        cd project
+        snakemake -p -c1 -n
+        snakemake -p -c4 -k
+    - name: Install website dependencies
+      run: |
+        pip install .[docs]
+    - name: Build imputation comparison website
+      run: |
+        pimms-setup-imputation-comparison -f project/runs/dev_dataset_small/proteinGroups_N50/
+        cd project/runs/dev_dataset_small/proteinGroups_N50/
+        sphinx-build -n --keep-going -b html ./ ./_build/
+    - name: Archive results
+      uses: actions/upload-artifact@v3
+      with:
+        name: example-workflow-results-${{ matrix.os }}
+        path: project/runs/dev_dataset_small/proteinGroups_N50/_build/
+    - name: Publish workflow as website
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: project/runs/dev_dataset_small/proteinGroups_N50/_build/
