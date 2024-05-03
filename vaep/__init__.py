@@ -34,6 +34,6 @@ __all__ = ['logging', 'nb', 'pandas', 'plotting', 'savefig']
 # set some defaults
 
 
-njab.pandas.set_pandas_number_formatting(float_format='{:,3f}')
+njab.pandas.set_pandas_number_formatting(float_format='{:,.3f}')
 
 vaep.plotting.make_large_descriptors('x-large')
