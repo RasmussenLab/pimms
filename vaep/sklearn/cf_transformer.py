@@ -3,23 +3,27 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastai.tabular.all import *
-from fastai.collab import *
-
-from fastai import learner
-
+import matplotlib.pyplot as plt
 import pandas as pd
-
-from sklearn.utils.validation import check_is_fitted
+from fastai import learner
+from fastai.callback.tracker import EarlyStoppingCallback
+from fastai.collab import *
+from fastai.collab import CollabDataLoaders, EmbeddingDotBias, TabularCollab
+from fastai.data.block import TransformBlock
+from fastai.data.transforms import IndexSplitter
+from fastai.learner import Learner
+from fastai.losses import MSELossFlat
+from fastai.tabular.all import *
+from fastai.tabular.core import Categorify
+from fastai.torch_core import default_device
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils.validation import check_is_fitted
 
 import vaep
-from vaep.models import collab
 import vaep.models as models
-
-
 # patch plotting function
-from vaep.models import plot_loss
+from vaep.models import collab, plot_loss
+
 learner.Recorder.plot_loss = plot_loss
 
 
@@ -52,6 +56,7 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         self.sample_column = sample_column
         self.n_factors = n_factors
         self.out_folder = Path(out_folder)
+        self.out_folder.mkdir(exist_ok=True, parents=True)
         self.batch_size = batch_size
 
     def fit(self, X: pd.Series, y: pd.Series = None,
@@ -81,7 +86,8 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
             y_range=(int(X.squeeze().min()),
                      int(X.squeeze().max()) + 1)
         )
-
+        if not cuda:
+            default_device(use=False)  # set to cpu
         if y is not None:
             X, frac = collab.combine_data(X, y)
         else:
@@ -174,6 +180,6 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         vaep.savefig(fig, name='collab_training',
                      folder=self.out_folder)
         self.model_kwargs['batch_size'] = self.batch_size
-        vaep.io.dump_json(self.model_kwargs, self.out_folder /
-                          'model_params_{}.json'.format('CF'))
+        vaep.io.dump_json(self.model_kwargs,
+                          self.out_folder / 'model_params_{}.json'.format('CF'))
         return ax

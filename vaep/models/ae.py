@@ -1,30 +1,28 @@
-from typing import Union, List
+"""Autoencoder model trained using denoising procedure.
 
-from torch.nn import functional as F
-import torch.utils.data
+Variational Autencoder model adapter should be moved to vaep.models.vae.
+Or model class could be put somewhere else.
+"""
+import logging
+from typing import List, Union
 
-from fastai.basics import store_attr, L, Learner  # , noop
 import fastai.learner
-from fastai.data.transforms import Normalize, broadcast_vec
-from fastai.callback.core import Callback
-from fastai.tabular.core import Tabular, TabularPandas
-
-import numpy as np
 import pandas as pd
-
 import sklearn.pipeline
-
 import torch
+import torch.utils.data
+from fastai.basics import L
+from fastai.callback.core import Callback
 from torch import nn
 
-from . import analysis
-import vaep.models
-import vaep.io.datasplits
-import vaep.io.datasets
 import vaep.io.dataloaders
+import vaep.io.datasets
+import vaep.io.datasplits
+import vaep.models
 import vaep.transform
 
-import logging
+from . import analysis
+
 logger = logging.getLogger(__name__)
 
 
@@ -183,78 +181,6 @@ def get_missing_values(df_train_wide: pd.DataFrame,
     return pred_real_na
 
 
-# class VAE(nn.Module):
-#     """Variational Autoencoder. Latent dimension is composed of mean and log variance,
-#     so effecively the number of neurons are duplicated.
-#     """
-
-#     def __init__(self,
-#                  n_features: int,
-#                  n_neurons: int,
-#                  activation=nn.LeakyReLU,
-#                  last_encoder_activation=nn.LeakyReLU,
-#                  last_decoder_activation=None,
-#                  dim_latent: int = 10):
-
-#         super().__init__()
-#         self.n_features, self.n_neurons = n_features, list(L(n_neurons))
-#         self.layers = [n_features, *self.n_neurons]
-#         self.dim_latent = dim_latent
-
-#         # Encoder
-#         self.encoder, out_feat = build_encoder_units(self.layers,
-#                                                      self.dim_latent,
-#                                                      activation,
-#                                                      last_encoder_activation,
-#                                                      factor_latent=2)
-#         self.encoder = nn.Sequential(*self.encoder)
-#         # Decoder
-#         self.layers_decoder = self.layers[::-1]
-#         assert self.layers_decoder is not self.layers
-#         assert out_feat == self.layers_decoder[0]
-#         self.decoder = [nn.Linear(self.dim_latent, out_feat),
-#                         activation(),
-#                         nn.BatchNorm1d(out_feat)]
-#         for i in range(len(self.layers_decoder)-1):
-#             in_feat, out_feat = self.layers_decoder[i:i+2]
-#             self.decoder.extend(
-#                 [nn.Linear(in_feat, out_feat),
-#                  activation(),
-#                  nn.BatchNorm1d(out_feat)])                     # ,
-#         if not last_decoder_activation:
-#             _ = self.decoder.pop()
-#         else:
-#             _ = self.decoder.pop()
-#             self.decoder.append(last_decoder_activation())
-#         self.decoder = nn.Sequential(*self.decoder)
-
-#     def reparameterize(self, mu, logvar):
-#         if self.training:
-#             std = logvar.mul(0.5).exp_()
-#             eps = std.data.new(std.size()).normal_()
-#             return eps.mul(std).add_(mu)
-#             # std = torch.exp(0.5*logvar)  # will always be positive
-#             # eps = torch.randn_like(std)
-#             # return mu + eps*std
-#         return mu
-
-#     def forward(self, x):
-#         mu, logvar = self.get_mu_and_logvar(x)
-#         z = self.reparameterize(mu=mu, logvar=logvar)
-#         recon = self.decoder(z)
-#         return recon, mu, logvar
-
-#     def get_mu_and_logvar(self, x, detach=False):
-#         """Helper function to return mu and logvar"""
-#         mu_logvar = self.encoder(x)
-#         mu_logvar = mu_logvar.view(-1, 2, self.dim_latent)
-#         if detach:
-#             mu_logvar = mu_logvar.detach().numpy()
-#         mu = mu_logvar[:, 0, :]
-#         logvar = mu_logvar[:, 1, :]
-#         return mu, logvar
-
-
 class DatasetWithTargetAdapter(Callback):
     def before_batch(self):
         """Remove cont. values from batch (mask)"""
@@ -263,7 +189,6 @@ class DatasetWithTargetAdapter(Callback):
         return data
 
     def after_pred(self):
-        M = self._mask.shape[-1]
         if len(self.yb):
             try:
                 self.learn.yb = (self.y[self.learn._mask],)
@@ -275,12 +200,11 @@ class DatasetWithTargetAdapter(Callback):
                 self.learn.yb = (self.learn.xb[0].clone()[self._mask],)
 
 
-class ModelAdapterFlatPred(DatasetWithTargetAdapter):
+class ModelAdapter(DatasetWithTargetAdapter):
     """Models forward only expects on input matrix.
     Apply mask from dataloader to both pred and targets.
 
-    Return only predictions and target for non NA inputs.
-    """
+    Keep original dimension, i.e. also predictions for NA."""
 
     def __init__(self, p=0.1):
         self.do = nn.Dropout(p=p)  # for denoising AE
@@ -295,22 +219,12 @@ class ModelAdapterFlatPred(DatasetWithTargetAdapter):
             self.learn.xb = (data,)
 
     def after_pred(self):
-        super().after_pred()
-        self.learn.pred = self.pred[self._mask]
-
-
-class ModelAdapter(ModelAdapterFlatPred):
-    """Models forward only expects on input matrix.
-    Apply mask from dataloader to both pred and targets.
-
-    Keep original dimension, i.e. also predictions for NA."""
-
-    def after_pred(self):
         self.learn._all_pred = self.pred.detach().clone()
         self.learn._all_y = None
         if len(self.yb):
             self.learn._all_y = self.y.detach().clone()
         super().after_pred()
+        self.learn.pred = self.pred[self._mask]
 
     def after_loss(self):
         self.learn.pred = self.learn._all_pred
@@ -318,7 +232,7 @@ class ModelAdapter(ModelAdapterFlatPred):
             self.learn.yb = (self._all_y,)
 
 
-class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
+class ModelAdapterVAE(DatasetWithTargetAdapter):
     """Models forward method only expects one input matrix.
     Apply mask from dataloader to both pred and targets."""
 
@@ -329,6 +243,10 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         # data augmentation here?
 
     def after_pred(self):
+        self.learn._all_pred = self.pred[0].detach().clone()
+        self.learn._all_y = None
+        if len(self.yb):
+            self.learn._all_y = self.y.detach().clone()
         super().after_pred()
         if len(self.pred) == 3:
             pred, mu, logvar = self.pred  # return predictions
@@ -336,17 +254,6 @@ class ModelAdapterVAEFlat(DatasetWithTargetAdapter):
         elif len(self.pred) == 4:
             x_mu, x_logvar, z_mu, z_logvar = self.pred
             self.learn.pred = (x_mu[self._mask], x_logvar[self._mask], z_mu, z_logvar)
-
-# same as ModelAdapter. Inheritence is limiting composition here
-
-
-class ModelAdapterVAE(ModelAdapterVAEFlat):
-    def after_pred(self):
-        self.learn._all_pred = self.pred[0].detach().clone()
-        self.learn._all_y = None
-        if len(self.yb):
-            self.learn._all_y = self.y.detach().clone()
-        super().after_pred()
 
     def after_loss(self):
         self.learn.pred = (self.learn._all_pred, *self.learn.pred[1:])

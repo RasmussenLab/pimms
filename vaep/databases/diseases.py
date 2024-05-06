@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 def get_disease_association(doid: int, limit: int = 1000):
     params = {'type1': -26,
-              'type2': 'value2',
               'id1': f'DOID:{doid}',
               'type2': 9606,
               'limit': limit,

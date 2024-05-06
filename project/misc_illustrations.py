@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.15.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -17,6 +17,7 @@
 
 # %%
 from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
@@ -44,7 +45,7 @@ plt.rcParams.update({'xtick.labelsize': 'xx-large',
 mu = 25.0
 stddev = 1.0
 
-x = np.linspace(mu - 5, mu + 5, num=101)
+x = np.linspace(mu - 3, mu + 3, num=101)
 
 y_normal = scipy.stats.norm.pdf(x, loc=mu, scale=stddev)
 
@@ -60,16 +61,39 @@ fig, ax = plt.subplots(1, 1, figsize=(5, 4))
 for y, c in zip([y_normal, y_impute], colors):
     ax.plot(x, y, color=c,)
     ax.fill_between(x, y, color=c)
-    ax.set_xlabel('log2 intensity')
-    ax.set_ylabel('density')
-    ax.set_label("test")
-    ax.legend(["original", "down shifted"])
+ax.set_xlabel('log2 intensity')
+ax.set_ylabel('density')
+ax.set_label("test")
+ax.legend(["original", "down shifted"])
 fig.tight_layout()
+
 # %%
 
 fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation')
 fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation.pdf')
 fig.savefig(FIGUREFOLDER / 'illustration_normal_imputation_highres', dpi=600)
+
+
+# %%
+plt.rcParams.update({'xtick.labelsize': 'large',
+                     'ytick.labelsize': 'large',
+                     'axes.titlesize': 'large',
+                     'axes.labelsize': 'large',
+                     })
+fig, ax = plt.subplots(1, 1, figsize=(3, 2))
+
+for y, c in zip([y_normal], colors):
+    ax.plot(x, y, color=c,)
+    # ax.fill_between(x, y, color=c)
+    ax.set_xlabel('log2 intensity')
+    ax.set_ylabel('density')
+    ax.set_label("test")
+    # ax.legend(["original", "down shifted"])
+fig.tight_layout()
+
+fig.savefig(FIGUREFOLDER / 'illustration_normal')
+fig.savefig(FIGUREFOLDER / 'illustration_normal.pdf')
+fig.savefig(FIGUREFOLDER / 'illustration_normal_highres', dpi=600)
 
 
 # %% [markdown]
@@ -127,4 +151,50 @@ print(
 # whereas the error in the original space is the same
 
 # %% [markdown]
-#
+# ## Volcano plot
+
+# %%
+# Sample data for the volcano plot
+np.random.seed(42)
+fold_change = np.random.default_rng().normal(0, 1, 1000)
+p_value = np.random.default_rng().uniform(0, 1, 1000)
+
+# Volcano plot
+# Assuming you have two arrays, fold_change and p_value, containing the fold change values and p-values respectively
+
+# Set the significance threshold for p-value
+significance_threshold = 0.05
+
+# Set the fold change threshold
+fold_change_threshold = 2
+
+# Create a boolean mask for significant points
+significant_mask = (p_value < significance_threshold)
+
+# Create a boolean mask for points that meet the fold change threshold
+fold_change_mask = (abs(fold_change) > fold_change_threshold)
+
+# Combine the masks to get the final mask for significant points
+final_mask = significant_mask & fold_change_mask
+
+fig, ax = plt.subplots(1, 1, figsize=(3, 3))
+# Plot the volcano plot
+_ = ax.scatter(fold_change, -np.log10(p_value), c='gray', alpha=0.5, s=10)
+_ = ax.scatter(fold_change[final_mask], -np.log10(p_value[final_mask]), c='red', alpha=0.7, s=20)
+
+# Add labels and title
+_ = ax.set_xlabel('Log2 fold change')
+_ = ax.set_ylabel('-log10(p-value)')
+_ = ax.set_title('Volcano Plot')
+
+# Add significance threshold lines
+_ = ax.axhline(-np.log10(significance_threshold), color='black', linestyle='--')
+_ = ax.axvline(fold_change_threshold, color='black', linestyle='--')
+_ = ax.axvline(-fold_change_threshold, color='black', linestyle='--')
+
+
+# %%
+fig.tight_layout()
+fig.savefig(FIGUREFOLDER / 'illustration_volcano.png', dpi=300)
+fig.savefig(FIGUREFOLDER / 'illustration_volcano.pdf')  
+# %%

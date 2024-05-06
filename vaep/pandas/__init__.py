@@ -1,43 +1,13 @@
 import collections.abc
 from collections import namedtuple
-
-
 from types import SimpleNamespace
-
-from typing import Iterable
+from typing import Iterable, List, Optional
 
 import numpy as np
-import pandas as pd
 import omegaconf
+import pandas as pd
 
 from .calc_errors import calc_errors_per_feat, get_absolute_error
-
-
-def combine_value_counts(X: pd.DataFrame, dropna=True) -> pd.DataFrame:
-    """Pass a selection of columns to combine it's value counts.
-
-    This performs no checks. Make sure the scale of the variables
-    you pass is comparable.
-
-    Parameters
-    ----------
-    X : pandas.DataFrame
-        A DataFrame of several columns with values in a similar range.
-    dropna : bool, optional
-        Exclude NA values from counting, by default True
-
-    Returns
-    -------
-    pandas.DataFrame
-        DataFrame of combined value counts.
-    """
-    """
-    """
-    _df = pd.DataFrame()
-    for col in X.columns:
-        _df = _df.join(X[col].value_counts(dropna=dropna), how='outer')
-    freq_targets = _df.sort_index()
-    return freq_targets
 
 
 def unique_cols(s: pd.Series) -> bool:
@@ -313,3 +283,19 @@ def get_lower_whiskers(df: pd.DataFrame, factor: float = 1.5) -> pd.Series:
     iqr = ret.loc['75%'] - ret.loc['25%']
     ret = ret.loc['25%'] - iqr * factor
     return ret
+
+
+def get_counts_per_bin(df: pd.DataFrame, bins: range, columns: Optional[List[str]] = None):
+    """Return counts per bin for selected columns in DataFrame."""
+    counts_per_bin = dict()
+    if columns is None:
+        columns = df.columns.to_list()
+    for col in columns:
+        _series = (pd.cut(df[col], bins=bins)
+                   .to_frame()
+                   .groupby(col)
+                   .size())
+        _series.index.name = 'bin'
+        counts_per_bin[col] = _series
+    counts_per_bin = pd.DataFrame(counts_per_bin)
+    return counts_per_bin

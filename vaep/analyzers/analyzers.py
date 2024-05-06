@@ -1,28 +1,23 @@
+import logging
+import random
 from collections import namedtuple
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Tuple, Union, List
+from typing import List, Optional, Tuple, Union
 
-import logging
-import random
-
-
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import seaborn
-
-from sklearn.decomposition import PCA
+from njab.sklearn import run_pca
 from sklearn.impute import SimpleImputer
 
 import vaep
 from vaep.analyzers import Analysis
-
-from vaep.pandas import _add_indices
 from vaep.io.datasplits import long_format, wide_format
-
+from vaep.io.load import verify_df
+from vaep.pandas import _add_indices
 
 logger = logging.getLogger(__name__)
 
@@ -31,23 +26,7 @@ __doc__ = 'A collection of Analyzers to perform certain type of analysis.'
 
 ALPHA = 0.5
 
-
-def verify_df(df,
-              fname,
-              index_col: str,  # could be potentially 0 for the first column
-              verify_fname: bool = False,
-              usecols=None,
-              ):
-    if usecols and isinstance(index_col, str):
-        assert index_col in usecols, 'Add index_col to usecols Sequence'
-    if verify_fname:
-        if not len(df.shape) == 2:
-            raise ValueError(f"Expected 2 -dimensional array, not {len(df.shape)} -dimensional,"
-                             f" of type: {type(df)}")
-        N, M = df.shape
-        assert f'N{N:05d}' in str(fname) and f'M{M:05d}' in str(fname), \
-            ("Filename number don't match loaded numbers: "
-                f"{fname} should contain N{N} and M{M}")
+# ! deprecate AnalyzePeptides
 
 
 class AnalyzePeptides(SimpleNamespace):
@@ -228,7 +207,7 @@ class AnalyzePeptides(SimpleNamespace):
             self.is_wide_format = True
             return self.df
         self._df_wide = df_wide
-        print(f"Set attribute: df_wide")
+        print("Set attribute: df_wide")
         return df_wide
 
     def describe_peptides(self, sample_n: int = None):
@@ -285,7 +264,6 @@ class AnalyzePeptides(SimpleNamespace):
             raise AttributeError('No metadata available, please set "df_meta" first.')
 
         PCs = self.get_PCA()
-        cols = list(PCs.columns)
 
         fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(
             15, 20), constrained_layout=True)
@@ -353,7 +331,7 @@ class AnalyzePeptides(SimpleNamespace):
 
     def __repr__(self):
         keys = sorted(self.__dict__)
-        items = ("{}".format(k, self.__dict__[k]) for k in keys)
+        items = ("{}".format(k) for k in keys)
         return "{} with attributes: {}".format(type(self).__name__, ", ".join(items))
 
     # def __dir__(self):
@@ -441,30 +419,6 @@ def plot_corr_histogram(corr_lower_triangle, bins=10):
     return fig, axes
 
 
-def run_pca(df_wide: pd.DataFrame, n_components: int = 2) -> Tuple[pd.DataFrame, PCA]:
-    """Run PCA on DataFrame and return result.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame in wide format to fit features on.
-    n_components : int, optional
-        Number of Principal Components to fit, by default 2
-
-    Returns
-    -------
-    Tuple[pd.DataFrame, PCA]
-        principal compoments of DataFrame with same indices as in original DataFrame,
-        and fitted PCA model of sklearn
-    """
-    pca = PCA(n_components=n_components)
-    PCs = pca.fit_transform(df_wide)
-    cols = [f'principal component {i+1} ({var_explained*100:.2f} %)' for i,
-            var_explained in enumerate(pca.explained_variance_ratio_)]
-    PCs = pd.DataFrame(PCs, index=df_wide.index, columns=cols)
-    return PCs, pca
-
-
 def plot_date_map(df, ax,
                   dates: pd.Series = None,
                   meta: pd.Series = None,
@@ -483,23 +437,31 @@ def plot_date_map(df, ax,
     ax.set_ylabel(cols[1])
     path_collection = scatter_plot_w_dates(
         ax, df, dates=dates, errors='raise')
-    cbar = add_date_colorbar(path_collection, ax=ax)
+    _ = add_date_colorbar(path_collection, ax=ax)
 
 
 def plot_scatter(df, ax,
                  meta: pd.Series,
-                 title: str = 'by some metadata',
+                 feat_name_display: str = 'features',
+                 title: Optional[str] = None,
                  alpha=ALPHA,
                  fontsize=8,
                  size=2):
     cols = list(df.columns)
     assert len(cols) == 2, f'Please provide two dimensons, not {df.columns}'
+    if not title:
+        title = f'by identified {feat_name_display}'
     ax.set_title(title, fontsize=fontsize)
     ax.set_xlabel(cols[0])
     ax.set_ylabel(cols[1])
     path_collection = ax.scatter(
         x=cols[0], y=cols[1], s=size, c=meta, data=df, alpha=alpha)
-    cbar = ax.get_figure().colorbar(path_collection, ax=ax)
+    _ = ax.get_figure().colorbar(path_collection, ax=ax,
+                                 label=f'Identified {feat_name_display}',
+                                 #  ticklocation='left', # ignored by matplotlib
+                                 location='right',  # ! left does not put colobar without overlapping y ticks
+                                 format="{x:,.0f}",
+                                 )
 
 
 def seaborn_scatter(df, ax,

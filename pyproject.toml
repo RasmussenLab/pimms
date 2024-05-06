@@ -1,3 +1,65 @@
+[project]
+authors = [{ name = "Henry Webel", email = "henry.webel@sund.ku.dk" }]
+description = "Imputing (MS-based prote-) omics data using self supervised deep learning models."
+name = "pimms-learn"
+# This means: Load the version from the package itself.
+# See the section below: [tools.setuptools.dynamic]
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.8"
+# These are keywords
+classifiers = [
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Intended Audience :: Healthcare Industry",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+  "njab>=0.0.5",
+  "numpy",
+  "matplotlib",
+  "pandas",
+  "plotly",
+  "torch",
+  "scikit-learn>=1.0",
+  "scipy",
+  "seaborn<0.13",
+  "fastai",
+  "omegaconf",
+  "tqdm",
+  "mrmr-selection",
+  "pingouin",
+]
+
+[project.scripts]
+pimms-setup-imputation-comparison = "vaep.cmd_interface.setup_imp_cp_website:main"
+
+[project.urls]
+"Bug Tracker" = "https://github.com/RasmussenLab/pimms/issues"
+"Homepage" = "https://github.com/RasmussenLab/pimms"
+
+[project.optional-dependencies]
+docs = [
+  "sphinx",
+  "sphinx-book-theme",
+  "myst-nb",
+  "ipywidgets",
+  "sphinx-new-tab-link!=0.2.2",
+]
+
+[tool.flake8]
+max-line-length = 120
+aggressive = 2
+ignore = ["E501"]
+
 [build-system]
-requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools_scm>=8", "wheel"]
+
+[tool.setuptools_scm]
+# https://setuptools-scm.readthedocs.io/ 
+# used to pick up the version from the git tags or the latest commit.
+
+[tool.setuptools.packages.find]
+include = ["vaep"]

@@ -1,4 +1,6 @@
 # PIMMS
+[![Read the Docs](https://img.shields.io/readthedocs/pimms)](https://readthedocs.org/projects/pimms/) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RasmussenLab/pimms/ci.yaml)](https://github.com/RasmussenLab/pimms/actions)
+
 
 PIMMS stands for Proteomics Imputation Modeling Mass Spectrometry 
 and is a hommage to our dear British friends 
@@ -7,14 +9,13 @@ who are missing as part of the EU for far too long already
 
 The pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
-
 > `PIMMS` was called `vaep` during development.  
 > Before entire refactoring has to been completed the imported package will be
 `vaep`.
 
 We provide functionality as a python package, an excutable workflow and notebooks.
 
-The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
 
 
 ## Python package
@@ -23,14 +24,12 @@ For interactive use of the models provided in PIMMS, you can use our
 [python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
 The interface is similar to scikit-learn.
 
-
 ```
 pip install pimms-learn
 ```
 
-
 Then you can use the models on a pandas DataFrame with missing values. Try this in the tutorial on Colab:
-[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/dev/project/04_1_train_pimms_models.ipynb)
+[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
 
 ## Notebooks as scripts using papermill
 
@@ -44,15 +43,18 @@ papermill 01_0_split_data.ipynb --help-notebook
 papermill 01_1_train_vae.ipynb --help-notebook
 ```
 
-> Misstyped argument names won't throw an error when using papermill
+> Mistyped argument names won't throw an error when using papermill
 
+## PIMMS comparison workflow
 
+The PIMMS comparison workflow is a snakemake workflow that runs the all selected PIMMS models and R-models on 
+a user-provided dataset and compares the results. An example for the smaller HeLa development dataset on the 
+protein groups level is re-built regularly and available at: [rasmussenlab.org/pimms](https://www.rasmussenlab.org/pimms/)
 
+### Setup comparison workflow
 
-## Setup for PIMMS comparison workflow
-
-The package is available as a standalone software on pypi. However, running the entire snakemake workflow in enabled using 
-conda (or mamba) and pip to setup the environment. For a detailed description of setting up
+The core funtionality is available as a standalone software on PyPI under the name `pimms-learn`. However, running the entire snakemake workflow in enabled using 
+conda (or mamba) and pip to setup an analysis environment. For a detailed description of setting up
 conda (or mamba), see [instructions on setting up a virtual environment](https://github.com/RasmussenLab/pimms/blob/HEAD/docs/venv_setup.md).
 
 Download the repository
@@ -70,24 +72,27 @@ conda env create -n pimms -f environment.yml # slower
 mamba env create -n pimms -f environment.yml # faster, less then 5mins
 ```
 
-If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment.
+If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment:
 
 ### Install development dependencies
 
-Check how to install pytorch for your system [here](https://pytorch.org/get-started/previous-versions/#v1131).
+Check how to install pytorch for your system [here](https://pytorch.org/get-started).
 
-- select the version compatible with your cuda version if you have an nvidia gpu
+- select the version compatible with your cuda version if you have an nvidia gpu or a Mac M-chip.
 
 ```bash
-conda create -n vaep_manuel python=3.8 pip
-conda activate vaep_manuel
-conda update pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia # might be different
-pip install . # pimms-learn
-pip install papermill jupyterlab # use run notebook interactive or as a script
+conda create -n vaep python=3.8 pip
+conda activate vaep
+# Follow instructions on https://pytorch.org/get-started 
+# conda env update -f environment.yml -n vaep # should not install the rest.
+pip install pimms-learn
+pip install jupyterlab papermill # use run notebook interactively or as a script
+
 cd project
+# choose one of the following to test the code
+jupyter lab # open 04_1_train_pimms_models.ipynb
 papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_test.ipynb # second notebook is output
-python 04_1_train_pimms_models.ipynb # just execute the code
-# jupyter lab # open 04_1_train_pimms_models.ipynb
+python 04_1_train_pimms_models.py # just execute the code
 ```
 
 ### Entire development installation
@@ -120,15 +125,11 @@ Trouble shoot your R installation by opening jupyter lab
 ```
 # in projects folder
 jupyter lab # open 01_1_train_NAGuideR.ipynb
+```
 
-## Run Demo
+## Run an analysis
 
 Change to the [`project` folder](./project) and see it's [README](project/README.md)
-
-> Currently there are only notebooks and scripts under `project`, 
-> but shared functionality will be added under `vaep` folder-package: This can 
-> then be imported using `import vaep`. See [`vaep/README.md`](vaep/README.md)
-
 You can subselect models by editing the config file:  [`config.yaml`](project/config/single_dev_dataset/proteinGroups_N50/config.yaml) file.
 
 ```

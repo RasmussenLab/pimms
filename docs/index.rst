@@ -1,7 +1,5 @@
-Welcome to PIMMS documentation!
+Welcome to proteomics imputation modelling mass spectrometry (PIMMS) documentation!
 ================================
-
-.. .. mdinclude:: ../README.md
 
 .. https://github.com/sphinx-doc/sphinx/issues/7000#issuecomment-1006645012
 .. https://stackoverflow.com/a/54519037
@@ -11,19 +9,25 @@ Welcome to PIMMS documentation!
 
 .. toctree::
    :maxdepth: 1
-   :caption: Topic and note pages:
-
+   :caption: Paper documentation and note pages:
+   
+   other/tutorial
+   other/project_readme
    proteomics_intro
-   MaxQuant
-   lab_book
-   vae_notes
-   venv_setup
+
    
 .. toctree::
    :maxdepth: 3
    :caption: Library:
 
    reference/modules
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Technical notes
+
+   README.md
+   venv_setup
 
 
 Indices and tables

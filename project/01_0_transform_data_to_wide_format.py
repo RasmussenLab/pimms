@@ -13,7 +13,7 @@
 #     name: python3
 # ---
 
-# %% [Markdown]
+# %% [markdown]
 # # Transfer data for NAGuideR format
 #
 

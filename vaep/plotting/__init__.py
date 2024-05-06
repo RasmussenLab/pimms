@@ -1,21 +1,21 @@
 from __future__ import annotations
 
-from functools import partial
-import numpy as np
-import pandas as pd
-import matplotlib
 import logging
 import pathlib
+from functools import partial
+
+import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn
 
 import vaep.pandas
 
+from . import data, defaults, errors, plotly
 from .errors import plot_rolling_error
-from . import errors
-from . import data
-from . import plotly
-from . defaults import order_categories, labels_dict, IDX_ORDER
+
+# from . defaults import order_categories, labels_dict, IDX_ORDER
 
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = ['plotly',
            'data',
+           'defaults',
            'errors',
            'plot_rolling_error',
            # define in this file
@@ -45,14 +46,16 @@ __all__ = ['plotly',
 
 def _savefig(fig, name, folder: pathlib.Path = '.',
              pdf=True,
-             dpi=300  # default 'figure'
+             dpi=300,  # default 'figure',
+             tight_layout=True,
              ):
     """Save matplotlib Figure (having method `savefig`) as pdf and png."""
     folder = pathlib.Path(folder)
     fname = folder / name
     folder = fname.parent  # in case name specifies folders
     folder.mkdir(exist_ok=True, parents=True)
-    fig.tight_layout()
+    if tight_layout:
+        fig.tight_layout()
     fig.savefig(fname.with_suffix('.png'), dpi=dpi)
     if pdf:
         fig.savefig(fname.with_suffix('.pdf'), dpi=dpi)

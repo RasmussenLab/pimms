@@ -6,8 +6,11 @@ from sklearn.preprocessing import StandardScaler
 import sklearn
 
 from pathlib import Path
+import pandas as pd
 
-
+from fastai.losses import MSELossFlat
+from fastai.callback.tracker import EarlyStoppingCallback
+from fastai.learner import Learner
 from fastai.basics import *
 from fastai.callback.all import *
 from fastai.torch_basics import *
@@ -62,6 +65,7 @@ class AETransformer(TransformerMixin, BaseEstimator):
         self.latent_dim = latent_dim
         self.batch_size = batch_size
         self.out_folder = Path(out_folder)
+        self.out_folder.mkdir(exist_ok=True, parents=True)
 
         if model == 'VAE':
             self.model = models.vae.VAE
@@ -77,7 +81,9 @@ class AETransformer(TransformerMixin, BaseEstimator):
         # ! patience?
         # EarlyStoppingCallback(patience=args.patience)
 
-    def fit(self, X, y,
+    def fit(self,
+            X: pd.DataFrame,
+            y: pd.DataFrame = None,
             epochs_max: int = 100,
             cuda: bool = True,
             patience: Optional[int] = None):
@@ -113,7 +119,9 @@ class AETransformer(TransformerMixin, BaseEstimator):
         self.analysis.learn.fit_one_cycle(epochs_max, lr_max=suggested_lr.valley)
         self.epochs_trained_ = self.analysis.learn.epoch + 1
         N_train_notna = X.notna().sum().sum()
-        N_val_notna = y.notna().sum().sum()
+        N_val_notna = None
+        if y is not None:
+            N_val_notna = y.notna().sum().sum()
         self.fig_loss_ = models.plot_training_losses(
             self.analysis.learn, self.model_name,
             folder=self.out_folder,

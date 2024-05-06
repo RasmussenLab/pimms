@@ -19,8 +19,10 @@
 # Datasets are provided to `DataLoaders` which perform the aggreation to batches.
 
 # %%
+from vaep.io.datasplits import long_format
+from fastai.collab import CollabDataLoaders
 import random
-import numpy as np
+
 import pandas as pd
 import vaep.io.datasets as datasets
 import vaep.utils as test_data
@@ -32,44 +34,19 @@ data = test_data.create_random_missing_data(N, M, prop_missing=.4)
 # %% [markdown]
 # ## Datasets
 #
-# - `PeptideDatasetInMemory`
-# - `PeptideDatasetInMemoryMasked`
-# - `PeptideDatasetInMemoryNoMissings`
+# - `DatasetWithMaskAndNoTarget`
+# - `DatasetWithTarget`
+# - `DatasetWithTargetSpecifyTarget`
 
 # %% [markdown]
-# ## `DatasetWithMaskAndNoTarget`
+# ### `DatasetWithMaskAndNoTarget`
+# - base class for datasets with missing values and no target
 
 # %%
 dataset = datasets.DatasetWithMaskAndNoTarget(df=pd.DataFrame(data))
 for _mask, _array in dataset:
     break
 _array, _mask
-
-# %% [markdown]
-# ###  `PeptideDatasetInMemory`
-#
-# - with duplicated target in memory
-
-# %%
-dataset = datasets.PeptideDatasetInMemory(data)
-for _array, _mask, _target in dataset:
-    break
-_array, _mask, _target
-
-# %%
-id(_array), id(_mask), id(_target) 
-
-# %%
-_array is _target # should be true
-
-# %%
-data = test_data.create_random_missing_data(N, M, prop_missing=0.3)
-dataset = datasets.PeptideDatasetInMemoryMasked(df=pd.DataFrame(data), fill_na=25.0)
-
-for _array, _mask in dataset:
-    if any(_mask):
-        print(_array, _mask)
-        break
 
 # %% [markdown]
 # ### `DatasetWithTarget`
@@ -92,8 +69,7 @@ data = test_data.create_random_missing_data(N, M, prop_missing=0.2)
 df = pd.DataFrame(data)
 
 val_y = df.stack().groupby(level=0).sample(frac=0.2)
-# targets = val_y.unstack().sort_index()
-targets = val_y.unstack()
+targets = val_y.unstack().sort_index(axis=1)
 
 df[targets.notna()] = pd.NA
 df
@@ -112,22 +88,13 @@ for _mask, _array, target in dataset:
         break
 
 # %%
-row = random.randint(0,len(dataset)-1)
+row = random.randint(0, len(dataset) - 1)
 print(f"{row = }")
 dataset[row]
 
-# %% [markdown]
-# ### `PeptideDatasetInMemoryNoMissings`
-
 # %%
-# data and pd.DataFrame.data share the same memory
-try:
-    dataset = datasets.PeptideDatasetInMemoryNoMissings(data)
-    for _array in dataset:
-        print(_array)
-        break
-except AssertionError as e:
-    print(e)
+dataset[row:row + 2]
+
 
 # %% [markdown]
 # ## DataLoaders
@@ -135,11 +102,8 @@ except AssertionError as e:
 # FastAI DataLoaders accept pytorch datasets
 
 # %%
-from fastai.collab import CollabDataLoaders
 # , MSELossFlat, Learner
 # from fastai.collab import EmbeddingDotBias
-
-from vaep.io.datasplits import long_format
 
 
 data = pd.DataFrame(data)
@@ -149,10 +113,10 @@ df_long.reset_index(inplace=True)
 df_long.head()
 
 # %%
-dls = CollabDataLoaders.from_df(df_long,  valid_pct=0.15, 
+dls = CollabDataLoaders.from_df(df_long, valid_pct=0.15,
                                 user_name='Sample ID', item_name='peptide', rating_name='intensity',
-                               bs=4)
-type(dls.dataset), dls.dataset._dl_type # no __mro__?
+                                bs=4)
+type(dls.dataset), dls.dataset._dl_type  # no __mro__?
 
 # %% [markdown]
 # Iterating over the dataset gives the column names
@@ -196,13 +160,12 @@ batch
 # dls.train.__iter__??
 
 # %%
-from torch.utils.data.dataloader import _SingleProcessDataLoaderIter
 # _SingleProcessDataLoaderIter??
 
 # %% [markdown]
 # So.. It seems too complicated
 # - the `_collate_fn` seems to aggrete the data from the DataFrame
-# - should be possible to keep track of that 
+# - should be possible to keep track of that
 
 # %%
 next(iter(dls.dataset))

@@ -1,4 +1,4 @@
-name: Run tests
+name: Run unit tests, integration tests, and publish package if tagged
 on:
   push:
     branches: [main, dev]
@@ -8,7 +8,7 @@ on:
   schedule:
     - cron: '0 2 * * 3,6'
 jobs:
-  run-tests:
+  run-unit-and-integration-tests-with-conda-install:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -23,7 +23,7 @@ jobs:
         python-version: ["3.8"]
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Set up Miniconda
       # ! change action https://github.com/mamba-org/setup-micromamba
       uses: conda-incubator/setup-miniconda@v2
@@ -41,7 +41,9 @@ jobs:
       run: |
         conda info
         conda list
-        conda info -e
+        conda env export --from-history --no-builds > environment.yml
+        conda env export --no-builds
+        conda env export --no-builds > environment_w_versions.yml
     - name: test-r-kernel-imports
       run: |
         Rscript -e "library(stringi)"
@@ -61,29 +63,45 @@ jobs:
         papermill 01_1_train_VAE.ipynb --help-notebook
         papermill 01_1_train_DAE.ipynb --help-notebook
         papermill 01_1_train_CF.ipynb --help-notebook
+    - name: Run tutorial notebooks
+      run: |
+        cd project
+        mkdir runs
+        papermill 04_1_train_DAE_VAE_wo_val_data.ipynb runs/04_1_train_DAE_VAE_wo_val_data.ipynb
+        papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models.ipynb
     - name: Run demo workflow (integration test)
+      continue-on-error: true
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
-       snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml
+       snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
+    - name: Run demo workflow again (in case of installation issues)
+      run: | 
+        cd project
+        snakemake -p -c1 -n --configfile config/single_dev_dataset/example/config.yaml
+        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
+    # https://github.com/actions/upload-artifact
       uses: actions/upload-artifact@v3
       with:
         name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/example/01_2_performance_plots.html
+        path: |
+          project/runs/example/
+          environment.yml
+          environment_w_versions.yml
 
-  test_pip_pkg_install:
+  run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
     name: test-pip-installation
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: ["3.8"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4.0.0
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -101,14 +119,14 @@ jobs:
     name: Publish package
     if: startsWith(github.event.ref, 'refs/tags/v')
     needs:
-      - run-tests
-      - test_pip_pkg_install
+      - run-unit-and-integration-tests-with-conda-install
+      - run-unit-local-pip-installation
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
   
-      - uses: actions/setup-python@v4.0.0
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.8"
       - name: Install twine and build
