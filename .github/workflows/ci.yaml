@@ -117,7 +117,7 @@ jobs:
 
   publish:
     name: Publish package
-    if: startsWith(github.event.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags')
     needs:
       - run-unit-and-integration-tests-with-conda-install
       - run-unit-local-pip-installation
