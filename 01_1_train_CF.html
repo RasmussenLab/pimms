@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g4f5f151 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.3.0 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g4f5f151 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.3.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -889,7 +889,8 @@ Name: intensity, Length: 167898, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00209
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00437
+No improvement since epoch 12: early stopping
 vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N50/figures/collab_training
 </pre></div>
 </div>
@@ -921,127 +922,91 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
   <tbody>
     <tr>
       <td>0</td>
-      <td>9.719058</td>
-      <td>15.441180</td>
+      <td>9.594434</td>
+      <td>15.143264</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>9.374769</td>
-      <td>14.379975</td>
+      <td>8.826435</td>
+      <td>11.762882</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>7.895232</td>
-      <td>8.403400</td>
+      <td>5.398042</td>
+      <td>2.162622</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>4.655443</td>
-      <td>2.255860</td>
+      <td>2.872819</td>
+      <td>1.267224</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>2.627537</td>
-      <td>1.414448</td>
+      <td>1.677103</td>
+      <td>1.053261</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>1.620846</td>
-      <td>1.177195</td>
+      <td>1.053662</td>
+      <td>0.848389</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>1.121428</td>
-      <td>1.083367</td>
+      <td>0.720369</td>
+      <td>0.789451</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.843921</td>
-      <td>0.965073</td>
+      <td>0.556910</td>
+      <td>0.760338</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.667816</td>
-      <td>0.875159</td>
+      <td>0.469247</td>
+      <td>0.744671</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.555106</td>
-      <td>0.802502</td>
+      <td>0.411884</td>
+      <td>0.744508</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.487555</td>
-      <td>0.775883</td>
+      <td>0.362537</td>
+      <td>0.732782</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.449947</td>
-      <td>0.754985</td>
+      <td>0.320573</td>
+      <td>0.728615</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.427969</td>
-      <td>0.748453</td>
+      <td>0.283780</td>
+      <td>0.723283</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>0.413865</td>
-      <td>0.740043</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>14</td>
-      <td>0.402895</td>
-      <td>0.735057</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>15</td>
-      <td>0.388967</td>
-      <td>0.730958</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>16</td>
-      <td>0.384929</td>
-      <td>0.729701</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>17</td>
-      <td>0.383447</td>
-      <td>0.727239</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>18</td>
-      <td>0.376973</td>
-      <td>0.726072</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>19</td>
-      <td>0.376015</td>
-      <td>0.725873</td>
+      <td>0.250259</td>
+      <td>0.723589</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/183c7d83b7f959fc21705fa014a514400b497d675d0ecc5a60ab7c8a8077b12b.png" src="_images/183c7d83b7f959fc21705fa014a514400b497d675d0ecc5a60ab7c8a8077b12b.png" />
-<img alt="_images/353395d58063b8fa4bbb2de68a9fe56ded3347096261308241fd49e4e6b3634a.png" src="_images/353395d58063b8fa4bbb2de68a9fe56ded3347096261308241fd49e4e6b3634a.png" />
+</table></div><img alt="_images/f9e19f645f49c2e983361794c1fe2d548969cb83b2a6ba1c150bbda371d329a8.png" src="_images/f9e19f645f49c2e983361794c1fe2d548969cb83b2a6ba1c150bbda371d329a8.png" />
+<img alt="_images/9c2174236c49524c2d4cc667cbf827ec6093844b9ac162f5d3fcfbada1d6cf5a.png" src="_images/9c2174236c49524c2d4cc667cbf827ec6093844b9ac162f5d3fcfbada1d6cf5a.png" />
 </div>
 </div>
 </section>
@@ -1110,31 +1075,31 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SEH1L</th>
       <td>27.180</td>
-      <td>26.500</td>
+      <td>26.377</td>
     </tr>
     <tr>
       <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SLC9A3R1</th>
       <td>30.259</td>
-      <td>27.916</td>
+      <td>28.147</td>
     </tr>
     <tr>
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>KYNU</th>
       <td>30.629</td>
-      <td>30.855</td>
+      <td>30.896</td>
     </tr>
     <tr>
       <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ADD3</th>
       <td>24.541</td>
-      <td>26.004</td>
+      <td>26.131</td>
     </tr>
     <tr>
       <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>CALM2;CALM1</th>
       <td>33.934</td>
-      <td>33.545</td>
+      <td>33.527</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1146,31 +1111,31 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>PPP2R4;DKFZp781M17165</th>
       <td>28.717</td>
-      <td>28.334</td>
+      <td>28.236</td>
     </tr>
     <tr>
       <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>MED23</th>
       <td>24.966</td>
-      <td>24.084</td>
+      <td>23.865</td>
     </tr>
     <tr>
       <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RBMXL1</th>
       <td>26.654</td>
-      <td>24.743</td>
+      <td>24.907</td>
     </tr>
     <tr>
       <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SMARCA1</th>
       <td>27.917</td>
-      <td>28.115</td>
+      <td>28.184</td>
     </tr>
     <tr>
       <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RGPD3;RGPD4</th>
       <td>24.289</td>
-      <td>24.581</td>
+      <td>24.457</td>
     </tr>
   </tbody>
 </table>
@@ -1237,27 +1202,27 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <th rowspan="5" valign="top">2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ABCE1</th>
       <td>29.538</td>
-      <td>29.841</td>
+      <td>29.573</td>
     </tr>
     <tr>
       <th>ACTN4</th>
       <td>33.270</td>
-      <td>33.237</td>
+      <td>33.132</td>
     </tr>
     <tr>
       <th>ADD3</th>
       <td>24.259</td>
-      <td>25.169</td>
+      <td>24.954</td>
     </tr>
     <tr>
       <th>ALCAM</th>
       <td>24.906</td>
-      <td>24.565</td>
+      <td>23.901</td>
     </tr>
     <tr>
       <th>ALDH1B1</th>
       <td>26.674</td>
-      <td>26.799</td>
+      <td>26.907</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1269,27 +1234,27 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <th rowspan="5" valign="top">2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>YIPF3</th>
       <td>25.040</td>
-      <td>25.512</td>
+      <td>25.585</td>
     </tr>
     <tr>
       <th>YTHDF3</th>
       <td>28.717</td>
-      <td>28.625</td>
+      <td>27.592</td>
     </tr>
     <tr>
       <th>ZC3H11A</th>
       <td>28.935</td>
-      <td>29.464</td>
+      <td>29.717</td>
     </tr>
     <tr>
       <th>ZFP91-CNTF;ZFP91</th>
       <td>25.662</td>
-      <td>26.631</td>
+      <td>26.744</td>
     </tr>
     <tr>
       <th>hCG_2014768;TMA7</th>
       <td>29.212</td>
-      <td>28.368</td>
+      <td>28.637</td>
     </tr>
   </tbody>
 </table>
@@ -1563,8 +1528,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7258729744842123,
-  &#39;MAE&#39;: 0.5776099974450397,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7235891023790036,
+  &#39;MAE&#39;: 0.5806186892942621,
   &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1588,8 +1553,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7358900013086532,
-  &#39;MAE&#39;: 0.5754592022403531,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7367632932722882,
+  &#39;MAE&#39;: 0.5781470539634855,
   &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1647,13 +1612,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.726</td>
-      <td>0.736</td>
+      <td>0.724</td>
+      <td>0.737</td>
     </tr>
     <tr>
       <th>MAE</th>
+      <td>0.581</td>
       <td>0.578</td>
-      <td>0.575</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1697,7 +1662,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 4096,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
- &#39;epoch_trained&#39;: 20,
+ &#39;epoch_trained&#39;: 14,
  &#39;epochs_max&#39;: 20,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
