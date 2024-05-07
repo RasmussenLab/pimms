@@ -20,7 +20,7 @@ jobs:
              "macos-13",
              # "windows-latest" # rrcovNA cannot be build from source on windows-server
              ]
-        python-version: ["3.8"]
+        python-version: ["3.8", "3.9", "3.10"]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
