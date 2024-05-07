@@ -36,6 +36,7 @@ dependencies:
   - xmltodict # configs
   - openpyxl # xml
   - omegaconf
+  - plac>=1.0
   # snakemake
   - snakemake-minimal #<7.26
   # jupyter
