@@ -663,6 +663,18 @@ fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
+# %%
+counts_per_bin = vaep.pandas.get_counts_per_bin(
+    df=pd.concat(
+        [df_long.squeeze().to_frame('observed'),
+         thresholds.to_frame('threshold'),
+         fake_na_mnar.squeeze().to_frame(f'MNAR ({N_MNAR:,d})'),
+         fake_na_mcar.squeeze().to_frame(f'MCAR ({N_MCAR:,d})')],
+        axis=1),
+    bins=range(min_max[0], min_max[1] + 1, 1))
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+counts_per_bin
+
 
 # %% [markdown]
 # ### Keep simulated samples only in a subset of the samples
@@ -841,7 +853,7 @@ vaep.savefig(ax.get_figure(), fname)
 
 # %%
 min_bin, max_bin = vaep.plotting.data.min_max(splits.val_y)
-bins = range(int(min_bin), int(max_bin), 1)
+bins = range(int(min_bin), int(max_bin) + 1, 1)
 ax = splits_df.plot.hist(bins=bins,
                          xticks=list(bins),
                          legend=False,
@@ -878,21 +890,6 @@ fname = args.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
-# Save binned counts
-
-# %%
-counts_per_bin = dict()
-for col in splits_df.columns:
-    _series = (pd.cut(splits_df[col], bins=bins)
-               .to_frame()
-               .groupby(col)
-               .size())
-    _series.index.name = 'bin'
-    counts_per_bin[col] = _series
-counts_per_bin = pd.DataFrame(counts_per_bin)
-counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
-counts_per_bin
 
 # %% [markdown]
 # plot training data missing plots
