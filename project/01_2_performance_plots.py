@@ -299,7 +299,7 @@ TOP_N_ORDER
 # %%
 corr_per_sample_val = (pred_val
                        .groupby(sample_index_name)
-                       .aggregate(
+                       .apply(
                            lambda df: df.corr().loc[TARGET_COL]
                        )[ORDER_MODELS])
 
@@ -321,6 +321,7 @@ dumps[fname.stem] = fname
 with pd.ExcelWriter(fname) as w:
     corr_per_sample_val.describe().to_excel(w, sheet_name='summary')
     corr_per_sample_val.to_excel(w, sheet_name='correlations')
+    corr_per_sample_val[TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
@@ -490,7 +491,7 @@ counts_per_bin
 # %%
 corr_per_sample_test = (pred_test
                         .groupby(sample_index_name)
-                        .aggregate(lambda df: df.corr().loc[TARGET_COL])
+                        .apply(lambda df: df.corr().loc[TARGET_COL])
                         [ORDER_MODELS])
 corr_per_sample_test = corr_per_sample_test.join(
     pred_test
@@ -521,6 +522,7 @@ dumps[fname.stem] = fname.with_suffix('.xlsx')
 with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_sample_test.describe().to_excel(w, sheet_name='summary')
     corr_per_sample_test.to_excel(w, sheet_name='correlations')
+    corr_per_sample_test.loc[~too_few_obs, TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
@@ -546,7 +548,7 @@ pred_test.loc[pd.IndexSlice[:, options[0]], :]
 # ### Correlation per feature
 
 # %%
-corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(
+corr_per_feat_test = pred_test.groupby(FEAT_NAME).apply(
     lambda df: df.corr().loc[TARGET_COL])[ORDER_MODELS]
 corr_per_feat_test = corr_per_feat_test.join(pred_test.groupby(FEAT_NAME)[
     TARGET_COL].count().rename('n_obs'))
@@ -576,6 +578,7 @@ with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(
         w, sheet_name='summary')
     corr_per_feat_test.to_excel(w, sheet_name='correlations')
+    corr_per_feat_test.loc[~too_few_obs, TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
 # %%
 feat_count_test = data.test_y.stack().groupby(FEAT_NAME).count()
