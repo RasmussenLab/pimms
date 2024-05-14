@@ -1,72 +1,14 @@
-import pandas
-import torch
-from typing import Tuple
 
-from torch.utils.data import Dataset
-from fastai.data.load import DataLoader
-from fastai.data.core import DataLoaders
+import pandas
+import pandas as pd
 from fastai.data.all import *
+from fastai.data.core import DataLoaders
+from fastai.data.load import DataLoader
+from torch.utils.data import Dataset
 
 from vaep.io import datasets
 from vaep.io.datasets import DatasetWithTarget
 from vaep.transform import VaepPipeline
-
-import pandas as pd
-
-
-class DataLoadersCreator():
-    """DataLoader creator. For training or evaluation."""
-
-    def __init__(self,
-                 df_train: pandas.DataFrame,
-                 df_valid: pandas.DataFrame,
-                 scaler,
-                 DataSetClass: torch.utils.data.Dataset,
-                 batch_size: int
-                 ):
-        """Helper function to create from pandas.DataFrame(s) in memory datasets.
-
-        Parameters
-        ----------
-        df_train : pandas.DataFrame
-            Training data samples in DataFrames.
-        df_valid : pandas.DataFrame
-            Validation data (for training) in DataFrames.
-        scaler : [type]
-            A pipeline of transform to apply to the dataset.
-        DataSetClass : torch.utils.data.Dataset
-            Type of dataset to use for generating single samples based on
-            DataFrames.
-        batch_size : int
-            Batch size to use.
-
-        Returns
-        -------
-        Tuple[torch.utils.data.Dataloader, torch.utils.data.Dataloader]
-            train and validation set dataloaders.
-        """
-        self.data_train = DataSetClass(
-            data=scaler.transform(df_train))
-        self.data_valid = DataSetClass(data=scaler.transform(df_valid))
-        self.scaler = scaler
-        self.batch_size = batch_size
-
-    def get_dls(self,
-                shuffle_train: bool = True,
-                **kwargs) -> Tuple[torch.utils.data.DataLoader,
-                                   torch.utils.data.DataLoader]:
-        self.shuffle_train = shuffle_train
-        dl_train = DataLoader(
-            dataset=self.data_train,
-            batch_size=self.batch_size, shuffle=shuffle_train, **kwargs)
-
-        dl_valid = DataLoader(
-            dataset=self.data_valid,
-            batch_size=self.batch_size, shuffle=False, **kwargs)
-        return dl_train, dl_valid
-
-    def __repr__(self):
-        return f"{self.__class__.__name__} for creating dataloaders with {self.batch_size}."
 
 
 def get_dls(train_X: pandas.DataFrame,
@@ -124,7 +66,11 @@ def get_dls(train_X: pandas.DataFrame,
         valid_ds = datasets.DatasetWithTarget(df=pd.DataFrame())
     # ! Need for script exection (as plain python file)
     # https://pytorch.org/docs/stable/notes/windows.html#multiprocessing-error-without-if-clause-protection
-    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=False,
+    drop_last = False
+    if (len(train_X) % bs) == 1:
+        # Batch-Normalization does not work with batches of size one
+        drop_last = True
+    return DataLoaders.from_dsets(train_ds, valid_ds, bs=bs, drop_last=drop_last,
                                   num_workers=num_workers)
 
 

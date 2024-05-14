@@ -21,36 +21,29 @@
 import logging
 from functools import partial
 
+import pandas as pd
+import sklearn
+import torch
+from fastai import learner
 from fastai.basics import *
-from fastai.learner import Learner
 from fastai.callback.all import *
 from fastai.callback.all import EarlyStoppingCallback
+from fastai.learner import Learner
 from fastai.torch_basics import *
-
-import torch
-
 from IPython.display import display
-
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 from torch.nn import Sigmoid
 
-import pandas as pd
-
-import sklearn
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
-
 import vaep
-import vaep.nb
-from vaep.io import datasplits
-from vaep.models import ae
-import vaep.models as models
 import vaep.model
+import vaep.models as models
+import vaep.nb
 from vaep.analyzers import analyzers
-
-
+from vaep.io import datasplits
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import plot_loss
-from fastai import learner
+from vaep.models import ae, plot_loss
+
 learner.Recorder.plot_loss = plot_loss
 
 
@@ -367,8 +360,16 @@ if args.save_pred_real_na:
 
 # %%
 analysis.model = analysis.model.cpu()
+# underlying data is train_X for both
+# assert analysis.dls.valid.data.equals(analysis.dls.train.data)
+# Reconstruct DataLoader for case that during training singleton batches were dropped
+_dl = torch.utils.data.DataLoader(
+    vaep.io.datasets.DatasetWithTarget(
+        analysis.dls.valid.data),
+    batch_size=args.batch_size,
+    shuffle=False)
 df_latent = vaep.model.get_latent_space(analysis.model.get_mu_and_logvar,
-                                        dl=analysis.dls.valid,
+                                        dl=_dl,
                                         dl_index=analysis.dls.valid.data.index)
 df_latent
 
