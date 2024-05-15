@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+g8706c61 documentation</title>
+    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+gfdb7090 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g8706c61 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gfdb7090 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -383,36 +383,29 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
 <span class="kn">from</span> <span class="nn">fastai.basics</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">fastai.learner</span> <span class="kn">import</span> <span class="n">Learner</span>
 <span class="kn">from</span> <span class="nn">fastai.callback.all</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">fastai.callback.all</span> <span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
+<span class="kn">from</span> <span class="nn">fastai.learner</span> <span class="kn">import</span> <span class="n">Learner</span>
 <span class="kn">from</span> <span class="nn">fastai.torch_basics</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="kn">import</span> <span class="nn">torch</span>
-
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
-
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Sigmoid</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="kn">import</span> <span class="nn">sklearn</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
-
 <span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.nb</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
-<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">ae</span>
-<span class="kn">import</span> <span class="nn">vaep.models</span> <span class="k">as</span> <span class="nn">models</span>
 <span class="kn">import</span> <span class="nn">vaep.model</span>
+<span class="kn">import</span> <span class="nn">vaep.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">import</span> <span class="nn">vaep.nb</span>
 <span class="kn">from</span> <span class="nn">vaep.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
-
-
+<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="c1"># overwriting Recorder callback with custom plot_loss</span>
-<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">plot_loss</span>
-<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
+<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
+
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 
 
@@ -594,11 +587,11 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID                                       Gene Names
-2020_05_15_10_30_Q-Exactive-HF-X-Orbitrap_6070  CUL4B        28.398
-2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070  USP39        27.656
-2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070  EHMT2        25.562
-2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070  MEMO1        28.763
-2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  SPTAN1       33.529
+2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070  RBBP6        26.795
+2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070  CLTC         35.623
+2020_05_04_11_39_Q-Exactive-HF-X-Orbitrap_6070  PRDX4        29.508
+2020_05_14_20_11_Q-Exactive-HF-X-Orbitrap_6070  UTP18        28.398
+2020_05_15_10_30_Q-Exactive-HF-X-Orbitrap_6070  MDC1         27.732
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -6325,10 +6318,10 @@ current version. Try again later</p>
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.0012022644514217973)
+</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.0008317637839354575)
 </pre></div>
 </div>
-<img alt="_images/d98a1dd1ff1d473b8e491523cc9b1b9874ca05ae7fa829a50ac2774f02a3775d.png" src="_images/d98a1dd1ff1d473b8e491523cc9b1b9874ca05ae7fa829a50ac2774f02a3775d.png" />
+<img alt="_images/876c0ed26817e74e1c9f64c706c20878a6ebe3353ace950a23d38c3401ab2ef2.png" src="_images/876c0ed26817e74e1c9f64c706c20878a6ebe3353ace950a23d38c3401ab2ef2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -6393,450 +6386,642 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>5222.178711</td>
-      <td>311.290283</td>
+      <td>5224.390625</td>
+      <td>311.257355</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>5200.942383</td>
-      <td>312.506287</td>
+      <td>5223.861328</td>
+      <td>312.374084</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>5194.554688</td>
-      <td>313.928436</td>
+      <td>5217.983887</td>
+      <td>314.637299</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>5183.023438</td>
-      <td>315.151672</td>
+      <td>5208.479980</td>
+      <td>315.537659</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>5168.596680</td>
-      <td>317.838684</td>
+      <td>5198.486328</td>
+      <td>318.344818</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>5151.783691</td>
-      <td>317.226929</td>
+      <td>5188.421387</td>
+      <td>319.520905</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>5130.026367</td>
-      <td>316.434265</td>
+      <td>5177.441895</td>
+      <td>319.015045</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>5106.126953</td>
-      <td>315.215118</td>
+      <td>5161.686523</td>
+      <td>318.044678</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>5076.050293</td>
-      <td>311.080872</td>
+      <td>5142.824219</td>
+      <td>319.876556</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>5039.304688</td>
-      <td>306.491608</td>
+      <td>5122.448242</td>
+      <td>314.586487</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>4994.815430</td>
-      <td>302.171265</td>
+      <td>5097.596191</td>
+      <td>312.652130</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>4942.034668</td>
-      <td>296.774567</td>
+      <td>5068.454590</td>
+      <td>309.434052</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>4880.787598</td>
-      <td>287.163208</td>
+      <td>5033.852051</td>
+      <td>303.880127</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>4809.044922</td>
-      <td>276.869507</td>
+      <td>4988.526855</td>
+      <td>299.176941</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>4726.832520</td>
-      <td>270.803955</td>
+      <td>4940.529297</td>
+      <td>289.259521</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>4632.606445</td>
-      <td>263.845551</td>
+      <td>4880.255859</td>
+      <td>282.322388</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>4545.745605</td>
-      <td>264.730652</td>
+      <td>4815.311035</td>
+      <td>276.017303</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>4468.042969</td>
-      <td>258.506622</td>
+      <td>4738.641113</td>
+      <td>269.414368</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>4375.649414</td>
-      <td>252.526306</td>
+      <td>4656.366699</td>
+      <td>265.537628</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>4338.560547</td>
-      <td>253.126053</td>
+      <td>4564.259766</td>
+      <td>259.423004</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>4246.215332</td>
-      <td>253.707703</td>
+      <td>4480.373047</td>
+      <td>255.695175</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>4166.100586</td>
-      <td>251.033600</td>
+      <td>4393.243164</td>
+      <td>250.468933</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>4086.889404</td>
-      <td>248.742767</td>
+      <td>4311.583984</td>
+      <td>253.958496</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>4001.450928</td>
-      <td>239.122299</td>
+      <td>4221.699707</td>
+      <td>248.426636</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>3930.424316</td>
-      <td>240.529938</td>
+      <td>4146.754395</td>
+      <td>245.200745</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>3858.479248</td>
-      <td>245.024994</td>
+      <td>4073.288330</td>
+      <td>242.776489</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>3751.021240</td>
-      <td>242.146835</td>
+      <td>3979.881836</td>
+      <td>250.959000</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>3710.307129</td>
-      <td>241.968750</td>
+      <td>3882.326416</td>
+      <td>266.231628</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>3647.106201</td>
-      <td>250.643494</td>
+      <td>3817.747070</td>
+      <td>242.872299</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>3591.691406</td>
-      <td>248.468170</td>
+      <td>3727.333740</td>
+      <td>238.107193</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>3512.626953</td>
-      <td>244.508926</td>
+      <td>3660.197266</td>
+      <td>241.762024</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>3524.842529</td>
-      <td>246.951675</td>
+      <td>3576.026855</td>
+      <td>239.183289</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>3490.603760</td>
-      <td>254.117813</td>
+      <td>3493.206299</td>
+      <td>237.535507</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>3469.125000</td>
-      <td>253.635315</td>
+      <td>3406.007812</td>
+      <td>232.479431</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>3422.797119</td>
-      <td>247.972961</td>
+      <td>3372.413574</td>
+      <td>235.052109</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>3398.143555</td>
-      <td>242.766891</td>
+      <td>3302.694580</td>
+      <td>234.898239</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>3363.442627</td>
-      <td>246.466675</td>
+      <td>3299.167480</td>
+      <td>247.780319</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>3319.323242</td>
-      <td>250.766739</td>
+      <td>3292.917725</td>
+      <td>250.300507</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>3305.591797</td>
-      <td>256.134491</td>
+      <td>3273.067139</td>
+      <td>249.384995</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>3254.851074</td>
-      <td>250.502228</td>
+      <td>3249.742920</td>
+      <td>247.046249</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>3230.004639</td>
-      <td>251.847717</td>
+      <td>3201.966064</td>
+      <td>240.763748</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>3178.173828</td>
-      <td>246.330078</td>
+      <td>3175.182617</td>
+      <td>236.419174</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>3228.182617</td>
-      <td>252.346191</td>
+      <td>3186.062012</td>
+      <td>240.108734</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>3243.581543</td>
-      <td>266.109131</td>
+      <td>3163.981689</td>
+      <td>239.349457</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>3206.192139</td>
-      <td>247.768082</td>
+      <td>3115.779541</td>
+      <td>240.139847</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>3207.878662</td>
-      <td>242.757034</td>
+      <td>3078.300293</td>
+      <td>237.096939</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>3172.039307</td>
-      <td>242.250427</td>
+      <td>3058.912354</td>
+      <td>234.886810</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>3179.289062</td>
-      <td>248.103119</td>
+      <td>3044.671143</td>
+      <td>238.789276</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>3132.110352</td>
-      <td>251.543152</td>
+      <td>3037.140625</td>
+      <td>237.858704</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>3107.087646</td>
-      <td>245.433594</td>
+      <td>3002.686523</td>
+      <td>234.024963</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>3063.702148</td>
-      <td>241.443161</td>
+      <td>2994.517334</td>
+      <td>242.514603</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>3048.414551</td>
-      <td>246.896362</td>
+      <td>2970.701660</td>
+      <td>244.179062</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>3021.898438</td>
-      <td>243.973816</td>
+      <td>2934.470459</td>
+      <td>237.373199</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>3005.623047</td>
-      <td>250.149490</td>
+      <td>2904.033936</td>
+      <td>235.545944</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>2989.174561</td>
-      <td>250.003052</td>
+      <td>2887.796631</td>
+      <td>235.796295</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>2968.082031</td>
-      <td>252.582535</td>
+      <td>2839.868652</td>
+      <td>231.616425</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>2946.316895</td>
-      <td>249.089645</td>
+      <td>2865.320801</td>
+      <td>239.502792</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>2956.893311</td>
-      <td>253.023697</td>
+      <td>2850.793701</td>
+      <td>246.137146</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>2943.937500</td>
-      <td>247.143478</td>
+      <td>2869.683350</td>
+      <td>249.780365</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>2925.443115</td>
-      <td>246.233170</td>
+      <td>2909.090576</td>
+      <td>252.668152</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>2911.037354</td>
-      <td>255.482239</td>
+      <td>2878.561279</td>
+      <td>241.670944</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>2893.995117</td>
-      <td>250.484726</td>
+      <td>2920.913818</td>
+      <td>237.070465</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>2888.343750</td>
-      <td>251.401718</td>
+      <td>2897.857422</td>
+      <td>238.165863</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>2867.078613</td>
-      <td>249.073196</td>
+      <td>2875.778076</td>
+      <td>234.848373</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>2860.486084</td>
-      <td>247.299057</td>
+      <td>2853.433594</td>
+      <td>234.986542</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>2854.593750</td>
-      <td>243.021683</td>
+      <td>2851.458008</td>
+      <td>236.210983</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>2815.169922</td>
-      <td>239.428589</td>
+      <td>2864.418213</td>
+      <td>240.491211</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>2838.890137</td>
-      <td>243.357773</td>
+      <td>2859.437012</td>
+      <td>238.629181</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>2800.688965</td>
-      <td>254.851761</td>
+      <td>2867.040283</td>
+      <td>237.878723</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>2843.864258</td>
-      <td>247.144196</td>
+      <td>2875.367676</td>
+      <td>235.365387</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>2868.773193</td>
-      <td>249.411713</td>
+      <td>2840.114502</td>
+      <td>243.879730</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>2832.748291</td>
-      <td>248.556763</td>
+      <td>2853.441162</td>
+      <td>244.667770</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>2875.370117</td>
-      <td>250.458282</td>
+      <td>2880.334229</td>
+      <td>247.793274</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>2887.657959</td>
-      <td>255.438110</td>
+      <td>2887.679199</td>
+      <td>241.693802</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>74</td>
+      <td>2855.155762</td>
+      <td>241.838943</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>75</td>
+      <td>2860.055664</td>
+      <td>240.393005</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>76</td>
+      <td>2837.365723</td>
+      <td>234.137573</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>77</td>
+      <td>2831.439453</td>
+      <td>238.412033</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>78</td>
+      <td>2805.926514</td>
+      <td>237.096909</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>79</td>
+      <td>2829.525879</td>
+      <td>244.222794</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td>2837.089111</td>
+      <td>241.882767</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td>2822.084229</td>
+      <td>241.626740</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>82</td>
+      <td>2798.795654</td>
+      <td>237.920151</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td>2758.495117</td>
+      <td>237.351746</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>84</td>
+      <td>2735.904541</td>
+      <td>238.381271</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>85</td>
+      <td>2774.715088</td>
+      <td>241.070023</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>86</td>
+      <td>2812.619385</td>
+      <td>253.083710</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>87</td>
+      <td>2826.599609</td>
+      <td>251.564590</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>88</td>
+      <td>2847.637207</td>
+      <td>244.294983</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>89</td>
+      <td>2878.355469</td>
+      <td>244.756638</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>90</td>
+      <td>2856.186523</td>
+      <td>242.778091</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>91</td>
+      <td>2813.143066</td>
+      <td>239.487320</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>92</td>
+      <td>2778.340820</td>
+      <td>236.866882</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>93</td>
+      <td>2815.703369</td>
+      <td>236.404037</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>94</td>
+      <td>2814.490234</td>
+      <td>243.232513</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>2790.216553</td>
+      <td>238.993240</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>96</td>
+      <td>2761.666992</td>
+      <td>237.488541</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>97</td>
+      <td>2781.568115</td>
+      <td>239.066635</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>98</td>
+      <td>2730.478516</td>
+      <td>236.807175</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>99</td>
+      <td>2708.706055</td>
+      <td>235.404770</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td>2669.342529</td>
+      <td>238.478500</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>101</td>
+      <td>2659.303467</td>
+      <td>241.543732</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>102</td>
+      <td>2626.545654</td>
+      <td>243.201584</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>103</td>
+      <td>2611.901367</td>
+      <td>246.093033</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>104</td>
+      <td>2572.266846</td>
+      <td>241.591843</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td>2585.399414</td>
+      <td>243.243210</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 23: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 55: early stopping
 </pre></div>
 </div>
 </div>
@@ -6850,7 +7035,7 @@ current version. Try again later</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>74
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>106
 </pre></div>
 </div>
 </div>
@@ -6871,7 +7056,7 @@ current version. Try again later</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N50/figures/vae_training
 </pre></div>
 </div>
-<img alt="_images/d6d29a70c3e7722f053f3548c2485cdc11547f1a28d59560c61be9e89477e640.png" src="_images/d6d29a70c3e7722f053f3548c2485cdc11547f1a28d59560c61be9e89477e640.png" />
+<img alt="_images/a9f14983a80fdfd1a92c9e6f18522b909d35929e820756166ee5ec926c5cfa2e.png" src="_images/a9f14983a80fdfd1a92c9e6f18522b909d35929e820756166ee5ec926c5cfa2e.png" />
 </div>
 </div>
 </section>
@@ -6908,17 +7093,17 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID                                       Gene Names      
-2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAAS               27.806
-                                                AACS               25.571
-                                                AAMDC              24.940
-                                                AAMP               26.180
-                                                AAR2               26.548
+2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAAS               27.842
+                                                AACS               25.550
+                                                AAMDC              24.960
+                                                AAMP               25.949
+                                                AAR2               26.540
                                                                     ...  
-2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZWILCH             24.396
-                                                ZWINT              25.814
-                                                ZYX                29.749
-                                                hCG_2014768;TMA7   28.375
-                                                pk;ZAK             24.757
+2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZWILCH             24.376
+                                                ZWINT              25.964
+                                                ZYX                29.856
+                                                hCG_2014768;TMA7   28.673
+                                                pk;ZAK             25.370
 Length: 220250, dtype: float32
 </pre></div>
 </div>
@@ -6966,31 +7151,31 @@ Length: 220250, dtype: float32
       <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SEH1L</th>
       <td>27.180</td>
-      <td>26.792</td>
+      <td>27.110</td>
     </tr>
     <tr>
       <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SLC9A3R1</th>
       <td>30.259</td>
-      <td>28.494</td>
+      <td>28.432</td>
     </tr>
     <tr>
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>KYNU</th>
       <td>30.629</td>
-      <td>31.020</td>
+      <td>30.900</td>
     </tr>
     <tr>
       <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ADD3</th>
       <td>24.541</td>
-      <td>26.444</td>
+      <td>26.144</td>
     </tr>
     <tr>
       <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>CALM2;CALM1</th>
       <td>33.934</td>
-      <td>33.447</td>
+      <td>33.343</td>
     </tr>
     <tr>
       <th>...</th>
@@ -7002,31 +7187,31 @@ Length: 220250, dtype: float32
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>PPP2R4;DKFZp781M17165</th>
       <td>28.717</td>
-      <td>28.448</td>
+      <td>28.220</td>
     </tr>
     <tr>
       <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>MED23</th>
       <td>24.966</td>
-      <td>24.113</td>
+      <td>24.166</td>
     </tr>
     <tr>
       <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RBMXL1</th>
       <td>26.654</td>
-      <td>24.704</td>
+      <td>25.289</td>
     </tr>
     <tr>
       <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SMARCA1</th>
       <td>27.917</td>
-      <td>28.082</td>
+      <td>27.909</td>
     </tr>
     <tr>
       <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RGPD3;RGPD4</th>
       <td>24.289</td>
-      <td>24.854</td>
+      <td>24.905</td>
     </tr>
   </tbody>
 </table>
@@ -7075,27 +7260,27 @@ Length: 220250, dtype: float32
       <th rowspan="5" valign="top">2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ABCE1</th>
       <td>29.538</td>
-      <td>29.839</td>
+      <td>29.802</td>
     </tr>
     <tr>
       <th>ACTN4</th>
       <td>33.270</td>
-      <td>33.383</td>
+      <td>33.207</td>
     </tr>
     <tr>
       <th>ADD3</th>
       <td>24.259</td>
-      <td>25.234</td>
+      <td>25.102</td>
     </tr>
     <tr>
       <th>ALCAM</th>
       <td>24.906</td>
-      <td>25.133</td>
+      <td>24.827</td>
     </tr>
     <tr>
       <th>ALDH1B1</th>
       <td>26.674</td>
-      <td>26.892</td>
+      <td>26.721</td>
     </tr>
     <tr>
       <th>...</th>
@@ -7107,17 +7292,17 @@ Length: 220250, dtype: float32
       <th rowspan="5" valign="top">2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>YIPF3</th>
       <td>25.040</td>
-      <td>25.818</td>
+      <td>25.787</td>
     </tr>
     <tr>
       <th>YTHDF3</th>
       <td>28.717</td>
-      <td>28.502</td>
+      <td>28.318</td>
     </tr>
     <tr>
       <th>ZC3H11A</th>
       <td>28.935</td>
-      <td>29.161</td>
+      <td>29.125</td>
     </tr>
     <tr>
       <th>ZFP91-CNTF;ZFP91</th>
@@ -7127,7 +7312,7 @@ Length: 220250, dtype: float32
     <tr>
       <th>hCG_2014768;TMA7</th>
       <td>29.212</td>
-      <td>28.375</td>
+      <td>28.673</td>
     </tr>
   </tbody>
 </table>
@@ -7149,17 +7334,17 @@ Length: 220250, dtype: float32
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID                                       Gene Names 
-2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAMDC         24.940
-                                                ABCB7         24.986
-                                                ABCC4         23.443
-                                                ABI2          24.947
-                                                ACOT2;ACOT1   26.314
+2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAMDC         24.960
+                                                ABCB7         24.930
+                                                ABCC4         23.376
+                                                ABI2          24.935
+                                                ACOT2;ACOT1   26.134
                                                                ...  
-2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZNF346        25.034
-                                                ZNF706        24.436
-                                                ZNRF2         24.707
-                                                ZWILCH        24.396
-                                                pk;ZAK        24.757
+2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZNF346        25.212
+                                                ZNF706        24.918
+                                                ZNRF2         24.917
+                                                ZWILCH        24.376
+                                                pk;ZAK        25.370
 Name: intensity, Length: 33698, dtype: float32
 </pre></div>
 </div>
@@ -7174,8 +7359,16 @@ Name: intensity, Length: 33698, dtype: float32
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+<span class="c1"># underlying data is train_X for both</span>
+<span class="c1"># assert analysis.dls.valid.data.equals(analysis.dls.train.data)</span>
+<span class="c1"># Reconstruct DataLoader for case that during training singleton batches were dropped</span>
+<span class="n">_dl</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">DatasetWithTarget</span><span class="p">(</span>
+        <span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">df_latent</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_latent_space</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_mu_and_logvar</span><span class="p">,</span>
-                                        <span class="n">dl</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span>
+                                        <span class="n">dl</span><span class="o">=</span><span class="n">_dl</span><span class="p">,</span>
                                         <span class="n">dl_index</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="n">df_latent</span>
 </pre></div>
@@ -7250,1203 +7443,1203 @@ Name: intensity, Length: 33698, dtype: float32
   <tbody>
     <tr>
       <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.922</td>
-      <td>1.261</td>
-      <td>-1.240</td>
-      <td>-0.495</td>
-      <td>-0.316</td>
-      <td>-1.362</td>
-      <td>-0.092</td>
-      <td>-0.259</td>
-      <td>0.501</td>
-      <td>-0.195</td>
+      <td>-0.188</td>
+      <td>-0.784</td>
+      <td>-2.096</td>
+      <td>0.797</td>
+      <td>-0.136</td>
+      <td>-1.402</td>
+      <td>0.865</td>
+      <td>0.094</td>
+      <td>-0.319</td>
+      <td>-0.446</td>
       <td>...</td>
-      <td>0.758</td>
-      <td>0.777</td>
-      <td>0.873</td>
-      <td>-0.322</td>
-      <td>1.214</td>
-      <td>-0.587</td>
-      <td>0.393</td>
-      <td>-0.282</td>
-      <td>-1.322</td>
-      <td>-0.876</td>
+      <td>0.909</td>
+      <td>0.798</td>
+      <td>0.898</td>
+      <td>-1.205</td>
+      <td>-0.633</td>
+      <td>-0.091</td>
+      <td>1.270</td>
+      <td>1.830</td>
+      <td>-0.009</td>
+      <td>0.689</td>
     </tr>
     <tr>
       <th>2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.134</td>
-      <td>1.786</td>
-      <td>-0.744</td>
-      <td>-0.399</td>
-      <td>-0.374</td>
-      <td>-0.668</td>
-      <td>0.269</td>
-      <td>-0.409</td>
-      <td>0.165</td>
-      <td>0.041</td>
+      <td>-0.027</td>
+      <td>-0.277</td>
+      <td>-1.413</td>
+      <td>0.557</td>
+      <td>-0.701</td>
+      <td>-1.351</td>
+      <td>-0.031</td>
+      <td>0.290</td>
+      <td>-0.457</td>
+      <td>-0.278</td>
       <td>...</td>
-      <td>0.541</td>
-      <td>0.489</td>
-      <td>0.516</td>
-      <td>-0.237</td>
-      <td>1.001</td>
-      <td>0.013</td>
-      <td>1.130</td>
-      <td>-0.202</td>
-      <td>-1.271</td>
-      <td>-1.027</td>
+      <td>0.642</td>
+      <td>1.094</td>
+      <td>0.639</td>
+      <td>-0.972</td>
+      <td>-0.607</td>
+      <td>-0.373</td>
+      <td>0.204</td>
+      <td>1.557</td>
+      <td>-0.837</td>
+      <td>0.388</td>
     </tr>
     <tr>
       <th>2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.278</td>
-      <td>0.409</td>
-      <td>-1.325</td>
-      <td>-0.469</td>
-      <td>-0.201</td>
-      <td>-1.616</td>
-      <td>-0.355</td>
-      <td>-0.070</td>
-      <td>0.598</td>
-      <td>-0.331</td>
+      <td>-0.090</td>
+      <td>-0.898</td>
+      <td>-1.922</td>
+      <td>0.345</td>
+      <td>0.402</td>
+      <td>-0.838</td>
+      <td>1.095</td>
+      <td>0.356</td>
+      <td>-0.147</td>
+      <td>0.053</td>
       <td>...</td>
-      <td>0.680</td>
-      <td>0.804</td>
-      <td>1.013</td>
-      <td>-0.329</td>
-      <td>1.152</td>
-      <td>-0.949</td>
-      <td>-0.324</td>
-      <td>-0.389</td>
-      <td>-0.900</td>
-      <td>-0.519</td>
+      <td>0.837</td>
+      <td>0.677</td>
+      <td>0.948</td>
+      <td>-1.127</td>
+      <td>-0.837</td>
+      <td>0.044</td>
+      <td>1.763</td>
+      <td>0.931</td>
+      <td>0.405</td>
+      <td>1.133</td>
     </tr>
     <tr>
       <th>2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.413</td>
-      <td>2.211</td>
-      <td>-0.141</td>
+      <td>-0.015</td>
+      <td>-0.002</td>
+      <td>-1.002</td>
+      <td>0.777</td>
+      <td>-1.034</td>
+      <td>-1.278</td>
       <td>-0.381</td>
-      <td>-0.377</td>
-      <td>-0.446</td>
-      <td>0.529</td>
-      <td>-0.426</td>
-      <td>0.112</td>
-      <td>0.548</td>
+      <td>0.038</td>
+      <td>-0.365</td>
+      <td>-0.512</td>
       <td>...</td>
-      <td>0.362</td>
-      <td>0.436</td>
-      <td>0.488</td>
-      <td>-0.293</td>
-      <td>0.799</td>
-      <td>0.344</td>
-      <td>1.697</td>
-      <td>-0.328</td>
-      <td>-1.015</td>
-      <td>-1.145</td>
+      <td>0.458</td>
+      <td>0.763</td>
+      <td>0.464</td>
+      <td>-0.635</td>
+      <td>-0.252</td>
+      <td>-0.396</td>
+      <td>-0.375</td>
+      <td>1.669</td>
+      <td>-0.918</td>
+      <td>-0.073</td>
     </tr>
     <tr>
       <th>2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.635</td>
-      <td>-3.021</td>
-      <td>-1.104</td>
-      <td>0.551</td>
-      <td>0.186</td>
-      <td>1.598</td>
-      <td>-0.361</td>
-      <td>-0.005</td>
-      <td>-1.820</td>
-      <td>-2.586</td>
+      <td>0.745</td>
+      <td>0.265</td>
+      <td>1.098</td>
+      <td>-1.180</td>
+      <td>0.819</td>
+      <td>0.680</td>
+      <td>-0.565</td>
+      <td>0.884</td>
+      <td>0.143</td>
+      <td>1.878</td>
       <td>...</td>
-      <td>-0.842</td>
-      <td>-1.190</td>
-      <td>-1.531</td>
-      <td>0.991</td>
-      <td>-0.300</td>
-      <td>-0.061</td>
-      <td>-1.778</td>
-      <td>0.697</td>
-      <td>-0.452</td>
-      <td>1.467</td>
+      <td>-0.373</td>
+      <td>0.608</td>
+      <td>-0.369</td>
+      <td>0.359</td>
+      <td>-1.255</td>
+      <td>0.009</td>
+      <td>0.028</td>
+      <td>-2.585</td>
+      <td>-0.493</td>
+      <td>1.030</td>
     </tr>
     <tr>
       <th>2019_12_29_18_18_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.935</td>
-      <td>-3.908</td>
-      <td>-1.117</td>
-      <td>0.437</td>
-      <td>0.151</td>
-      <td>1.604</td>
-      <td>-0.211</td>
-      <td>0.039</td>
-      <td>-2.001</td>
-      <td>-2.774</td>
+      <td>0.794</td>
+      <td>0.081</td>
+      <td>1.692</td>
+      <td>-1.295</td>
+      <td>1.478</td>
+      <td>1.337</td>
+      <td>-0.328</td>
+      <td>0.703</td>
+      <td>0.500</td>
+      <td>1.868</td>
       <td>...</td>
-      <td>-0.959</td>
-      <td>-1.473</td>
-      <td>-1.574</td>
-      <td>1.050</td>
-      <td>-0.434</td>
-      <td>-0.348</td>
-      <td>-2.276</td>
-      <td>0.857</td>
-      <td>-0.182</td>
-      <td>1.932</td>
+      <td>-0.456</td>
+      <td>0.118</td>
+      <td>-0.481</td>
+      <td>1.056</td>
+      <td>-1.187</td>
+      <td>0.378</td>
+      <td>0.261</td>
+      <td>-3.122</td>
+      <td>-0.024</td>
+      <td>1.038</td>
     </tr>
     <tr>
       <th>2020_01_02_17_38_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-4.644</td>
-      <td>2.132</td>
-      <td>3.714</td>
-      <td>1.721</td>
-      <td>0.044</td>
-      <td>4.151</td>
-      <td>-1.246</td>
-      <td>1.129</td>
-      <td>-0.890</td>
-      <td>1.502</td>
+      <td>0.505</td>
+      <td>1.852</td>
+      <td>2.190</td>
+      <td>-0.259</td>
+      <td>-1.861</td>
+      <td>-0.040</td>
+      <td>-2.351</td>
+      <td>0.188</td>
+      <td>-0.616</td>
+      <td>0.391</td>
       <td>...</td>
-      <td>-2.258</td>
-      <td>0.614</td>
-      <td>-2.773</td>
-      <td>-0.337</td>
-      <td>-2.057</td>
-      <td>4.020</td>
-      <td>1.981</td>
-      <td>-0.179</td>
-      <td>1.143</td>
-      <td>-1.185</td>
+      <td>-1.342</td>
+      <td>-0.612</td>
+      <td>-1.393</td>
+      <td>0.536</td>
+      <td>0.845</td>
+      <td>-1.157</td>
+      <td>-3.778</td>
+      <td>-1.685</td>
+      <td>-2.170</td>
+      <td>-1.914</td>
     </tr>
     <tr>
       <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-2.257</td>
-      <td>0.118</td>
-      <td>0.984</td>
-      <td>1.780</td>
-      <td>0.231</td>
-      <td>3.336</td>
-      <td>-1.576</td>
-      <td>0.726</td>
-      <td>-1.448</td>
-      <td>-0.961</td>
+      <td>0.484</td>
+      <td>0.960</td>
+      <td>1.112</td>
+      <td>-0.553</td>
+      <td>-0.942</td>
+      <td>-0.148</td>
+      <td>-1.495</td>
+      <td>0.774</td>
+      <td>-0.479</td>
+      <td>1.024</td>
       <td>...</td>
-      <td>-1.384</td>
-      <td>-0.208</td>
-      <td>-2.517</td>
-      <td>0.355</td>
-      <td>-1.276</td>
-      <td>2.258</td>
-      <td>-0.131</td>
-      <td>0.433</td>
-      <td>-0.163</td>
-      <td>0.035</td>
+      <td>-0.678</td>
+      <td>0.192</td>
+      <td>-0.746</td>
+      <td>0.129</td>
+      <td>-0.180</td>
+      <td>-0.880</td>
+      <td>-1.992</td>
+      <td>-1.698</td>
+      <td>-1.641</td>
+      <td>-0.362</td>
     </tr>
     <tr>
       <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.281</td>
-      <td>-1.355</td>
-      <td>-0.792</td>
-      <td>1.048</td>
-      <td>0.147</td>
-      <td>2.175</td>
-      <td>-0.980</td>
-      <td>0.135</td>
-      <td>-1.681</td>
-      <td>-2.211</td>
+      <td>0.651</td>
+      <td>0.489</td>
+      <td>0.383</td>
+      <td>-1.057</td>
+      <td>-0.047</td>
+      <td>-0.046</td>
+      <td>-0.889</td>
+      <td>1.156</td>
+      <td>-0.329</td>
+      <td>1.810</td>
       <td>...</td>
-      <td>-0.823</td>
-      <td>-0.755</td>
-      <td>-1.913</td>
-      <td>0.814</td>
-      <td>-0.431</td>
-      <td>0.802</td>
-      <td>-0.936</td>
-      <td>0.591</td>
-      <td>-0.858</td>
-      <td>0.683</td>
+      <td>-0.246</td>
+      <td>1.107</td>
+      <td>-0.238</td>
+      <td>-0.398</td>
+      <td>-1.347</td>
+      <td>-0.585</td>
+      <td>-0.383</td>
+      <td>-1.977</td>
+      <td>-1.156</td>
+      <td>0.945</td>
     </tr>
     <tr>
       <th>2020_01_03_20_10_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.284</td>
-      <td>-1.713</td>
-      <td>-0.742</td>
-      <td>1.145</td>
-      <td>0.177</td>
-      <td>2.357</td>
-      <td>-1.045</td>
-      <td>0.190</td>
-      <td>-1.808</td>
-      <td>-2.377</td>
+      <td>0.698</td>
+      <td>0.391</td>
+      <td>0.425</td>
+      <td>-1.075</td>
+      <td>0.153</td>
+      <td>0.034</td>
+      <td>-0.802</td>
+      <td>1.150</td>
+      <td>-0.222</td>
+      <td>1.838</td>
       <td>...</td>
-      <td>-0.933</td>
-      <td>-0.895</td>
-      <td>-2.099</td>
-      <td>0.890</td>
-      <td>-0.533</td>
-      <td>0.838</td>
-      <td>-1.160</td>
-      <td>0.669</td>
-      <td>-0.751</td>
-      <td>0.818</td>
+      <td>-0.190</td>
+      <td>1.142</td>
+      <td>-0.186</td>
+      <td>-0.387</td>
+      <td>-1.416</td>
+      <td>-0.460</td>
+      <td>-0.179</td>
+      <td>-2.024</td>
+      <td>-1.007</td>
+      <td>1.029</td>
     </tr>
     <tr>
       <th>2020_01_04_04_23_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.694</td>
-      <td>-3.499</td>
-      <td>-0.968</td>
-      <td>0.619</td>
-      <td>0.159</td>
-      <td>1.745</td>
-      <td>-0.365</td>
-      <td>0.112</td>
-      <td>-1.902</td>
-      <td>-2.636</td>
+      <td>0.781</td>
+      <td>0.199</td>
+      <td>1.248</td>
+      <td>-1.226</td>
+      <td>1.008</td>
+      <td>0.860</td>
+      <td>-0.525</td>
+      <td>0.836</td>
+      <td>0.236</td>
+      <td>1.908</td>
       <td>...</td>
-      <td>-0.939</td>
-      <td>-1.343</td>
-      <td>-1.664</td>
-      <td>0.976</td>
-      <td>-0.497</td>
-      <td>-0.107</td>
-      <td>-2.075</td>
-      <td>0.810</td>
-      <td>-0.248</td>
-      <td>1.719</td>
+      <td>-0.373</td>
+      <td>0.526</td>
+      <td>-0.379</td>
+      <td>0.513</td>
+      <td>-1.274</td>
+      <td>0.109</td>
+      <td>0.124</td>
+      <td>-2.756</td>
+      <td>-0.372</td>
+      <td>1.044</td>
     </tr>
     <tr>
       <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-7.428</td>
-      <td>4.821</td>
-      <td>7.106</td>
-      <td>1.565</td>
-      <td>-0.362</td>
-      <td>4.771</td>
-      <td>-0.355</td>
-      <td>1.423</td>
-      <td>-0.038</td>
-      <td>4.630</td>
+      <td>0.608</td>
+      <td>3.748</td>
+      <td>4.318</td>
+      <td>0.012</td>
+      <td>-3.524</td>
+      <td>0.237</td>
+      <td>-3.798</td>
+      <td>-1.008</td>
+      <td>-0.811</td>
+      <td>-0.626</td>
       <td>...</td>
-      <td>-3.563</td>
-      <td>1.823</td>
-      <td>-3.042</td>
-      <td>-0.896</td>
-      <td>-2.835</td>
-      <td>5.868</td>
-      <td>4.744</td>
-      <td>-1.326</td>
-      <td>2.381</td>
-      <td>-2.702</td>
+      <td>-2.389</td>
+      <td>-2.203</td>
+      <td>-2.594</td>
+      <td>1.250</td>
+      <td>2.617</td>
+      <td>-1.544</td>
+      <td>-6.843</td>
+      <td>-2.057</td>
+      <td>-3.056</td>
+      <td>-4.812</td>
     </tr>
     <tr>
       <th>2020_01_04_14_59_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-4.999</td>
-      <td>2.306</td>
-      <td>4.101</td>
-      <td>1.868</td>
-      <td>0.026</td>
-      <td>4.437</td>
-      <td>-1.333</td>
-      <td>1.307</td>
-      <td>-0.858</td>
-      <td>1.768</td>
+      <td>0.455</td>
+      <td>1.834</td>
+      <td>2.179</td>
+      <td>-0.339</td>
+      <td>-1.836</td>
+      <td>-0.002</td>
+      <td>-2.358</td>
+      <td>0.266</td>
+      <td>-0.594</td>
+      <td>0.468</td>
       <td>...</td>
-      <td>-2.455</td>
-      <td>0.743</td>
-      <td>-2.992</td>
-      <td>-0.395</td>
-      <td>-2.269</td>
-      <td>4.322</td>
-      <td>2.080</td>
-      <td>-0.183</td>
-      <td>1.313</td>
-      <td>-1.268</td>
+      <td>-1.329</td>
+      <td>-0.611</td>
+      <td>-1.373</td>
+      <td>0.546</td>
+      <td>0.806</td>
+      <td>-1.097</td>
+      <td>-3.741</td>
+      <td>-1.765</td>
+      <td>-2.127</td>
+      <td>-1.844</td>
     </tr>
     <tr>
       <th>2020_01_06_20_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.441</td>
-      <td>-5.293</td>
-      <td>-1.071</td>
-      <td>0.357</td>
-      <td>0.022</td>
-      <td>1.640</td>
-      <td>-0.092</td>
-      <td>0.213</td>
-      <td>-2.148</td>
-      <td>-3.007</td>
+      <td>0.813</td>
+      <td>-0.045</td>
+      <td>2.167</td>
+      <td>-1.363</td>
+      <td>1.890</td>
+      <td>1.795</td>
+      <td>-0.183</td>
+      <td>0.654</td>
+      <td>0.725</td>
+      <td>1.834</td>
       <td>...</td>
-      <td>-1.116</td>
-      <td>-1.793</td>
-      <td>-1.594</td>
-      <td>1.107</td>
-      <td>-0.691</td>
-      <td>-0.801</td>
-      <td>-3.094</td>
-      <td>1.223</td>
-      <td>0.328</td>
-      <td>2.691</td>
+      <td>-0.534</td>
+      <td>-0.228</td>
+      <td>-0.569</td>
+      <td>1.512</td>
+      <td>-1.075</td>
+      <td>0.609</td>
+      <td>0.298</td>
+      <td>-3.538</td>
+      <td>0.287</td>
+      <td>0.979</td>
     </tr>
     <tr>
       <th>2020_01_08_16_43_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-2.317</td>
-      <td>0.882</td>
-      <td>1.157</td>
-      <td>1.375</td>
-      <td>0.240</td>
-      <td>2.766</td>
-      <td>-1.025</td>
-      <td>0.527</td>
-      <td>-1.208</td>
-      <td>-0.302</td>
+      <td>0.422</td>
+      <td>0.898</td>
+      <td>0.838</td>
+      <td>-0.491</td>
+      <td>-1.037</td>
+      <td>-0.415</td>
+      <td>-1.478</td>
+      <td>0.761</td>
+      <td>-0.509</td>
+      <td>1.030</td>
       <td>...</td>
-      <td>-1.105</td>
-      <td>-0.050</td>
-      <td>-1.970</td>
-      <td>0.183</td>
-      <td>-1.007</td>
-      <td>2.222</td>
-      <td>0.764</td>
-      <td>0.170</td>
-      <td>-0.154</td>
-      <td>-0.429</td>
+      <td>-0.584</td>
+      <td>0.532</td>
+      <td>-0.527</td>
+      <td>-0.132</td>
+      <td>-0.329</td>
+      <td>-0.866</td>
+      <td>-1.879</td>
+      <td>-1.285</td>
+      <td>-1.719</td>
+      <td>-0.182</td>
     </tr>
     <tr>
       <th>2020_01_09_11_07_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.227</td>
-      <td>-0.111</td>
-      <td>0.063</td>
-      <td>1.344</td>
-      <td>0.123</td>
-      <td>2.457</td>
-      <td>-1.178</td>
-      <td>0.362</td>
-      <td>-1.358</td>
-      <td>-1.366</td>
+      <td>0.548</td>
+      <td>0.669</td>
+      <td>0.456</td>
+      <td>-0.806</td>
+      <td>-0.670</td>
+      <td>-0.352</td>
+      <td>-1.211</td>
+      <td>1.086</td>
+      <td>-0.532</td>
+      <td>1.448</td>
       <td>...</td>
+      <td>-0.346</td>
+      <td>1.017</td>
+      <td>-0.318</td>
+      <td>-0.434</td>
+      <td>-0.949</td>
       <td>-0.887</td>
-      <td>-0.347</td>
-      <td>-1.909</td>
-      <td>0.459</td>
-      <td>-0.738</td>
-      <td>1.439</td>
-      <td>-0.185</td>
-      <td>0.460</td>
-      <td>-0.645</td>
-      <td>0.164</td>
+      <td>-1.156</td>
+      <td>-1.564</td>
+      <td>-1.621</td>
+      <td>0.488</td>
     </tr>
     <tr>
       <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-3.563</td>
-      <td>4.440</td>
-      <td>3.556</td>
-      <td>-0.106</td>
-      <td>-0.393</td>
-      <td>0.593</td>
-      <td>1.499</td>
-      <td>-0.124</td>
-      <td>0.496</td>
-      <td>3.264</td>
+      <td>0.284</td>
+      <td>1.403</td>
+      <td>0.487</td>
+      <td>1.870</td>
+      <td>-2.407</td>
+      <td>-1.361</td>
+      <td>-1.418</td>
+      <td>-1.429</td>
+      <td>-0.016</td>
+      <td>-1.907</td>
       <td>...</td>
-      <td>-1.060</td>
-      <td>1.131</td>
-      <td>0.085</td>
-      <td>-0.676</td>
-      <td>-0.486</td>
-      <td>2.577</td>
-      <td>4.399</td>
-      <td>-1.461</td>
-      <td>0.530</td>
-      <td>-2.265</td>
+      <td>-0.136</td>
+      <td>-0.650</td>
+      <td>-0.484</td>
+      <td>0.031</td>
+      <td>1.490</td>
+      <td>-0.645</td>
+      <td>-2.737</td>
+      <td>2.186</td>
+      <td>-1.533</td>
+      <td>-2.703</td>
     </tr>
     <tr>
       <th>2020_01_20_15_10_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>2.643</td>
-      <td>-7.437</td>
-      <td>-1.432</td>
-      <td>-0.037</td>
-      <td>-0.260</td>
-      <td>1.154</td>
-      <td>0.369</td>
-      <td>0.468</td>
-      <td>-2.339</td>
-      <td>-3.391</td>
+      <td>0.866</td>
+      <td>-0.445</td>
+      <td>2.918</td>
+      <td>-1.626</td>
+      <td>2.818</td>
+      <td>2.738</td>
+      <td>0.233</td>
+      <td>0.529</td>
+      <td>1.255</td>
+      <td>1.834</td>
       <td>...</td>
-      <td>-1.158</td>
-      <td>-2.156</td>
-      <td>-1.142</td>
-      <td>1.174</td>
-      <td>-0.655</td>
-      <td>-1.811</td>
-      <td>-4.460</td>
-      <td>1.602</td>
-      <td>0.882</td>
-      <td>3.902</td>
+      <td>-0.539</td>
+      <td>-0.955</td>
+      <td>-0.550</td>
+      <td>2.407</td>
+      <td>-0.974</td>
+      <td>1.195</td>
+      <td>0.670</td>
+      <td>-4.333</td>
+      <td>0.938</td>
+      <td>1.023</td>
     </tr>
     <tr>
       <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.566</td>
-      <td>-5.574</td>
-      <td>-1.154</td>
-      <td>0.346</td>
-      <td>0.006</td>
-      <td>1.686</td>
-      <td>-0.049</td>
-      <td>0.213</td>
-      <td>-2.262</td>
-      <td>-3.165</td>
+      <td>0.782</td>
+      <td>-0.089</td>
+      <td>2.349</td>
+      <td>-1.451</td>
+      <td>2.079</td>
+      <td>1.993</td>
+      <td>-0.105</td>
+      <td>0.613</td>
+      <td>0.831</td>
+      <td>1.824</td>
       <td>...</td>
-      <td>-1.159</td>
-      <td>-1.900</td>
-      <td>-1.635</td>
-      <td>1.166</td>
-      <td>-0.706</td>
-      <td>-0.876</td>
-      <td>-3.264</td>
-      <td>1.264</td>
-      <td>0.350</td>
-      <td>2.840</td>
+      <td>-0.553</td>
+      <td>-0.408</td>
+      <td>-0.578</td>
+      <td>1.735</td>
+      <td>-1.036</td>
+      <td>0.733</td>
+      <td>0.343</td>
+      <td>-3.691</td>
+      <td>0.396</td>
+      <td>0.968</td>
     </tr>
     <tr>
       <th>2020_02_10_15_41_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>3.183</td>
-      <td>-2.356</td>
-      <td>-1.460</td>
-      <td>-0.661</td>
-      <td>-0.355</td>
-      <td>-3.273</td>
-      <td>0.025</td>
-      <td>0.612</td>
-      <td>0.971</td>
-      <td>0.382</td>
+      <td>-0.038</td>
+      <td>-1.906</td>
+      <td>0.107</td>
+      <td>0.161</td>
+      <td>2.520</td>
+      <td>1.280</td>
+      <td>2.287</td>
+      <td>-0.388</td>
+      <td>1.429</td>
+      <td>0.075</td>
       <td>...</td>
-      <td>0.877</td>
-      <td>0.480</td>
-      <td>2.639</td>
-      <td>-0.721</td>
-      <td>0.685</td>
-      <td>-2.632</td>
-      <td>-2.078</td>
-      <td>-0.637</td>
-      <td>0.285</td>
-      <td>1.295</td>
+      <td>0.724</td>
+      <td>-1.640</td>
+      <td>0.410</td>
+      <td>1.270</td>
+      <td>-0.089</td>
+      <td>1.541</td>
+      <td>2.460</td>
+      <td>-1.062</td>
+      <td>2.314</td>
+      <td>0.915</td>
     </tr>
     <tr>
       <th>2020_02_11_10_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>2.511</td>
-      <td>-1.598</td>
-      <td>-1.343</td>
-      <td>-0.556</td>
-      <td>-0.226</td>
-      <td>-2.717</td>
-      <td>-0.133</td>
-      <td>0.449</td>
-      <td>0.817</td>
-      <td>0.258</td>
+      <td>-0.066</td>
+      <td>-1.661</td>
+      <td>-0.393</td>
+      <td>0.311</td>
+      <td>1.952</td>
+      <td>0.698</td>
+      <td>2.004</td>
+      <td>-0.301</td>
+      <td>1.053</td>
+      <td>0.018</td>
       <td>...</td>
-      <td>0.733</td>
-      <td>0.508</td>
-      <td>2.113</td>
-      <td>-0.652</td>
-      <td>0.740</td>
-      <td>-2.026</td>
-      <td>-1.588</td>
-      <td>-0.613</td>
-      <td>0.076</td>
-      <td>0.818</td>
+      <td>0.723</td>
+      <td>-1.143</td>
+      <td>0.422</td>
+      <td>0.686</td>
+      <td>-0.113</td>
+      <td>1.169</td>
+      <td>2.178</td>
+      <td>-0.513</td>
+      <td>1.932</td>
+      <td>0.839</td>
     </tr>
     <tr>
       <th>2020_02_12_05_06_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>3.228</td>
-      <td>-2.748</td>
-      <td>-1.495</td>
-      <td>-0.674</td>
-      <td>-0.384</td>
-      <td>-3.144</td>
-      <td>0.084</td>
-      <td>0.631</td>
-      <td>0.826</td>
-      <td>0.246</td>
+      <td>-0.035</td>
+      <td>-1.850</td>
+      <td>0.028</td>
+      <td>0.171</td>
+      <td>2.437</td>
+      <td>1.192</td>
+      <td>2.215</td>
+      <td>-0.372</td>
+      <td>1.340</td>
+      <td>0.074</td>
       <td>...</td>
-      <td>0.801</td>
-      <td>0.365</td>
-      <td>2.559</td>
-      <td>-0.673</td>
-      <td>0.638</td>
-      <td>-2.714</td>
-      <td>-2.320</td>
-      <td>-0.491</td>
-      <td>0.345</td>
-      <td>1.536</td>
+      <td>0.719</td>
+      <td>-1.547</td>
+      <td>0.406</td>
+      <td>1.179</td>
+      <td>-0.114</td>
+      <td>1.483</td>
+      <td>2.399</td>
+      <td>-1.015</td>
+      <td>2.228</td>
+      <td>0.888</td>
     </tr>
     <tr>
       <th>2020_02_13_00_26_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>3.547</td>
-      <td>-2.928</td>
-      <td>-1.543</td>
-      <td>-0.712</td>
-      <td>-0.446</td>
-      <td>-3.517</td>
-      <td>0.113</td>
-      <td>0.692</td>
-      <td>0.990</td>
-      <td>0.354</td>
+      <td>-0.161</td>
+      <td>-2.182</td>
+      <td>0.037</td>
+      <td>0.316</td>
+      <td>2.757</td>
+      <td>1.374</td>
+      <td>2.639</td>
+      <td>-0.545</td>
+      <td>1.633</td>
+      <td>-0.072</td>
       <td>...</td>
-      <td>0.913</td>
-      <td>0.424</td>
-      <td>2.863</td>
-      <td>-0.771</td>
-      <td>0.662</td>
-      <td>-2.967</td>
-      <td>-2.475</td>
-      <td>-0.538</td>
-      <td>0.413</td>
-      <td>1.677</td>
+      <td>0.798</td>
+      <td>-2.003</td>
+      <td>0.529</td>
+      <td>1.388</td>
+      <td>0.033</td>
+      <td>1.698</td>
+      <td>2.800</td>
+      <td>-0.950</td>
+      <td>2.715</td>
+      <td>0.875</td>
     </tr>
     <tr>
       <th>2020_02_13_03_11_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>3.749</td>
-      <td>-3.422</td>
-      <td>-1.583</td>
-      <td>-0.750</td>
-      <td>-0.496</td>
-      <td>-3.512</td>
-      <td>0.192</td>
-      <td>0.728</td>
-      <td>0.875</td>
-      <td>0.239</td>
+      <td>-0.138</td>
+      <td>-2.261</td>
+      <td>0.093</td>
+      <td>0.320</td>
+      <td>2.887</td>
+      <td>1.480</td>
+      <td>2.714</td>
+      <td>-0.567</td>
+      <td>1.725</td>
+      <td>-0.088</td>
       <td>...</td>
-      <td>0.867</td>
-      <td>0.317</td>
-      <td>2.901</td>
-      <td>-0.739</td>
-      <td>0.623</td>
-      <td>-3.143</td>
-      <td>-2.777</td>
-      <td>-0.398</td>
-      <td>0.514</td>
-      <td>1.979</td>
+      <td>0.825</td>
+      <td>-2.081</td>
+      <td>0.548</td>
+      <td>1.467</td>
+      <td>0.053</td>
+      <td>1.788</td>
+      <td>2.903</td>
+      <td>-1.048</td>
+      <td>2.797</td>
+      <td>0.903</td>
     </tr>
     <tr>
       <th>2020_02_17_13_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.388</td>
-      <td>0.343</td>
-      <td>-1.375</td>
-      <td>-0.441</td>
-      <td>-0.242</td>
-      <td>-1.792</td>
-      <td>-0.457</td>
-      <td>0.007</td>
-      <td>0.693</td>
-      <td>-0.256</td>
+      <td>-0.171</td>
+      <td>-0.929</td>
+      <td>-1.946</td>
+      <td>0.406</td>
+      <td>0.376</td>
+      <td>-0.904</td>
+      <td>1.174</td>
+      <td>0.278</td>
+      <td>-0.145</td>
+      <td>-0.012</td>
       <td>...</td>
-      <td>0.706</td>
-      <td>0.895</td>
-      <td>1.088</td>
-      <td>-0.418</td>
-      <td>1.170</td>
-      <td>-0.987</td>
-      <td>-0.419</td>
-      <td>-0.440</td>
-      <td>-0.831</td>
-      <td>-0.486</td>
+      <td>0.882</td>
+      <td>0.538</td>
+      <td>0.876</td>
+      <td>-1.091</td>
+      <td>-0.740</td>
+      <td>0.084</td>
+      <td>1.754</td>
+      <td>1.016</td>
+      <td>0.416</td>
+      <td>1.058</td>
     </tr>
     <tr>
       <th>2020_02_18_01_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.052</td>
-      <td>0.689</td>
-      <td>-1.520</td>
-      <td>-0.318</td>
-      <td>-0.256</td>
-      <td>-1.239</td>
-      <td>-0.507</td>
-      <td>-0.079</td>
-      <td>0.388</td>
-      <td>-0.618</td>
+      <td>-0.036</td>
+      <td>-0.682</td>
+      <td>-1.935</td>
+      <td>0.310</td>
+      <td>0.086</td>
+      <td>-1.087</td>
+      <td>0.746</td>
+      <td>0.479</td>
+      <td>-0.347</td>
+      <td>0.092</td>
       <td>...</td>
-      <td>0.629</td>
-      <td>0.811</td>
-      <td>0.645</td>
-      <td>-0.264</td>
-      <td>1.190</td>
-      <td>-0.637</td>
-      <td>-0.227</td>
-      <td>-0.255</td>
-      <td>-1.252</td>
-      <td>-0.648</td>
+      <td>0.831</td>
+      <td>1.010</td>
+      <td>0.898</td>
+      <td>-1.267</td>
+      <td>-0.973</td>
+      <td>-0.165</td>
+      <td>1.407</td>
+      <td>1.070</td>
+      <td>-0.130</td>
+      <td>1.102</td>
     </tr>
     <tr>
       <th>2020_02_18_18_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.302</td>
-      <td>0.649</td>
-      <td>-1.421</td>
-      <td>-0.459</td>
-      <td>-0.274</td>
-      <td>-1.727</td>
-      <td>-0.405</td>
-      <td>-0.061</td>
-      <td>0.674</td>
-      <td>-0.317</td>
+      <td>-0.176</td>
+      <td>-0.894</td>
+      <td>-2.043</td>
+      <td>0.514</td>
+      <td>0.242</td>
+      <td>-1.114</td>
+      <td>1.129</td>
+      <td>0.244</td>
+      <td>-0.221</td>
+      <td>-0.124</td>
       <td>...</td>
-      <td>0.759</td>
-      <td>0.941</td>
-      <td>1.037</td>
-      <td>-0.413</td>
-      <td>1.218</td>
-      <td>-0.897</td>
-      <td>-0.233</td>
-      <td>-0.399</td>
-      <td>-1.032</td>
-      <td>-0.637</td>
+      <td>0.927</td>
+      <td>0.654</td>
+      <td>0.904</td>
+      <td>-1.196</td>
+      <td>-0.733</td>
+      <td>-0.003</td>
+      <td>1.621</td>
+      <td>1.303</td>
+      <td>0.241</td>
+      <td>0.986</td>
     </tr>
     <tr>
       <th>2020_02_28_12_27_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.883</td>
-      <td>1.588</td>
-      <td>-0.935</td>
-      <td>-0.627</td>
-      <td>-0.408</td>
-      <td>-1.628</td>
-      <td>0.056</td>
-      <td>-0.292</td>
-      <td>0.777</td>
-      <td>0.321</td>
+      <td>-0.251</td>
+      <td>-0.760</td>
+      <td>-2.120</td>
+      <td>1.111</td>
+      <td>-0.321</td>
+      <td>-1.546</td>
+      <td>0.866</td>
+      <td>-0.111</td>
+      <td>-0.256</td>
+      <td>-0.751</td>
       <td>...</td>
-      <td>0.801</td>
-      <td>0.894</td>
-      <td>1.190</td>
-      <td>-0.465</td>
-      <td>1.160</td>
-      <td>-0.629</td>
-      <td>0.682</td>
-      <td>-0.443</td>
-      <td>-1.173</td>
-      <td>-1.046</td>
+      <td>0.948</td>
+      <td>0.621</td>
+      <td>0.887</td>
+      <td>-1.132</td>
+      <td>-0.409</td>
+      <td>-0.087</td>
+      <td>1.139</td>
+      <td>2.221</td>
+      <td>0.064</td>
+      <td>0.392</td>
     </tr>
     <tr>
       <th>2020_03_01_23_00_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.619</td>
-      <td>2.499</td>
-      <td>0.318</td>
-      <td>-0.399</td>
-      <td>-0.401</td>
-      <td>-0.638</td>
-      <td>0.672</td>
-      <td>-0.343</td>
-      <td>0.346</td>
-      <td>1.070</td>
+      <td>0.046</td>
+      <td>-0.137</td>
+      <td>-1.141</td>
+      <td>1.046</td>
+      <td>-0.823</td>
+      <td>-1.364</td>
+      <td>-0.133</td>
+      <td>-0.100</td>
+      <td>-0.202</td>
+      <td>-0.732</td>
       <td>...</td>
-      <td>0.271</td>
-      <td>0.571</td>
-      <td>0.701</td>
-      <td>-0.449</td>
-      <td>0.629</td>
-      <td>0.446</td>
-      <td>1.981</td>
-      <td>-0.563</td>
-      <td>-0.797</td>
-      <td>-1.228</td>
+      <td>0.529</td>
+      <td>0.633</td>
+      <td>0.479</td>
+      <td>-0.566</td>
+      <td>-0.208</td>
+      <td>-0.261</td>
+      <td>-0.206</td>
+      <td>1.936</td>
+      <td>-0.698</td>
+      <td>-0.102</td>
     </tr>
     <tr>
       <th>2020_03_06_16_22_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-4.907</td>
-      <td>2.272</td>
-      <td>3.820</td>
-      <td>1.889</td>
-      <td>0.136</td>
-      <td>4.485</td>
-      <td>-1.296</td>
-      <td>1.087</td>
-      <td>-1.084</td>
-      <td>1.454</td>
+      <td>0.548</td>
+      <td>1.970</td>
+      <td>2.334</td>
+      <td>-0.241</td>
+      <td>-1.953</td>
+      <td>-0.011</td>
+      <td>-2.507</td>
+      <td>0.175</td>
+      <td>-0.578</td>
+      <td>0.340</td>
       <td>...</td>
-      <td>-2.345</td>
-      <td>0.498</td>
-      <td>-2.927</td>
-      <td>-0.312</td>
-      <td>-2.057</td>
-      <td>4.193</td>
-      <td>2.263</td>
-      <td>-0.134</td>
-      <td>1.077</td>
-      <td>-1.224</td>
+      <td>-1.385</td>
+      <td>-0.692</td>
+      <td>-1.433</td>
+      <td>0.564</td>
+      <td>0.932</td>
+      <td>-1.154</td>
+      <td>-3.937</td>
+      <td>-1.753</td>
+      <td>-2.243</td>
+      <td>-2.146</td>
     </tr>
     <tr>
       <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.808</td>
-      <td>-0.719</td>
-      <td>-0.401</td>
-      <td>1.287</td>
-      <td>0.129</td>
-      <td>2.475</td>
-      <td>-1.245</td>
-      <td>0.288</td>
-      <td>-1.581</td>
-      <td>-1.870</td>
+      <td>0.593</td>
+      <td>0.545</td>
+      <td>0.498</td>
+      <td>-0.878</td>
+      <td>-0.378</td>
+      <td>-0.214</td>
+      <td>-1.058</td>
+      <td>1.059</td>
+      <td>-0.449</td>
+      <td>1.515</td>
       <td>...</td>
-      <td>-0.867</td>
-      <td>-0.578</td>
-      <td>-2.054</td>
-      <td>0.677</td>
-      <td>-0.613</td>
-      <td>1.209</td>
-      <td>-0.636</td>
-      <td>0.530</td>
-      <td>-0.809</td>
-      <td>0.417</td>
+      <td>-0.317</td>
+      <td>0.986</td>
+      <td>-0.306</td>
+      <td>-0.351</td>
+      <td>-1.035</td>
+      <td>-0.679</td>
+      <td>-0.889</td>
+      <td>-1.687</td>
+      <td>-1.349</td>
+      <td>0.633</td>
     </tr>
     <tr>
       <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.292</td>
-      <td>0.900</td>
-      <td>-1.402</td>
-      <td>-0.500</td>
-      <td>-0.320</td>
-      <td>-1.833</td>
-      <td>-0.418</td>
-      <td>-0.067</td>
-      <td>0.804</td>
-      <td>-0.110</td>
+      <td>-0.211</td>
+      <td>-1.000</td>
+      <td>-2.135</td>
+      <td>0.609</td>
+      <td>0.299</td>
+      <td>-1.123</td>
+      <td>1.209</td>
+      <td>0.196</td>
+      <td>-0.178</td>
+      <td>-0.211</td>
       <td>...</td>
-      <td>0.815</td>
-      <td>1.044</td>
-      <td>1.167</td>
-      <td>-0.453</td>
-      <td>1.238</td>
-      <td>-0.904</td>
-      <td>-0.114</td>
-      <td>-0.465</td>
-      <td>-1.106</td>
-      <td>-0.783</td>
+      <td>0.941</td>
+      <td>0.607</td>
+      <td>0.955</td>
+      <td>-1.174</td>
+      <td>-0.700</td>
+      <td>0.049</td>
+      <td>1.771</td>
+      <td>1.423</td>
+      <td>0.417</td>
+      <td>0.986</td>
     </tr>
     <tr>
       <th>2020_05_04_11_39_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-2.166</td>
-      <td>3.922</td>
-      <td>2.185</td>
-      <td>-0.512</td>
-      <td>-0.490</td>
-      <td>-0.481</td>
-      <td>1.744</td>
-      <td>-0.501</td>
-      <td>0.651</td>
-      <td>2.620</td>
+      <td>0.064</td>
+      <td>0.597</td>
+      <td>-0.368</td>
+      <td>1.818</td>
+      <td>-1.641</td>
+      <td>-1.415</td>
+      <td>-0.623</td>
+      <td>-0.994</td>
+      <td>0.005</td>
+      <td>-1.670</td>
       <td>...</td>
-      <td>-0.250</td>
-      <td>0.825</td>
-      <td>0.896</td>
-      <td>-0.580</td>
-      <td>0.151</td>
-      <td>1.408</td>
-      <td>3.846</td>
-      <td>-1.242</td>
-      <td>-0.191</td>
-      <td>-1.951</td>
+      <td>0.263</td>
+      <td>-0.269</td>
+      <td>-0.049</td>
+      <td>-0.085</td>
+      <td>0.903</td>
+      <td>-0.366</td>
+      <td>-1.480</td>
+      <td>2.473</td>
+      <td>-0.955</td>
+      <td>-1.628</td>
     </tr>
     <tr>
       <th>2020_05_12_15_13_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.671</td>
-      <td>3.810</td>
-      <td>1.813</td>
-      <td>-0.751</td>
-      <td>-0.588</td>
-      <td>-0.909</td>
-      <td>1.833</td>
-      <td>-0.669</td>
-      <td>0.724</td>
-      <td>2.461</td>
+      <td>0.070</td>
+      <td>0.715</td>
+      <td>-0.349</td>
+      <td>2.050</td>
+      <td>-1.788</td>
+      <td>-1.502</td>
+      <td>-0.628</td>
+      <td>-1.300</td>
+      <td>0.108</td>
+      <td>-1.958</td>
       <td>...</td>
-      <td>0.042</td>
-      <td>0.785</td>
-      <td>1.214</td>
-      <td>-0.567</td>
-      <td>0.374</td>
-      <td>1.028</td>
-      <td>3.718</td>
-      <td>-1.224</td>
-      <td>-0.358</td>
-      <td>-1.869</td>
+      <td>0.314</td>
+      <td>-0.459</td>
+      <td>-0.095</td>
+      <td>-0.042</td>
+      <td>1.140</td>
+      <td>-0.368</td>
+      <td>-1.623</td>
+      <td>2.776</td>
+      <td>-0.949</td>
+      <td>-1.938</td>
     </tr>
     <tr>
       <th>2020_05_12_18_10_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-2.886</td>
-      <td>4.878</td>
-      <td>3.268</td>
-      <td>-0.729</td>
-      <td>-0.654</td>
-      <td>-0.615</td>
-      <td>2.398</td>
-      <td>-0.660</td>
-      <td>0.959</td>
-      <td>3.645</td>
+      <td>0.273</td>
+      <td>1.508</td>
+      <td>0.246</td>
+      <td>2.746</td>
+      <td>-2.688</td>
+      <td>-1.701</td>
+      <td>-1.118</td>
+      <td>-2.189</td>
+      <td>0.268</td>
+      <td>-2.820</td>
       <td>...</td>
-      <td>-0.531</td>
-      <td>1.145</td>
-      <td>1.175</td>
-      <td>-0.698</td>
-      <td>0.046</td>
-      <td>1.917</td>
-      <td>4.939</td>
-      <td>-1.746</td>
+      <td>0.105</td>
+      <td>-1.192</td>
+      <td>-0.501</td>
       <td>0.108</td>
-      <td>-2.403</td>
+      <td>2.084</td>
+      <td>-0.619</td>
+      <td>-2.826</td>
+      <td>3.356</td>
+      <td>-1.370</td>
+      <td>-3.489</td>
     </tr>
     <tr>
       <th>2020_05_12_21_07_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-2.593</td>
-      <td>4.814</td>
-      <td>3.021</td>
-      <td>-0.831</td>
-      <td>-0.656</td>
-      <td>-0.918</td>
-      <td>2.459</td>
-      <td>-0.736</td>
-      <td>1.071</td>
-      <td>3.562</td>
+      <td>0.143</td>
+      <td>1.058</td>
+      <td>-0.127</td>
+      <td>2.421</td>
+      <td>-2.241</td>
+      <td>-1.632</td>
+      <td>-0.785</td>
+      <td>-1.717</td>
+      <td>0.193</td>
+      <td>-2.391</td>
       <td>...</td>
-      <td>-0.356</td>
-      <td>1.120</td>
-      <td>1.408</td>
-      <td>-0.715</td>
-      <td>0.132</td>
-      <td>1.649</td>
-      <td>4.871</td>
-      <td>-1.732</td>
-      <td>-0.027</td>
-      <td>-2.388</td>
+      <td>0.249</td>
+      <td>-0.831</td>
+      <td>-0.256</td>
+      <td>0.020</td>
+      <td>1.586</td>
+      <td>-0.458</td>
+      <td>-2.159</td>
+      <td>3.117</td>
+      <td>-1.111</td>
+      <td>-2.673</td>
     </tr>
     <tr>
       <th>2020_05_14_14_46_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.425</td>
-      <td>3.259</td>
-      <td>1.307</td>
-      <td>-0.586</td>
-      <td>-0.501</td>
-      <td>-0.597</td>
-      <td>1.351</td>
-      <td>-0.509</td>
-      <td>0.463</td>
-      <td>1.908</td>
+      <td>0.074</td>
+      <td>0.468</td>
+      <td>-0.460</td>
+      <td>1.637</td>
+      <td>-1.492</td>
+      <td>-1.403</td>
+      <td>-0.600</td>
+      <td>-0.799</td>
+      <td>-0.016</td>
+      <td>-1.485</td>
       <td>...</td>
-      <td>0.080</td>
-      <td>0.643</td>
-      <td>0.873</td>
-      <td>-0.483</td>
-      <td>0.367</td>
-      <td>0.919</td>
-      <td>3.070</td>
-      <td>-0.927</td>
-      <td>-0.452</td>
-      <td>-1.626</td>
+      <td>0.260</td>
+      <td>-0.064</td>
+      <td>0.040</td>
+      <td>-0.113</td>
+      <td>0.684</td>
+      <td>-0.345</td>
+      <td>-1.247</td>
+      <td>2.320</td>
+      <td>-0.940</td>
+      <td>-1.296</td>
     </tr>
     <tr>
       <th>2020_05_14_17_28_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.327</td>
-      <td>3.360</td>
-      <td>1.178</td>
-      <td>-0.668</td>
-      <td>-0.530</td>
-      <td>-0.749</td>
-      <td>1.450</td>
-      <td>-0.608</td>
-      <td>0.516</td>
-      <td>1.902</td>
+      <td>0.072</td>
+      <td>0.305</td>
+      <td>-0.527</td>
+      <td>1.301</td>
+      <td>-1.302</td>
+      <td>-1.294</td>
+      <td>-0.574</td>
+      <td>-0.467</td>
+      <td>-0.107</td>
+      <td>-1.101</td>
       <td>...</td>
-      <td>0.201</td>
-      <td>0.597</td>
-      <td>1.011</td>
-      <td>-0.486</td>
-      <td>0.493</td>
-      <td>0.789</td>
-      <td>3.170</td>
-      <td>-0.933</td>
-      <td>-0.565</td>
-      <td>-1.671</td>
+      <td>0.279</td>
+      <td>0.200</td>
+      <td>0.147</td>
+      <td>-0.223</td>
+      <td>0.364</td>
+      <td>-0.310</td>
+      <td>-1.029</td>
+      <td>1.927</td>
+      <td>-0.956</td>
+      <td>-0.909</td>
     </tr>
     <tr>
       <th>2020_05_14_20_11_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-0.904</td>
-      <td>2.727</td>
-      <td>0.538</td>
-      <td>-0.488</td>
-      <td>-0.462</td>
-      <td>-0.561</td>
-      <td>0.943</td>
-      <td>-0.481</td>
-      <td>0.288</td>
-      <td>1.225</td>
+      <td>-0.025</td>
+      <td>0.126</td>
+      <td>-0.743</td>
+      <td>1.262</td>
+      <td>-1.166</td>
+      <td>-1.353</td>
+      <td>-0.376</td>
+      <td>-0.363</td>
+      <td>-0.108</td>
+      <td>-1.027</td>
       <td>...</td>
-      <td>0.284</td>
-      <td>0.460</td>
-      <td>0.725</td>
-      <td>-0.391</td>
-      <td>0.608</td>
-      <td>0.586</td>
-      <td>2.422</td>
-      <td>-0.607</td>
-      <td>-0.737</td>
-      <td>-1.356</td>
+      <td>0.380</td>
+      <td>0.268</td>
+      <td>0.285</td>
+      <td>-0.271</td>
+      <td>0.240</td>
+      <td>-0.229</td>
+      <td>-0.730</td>
+      <td>2.004</td>
+      <td>-0.836</td>
+      <td>-0.646</td>
     </tr>
     <tr>
       <th>2020_05_15_10_30_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.992</td>
-      <td>1.043</td>
-      <td>-1.380</td>
-      <td>-0.409</td>
-      <td>-0.314</td>
-      <td>-1.348</td>
-      <td>-0.359</td>
-      <td>-0.136</td>
-      <td>0.529</td>
-      <td>-0.314</td>
+      <td>-0.130</td>
+      <td>-0.717</td>
+      <td>-2.056</td>
+      <td>0.565</td>
+      <td>-0.151</td>
+      <td>-1.361</td>
+      <td>0.721</td>
+      <td>0.317</td>
+      <td>-0.407</td>
+      <td>-0.205</td>
       <td>...</td>
-      <td>0.714</td>
-      <td>0.886</td>
-      <td>0.780</td>
-      <td>-0.360</td>
-      <td>1.190</td>
-      <td>-0.603</td>
-      <td>0.055</td>
-      <td>-0.304</td>
-      <td>-1.265</td>
-      <td>-0.795</td>
+      <td>0.865</td>
+      <td>0.989</td>
+      <td>0.941</td>
+      <td>-1.292</td>
+      <td>-0.831</td>
+      <td>-0.197</td>
+      <td>1.296</td>
+      <td>1.559</td>
+      <td>-0.182</td>
+      <td>0.856</td>
     </tr>
     <tr>
       <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.108</td>
-      <td>2.677</td>
-      <td>0.622</td>
-      <td>-0.292</td>
-      <td>-0.381</td>
-      <td>-0.230</td>
-      <td>0.702</td>
-      <td>-0.296</td>
-      <td>0.190</td>
-      <td>1.168</td>
+      <td>0.003</td>
+      <td>0.079</td>
+      <td>-0.808</td>
+      <td>1.017</td>
+      <td>-1.094</td>
+      <td>-1.241</td>
+      <td>-0.473</td>
+      <td>-0.193</td>
+      <td>-0.221</td>
+      <td>-0.766</td>
       <td>...</td>
-      <td>0.111</td>
-      <td>0.566</td>
-      <td>0.440</td>
-      <td>-0.442</td>
-      <td>0.489</td>
-      <td>0.822</td>
-      <td>2.272</td>
-      <td>-0.569</td>
-      <td>-0.678</td>
-      <td>-1.338</td>
+      <td>0.338</td>
+      <td>0.515</td>
+      <td>0.319</td>
+      <td>-0.392</td>
+      <td>0.018</td>
+      <td>-0.331</td>
+      <td>-0.634</td>
+      <td>1.783</td>
+      <td>-0.868</td>
+      <td>-0.362</td>
     </tr>
     <tr>
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.558</td>
-      <td>1.876</td>
-      <td>-0.642</td>
-      <td>-0.618</td>
-      <td>-0.452</td>
-      <td>-1.384</td>
-      <td>0.222</td>
-      <td>-0.347</td>
-      <td>0.728</td>
-      <td>0.576</td>
+      <td>-0.107</td>
+      <td>-0.440</td>
+      <td>-1.685</td>
+      <td>0.806</td>
+      <td>-0.568</td>
+      <td>-1.433</td>
+      <td>0.286</td>
+      <td>0.133</td>
+      <td>-0.389</td>
+      <td>-0.523</td>
       <td>...</td>
-      <td>0.683</td>
-      <td>0.814</td>
-      <td>1.058</td>
-      <td>-0.499</td>
-      <td>1.061</td>
-      <td>-0.379</td>
-      <td>1.056</td>
-      <td>-0.375</td>
-      <td>-1.055</td>
-      <td>-1.103</td>
+      <td>0.751</td>
+      <td>0.891</td>
+      <td>0.786</td>
+      <td>-1.007</td>
+      <td>-0.510</td>
+      <td>-0.256</td>
+      <td>0.599</td>
+      <td>1.936</td>
+      <td>-0.467</td>
+      <td>0.364</td>
     </tr>
     <tr>
       <th>2020_05_22_14_57_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.035</td>
-      <td>1.918</td>
-      <td>-0.626</td>
+      <td>0.006</td>
+      <td>-0.223</td>
+      <td>-1.415</td>
+      <td>0.786</td>
+      <td>-0.679</td>
+      <td>-1.378</td>
+      <td>-0.013</td>
+      <td>0.142</td>
       <td>-0.380</td>
-      <td>-0.401</td>
-      <td>-0.675</td>
-      <td>0.298</td>
-      <td>-0.363</td>
-      <td>0.207</td>
-      <td>0.145</td>
+      <td>-0.451</td>
       <td>...</td>
-      <td>0.516</td>
-      <td>0.511</td>
-      <td>0.525</td>
-      <td>-0.314</td>
-      <td>0.942</td>
-      <td>0.102</td>
-      <td>1.257</td>
-      <td>-0.210</td>
-      <td>-1.240</td>
-      <td>-1.032</td>
+      <td>0.619</td>
+      <td>1.013</td>
+      <td>0.707</td>
+      <td>-0.903</td>
+      <td>-0.505</td>
+      <td>-0.321</td>
+      <td>0.221</td>
+      <td>1.779</td>
+      <td>-0.739</td>
+      <td>0.297</td>
     </tr>
     <tr>
       <th>2020_05_22_17_43_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.945</td>
-      <td>1.304</td>
-      <td>-1.199</td>
-      <td>-0.510</td>
-      <td>-0.353</td>
-      <td>-1.426</td>
-      <td>-0.107</td>
-      <td>-0.236</td>
-      <td>0.576</td>
-      <td>-0.087</td>
+      <td>-0.133</td>
+      <td>-0.651</td>
+      <td>-1.965</td>
+      <td>0.734</td>
+      <td>-0.282</td>
+      <td>-1.395</td>
+      <td>0.622</td>
+      <td>0.172</td>
+      <td>-0.369</td>
+      <td>-0.402</td>
       <td>...</td>
-      <td>0.763</td>
-      <td>0.838</td>
-      <td>0.906</td>
-      <td>-0.371</td>
-      <td>1.186</td>
-      <td>-0.578</td>
-      <td>0.402</td>
-      <td>-0.305</td>
-      <td>-1.280</td>
-      <td>-0.902</td>
+      <td>0.848</td>
+      <td>0.909</td>
+      <td>0.908</td>
+      <td>-1.170</td>
+      <td>-0.677</td>
+      <td>-0.188</td>
+      <td>1.099</td>
+      <td>1.764</td>
+      <td>-0.191</td>
+      <td>0.675</td>
     </tr>
     <tr>
       <th>2020_05_26_14_20_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.542</td>
-      <td>-0.349</td>
-      <td>-1.304</td>
-      <td>-0.420</td>
-      <td>-0.171</td>
-      <td>-1.787</td>
-      <td>-0.424</td>
-      <td>0.133</td>
-      <td>0.557</td>
-      <td>-0.256</td>
+      <td>-0.032</td>
+      <td>-0.873</td>
+      <td>-1.387</td>
+      <td>0.197</td>
+      <td>0.727</td>
+      <td>-0.337</td>
+      <td>1.124</td>
+      <td>0.267</td>
+      <td>0.130</td>
+      <td>0.178</td>
       <td>...</td>
-      <td>0.582</td>
-      <td>0.631</td>
-      <td>1.071</td>
-      <td>-0.365</td>
-      <td>1.019</td>
-      <td>-1.138</td>
-      <td>-0.796</td>
-      <td>-0.425</td>
-      <td>-0.438</td>
-      <td>-0.070</td>
+      <td>0.681</td>
+      <td>0.296</td>
+      <td>0.712</td>
+      <td>-0.619</td>
+      <td>-0.701</td>
+      <td>0.270</td>
+      <td>1.701</td>
+      <td>0.389</td>
+      <td>0.698</td>
+      <td>1.110</td>
     </tr>
     <tr>
       <th>2020_05_27_13_57_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>4.685</td>
-      <td>-4.569</td>
-      <td>-1.786</td>
-      <td>-0.926</td>
-      <td>-0.689</td>
-      <td>-4.172</td>
-      <td>0.423</td>
-      <td>0.932</td>
-      <td>1.001</td>
-      <td>0.296</td>
+      <td>-0.130</td>
+      <td>-2.648</td>
+      <td>0.929</td>
+      <td>-0.003</td>
+      <td>3.810</td>
+      <td>2.469</td>
+      <td>3.116</td>
+      <td>-0.728</td>
+      <td>2.308</td>
+      <td>0.076</td>
       <td>...</td>
-      <td>1.007</td>
-      <td>0.245</td>
-      <td>3.508</td>
-      <td>-0.843</td>
-      <td>0.611</td>
-      <td>-3.905</td>
-      <td>-3.581</td>
-      <td>-0.274</td>
-      <td>0.732</td>
-      <td>2.716</td>
+      <td>0.775</td>
+      <td>-2.860</td>
+      <td>0.555</td>
+      <td>2.413</td>
+      <td>0.093</td>
+      <td>2.297</td>
+      <td>3.302</td>
+      <td>-2.037</td>
+      <td>3.418</td>
+      <td>0.995</td>
     </tr>
     <tr>
       <th>2020_05_28_04_06_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>5.873</td>
-      <td>-6.032</td>
-      <td>-2.040</td>
-      <td>-1.168</td>
-      <td>-0.960</td>
-      <td>-5.091</td>
-      <td>0.609</td>
-      <td>1.224</td>
-      <td>1.194</td>
-      <td>0.429</td>
+      <td>-0.271</td>
+      <td>-3.375</td>
+      <td>1.284</td>
+      <td>0.088</td>
+      <td>4.824</td>
+      <td>3.258</td>
+      <td>4.048</td>
+      <td>-1.131</td>
+      <td>3.026</td>
+      <td>-0.118</td>
       <td>...</td>
-      <td>1.196</td>
-      <td>0.214</td>
-      <td>4.364</td>
-      <td>-0.989</td>
-      <td>0.610</td>
-      <td>-4.916</td>
-      <td>-4.634</td>
-      <td>-0.139</td>
-      <td>1.098</td>
-      <td>3.692</td>
+      <td>0.947</td>
+      <td>-3.997</td>
+      <td>0.722</td>
+      <td>3.215</td>
+      <td>0.308</td>
+      <td>2.935</td>
+      <td>4.140</td>
+      <td>-2.511</td>
+      <td>4.483</td>
+      <td>0.935</td>
     </tr>
     <tr>
       <th>2020_06_01_10_22_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>-1.990</td>
-      <td>-0.132</td>
-      <td>0.767</td>
-      <td>1.738</td>
-      <td>0.246</td>
-      <td>3.324</td>
-      <td>-1.415</td>
-      <td>0.581</td>
-      <td>-1.588</td>
-      <td>-1.208</td>
+      <td>0.405</td>
+      <td>0.807</td>
+      <td>0.813</td>
+      <td>-0.566</td>
+      <td>-0.886</td>
+      <td>-0.246</td>
+      <td>-1.323</td>
+      <td>0.971</td>
+      <td>-0.523</td>
+      <td>1.116</td>
       <td>...</td>
-      <td>-1.324</td>
-      <td>-0.359</td>
-      <td>-2.463</td>
-      <td>0.498</td>
-      <td>-1.289</td>
-      <td>2.078</td>
-      <td>-0.081</td>
-      <td>0.542</td>
-      <td>-0.267</td>
-      <td>0.135</td>
+      <td>-0.534</td>
+      <td>0.531</td>
+      <td>-0.557</td>
+      <td>-0.098</td>
+      <td>-0.424</td>
+      <td>-0.890</td>
+      <td>-1.743</td>
+      <td>-1.521</td>
+      <td>-1.669</td>
+      <td>-0.001</td>
     </tr>
     <tr>
       <th>2020_06_01_15_41_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>0.251</td>
-      <td>-2.524</td>
-      <td>-0.874</td>
-      <td>0.871</td>
-      <td>0.096</td>
-      <td>1.809</td>
-      <td>-0.744</td>
-      <td>0.185</td>
-      <td>-1.634</td>
-      <td>-2.382</td>
+      <td>0.690</td>
+      <td>0.358</td>
+      <td>1.288</td>
+      <td>-1.114</td>
+      <td>0.803</td>
+      <td>0.758</td>
+      <td>-0.475</td>
+      <td>0.922</td>
+      <td>0.138</td>
+      <td>1.765</td>
       <td>...</td>
-      <td>-0.859</td>
-      <td>-0.945</td>
-      <td>-1.707</td>
-      <td>0.805</td>
-      <td>-0.493</td>
-      <td>0.247</td>
-      <td>-1.650</td>
-      <td>0.697</td>
-      <td>-0.441</td>
-      <td>1.240</td>
+      <td>-0.482</td>
+      <td>0.404</td>
+      <td>-0.564</td>
+      <td>0.656</td>
+      <td>-1.047</td>
+      <td>-0.068</td>
+      <td>-0.287</td>
+      <td>-2.842</td>
+      <td>-0.549</td>
+      <td>0.946</td>
     </tr>
     <tr>
       <th>2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>1.517</td>
-      <td>-0.524</td>
-      <td>-1.287</td>
-      <td>-0.441</td>
-      <td>-0.115</td>
-      <td>-1.741</td>
-      <td>-0.334</td>
-      <td>0.136</td>
-      <td>0.515</td>
-      <td>-0.276</td>
+      <td>-0.022</td>
+      <td>-0.912</td>
+      <td>-1.355</td>
+      <td>0.287</td>
+      <td>0.778</td>
+      <td>-0.262</td>
+      <td>1.143</td>
+      <td>0.238</td>
+      <td>0.148</td>
+      <td>0.135</td>
       <td>...</td>
-      <td>0.572</td>
-      <td>0.570</td>
-      <td>1.120</td>
-      <td>-0.356</td>
-      <td>0.980</td>
-      <td>-1.167</td>
-      <td>-0.867</td>
-      <td>-0.405</td>
-      <td>-0.394</td>
-      <td>0.075</td>
+      <td>0.637</td>
+      <td>0.250</td>
+      <td>0.706</td>
+      <td>-0.577</td>
+      <td>-0.653</td>
+      <td>0.277</td>
+      <td>1.719</td>
+      <td>0.416</td>
+      <td>0.793</td>
+      <td>1.077</td>
     </tr>
   </tbody>
 </table>
@@ -8494,12 +8687,13 @@ Name: intensity, Length: 33698, dtype: float32
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1   1,121
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>freq_val
+1   1,121
 2   1,148
 3     803
 4     461
 5     185
-Name: freq_val, dtype: int64
+Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -8521,7 +8715,7 @@ Name: freq_val, dtype: int64
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/3a7d46d957fdf467e687489e4af2be09607b17719dd8e9d7a2576fc03549c84b.png" src="_images/3a7d46d957fdf467e687489e4af2be09607b17719dd8e9d7a2576fc03549c84b.png" />
+<img alt="_images/e721dee921455ddc392806bcc8d8c69b71b69406518d28a758ffc2dab6693bb0.png" src="_images/e721dee921455ddc392806bcc8d8c69b71b69406518d28a758ffc2dab6693bb0.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -8571,27 +8765,27 @@ Name: freq_val, dtype: int64
   <tbody>
     <tr>
       <th>AAAS</th>
-      <td>1.312</td>
+      <td>1.407</td>
       <td>2</td>
     </tr>
     <tr>
       <th>AACS</th>
-      <td>1.524</td>
+      <td>1.565</td>
       <td>2</td>
     </tr>
     <tr>
       <th>AAMDC</th>
-      <td>0.489</td>
+      <td>0.563</td>
       <td>5</td>
     </tr>
     <tr>
       <th>AAMP</th>
-      <td>0.350</td>
+      <td>0.835</td>
       <td>2</td>
     </tr>
     <tr>
       <th>AAR2</th>
-      <td>0.661</td>
+      <td>0.492</td>
       <td>2</td>
     </tr>
     <tr>
@@ -8601,27 +8795,27 @@ Name: freq_val, dtype: int64
     </tr>
     <tr>
       <th>ZWILCH</th>
-      <td>0.729</td>
+      <td>0.683</td>
       <td>1</td>
     </tr>
     <tr>
       <th>ZWINT</th>
-      <td>0.983</td>
+      <td>0.648</td>
       <td>1</td>
     </tr>
     <tr>
       <th>ZYX</th>
-      <td>0.640</td>
+      <td>0.494</td>
       <td>4</td>
     </tr>
     <tr>
       <th>hCG_2014768;TMA7</th>
-      <td>0.301</td>
+      <td>0.400</td>
       <td>1</td>
     </tr>
     <tr>
       <th>pk;ZAK</th>
-      <td>0.009</td>
+      <td>0.349</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -8667,27 +8861,27 @@ Name: freq_val, dtype: int64
     <tr>
       <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SEH1L</th>
-      <td>-0.388</td>
+      <td>-0.071</td>
     </tr>
     <tr>
       <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SLC9A3R1</th>
-      <td>-1.764</td>
+      <td>-1.827</td>
     </tr>
     <tr>
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>KYNU</th>
-      <td>0.390</td>
+      <td>0.270</td>
     </tr>
     <tr>
       <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>ADD3</th>
-      <td>1.903</td>
+      <td>1.603</td>
     </tr>
     <tr>
       <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>CALM2;CALM1</th>
-      <td>-0.487</td>
+      <td>-0.591</td>
     </tr>
     <tr>
       <th>...</th>
@@ -8697,27 +8891,27 @@ Name: freq_val, dtype: int64
     <tr>
       <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>PPP2R4;DKFZp781M17165</th>
-      <td>-0.269</td>
+      <td>-0.497</td>
     </tr>
     <tr>
       <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>MED23</th>
-      <td>-0.853</td>
+      <td>-0.801</td>
     </tr>
     <tr>
       <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RBMXL1</th>
-      <td>-1.950</td>
+      <td>-1.365</td>
     </tr>
     <tr>
       <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>SMARCA1</th>
-      <td>0.165</td>
+      <td>-0.008</td>
     </tr>
     <tr>
       <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
       <th>RGPD3;RGPD4</th>
-      <td>0.565</td>
+      <td>0.616</td>
     </tr>
   </tbody>
 </table>
@@ -8757,8 +8951,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.884863795732986,
-  &#39;MAE&#39;: 0.653629150670124,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.8534713613580351,
+  &#39;MAE&#39;: 0.6447161269542695,
   &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -8779,8 +8973,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.893837996517632,
-  &#39;MAE&#39;: 0.6497859982924051,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.8940516885127485,
+  &#39;MAE&#39;: 0.6513030997984782,
   &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -8797,12 +8991,12 @@ reconstruction.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.6497859982924051,
-                                  &#39;MSE&#39;: 0.893837996517632,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.6513030997984782,
+                                  &#39;MSE&#39;: 0.8940516885127485,
                                   &#39;N&#39;: 9327,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.653629150670124,
-                                   &#39;MSE&#39;: 0.884863795732986,
+  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.6447161269542695,
+                                   &#39;MSE&#39;: 0.8534713613580351,
                                    &#39;N&#39;: 9327,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
@@ -8851,13 +9045,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">VAE</th>
       <th>MSE</th>
-      <td>0.885</td>
+      <td>0.853</td>
       <td>0.894</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.654</td>
-      <td>0.650</td>
+      <td>0.645</td>
+      <td>0.651</td>
     </tr>
     <tr>
       <th>N</th>
@@ -8913,7 +9107,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 10,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
- &#39;epoch_trained&#39;: 74,
+ &#39;epoch_trained&#39;: 106,
  &#39;epochs_max&#39;: 200,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
