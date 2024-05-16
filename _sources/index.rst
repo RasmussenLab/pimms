@@ -15,10 +15,10 @@ Inspect the notebooks associated with the imputation workflow.
     :maxdepth: 2
     :caption: PIMMS models
 
+    VAE <01_1_train_VAE.ipynb>
+    KNN <01_1_train_KNN.ipynb>
     Median <01_1_train_Median.ipynb>
     DAE <01_1_train_DAE.ipynb>
-    KNN <01_1_train_KNN.ipynb>
-    VAE <01_1_train_VAE.ipynb>
     CF <01_1_train_CF.ipynb>
 
 
@@ -26,29 +26,29 @@ Inspect the notebooks associated with the imputation workflow.
     :maxdepth: 2
     :caption: R models
 
-    ZERO <01_1_train_NAGuideR_ZERO.ipynb>
-    BPCA <01_1_train_NAGuideR_BPCA.ipynb>
+    RF <01_1_train_NAGuideR_RF.ipynb>
     MINDET <01_1_train_NAGuideR_MINDET.ipynb>
-    MINPROB <01_1_train_NAGuideR_MINPROB.ipynb>
-    MICE-CART <01_1_train_NAGuideR_MICE-CART.ipynb>
-    QRILC <01_1_train_NAGuideR_QRILC.ipynb>
-    IMPSEQ <01_1_train_NAGuideR_IMPSEQ.ipynb>
-    transfer NAGuideR pred <01_1_transfer_NAGuideR_pred.ipynb>
-    MICE-NORM <01_1_train_NAGuideR_MICE-NORM.ipynb>
+    PI <01_1_train_NAGuideR_PI.ipynb>
     MSIMPUTE <01_1_train_NAGuideR_MSIMPUTE.ipynb>
+    MINPROB <01_1_train_NAGuideR_MINPROB.ipynb>
+    LLS <01_1_train_NAGuideR_LLS.ipynb>
+    MICE-CART <01_1_train_NAGuideR_MICE-CART.ipynb>
+    BPCA <01_1_train_NAGuideR_BPCA.ipynb>
+    QRILC <01_1_train_NAGuideR_QRILC.ipynb>
+    SVDMETHOD <01_1_train_NAGuideR_SVDMETHOD.ipynb>
+    MICE-NORM <01_1_train_NAGuideR_MICE-NORM.ipynb>
+    MLE <01_1_train_NAGuideR_MLE.ipynb>
+    TRKNN <01_1_train_NAGuideR_TRKNN.ipynb>
     MINIMUM <01_1_train_NAGuideR_MINIMUM.ipynb>
     IRM <01_1_train_NAGuideR_IRM.ipynb>
+    IMPSEQ <01_1_train_NAGuideR_IMPSEQ.ipynb>
+    transfer NAGuideR pred <01_1_transfer_NAGuideR_pred.ipynb>
     IMPSEQROB <01_1_train_NAGuideR_IMPSEQROB.ipynb>
-    ROWMEDIAN <01_1_train_NAGuideR_ROWMEDIAN.ipynb>
-    MLE <01_1_train_NAGuideR_MLE.ipynb>
-    SVDMETHOD <01_1_train_NAGuideR_SVDMETHOD.ipynb>
+    ZERO <01_1_train_NAGuideR_ZERO.ipynb>
     SEQKNN <01_1_train_NAGuideR_SEQKNN.ipynb>
-    PI <01_1_train_NAGuideR_PI.ipynb>
-    RF <01_1_train_NAGuideR_RF.ipynb>
-    COLMEDIAN <01_1_train_NAGuideR_COLMEDIAN.ipynb>
+    ROWMEDIAN <01_1_train_NAGuideR_ROWMEDIAN.ipynb>
     IMPUTE <01_1_train_NAGuideR_KNN_IMPUTE.ipynb>
-    TRKNN <01_1_train_NAGuideR_TRKNN.ipynb>
-    LLS <01_1_train_NAGuideR_LLS.ipynb>
+    COLMEDIAN <01_1_train_NAGuideR_COLMEDIAN.ipynb>
 
 
 .. toctree::
