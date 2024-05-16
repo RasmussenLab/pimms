@@ -541,7 +541,7 @@ M = len(feature_names)
 pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M - 1)]], :]
 
 # %%
-options = random.sample(set(feature_names), 1)
+options = random.sample(sorted(set(feature_names)), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
 
 # %% [markdown]
