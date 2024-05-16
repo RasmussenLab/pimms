@@ -6,6 +6,7 @@ channels:
   - defaults
 dependencies:
   - papermill # execute ipynb's
+  - jupyter
   # R packages (listed in NAGuideR)
   - r-base
   - r-devtools # is it needed for source installs on windows server?

@@ -50,4 +50,4 @@ jobs:
         run: |
           cd project
           snakemake -p -c1 -n --configfile config/single_dev_dataset/example/config.yaml --use-conda
-          snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
+          snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
