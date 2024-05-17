@@ -20,7 +20,7 @@ dependencies:
   - seaborn<0.13
   - pip
   # ML
-  - pytorch=1 #=1.13.1=py3.8_cuda11.7_cudnn8_0
+  - pytorch #=1.13.1=py3.8_cuda11.7_cudnn8_0
   # - pytorch-cuda
   - scikit-learn
   - fastai
