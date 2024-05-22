@@ -16,7 +16,7 @@
 # %% [markdown]
 # # K- Nearest Neighbors (KNN)
 
-# %%
+# %% tags=["hide-input"]
 import logging
 
 import pandas as pd
@@ -38,7 +38,7 @@ logger.info("Experiment 03 - Analysis of latent spaces and performance comparisi
 figures = {}  # collection of ax or figures
 
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -72,7 +72,7 @@ meta_cat_col: str = None  # category column in meta data
 # %% [markdown]
 # Some argument transformations
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args = vaep.nb.args_from_dict(args)
 args
@@ -81,25 +81,25 @@ args
 # %% [markdown]
 # Some naming conventions
 
-# %%
+# %% tags=["hide-input"]
 TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 
 # %% [markdown]
 # ## Load data in long format
 
-# %%
+# %% tags=["hide-input"]
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
 
-# %%
+# %% tags=["hide-input"]
 data.train_X.sample(5)
 
 # %% [markdown]
 # load meta data for splits
 
-# %%
+# %% tags=["hide-input"]
 if args.fn_rawfile_metadata:
     df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
     display(df_meta.loc[data.train_X.index.levels[0]])
@@ -109,7 +109,7 @@ else:
 # %% [markdown]
 # ## Initialize Comparison
 
-# %%
+# %% tags=["hide-input"]
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
 freq_feat.head()  # training data
 
@@ -119,11 +119,11 @@ freq_feat.head()  # training data
 # %% [markdown]
 # The validation fake NA is used to by all models to evaluate training performance.
 
-# %%
+# %% tags=["hide-input"]
 val_pred_fake_na = data.val_y.to_frame(name='observed')
 val_pred_fake_na
 
-# %%
+# %% tags=["hide-input"]
 test_pred_fake_na = data.test_y.to_frame(name='observed')
 test_pred_fake_na.describe()
 
@@ -131,7 +131,7 @@ test_pred_fake_na.describe()
 # %% [markdown]
 # ## Data in wide format
 
-# %%
+# %% tags=["hide-input"]
 data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
@@ -140,7 +140,7 @@ data.train_X.head()
 # ## Train
 # model = 'sklearn_knn'
 
-# %%
+# %% tags=["hide-input"]
 knn_imputer = sklearn.impute.KNNImputer(n_neighbors=args.neighbors).fit(data.train_X)
 
 # %% [markdown]
@@ -151,23 +151,23 @@ knn_imputer = sklearn.impute.KNNImputer(n_neighbors=args.neighbors).fit(data.tra
 #
 # create predictions and select for split entries
 
-# %%
+# %% tags=["hide-input"]
 pred = knn_imputer.transform(data.train_X)
 pred = pd.DataFrame(pred, index=data.train_X.index, columns=data.train_X.columns).stack()
 pred
 
-# %%
+# %% tags=["hide-input"]
 val_pred_fake_na[args.model_key] = pred
 val_pred_fake_na
 
-# %%
+# %% tags=["hide-input"]
 test_pred_fake_na[args.model_key] = pred
 test_pred_fake_na
 
 # %% [markdown]
 # save missing values predictions
 
-# %%
+# %% tags=["hide-input"]
 if args.save_pred_real_na:
     pred_real_na = ae.get_missing_values(df_train_wide=data.train_X,
                                          val_idx=val_pred_fake_na.index,
@@ -182,7 +182,7 @@ if args.save_pred_real_na:
 #
 # - validation data
 
-# %%
+# %% tags=["hide-input"]
 
 # %% [markdown]
 # ## Comparisons
@@ -196,14 +196,14 @@ if args.save_pred_real_na:
 # > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
-# %%
+# %% tags=["hide-input"]
 # papermill_description=metrics
 d_metrics = models.Metrics()
 
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
 added_metrics
 
@@ -214,18 +214,18 @@ added_metrics
 # explicitly to misssing before it was fed to the model for
 # reconstruction.
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
 added_metrics
 
 # %% [markdown]
 # Save all metrics as json
 
-# %%
+# %% tags=["hide-input"]
 vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
 d_metrics
 
-# %%
+# %% tags=["hide-input"]
 metrics_df = models.get_df_from_nested_dict(d_metrics.metrics,
                                             column_levels=['model', 'metric_name']).T
 metrics_df
@@ -233,7 +233,7 @@ metrics_df
 # %% [markdown]
 # ## Save predictions
 
-# %%
+# %% tags=["hide-input"]
 # save simulated missing values for both splits
 val_pred_fake_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
@@ -241,10 +241,10 @@ test_pred_fake_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
 # %% [markdown]
 # ## Config
 
-# %%
+# %% tags=["hide-input"]
 figures  # switch to fnames?
 
-# %%
+# %% tags=["hide-input"]
 args.n_params = 1  # the number of neighbors to consider
 args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args

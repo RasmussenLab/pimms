@@ -18,7 +18,7 @@
 #
 # Create data splits
 
-# %%
+# %% tags=["hide-input"]
 import logging
 from functools import partial
 from pathlib import Path
@@ -65,7 +65,7 @@ dumps = {}  # collection of data dumps
 # %% [markdown]
 # ## Arguments
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -95,15 +95,15 @@ prop_sample_w_sim: float = 1.0  # proportion of samples with simulated missing v
 feat_name_display: str = None  # display name for feature name (e.g. 'protein group')
 
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.args_from_dict(args)
 args
 
-# %%
+# %% tags=["hide-input"]
 if not 0.0 <= args.frac_mnar <= 1.0:
     raise ValueError("Invalid MNAR float value (should be betw. 0 and 1):"
                      f" {args.frac_mnar}")
@@ -118,7 +118,7 @@ args.index_col  # make sure it is an iterable
 # %% [markdown]
 # process arguments
 
-# %%
+# %% tags=["hide-input"]
 logger.info(f"{args.FN_INTENSITIES = }")
 
 
@@ -131,7 +131,7 @@ FILE_EXT = Path(args.FN_INTENSITIES).suffix[1:]
 logger.info(
     f"File format (extension): {FILE_EXT}  (!specifies data loading function!)")
 
-# %%
+# %% tags=["hide-input"]
 # # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
 constructor = getattr(vaep.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
@@ -155,7 +155,7 @@ if args.logarithm:
     df = log_fct(df)  # ! potentially add check to increase value by 1 if 0 is present (should be part of preprocessing)
 df
 
-# %%
+# %% tags=["hide-input"]
 ax = (df
       .notna()
       .sum(axis=0)
@@ -166,7 +166,7 @@ ax = (df
 ax.set_ylabel('Frequency')
 
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_folder / '01_0_data_stats.xlsx'
 dumps[fname.name] = fname.as_posix()
 writer = pd.ExcelWriter(fname)
@@ -188,7 +188,7 @@ data_stats_original
 #
 # > The Collaborative Modeling approach will need a single feature column.
 
-# %%
+# %% tags=["hide-input"]
 def join_as_str(seq):
     ret = "_".join(str(x) for x in seq)
     return ret
@@ -207,7 +207,7 @@ if isinstance(df.columns, pd.MultiIndex):
 #
 # - read from file using [ThermoRawFileParser](https://github.com/compomics/ThermoRawFileParser)
 
-# %%
+# %% tags=["hide-input"]
 if args.fn_rawfile_metadata:
     df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
 else:
@@ -224,7 +224,7 @@ if df_meta.index.name is None:
     df_meta.index.name = args.index_col[0]
 df_meta
 
-# %%
+# %% tags=["hide-input"]
 if args.meta_date_col:
     df_meta[args.meta_date_col] = pd.to_datetime(
         df_meta[args.meta_date_col])
@@ -234,20 +234,20 @@ else:
 df_meta
 
 
-# %%
+# %% tags=["hide-input"]
 df_meta.describe(percentiles=np.linspace(0.05, 0.95, 10))
 
-# %%
+# %% tags=["hide-input"]
 df_meta = df_meta.sort_values(args.meta_date_col)
 
-# %%
+# %% tags=["hide-input"]
 meta_stats = df_meta.describe(include='all')
 meta_stats
 
 # %% [markdown]
 # subset with variation
 
-# %%
+# %% tags=["hide-input"]
 try:
     display(meta_stats.loc[:, (meta_stats.loc['unique']
             > 1) | (meta_stats.loc['std'] > 0.1)])
@@ -258,13 +258,13 @@ except KeyError:
         display(meta_stats.loc[:, (meta_stats.loc['std'] > 0.1)])
 
 
-# %%
+# %% tags=["hide-input"]
 df_meta = align_meta_data(df, df_meta=df_meta)
 
 # %% [markdown]
 # Ensure unique indices
 
-# %%
+# %% tags=["hide-input"]
 assert df.index.is_unique, "Duplicates in index."
 
 # %% [markdown]
@@ -274,7 +274,7 @@ assert df.index.is_unique, "Duplicates in index."
 # - for interpolation to make sense, it is best to select a consecutive number of samples:
 #   - take N most recent samples (-> check that this makes sense for your case)
 
-# %%
+# %% tags=["hide-input"]
 if args.select_N is not None:
     args.select_N = min(args.select_N, len(df_meta))
     if args.sample_N:
@@ -292,7 +292,7 @@ if args.select_N is not None:
 # - `feat_prevalence` across samples
 
 
-# %%
+# %% tags=["hide-input"]
 # ! add function
 freq_per_feature = df.notna().sum()  # on wide format
 if isinstance(args.feat_prevalence, float):
@@ -313,7 +313,7 @@ freq_per_feature = freq_per_feature.loc[mask]
 df = df.loc[:, mask]
 df
 
-# %%
+# %% tags=["hide-input"]
 notna = df.notna()
 data_stats_filtered = pd.concat(
     [
@@ -330,7 +330,7 @@ data_stats_filtered
 # %% [markdown]
 # Select samples based on completeness
 
-# %%
+# %% tags=["hide-input"]
 if isinstance(args.sample_completeness, float):
     msg = f'Fraction of minimum sample completeness over all features specified with: {args.sample_completeness}\n'
     # assumes df in wide format
@@ -342,7 +342,7 @@ if isinstance(args.sample_completeness, float):
 sample_counts = df.notna().sum(axis=1)  # if DataFrame
 sample_counts.describe()
 
-# %%
+# %% tags=["hide-input"]
 mask = sample_counts > args.sample_completeness
 msg = f'Drop {len(mask) - mask.sum()} of {len(mask)} initial samples.'
 logger.info(msg)
@@ -350,14 +350,14 @@ df = df.loc[mask]
 df = df.dropna(
     axis=1, how='all')  # drop now missing features
 
-# %%
+# %% tags=["hide-input"]
 args.N, args.M = df.shape  # save data dimensions
 args.used_samples = df.index.to_list()
 
 # %% [markdown]
 # ### Histogram of features per sample
 
-# %%
+# %% tags=["hide-input"]
 group = 1
 ax = df.notna().sum(axis=1).hist()
 ax.set_xlabel(f'{args.feat_name_display.capitalize()} per eligable sample')
@@ -366,7 +366,7 @@ fname = args.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 ax = df.notna().sum(axis=0).sort_values().plot()
 _new_labels = [l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()]
 _ = ax.set_xticklabels(_new_labels, rotation=45,
@@ -381,7 +381,7 @@ vaep.savefig(ax.get_figure(), fname)
 # %% [markdown]
 # ### Number off observations accross feature value
 
-# %%
+# %% tags=["hide-input"]
 min_max = vaep.plotting.data.min_max(df.stack())
 ax, bins = vaep.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
@@ -391,7 +391,7 @@ fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
@@ -401,7 +401,7 @@ ax.set_xlabel(
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
@@ -417,11 +417,11 @@ del _data_feat_median_over_prop_missing
 # %% [markdown]
 # ### Interactive and Single plots
 
-# %%
+# %% tags=["hide-input"]
 _feature_display_name = f'identified {args.feat_name_display}'
 sample_counts.name = _feature_display_name
 
-# %%
+# %% tags=["hide-input"]
 K = 2
 df = df.astype(float)
 pcs = get_PCA(df, n_components=K)  # should be renamed to get_PCs
@@ -432,10 +432,10 @@ pcs_index_name = pcs.index.name
 pcs = pcs.reset_index()
 pcs
 
-# %%
+# %% tags=["hide-input"]
 pcs.describe(include='all').T
 
-# %%
+# %% tags=["hide-input"]
 if args.meta_cat_col:
     fig, ax = plt.subplots(figsize=(3, 3))
     analyzers.seaborn_scatter(
@@ -445,7 +445,7 @@ if args.meta_cat_col:
     figures[fname.stem] = fname
     vaep.savefig(fig, fname)
 
-# %%
+# %% tags=["hide-input"]
 if args.meta_date_col != 'PlaceholderTime':
     fig, ax = plt.subplots()
     analyzers.plot_date_map(
@@ -457,7 +457,7 @@ if args.meta_date_col != 'PlaceholderTime':
 # %% [markdown]
 # - size: number of features in a single sample
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots()
 col_identified_feat = _feature_display_name
 analyzers.plot_scatter(
@@ -472,11 +472,11 @@ fname = (args.out_figures
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
-# %%
+# %% tags=["hide-input"]
 # # ! write principal components to excel (if needed)
 # pcs.set_index([df.index.name])[[*pcs_name, col_identified_feat]].to_excel(fname.with_suffix('.xlsx'))
 
-# %%
+# %% tags=["hide-input"]
 fig = px.scatter(
     pcs, x=pcs_name[0], y=pcs_name[1],
     hover_name=pcs_index_name,
@@ -497,10 +497,10 @@ fig  # stays interactive in html
 # %% [markdown]
 # ## Sample Medians and percentiles
 
-# %%
+# %% tags=["hide-input"]
 df.head()
 
-# %%
+# %% tags=["hide-input"]
 df_w_date = df.join(df_meta[args.meta_date_col])
 df_w_date = df_w_date.set_index(args.meta_date_col).sort_index()
 if not args.meta_date_col == 'PlaceholderTime':
@@ -508,7 +508,7 @@ if not args.meta_date_col == 'PlaceholderTime':
 df_w_date = df_w_date.T
 df_w_date
 
-# %%
+# %% tags=["hide-input"]
 ax = df_w_date.plot.box(rot=80,
                         figsize=(7, 3),
                         fontsize=7,
@@ -528,7 +528,7 @@ del df_w_date
 # %% [markdown]
 # Percentiles of intensities in dataset
 
-# %%
+# %% tags=["hide-input"]
 df.stack().describe(percentiles=np.linspace(0.05, 0.95, 19).round(2))
 
 # %% [markdown]
@@ -536,7 +536,7 @@ df.stack().describe(percentiles=np.linspace(0.05, 0.95, 19).round(2))
 #   - check if points are equally spaced (probably QC samples are run in close proximity)
 #   - the machine will be not use for intermediate periods
 
-# %%
+# %% tags=["hide-input"]
 if not args.meta_date_col == 'PlaceholderTime':
     dates = df_meta[args.meta_date_col].sort_values()
     median_sample_intensity = (df
@@ -563,7 +563,7 @@ if not args.meta_date_col == 'PlaceholderTime':
 # %% [markdown]
 # ## Feature frequency  in data
 
-# %%
+# %% tags=["hide-input"]
 msg = "Total number of samples in data: {}"
 logger.info(msg.format(len(df)))
 
@@ -571,11 +571,11 @@ logger.info(msg.format(len(df)))
 # %% [markdown]
 # Recalculate feature frequency after selecting samples
 
-# %%
+# %% tags=["hide-input"]
 freq_per_feature = feature_frequency(df)
 freq_per_feature
 
-# %%
+# %% tags=["hide-input"]
 # freq_per_feature.name = 'Gene names freq' # name it differently?
 # index.name is lost when data is stored
 fname = args.data / 'freq_features.json'
@@ -599,7 +599,7 @@ freq_per_feature.to_pickle(fname)
 #   for validation and test data split, e.g. 0.1 = quantile(0.1)
 # - select frac_mnar from intensities selected using threshold matrix
 
-# %%
+# %% tags=["hide-input"]
 splits = DataSplits(is_wide_format=False)
 logger.info(f"{splits = }")
 splits.__annotations__
@@ -609,11 +609,11 @@ splits.__annotations__
 # Create some target values by sampling X% of the validation and test data.
 # Simulated missing values are not used for validation and testing.
 
-# %%
+# %% tags=["hide-input"]
 df_long = vaep.io.datasplits.long_format(df)
 df_long.head()
 
-# %%
+# %% tags=["hide-input"]
 group = 2
 
 splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
@@ -624,7 +624,7 @@ splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
 )
 logger.info(f"{splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
 
-# %%
+# %% tags=["hide-input"]
 N = len(df_long)
 N_MCAR = len(fake_na_mcar)
 N_MNAR = len(fake_na_mnar)
@@ -663,7 +663,7 @@ fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, fname)
 
-# %%
+# %% tags=["hide-input"]
 counts_per_bin = vaep.pandas.get_counts_per_bin(
     df=pd.concat(
         [df_long.squeeze().to_frame('observed'),
@@ -684,7 +684,7 @@ counts_per_bin
 #
 # The procedure is experimental and turned off by default.
 
-# %%
+# %% tags=["hide-input"]
 if 0.0 < args.prop_sample_w_sim < 1.0:
     to_stratify = None
     if args.meta_cat_col and df_meta is not None:
@@ -708,16 +708,16 @@ if 0.0 < args.prop_sample_w_sim < 1.0:
     splits.test_y = splits.test_y.loc[test_idx]
     logger.info(f"New shapes: {splits.train_X.shape = } - {splits.val_y.shape = } - {splits.test_y.shape = }")
 
-# %%
+# %% tags=["hide-input"]
 splits.test_y.groupby(level=-1).count().describe()
 
-# %%
+# %% tags=["hide-input"]
 splits.val_y
 
-# %%
+# %% tags=["hide-input"]
 splits.train_X.groupby(level=-1).count().describe()
 
-# %%
+# %% tags=["hide-input"]
 # Check that feature indices and sample indicies overlap between splits
 # -> a single feature cannot be only in the validation or test split
 # -> single features should be put into the training data
@@ -740,7 +740,7 @@ if diff:
     splits.val_y = splits.val_y.drop(to_remove.index)
 diff
 
-# %%
+# %% tags=["hide-input"]
 diff = (splits
         .test_y
         .index
@@ -765,7 +765,7 @@ diff
 # In that case: Move the validation measurments back to the training data.
 # If after this procedure the condition is still not met, a value error is raised.
 
-# %%
+# %% tags=["hide-input"]
 mask_min_4_measurments = splits.train_X.groupby(level=1).count() < 4
 if mask_min_4_measurments.any():
     idx = mask_min_4_measurments.loc[mask_min_4_measurments].index
@@ -788,7 +788,7 @@ if mask_min_4_measurments.any():
 # - Data in long format: (peptide, sample_id, intensity)
 # - no missing values kept
 
-# %%
+# %% tags=["hide-input"]
 # dumps data in long-format
 splits_dumped = splits.dump(folder=args.data, file_format=args.file_format)
 dumps.update(splits_dumped)
@@ -797,13 +797,13 @@ splits_dumped
 # %% [markdown]
 # ### Reload from disk
 
-# %%
+# %% tags=["hide-input"]
 splits = DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %% [markdown]
 # ## plot distribution of splits
 
-# %%
+# %% tags=["hide-input"]
 splits_df = pd.DataFrame(index=df_long.index)
 splits_df['train'] = splits.train_X
 splits_df['val'] = splits.val_y
@@ -812,7 +812,7 @@ stats_splits = splits_df.describe()
 stats_splits.to_excel(writer, 'stats_splits', float_format='%.3f')
 stats_splits
 
-# %%
+# %% tags=["hide-input"]
 # whitespaces in legends are not displayed correctly...
 # max_int_len   = len(str(int(stats_splits.loc['count'].max()))) +1
 # _legend = [
@@ -824,7 +824,7 @@ _legend = [
     for s in ('train', 'val', 'test')]
 print(_legend)
 
-# %%
+# %% tags=["hide-input"]
 group = 3
 ax = (splits
       .train_X
@@ -851,7 +851,7 @@ fname = args.out_figures / f'0_{group}_val_over_train_split.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 min_bin, max_bin = vaep.plotting.data.min_max(splits.val_y)
 bins = range(int(min_bin), int(max_bin) + 1, 1)
 ax = splits_df.plot.hist(bins=bins,
@@ -869,12 +869,12 @@ fname = args.out_figures / f'0_{group}_splits_freq_stacked.pdf'
 figures[fname.name] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 counts_per_bin = vaep.pandas.get_counts_per_bin(df=splits_df, bins=bins)
 counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
 counts_per_bin
 
-# %%
+# %% tags=["hide-input"]
 ax = splits_df.drop('train', axis=1).plot.hist(bins=bins,
                                                xticks=list(bins),
                                                color=['C1', 'C2'],
@@ -894,24 +894,24 @@ vaep.savefig(ax.get_figure(), fname)
 # %% [markdown]
 # plot training data missing plots
 
-# %%
+# %% tags=["hide-input"]
 splits.to_wide_format()
 
-# %%
+# %% tags=["hide-input"]
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='boxplot')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_train'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 medians = (splits
            .train_X
            .median()
@@ -945,7 +945,7 @@ vaep.savefig(ax.get_figure(), fname)
 # %% [markdown]
 # ## Save parameters
 
-# %%
+# %% tags=["hide-input"]
 fname = args.folder_experiment / 'data_config.yaml'
 args.dump(fname)
 args
@@ -953,15 +953,15 @@ args
 # %% [markdown]
 # ## Saved Figures
 
-# %%
+# %% tags=["hide-input"]
 # saved figures
 figures
 
 # %% [markdown]
 # Saved dumps
 
-# %%
+# %% tags=["hide-input"]
 writer.close()
 dumps
 
-# %%
+# %% tags=["hide-input"]
