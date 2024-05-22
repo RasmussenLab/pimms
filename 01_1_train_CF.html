@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g8706c61 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+ge97eb32 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g8706c61 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+ge97eb32 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -164,14 +164,13 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-CART.html">MICE-CART</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
@@ -180,7 +179,6 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
@@ -454,15 +452,14 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
 <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;CF&quot;</span>
-<span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span>
 <span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">4096</span>
-<span class="n">epochs_max</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">epochs_max</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">sample_idx_position</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">cuda</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">save_pred_real_na</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">fn_rawfile_metadata</span> <span class="o">=</span> <span class="s2">&quot;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&quot;</span>
-<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/dev_dataset_small/proteinGroups_N50&quot;</span>
+<span class="n">fn_rawfile_metadata</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study_2023_11_v2&quot;</span>
 <span class="n">model_key</span> <span class="o">=</span> <span class="s2">&quot;CF&quot;</span>
 </pre></div>
 </div>
@@ -477,19 +474,19 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study_2023_11_v2&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;epochs_max&#39;: 20,
+ &#39;epochs_max&#39;: 100,
  &#39;patience&#39;: 1,
- &#39;batch_size&#39;: 4096,
+ &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;latent_dim&#39;: 50,
  &#39;sample_idx_position&#39;: 0,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
  &#39;save_pred_real_na&#39;: True,
- &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;}
+ &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;}
 </pre></div>
 </div>
 </div>
@@ -508,22 +505,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;batch_size&#39;: 4096,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
- &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
- &#39;epochs_max&#39;: 20,
+ &#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
+ &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
+ &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
  &#39;latent_dim&#39;: 50,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
- &#39;out_figures&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_models&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds&#39;),
+ &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/preds&#39;),
  &#39;patience&#39;: 1,
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
@@ -552,9 +549,9 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study_2023_11_v2/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -567,19 +564,19 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID                                       Gene Names
-2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAAS         28.349
-                                                AACS         26.133
-                                                AAMP         26.777
-                                                AAR2         27.248
-                                                AARS         32.195
-                                                              ...  
-2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZNHIT2       26.946
-                                                ZRANB2       28.098
-                                                ZW10         29.425
-                                                ZWINT        24.794
-                                                ZYX          29.847
-Name: intensity, Length: 167898, dtype: float64
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.912
+            A0A024R0T9;K7ER74;P02655                                                         16.852
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.570
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.481
+            A0A075B6H7                                                                       17.301
+                                                                                              ...  
+Sample_209  Q9Y6R7                                                                           19.275
+            Q9Y6X5                                                                           15.732
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.577
+            Q9Y6Y9                                                                           11.042
+            S4R3U6                                                                           11.791
+Name: intensity, Length: 226809, dtype: float64
 </pre></div>
 </div>
 </div>
@@ -613,7 +610,7 @@ Name: intensity, Length: 167898, dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;Gene Names&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
 </pre></div>
 </div>
 </div>
@@ -652,35 +649,35 @@ Name: intensity, Length: 167898, dtype: float64
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>Gene Names</th>
+      <th>protein groups</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SEH1L</th>
-      <td>27.180</td>
+      <th>Sample_158</th>
+      <th>Q9UN70;Q9UN70-2</th>
+      <td>14.630</td>
     </tr>
     <tr>
-      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SLC9A3R1</th>
-      <td>30.259</td>
+      <th>Sample_050</th>
+      <th>Q9Y287</th>
+      <td>15.755</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>KYNU</th>
-      <td>30.629</td>
+      <th>Sample_107</th>
+      <th>Q8N475;Q8N475-2</th>
+      <td>15.029</td>
     </tr>
     <tr>
-      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>ADD3</th>
-      <td>24.541</td>
+      <th>Sample_199</th>
+      <th>P06307</th>
+      <td>19.376</td>
     </tr>
     <tr>
-      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>CALM2;CALM1</th>
-      <td>33.934</td>
+      <th>Sample_067</th>
+      <th>Q5VUB5</th>
+      <td>15.309</td>
     </tr>
     <tr>
       <th>...</th>
@@ -688,33 +685,33 @@ Name: intensity, Length: 167898, dtype: float64
       <td>...</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>PPP2R4;DKFZp781M17165</th>
-      <td>28.717</td>
+      <th>Sample_111</th>
+      <th>F6SYF8;Q9UBP4</th>
+      <td>22.822</td>
     </tr>
     <tr>
-      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>MED23</th>
-      <td>24.966</td>
+      <th>Sample_002</th>
+      <th>A0A0A0MT36</th>
+      <td>18.165</td>
     </tr>
     <tr>
-      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RBMXL1</th>
-      <td>26.654</td>
+      <th>Sample_049</th>
+      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
+      <td>15.525</td>
     </tr>
     <tr>
-      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SMARCA1</th>
-      <td>27.917</td>
+      <th>Sample_182</th>
+      <th>Q8NFT8</th>
+      <td>14.379</td>
     </tr>
     <tr>
-      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RGPD3;RGPD4</th>
-      <td>24.289</td>
+      <th>Sample_123</th>
+      <th>Q16853;Q16853-2</th>
+      <td>14.504</td>
     </tr>
   </tbody>
 </table>
-<p>9327 rows × 1 columns</p>
+<p>12600 rows × 1 columns</p>
 </div></div></div>
 </div>
 <div class="cell docutils container">
@@ -749,35 +746,35 @@ Name: intensity, Length: 167898, dtype: float64
   <tbody>
     <tr>
       <th>count</th>
-      <td>9,327.000</td>
+      <td>12,600.000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>27.230</td>
+      <td>16.339</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>2.888</td>
+      <td>2.741</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>19.974</td>
+      <td>7.209</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>24.905</td>
+      <td>14.412</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>26.929</td>
+      <td>15.935</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>29.174</td>
+      <td>17.910</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>37.689</td>
+      <td>30.140</td>
     </tr>
   </tbody>
 </table>
@@ -817,7 +814,7 @@ Name: intensity, Length: 167898, dtype: float64
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Args:
-{&#39;n_factors&#39;: 50, &#39;y_range&#39;: (20, 40)}
+{&#39;n_factors&#39;: 50, &#39;y_range&#39;: (7, 31)}
 </pre></div>
 </div>
 </div>
@@ -889,9 +886,9 @@ Name: intensity, Length: 167898, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00437
-No improvement since epoch 11: early stopping
-vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N50/figures/collab_training
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00759
+No improvement since epoch 9: early stopping
+vaep.plotting - INFO     Saved Figures to runs/alzheimer_study_2023_11_v2/figures/collab_training
 </pre></div>
 </div>
 <div class="output text_html">
@@ -922,85 +919,73 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
   <tbody>
     <tr>
       <td>0</td>
-      <td>9.560513</td>
-      <td>15.142423</td>
-      <td>00:00</td>
+      <td>7.315674</td>
+      <td>9.918063</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>8.802984</td>
-      <td>11.772315</td>
-      <td>00:00</td>
+      <td>1.967863</td>
+      <td>2.314314</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>5.387239</td>
-      <td>2.152946</td>
-      <td>00:00</td>
+      <td>0.695550</td>
+      <td>0.870492</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>2.819573</td>
-      <td>1.183822</td>
-      <td>00:00</td>
+      <td>0.566539</td>
+      <td>0.749014</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1.596138</td>
-      <td>0.970973</td>
-      <td>00:00</td>
+      <td>0.552755</td>
+      <td>0.720656</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.982700</td>
-      <td>0.846158</td>
-      <td>00:00</td>
+      <td>0.510607</td>
+      <td>0.683494</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.684790</td>
-      <td>0.801381</td>
-      <td>00:00</td>
+      <td>0.431981</td>
+      <td>0.594769</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.541789</td>
-      <td>0.780351</td>
-      <td>00:00</td>
+      <td>0.382721</td>
+      <td>0.540399</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.457335</td>
-      <td>0.760134</td>
-      <td>00:00</td>
+      <td>0.355993</td>
+      <td>0.517195</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.400516</td>
-      <td>0.746560</td>
-      <td>00:00</td>
+      <td>0.311398</td>
+      <td>0.491182</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.354322</td>
-      <td>0.739877</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>11</td>
-      <td>0.313219</td>
-      <td>0.726775</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>12</td>
-      <td>0.274527</td>
-      <td>0.729365</td>
-      <td>00:00</td>
+      <td>0.274780</td>
+      <td>0.491779</td>
+      <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/986fecbbf06d1d2eadbfe6bda1e0a943e18fa40bab0295c4b0801f7ba0be0609.png" src="_images/986fecbbf06d1d2eadbfe6bda1e0a943e18fa40bab0295c4b0801f7ba0be0609.png" />
-<img alt="_images/5b680ddb9dcc0dc0c4e809dbd296a8f264c971b5edf19ceb6829838a61c49a5c.png" src="_images/5b680ddb9dcc0dc0c4e809dbd296a8f264c971b5edf19ceb6829838a61c49a5c.png" />
+</table></div><img alt="_images/d8f94623a7d2c6a4ae0cfe5b110195b116c5e4a181c1ebdbdb9496a48f263f5e.png" src="_images/d8f94623a7d2c6a4ae0cfe5b110195b116c5e4a181c1ebdbdb9496a48f263f5e.png" />
+<img alt="_images/5c5320298dbed15a57509afd3dbfe23ccabcb21ee800b664a2d4ade7edf811f4.png" src="_images/5c5320298dbed15a57509afd3dbfe23ccabcb21ee800b664a2d4ade7edf811f4.png" />
 </div>
 </div>
 </section>
@@ -1059,41 +1044,41 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>Gene Names</th>
+      <th>protein groups</th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SEH1L</th>
-      <td>27.180</td>
-      <td>26.524</td>
+      <th>Sample_158</th>
+      <th>Q9UN70;Q9UN70-2</th>
+      <td>14.630</td>
+      <td>15.891</td>
     </tr>
     <tr>
-      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SLC9A3R1</th>
-      <td>30.259</td>
-      <td>28.417</td>
+      <th>Sample_050</th>
+      <th>Q9Y287</th>
+      <td>15.755</td>
+      <td>17.045</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>KYNU</th>
-      <td>30.629</td>
-      <td>30.961</td>
+      <th>Sample_107</th>
+      <th>Q8N475;Q8N475-2</th>
+      <td>15.029</td>
+      <td>14.629</td>
     </tr>
     <tr>
-      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>ADD3</th>
-      <td>24.541</td>
-      <td>26.033</td>
+      <th>Sample_199</th>
+      <th>P06307</th>
+      <td>19.376</td>
+      <td>19.410</td>
     </tr>
     <tr>
-      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>CALM2;CALM1</th>
-      <td>33.934</td>
-      <td>33.450</td>
+      <th>Sample_067</th>
+      <th>Q5VUB5</th>
+      <td>15.309</td>
+      <td>14.831</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1102,38 +1087,38 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <td>...</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>PPP2R4;DKFZp781M17165</th>
-      <td>28.717</td>
-      <td>28.389</td>
+      <th>Sample_111</th>
+      <th>F6SYF8;Q9UBP4</th>
+      <td>22.822</td>
+      <td>22.753</td>
     </tr>
     <tr>
-      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>MED23</th>
-      <td>24.966</td>
-      <td>23.831</td>
+      <th>Sample_002</th>
+      <th>A0A0A0MT36</th>
+      <td>18.165</td>
+      <td>15.144</td>
     </tr>
     <tr>
-      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RBMXL1</th>
-      <td>26.654</td>
-      <td>24.679</td>
+      <th>Sample_049</th>
+      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
+      <td>15.525</td>
+      <td>15.736</td>
     </tr>
     <tr>
-      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SMARCA1</th>
-      <td>27.917</td>
-      <td>28.280</td>
+      <th>Sample_182</th>
+      <th>Q8NFT8</th>
+      <td>14.379</td>
+      <td>14.672</td>
     </tr>
     <tr>
-      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RGPD3;RGPD4</th>
-      <td>24.289</td>
-      <td>24.538</td>
+      <th>Sample_123</th>
+      <th>Q16853;Q16853-2</th>
+      <td>14.504</td>
+      <td>14.337</td>
     </tr>
   </tbody>
 </table>
-<p>9327 rows × 2 columns</p>
+<p>12600 rows × 2 columns</p>
 </div></div></div>
 </div>
 <p>select test data predictions</p>
@@ -1186,37 +1171,37 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>Gene Names</th>
+      <th>protein groups</th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th rowspan="5" valign="top">2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>ABCE1</th>
-      <td>29.538</td>
-      <td>29.877</td>
+      <th rowspan="5" valign="top">Sample_000</th>
+      <th>A0A075B6P5;P01615</th>
+      <td>17.016</td>
+      <td>17.262</td>
     </tr>
     <tr>
-      <th>ACTN4</th>
-      <td>33.270</td>
-      <td>33.014</td>
+      <th>A0A087X089;Q16627;Q16627-2</th>
+      <td>18.280</td>
+      <td>17.985</td>
     </tr>
     <tr>
-      <th>ADD3</th>
-      <td>24.259</td>
-      <td>24.965</td>
+      <th>A0A0B4J2B5;S4R460</th>
+      <td>21.735</td>
+      <td>22.727</td>
     </tr>
     <tr>
-      <th>ALCAM</th>
-      <td>24.906</td>
-      <td>24.445</td>
+      <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
+      <td>14.603</td>
+      <td>15.049</td>
     </tr>
     <tr>
-      <th>ALDH1B1</th>
-      <td>26.674</td>
-      <td>27.058</td>
+      <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
+      <td>16.143</td>
+      <td>16.029</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1225,34 +1210,34 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
       <td>...</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>YIPF3</th>
-      <td>25.040</td>
-      <td>25.559</td>
+      <th rowspan="5" valign="top">Sample_209</th>
+      <th>Q96ID5</th>
+      <td>16.074</td>
+      <td>16.129</td>
     </tr>
     <tr>
-      <th>YTHDF3</th>
-      <td>28.717</td>
-      <td>27.373</td>
+      <th>Q9H492;Q9H492-2</th>
+      <td>13.173</td>
+      <td>13.543</td>
     </tr>
     <tr>
-      <th>ZC3H11A</th>
-      <td>28.935</td>
-      <td>29.317</td>
+      <th>Q9HC57</th>
+      <td>14.207</td>
+      <td>14.114</td>
     </tr>
     <tr>
-      <th>ZFP91-CNTF;ZFP91</th>
-      <td>25.662</td>
-      <td>26.635</td>
+      <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
+      <td>14.962</td>
+      <td>14.971</td>
     </tr>
     <tr>
-      <th>hCG_2014768;TMA7</th>
-      <td>29.212</td>
-      <td>28.563</td>
+      <th>Q9UGM5;Q9UGM5-2</th>
+      <td>16.871</td>
+      <td>16.510</td>
     </tr>
   </tbody>
 </table>
-<p>9327 rows × 2 columns</p>
+<p>12600 rows × 2 columns</p>
 </div></div></div>
 </div>
 <div class="cell docutils container">
@@ -1319,28 +1304,28 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>Gene Names</th>
-      <th>AAAS</th>
-      <th>AACS</th>
-      <th>AAMDC</th>
-      <th>AAMP</th>
-      <th>AAR2</th>
-      <th>AARS</th>
-      <th>AARS2</th>
-      <th>AASDHPPT</th>
-      <th>AATF</th>
-      <th>ABCB10</th>
+      <th>protein groups</th>
+      <th>A0A024QZX5;A0A087X1N8;P35237</th>
+      <th>A0A024R0T9;K7ER74;P02655</th>
+      <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
+      <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
+      <th>A0A075B6H7</th>
+      <th>A0A075B6H9</th>
+      <th>A0A075B6I0</th>
+      <th>A0A075B6I1</th>
+      <th>A0A075B6I6</th>
+      <th>A0A075B6I9</th>
       <th>...</th>
-      <th>ZNHIT2</th>
-      <th>ZNRF2</th>
-      <th>ZPR1</th>
-      <th>ZRANB2</th>
-      <th>ZW10</th>
-      <th>ZWILCH</th>
-      <th>ZWINT</th>
-      <th>ZYX</th>
-      <th>hCG_2014768;TMA7</th>
-      <th>pk;ZAK</th>
+      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
+      <th>Q9Y696</th>
+      <th>Q9Y6C2</th>
+      <th>Q9Y6N6</th>
+      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
+      <th>Q9Y6R7</th>
+      <th>Q9Y6X5</th>
+      <th>Q9Y6Y8;Q9Y6Y8-2</th>
+      <th>Q9Y6Y9</th>
+      <th>S4R3U6</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1369,128 +1354,128 @@ vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N
   </thead>
   <tbody>
     <tr>
-      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>28.349</td>
-      <td>26.133</td>
-      <td>NaN</td>
-      <td>26.777</td>
-      <td>27.248</td>
-      <td>32.195</td>
-      <td>27.153</td>
-      <td>27.872</td>
-      <td>28.603</td>
-      <td>26.110</td>
+      <th>Sample_000</th>
+      <td>15.912</td>
+      <td>16.852</td>
+      <td>15.570</td>
+      <td>16.481</td>
+      <td>17.301</td>
+      <td>20.246</td>
+      <td>16.764</td>
+      <td>17.584</td>
+      <td>16.988</td>
+      <td>20.054</td>
       <td>...</td>
+      <td>16.012</td>
+      <td>15.178</td>
+      <td>NaN</td>
+      <td>15.050</td>
+      <td>16.842</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>28.309</td>
-      <td>28.831</td>
-      <td>28.851</td>
+      <td>19.563</td>
       <td>NaN</td>
-      <td>24.379</td>
-      <td>29.427</td>
-      <td>28.080</td>
-      <td>NaN</td>
+      <td>12.805</td>
     </tr>
     <tr>
-      <th>2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>27.657</td>
-      <td>25.019</td>
-      <td>24.236</td>
-      <td>26.271</td>
+      <th>Sample_001</th>
       <td>NaN</td>
+      <td>16.874</td>
+      <td>15.519</td>
+      <td>16.387</td>
       <td>NaN</td>
-      <td>26.530</td>
-      <td>28.191</td>
-      <td>27.942</td>
-      <td>25.735</td>
+      <td>19.941</td>
+      <td>18.786</td>
+      <td>17.144</td>
+      <td>NaN</td>
+      <td>19.067</td>
       <td>...</td>
+      <td>15.528</td>
+      <td>15.576</td>
       <td>NaN</td>
-      <td>NaN</td>
-      <td>28.133</td>
-      <td>27.267</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>14.833</td>
+      <td>16.597</td>
+      <td>20.299</td>
+      <td>15.556</td>
+      <td>19.386</td>
+      <td>13.970</td>
+      <td>12.442</td>
     </tr>
     <tr>
-      <th>2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>28.352</td>
-      <td>23.740</td>
+      <th>Sample_002</th>
+      <td>16.111</td>
       <td>NaN</td>
-      <td>27.098</td>
-      <td>27.377</td>
-      <td>32.885</td>
-      <td>27.515</td>
-      <td>28.476</td>
-      <td>28.771</td>
-      <td>26.787</td>
+      <td>15.935</td>
+      <td>16.416</td>
+      <td>18.175</td>
+      <td>19.251</td>
+      <td>16.832</td>
+      <td>15.671</td>
+      <td>17.012</td>
+      <td>18.569</td>
       <td>...</td>
-      <td>25.184</td>
-      <td>NaN</td>
-      <td>28.968</td>
-      <td>27.322</td>
-      <td>29.388</td>
-      <td>NaN</td>
-      <td>25.803</td>
-      <td>29.525</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>15.229</td>
+      <td>14.728</td>
+      <td>13.757</td>
+      <td>15.118</td>
+      <td>17.440</td>
+      <td>19.598</td>
+      <td>15.735</td>
+      <td>20.447</td>
+      <td>12.636</td>
+      <td>12.505</td>
     </tr>
     <tr>
-      <th>2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>26.826</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>31.926</td>
-      <td>26.157</td>
-      <td>27.635</td>
-      <td>27.851</td>
-      <td>25.346</td>
+      <th>Sample_003</th>
+      <td>16.107</td>
+      <td>17.032</td>
+      <td>15.802</td>
+      <td>16.979</td>
+      <td>15.963</td>
+      <td>19.628</td>
+      <td>17.852</td>
+      <td>18.877</td>
+      <td>14.182</td>
+      <td>18.985</td>
       <td>...</td>
+      <td>15.495</td>
+      <td>14.590</td>
+      <td>14.682</td>
+      <td>15.140</td>
+      <td>17.356</td>
+      <td>19.429</td>
       <td>NaN</td>
-      <td>23.586</td>
+      <td>20.216</td>
       <td>NaN</td>
-      <td>27.278</td>
-      <td>28.076</td>
-      <td>NaN</td>
-      <td>24.688</td>
-      <td>28.783</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>12.445</td>
     </tr>
     <tr>
-      <th>2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <td>27.404</td>
-      <td>26.948</td>
-      <td>23.864</td>
-      <td>26.982</td>
-      <td>26.520</td>
-      <td>31.844</td>
-      <td>25.342</td>
-      <td>27.416</td>
-      <td>27.474</td>
+      <th>Sample_004</th>
+      <td>15.603</td>
+      <td>15.331</td>
+      <td>15.375</td>
+      <td>16.679</td>
       <td>NaN</td>
+      <td>20.450</td>
+      <td>18.682</td>
+      <td>17.081</td>
+      <td>14.140</td>
+      <td>19.686</td>
       <td>...</td>
-      <td>24.591</td>
+      <td>14.757</td>
       <td>NaN</td>
-      <td>25.838</td>
-      <td>29.326</td>
-      <td>27.491</td>
-      <td>26.406</td>
       <td>NaN</td>
-      <td>30.422</td>
+      <td>15.256</td>
+      <td>17.075</td>
+      <td>19.582</td>
+      <td>15.328</td>
       <td>NaN</td>
-      <td>26.939</td>
+      <td>13.145</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 4405 columns</p>
+<p>5 rows × 1421 columns</p>
 </div></div></div>
 </div>
 <section id="validation-data">
@@ -1522,9 +1507,9 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.729365282800431,
-  &#39;MAE&#39;: 0.5838424610823013,
-  &#39;N&#39;: 9327,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4917788984578331,
+  &#39;MAE&#39;: 0.47163769561733526,
+  &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
 </div>
@@ -1547,9 +1532,9 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.738431457815308,
-  &#39;MAE&#39;: 0.5829164214394708,
-  &#39;N&#39;: 9327,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4966371688431675,
+  &#39;MAE&#39;: 0.4718465799326769,
+  &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
 </div>
@@ -1606,18 +1591,18 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.729</td>
-      <td>0.738</td>
+      <td>0.492</td>
+      <td>0.497</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.584</td>
-      <td>0.583</td>
+      <td>0.472</td>
+      <td>0.472</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>9,327.000</td>
-      <td>9,327.000</td>
+      <td>12,600.000</td>
+      <td>12,600.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1652,25 +1637,25 @@ reconstruction.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 4405,
- &#39;batch_size&#39;: 4096,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 1421,
+ &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
- &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
- &#39;epoch_trained&#39;: 13,
- &#39;epochs_max&#39;: 20,
+ &#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
+ &#39;epoch_trained&#39;: 11,
+ &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
+ &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
  &#39;latent_dim&#39;: 50,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
- &#39;n_params&#39;: 227307,
- &#39;out_figures&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_models&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds&#39;),
+ &#39;n_params&#39;: 83283,
+ &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/preds&#39;),
  &#39;patience&#39;: 1,
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
