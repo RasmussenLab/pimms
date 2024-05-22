@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+ge97eb32 documentation</title>
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+gb6b0639 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge97eb32 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gb6b0639 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -349,17 +349,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="transfer-predictions-from-naguider">
 <h1>Transfer predictions from NAGuideR<a class="headerlink" href="#transfer-predictions-from-naguider" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">vaep</span>
 <span class="kn">import</span> <span class="nn">vaep.models</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="kn">import</span> <span class="nn">vaep.pandas</span>
+<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 
 <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
@@ -367,8 +373,14 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
@@ -376,6 +388,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Papermill script parameters:</p>
 <div class="cell tag_parameters docutils container">
@@ -401,7 +414,12 @@ document.write(`
 </div>
 </div>
 <p>Some argument transformations</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -409,6 +427,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
  &#39;dumps&#39;: &#39;runs/alzheimer_study_2023_11_v2/preds/pred_all_BPCA.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_IRM.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_LLS.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MINDET.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MINIMUM.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MINPROB.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MLE.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MSIMPUTE.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_MSIMPUTE_MNAR.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_PI.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_QRILC.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_RF.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_TRKNN.csv,runs/alzheimer_study_2023_11_v2/preds/pred_all_ZERO.csv&#39;,
@@ -425,21 +444,33 @@ document.write(`
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span> <span class="o">=</span> <span class="p">{}</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>load data splits</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study_2023_11_v2/data/train_X.csv
 vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/val_y.csv
@@ -449,13 +480,19 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </div>
 <p>Validation and test data split of simulated missing values</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">val_pred_fake_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -545,13 +582,19 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <p>12600 rows × 1 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -611,14 +654,25 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find and load prediction files, filter for validation and test data</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">entire_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
@@ -629,6 +683,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pred_all_BPCA.csv&#39;),
  Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pred_all_COLMEDIAN.csv&#39;),
@@ -654,7 +709,12 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
 <span class="n">idx_real_na</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -692,6 +752,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pred_all_BPCA.csv&#39;)
 vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pred_val_BPCA.csv&#39;)
@@ -777,12 +838,18 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -867,11 +934,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,513.638</td>
-      <td>6.851</td>
-      <td>8.755</td>
-      <td>13.425</td>
-      <td>14.772</td>
-      <td>15.623</td>
+      <td>7.043</td>
+      <td>8.369</td>
+      <td>12.346</td>
+      <td>15.050</td>
+      <td>15.810</td>
       <td>15.752</td>
       <td>17.206</td>
       <td>15.700</td>
@@ -892,11 +959,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>19.829</td>
-      <td>7.022</td>
-      <td>8.350</td>
-      <td>11.206</td>
-      <td>15.795</td>
-      <td>17.298</td>
+      <td>7.222</td>
+      <td>8.482</td>
+      <td>14.364</td>
+      <td>15.814</td>
+      <td>17.000</td>
       <td>17.221</td>
       <td>17.807</td>
       <td>16.738</td>
@@ -917,11 +984,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,582.130</td>
-      <td>6.050</td>
-      <td>7.698</td>
-      <td>12.873</td>
-      <td>13.483</td>
-      <td>14.757</td>
+      <td>6.225</td>
+      <td>7.481</td>
+      <td>12.513</td>
+      <td>11.326</td>
+      <td>14.244</td>
       <td>14.846</td>
       <td>17.434</td>
       <td>13.776</td>
@@ -942,11 +1009,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,483.120</td>
-      <td>8.465</td>
-      <td>9.447</td>
-      <td>13.282</td>
-      <td>17.463</td>
-      <td>19.198</td>
+      <td>8.694</td>
+      <td>9.476</td>
+      <td>12.834</td>
+      <td>16.959</td>
+      <td>19.057</td>
       <td>18.973</td>
       <td>17.111</td>
       <td>19.015</td>
@@ -967,11 +1034,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,569.564</td>
-      <td>6.207</td>
-      <td>7.721</td>
-      <td>12.505</td>
-      <td>12.686</td>
-      <td>14.857</td>
+      <td>6.384</td>
+      <td>7.657</td>
+      <td>12.524</td>
+      <td>13.528</td>
+      <td>14.895</td>
       <td>14.726</td>
       <td>17.031</td>
       <td>14.699</td>
@@ -1017,11 +1084,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,634.108</td>
-      <td>10.296</td>
-      <td>10.866</td>
-      <td>12.990</td>
-      <td>22.344</td>
-      <td>22.930</td>
+      <td>10.576</td>
+      <td>10.906</td>
+      <td>11.560</td>
+      <td>22.329</td>
+      <td>22.840</td>
       <td>22.918</td>
       <td>17.330</td>
       <td>22.872</td>
@@ -1042,11 +1109,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,448.503</td>
-      <td>6.328</td>
-      <td>7.619</td>
-      <td>12.911</td>
-      <td>11.577</td>
-      <td>16.006</td>
+      <td>6.517</td>
+      <td>7.848</td>
+      <td>12.962</td>
+      <td>13.707</td>
+      <td>15.610</td>
       <td>15.877</td>
       <td>16.879</td>
       <td>15.671</td>
@@ -1067,11 +1134,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,487.550</td>
-      <td>6.223</td>
-      <td>7.989</td>
-      <td>13.452</td>
-      <td>14.572</td>
-      <td>16.210</td>
+      <td>6.409</td>
+      <td>8.155</td>
+      <td>13.299</td>
+      <td>14.940</td>
+      <td>15.439</td>
       <td>16.278</td>
       <td>17.215</td>
       <td>15.574</td>
@@ -1092,11 +1159,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,426.191</td>
-      <td>4.408</td>
-      <td>6.264</td>
-      <td>11.365</td>
-      <td>11.181</td>
-      <td>13.807</td>
+      <td>4.557</td>
+      <td>6.287</td>
+      <td>12.883</td>
+      <td>10.689</td>
+      <td>13.932</td>
       <td>13.995</td>
       <td>17.125</td>
       <td>14.518</td>
@@ -1117,11 +1184,11 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>7.068</td>
       <td>...</td>
       <td>2,461.806</td>
-      <td>6.223</td>
-      <td>8.154</td>
-      <td>12.152</td>
-      <td>13.966</td>
-      <td>14.739</td>
+      <td>6.402</td>
+      <td>7.664</td>
+      <td>13.815</td>
+      <td>13.983</td>
+      <td>14.647</td>
       <td>14.849</td>
       <td>16.981</td>
       <td>14.485</td>
@@ -1133,21 +1200,33 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </div></div></div>
 </div>
 <p>Metrics for simulated missing values (NA)</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
 <span class="n">d_metrics</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">val_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
@@ -1202,12 +1281,12 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>108.639</td>
       <td>25.619</td>
       <td>97.284</td>
-      <td>25.935</td>
+      <td>25.932</td>
       <td>5,393,471.689</td>
-      <td>98.479</td>
-      <td>71.561</td>
-      <td>23.292</td>
-      <td>4.413</td>
+      <td>94.670</td>
+      <td>74.316</td>
+      <td>23.063</td>
+      <td>4.332</td>
       <td>0.451</td>
       <td>0.695</td>
       <td>8.040</td>
@@ -1224,13 +1303,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>0.695</td>
       <td>4.267</td>
       <td>9.468</td>
-      <td>4.273</td>
+      <td>4.282</td>
       <td>2,132.119</td>
-      <td>9.818</td>
-      <td>8.310</td>
-      <td>3.982</td>
-      <td>1.654</td>
-      <td>0.447</td>
+      <td>9.625</td>
+      <td>8.471</td>
+      <td>3.949</td>
+      <td>1.634</td>
+      <td>0.448</td>
       <td>0.580</td>
       <td>2.283</td>
       <td>0.436</td>
@@ -1286,13 +1365,19 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </div>
 <section id="test-datasplit">
 <h2>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;test_fake_na&#39;</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
@@ -1347,13 +1432,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>0.688</td>
       <td>24.975</td>
       <td>95.562</td>
-      <td>25.159</td>
+      <td>25.426</td>
       <td>5,505,296.129</td>
-      <td>97.721</td>
-      <td>70.800</td>
-      <td>22.387</td>
-      <td>4.265</td>
-      <td>0.560</td>
+      <td>93.951</td>
+      <td>73.576</td>
+      <td>22.759</td>
+      <td>4.559</td>
+      <td>0.576</td>
       <td>0.843</td>
       <td>8.370</td>
       <td>0.562</td>
@@ -1369,13 +1454,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
       <td>0.524</td>
       <td>4.190</td>
       <td>9.369</td>
-      <td>4.190</td>
+      <td>4.211</td>
       <td>2,175.538</td>
-      <td>9.772</td>
-      <td>8.255</td>
-      <td>3.886</td>
-      <td>1.636</td>
-      <td>0.480</td>
+      <td>9.580</td>
+      <td>8.417</td>
+      <td>3.920</td>
+      <td>1.663</td>
+      <td>0.483</td>
       <td>0.624</td>
       <td>2.314</td>
       <td>0.470</td>
@@ -1429,7 +1514,12 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
     <span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">column_levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
@@ -1437,6 +1527,7 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1533,7 +1624,12 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 <p>76 rows × 2 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">order_methods</span> <span class="o">=</span> <span class="n">metrics_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span>
                                              <span class="s1">&#39;MAE&#39;</span><span class="p">],</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
@@ -1541,24 +1637,25 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study_2023_11_v2/preds/pre
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
 BPCA           MAE               0.406
 TRKNN          MAE               0.436
-RF             MAE               0.447
+RF             MAE               0.448
 KNN_IMPUTE     MAE               0.535
 IRM            MAE               0.575
 ROWMEDIAN      MAE               0.580
 LLS            MAE               0.695
-QRILC          MAE               1.654
+QRILC          MAE               1.634
 COLMEDIAN      MAE               2.204
 SVDMETHOD      MAE               2.283
-PI             MAE               3.982
+PI             MAE               3.949
 MINDET         MAE               4.267
-MINPROB        MAE               4.273
-MSIMPUTE_MNAR  MAE               8.310
+MINPROB        MAE               4.282
+MSIMPUTE_MNAR  MAE               8.471
 MINIMUM        MAE               9.468
-MSIMPUTE       MAE               9.818
+MSIMPUTE       MAE               9.625
 ZERO           MAE              16.536
 MLE            MAE           2,132.119
 IMPSEQROB      MAE           2,433.435
@@ -1567,20 +1664,31 @@ Name: valid_fake_na, dtype: float64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_5</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">order_methods</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">6</span><span class="p">]]</span>
 <span class="n">top_5</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;observed&#39;, &#39;BPCA&#39;, &#39;TRKNN&#39;, &#39;RF&#39;, &#39;KNN_IMPUTE&#39;, &#39;IRM&#39;, &#39;ROWMEDIAN&#39;]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">ax</span><span class="p">,</span> <span class="n">errors_bind</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">plot_errors_binned</span><span class="p">(</span>
@@ -1593,19 +1701,26 @@ Name: valid_fake_na, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study_2023_11_v2/figures/NAGuideR_errors_per_bin_val.png
 </pre></div>
 </div>
-<img alt="_images/05988b8871fb9e0653c15c7cbb068eaeb9852364e7a17cf4fcb45c20f43bdf96.png" src="_images/05988b8871fb9e0653c15c7cbb068eaeb9852364e7a17cf4fcb45c20f43bdf96.png" />
+<img alt="_images/59761a89f38ac41257d0d4ef98f7f683ff9ceb5e8e736cfe00964b67e3f364ac.png" src="_images/59761a89f38ac41257d0d4ef98f7f683ff9ceb5e8e736cfe00964b67e3f364ac.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;pred_val_BPCA.csv&#39;: &#39;runs/alzheimer_study_2023_11_v2/preds/pred_val_BPCA.csv&#39;,
  &#39;pred_test_BPCA.csv&#39;: &#39;runs/alzheimer_study_2023_11_v2/preds/pred_test_BPCA.csv&#39;,

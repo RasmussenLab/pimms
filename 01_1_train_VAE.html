@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+ge97eb32 documentation</title>
+    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+gb6b0639 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge97eb32 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gb6b0639 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -376,7 +376,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="variational-autoencoder">
 <h1>Variational Autoencoder<a class="headerlink" href="#variational-autoencoder" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -415,13 +420,19 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
@@ -429,6 +440,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Papermill script parameters:</p>
 <div class="cell tag_parameters docutils container">
@@ -481,13 +493,19 @@ document.write(`
 </div>
 </div>
 <p>Some argument transformations</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study_2023_11_v2&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
@@ -509,7 +527,12 @@ document.write(`
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
@@ -523,6 +546,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
@@ -551,22 +575,34 @@ document.write(`
 </div>
 </div>
 <p>Some naming conventions</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TEMPLATE_MODEL_PARAMS</span> <span class="o">=</span> <span class="s1">&#39;model_params_</span><span class="si">{}</span><span class="s1">.json&#39;</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section id="load-data-in-long-format">
 <h2>Load data in long format<a class="headerlink" href="#load-data-in-long-format" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study_2023_11_v2/data/train_X.csv
 vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/val_y.csv
@@ -576,26 +612,37 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </div>
 <p>data is loaded in long format</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                     
-Sample_168  M0R009                                                21.696
-Sample_042  P15509;P15509-2;P15509-3;P15509-5;P15509-7;P15509-8   19.325
-Sample_048  Q9NYX4                                                16.788
-Sample_131  Q9GZP4;Q9GZP4-2                                       13.292
-Sample_167  Q9H3T3;Q9H3T3-3                                       16.509
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                    
+Sample_001  Q03591                               17.883
+Sample_178  E7EMS2;G3V3D1;G3V3E8;J3KMY5;P61916   19.790
+Sample_061  A0A0J9YX35                           17.668
+Sample_102  P05154                               18.342
+Sample_139  P14314-2                             16.198
 Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
 <p>Infer index names from long format</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
 <span class="n">sample_id</span> <span class="o">=</span> <span class="n">index_columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sample_idx_position</span><span class="p">)</span>
@@ -614,6 +661,7 @@ Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
 </pre></div>
@@ -621,7 +669,12 @@ Name: intensity, dtype: float64
 </div>
 </div>
 <p>load meta data for splits</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">fn_rawfile_metadata</span><span class="p">:</span>
     <span class="n">df_meta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fn_rawfile_metadata</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -631,6 +684,7 @@ Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -850,13 +904,19 @@ each sample</p></li>
 </ul>
 </li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">freq_feat</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">load_freq</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 <span class="n">freq_feat</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>  <span class="c1"># training data</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>protein groups
 A0A024QZX5;A0A087X1N8;P35237                                                     197
@@ -872,13 +932,19 @@ Name: freq, dtype: int64
 <section id="produce-some-addional-simulated-samples">
 <h3>Produce some addional simulated samples<a class="headerlink" href="#produce-some-addional-simulated-samples" title="Permalink to this heading">#</a></h3>
 <p>The validation simulated NA is used to by all models to evaluate training performance.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_simulated_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">val_pred_simulated_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -968,13 +1034,19 @@ Name: freq, dtype: int64
 <p>12600 rows × 1 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_simulated_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">test_pred_simulated_na</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1041,7 +1113,12 @@ Name: freq, dtype: int64
 <ul class="simple">
 <li><p>Autoencoder need data in wide format</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">to_wide_format</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1049,6 +1126,7 @@ Name: freq, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1246,12 +1324,18 @@ Name: freq, dtype: int64
 </section>
 <section id="fill-validation-data-with-potentially-missing-features">
 <h3>Fill Validation data with potentially missing features<a class="headerlink" href="#fill-validation-data-with-potentially-missing-features" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1588,12 +1672,18 @@ Name: freq, dtype: int64
 <p>210 rows × 1421 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">val_y</span>  <span class="c1"># potentially has less features</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1930,7 +2020,12 @@ Name: freq, dtype: int64
 <p>210 rows × 1419 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">val_y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
                           <span class="n">columns</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="p">)</span>
@@ -1938,6 +2033,7 @@ Name: freq, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -2280,7 +2376,12 @@ Name: freq, dtype: int64
 <h2>Variational Autoencoder<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
 <section id="analysis-dataloaders-model-transform">
 <h3>Analysis: DataLoaders, Model, transform<a class="headerlink" href="#analysis-dataloaders-model-transform" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">default_pipeline</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">(</span>
     <span class="p">[</span>
@@ -2290,11 +2391,17 @@ Name: freq, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="analysis-dataloaders-model">
 <h3>Analysis: DataLoaders, Model<a class="headerlink" href="#analysis-dataloaders-model" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">AutoEncoderAnalysis</span><span class="p">(</span>  <span class="c1"># datasplits=data,</span>
     <span class="n">train_df</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span>
@@ -2315,6 +2422,7 @@ Name: freq, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>VAE(
   (encoder): Sequential(
@@ -2339,15 +2447,26 @@ Name: freq, dtype: int64
 </section>
 <section id="training">
 <h3>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">loss_fct</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">loss_fct</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span><span class="o">.</span><span class="n">learn</span> <span class="o">=</span> <span class="n">Learner</span><span class="p">(</span><span class="n">dls</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="p">,</span>
                          <span class="n">model</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
@@ -2360,6 +2479,7 @@ Name: freq, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Start Fit
    - before_fit     : [TrainEvalCallback, Recorder, ProgressCallback, EarlyStoppingCallback]
@@ -2401,14 +2521,25 @@ End Fit
 <p>Adding a <code class="docutils literal notranslate"><span class="pre">EarlyStoppingCallback</span></code> results in an error.  Potential fix in
 <a class="reference external" href="https://github.com/fastai/fastai/pull/3509" rel="noopener noreferrer" target="_blank">PR3509</a> is not yet in
 current version. Try again later</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># learn.summary()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">suggested_lr</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 <span class="n">analysis</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;suggested_inital_lr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suggested_lr</span><span class="o">.</span><span class="n">valley</span>
@@ -2416,6 +2547,7 @@ current version. Try again later</p>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -2433,21 +2565,32 @@ current version. Try again later</p>
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.005248074419796467)
+</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.004365158267319202)
 </pre></div>
 </div>
-<img alt="_images/1a576b156cf79beda88837e4efba92b27eb54d357df9858623d8c519a0660993.png" src="_images/1a576b156cf79beda88837e4efba92b27eb54d357df9858623d8c519a0660993.png" />
+<img alt="_images/1f8c9257e14f9b42060521bdbe9ec1df3a349bca76ab6247252c78e3ad30e69a.png" src="_images/1f8c9257e14f9b42060521bdbe9ec1df3a349bca76ab6247252c78e3ad30e69a.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># reset results</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>dump model config</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># needs class as argument, not instance, but serialization needs instance</span>
 <span class="n">analysis</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;last_decoder_activation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sigmoid</span><span class="p">()</span>
@@ -2464,14 +2607,21 @@ current version. Try again later</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=train</span>
 <span class="n">analysis</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">epochs_max</span><span class="p">,</span> <span class="n">lr_max</span><span class="o">=</span><span class="n">suggested_lr</span><span class="o">.</span><span class="n">valley</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -2501,669 +2651,494 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>1685.368896</td>
-      <td>92.255066</td>
+      <td>1686.489990</td>
+      <td>93.004997</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>1684.984131</td>
-      <td>92.994888</td>
+      <td>1689.015991</td>
+      <td>93.563232</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1678.688110</td>
-      <td>92.332870</td>
+      <td>1687.881592</td>
+      <td>93.754715</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>1674.109619</td>
-      <td>93.597626</td>
+      <td>1684.351318</td>
+      <td>94.849014</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1670.882446</td>
-      <td>93.520729</td>
+      <td>1680.855225</td>
+      <td>94.726082</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>1667.181274</td>
-      <td>93.726555</td>
+      <td>1674.824585</td>
+      <td>95.341019</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>1662.054077</td>
-      <td>93.813011</td>
+      <td>1671.199341</td>
+      <td>95.288536</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>1657.549438</td>
-      <td>94.728813</td>
+      <td>1668.092407</td>
+      <td>94.142265</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>1651.549561</td>
-      <td>94.675308</td>
+      <td>1664.081787</td>
+      <td>95.180397</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>1645.796875</td>
-      <td>94.436363</td>
+      <td>1660.168091</td>
+      <td>94.709869</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>1641.409424</td>
-      <td>94.103806</td>
+      <td>1655.696411</td>
+      <td>94.450287</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>1636.518555</td>
-      <td>94.555466</td>
+      <td>1651.901489</td>
+      <td>94.073273</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>1629.851440</td>
-      <td>94.458504</td>
+      <td>1646.571899</td>
+      <td>94.451820</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>1623.682007</td>
-      <td>93.872467</td>
+      <td>1640.451782</td>
+      <td>94.278145</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>1618.015503</td>
-      <td>93.320580</td>
+      <td>1634.850708</td>
+      <td>93.708504</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>1611.640137</td>
-      <td>93.038101</td>
+      <td>1627.688110</td>
+      <td>93.731667</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>1604.729248</td>
-      <td>93.018036</td>
+      <td>1620.774780</td>
+      <td>93.374496</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>1596.667114</td>
-      <td>92.461441</td>
+      <td>1613.648804</td>
+      <td>93.130615</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>1589.460327</td>
-      <td>92.412270</td>
+      <td>1605.433350</td>
+      <td>92.714806</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>1580.476929</td>
-      <td>92.325577</td>
+      <td>1597.213745</td>
+      <td>92.837364</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>1570.158325</td>
-      <td>92.106956</td>
+      <td>1589.062988</td>
+      <td>92.691231</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>1560.678589</td>
-      <td>91.783401</td>
+      <td>1579.202393</td>
+      <td>92.429169</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>1549.071777</td>
-      <td>91.684280</td>
+      <td>1568.630371</td>
+      <td>92.471252</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>1537.461426</td>
-      <td>91.857300</td>
+      <td>1558.592285</td>
+      <td>91.951988</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>1525.197266</td>
-      <td>91.589417</td>
+      <td>1547.344727</td>
+      <td>91.870850</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>1512.903687</td>
-      <td>92.284401</td>
+      <td>1535.459595</td>
+      <td>91.729668</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>1501.275024</td>
-      <td>92.562958</td>
+      <td>1523.783081</td>
+      <td>91.926079</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>1488.586914</td>
-      <td>93.001343</td>
+      <td>1511.488525</td>
+      <td>92.099411</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>1477.203125</td>
-      <td>93.250732</td>
+      <td>1499.022949</td>
+      <td>92.316818</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>1464.941040</td>
-      <td>94.116081</td>
+      <td>1487.283081</td>
+      <td>92.495461</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>1452.204956</td>
-      <td>94.102104</td>
+      <td>1475.947754</td>
+      <td>92.717232</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>1439.869873</td>
-      <td>94.555077</td>
+      <td>1462.680542</td>
+      <td>92.388519</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>1429.268311</td>
-      <td>95.027458</td>
+      <td>1451.208984</td>
+      <td>92.541656</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>1416.565308</td>
-      <td>94.925171</td>
+      <td>1438.467407</td>
+      <td>93.279129</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>1405.305176</td>
-      <td>95.079239</td>
+      <td>1427.209717</td>
+      <td>93.744171</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>1393.789673</td>
-      <td>94.917038</td>
+      <td>1416.273071</td>
+      <td>94.553062</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>1383.951538</td>
-      <td>95.348808</td>
+      <td>1404.739990</td>
+      <td>94.605034</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>1373.780151</td>
-      <td>95.107727</td>
+      <td>1393.749146</td>
+      <td>94.646858</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>1366.643311</td>
-      <td>95.450348</td>
+      <td>1383.577393</td>
+      <td>94.551231</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>1358.656006</td>
-      <td>95.035210</td>
+      <td>1373.624390</td>
+      <td>94.272049</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>1350.139282</td>
-      <td>94.583298</td>
+      <td>1364.101562</td>
+      <td>94.073738</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>1342.156250</td>
-      <td>94.016151</td>
+      <td>1354.736694</td>
+      <td>93.937386</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>1334.176147</td>
-      <td>93.244942</td>
+      <td>1344.646362</td>
+      <td>93.596153</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>1326.246948</td>
-      <td>92.304085</td>
+      <td>1334.447388</td>
+      <td>93.243172</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>1317.842285</td>
-      <td>92.190475</td>
+      <td>1325.485840</td>
+      <td>93.540451</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>1310.194946</td>
-      <td>91.589622</td>
+      <td>1316.194336</td>
+      <td>93.840515</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>1302.826294</td>
-      <td>91.667870</td>
+      <td>1307.086670</td>
+      <td>93.206726</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>1296.213501</td>
-      <td>91.864349</td>
+      <td>1298.422852</td>
+      <td>93.457329</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>1290.261108</td>
-      <td>92.360397</td>
+      <td>1290.401123</td>
+      <td>93.432289</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>1284.325806</td>
-      <td>92.229370</td>
+      <td>1281.813721</td>
+      <td>93.933067</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>1276.916992</td>
-      <td>92.218224</td>
+      <td>1273.377075</td>
+      <td>94.083931</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>1269.642456</td>
-      <td>91.779961</td>
+      <td>1266.267212</td>
+      <td>94.126282</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>1261.417847</td>
-      <td>91.956985</td>
+      <td>1259.084106</td>
+      <td>93.773956</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>1253.790039</td>
-      <td>91.821548</td>
+      <td>1250.942505</td>
+      <td>94.150314</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>1246.100464</td>
-      <td>91.154510</td>
+      <td>1245.331909</td>
+      <td>94.060394</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>1240.078857</td>
-      <td>91.069748</td>
+      <td>1239.195801</td>
+      <td>94.672417</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>1235.120728</td>
-      <td>90.413643</td>
+      <td>1232.375244</td>
+      <td>93.674797</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>1228.806519</td>
-      <td>91.101677</td>
+      <td>1227.246460</td>
+      <td>92.940567</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>1222.284668</td>
-      <td>91.334915</td>
+      <td>1220.477539</td>
+      <td>93.007149</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>1218.079834</td>
-      <td>91.760811</td>
+      <td>1213.668213</td>
+      <td>92.903191</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>1212.501465</td>
-      <td>92.181931</td>
+      <td>1207.224854</td>
+      <td>92.832428</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>1206.993652</td>
-      <td>92.102089</td>
+      <td>1202.506836</td>
+      <td>93.987007</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>1202.945190</td>
-      <td>91.097069</td>
+      <td>1197.165894</td>
+      <td>93.660576</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>1198.831055</td>
-      <td>91.418488</td>
+      <td>1190.915527</td>
+      <td>93.429214</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>1193.133789</td>
-      <td>93.196495</td>
+      <td>1186.307617</td>
+      <td>93.101807</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>1188.521240</td>
-      <td>92.665688</td>
+      <td>1181.571899</td>
+      <td>93.106873</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>1183.890991</td>
-      <td>91.067497</td>
+      <td>1176.334473</td>
+      <td>93.281815</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>1179.395996</td>
-      <td>90.763824</td>
+      <td>1170.911499</td>
+      <td>93.179359</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>1174.024292</td>
-      <td>91.636620</td>
+      <td>1167.318115</td>
+      <td>93.013107</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>1168.512329</td>
-      <td>92.898232</td>
+      <td>1161.457642</td>
+      <td>92.943176</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>1164.204590</td>
-      <td>92.827988</td>
+      <td>1156.609375</td>
+      <td>93.336571</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>1159.963623</td>
-      <td>91.991470</td>
+      <td>1153.068970</td>
+      <td>93.701096</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>1156.564087</td>
-      <td>92.545715</td>
+      <td>1149.134644</td>
+      <td>92.911140</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>1152.971191</td>
-      <td>93.129631</td>
+      <td>1145.705811</td>
+      <td>92.668465</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>74</td>
-      <td>1148.619751</td>
-      <td>92.659760</td>
+      <td>1142.578979</td>
+      <td>93.084404</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>75</td>
-      <td>1147.572266</td>
-      <td>92.794044</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>76</td>
-      <td>1143.435181</td>
-      <td>93.484978</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>77</td>
-      <td>1140.263184</td>
-      <td>92.755554</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>78</td>
-      <td>1136.781250</td>
-      <td>93.636688</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>79</td>
-      <td>1135.570190</td>
-      <td>92.848930</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>80</td>
-      <td>1133.412598</td>
-      <td>92.747498</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>81</td>
-      <td>1131.823730</td>
-      <td>93.220963</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>82</td>
-      <td>1128.100952</td>
-      <td>93.962029</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>83</td>
-      <td>1125.572632</td>
-      <td>92.266670</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>84</td>
-      <td>1122.245728</td>
-      <td>91.610123</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>85</td>
-      <td>1118.796997</td>
-      <td>91.480690</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>86</td>
-      <td>1115.183838</td>
-      <td>92.202545</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>87</td>
-      <td>1111.333008</td>
-      <td>92.886055</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>88</td>
-      <td>1108.787354</td>
-      <td>93.105377</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>89</td>
-      <td>1106.817017</td>
-      <td>93.238167</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>90</td>
-      <td>1105.792725</td>
-      <td>93.485878</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>91</td>
-      <td>1103.498779</td>
-      <td>92.740135</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>92</td>
-      <td>1100.117065</td>
-      <td>91.851105</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>93</td>
-      <td>1097.432495</td>
-      <td>91.997849</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>94</td>
-      <td>1096.036499</td>
-      <td>91.880814</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>95</td>
-      <td>1093.577881</td>
-      <td>91.878410</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>96</td>
-      <td>1090.933716</td>
-      <td>92.090591</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>97</td>
-      <td>1087.537598</td>
-      <td>92.859772</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>98</td>
-      <td>1084.284424</td>
-      <td>93.010323</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>99</td>
-      <td>1083.388428</td>
-      <td>92.701752</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>100</td>
-      <td>1082.625488</td>
-      <td>93.032730</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>101</td>
-      <td>1080.058350</td>
-      <td>92.611633</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>102</td>
-      <td>1078.290771</td>
-      <td>92.013176</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>103</td>
-      <td>1076.171753</td>
-      <td>92.452377</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>104</td>
-      <td>1074.255981</td>
-      <td>93.217575</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>105</td>
-      <td>1071.426025</td>
-      <td>93.032944</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>106</td>
-      <td>1068.243652</td>
-      <td>92.940392</td>
+      <td>1138.758301</td>
+      <td>94.359558</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 56: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 25: early stopping
 </pre></div>
 </div>
 </div>
 </div>
 <p>Save number of actually trained epochs</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">epoch_trained</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="n">args</span><span class="o">.</span><span class="n">epoch_trained</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>107
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>76
 </pre></div>
 </div>
 </div>
 </div>
 <section id="loss-normalized-by-total-number-of-measurements">
 <h4>Loss normalized by total number of measurements<a class="headerlink" href="#loss-normalized-by-total-number-of-measurements" title="Permalink to this heading">#</a></h4>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_train_notna</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 <span class="n">N_val_notna</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -3173,11 +3148,12 @@ current version. Try again later</p>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study_2023_11_v2/figures/vae_training
 </pre></div>
 </div>
-<img alt="_images/1dee8c6175e760609165d153fa785e1f3bd064106aed76321ea120c6545f5cef.png" src="_images/1dee8c6175e760609165d153fa785e1f3bd064106aed76321ea120c6545f5cef.png" />
+<img alt="_images/56721cda1d7862a39f5a582e527ee1a70185d33d7ac64f00cfc8b61c9742bea1.png" src="_images/56721cda1d7862a39f5a582e527ee1a70185d33d7ac64f00cfc8b61c9742bea1.png" />
 </div>
 </div>
 </section>
@@ -3185,7 +3161,12 @@ current version. Try again later</p>
 <section id="predictions">
 <h3>Predictions<a class="headerlink" href="#predictions" title="Permalink to this heading">#</a></h3>
 <p>create predictions and select validation data predictions</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 <span class="n">pred</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">res</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">get_preds_from_df</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span> <span class="n">learn</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">learn</span><span class="p">,</span>
@@ -3196,6 +3177,7 @@ current version. Try again later</p>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -3214,29 +3196,35 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.836
-            A0A024R0T9;K7ER74;P02655                                                         16.790
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.728
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.655
-            A0A075B6H7                                                                       17.180
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.855
+            A0A024R0T9;K7ER74;P02655                                                         16.428
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.813
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.791
+            A0A075B6H7                                                                       16.728
                                                                                               ...  
-Sample_209  Q9Y6R7                                                                           19.182
-            Q9Y6X5                                                                           15.920
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.375
-            Q9Y6Y9                                                                           11.964
-            S4R3U6                                                                           11.494
+Sample_209  Q9Y6R7                                                                           19.031
+            Q9Y6X5                                                                           15.826
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.159
+            Q9Y6Y9                                                                           12.672
+            S4R3U6                                                                           11.521
 Length: 298410, dtype: float32
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;VAE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pred</span>  <span class="c1"># &#39;model_key&#39; ?</span>
 <span class="n">val_pred_simulated_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3272,31 +3260,31 @@ Length: 298410, dtype: float32
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.720</td>
+      <td>15.628</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.746</td>
+      <td>16.708</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.861</td>
+      <td>14.453</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>18.977</td>
+      <td>19.060</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>14.948</td>
+      <td>15.062</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3314,38 +3302,44 @@ Length: 298410, dtype: float32
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>15.715</td>
+      <td>15.680</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.694</td>
+      <td>15.779</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.576</td>
+      <td>13.571</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.478</td>
+      <td>14.471</td>
     </tr>
   </tbody>
 </table>
 <p>12600 rows × 2 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;VAE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pred</span>  <span class="c1"># model_key?</span>
 <span class="n">test_pred_simulated_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3381,27 +3375,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.348</td>
+      <td>17.412</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.052</td>
+      <td>17.709</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.490</td>
+      <td>22.308</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.260</td>
+      <td>15.385</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.669</td>
+      <td>16.682</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3413,27 +3407,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.953</td>
+      <td>15.967</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.682</td>
+      <td>13.603</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>14.208</td>
+      <td>14.386</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>14.965</td>
+      <td>15.034</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.495</td>
+      <td>16.466</td>
     </tr>
   </tbody>
 </table>
@@ -3441,7 +3435,12 @@ Length: 298410, dtype: float32
 </div></div></div>
 </div>
 <p>save missing values predictions</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save_pred_real_na</span><span class="p">:</span>
     <span class="n">pred_real_na</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">get_missing_values</span><span class="p">(</span><span class="n">df_train_wide</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span>
@@ -3453,19 +3452,20 @@ Length: 298410, dtype: float32
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.447
-            A0A075B6Q5                 15.894
-            A0A075B6R2                 16.796
-            A0A075B6S5                 16.365
-            A0A087WSY4                 16.375
+Sample_000  A0A075B6J9                 15.562
+            A0A075B6Q5                 15.950
+            A0A075B6R2                 16.386
+            A0A075B6S5                 16.061
+            A0A087WSY4                 16.275
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.006
-            Q9UI40;Q9UI40-2            15.756
-            Q9UIW2                     16.656
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   14.003
-            Q9UP79                     15.991
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.947
+            Q9UI40;Q9UI40-2            16.349
+            Q9UIW2                     16.636
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.898
+            Q9UP79                     15.985
 Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
@@ -3477,7 +3477,12 @@ Name: intensity, Length: 46401, dtype: float32
 <ul class="simple">
 <li><p>validation data</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
 <span class="c1"># underlying data is train_X for both</span>
@@ -3495,6 +3500,7 @@ Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3542,68 +3548,68 @@ Name: intensity, Length: 46401, dtype: float32
   <tbody>
     <tr>
       <th>Sample_000</th>
-      <td>-1.417</td>
-      <td>1.331</td>
-      <td>1.052</td>
-      <td>-0.057</td>
-      <td>-1.504</td>
-      <td>0.816</td>
-      <td>0.479</td>
-      <td>-2.003</td>
-      <td>0.690</td>
-      <td>1.284</td>
+      <td>-0.896</td>
+      <td>0.919</td>
+      <td>-2.364</td>
+      <td>0.177</td>
+      <td>1.168</td>
+      <td>-1.830</td>
+      <td>-1.166</td>
+      <td>2.398</td>
+      <td>1.113</td>
+      <td>-0.020</td>
     </tr>
     <tr>
       <th>Sample_001</th>
-      <td>-0.936</td>
-      <td>0.820</td>
-      <td>0.153</td>
-      <td>-1.116</td>
-      <td>0.685</td>
-      <td>1.267</td>
-      <td>-0.047</td>
-      <td>-1.580</td>
-      <td>0.642</td>
-      <td>1.294</td>
+      <td>0.290</td>
+      <td>0.876</td>
+      <td>-1.446</td>
+      <td>-0.332</td>
+      <td>1.101</td>
+      <td>-1.516</td>
+      <td>-0.447</td>
+      <td>2.020</td>
+      <td>-0.378</td>
+      <td>0.960</td>
     </tr>
     <tr>
       <th>Sample_002</th>
-      <td>-1.305</td>
-      <td>0.675</td>
-      <td>-0.683</td>
-      <td>-1.267</td>
-      <td>-1.150</td>
-      <td>-1.231</td>
-      <td>-0.822</td>
-      <td>-2.672</td>
-      <td>-0.873</td>
-      <td>0.628</td>
+      <td>-0.888</td>
+      <td>-0.985</td>
+      <td>-1.247</td>
+      <td>0.723</td>
+      <td>1.578</td>
+      <td>-1.135</td>
+      <td>0.307</td>
+      <td>2.558</td>
+      <td>0.724</td>
+      <td>0.978</td>
     </tr>
     <tr>
       <th>Sample_003</th>
-      <td>-2.053</td>
-      <td>1.135</td>
-      <td>0.467</td>
-      <td>-0.820</td>
-      <td>-2.081</td>
-      <td>-0.246</td>
-      <td>-0.309</td>
-      <td>-2.388</td>
-      <td>0.082</td>
-      <td>0.852</td>
+      <td>-0.929</td>
+      <td>-0.214</td>
+      <td>-1.563</td>
+      <td>0.888</td>
+      <td>1.249</td>
+      <td>-1.829</td>
+      <td>-0.788</td>
+      <td>2.130</td>
+      <td>1.277</td>
+      <td>0.849</td>
     </tr>
     <tr>
       <th>Sample_004</th>
-      <td>-1.692</td>
-      <td>1.108</td>
-      <td>0.146</td>
-      <td>-0.957</td>
-      <td>-1.068</td>
-      <td>0.463</td>
-      <td>-0.185</td>
-      <td>-1.597</td>
-      <td>-0.466</td>
-      <td>1.132</td>
+      <td>-1.012</td>
+      <td>0.752</td>
+      <td>-1.790</td>
+      <td>1.128</td>
+      <td>1.123</td>
+      <td>-1.234</td>
+      <td>-0.609</td>
+      <td>1.819</td>
+      <td>0.374</td>
+      <td>1.070</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3620,75 +3626,80 @@ Name: intensity, Length: 46401, dtype: float32
     </tr>
     <tr>
       <th>Sample_205</th>
-      <td>-1.607</td>
-      <td>2.214</td>
-      <td>-0.241</td>
-      <td>-0.340</td>
-      <td>-0.837</td>
-      <td>-1.356</td>
-      <td>-1.183</td>
-      <td>0.704</td>
-      <td>0.757</td>
-      <td>-0.128</td>
+      <td>-0.079</td>
+      <td>-2.296</td>
+      <td>-1.610</td>
+      <td>2.431</td>
+      <td>-0.828</td>
+      <td>0.414</td>
+      <td>-0.023</td>
+      <td>1.499</td>
+      <td>-0.442</td>
+      <td>0.221</td>
     </tr>
     <tr>
       <th>Sample_206</th>
-      <td>0.775</td>
-      <td>1.636</td>
-      <td>-1.396</td>
-      <td>1.414</td>
-      <td>2.020</td>
-      <td>-1.573</td>
-      <td>0.153</td>
-      <td>-0.341</td>
-      <td>0.652</td>
-      <td>1.783</td>
+      <td>-0.102</td>
+      <td>-0.958</td>
+      <td>-1.250</td>
+      <td>-1.861</td>
+      <td>0.747</td>
+      <td>1.514</td>
+      <td>0.512</td>
+      <td>1.341</td>
+      <td>-0.259</td>
+      <td>-2.296</td>
     </tr>
     <tr>
       <th>Sample_207</th>
-      <td>-0.548</td>
-      <td>3.648</td>
-      <td>1.308</td>
-      <td>0.050</td>
-      <td>-0.749</td>
-      <td>0.165</td>
-      <td>0.422</td>
-      <td>1.323</td>
-      <td>-0.282</td>
-      <td>1.610</td>
+      <td>0.066</td>
+      <td>0.035</td>
+      <td>-4.092</td>
+      <td>0.736</td>
+      <td>-0.296</td>
+      <td>1.377</td>
+      <td>-0.616</td>
+      <td>0.960</td>
+      <td>-0.286</td>
+      <td>-0.364</td>
     </tr>
     <tr>
       <th>Sample_208</th>
-      <td>-0.642</td>
-      <td>0.923</td>
-      <td>-0.625</td>
-      <td>-0.081</td>
-      <td>0.665</td>
-      <td>-0.011</td>
-      <td>-0.704</td>
-      <td>1.930</td>
-      <td>-0.684</td>
-      <td>1.900</td>
+      <td>0.733</td>
+      <td>0.523</td>
+      <td>-2.763</td>
+      <td>0.098</td>
+      <td>0.519</td>
+      <td>1.997</td>
+      <td>0.542</td>
+      <td>0.943</td>
+      <td>-2.188</td>
+      <td>-0.404</td>
     </tr>
     <tr>
       <th>Sample_209</th>
-      <td>-0.267</td>
-      <td>1.178</td>
-      <td>-1.596</td>
-      <td>-1.170</td>
-      <td>0.152</td>
-      <td>-0.403</td>
-      <td>-1.255</td>
-      <td>0.842</td>
-      <td>-2.144</td>
-      <td>1.160</td>
+      <td>-0.655</td>
+      <td>-0.522</td>
+      <td>-2.155</td>
+      <td>-0.029</td>
+      <td>1.373</td>
+      <td>1.705</td>
+      <td>0.748</td>
+      <td>0.764</td>
+      <td>-1.306</td>
+      <td>0.227</td>
     </tr>
   </tbody>
 </table>
 <p>210 rows × 10 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ana_latent</span> <span class="o">=</span> <span class="n">analyzers</span><span class="o">.</span><span class="n">LatentAnalysis</span><span class="p">(</span><span class="n">df_latent</span><span class="p">,</span>
                                       <span class="n">df_meta</span><span class="p">,</span>
@@ -3700,8 +3711,14 @@ Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">meta_cat_col</span> <span class="ow">and</span> <span class="n">df_meta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">figures</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;latent_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">_by_</span><span class="si">{</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">meta_cat_col</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ana_latent</span><span class="o">.</span><span class="n">plot_by_category</span><span class="p">(</span>
@@ -3709,8 +3726,14 @@ Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feat_freq_val</span> <span class="o">=</span> <span class="n">val_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 <span class="n">feat_freq_val</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;freq_val&#39;</span>
@@ -3718,16 +3741,23 @@ Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <img alt="_images/9dbaccd787e0e41ff37b89c9544f23c1144431768bf9142865bcebf5019b4472.png" src="_images/9dbaccd787e0e41ff37b89c9544f23c1144431768bf9142865bcebf5019b4472.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feat_freq_val</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>  <span class="c1"># require more than one feat?</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>freq_val
 1    12
@@ -3740,7 +3770,12 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors_val</span> <span class="o">=</span> <span class="n">val_pred_simulated_na</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
     <span class="n">val_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -3756,11 +3791,17 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<img alt="_images/585bc957a46034522dbedb8304d10d6fb863ef8370aaa6c830a9879a7d3944ea.png" src="_images/585bc957a46034522dbedb8304d10d6fb863ef8370aaa6c830a9879a7d3944ea.png" />
+<img alt="_images/dcd78b3de051ebf5ca6a1bb97c1347afd93b733738c92785be3bf76bc3edd1ff.png" src="_images/dcd78b3de051ebf5ca6a1bb97c1347afd93b733738c92785be3bf76bc3edd1ff.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors_val</span> <span class="o">=</span> <span class="n">val_pred_simulated_na</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
     <span class="n">val_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -3768,6 +3809,7 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3807,27 +3849,27 @@ Name: count, dtype: int64
   <tbody>
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
-      <td>0.151</td>
+      <td>0.127</td>
       <td>7</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
-      <td>1.251</td>
+      <td>1.362</td>
       <td>4</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
-      <td>0.261</td>
+      <td>0.280</td>
       <td>9</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
-      <td>0.299</td>
+      <td>0.275</td>
       <td>6</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
-      <td>0.619</td>
+      <td>0.684</td>
       <td>6</td>
     </tr>
     <tr>
@@ -3837,27 +3879,27 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>Q9Y6R7</th>
-      <td>0.405</td>
+      <td>0.370</td>
       <td>10</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
-      <td>0.271</td>
+      <td>0.209</td>
       <td>7</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
-      <td>0.357</td>
+      <td>0.345</td>
       <td>9</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
-      <td>0.338</td>
+      <td>0.472</td>
       <td>15</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
-      <td>0.491</td>
+      <td>0.470</td>
       <td>24</td>
     </tr>
   </tbody>
@@ -3865,12 +3907,18 @@ Name: count, dtype: int64
 <p>1419 rows × 2 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors_val</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3903,27 +3951,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
-      <td>1.089</td>
+      <td>0.997</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
-      <td>0.991</td>
+      <td>0.953</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
-      <td>-0.169</td>
+      <td>-0.577</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
-      <td>-0.399</td>
+      <td>-0.316</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
-      <td>-0.361</td>
+      <td>-0.247</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3933,27 +3981,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
-      <td>0.010</td>
+      <td>0.009</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
-      <td>-2.450</td>
+      <td>-2.485</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
-      <td>0.169</td>
+      <td>0.254</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
-      <td>-0.803</td>
+      <td>-0.808</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
-      <td>-0.026</td>
+      <td>-0.033</td>
     </tr>
   </tbody>
 </table>
@@ -3972,7 +4020,12 @@ reconstruction.</p>
 <ul class="simple">
 <li><p>all measured (identified, observed) peptides in validation data</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
 <span class="c1"># d_metrics = models.Metrics(no_na_key=&#39;NA interpolated&#39;, with_na_key=&#39;NA not interpolated&#39;)</span>
@@ -3980,21 +4033,28 @@ reconstruction.</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>The simulated NA for the validation step are real test data (not used for training nor early stopping)</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">val_pred_simulated_na</span><span class="p">,</span> <span class="s1">&#39;valid_simulated_na&#39;</span><span class="p">)</span>
 <span class="n">added_metrics</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4621060492663053,
-  &#39;MAE&#39;: 0.4336146764357699,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.475059544419023,
+  &#39;MAE&#39;: 0.4428724823870024,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4004,19 +4064,25 @@ reconstruction.</p>
 </section>
 <section id="test-datasplit">
 <h3>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">test_pred_simulated_na</span><span class="p">,</span> <span class="s1">&#39;test_simulated_na&#39;</span><span class="p">)</span>
 <span class="n">added_metrics</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4836195158120939,
-  &#39;MAE&#39;: 0.4386695795351505,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4906892864240461,
+  &#39;MAE&#39;: 0.44652352823916847,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4024,7 +4090,12 @@ reconstruction.</p>
 </div>
 </div>
 <p>Save all metrics as json</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_metrics</span> <span class="o">/</span>
                   <span class="sa">f</span><span class="s1">&#39;metrics_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
@@ -4032,20 +4103,26 @@ reconstruction.</p>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4386695795351505,
-                                  &#39;MSE&#39;: 0.4836195158120939,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.44652352823916847,
+                                  &#39;MSE&#39;: 0.4906892864240461,
                                   &#39;N&#39;: 12600,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4336146764357699,
-                                   &#39;MSE&#39;: 0.4621060492663053,
+  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4428724823870024,
+                                   &#39;MSE&#39;: 0.475059544419023,
                                    &#39;N&#39;: 12600,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
     <span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">column_levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
@@ -4053,6 +4130,7 @@ reconstruction.</p>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -4087,13 +4165,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">VAE</th>
       <th>MSE</th>
-      <td>0.462</td>
-      <td>0.484</td>
+      <td>0.475</td>
+      <td>0.491</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.434</td>
-      <td>0.439</td>
+      <td>0.443</td>
+      <td>0.447</td>
     </tr>
     <tr>
       <th>N</th>
@@ -4113,7 +4191,12 @@ reconstruction.</p>
 </section>
 <section id="save-predictions">
 <h2>Save predictions<a class="headerlink" href="#save-predictions" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save simulated missing values for both splits</span>
 <span class="n">val_pred_simulated_na</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pred_val_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
@@ -4121,35 +4204,48 @@ reconstruction.</p>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="config">
 <h2>Config<a class="headerlink" href="#config" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">figures</span>  <span class="c1"># switch to fnames?</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_config_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">.yaml&quot;</span><span class="p">)</span>
 <span class="n">args</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 1421,
  &#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
- &#39;epoch_trained&#39;: 107,
+ &#39;epoch_trained&#39;: 76,
  &#39;epochs_max&#39;: 300,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
