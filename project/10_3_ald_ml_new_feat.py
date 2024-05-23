@@ -27,6 +27,7 @@
 # %%
 import logging
 from pathlib import Path
+from typing import List
 
 import matplotlib.pyplot as plt
 import njab.sklearn
@@ -49,6 +50,33 @@ vaep.plotting.make_large_descriptors(fontsize)
 
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.ERROR)
+
+
+def parse_roc(*res: List[njab.sklearn.types.Results]) -> pd.DataFrame:
+    ret = list()
+    for _r in res:
+        _roc = (pd.DataFrame(_r.test.roc,
+                             index='fpr tpr cutoffs'.split()
+                             )).loc[['fpr', 'tpr']]
+        _roc = _roc.T
+        _roc.columns = pd.MultiIndex.from_product([[_r.name], _roc.columns])
+        ret.append(_roc)
+    ret = pd.concat(ret, axis=1)
+    return ret
+
+
+def parse_prc(*res: List[njab.sklearn.types.Results]) -> pd.DataFrame:
+    ret = list()
+    for _r in res:
+        _prc = pd.DataFrame(_r.test.prc,
+                            index='precision recall cutoffs'.split()
+                            ).loc[['precision', 'recall']]
+        _prc = _prc.T.rename(columns={'recall': 'tpr'})
+        _prc.columns = pd.MultiIndex.from_product([[_r.name], _prc.columns])
+        ret.append(_prc)
+    ret = pd.concat(ret, axis=1)
+    return ret
+
 
 # %%
 # catch passed parameters
@@ -190,7 +218,7 @@ ald_study = pd.concat(
     [ald_study.stack(),
      pred_real_na_baseline.loc[
         # only select columns in selected in ald_study
-        pd.IndexSlice[:, ald_study.columns]
+        pd.IndexSlice[:, pred_real_na.index.levels[-1].intersection(ald_study.columns)]
     ]
     ]
 ).unstack()
@@ -215,20 +243,23 @@ pd.crosstab(target.squeeze(), target_to_group.squeeze())
 # %%
 cv_feat_ald = njab.sklearn.find_n_best_features(X=ald_study, y=target, name=args.target,
                                                 groups=target_to_group)
-cv_feat_ald = cv_feat_ald.groupby('n_features').agg(['mean', 'std'])
+cv_feat_ald = (cv_feat_ald
+               .drop('test_case', axis=1)
+               .groupby('n_features')
+               .agg(['mean', 'std']))
 cv_feat_ald
 
 # %%
 cv_feat_all = njab.sklearn.find_n_best_features(X=X, y=target, name=args.target,
                                                 groups=target_to_group)
-cv_feat_all = cv_feat_all.groupby('n_features').agg(['mean', 'std'])
+cv_feat_all = cv_feat_all.drop('test_case', axis=1).groupby('n_features').agg(['mean', 'std'])
 cv_feat_all
 
 # %%
 cv_feat_new = njab.sklearn.find_n_best_features(X=X.loc[:, new_features],
                                                 y=target, name=args.target,
                                                 groups=target_to_group)
-cv_feat_new = cv_feat_new.groupby('n_features').agg(['mean', 'std'])
+cv_feat_new = cv_feat_new.drop('test_case', axis=1).groupby('n_features').agg(['mean', 'std'])
 cv_feat_new
 
 # %%
@@ -258,8 +289,7 @@ njab.pandas.combine_value_counts(
     pd.concat([y_train, y_test],
               axis=1,
               ignore_index=True,
-              )
-    .rename(columns={0: 'train', 1: 'test'})
+              ).rename(columns={0: 'train', 1: 'test'})
 )
 
 # %%
@@ -329,6 +359,13 @@ fname = args.out_folder / 'auc_roc_curve.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
+# %%
+res = [results_ald_full, results_model_full, results_model_new]
+
+auc_roc_curve = parse_roc(*res)
+auc_roc_curve.to_excel(fname.with_suffix('.xlsx'))
+auc_roc_curve
+
 # %% [markdown]
 # ### Features selected
 
@@ -360,6 +397,11 @@ ax = plot_split_prc(results_model_new.test, results_model_new.name, ax)
 fname = folder = args.out_folder / 'prec_recall_curve.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
+
+# %%
+prec_recall_curve = parse_prc(*res)
+prec_recall_curve.to_excel(fname.with_suffix('.xlsx'))
+prec_recall_curve
 
 # %% [markdown]
 # ## Train data plots

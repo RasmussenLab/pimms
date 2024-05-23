@@ -296,16 +296,23 @@ def plot_distributions(observed: pd.Series,
         ax.set_ylabel('observations')
         ax.locator_params(axis='y', integer=True)
         ax.yaxis.set_major_formatter("{x:,.0f}")
-    return fig
+    return fig, bins
 
 
 vaep.plotting.make_large_descriptors(6)
-fig = plot_distributions(observed,
-                         imputation=pred_real_na,
-                         model_key=args.model_key, figsize=(2.5, 2))
+fig, bins = plot_distributions(observed,
+                               imputation=pred_real_na,
+                               model_key=args.model_key, figsize=(2.5, 2))
 fname = args.out_folder / 'dist_plots' / f'real_na_obs_vs_{args.model_key}.pdf'
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(fig, name=fname)
+
+# %%
+counts_per_bin = pd.concat([
+    vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
+    vaep.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
+], axis=1)
+counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
 
 # %% [markdown]
 # ## Mean shift by model
