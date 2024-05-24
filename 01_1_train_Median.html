@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+ga9ba609 documentation</title>
+    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+gca74906 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ga9ba609 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gca74906 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -437,7 +437,7 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
 <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;Median&quot;</span>
 <span class="n">fn_rawfile_metadata</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&quot;</span>
-<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study_2023_11_v2&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study&quot;</span>
 <span class="n">model_key</span> <span class="o">=</span> <span class="s2">&quot;Median&quot;</span>
 </pre></div>
 </div>
@@ -458,7 +458,7 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study_2023_11_v2&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study&#39;,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
  &#39;sample_idx_position&#39;: 0,
@@ -485,19 +485,19 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
  &#39;meta_cat_col&#39;: None,
  &#39;meta_date_col&#39;: None,
  &#39;model&#39;: &#39;Median&#39;,
  &#39;model_key&#39;: &#39;Median&#39;,
- &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_models&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/preds&#39;),
+ &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study/preds&#39;),
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
 </pre></div>
@@ -533,9 +533,9 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study_2023_11_v2/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study_2023_11_v2/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -554,12 +554,12 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
-Sample_143  P00441           21.666
-Sample_115  Q8N967           15.208
-Sample_003  P14543           16.957
-Sample_006  P02753;Q5VY30    21.946
-Sample_181  P0C0L4           18.988
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                          
+Sample_202  P01033;Q5H9A7                              20.038
+Sample_114  J3KRP0                                     16.334
+Sample_077  Q9NX62                                     19.005
+Sample_074  Q9HCU4                                     16.874
+Sample_086  I3L0A0;Q13404;Q13404-1;Q13404-2;Q13404-7   16.574
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -2026,22 +2026,22 @@ reconstruction.</p>
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 1421,
- &#39;data&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/data&#39;),
+ &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
  &#39;meta_cat_col&#39;: None,
  &#39;meta_date_col&#39;: None,
  &#39;model&#39;: &#39;Median&#39;,
  &#39;model_key&#39;: &#39;Median&#39;,
  &#39;n_params&#39;: 1421,
- &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_models&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study_2023_11_v2/preds&#39;),
- &#39;pred_test_Median&#39;: &#39;runs/alzheimer_study_2023_11_v2/preds/pred_test_Median.csv&#39;,
- &#39;pred_val_Median&#39;: &#39;runs/alzheimer_study_2023_11_v2/preds/pred_val_Median.csv&#39;,
+ &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study/preds&#39;),
+ &#39;pred_test_Median&#39;: &#39;runs/alzheimer_study/preds/pred_test_Median.csv&#39;,
+ &#39;pred_val_Median&#39;: &#39;runs/alzheimer_study/preds/pred_val_Median.csv&#39;,
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
 </pre></div>
