@@ -18,9 +18,7 @@ out_folder = folder_experiment + "/{out_folder}/{target}/"
 
 out_folder_two_methods_cp = out_folder + "{baseline}_vs_{model}/"
 
-target_cutoff = dict(kleiner="2")
-
-target = "kleiner"
+target = config["target"]
 
 all_methods = [config["baseline"], "None", *config["methods"]]
 
@@ -73,7 +71,8 @@ rule plot_intensities_for_diverging_results:
             out_folder=config["out_folder"],
         ),
         nb=nb,
-        fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
+        # replace with config
+        fn_clinical_data=f"{folder_experiment}/data/clinical_data.csv",
     output:
         diff_da=out_folder + "diff_analysis_compare_DA.xlsx",
         qvalues=out_folder + "qvalues_target.pkl",
@@ -106,7 +105,7 @@ rule ml_comparison:
         nb=nb,
         pred_base=folder_experiment + "/preds/pred_real_na_{baseline}.csv",
         pred_model=folder_experiment + "/preds/pred_real_na_{model}.csv",
-        fn_clinical_data="data/ALD_study/processed/ald_metadata_cli.csv",
+        fn_clinical_data=f"{folder_experiment}/data/clinical_data.csv",
     output:
         sel_feat=out_folder_two_methods_cp + "mrmr_feat_by_model.xlsx",
         nb=out_folder_two_methods_cp + nb,
@@ -163,18 +162,38 @@ nb = "10_1_ald_diff_analysis.ipynb"
 rule differential_analysis:
     input:
         nb=nb,
-        f_annotations=config["f_annotations"],
+        fn_clinical_data=f"{folder_experiment}/data/clinical_data.csv",
     output:
         score=out_folder + "scores/diff_analysis_scores_{model}.pkl",
         nb=out_folder + "scores/diff_analysis_{model}.ipynb",
     params:
         covar=lambda wildcards: config["covar"][wildcards.target],
+        f_annotations=config["f_annotations"],
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
-        " -r f_annotations {input.f_annotations}"
+        " -r fn_clinical_data {input.fn_clinical_data}"
+        " -p f_annotations {params.f_annotations}"
         " -r target {wildcards.target}"
         " -r covar {params.covar}"
         " -r model_key {wildcards.model}"
         " -r out_folder {wildcards.out_folder}"
         " && jupyter nbconvert --to html {output.nb}"
+
+
+##########################################################################################
+# Save clinical metadata to data folder of experimental folder
+# Makes it possible to have remote clincial data
+
+rule copy_clinical_data:
+    output:
+        local_clincial_data = f"{folder_experiment}/data/clinical_data.csv",
+    params:
+        fn_clinical_data = config["fn_clinical_data"],
+    run:
+        import pandas as pd
+        # could be extended for several file-types
+        df = pd.read_csv(params.fn_clinical_data)
+        df.to_csv(output.local_clincial_data, index=False)
+        # , index_col=0)             
+        # usecols=[args.sample_id_col, args.target])
