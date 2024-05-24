@@ -32,16 +32,16 @@ jobs:
     - name: Dry-run workflow
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2 --configfile config/alzheimer_study/config.yaml -p -c1 -n
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -n
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2 --configfile config/alzheimer_study/config.yaml -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
     - name: Run demo workflow again (in case of installation issues)
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2 --configfile config/alzheimer_study/config.yaml -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
     - name: Run differential analysis workflow
       run: | 
         cd project

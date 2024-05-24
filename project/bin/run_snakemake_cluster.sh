@@ -48,7 +48,7 @@ echo config_train $config_train
 . ~/setup_conda.sh
 conda activate vaep
 
-snakemake -s workflow/Snakefile_v2 --jobs 10 -k -p -c2 --latency-wait 60 --rerun-incomplete \
+snakemake -s workflow/Snakefile_v2.smk --jobs 10 -k -p -c2 --latency-wait 60 --rerun-incomplete \
 --configfile $configfile \
 --config frac_mnar=$frac_mnar folder_experiment=$folder_experiment config_split=$config_split config_train=$config_train \
 --max-status-checks-per-second 0.1 \
