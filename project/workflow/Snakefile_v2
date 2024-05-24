@@ -215,12 +215,9 @@ rule dump_train_config:
             f.write("# Build in Snakemake workflow\n")
             yaml.dump(model_configs[wildcards.model], f, sort_keys=False)
 
-
 ##########################################################################################
-# Create Data splits
-# separate workflow by level -> provide custom configs
+# Create data splits
 nb_stem = "01_0_split_data"
-
 
 rule create_splits:
     input:
@@ -243,7 +240,7 @@ rule create_splits:
 
 
 ##########################################################################################
-# create config file dumps for each model
+# create data splitting configuration file
 
 
 rule dump_split_config:

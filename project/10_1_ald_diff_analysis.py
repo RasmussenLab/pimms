@@ -308,11 +308,12 @@ files_out[fname.name] = fname.as_posix()
 vaep.savefig(fig, name=fname)
 
 # %%
-counts_per_bin = pd.concat([
-    vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
-    vaep.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
-], axis=1)
-counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+if pred_real_na is not None:
+    counts_per_bin = pd.concat([
+        vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
+        vaep.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
+    ], axis=1)
+    counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
 
 # %% [markdown]
 # ## Mean shift by model

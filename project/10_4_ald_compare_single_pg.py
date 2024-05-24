@@ -199,12 +199,15 @@ feat_idx_w_diff
  .to_excel(writer, sheet_name='qvalues_diff_common')
  )
 
-(qvalues
- .loc[feat_idx_w_diff]
- .loc[~mask_common]  # mask automatically aligned
- .sort_values(('None', 'qvalue'))
- .to_excel(writer, sheet_name='qvalues_diff_new')
- )
+try:
+    (qvalues
+     .loc[feat_idx_w_diff]
+     .loc[~mask_common]
+     .sort_values(('None', 'qvalue'))
+     .to_excel(writer, sheet_name='qvalues_diff_new')
+     )
+except IndexError:
+    print("No new features or no new ones (with diverging decisions.)")
 writer.close()
 
 # %% [markdown]
@@ -434,5 +437,6 @@ for i, idx in enumerate(feat_sel):
         fig,
         name=fname)
     plt.close()
+
 # %%
 files_out

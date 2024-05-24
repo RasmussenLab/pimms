@@ -42,21 +42,25 @@ jobs:
       run: | 
         cd project
         snakemake -s workflow/Snakefile_v2 --configfile config/alzheimer_study/config.yaml -p -c4 -k
+    - name: Run differential analysis workflow
+      run: | 
+        cd project
+        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c4
     - name: Install website dependencies
       run: |
         pip install .[docs]
     - name: Build imputation comparison website
       run: |
-        pimms-setup-imputation-comparison -f project/runs/alzheimer_study_2023_11_v2/
-        cd project/runs/alzheimer_study_2023_11_v2/
+        pimms-setup-imputation-comparison -f project/runs/alzheimer_study/
+        cd project/runs/alzheimer_study/
         sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
         name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/alzheimer_study_2023_11_v2/
+        path: project/runs/alzheimer_study/
     - name: Publish workflow as website
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: project/runs/alzheimer_study_2023_11_v2/_build/
+        publish_dir: project/runs/alzheimer_study/_build/

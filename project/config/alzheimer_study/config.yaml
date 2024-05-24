@@ -1,7 +1,7 @@
 # config for Snakefile_v2.smk
-config_split: runs/alzheimer_study_2023_11_v2/split.yaml # ! will be build
-config_train: runs/alzheimer_study_2023_11_v2/train_{model}.yaml # ! will be build
-folder_experiment: runs/alzheimer_study_2023_11_v2
+config_split: runs/alzheimer_study/split.yaml # ! will be build
+config_train: runs/alzheimer_study/train_{model}.yaml # ! will be build
+folder_experiment: runs/alzheimer_study
 fn_rawfile_metadata: https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv
 cuda: False
 file_format: csv

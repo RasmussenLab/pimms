@@ -23,9 +23,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from IPython.display import display
 
 import vaep
 import vaep.databases.diseases
+
 logger = vaep.logging.setup_nb_logger()
 
 plt.rcParams['figure.figsize'] = (2, 2)
@@ -51,7 +53,6 @@ out_folder = 'diff_analysis'
 disease_ontology = 5082  # code from https://disease-ontology.org/
 # split diseases notebook? Query gene names for proteins in file from uniprot?
 annotaitons_gene_col = 'PG.Genes'
-
 
 # %%
 params = vaep.nb.get_params(args, globals=globals())
@@ -264,29 +265,30 @@ vaep.savefig(
 
 # %% [markdown]
 # # Only features contained in model
+# - this block exist due to a specific part in the ALD analysis of the paper
 
 # %%
 scores_model_only = scores.reset_index(level=-1, drop=True)
-scores_model_only = (scores_model_only
-                     .loc[
-                         scores_model_only.index.difference(
-                             scores_common.index),
-                         args.model_key]
-                     .sort_values(by='qvalue', ascending=True)
-                     .join(freq_feat)
-                     )
-scores_model_only
+_diff = scores_model_only.index.difference(scores_common.index)
+if not _diff.empty:
+    scores_model_only = (scores_model_only
+                         .loc[
+                             _diff,
+                             args.model_key]
+                         .sort_values(by='qvalue', ascending=True)
+                         .join(freq_feat)
+                         )
+    display(scores_model_only)
+else:
+    scores_model_only = None
 
 # %%
-scores_model_only.rejected.value_counts()
-
-# %%
-scores_model_only.to_excel(writer, 'only_model', **writer_args)
-
-# %%
-scores_model_only_rejected = scores_model_only.loc[scores_model_only.rejected]
-scores_model_only_rejected.to_excel(
-    writer, 'only_model_rejected', **writer_args)
+if not _diff.empty:
+    scores_model_only.to_excel(writer, 'only_model', **writer_args)
+    display(scores_model_only.rejected.value_counts())
+    scores_model_only_rejected = scores_model_only.loc[scores_model_only.rejected]
+    scores_model_only_rejected.to_excel(
+        writer, 'only_model_rejected', **writer_args)
 
 # %% [markdown]
 # # DISEASES DB lookup
