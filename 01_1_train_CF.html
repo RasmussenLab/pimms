@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g50dcc68 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g8706c61 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g50dcc68 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g8706c61 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -164,13 +164,14 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-CART.html">MICE-CART</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
@@ -179,6 +180,7 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
@@ -364,32 +366,37 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="collaborative-filtering">
 <h1>Collaborative Filtering<a class="headerlink" href="#collaborative-filtering" title="Permalink to this heading">#</a></h1>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="c1"># overwriting Recorder callback with custom plot_loss</span>
-<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
-<span class="kn">from</span> <span class="nn">fastai.collab</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">fastai.collab</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EarlyStoppingCallback</span><span class="p">,</span> <span class="n">EmbeddingDotBias</span><span class="p">,</span> <span class="n">Learner</span><span class="p">,</span>
-                           <span class="n">MSELossFlat</span><span class="p">,</span> <span class="n">default_device</span><span class="p">)</span>
+
+<span class="c1"># from fastai.basics import *</span>
+<span class="c1"># from fastai.callback.all import *</span>
+<span class="c1"># from fastai.torch_basics import *</span>
+<span class="c1"># from fastai.data.all import *</span>
+
 <span class="kn">from</span> <span class="nn">fastai.tabular.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.collab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">fastai.collab</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EmbeddingDotBias</span><span class="p">,</span> <span class="n">Learner</span><span class="p">,</span> <span class="n">MSELossFlat</span><span class="p">,</span> <span class="n">EarlyStoppingCallback</span><span class="p">,</span> <span class="n">default_device</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">vaep</span>
 <span class="kn">import</span> <span class="nn">vaep.model</span>
 <span class="kn">import</span> <span class="nn">vaep.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="kn">import</span> <span class="nn">vaep.nb</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
-<span class="kn">from</span> <span class="nn">vaep.logging</span> <span class="kn">import</span> <span class="n">setup_logger</span>
-<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">RecorderDump</span><span class="p">,</span> <span class="n">plot_loss</span>
+<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">plot_loss</span><span class="p">,</span> <span class="n">RecorderDump</span>
 
+<span class="kn">import</span> <span class="nn">vaep.nb</span>
+<span class="kn">from</span> <span class="nn">vaep</span> <span class="kn">import</span> <span class="n">sampling</span>
+<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
+
+<span class="kn">from</span> <span class="nn">vaep.logging</span> <span class="kn">import</span> <span class="n">setup_logger</span>
+
+<span class="c1"># overwriting Recorder callback with custom plot_loss</span>
+<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 <span class="c1"># import fastai.callback.hook # Learner.summary</span>
 
@@ -402,7 +409,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
 </pre></div>
@@ -410,12 +416,7 @@ document.write(`
 </div>
 </div>
 <p>Papermill script parameters:</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
@@ -423,7 +424,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
@@ -454,57 +454,47 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
 <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;CF&quot;</span>
+<span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span>
 <span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1024</span>
-<span class="n">epochs_max</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">4096</span>
+<span class="n">epochs_max</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">sample_idx_position</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">cuda</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">save_pred_real_na</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">fn_rawfile_metadata</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&quot;</span>
-<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study&quot;</span>
+<span class="n">fn_rawfile_metadata</span> <span class="o">=</span> <span class="s2">&quot;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/dev_dataset_small/proteinGroups_N50&quot;</span>
 <span class="n">model_key</span> <span class="o">=</span> <span class="s2">&quot;CF&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Some argument transformations</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;epochs_max&#39;: 100,
+ &#39;epochs_max&#39;: 20,
  &#39;patience&#39;: 1,
- &#39;batch_size&#39;: 1024,
+ &#39;batch_size&#39;: 4096,
  &#39;cuda&#39;: False,
  &#39;latent_dim&#39;: 50,
  &#39;sample_idx_position&#39;: 0,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
  &#39;save_pred_real_na&#39;: True,
- &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;}
+ &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
@@ -517,24 +507,23 @@ document.write(`
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;batch_size&#39;: 1024,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;batch_size&#39;: 4096,
  &#39;cuda&#39;: False,
- &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epochs_max&#39;: 100,
+ &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
+ &#39;epochs_max&#39;: 20,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
+ &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
  &#39;latent_dim&#39;: 50,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
- &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_models&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study/preds&#39;),
+ &#39;out_figures&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds&#39;),
  &#39;patience&#39;: 1,
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
@@ -543,12 +532,7 @@ document.write(`
 </div>
 </div>
 <p>Some naming conventions</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TEMPLATE_MODEL_PARAMS</span> <span class="o">=</span> <span class="s1">&#39;model_params_</span><span class="si">{}</span><span class="s1">.json&#39;</span>
 
@@ -557,83 +541,59 @@ document.write(`
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 <section id="load-data-in-long-format">
 <h2>Load data in long format<a class="headerlink" href="#load-data-in-long-format" title="Permalink to this heading">#</a></h2>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/test_y.csv
 </pre></div>
 </div>
 </div>
 </div>
 <p>data is loaded in long format</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.912
-            A0A024R0T9;K7ER74;P02655                                                         16.852
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.570
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.481
-            A0A075B6H7                                                                       17.301
-                                                                                              ...  
-Sample_209  Q9Y6R7                                                                           19.275
-            Q9Y6X5                                                                           15.732
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.577
-            Q9Y6Y9                                                                           11.042
-            S4R3U6                                                                           11.791
-Name: intensity, Length: 226809, dtype: float64
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID                                       Gene Names
+2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070  AAAS         28.349
+                                                AACS         26.133
+                                                AAMP         26.777
+                                                AAR2         27.248
+                                                AARS         32.195
+                                                              ...  
+2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070  ZNHIT2       26.946
+                                                ZRANB2       28.098
+                                                ZW10         29.425
+                                                ZWINT        24.794
+                                                ZYX          29.847
+Name: intensity, Length: 167898, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ! add check that specified data is available</span>
 <span class="c1"># silent error in fastai if e.g. target column is not available</span>
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 <p>Infer index names from long format</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
 <span class="n">sample_id</span> <span class="o">=</span> <span class="n">index_columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sample_idx_position</span><span class="p">)</span>
@@ -652,9 +612,8 @@ Name: intensity, Length: 226809, dtype: float64
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;Gene Names&#39;
 </pre></div>
 </div>
 </div>
@@ -662,19 +621,13 @@ Name: intensity, Length: 226809, dtype: float64
 <section id="use-some-simulated-missing-for-evaluation">
 <h3>Use some simulated missing for evaluation<a class="headerlink" href="#use-some-simulated-missing-for-evaluation" title="Permalink to this heading">#</a></h3>
 <p>The validation simulated NA is used to by all models to evaluate training performance.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_simulated_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">val_pred_simulated_na</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -699,35 +652,35 @@ Name: intensity, Length: 226809, dtype: float64
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>protein groups</th>
+      <th>Gene Names</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Sample_158</th>
-      <th>Q9UN70;Q9UN70-2</th>
-      <td>14.630</td>
+      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SEH1L</th>
+      <td>27.180</td>
     </tr>
     <tr>
-      <th>Sample_050</th>
-      <th>Q9Y287</th>
-      <td>15.755</td>
+      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SLC9A3R1</th>
+      <td>30.259</td>
     </tr>
     <tr>
-      <th>Sample_107</th>
-      <th>Q8N475;Q8N475-2</th>
-      <td>15.029</td>
+      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>KYNU</th>
+      <td>30.629</td>
     </tr>
     <tr>
-      <th>Sample_199</th>
-      <th>P06307</th>
-      <td>19.376</td>
+      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ADD3</th>
+      <td>24.541</td>
     </tr>
     <tr>
-      <th>Sample_067</th>
-      <th>Q5VUB5</th>
-      <td>15.309</td>
+      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>CALM2;CALM1</th>
+      <td>33.934</td>
     </tr>
     <tr>
       <th>...</th>
@@ -735,48 +688,42 @@ Name: intensity, Length: 226809, dtype: float64
       <td>...</td>
     </tr>
     <tr>
-      <th>Sample_111</th>
-      <th>F6SYF8;Q9UBP4</th>
-      <td>22.822</td>
+      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>PPP2R4;DKFZp781M17165</th>
+      <td>28.717</td>
     </tr>
     <tr>
-      <th>Sample_002</th>
-      <th>A0A0A0MT36</th>
-      <td>18.165</td>
+      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>MED23</th>
+      <td>24.966</td>
     </tr>
     <tr>
-      <th>Sample_049</th>
-      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
-      <td>15.525</td>
+      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>RBMXL1</th>
+      <td>26.654</td>
     </tr>
     <tr>
-      <th>Sample_182</th>
-      <th>Q8NFT8</th>
-      <td>14.379</td>
+      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SMARCA1</th>
+      <td>27.917</td>
     </tr>
     <tr>
-      <th>Sample_123</th>
-      <th>Q16853;Q16853-2</th>
-      <td>14.504</td>
+      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>RGPD3;RGPD4</th>
+      <td>24.289</td>
     </tr>
   </tbody>
 </table>
-<p>12600 rows × 1 columns</p>
+<p>9327 rows × 1 columns</p>
 </div></div></div>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_simulated_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">test_pred_simulated_na</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -802,35 +749,35 @@ Name: intensity, Length: 226809, dtype: float64
   <tbody>
     <tr>
       <th>count</th>
-      <td>12,600.000</td>
+      <td>9,327.000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>16.339</td>
+      <td>27.230</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>2.741</td>
+      <td>2.888</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>7.209</td>
+      <td>19.974</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>14.412</td>
+      <td>24.905</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>15.935</td>
+      <td>26.929</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>17.910</td>
+      <td>29.174</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>30.140</td>
+      <td>37.689</td>
     </tr>
   </tbody>
 </table>
@@ -844,12 +791,7 @@ Name: intensity, Length: 226809, dtype: float64
 <li><p>save custom collab batch size (increase AE batch size by a factor), could be setup separately.</p></li>
 <li><p>the test data is used to evaluate the performance after training</p></li>
 </ul>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># larger mini-batches speed up training</span>
 <span class="n">ana_collab</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">collab</span><span class="o">.</span><span class="n">CollabAnalysis</span><span class="p">(</span>
@@ -865,34 +807,22 @@ Name: intensity, Length: 226809, dtype: float64
 </pre></div>
 </div>
 </div>
-</details>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Args:&quot;</span><span class="p">)</span>
 <span class="n">pprint</span><span class="p">(</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">model_kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Args:
-{&#39;n_factors&#39;: 50, &#39;y_range&#39;: (7, 31)}
+{&#39;n_factors&#39;: 50, &#39;y_range&#39;: (20, 40)}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ana_collab</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">EmbeddingDotBias</span><span class="o">.</span><span class="n">from_classes</span><span class="p">(</span>
     <span class="n">classes</span><span class="o">=</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">classes</span><span class="p">,</span>
@@ -914,16 +844,10 @@ Name: intensity, Length: 226809, dtype: float64
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 <section id="training">
 <h3>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h3>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=train_collab</span>
 <span class="n">suggested_lr</span> <span class="o">=</span> <span class="n">ana_collab</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
@@ -948,7 +872,6 @@ Name: intensity, Length: 226809, dtype: float64
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -966,9 +889,9 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00525
-No improvement since epoch 12: early stopping
-vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00631
+No improvement since epoch 9: early stopping
+vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N50/figures/collab_training
 </pre></div>
 </div>
 <div class="output text_html">
@@ -999,103 +922,80 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
   <tbody>
     <tr>
       <td>0</td>
-      <td>8.291077</td>
-      <td>11.882884</td>
-      <td>00:01</td>
+      <td>9.486913</td>
+      <td>14.880719</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>4.117229</td>
-      <td>5.430159</td>
-      <td>00:01</td>
+      <td>8.130827</td>
+      <td>8.711849</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1.196011</td>
-      <td>1.555120</td>
-      <td>00:01</td>
+      <td>4.347179</td>
+      <td>1.502586</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>0.626428</td>
-      <td>0.814438</td>
-      <td>00:01</td>
+      <td>2.299879</td>
+      <td>1.096758</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>0.547796</td>
-      <td>0.715304</td>
-      <td>00:01</td>
+      <td>1.315862</td>
+      <td>0.853204</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.522492</td>
-      <td>0.689318</td>
-      <td>00:01</td>
+      <td>0.836909</td>
+      <td>0.806593</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.481977</td>
-      <td>0.653879</td>
-      <td>00:01</td>
+      <td>0.608248</td>
+      <td>0.774093</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.434919</td>
-      <td>0.594191</td>
-      <td>00:01</td>
+      <td>0.479289</td>
+      <td>0.764276</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.386745</td>
-      <td>0.559024</td>
-      <td>00:01</td>
+      <td>0.387305</td>
+      <td>0.759442</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.355216</td>
-      <td>0.517520</td>
-      <td>00:01</td>
+      <td>0.308613</td>
+      <td>0.750992</td>
+      <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.327531</td>
-      <td>0.495241</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>11</td>
-      <td>0.289609</td>
-      <td>0.478712</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>12</td>
-      <td>0.254523</td>
-      <td>0.467202</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>13</td>
-      <td>0.228543</td>
-      <td>0.476029</td>
-      <td>00:01</td>
+      <td>0.243872</td>
+      <td>0.760591</td>
+      <td>00:00</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/3a1e4d0ecdc6b211d291156506ebab591d821e2c5ed12a001182c12317733ec6.png" src="_images/3a1e4d0ecdc6b211d291156506ebab591d821e2c5ed12a001182c12317733ec6.png" />
-<img alt="_images/4b597e169d028314371a23fec9800ee3281418c02317c787c6c4142965c5c7ff.png" src="_images/4b597e169d028314371a23fec9800ee3281418c02317c787c6c4142965c5c7ff.png" />
+</table></div><img alt="_images/d594fc0b0a19d8d0bbb16fd406e6682a2c8f4d47f2474cf17a1398a76fdb553a.png" src="_images/d594fc0b0a19d8d0bbb16fd406e6682a2c8f4d47f2474cf17a1398a76fdb553a.png" />
+<img alt="_images/08a308c340e0c1f5113cbe526f979521eacc4572d9793ac0ff1f15ed25d17883.png" src="_images/08a308c340e0c1f5113cbe526f979521eacc4572d9793ac0ff1f15ed25d17883.png" />
 </div>
 </div>
 </section>
 <section id="predictions">
 <h3>Predictions<a class="headerlink" href="#predictions" title="Permalink to this heading">#</a></h3>
 <p>Compare simulated_na data predictions to original values</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this could be done using the validation data laoder now</span>
 <span class="n">ana_collab</span><span class="o">.</span><span class="n">test_dl</span> <span class="o">=</span> <span class="n">ana_collab</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">test_dl</span><span class="p">(</span>
@@ -1106,7 +1006,6 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -1148,41 +1047,41 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>protein groups</th>
+      <th>Gene Names</th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Sample_158</th>
-      <th>Q9UN70;Q9UN70-2</th>
-      <td>14.630</td>
-      <td>15.401</td>
+      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SEH1L</th>
+      <td>27.180</td>
+      <td>26.370</td>
     </tr>
     <tr>
-      <th>Sample_050</th>
-      <th>Q9Y287</th>
-      <td>15.755</td>
-      <td>16.419</td>
+      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SLC9A3R1</th>
+      <td>30.259</td>
+      <td>28.172</td>
     </tr>
     <tr>
-      <th>Sample_107</th>
-      <th>Q8N475;Q8N475-2</th>
-      <td>15.029</td>
-      <td>13.717</td>
+      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>KYNU</th>
+      <td>30.629</td>
+      <td>31.066</td>
     </tr>
     <tr>
-      <th>Sample_199</th>
-      <th>P06307</th>
-      <td>19.376</td>
-      <td>19.373</td>
+      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ADD3</th>
+      <td>24.541</td>
+      <td>26.310</td>
     </tr>
     <tr>
-      <th>Sample_067</th>
-      <th>Q5VUB5</th>
-      <td>15.309</td>
-      <td>15.111</td>
+      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>CALM2;CALM1</th>
+      <td>33.934</td>
+      <td>33.534</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1191,47 +1090,42 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <td>...</td>
     </tr>
     <tr>
-      <th>Sample_111</th>
-      <th>F6SYF8;Q9UBP4</th>
-      <td>22.822</td>
-      <td>22.975</td>
+      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>PPP2R4;DKFZp781M17165</th>
+      <td>28.717</td>
+      <td>28.597</td>
     </tr>
     <tr>
-      <th>Sample_002</th>
-      <th>A0A0A0MT36</th>
-      <td>18.165</td>
-      <td>16.011</td>
+      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>MED23</th>
+      <td>24.966</td>
+      <td>24.101</td>
     </tr>
     <tr>
-      <th>Sample_049</th>
-      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
-      <td>15.525</td>
-      <td>15.534</td>
+      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>RBMXL1</th>
+      <td>26.654</td>
+      <td>25.034</td>
     </tr>
     <tr>
-      <th>Sample_182</th>
-      <th>Q8NFT8</th>
-      <td>14.379</td>
-      <td>14.280</td>
+      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>SMARCA1</th>
+      <td>27.917</td>
+      <td>28.170</td>
     </tr>
     <tr>
-      <th>Sample_123</th>
-      <th>Q16853;Q16853-2</th>
-      <td>14.504</td>
-      <td>14.398</td>
+      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>RGPD3;RGPD4</th>
+      <td>24.289</td>
+      <td>24.625</td>
     </tr>
   </tbody>
 </table>
-<p>12600 rows × 2 columns</p>
+<p>9327 rows × 2 columns</p>
 </div></div></div>
 </div>
 <p>select test data predictions</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ana_collab</span><span class="o">.</span><span class="n">test_dl</span> <span class="o">=</span> <span class="n">ana_collab</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">test_dl</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
 <span class="n">test_pred_simulated_na</span><span class="p">[</span><span class="s1">&#39;CF&#39;</span><span class="p">],</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ana_collab</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">get_preds</span><span class="p">(</span><span class="n">dl</span><span class="o">=</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">test_dl</span><span class="p">)</span>
@@ -1239,7 +1133,6 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -1281,37 +1174,37 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>protein groups</th>
+      <th>Gene Names</th>
       <th></th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th rowspan="5" valign="top">Sample_000</th>
-      <th>A0A075B6P5;P01615</th>
-      <td>17.016</td>
-      <td>17.806</td>
+      <th rowspan="5" valign="top">2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>ABCE1</th>
+      <td>29.538</td>
+      <td>29.444</td>
     </tr>
     <tr>
-      <th>A0A087X089;Q16627;Q16627-2</th>
-      <td>18.280</td>
-      <td>17.849</td>
+      <th>ACTN4</th>
+      <td>33.270</td>
+      <td>33.165</td>
     </tr>
     <tr>
-      <th>A0A0B4J2B5;S4R460</th>
-      <td>21.735</td>
-      <td>22.833</td>
+      <th>ADD3</th>
+      <td>24.259</td>
+      <td>24.962</td>
     </tr>
     <tr>
-      <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
-      <td>14.603</td>
-      <td>15.601</td>
+      <th>ALCAM</th>
+      <td>24.906</td>
+      <td>23.871</td>
     </tr>
     <tr>
-      <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
-      <td>16.143</td>
-      <td>16.342</td>
+      <th>ALDH1B1</th>
+      <td>26.674</td>
+      <td>26.927</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1320,42 +1213,37 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <td>...</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">Sample_209</th>
-      <th>Q96ID5</th>
-      <td>16.074</td>
-      <td>16.312</td>
+      <th rowspan="5" valign="top">2020_06_02_09_41_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <th>YIPF3</th>
+      <td>25.040</td>
+      <td>25.769</td>
     </tr>
     <tr>
-      <th>Q9H492;Q9H492-2</th>
-      <td>13.173</td>
-      <td>13.239</td>
+      <th>YTHDF3</th>
+      <td>28.717</td>
+      <td>27.450</td>
     </tr>
     <tr>
-      <th>Q9HC57</th>
-      <td>14.207</td>
-      <td>13.807</td>
+      <th>ZC3H11A</th>
+      <td>28.935</td>
+      <td>29.418</td>
     </tr>
     <tr>
-      <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
-      <td>14.962</td>
-      <td>15.145</td>
+      <th>ZFP91-CNTF;ZFP91</th>
+      <td>25.662</td>
+      <td>26.462</td>
     </tr>
     <tr>
-      <th>Q9UGM5;Q9UGM5-2</th>
-      <td>16.871</td>
-      <td>16.088</td>
+      <th>hCG_2014768;TMA7</th>
+      <td>29.212</td>
+      <td>28.438</td>
     </tr>
   </tbody>
 </table>
-<p>12600 rows × 2 columns</p>
+<p>9327 rows × 2 columns</p>
 </div></div></div>
 </div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">save_pred_real_na</span><span class="p">:</span>
     <span class="n">pred_real_na</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">collab</span><span class="o">.</span><span class="n">get_missing_values</span><span class="p">(</span>
@@ -1367,7 +1255,6 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
 <style>
@@ -1394,12 +1281,7 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 <ul class="simple">
 <li><p>Autoencoder need data in wide format</p></li>
 </ul>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">to_wide_format</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1407,7 +1289,6 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1426,28 +1307,28 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
-      <th>protein groups</th>
-      <th>A0A024QZX5;A0A087X1N8;P35237</th>
-      <th>A0A024R0T9;K7ER74;P02655</th>
-      <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
-      <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
-      <th>A0A075B6H7</th>
-      <th>A0A075B6H9</th>
-      <th>A0A075B6I0</th>
-      <th>A0A075B6I1</th>
-      <th>A0A075B6I6</th>
-      <th>A0A075B6I9</th>
+      <th>Gene Names</th>
+      <th>AAAS</th>
+      <th>AACS</th>
+      <th>AAMDC</th>
+      <th>AAMP</th>
+      <th>AAR2</th>
+      <th>AARS</th>
+      <th>AARS2</th>
+      <th>AASDHPPT</th>
+      <th>AATF</th>
+      <th>ABCB10</th>
       <th>...</th>
-      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
-      <th>Q9Y696</th>
-      <th>Q9Y6C2</th>
-      <th>Q9Y6N6</th>
-      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
-      <th>Q9Y6R7</th>
-      <th>Q9Y6X5</th>
-      <th>Q9Y6Y8;Q9Y6Y8-2</th>
-      <th>Q9Y6Y9</th>
-      <th>S4R3U6</th>
+      <th>ZNHIT2</th>
+      <th>ZNRF2</th>
+      <th>ZPR1</th>
+      <th>ZRANB2</th>
+      <th>ZW10</th>
+      <th>ZWILCH</th>
+      <th>ZWINT</th>
+      <th>ZYX</th>
+      <th>hCG_2014768;TMA7</th>
+      <th>pk;ZAK</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1476,128 +1357,128 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
   </thead>
   <tbody>
     <tr>
-      <th>Sample_000</th>
-      <td>15.912</td>
-      <td>16.852</td>
-      <td>15.570</td>
-      <td>16.481</td>
-      <td>17.301</td>
-      <td>20.246</td>
-      <td>16.764</td>
-      <td>17.584</td>
-      <td>16.988</td>
-      <td>20.054</td>
+      <th>2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <td>28.349</td>
+      <td>26.133</td>
+      <td>NaN</td>
+      <td>26.777</td>
+      <td>27.248</td>
+      <td>32.195</td>
+      <td>27.153</td>
+      <td>27.872</td>
+      <td>28.603</td>
+      <td>26.110</td>
       <td>...</td>
-      <td>16.012</td>
-      <td>15.178</td>
-      <td>NaN</td>
-      <td>15.050</td>
-      <td>16.842</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>19.563</td>
+      <td>28.309</td>
+      <td>28.831</td>
+      <td>28.851</td>
       <td>NaN</td>
-      <td>12.805</td>
+      <td>24.379</td>
+      <td>29.427</td>
+      <td>28.080</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Sample_001</th>
+      <th>2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <td>27.657</td>
+      <td>25.019</td>
+      <td>24.236</td>
+      <td>26.271</td>
       <td>NaN</td>
-      <td>16.874</td>
-      <td>15.519</td>
-      <td>16.387</td>
       <td>NaN</td>
-      <td>19.941</td>
-      <td>18.786</td>
-      <td>17.144</td>
-      <td>NaN</td>
-      <td>19.067</td>
+      <td>26.530</td>
+      <td>28.191</td>
+      <td>27.942</td>
+      <td>25.735</td>
       <td>...</td>
-      <td>15.528</td>
-      <td>15.576</td>
       <td>NaN</td>
-      <td>14.833</td>
-      <td>16.597</td>
-      <td>20.299</td>
-      <td>15.556</td>
-      <td>19.386</td>
-      <td>13.970</td>
-      <td>12.442</td>
+      <td>NaN</td>
+      <td>28.133</td>
+      <td>27.267</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Sample_002</th>
-      <td>16.111</td>
+      <th>2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <td>28.352</td>
+      <td>23.740</td>
       <td>NaN</td>
-      <td>15.935</td>
-      <td>16.416</td>
-      <td>18.175</td>
-      <td>19.251</td>
-      <td>16.832</td>
-      <td>15.671</td>
-      <td>17.012</td>
-      <td>18.569</td>
+      <td>27.098</td>
+      <td>27.377</td>
+      <td>32.885</td>
+      <td>27.515</td>
+      <td>28.476</td>
+      <td>28.771</td>
+      <td>26.787</td>
       <td>...</td>
-      <td>15.229</td>
-      <td>14.728</td>
-      <td>13.757</td>
-      <td>15.118</td>
-      <td>17.440</td>
-      <td>19.598</td>
-      <td>15.735</td>
-      <td>20.447</td>
-      <td>12.636</td>
-      <td>12.505</td>
+      <td>25.184</td>
+      <td>NaN</td>
+      <td>28.968</td>
+      <td>27.322</td>
+      <td>29.388</td>
+      <td>NaN</td>
+      <td>25.803</td>
+      <td>29.525</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Sample_003</th>
-      <td>16.107</td>
-      <td>17.032</td>
-      <td>15.802</td>
-      <td>16.979</td>
-      <td>15.963</td>
-      <td>19.628</td>
-      <td>17.852</td>
-      <td>18.877</td>
-      <td>14.182</td>
-      <td>18.985</td>
+      <th>2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <td>26.826</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>31.926</td>
+      <td>26.157</td>
+      <td>27.635</td>
+      <td>27.851</td>
+      <td>25.346</td>
       <td>...</td>
-      <td>15.495</td>
-      <td>14.590</td>
-      <td>14.682</td>
-      <td>15.140</td>
-      <td>17.356</td>
-      <td>19.429</td>
       <td>NaN</td>
-      <td>20.216</td>
+      <td>23.586</td>
       <td>NaN</td>
-      <td>12.445</td>
+      <td>27.278</td>
+      <td>28.076</td>
+      <td>NaN</td>
+      <td>24.688</td>
+      <td>28.783</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Sample_004</th>
-      <td>15.603</td>
-      <td>15.331</td>
-      <td>15.375</td>
-      <td>16.679</td>
+      <th>2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070</th>
+      <td>27.404</td>
+      <td>26.948</td>
+      <td>23.864</td>
+      <td>26.982</td>
+      <td>26.520</td>
+      <td>31.844</td>
+      <td>25.342</td>
+      <td>27.416</td>
+      <td>27.474</td>
       <td>NaN</td>
-      <td>20.450</td>
-      <td>18.682</td>
-      <td>17.081</td>
-      <td>14.140</td>
-      <td>19.686</td>
       <td>...</td>
-      <td>14.757</td>
+      <td>24.591</td>
       <td>NaN</td>
+      <td>25.838</td>
+      <td>29.326</td>
+      <td>27.491</td>
+      <td>26.406</td>
       <td>NaN</td>
-      <td>15.256</td>
-      <td>17.075</td>
-      <td>19.582</td>
-      <td>15.328</td>
+      <td>30.422</td>
       <td>NaN</td>
-      <td>13.145</td>
-      <td>NaN</td>
+      <td>26.939</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 1421 columns</p>
+<p>5 rows × 4405 columns</p>
 </div></div></div>
 </div>
 <section id="validation-data">
@@ -1609,19 +1490,13 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
 <div><p>Does not make to much sense to compare collab and AEs,
 as the setup differs of training and validation data differs</p>
 </div></blockquote>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
 <span class="n">d_metrics</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 <p>The simulated NA for the validation step are real test data (not used for training nor early stopping)</p>
 <div class="cell docutils container">
@@ -1635,9 +1510,9 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4760287325447276,
-  &#39;MAE&#39;: 0.4678361190058712,
-  &#39;N&#39;: 12600,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7605911963298184,
+  &#39;MAE&#39;: 0.5996398833674661,
+  &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
 </div>
@@ -1660,9 +1535,9 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.490838549581356,
-  &#39;MAE&#39;: 0.4700701137920505,
-  &#39;N&#39;: 12600,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.7847495593967329,
+  &#39;MAE&#39;: 0.6037656968123515,
+  &#39;N&#39;: 9327,
   &#39;prop&#39;: 1.0}}
 </pre></div>
 </div>
@@ -1719,18 +1594,18 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.476</td>
-      <td>0.491</td>
+      <td>0.761</td>
+      <td>0.785</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.468</td>
-      <td>0.470</td>
+      <td>0.600</td>
+      <td>0.604</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>12,600.000</td>
-      <td>12,600.000</td>
+      <td>9,327.000</td>
+      <td>9,327.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1745,12 +1620,7 @@ reconstruction.</p>
 </section>
 <section id="save-predictions">
 <h2>Save predictions<a class="headerlink" href="#save-predictions" title="Permalink to this heading">#</a></h2>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save simulated missing values for both splits</span>
 <span class="n">val_pred_simulated_na</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;pred_val_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
@@ -1758,44 +1628,37 @@ reconstruction.</p>
 </pre></div>
 </div>
 </div>
-</details>
 </div>
 </section>
 <section id="config">
 <h2>Config<a class="headerlink" href="#config" title="Permalink to this heading">#</a></h2>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_config_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">.yaml&quot;</span><span class="p">)</span>
 <span class="n">args</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 1421,
- &#39;batch_size&#39;: 1024,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;M&#39;: 4405,
+ &#39;batch_size&#39;: 4096,
  &#39;cuda&#39;: False,
- &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 14,
- &#39;epochs_max&#39;: 100,
+ &#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
+ &#39;epoch_trained&#39;: 11,
+ &#39;epochs_max&#39;: 20,
  &#39;file_format&#39;: &#39;csv&#39;,
- &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
+ &#39;fn_rawfile_metadata&#39;: &#39;data/dev_datasets/HeLa_6070/files_selected_metadata_N50.csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
  &#39;latent_dim&#39;: 50,
  &#39;model&#39;: &#39;CF&#39;,
  &#39;model_key&#39;: &#39;CF&#39;,
- &#39;n_params&#39;: 83283,
- &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_models&#39;: Path(&#39;runs/alzheimer_study&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study/preds&#39;),
+ &#39;n_params&#39;: 227307,
+ &#39;out_figures&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds&#39;),
  &#39;patience&#39;: 1,
  &#39;sample_idx_position&#39;: 0,
  &#39;save_pred_real_na&#39;: True}
