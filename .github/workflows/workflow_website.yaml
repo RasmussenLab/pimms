@@ -52,12 +52,13 @@ jobs:
     - name: Build imputation comparison website
       run: |
         pimms-setup-imputation-comparison -f project/runs/alzheimer_study/
+        pimms-add-diff-comp -f project/runs/alzheimer_study/ -sf_cp project/runs/alzheimer_study/diff_analysis/AD
         cd project/runs/alzheimer_study/
         sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
-        name: example-workflow-results-${{ matrix.os }}
+        name: alzheimer-study
         path: project/runs/alzheimer_study/
     - name: Publish workflow as website
       uses: peaceiris/actions-gh-pages@v4

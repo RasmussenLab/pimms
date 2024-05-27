@@ -45,11 +45,17 @@ papermill 01_1_train_vae.ipynb --help-notebook
 
 > Mistyped argument names won't throw an error when using papermill
 
-## PIMMS comparison workflow
+## PIMMS comparison workflow and differential analysis workflow
 
 The PIMMS comparison workflow is a snakemake workflow that runs the all selected PIMMS models and R-models on 
-a user-provided dataset and compares the results. An example for the smaller HeLa development dataset on the 
+a user-provided dataset and compares the results. An example for a publickly available Alzheimer dataset on the 
 protein groups level is re-built regularly and available at: [rasmussenlab.org/pimms](https://www.rasmussenlab.org/pimms/)
+
+It is built on top of
+  - the [Snakefile_v2.smk](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow/Snakefile_v2.smk) (v2 of imputation workflow), specified in on configuration
+  - the [Snakefile_ald_comparision](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow/Snakefile_ald_comparison.smk) workflow for differential analysis
+
+
 
 ### Setup comparison workflow
 

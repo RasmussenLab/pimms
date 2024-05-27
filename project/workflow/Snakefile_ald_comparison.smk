@@ -156,16 +156,16 @@ rule compare_diff_analysis:
 
 ##########################################################################################
 # Scores for each model (method)
-nb = "10_1_ald_diff_analysis.ipynb"
+nb_stem = "10_1_ald_diff_analysis"
 
 
 rule differential_analysis:
     input:
-        nb=nb,
+        nb=f"{nb_stem}.ipynb",
         fn_clinical_data=f"{folder_experiment}/data/clinical_data.csv",
     output:
         score=out_folder + "scores/diff_analysis_scores_{model}.pkl",
-        nb=out_folder + "scores/diff_analysis_{model}.ipynb",
+        nb=out_folder + f"scores/{nb_stem}_{{model}}.ipynb",
     params:
         covar=lambda wildcards: config["covar"][wildcards.target],
         f_annotations=config["f_annotations"],
