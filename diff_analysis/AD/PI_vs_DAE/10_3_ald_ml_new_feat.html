@@ -1,0 +1,4569 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+ga2f76fe documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Fit logistic regression model" href="../PI_vs_Median/10_3_ald_ml_new_feat.html" />
+    <link rel="prev" title="Compare predictions between model and RSN" href="../10_4_ald_compare_single_pg.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pimms_workflow 0.1.dev1+ga2f76fe documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../index.html">
+                    Comparison Workflow Notebooks
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../01_2_performance_plots.html">Compare models</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_None.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_Median.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_VAE.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_CF.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_QRILC.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_TRKNN.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_PI.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_DAE.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_RF.html">Differential Analysis - Compare model imputation with standard imputation</a></li>
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">Compare outcomes from differential analysis based on different imputation methods</a></li>
+
+
+
+
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../10_4_ald_compare_single_pg.html">Compare single features</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">Fit logistic regression model</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Fit logistic regression model</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Fit logistic regression model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-target">Load target</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measured-data">Measured data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-ald-data-or-create">Load ALD data or create</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-semi-supervised-model-imputations">Load semi-supervised model imputations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-predictions">Model predictions</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-number-of-parameters-by-cv">Best number of parameters by CV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">Train, test split</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-auc">ROC-AUC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#features-selected">Features selected</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall-plot">Precision-Recall plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data-plots">Train data plots</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="fit-logistic-regression-model">
+<h1>Fit logistic regression model<a class="headerlink" href="#fit-logistic-regression-model" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p>based on different imputation methods</p></li>
+<li><p>baseline: reference</p></li>
+<li><p>model: any other selected imputation method</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">njab.sklearn</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">njab.plotting.metrics</span> <span class="kn">import</span> <span class="n">plot_split_auc</span><span class="p">,</span> <span class="n">plot_split_prc</span>
+<span class="kn">from</span> <span class="nn">njab.sklearn.types</span> <span class="kn">import</span> <span class="n">Splits</span>
+
+<span class="kn">import</span> <span class="nn">vaep</span>
+<span class="kn">import</span> <span class="nn">vaep.analyzers</span>
+<span class="kn">import</span> <span class="nn">vaep.io.datasplits</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.markersize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">parse_roc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+        <span class="n">_roc</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_r</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">roc</span><span class="p">,</span>
+                             <span class="n">index</span><span class="o">=</span><span class="s1">&#39;fpr tpr cutoffs&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                             <span class="p">))</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;fpr&#39;</span><span class="p">,</span> <span class="s1">&#39;tpr&#39;</span><span class="p">]]</span>
+        <span class="n">_roc</span> <span class="o">=</span> <span class="n">_roc</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">_roc</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([[</span><span class="n">_r</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">_roc</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_roc</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+
+
+<span class="k">def</span> <span class="nf">parse_prc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+        <span class="n">_prc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_r</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">prc</span><span class="p">,</span>
+                            <span class="n">index</span><span class="o">=</span><span class="s1">&#39;precision recall cutoffs&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">]]</span>
+        <span class="n">_prc</span> <span class="o">=</span> <span class="n">_prc</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="s1">&#39;tpr&#39;</span><span class="p">})</span>
+        <span class="n">_prc</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">([[</span><span class="n">_r</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">_prc</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_prc</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
+<span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<div class="cell tag_parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">folder_data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># specify data directory if needed</span>
+<span class="n">fn_clinical_data</span> <span class="o">=</span> <span class="s2">&quot;data/ALD_study/processed/ald_metadata_cli.csv&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/appl_ald_data/plasma/proteinGroups&quot;</span>
+<span class="n">model_key</span> <span class="o">=</span> <span class="s1">&#39;VAE&#39;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;kleiner&#39;</span>
+<span class="n">sample_id_col</span> <span class="o">=</span> <span class="s1">&#39;Sample ID&#39;</span>
+<span class="n">cutoff_target</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># =&gt; for binarization target &gt;= cutoff_target</span>
+<span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span>
+<span class="n">out_folder</span> <span class="o">=</span> <span class="s1">&#39;diff_analysis&#39;</span>
+<span class="n">fn_qc_samples</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># &#39;data/ALD_study/processed/qc_plasma_proteinGroups.pkl&#39;</span>
+
+<span class="n">baseline</span> <span class="o">=</span> <span class="s1">&#39;RSN&#39;</span>  <span class="c1"># default is RSN, as this was used in the original ALD Niu. et. al 2022</span>
+<span class="n">template_pred</span> <span class="o">=</span> <span class="s1">&#39;pred_real_na_</span><span class="si">{}</span><span class="s1">.csv&#39;</span>  <span class="c1"># fixed, do not change</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_injected-parameters docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
+<span class="n">cutoff_target</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study&quot;</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;AD&quot;</span>
+<span class="n">baseline</span> <span class="o">=</span> <span class="s2">&quot;PI&quot;</span>
+<span class="n">model_key</span> <span class="o">=</span> <span class="s2">&quot;DAE&quot;</span>
+<span class="n">out_folder</span> <span class="o">=</span> <span class="s2">&quot;diff_analysis&quot;</span>
+<span class="n">fn_clinical_data</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study/data/clinical_data.csv&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="n">params</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Removed from global namespace: folder_data
+root - INFO     Removed from global namespace: fn_clinical_data
+root - INFO     Removed from global namespace: folder_experiment
+root - INFO     Removed from global namespace: model_key
+root - INFO     Removed from global namespace: target
+root - INFO     Removed from global namespace: sample_id_col
+root - INFO     Removed from global namespace: cutoff_target
+root - INFO     Removed from global namespace: file_format
+root - INFO     Removed from global namespace: out_folder
+root - INFO     Removed from global namespace: fn_qc_samples
+root - INFO     Removed from global namespace: baseline
+root - INFO     Removed from global namespace: template_pred
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_data&#39;: &#39;&#39;,
+ &#39;fn_clinical_data&#39;: &#39;runs/alzheimer_study/data/clinical_data.csv&#39;,
+ &#39;folder_experiment&#39;: &#39;runs/alzheimer_study&#39;,
+ &#39;model_key&#39;: &#39;DAE&#39;,
+ &#39;target&#39;: &#39;AD&#39;,
+ &#39;sample_id_col&#39;: &#39;Sample ID&#39;,
+ &#39;cutoff_target&#39;: 0.5,
+ &#39;file_format&#39;: &#39;csv&#39;,
+ &#39;out_folder&#39;: &#39;diff_analysis&#39;,
+ &#39;fn_qc_samples&#39;: &#39;&#39;,
+ &#39;baseline&#39;: &#39;PI&#39;,
+ &#39;template_pred&#39;: &#39;pred_real_na_{}.csv&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+<span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                 <span class="n">out_root</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span>
+                                           <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;out_folder&quot;</span><span class="p">]</span>
+                                           <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
+                                           <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_vs_</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;model_key&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="n">args</span><span class="o">.</span><span class="n">update_from_dict</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">args</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Already set attribute: folder_experiment has value runs/alzheimer_study
+root - INFO     Already set attribute: out_folder has value diff_analysis
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;baseline&#39;: &#39;PI&#39;,
+ &#39;cutoff_target&#39;: 0.5,
+ &#39;data&#39;: PosixPath(&#39;runs/alzheimer_study/data&#39;),
+ &#39;file_format&#39;: &#39;csv&#39;,
+ &#39;fn_clinical_data&#39;: &#39;runs/alzheimer_study/data/clinical_data.csv&#39;,
+ &#39;fn_qc_samples&#39;: &#39;&#39;,
+ &#39;folder_data&#39;: &#39;&#39;,
+ &#39;folder_experiment&#39;: PosixPath(&#39;runs/alzheimer_study&#39;),
+ &#39;model_key&#39;: &#39;DAE&#39;,
+ &#39;out_figures&#39;: PosixPath(&#39;runs/alzheimer_study/figures&#39;),
+ &#39;out_folder&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE&#39;),
+ &#39;out_metrics&#39;: PosixPath(&#39;runs/alzheimer_study&#39;),
+ &#39;out_models&#39;: PosixPath(&#39;runs/alzheimer_study&#39;),
+ &#39;out_preds&#39;: PosixPath(&#39;runs/alzheimer_study/preds&#39;),
+ &#39;sample_id_col&#39;: &#39;Sample ID&#39;,
+ &#39;target&#39;: &#39;AD&#39;,
+ &#39;template_pred&#39;: &#39;pred_real_na_{}.csv&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-target">
+<h2>Load target<a class="headerlink" href="#load-target" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fn_clinical_data</span><span class="p">,</span>
+                     <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">sample_id_col</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">])</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">target</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AD</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Sample_000</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_001</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Sample_002</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Sample_003</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Sample_004</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Sample_205</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Sample_206</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_207</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_208</th>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_209</th>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>210 rows × 1 columns</p>
+</div></div></div>
+</div>
+<section id="measured-data">
+<h3>Measured data<a class="headerlink" href="#measured-data" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="p">])</span>
+<span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
+Sample_027  C9JFR7;P99999    16.171
+Sample_087  P02745           19.595
+Sample_171  A0A1W2PQ11       20.158
+Sample_098  A6NL88           16.482
+Sample_053  P40926           14.345
+Name: intensity, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get overlap between independent features and target</p>
+</section>
+<section id="load-ald-data-or-create">
+<h3>Load ALD data or create<a class="headerlink" href="#load-ald-data-or-create" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_COMPLETENESS</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">MIN_N_PROTEIN_GROUPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.622</span>
+<span class="n">CV_QC_SAMPLE</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+<span class="n">ald_study</span><span class="p">,</span> <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_raw_data</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
+<span class="p">),</span> <span class="n">data_completeness</span><span class="o">=</span><span class="n">DATA_COMPLETENESS</span><span class="p">,</span> <span class="n">frac_protein_groups</span><span class="o">=</span><span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">fn_qc_samples</span><span class="p">:</span>
+    <span class="n">qc_samples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fn_qc_samples</span><span class="p">)</span>
+    <span class="n">qc_samples</span> <span class="o">=</span> <span class="n">qc_samples</span><span class="p">[</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">qc_cv_feat</span> <span class="o">=</span> <span class="n">qc_samples</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">qc_samples</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">qc_cv_feat</span> <span class="o">=</span> <span class="n">qc_cv_feat</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">qc_samples</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">qc_cv_feat</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficient of Variation&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">((</span><span class="n">qc_cv_feat</span> <span class="o">&lt;</span> <span class="n">CV_QC_SAMPLE</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+    <span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="p">[</span><span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_feat</span><span class="p">(</span><span class="n">qc_samples</span><span class="p">)]</span>
+
+<span class="n">column_name_first_prot_to_pg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">pg</span> <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
+
+<span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">column_name_first_prot_to_pg</span><span class="p">)</span>
+<span class="n">ald_study</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Initally: N samples: 210, M feat: 1421
+root - INFO     Dropped features quantified in less than 126 samples.
+root - INFO     After feat selection: N samples: 210, M feat: 1213
+root - INFO     Min No. of Protein-Groups in single sample: 754
+root - INFO     Finally: N samples: 210, M feat: 1213
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>protein groups</th>
+      <th>A0A024QZX5;A0A087X1N8;P35237</th>
+      <th>A0A024R0T9;K7ER74;P02655</th>
+      <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
+      <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
+      <th>A0A075B6H9</th>
+      <th>A0A075B6I0</th>
+      <th>A0A075B6I1</th>
+      <th>A0A075B6I6</th>
+      <th>A0A075B6I9</th>
+      <th>A0A075B6J9</th>
+      <th>...</th>
+      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
+      <th>Q9Y696</th>
+      <th>Q9Y6C2</th>
+      <th>Q9Y6N6</th>
+      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
+      <th>Q9Y6R7</th>
+      <th>Q9Y6X5</th>
+      <th>Q9Y6Y8;Q9Y6Y8-2</th>
+      <th>Q9Y6Y9</th>
+      <th>S4R3U6</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Sample_000</th>
+      <td>15.912</td>
+      <td>16.852</td>
+      <td>15.570</td>
+      <td>16.481</td>
+      <td>20.246</td>
+      <td>16.764</td>
+      <td>17.584</td>
+      <td>16.988</td>
+      <td>20.054</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>16.012</td>
+      <td>15.178</td>
+      <td>NaN</td>
+      <td>15.050</td>
+      <td>16.842</td>
+      <td>19.863</td>
+      <td>NaN</td>
+      <td>19.563</td>
+      <td>12.837</td>
+      <td>12.805</td>
+    </tr>
+    <tr>
+      <th>Sample_001</th>
+      <td>15.936</td>
+      <td>16.874</td>
+      <td>15.519</td>
+      <td>16.387</td>
+      <td>19.941</td>
+      <td>18.786</td>
+      <td>17.144</td>
+      <td>NaN</td>
+      <td>19.067</td>
+      <td>16.188</td>
+      <td>...</td>
+      <td>15.528</td>
+      <td>15.576</td>
+      <td>NaN</td>
+      <td>14.833</td>
+      <td>16.597</td>
+      <td>20.299</td>
+      <td>15.556</td>
+      <td>19.386</td>
+      <td>13.970</td>
+      <td>12.442</td>
+    </tr>
+    <tr>
+      <th>Sample_002</th>
+      <td>16.111</td>
+      <td>14.523</td>
+      <td>15.935</td>
+      <td>16.416</td>
+      <td>19.251</td>
+      <td>16.832</td>
+      <td>15.671</td>
+      <td>17.012</td>
+      <td>18.569</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>15.229</td>
+      <td>14.728</td>
+      <td>13.757</td>
+      <td>15.118</td>
+      <td>17.440</td>
+      <td>19.598</td>
+      <td>15.735</td>
+      <td>20.447</td>
+      <td>12.636</td>
+      <td>12.505</td>
+    </tr>
+    <tr>
+      <th>Sample_003</th>
+      <td>16.107</td>
+      <td>17.032</td>
+      <td>15.802</td>
+      <td>16.979</td>
+      <td>19.628</td>
+      <td>17.852</td>
+      <td>18.877</td>
+      <td>14.182</td>
+      <td>18.985</td>
+      <td>13.438</td>
+      <td>...</td>
+      <td>15.495</td>
+      <td>14.590</td>
+      <td>14.682</td>
+      <td>15.140</td>
+      <td>17.356</td>
+      <td>19.429</td>
+      <td>NaN</td>
+      <td>20.216</td>
+      <td>12.627</td>
+      <td>12.445</td>
+    </tr>
+    <tr>
+      <th>Sample_004</th>
+      <td>15.603</td>
+      <td>15.331</td>
+      <td>15.375</td>
+      <td>16.679</td>
+      <td>20.450</td>
+      <td>18.682</td>
+      <td>17.081</td>
+      <td>14.140</td>
+      <td>19.686</td>
+      <td>14.495</td>
+      <td>...</td>
+      <td>14.757</td>
+      <td>15.094</td>
+      <td>14.048</td>
+      <td>15.256</td>
+      <td>17.075</td>
+      <td>19.582</td>
+      <td>15.328</td>
+      <td>19.867</td>
+      <td>13.145</td>
+      <td>12.235</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Sample_205</th>
+      <td>15.682</td>
+      <td>16.886</td>
+      <td>14.910</td>
+      <td>16.482</td>
+      <td>17.705</td>
+      <td>17.039</td>
+      <td>NaN</td>
+      <td>16.413</td>
+      <td>19.102</td>
+      <td>16.064</td>
+      <td>...</td>
+      <td>15.235</td>
+      <td>15.684</td>
+      <td>14.236</td>
+      <td>15.415</td>
+      <td>17.551</td>
+      <td>17.922</td>
+      <td>16.340</td>
+      <td>19.928</td>
+      <td>12.929</td>
+      <td>11.802</td>
+    </tr>
+    <tr>
+      <th>Sample_206</th>
+      <td>15.798</td>
+      <td>17.554</td>
+      <td>15.600</td>
+      <td>15.938</td>
+      <td>18.154</td>
+      <td>18.152</td>
+      <td>16.503</td>
+      <td>16.860</td>
+      <td>18.538</td>
+      <td>15.288</td>
+      <td>...</td>
+      <td>15.422</td>
+      <td>16.106</td>
+      <td>NaN</td>
+      <td>15.345</td>
+      <td>17.084</td>
+      <td>18.708</td>
+      <td>14.249</td>
+      <td>19.433</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Sample_207</th>
+      <td>15.739</td>
+      <td>16.877</td>
+      <td>15.469</td>
+      <td>16.898</td>
+      <td>18.636</td>
+      <td>17.950</td>
+      <td>16.321</td>
+      <td>16.401</td>
+      <td>18.849</td>
+      <td>17.580</td>
+      <td>...</td>
+      <td>15.808</td>
+      <td>16.098</td>
+      <td>14.403</td>
+      <td>15.715</td>
+      <td>16.586</td>
+      <td>18.725</td>
+      <td>16.138</td>
+      <td>19.599</td>
+      <td>13.637</td>
+      <td>11.174</td>
+    </tr>
+    <tr>
+      <th>Sample_208</th>
+      <td>15.477</td>
+      <td>16.779</td>
+      <td>14.995</td>
+      <td>16.132</td>
+      <td>14.908</td>
+      <td>17.530</td>
+      <td>NaN</td>
+      <td>16.119</td>
+      <td>18.368</td>
+      <td>15.202</td>
+      <td>...</td>
+      <td>15.157</td>
+      <td>16.712</td>
+      <td>NaN</td>
+      <td>14.640</td>
+      <td>16.533</td>
+      <td>19.411</td>
+      <td>15.807</td>
+      <td>19.545</td>
+      <td>13.216</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>Sample_209</th>
+      <td>15.727</td>
+      <td>17.261</td>
+      <td>15.175</td>
+      <td>16.235</td>
+      <td>17.893</td>
+      <td>17.744</td>
+      <td>16.371</td>
+      <td>15.780</td>
+      <td>18.806</td>
+      <td>16.532</td>
+      <td>...</td>
+      <td>15.237</td>
+      <td>15.652</td>
+      <td>15.211</td>
+      <td>14.205</td>
+      <td>16.749</td>
+      <td>19.275</td>
+      <td>15.732</td>
+      <td>19.577</td>
+      <td>11.042</td>
+      <td>11.791</td>
+    </tr>
+  </tbody>
+</table>
+<p>210 rows × 1213 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask_has_target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">mask_has_target</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;No data for target: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Samples available both in proteomics data and for target: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mask_has_target</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">target</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">ald_study</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_has_target</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_has_target</span><span class="p">],</span> <span class="n">ald_study</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_has_target</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Samples available both in proteomics data and for target: 210
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-semi-supervised-model-imputations">
+<h3>Load semi-supervised model imputations<a class="headerlink" href="#load-semi-supervised-model-imputations" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing values pred. by </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">load_single_csv_pred_file</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">compare_predictions</span><span class="o">.</span><span class="n">load_single_csv_pred_file</span>
+<span class="n">pred_real_na</span> <span class="o">=</span> <span class="n">load_single_csv_pred_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_has_target</span><span class="p">]</span>
+<span class="n">pred_real_na</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>missing values pred. by DAE: runs/alzheimer_study/preds/pred_real_na_DAE.csv
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
+Sample_204  Q6P9A2           14.797
+Sample_169  A0A0G2JSC0       15.982
+Sample_175  P31146           13.747
+Name: intensity, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">baseline</span><span class="p">)</span>
+<span class="n">pred_real_na_baseline</span> <span class="o">=</span> <span class="n">load_single_csv_pred_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>  <span class="c1"># .loc[mask_has_target]</span>
+<span class="n">pred_real_na_baseline</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
+Sample_000  A0A075B6J9                 13.367
+            A0A075B6Q5                 12.104
+            A0A075B6R2                 12.507
+            A0A075B6S5                 13.626
+            A0A087WSY4                 13.471
+                                        ...  
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.640
+            Q9UI40;Q9UI40-2            12.844
+            Q9UIW2                     12.084
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.727
+            Q9UP79                     13.120
+Name: intensity, Length: 46401, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="model-predictions">
+<h1>Model predictions<a class="headerlink" href="#model-predictions" title="Permalink to this heading">#</a></h1>
+<p>General approach:</p>
+<ul class="simple">
+<li><p>use one train, test split of the data</p></li>
+<li><p>select best 10 features from training data <code class="docutils literal notranslate"><span class="pre">X_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_train</span></code> before binarization of target</p></li>
+<li><p>dichotomize (binarize) data into to groups (zero and 1)</p></li>
+<li><p>evaluate model on the test data <code class="docutils literal notranslate"><span class="pre">X_test</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code></p></li>
+</ul>
+<p>Repeat general approach for</p>
+<ol class="arabic simple">
+<li><p>all original ald data: all features justed in original ALD study</p></li>
+<li><p>all model data: all features available my using the self supervised deep learning model</p></li>
+<li><p>newly available feat only: the subset of features available from the
+self supervised deep learning model which were newly retained using the
+new approach</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">,</span> <span class="n">pred_real_na</span><span class="p">])</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="n">X</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>protein groups</th>
+      <th>A0A024QZX5;A0A087X1N8;P35237</th>
+      <th>A0A024R0T9;K7ER74;P02655</th>
+      <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
+      <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
+      <th>A0A075B6H7</th>
+      <th>A0A075B6H9</th>
+      <th>A0A075B6I0</th>
+      <th>A0A075B6I1</th>
+      <th>A0A075B6I6</th>
+      <th>A0A075B6I9</th>
+      <th>...</th>
+      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
+      <th>Q9Y696</th>
+      <th>Q9Y6C2</th>
+      <th>Q9Y6N6</th>
+      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
+      <th>Q9Y6R7</th>
+      <th>Q9Y6X5</th>
+      <th>Q9Y6Y8;Q9Y6Y8-2</th>
+      <th>Q9Y6Y9</th>
+      <th>S4R3U6</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Sample_000</th>
+      <td>15.912</td>
+      <td>16.852</td>
+      <td>15.570</td>
+      <td>16.481</td>
+      <td>17.301</td>
+      <td>20.246</td>
+      <td>16.764</td>
+      <td>17.584</td>
+      <td>16.988</td>
+      <td>20.054</td>
+      <td>...</td>
+      <td>16.012</td>
+      <td>15.178</td>
+      <td>14.061</td>
+      <td>15.050</td>
+      <td>16.842</td>
+      <td>19.863</td>
+      <td>16.060</td>
+      <td>19.563</td>
+      <td>12.837</td>
+      <td>12.805</td>
+    </tr>
+    <tr>
+      <th>Sample_001</th>
+      <td>15.936</td>
+      <td>16.874</td>
+      <td>15.519</td>
+      <td>16.387</td>
+      <td>13.796</td>
+      <td>19.941</td>
+      <td>18.786</td>
+      <td>17.144</td>
+      <td>16.808</td>
+      <td>19.067</td>
+      <td>...</td>
+      <td>15.528</td>
+      <td>15.576</td>
+      <td>14.144</td>
+      <td>14.833</td>
+      <td>16.597</td>
+      <td>20.299</td>
+      <td>15.556</td>
+      <td>19.386</td>
+      <td>13.970</td>
+      <td>12.442</td>
+    </tr>
+    <tr>
+      <th>Sample_002</th>
+      <td>16.111</td>
+      <td>14.523</td>
+      <td>15.935</td>
+      <td>16.416</td>
+      <td>18.175</td>
+      <td>19.251</td>
+      <td>16.832</td>
+      <td>15.671</td>
+      <td>17.012</td>
+      <td>18.569</td>
+      <td>...</td>
+      <td>15.229</td>
+      <td>14.728</td>
+      <td>13.757</td>
+      <td>15.118</td>
+      <td>17.440</td>
+      <td>19.598</td>
+      <td>15.735</td>
+      <td>20.447</td>
+      <td>12.636</td>
+      <td>12.505</td>
+    </tr>
+    <tr>
+      <th>Sample_003</th>
+      <td>16.107</td>
+      <td>17.032</td>
+      <td>15.802</td>
+      <td>16.979</td>
+      <td>15.963</td>
+      <td>19.628</td>
+      <td>17.852</td>
+      <td>18.877</td>
+      <td>14.182</td>
+      <td>18.985</td>
+      <td>...</td>
+      <td>15.495</td>
+      <td>14.590</td>
+      <td>14.682</td>
+      <td>15.140</td>
+      <td>17.356</td>
+      <td>19.429</td>
+      <td>15.976</td>
+      <td>20.216</td>
+      <td>12.627</td>
+      <td>12.445</td>
+    </tr>
+    <tr>
+      <th>Sample_004</th>
+      <td>15.603</td>
+      <td>15.331</td>
+      <td>15.375</td>
+      <td>16.679</td>
+      <td>15.473</td>
+      <td>20.450</td>
+      <td>18.682</td>
+      <td>17.081</td>
+      <td>14.140</td>
+      <td>19.686</td>
+      <td>...</td>
+      <td>14.757</td>
+      <td>15.094</td>
+      <td>14.048</td>
+      <td>15.256</td>
+      <td>17.075</td>
+      <td>19.582</td>
+      <td>15.328</td>
+      <td>19.867</td>
+      <td>13.145</td>
+      <td>12.235</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Sample_205</th>
+      <td>15.682</td>
+      <td>16.886</td>
+      <td>14.910</td>
+      <td>16.482</td>
+      <td>15.016</td>
+      <td>17.705</td>
+      <td>17.039</td>
+      <td>15.649</td>
+      <td>16.413</td>
+      <td>19.102</td>
+      <td>...</td>
+      <td>15.235</td>
+      <td>15.684</td>
+      <td>14.236</td>
+      <td>15.415</td>
+      <td>17.551</td>
+      <td>17.922</td>
+      <td>16.340</td>
+      <td>19.928</td>
+      <td>12.929</td>
+      <td>11.802</td>
+    </tr>
+    <tr>
+      <th>Sample_206</th>
+      <td>15.798</td>
+      <td>17.554</td>
+      <td>15.600</td>
+      <td>15.938</td>
+      <td>15.094</td>
+      <td>18.154</td>
+      <td>18.152</td>
+      <td>16.503</td>
+      <td>16.860</td>
+      <td>18.538</td>
+      <td>...</td>
+      <td>15.422</td>
+      <td>16.106</td>
+      <td>14.574</td>
+      <td>15.345</td>
+      <td>17.084</td>
+      <td>18.708</td>
+      <td>14.249</td>
+      <td>19.433</td>
+      <td>11.320</td>
+      <td>10.611</td>
+    </tr>
+    <tr>
+      <th>Sample_207</th>
+      <td>15.739</td>
+      <td>16.877</td>
+      <td>15.469</td>
+      <td>16.898</td>
+      <td>13.982</td>
+      <td>18.636</td>
+      <td>17.950</td>
+      <td>16.321</td>
+      <td>16.401</td>
+      <td>18.849</td>
+      <td>...</td>
+      <td>15.808</td>
+      <td>16.098</td>
+      <td>14.403</td>
+      <td>15.715</td>
+      <td>16.586</td>
+      <td>18.725</td>
+      <td>16.138</td>
+      <td>19.599</td>
+      <td>13.637</td>
+      <td>11.174</td>
+    </tr>
+    <tr>
+      <th>Sample_208</th>
+      <td>15.477</td>
+      <td>16.779</td>
+      <td>14.995</td>
+      <td>16.132</td>
+      <td>13.424</td>
+      <td>14.908</td>
+      <td>17.530</td>
+      <td>17.023</td>
+      <td>16.119</td>
+      <td>18.368</td>
+      <td>...</td>
+      <td>15.157</td>
+      <td>16.712</td>
+      <td>14.323</td>
+      <td>14.640</td>
+      <td>16.533</td>
+      <td>19.411</td>
+      <td>15.807</td>
+      <td>19.545</td>
+      <td>13.216</td>
+      <td>11.243</td>
+    </tr>
+    <tr>
+      <th>Sample_209</th>
+      <td>15.727</td>
+      <td>17.261</td>
+      <td>15.175</td>
+      <td>16.235</td>
+      <td>14.630</td>
+      <td>17.893</td>
+      <td>17.744</td>
+      <td>16.371</td>
+      <td>15.780</td>
+      <td>18.806</td>
+      <td>...</td>
+      <td>15.237</td>
+      <td>15.652</td>
+      <td>15.211</td>
+      <td>14.205</td>
+      <td>16.749</td>
+      <td>19.275</td>
+      <td>15.732</td>
+      <td>19.577</td>
+      <td>11.042</td>
+      <td>11.791</td>
+    </tr>
+  </tbody>
+</table>
+<p>210 rows × 1421 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># could be just observed, drop columns with missing values</span>
+<span class="n">ald_study</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">ald_study</span><span class="o">.</span><span class="n">stack</span><span class="p">(),</span>
+     <span class="n">pred_real_na_baseline</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="c1"># only select columns in selected in ald_study</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="n">pred_real_na</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+    <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="n">ald_study</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>protein groups</th>
+      <th>A0A024QZX5;A0A087X1N8;P35237</th>
+      <th>A0A024R0T9;K7ER74;P02655</th>
+      <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
+      <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
+      <th>A0A075B6H9</th>
+      <th>A0A075B6I0</th>
+      <th>A0A075B6I1</th>
+      <th>A0A075B6I6</th>
+      <th>A0A075B6I9</th>
+      <th>A0A075B6J9</th>
+      <th>...</th>
+      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
+      <th>Q9Y696</th>
+      <th>Q9Y6C2</th>
+      <th>Q9Y6N6</th>
+      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
+      <th>Q9Y6R7</th>
+      <th>Q9Y6X5</th>
+      <th>Q9Y6Y8;Q9Y6Y8-2</th>
+      <th>Q9Y6Y9</th>
+      <th>S4R3U6</th>
+    </tr>
+    <tr>
+      <th>Sample ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Sample_000</th>
+      <td>15.912</td>
+      <td>16.852</td>
+      <td>15.570</td>
+      <td>16.481</td>
+      <td>20.246</td>
+      <td>16.764</td>
+      <td>17.584</td>
+      <td>16.988</td>
+      <td>20.054</td>
+      <td>13.367</td>
+      <td>...</td>
+      <td>16.012</td>
+      <td>15.178</td>
+      <td>13.103</td>
+      <td>15.050</td>
+      <td>16.842</td>
+      <td>19.863</td>
+      <td>12.911</td>
+      <td>19.563</td>
+      <td>12.837</td>
+      <td>12.805</td>
+    </tr>
+    <tr>
+      <th>Sample_001</th>
+      <td>15.936</td>
+      <td>16.874</td>
+      <td>15.519</td>
+      <td>16.387</td>
+      <td>19.941</td>
+      <td>18.786</td>
+      <td>17.144</td>
+      <td>12.362</td>
+      <td>19.067</td>
+      <td>16.188</td>
+      <td>...</td>
+      <td>15.528</td>
+      <td>15.576</td>
+      <td>12.908</td>
+      <td>14.833</td>
+      <td>16.597</td>
+      <td>20.299</td>
+      <td>15.556</td>
+      <td>19.386</td>
+      <td>13.970</td>
+      <td>12.442</td>
+    </tr>
+    <tr>
+      <th>Sample_002</th>
+      <td>16.111</td>
+      <td>14.523</td>
+      <td>15.935</td>
+      <td>16.416</td>
+      <td>19.251</td>
+      <td>16.832</td>
+      <td>15.671</td>
+      <td>17.012</td>
+      <td>18.569</td>
+      <td>14.032</td>
+      <td>...</td>
+      <td>15.229</td>
+      <td>14.728</td>
+      <td>13.757</td>
+      <td>15.118</td>
+      <td>17.440</td>
+      <td>19.598</td>
+      <td>15.735</td>
+      <td>20.447</td>
+      <td>12.636</td>
+      <td>12.505</td>
+    </tr>
+    <tr>
+      <th>Sample_003</th>
+      <td>16.107</td>
+      <td>17.032</td>
+      <td>15.802</td>
+      <td>16.979</td>
+      <td>19.628</td>
+      <td>17.852</td>
+      <td>18.877</td>
+      <td>14.182</td>
+      <td>18.985</td>
+      <td>13.438</td>
+      <td>...</td>
+      <td>15.495</td>
+      <td>14.590</td>
+      <td>14.682</td>
+      <td>15.140</td>
+      <td>17.356</td>
+      <td>19.429</td>
+      <td>12.549</td>
+      <td>20.216</td>
+      <td>12.627</td>
+      <td>12.445</td>
+    </tr>
+    <tr>
+      <th>Sample_004</th>
+      <td>15.603</td>
+      <td>15.331</td>
+      <td>15.375</td>
+      <td>16.679</td>
+      <td>20.450</td>
+      <td>18.682</td>
+      <td>17.081</td>
+      <td>14.140</td>
+      <td>19.686</td>
+      <td>14.495</td>
+      <td>...</td>
+      <td>14.757</td>
+      <td>15.094</td>
+      <td>14.048</td>
+      <td>15.256</td>
+      <td>17.075</td>
+      <td>19.582</td>
+      <td>15.328</td>
+      <td>19.867</td>
+      <td>13.145</td>
+      <td>12.235</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Sample_205</th>
+      <td>15.682</td>
+      <td>16.886</td>
+      <td>14.910</td>
+      <td>16.482</td>
+      <td>17.705</td>
+      <td>17.039</td>
+      <td>11.699</td>
+      <td>16.413</td>
+      <td>19.102</td>
+      <td>16.064</td>
+      <td>...</td>
+      <td>15.235</td>
+      <td>15.684</td>
+      <td>14.236</td>
+      <td>15.415</td>
+      <td>17.551</td>
+      <td>17.922</td>
+      <td>16.340</td>
+      <td>19.928</td>
+      <td>12.929</td>
+      <td>11.802</td>
+    </tr>
+    <tr>
+      <th>Sample_206</th>
+      <td>15.798</td>
+      <td>17.554</td>
+      <td>15.600</td>
+      <td>15.938</td>
+      <td>18.154</td>
+      <td>18.152</td>
+      <td>16.503</td>
+      <td>16.860</td>
+      <td>18.538</td>
+      <td>15.288</td>
+      <td>...</td>
+      <td>15.422</td>
+      <td>16.106</td>
+      <td>11.879</td>
+      <td>15.345</td>
+      <td>17.084</td>
+      <td>18.708</td>
+      <td>14.249</td>
+      <td>19.433</td>
+      <td>11.441</td>
+      <td>13.331</td>
+    </tr>
+    <tr>
+      <th>Sample_207</th>
+      <td>15.739</td>
+      <td>16.877</td>
+      <td>15.469</td>
+      <td>16.898</td>
+      <td>18.636</td>
+      <td>17.950</td>
+      <td>16.321</td>
+      <td>16.401</td>
+      <td>18.849</td>
+      <td>17.580</td>
+      <td>...</td>
+      <td>15.808</td>
+      <td>16.098</td>
+      <td>14.403</td>
+      <td>15.715</td>
+      <td>16.586</td>
+      <td>18.725</td>
+      <td>16.138</td>
+      <td>19.599</td>
+      <td>13.637</td>
+      <td>11.174</td>
+    </tr>
+    <tr>
+      <th>Sample_208</th>
+      <td>15.477</td>
+      <td>16.779</td>
+      <td>14.995</td>
+      <td>16.132</td>
+      <td>14.908</td>
+      <td>17.530</td>
+      <td>11.212</td>
+      <td>16.119</td>
+      <td>18.368</td>
+      <td>15.202</td>
+      <td>...</td>
+      <td>15.157</td>
+      <td>16.712</td>
+      <td>12.311</td>
+      <td>14.640</td>
+      <td>16.533</td>
+      <td>19.411</td>
+      <td>15.807</td>
+      <td>19.545</td>
+      <td>13.216</td>
+      <td>13.018</td>
+    </tr>
+    <tr>
+      <th>Sample_209</th>
+      <td>15.727</td>
+      <td>17.261</td>
+      <td>15.175</td>
+      <td>16.235</td>
+      <td>17.893</td>
+      <td>17.744</td>
+      <td>16.371</td>
+      <td>15.780</td>
+      <td>18.806</td>
+      <td>16.532</td>
+      <td>...</td>
+      <td>15.237</td>
+      <td>15.652</td>
+      <td>15.211</td>
+      <td>14.205</td>
+      <td>16.749</td>
+      <td>19.275</td>
+      <td>15.732</td>
+      <td>19.577</td>
+      <td>11.042</td>
+      <td>11.791</td>
+    </tr>
+  </tbody>
+</table>
+<p>210 rows × 1213 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">new_features</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;A0A075B6H7&#39;, &#39;A0A075B6Q5&#39;, &#39;A0A075B7B8&#39;, &#39;A0A087WSY4&#39;,
+       &#39;A0A087WTT8;A0A0A0MQX5;O94779;O94779-2&#39;, &#39;A0A087WXB8;Q9Y274&#39;,
+       &#39;A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3&#39;,
+       &#39;A0A087X1Z2;C9JTV4;H0Y4Y4;Q8WYH2;Q96C19;Q9BUP0;Q9BUP0-2&#39;,
+       &#39;A0A0A0MQS9;A0A0A0MTC7;Q16363;Q16363-2&#39;, &#39;A0A0A0MSN4;P12821;P12821-2&#39;,
+       ...
+       &#39;Q9NZ94;Q9NZ94-2;Q9NZ94-3&#39;, &#39;Q9NZU1&#39;, &#39;Q9P1W8;Q9P1W8-2;Q9P1W8-4&#39;,
+       &#39;Q9UHI8&#39;, &#39;Q9UI40;Q9UI40-2&#39;,
+       &#39;Q9UIB8;Q9UIB8-2;Q9UIB8-3;Q9UIB8-4;Q9UIB8-5;Q9UIB8-6&#39;,
+       &#39;Q9UKZ4;Q9UKZ4-2&#39;, &#39;Q9UMX0;Q9UMX0-2;Q9UMX0-4&#39;, &#39;Q9Y281;Q9Y281-3&#39;,
+       &#39;Q9Y490&#39;],
+      dtype=&#39;object&#39;, name=&#39;protein groups&#39;, length=208)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Binarize targets, but also keep groups for stratification</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_to_group</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">target</span> <span class="o">&gt;=</span> <span class="n">args</span><span class="o">.</span><span class="n">cutoff_target</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(),</span> <span class="n">target_to_group</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>AD</th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+    <tr>
+      <th>AD</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>False</th>
+      <td>122</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>True</th>
+      <td>0</td>
+      <td>88</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="best-number-of-parameters-by-cv">
+<h2>Best number of parameters by CV<a class="headerlink" href="#best-number-of-parameters-by-cv" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_ald</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">ald_study</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                                                <span class="n">groups</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">)</span>
+<span class="n">cv_feat_ald</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv_feat_ald</span>
+               <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_features&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">]))</span>
+<span class="n">cv_feat_ald</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 315.38it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  5.05it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  4.90it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.56it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  3.22it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  3.74it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  3.29it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  3.03it/s]
+100%|██████████| 9/9 [00:02&lt;00:00,  3.34it/s]
+100%|██████████| 10/10 [00:03&lt;00:00,  2.62it/s]
+100%|██████████| 11/11 [00:03&lt;00:00,  2.95it/s]
+100%|██████████| 12/12 [00:03&lt;00:00,  3.30it/s]
+100%|██████████| 13/13 [00:04&lt;00:00,  2.88it/s]
+100%|██████████| 14/14 [00:05&lt;00:00,  2.67it/s]
+100%|██████████| 15/15 [00:05&lt;00:00,  2.58it/s]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">fit_time</th>
+      <th colspan="2" halign="left">score_time</th>
+      <th colspan="2" halign="left">test_precision</th>
+      <th colspan="2" halign="left">test_recall</th>
+      <th colspan="2" halign="left">test_f1</th>
+      <th colspan="2" halign="left">test_balanced_accuracy</th>
+      <th colspan="2" halign="left">test_roc_auc</th>
+      <th colspan="2" halign="left">test_average_precision</th>
+      <th colspan="2" halign="left">n_observations</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+    </tr>
+    <tr>
+      <th>n_features</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.069</td>
+      <td>0.029</td>
+      <td>0.823</td>
+      <td>0.276</td>
+      <td>0.136</td>
+      <td>0.087</td>
+      <td>0.225</td>
+      <td>0.128</td>
+      <td>0.560</td>
+      <td>0.043</td>
+      <td>0.856</td>
+      <td>0.061</td>
+      <td>0.825</td>
+      <td>0.087</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.081</td>
+      <td>0.034</td>
+      <td>0.702</td>
+      <td>0.091</td>
+      <td>0.605</td>
+      <td>0.106</td>
+      <td>0.644</td>
+      <td>0.080</td>
+      <td>0.707</td>
+      <td>0.060</td>
+      <td>0.788</td>
+      <td>0.065</td>
+      <td>0.762</td>
+      <td>0.084</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.067</td>
+      <td>0.025</td>
+      <td>0.693</td>
+      <td>0.094</td>
+      <td>0.601</td>
+      <td>0.105</td>
+      <td>0.638</td>
+      <td>0.081</td>
+      <td>0.701</td>
+      <td>0.060</td>
+      <td>0.782</td>
+      <td>0.065</td>
+      <td>0.756</td>
+      <td>0.084</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.073</td>
+      <td>0.027</td>
+      <td>0.746</td>
+      <td>0.089</td>
+      <td>0.640</td>
+      <td>0.109</td>
+      <td>0.684</td>
+      <td>0.083</td>
+      <td>0.739</td>
+      <td>0.063</td>
+      <td>0.807</td>
+      <td>0.060</td>
+      <td>0.773</td>
+      <td>0.083</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.079</td>
+      <td>0.032</td>
+      <td>0.713</td>
+      <td>0.080</td>
+      <td>0.681</td>
+      <td>0.108</td>
+      <td>0.691</td>
+      <td>0.075</td>
+      <td>0.739</td>
+      <td>0.058</td>
+      <td>0.811</td>
+      <td>0.057</td>
+      <td>0.771</td>
+      <td>0.083</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.008</td>
+      <td>0.007</td>
+      <td>0.082</td>
+      <td>0.034</td>
+      <td>0.708</td>
+      <td>0.087</td>
+      <td>0.673</td>
+      <td>0.109</td>
+      <td>0.684</td>
+      <td>0.077</td>
+      <td>0.733</td>
+      <td>0.061</td>
+      <td>0.810</td>
+      <td>0.059</td>
+      <td>0.772</td>
+      <td>0.085</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.069</td>
+      <td>0.024</td>
+      <td>0.796</td>
+      <td>0.089</td>
+      <td>0.804</td>
+      <td>0.108</td>
+      <td>0.794</td>
+      <td>0.071</td>
+      <td>0.824</td>
+      <td>0.061</td>
+      <td>0.894</td>
+      <td>0.048</td>
+      <td>0.868</td>
+      <td>0.056</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.074</td>
+      <td>0.028</td>
+      <td>0.802</td>
+      <td>0.081</td>
+      <td>0.820</td>
+      <td>0.096</td>
+      <td>0.807</td>
+      <td>0.068</td>
+      <td>0.835</td>
+      <td>0.058</td>
+      <td>0.909</td>
+      <td>0.048</td>
+      <td>0.895</td>
+      <td>0.052</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.008</td>
+      <td>0.007</td>
+      <td>0.074</td>
+      <td>0.028</td>
+      <td>0.801</td>
+      <td>0.077</td>
+      <td>0.821</td>
+      <td>0.096</td>
+      <td>0.807</td>
+      <td>0.065</td>
+      <td>0.835</td>
+      <td>0.057</td>
+      <td>0.908</td>
+      <td>0.048</td>
+      <td>0.894</td>
+      <td>0.053</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.065</td>
+      <td>0.022</td>
+      <td>0.794</td>
+      <td>0.080</td>
+      <td>0.836</td>
+      <td>0.093</td>
+      <td>0.811</td>
+      <td>0.068</td>
+      <td>0.837</td>
+      <td>0.060</td>
+      <td>0.906</td>
+      <td>0.049</td>
+      <td>0.895</td>
+      <td>0.051</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.083</td>
+      <td>0.028</td>
+      <td>0.798</td>
+      <td>0.088</td>
+      <td>0.820</td>
+      <td>0.102</td>
+      <td>0.805</td>
+      <td>0.076</td>
+      <td>0.833</td>
+      <td>0.066</td>
+      <td>0.905</td>
+      <td>0.050</td>
+      <td>0.892</td>
+      <td>0.051</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.008</td>
+      <td>0.007</td>
+      <td>0.086</td>
+      <td>0.034</td>
+      <td>0.798</td>
+      <td>0.088</td>
+      <td>0.820</td>
+      <td>0.104</td>
+      <td>0.805</td>
+      <td>0.076</td>
+      <td>0.833</td>
+      <td>0.066</td>
+      <td>0.902</td>
+      <td>0.051</td>
+      <td>0.889</td>
+      <td>0.053</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.007</td>
+      <td>0.005</td>
+      <td>0.076</td>
+      <td>0.031</td>
+      <td>0.800</td>
+      <td>0.073</td>
+      <td>0.823</td>
+      <td>0.095</td>
+      <td>0.807</td>
+      <td>0.064</td>
+      <td>0.835</td>
+      <td>0.055</td>
+      <td>0.905</td>
+      <td>0.050</td>
+      <td>0.891</td>
+      <td>0.056</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.070</td>
+      <td>0.026</td>
+      <td>0.828</td>
+      <td>0.081</td>
+      <td>0.837</td>
+      <td>0.096</td>
+      <td>0.828</td>
+      <td>0.065</td>
+      <td>0.853</td>
+      <td>0.056</td>
+      <td>0.914</td>
+      <td>0.047</td>
+      <td>0.901</td>
+      <td>0.052</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.059</td>
+      <td>0.020</td>
+      <td>0.817</td>
+      <td>0.091</td>
+      <td>0.824</td>
+      <td>0.094</td>
+      <td>0.817</td>
+      <td>0.073</td>
+      <td>0.843</td>
+      <td>0.064</td>
+      <td>0.915</td>
+      <td>0.048</td>
+      <td>0.902</td>
+      <td>0.052</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_all</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                                                <span class="n">groups</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">)</span>
+<span class="n">cv_feat_all</span> <span class="o">=</span> <span class="n">cv_feat_all</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_features&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">])</span>
+<span class="n">cv_feat_all</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 85.03it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  5.45it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  3.55it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  2.79it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  3.42it/s]
+100%|██████████| 6/6 [00:02&lt;00:00,  2.95it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  2.66it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  2.99it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.79it/s]
+100%|██████████| 10/10 [00:03&lt;00:00,  2.78it/s]
+100%|██████████| 11/11 [00:03&lt;00:00,  2.80it/s]
+100%|██████████| 12/12 [00:04&lt;00:00,  2.58it/s]
+100%|██████████| 13/13 [00:05&lt;00:00,  2.58it/s]
+100%|██████████| 14/14 [00:05&lt;00:00,  2.62it/s]
+100%|██████████| 15/15 [00:07&lt;00:00,  2.05it/s]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">fit_time</th>
+      <th colspan="2" halign="left">score_time</th>
+      <th colspan="2" halign="left">test_precision</th>
+      <th colspan="2" halign="left">test_recall</th>
+      <th colspan="2" halign="left">test_f1</th>
+      <th colspan="2" halign="left">test_balanced_accuracy</th>
+      <th colspan="2" halign="left">test_roc_auc</th>
+      <th colspan="2" halign="left">test_average_precision</th>
+      <th colspan="2" halign="left">n_observations</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+    </tr>
+    <tr>
+      <th>n_features</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0.007</td>
+      <td>0.005</td>
+      <td>0.081</td>
+      <td>0.029</td>
+      <td>0.110</td>
+      <td>0.268</td>
+      <td>0.014</td>
+      <td>0.039</td>
+      <td>0.024</td>
+      <td>0.064</td>
+      <td>0.502</td>
+      <td>0.017</td>
+      <td>0.869</td>
+      <td>0.060</td>
+      <td>0.836</td>
+      <td>0.087</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.071</td>
+      <td>0.032</td>
+      <td>0.774</td>
+      <td>0.084</td>
+      <td>0.716</td>
+      <td>0.118</td>
+      <td>0.738</td>
+      <td>0.079</td>
+      <td>0.781</td>
+      <td>0.061</td>
+      <td>0.862</td>
+      <td>0.057</td>
+      <td>0.834</td>
+      <td>0.076</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.075</td>
+      <td>0.029</td>
+      <td>0.765</td>
+      <td>0.088</td>
+      <td>0.720</td>
+      <td>0.110</td>
+      <td>0.735</td>
+      <td>0.072</td>
+      <td>0.777</td>
+      <td>0.056</td>
+      <td>0.858</td>
+      <td>0.057</td>
+      <td>0.827</td>
+      <td>0.077</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.073</td>
+      <td>0.026</td>
+      <td>0.762</td>
+      <td>0.090</td>
+      <td>0.716</td>
+      <td>0.117</td>
+      <td>0.732</td>
+      <td>0.080</td>
+      <td>0.774</td>
+      <td>0.062</td>
+      <td>0.857</td>
+      <td>0.057</td>
+      <td>0.827</td>
+      <td>0.080</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>0.053</td>
+      <td>0.022</td>
+      <td>0.758</td>
+      <td>0.097</td>
+      <td>0.709</td>
+      <td>0.101</td>
+      <td>0.726</td>
+      <td>0.071</td>
+      <td>0.769</td>
+      <td>0.056</td>
+      <td>0.860</td>
+      <td>0.056</td>
+      <td>0.823</td>
+      <td>0.076</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.079</td>
+      <td>0.031</td>
+      <td>0.760</td>
+      <td>0.100</td>
+      <td>0.706</td>
+      <td>0.104</td>
+      <td>0.725</td>
+      <td>0.074</td>
+      <td>0.768</td>
+      <td>0.058</td>
+      <td>0.858</td>
+      <td>0.056</td>
+      <td>0.824</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.074</td>
+      <td>0.029</td>
+      <td>0.771</td>
+      <td>0.096</td>
+      <td>0.707</td>
+      <td>0.107</td>
+      <td>0.731</td>
+      <td>0.076</td>
+      <td>0.774</td>
+      <td>0.058</td>
+      <td>0.859</td>
+      <td>0.058</td>
+      <td>0.823</td>
+      <td>0.074</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.065</td>
+      <td>0.027</td>
+      <td>0.786</td>
+      <td>0.095</td>
+      <td>0.784</td>
+      <td>0.112</td>
+      <td>0.780</td>
+      <td>0.080</td>
+      <td>0.812</td>
+      <td>0.067</td>
+      <td>0.896</td>
+      <td>0.052</td>
+      <td>0.872</td>
+      <td>0.060</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.061</td>
+      <td>0.021</td>
+      <td>0.785</td>
+      <td>0.097</td>
+      <td>0.780</td>
+      <td>0.111</td>
+      <td>0.777</td>
+      <td>0.081</td>
+      <td>0.810</td>
+      <td>0.068</td>
+      <td>0.894</td>
+      <td>0.053</td>
+      <td>0.870</td>
+      <td>0.061</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.068</td>
+      <td>0.025</td>
+      <td>0.771</td>
+      <td>0.089</td>
+      <td>0.771</td>
+      <td>0.115</td>
+      <td>0.766</td>
+      <td>0.079</td>
+      <td>0.800</td>
+      <td>0.066</td>
+      <td>0.896</td>
+      <td>0.050</td>
+      <td>0.873</td>
+      <td>0.058</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.060</td>
+      <td>0.017</td>
+      <td>0.785</td>
+      <td>0.087</td>
+      <td>0.794</td>
+      <td>0.125</td>
+      <td>0.784</td>
+      <td>0.088</td>
+      <td>0.817</td>
+      <td>0.074</td>
+      <td>0.904</td>
+      <td>0.050</td>
+      <td>0.884</td>
+      <td>0.056</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.058</td>
+      <td>0.018</td>
+      <td>0.792</td>
+      <td>0.089</td>
+      <td>0.791</td>
+      <td>0.122</td>
+      <td>0.787</td>
+      <td>0.086</td>
+      <td>0.819</td>
+      <td>0.072</td>
+      <td>0.908</td>
+      <td>0.050</td>
+      <td>0.891</td>
+      <td>0.055</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.060</td>
+      <td>0.021</td>
+      <td>0.803</td>
+      <td>0.077</td>
+      <td>0.794</td>
+      <td>0.113</td>
+      <td>0.793</td>
+      <td>0.073</td>
+      <td>0.824</td>
+      <td>0.060</td>
+      <td>0.915</td>
+      <td>0.043</td>
+      <td>0.903</td>
+      <td>0.047</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.068</td>
+      <td>0.027</td>
+      <td>0.801</td>
+      <td>0.075</td>
+      <td>0.785</td>
+      <td>0.108</td>
+      <td>0.788</td>
+      <td>0.073</td>
+      <td>0.820</td>
+      <td>0.059</td>
+      <td>0.915</td>
+      <td>0.041</td>
+      <td>0.901</td>
+      <td>0.046</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.006</td>
+      <td>0.006</td>
+      <td>0.062</td>
+      <td>0.021</td>
+      <td>0.813</td>
+      <td>0.076</td>
+      <td>0.786</td>
+      <td>0.115</td>
+      <td>0.794</td>
+      <td>0.077</td>
+      <td>0.826</td>
+      <td>0.061</td>
+      <td>0.916</td>
+      <td>0.040</td>
+      <td>0.901</td>
+      <td>0.045</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_new</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">new_features</span><span class="p">],</span>
+                                                <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
+                                                <span class="n">groups</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">)</span>
+<span class="n">cv_feat_new</span> <span class="o">=</span> <span class="n">cv_feat_new</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;test_case&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;n_features&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">])</span>
+<span class="n">cv_feat_new</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 915.19it/s]
+100%|██████████| 2/2 [00:00&lt;00:00, 18.67it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 16.60it/s]
+100%|██████████| 4/4 [00:00&lt;00:00, 13.13it/s]
+100%|██████████| 5/5 [00:00&lt;00:00, 10.69it/s]
+100%|██████████| 6/6 [00:00&lt;00:00, 14.73it/s]
+100%|██████████| 7/7 [00:00&lt;00:00, 18.08it/s]
+100%|██████████| 8/8 [00:00&lt;00:00, 12.03it/s]
+100%|██████████| 9/9 [00:00&lt;00:00, 14.78it/s]
+100%|██████████| 10/10 [00:00&lt;00:00, 11.72it/s]
+100%|██████████| 11/11 [00:01&lt;00:00, 10.46it/s]
+100%|██████████| 12/12 [00:01&lt;00:00,  9.96it/s]
+100%|██████████| 13/13 [00:01&lt;00:00, 10.28it/s]
+100%|██████████| 14/14 [00:01&lt;00:00, 13.04it/s]
+100%|██████████| 15/15 [00:01&lt;00:00, 11.94it/s]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">fit_time</th>
+      <th colspan="2" halign="left">score_time</th>
+      <th colspan="2" halign="left">test_precision</th>
+      <th colspan="2" halign="left">test_recall</th>
+      <th colspan="2" halign="left">test_f1</th>
+      <th colspan="2" halign="left">test_balanced_accuracy</th>
+      <th colspan="2" halign="left">test_roc_auc</th>
+      <th colspan="2" halign="left">test_average_precision</th>
+      <th colspan="2" halign="left">n_observations</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+      <th>mean</th>
+      <th>std</th>
+    </tr>
+    <tr>
+      <th>n_features</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.078</td>
+      <td>0.026</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.500</td>
+      <td>0.000</td>
+      <td>0.748</td>
+      <td>0.068</td>
+      <td>0.700</td>
+      <td>0.082</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.004</td>
+      <td>0.001</td>
+      <td>0.057</td>
+      <td>0.018</td>
+      <td>0.690</td>
+      <td>0.101</td>
+      <td>0.584</td>
+      <td>0.118</td>
+      <td>0.625</td>
+      <td>0.092</td>
+      <td>0.694</td>
+      <td>0.068</td>
+      <td>0.786</td>
+      <td>0.062</td>
+      <td>0.706</td>
+      <td>0.080</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.007</td>
+      <td>0.007</td>
+      <td>0.082</td>
+      <td>0.041</td>
+      <td>0.648</td>
+      <td>0.084</td>
+      <td>0.619</td>
+      <td>0.123</td>
+      <td>0.627</td>
+      <td>0.093</td>
+      <td>0.687</td>
+      <td>0.071</td>
+      <td>0.786</td>
+      <td>0.059</td>
+      <td>0.718</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.005</td>
+      <td>0.005</td>
+      <td>0.061</td>
+      <td>0.025</td>
+      <td>0.643</td>
+      <td>0.083</td>
+      <td>0.611</td>
+      <td>0.118</td>
+      <td>0.621</td>
+      <td>0.089</td>
+      <td>0.681</td>
+      <td>0.068</td>
+      <td>0.781</td>
+      <td>0.059</td>
+      <td>0.713</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.055</td>
+      <td>0.019</td>
+      <td>0.689</td>
+      <td>0.066</td>
+      <td>0.682</td>
+      <td>0.119</td>
+      <td>0.681</td>
+      <td>0.084</td>
+      <td>0.730</td>
+      <td>0.063</td>
+      <td>0.823</td>
+      <td>0.057</td>
+      <td>0.763</td>
+      <td>0.072</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.060</td>
+      <td>0.024</td>
+      <td>0.692</td>
+      <td>0.074</td>
+      <td>0.665</td>
+      <td>0.111</td>
+      <td>0.674</td>
+      <td>0.083</td>
+      <td>0.725</td>
+      <td>0.063</td>
+      <td>0.829</td>
+      <td>0.050</td>
+      <td>0.771</td>
+      <td>0.060</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.003</td>
+      <td>0.001</td>
+      <td>0.041</td>
+      <td>0.011</td>
+      <td>0.686</td>
+      <td>0.068</td>
+      <td>0.687</td>
+      <td>0.116</td>
+      <td>0.681</td>
+      <td>0.082</td>
+      <td>0.729</td>
+      <td>0.062</td>
+      <td>0.830</td>
+      <td>0.054</td>
+      <td>0.769</td>
+      <td>0.070</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.068</td>
+      <td>0.024</td>
+      <td>0.684</td>
+      <td>0.070</td>
+      <td>0.683</td>
+      <td>0.112</td>
+      <td>0.679</td>
+      <td>0.082</td>
+      <td>0.727</td>
+      <td>0.063</td>
+      <td>0.825</td>
+      <td>0.055</td>
+      <td>0.762</td>
+      <td>0.072</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.062</td>
+      <td>0.025</td>
+      <td>0.683</td>
+      <td>0.071</td>
+      <td>0.678</td>
+      <td>0.108</td>
+      <td>0.677</td>
+      <td>0.080</td>
+      <td>0.724</td>
+      <td>0.061</td>
+      <td>0.822</td>
+      <td>0.057</td>
+      <td>0.760</td>
+      <td>0.073</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.076</td>
+      <td>0.026</td>
+      <td>0.675</td>
+      <td>0.068</td>
+      <td>0.673</td>
+      <td>0.111</td>
+      <td>0.670</td>
+      <td>0.082</td>
+      <td>0.719</td>
+      <td>0.062</td>
+      <td>0.819</td>
+      <td>0.058</td>
+      <td>0.755</td>
+      <td>0.077</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.064</td>
+      <td>0.024</td>
+      <td>0.675</td>
+      <td>0.066</td>
+      <td>0.680</td>
+      <td>0.112</td>
+      <td>0.673</td>
+      <td>0.081</td>
+      <td>0.721</td>
+      <td>0.061</td>
+      <td>0.815</td>
+      <td>0.058</td>
+      <td>0.748</td>
+      <td>0.076</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.061</td>
+      <td>0.021</td>
+      <td>0.676</td>
+      <td>0.070</td>
+      <td>0.677</td>
+      <td>0.117</td>
+      <td>0.672</td>
+      <td>0.083</td>
+      <td>0.721</td>
+      <td>0.063</td>
+      <td>0.810</td>
+      <td>0.058</td>
+      <td>0.742</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.074</td>
+      <td>0.027</td>
+      <td>0.662</td>
+      <td>0.065</td>
+      <td>0.666</td>
+      <td>0.120</td>
+      <td>0.659</td>
+      <td>0.082</td>
+      <td>0.710</td>
+      <td>0.062</td>
+      <td>0.803</td>
+      <td>0.058</td>
+      <td>0.738</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.081</td>
+      <td>0.030</td>
+      <td>0.659</td>
+      <td>0.062</td>
+      <td>0.665</td>
+      <td>0.117</td>
+      <td>0.657</td>
+      <td>0.080</td>
+      <td>0.708</td>
+      <td>0.060</td>
+      <td>0.802</td>
+      <td>0.058</td>
+      <td>0.738</td>
+      <td>0.075</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.071</td>
+      <td>0.024</td>
+      <td>0.664</td>
+      <td>0.064</td>
+      <td>0.680</td>
+      <td>0.124</td>
+      <td>0.667</td>
+      <td>0.082</td>
+      <td>0.715</td>
+      <td>0.064</td>
+      <td>0.810</td>
+      <td>0.057</td>
+      <td>0.750</td>
+      <td>0.073</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_feat_best</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ald&#39;</span><span class="p">:</span> <span class="n">cv_feat_ald</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span>
+     <span class="s1">&#39;all&#39;</span><span class="p">:</span> <span class="n">cv_feat_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span>
+     <span class="s1">&#39;new&#39;</span><span class="p">:</span> <span class="n">cv_feat_new</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+     <span class="p">}</span>
+<span class="p">)</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n_feat_best</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ald</th>
+      <th>all</th>
+      <th>new</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fit_time</th>
+      <td>9</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>score_time</th>
+      <td>12</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>test_precision</th>
+      <td>14</td>
+      <td>15</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>test_recall</th>
+      <td>14</td>
+      <td>11</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>test_f1</th>
+      <td>14</td>
+      <td>15</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>test_balanced_accuracy</th>
+      <td>14</td>
+      <td>15</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>test_roc_auc</th>
+      <td>15</td>
+      <td>15</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>test_average_precision</th>
+      <td>15</td>
+      <td>13</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>n_observations</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="train-test-split">
+<h2>Train, test split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">target</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">idx_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">index</span>
+<span class="n">idx_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">njab</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">combine_value_counts</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">],</span>
+              <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">})</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>train</th>
+      <th>test</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>False</th>
+      <td>98</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>True</th>
+      <td>70</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AD   
+False   98
+True    70
+Name: count, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">run_model</span></code> returns dataclasses with the further needed results</p></li>
+<li><p>add mrmr selection of data (select best number of features to use instead of fixing it)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span>
+                <span class="n">X_test</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">],</span>
+                <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="n">results_model_full</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">run_model</span><span class="p">(</span>
+    <span class="n">splits</span><span class="p">,</span>
+    <span class="n">n_feat_to_select</span><span class="o">=</span><span class="n">n_feat_best</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;test_roc_auc&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">])</span>
+<span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1"> all&#39;</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 15/15 [00:07&lt;00:00,  2.07it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># all(results_model_full.test.roc.tpr</span>
+<span class="c1">#     ==</span>
+<span class="c1">#     vaep.sklearn.Results.from_pickle(fname).test.roc.tpr)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
+                <span class="n">X_test</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
+                <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+                <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="n">results_model_new</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">run_model</span><span class="p">(</span>
+    <span class="n">splits</span><span class="p">,</span>
+    <span class="n">n_feat_to_select</span><span class="o">=</span><span class="n">n_feat_best</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;test_roc_auc&#39;</span><span class="p">,</span> <span class="s1">&#39;new&#39;</span><span class="p">])</span>
+<span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1"> new&#39;</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_new</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 7/7 [00:00&lt;00:00, 12.30it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits_ald</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span>
+    <span class="n">X_train</span><span class="o">=</span><span class="n">ald_study</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span>
+    <span class="n">X_test</span><span class="o">=</span><span class="n">ald_study</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">],</span>
+    <span class="n">y_train</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+    <span class="n">y_test</span><span class="o">=</span><span class="n">y_test</span><span class="p">)</span>
+<span class="n">results_ald_full</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">run_model</span><span class="p">(</span>
+    <span class="n">splits_ald</span><span class="p">,</span>
+    <span class="n">n_feat_to_select</span><span class="o">=</span><span class="n">n_feat_best</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;test_roc_auc&#39;</span><span class="p">,</span> <span class="s1">&#39;ald&#39;</span><span class="p">])</span>
+<span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ALD study all&#39;</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_ald_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 15/15 [00:06&lt;00:00,  2.42it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<section id="roc-auc">
+<h3>ROC-AUC<a class="headerlink" href="#roc-auc" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;auc_roc_curve.pdf&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/auc_roc_curve.pdf
+</pre></div>
+</div>
+<img alt="../../../_images/5b16ab46271329f5017d1c008a483529438f9a3a3a9488f0574e7cbd926477ff.png" src="../../../_images/5b16ab46271329f5017d1c008a483529438f9a3a3a9488f0574e7cbd926477ff.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">results_ald_full</span><span class="p">,</span> <span class="n">results_model_full</span><span class="p">,</span> <span class="n">results_model_new</span><span class="p">]</span>
+
+<span class="n">auc_roc_curve</span> <span class="o">=</span> <span class="n">parse_roc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">)</span>
+<span class="n">auc_roc_curve</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
+<span class="n">auc_roc_curve</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">ALD study all</th>
+      <th colspan="2" halign="left">DAE all</th>
+      <th colspan="2" halign="left">DAE new</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>fpr</th>
+      <th>tpr</th>
+      <th>fpr</th>
+      <th>tpr</th>
+      <th>fpr</th>
+      <th>tpr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.000</td>
+      <td>0.056</td>
+      <td>0.000</td>
+      <td>0.056</td>
+      <td>0.042</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.000</td>
+      <td>0.556</td>
+      <td>0.000</td>
+      <td>0.111</td>
+      <td>0.042</td>
+      <td>0.056</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.083</td>
+      <td>0.556</td>
+      <td>0.042</td>
+      <td>0.111</td>
+      <td>0.083</td>
+      <td>0.056</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.083</td>
+      <td>0.667</td>
+      <td>0.042</td>
+      <td>0.389</td>
+      <td>0.083</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.167</td>
+      <td>0.667</td>
+      <td>0.125</td>
+      <td>0.389</td>
+      <td>0.208</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.167</td>
+      <td>0.778</td>
+      <td>0.125</td>
+      <td>0.444</td>
+      <td>0.208</td>
+      <td>0.333</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.250</td>
+      <td>0.778</td>
+      <td>0.167</td>
+      <td>0.444</td>
+      <td>0.292</td>
+      <td>0.333</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.250</td>
+      <td>0.833</td>
+      <td>0.167</td>
+      <td>0.667</td>
+      <td>0.292</td>
+      <td>0.556</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.292</td>
+      <td>0.833</td>
+      <td>0.292</td>
+      <td>0.667</td>
+      <td>0.333</td>
+      <td>0.556</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.292</td>
+      <td>0.889</td>
+      <td>0.292</td>
+      <td>0.722</td>
+      <td>0.333</td>
+      <td>0.611</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.375</td>
+      <td>0.889</td>
+      <td>0.375</td>
+      <td>0.722</td>
+      <td>0.375</td>
+      <td>0.611</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.375</td>
+      <td>0.944</td>
+      <td>0.375</td>
+      <td>0.944</td>
+      <td>0.375</td>
+      <td>0.778</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.833</td>
+      <td>0.944</td>
+      <td>0.417</td>
+      <td>0.944</td>
+      <td>0.458</td>
+      <td>0.778</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.833</td>
+      <td>1.000</td>
+      <td>0.417</td>
+      <td>1.000</td>
+      <td>0.458</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>0.708</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.708</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.000</td>
+      <td>1.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="features-selected">
+<h3>Features selected<a class="headerlink" href="#features-selected" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">selected_features</span><span class="p">,</span>
+     <span class="n">results_model_full</span><span class="o">.</span><span class="n">selected_features</span><span class="p">,</span>
+     <span class="n">results_model_new</span><span class="o">.</span><span class="n">selected_features</span><span class="p">],</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">selected_features</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rank&#39;</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;mrmr_feat_by_model.xlsx&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">selected_features</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">selected_features</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ALD study all</th>
+      <th>DAE all</th>
+      <th>DAE new</th>
+    </tr>
+    <tr>
+      <th>rank</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>P10636-2;P10636-6</td>
+      <td>P10636-2;P10636-6</td>
+      <td>Q14894</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>B0QYF8;P02144</td>
+      <td>Q96GD0</td>
+      <td>P01704</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>P02766</td>
+      <td>P63104</td>
+      <td>P51688</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>B1AHL2;P23142-4</td>
+      <td>Q14894</td>
+      <td>P31321</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>P61981</td>
+      <td>A0A0A0MRJ7;P12259</td>
+      <td>F8WBF9;Q5TH30;Q9UGV2;Q9UGV2-2;Q9UGV2-3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>P14174</td>
+      <td>Q9Y2T3;Q9Y2T3-3</td>
+      <td>Q96GD0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>P04075</td>
+      <td>P61981</td>
+      <td>O95497</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Q9Y2T3;Q9Y2T3-3</td>
+      <td>P14174</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>P00338;P00338-3</td>
+      <td>P04075</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>P14618</td>
+      <td>P25189;P25189-2</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Q6EMK4</td>
+      <td>P00492</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>P05413;S4R371</td>
+      <td>Q6EMK4</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>C9JF17;P05090</td>
+      <td>A0A0C4DGY8;D6RA00;Q9UHY7</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>P63104</td>
+      <td>P00338;P00338-3</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>A0A0B4J1V0</td>
+      <td>C9JF17;P05090</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="precision-recall-plot">
+<h3>Precision-Recall plot<a class="headerlink" href="#precision-recall-plot" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;prec_recall_curve.pdf&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/prec_recall_curve.pdf
+</pre></div>
+</div>
+<img alt="../../../_images/7c78c430e25dc7cdf4e9b93fef3697831c9455994dd319f28ead8e31b35374a1.png" src="../../../_images/7c78c430e25dc7cdf4e9b93fef3697831c9455994dd319f28ead8e31b35374a1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prec_recall_curve</span> <span class="o">=</span> <span class="n">parse_prc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">)</span>
+<span class="n">prec_recall_curve</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
+<span class="n">prec_recall_curve</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">ALD study all</th>
+      <th colspan="2" halign="left">DAE all</th>
+      <th colspan="2" halign="left">DAE new</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>precision</th>
+      <th>tpr</th>
+      <th>precision</th>
+      <th>tpr</th>
+      <th>precision</th>
+      <th>tpr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.429</td>
+      <td>1.000</td>
+      <td>0.429</td>
+      <td>1.000</td>
+      <td>0.429</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.439</td>
+      <td>1.000</td>
+      <td>0.439</td>
+      <td>1.000</td>
+      <td>0.439</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.450</td>
+      <td>1.000</td>
+      <td>0.450</td>
+      <td>1.000</td>
+      <td>0.450</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.462</td>
+      <td>1.000</td>
+      <td>0.462</td>
+      <td>1.000</td>
+      <td>0.462</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.474</td>
+      <td>1.000</td>
+      <td>0.474</td>
+      <td>1.000</td>
+      <td>0.474</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.459</td>
+      <td>0.944</td>
+      <td>0.486</td>
+      <td>1.000</td>
+      <td>0.486</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.472</td>
+      <td>0.944</td>
+      <td>0.500</td>
+      <td>1.000</td>
+      <td>0.500</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.486</td>
+      <td>0.944</td>
+      <td>0.514</td>
+      <td>1.000</td>
+      <td>0.514</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.500</td>
+      <td>0.944</td>
+      <td>0.529</td>
+      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.515</td>
+      <td>0.944</td>
+      <td>0.545</td>
+      <td>1.000</td>
+      <td>0.515</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.531</td>
+      <td>0.944</td>
+      <td>0.562</td>
+      <td>1.000</td>
+      <td>0.531</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.548</td>
+      <td>0.944</td>
+      <td>0.581</td>
+      <td>1.000</td>
+      <td>0.548</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.567</td>
+      <td>0.944</td>
+      <td>0.600</td>
+      <td>1.000</td>
+      <td>0.567</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.586</td>
+      <td>0.944</td>
+      <td>0.621</td>
+      <td>1.000</td>
+      <td>0.586</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.607</td>
+      <td>0.944</td>
+      <td>0.643</td>
+      <td>1.000</td>
+      <td>0.607</td>
+      <td>0.944</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.630</td>
+      <td>0.944</td>
+      <td>0.630</td>
+      <td>0.944</td>
+      <td>0.593</td>
+      <td>0.889</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.654</td>
+      <td>0.944</td>
+      <td>0.654</td>
+      <td>0.944</td>
+      <td>0.577</td>
+      <td>0.833</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.640</td>
+      <td>0.889</td>
+      <td>0.640</td>
+      <td>0.889</td>
+      <td>0.560</td>
+      <td>0.778</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.667</td>
+      <td>0.889</td>
+      <td>0.625</td>
+      <td>0.833</td>
+      <td>0.583</td>
+      <td>0.778</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.696</td>
+      <td>0.889</td>
+      <td>0.609</td>
+      <td>0.778</td>
+      <td>0.609</td>
+      <td>0.778</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.682</td>
+      <td>0.833</td>
+      <td>0.591</td>
+      <td>0.722</td>
+      <td>0.591</td>
+      <td>0.722</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.714</td>
+      <td>0.833</td>
+      <td>0.619</td>
+      <td>0.722</td>
+      <td>0.571</td>
+      <td>0.667</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>0.700</td>
+      <td>0.778</td>
+      <td>0.650</td>
+      <td>0.722</td>
+      <td>0.550</td>
+      <td>0.611</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>0.737</td>
+      <td>0.778</td>
+      <td>0.632</td>
+      <td>0.667</td>
+      <td>0.579</td>
+      <td>0.611</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>0.778</td>
+      <td>0.778</td>
+      <td>0.667</td>
+      <td>0.667</td>
+      <td>0.556</td>
+      <td>0.556</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>0.765</td>
+      <td>0.722</td>
+      <td>0.706</td>
+      <td>0.667</td>
+      <td>0.588</td>
+      <td>0.556</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>0.750</td>
+      <td>0.667</td>
+      <td>0.750</td>
+      <td>0.667</td>
+      <td>0.562</td>
+      <td>0.500</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>0.800</td>
+      <td>0.667</td>
+      <td>0.733</td>
+      <td>0.611</td>
+      <td>0.533</td>
+      <td>0.444</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>0.857</td>
+      <td>0.667</td>
+      <td>0.714</td>
+      <td>0.556</td>
+      <td>0.500</td>
+      <td>0.389</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>0.846</td>
+      <td>0.611</td>
+      <td>0.692</td>
+      <td>0.500</td>
+      <td>0.462</td>
+      <td>0.333</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.833</td>
+      <td>0.556</td>
+      <td>0.667</td>
+      <td>0.444</td>
+      <td>0.500</td>
+      <td>0.333</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>0.909</td>
+      <td>0.556</td>
+      <td>0.727</td>
+      <td>0.444</td>
+      <td>0.545</td>
+      <td>0.333</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>1.000</td>
+      <td>0.556</td>
+      <td>0.700</td>
+      <td>0.389</td>
+      <td>0.500</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.778</td>
+      <td>0.389</td>
+      <td>0.556</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>1.000</td>
+      <td>0.444</td>
+      <td>0.875</td>
+      <td>0.389</td>
+      <td>0.625</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>1.000</td>
+      <td>0.389</td>
+      <td>0.857</td>
+      <td>0.333</td>
+      <td>0.714</td>
+      <td>0.278</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>1.000</td>
+      <td>0.333</td>
+      <td>0.833</td>
+      <td>0.278</td>
+      <td>0.667</td>
+      <td>0.222</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>1.000</td>
+      <td>0.278</td>
+      <td>0.800</td>
+      <td>0.222</td>
+      <td>0.600</td>
+      <td>0.167</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>1.000</td>
+      <td>0.222</td>
+      <td>0.750</td>
+      <td>0.167</td>
+      <td>0.500</td>
+      <td>0.111</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>1.000</td>
+      <td>0.167</td>
+      <td>0.667</td>
+      <td>0.111</td>
+      <td>0.333</td>
+      <td>0.056</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>1.000</td>
+      <td>0.111</td>
+      <td>1.000</td>
+      <td>0.111</td>
+      <td>0.500</td>
+      <td>0.056</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>1.000</td>
+      <td>0.056</td>
+      <td>1.000</td>
+      <td>0.056</td>
+      <td>0.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>1.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+      <td>0.000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="train-data-plots">
+<h2>Train data plots<a class="headerlink" href="#train-data-plots" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;prec_recall_curve_train.pdf&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/prec_recall_curve_train.pdf
+</pre></div>
+</div>
+<img alt="../../../_images/fc96b5c0b593f5097ebe97329dae8429dd131bc786ea48f078886d036adb4264.png" src="../../../_images/fc96b5c0b593f5097ebe97329dae8429dd131bc786ea48f078886d036adb4264.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;auc_roc_curve_train.pdf&#39;</span>
+<span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/auc_roc_curve_train.pdf
+</pre></div>
+</div>
+<img alt="../../../_images/1923904e120690dc305eca625e23dce223bc4aa42f61265eecfe1a0fe5cb5a62.png" src="../../../_images/1923904e120690dc305eca625e23dce223bc4aa42f61265eecfe1a0fe5cb5a62.png" />
+</div>
+</div>
+<p>Options:</p>
+<ul class="simple">
+<li><p>F1 results for test data for best cutoff on training data?
+(select best cutoff of training data, evaluate on test data)</p></li>
+<li><p>plot X_train PCA/UMAP, map X_test</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;results_DAE all.pkl&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/results_DAE all.pkl&#39;),
+ &#39;results_DAE new.pkl&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/results_DAE new.pkl&#39;),
+ &#39;results_ALD study all.pkl&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/results_ALD study all.pkl&#39;),
+ &#39;auc_roc_curve.pdf&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/auc_roc_curve.pdf&#39;),
+ &#39;mrmr_feat_by_model.xlsx&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/mrmr_feat_by_model.xlsx&#39;),
+ &#39;prec_recall_curve.pdf&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/prec_recall_curve.pdf&#39;),
+ &#39;prec_recall_curve_train.pdf&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/prec_recall_curve_train.pdf&#39;),
+ &#39;auc_roc_curve_train.pdf&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_DAE/auc_roc_curve_train.pdf&#39;)}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../10_4_ald_compare_single_pg.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Compare predictions between model and RSN</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../PI_vs_Median/10_3_ald_ml_new_feat.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Fit logistic regression model</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Fit logistic regression model</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-target">Load target</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measured-data">Measured data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-ald-data-or-create">Load ALD data or create</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-semi-supervised-model-imputations">Load semi-supervised model imputations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#model-predictions">Model predictions</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-number-of-parameters-by-cv">Best number of parameters by CV</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-test-split">Train, test split</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#roc-auc">ROC-AUC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#features-selected">Features selected</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-recall-plot">Precision-Recall plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-data-plots">Train data plots</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PIMMS
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Henry Webel.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -56,7 +56,7 @@ Inspect the notebooks associated with the imputation workflow.
     performance plots <01_2_performance_plots.ipynb>
 
 Differential Analysis Notebooks
-================================
+-------------------------------
 
 Inspect the notebooks associated with the differential analysis workflow.
 
