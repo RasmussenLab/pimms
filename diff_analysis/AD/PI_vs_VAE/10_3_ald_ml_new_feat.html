@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+g4774835 documentation</title>
+    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+g3dbdb67 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g4774835 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g3dbdb67 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -406,7 +406,12 @@ document.write(`
 <li><p>baseline: reference</p></li>
 <li><p>model: any other selected imputation method</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -462,8 +467,14 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
@@ -471,6 +482,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
@@ -507,13 +519,19 @@ document.write(`
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">params</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Removed from global namespace: folder_data
 root - INFO     Removed from global namespace: fn_clinical_data
@@ -545,7 +563,12 @@ root - INFO     Removed from global namespace: template_pred
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
@@ -559,6 +582,7 @@ root - INFO     Removed from global namespace: template_pred
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Already set attribute: folder_experiment has value runs/alzheimer_study
 root - INFO     Already set attribute: out_folder has value diff_analysis
@@ -585,12 +609,18 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 <section id="load-target">
@@ -683,7 +713,12 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 <section id="measured-data">
 <h3>Measured data<a class="headerlink" href="#measured-data" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
@@ -692,18 +727,19 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
 vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
 vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                    
-Sample_139  A0A0U1RQC5                           18.189
-Sample_145  J3QQR8;J3QQX6;J3QRQ1;J3QRT5;P13598   15.381
-Sample_007  P26038                               16.541
-Sample_082  F6S8M0;H7C3P4;P15586;P15586-2        16.319
-Sample_154  P00740;P00740-2                      15.660
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                   
+Sample_008  B8ZZE5;C9JRR0;Q9H1Z8                19.635
+Sample_096  P29144;Q5VZU9                       18.822
+Sample_098  Q03167;Q03167-2                     16.772
+Sample_180  Q99519                              15.090
+Sample_181  A0A087WYK9;Q02985;Q02985-2;Q6NSD3   15.001
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -713,7 +749,12 @@ Name: intensity, dtype: float64
 </section>
 <section id="load-ald-data-or-create">
 <h3>Load ALD data or create<a class="headerlink" href="#load-ald-data-or-create" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_COMPLETENESS</span> <span class="o">=</span> <span class="mf">0.6</span>
 <span class="n">MIN_N_PROTEIN_GROUPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span>
@@ -742,6 +783,7 @@ Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Initally: N samples: 210, M feat: 1421
 root - INFO     Dropped features quantified in less than 126 samples.
@@ -1085,7 +1127,12 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <p>210 rows × 1213 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask_has_target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="k">assert</span> <span class="ow">not</span> <span class="n">mask_has_target</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;No data for target: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1095,6 +1142,7 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Samples available both in proteomics data and for target: 210
 </pre></div>
@@ -1104,7 +1152,12 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </section>
 <section id="load-semi-supervised-model-imputations">
 <h3>Load semi-supervised model imputations<a class="headerlink" href="#load-semi-supervised-model-imputations" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing values pred. by </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1114,20 +1167,26 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>missing values pred. by VAE: runs/alzheimer_study/preds/pred_real_na_VAE.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups            
-Sample_017  A0A140T9S5;Q9Y334;Q9Y334-2   13.029
-Sample_018  P06732                       13.539
-Sample_120  A0A0A6YYJ2;P42857;P42857-2   15.234
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                        
+Sample_029  P05997                                   14.922
+Sample_112  P07196                                   14.251
+Sample_041  I3L0A1;J3KPA1;P54108;P54108-2;P54108-3   16.679
 Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">baseline</span><span class="p">)</span>
 <span class="n">pred_real_na_baseline</span> <span class="o">=</span> <span class="n">load_single_csv_pred_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>  <span class="c1"># .loc[mask_has_target]</span>
@@ -1135,19 +1194,20 @@ Name: intensity, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 11.625
-            A0A075B6Q5                 12.870
-            A0A075B6R2                 12.220
-            A0A075B6S5                 12.145
-            A0A087WSY4                 12.357
+Sample_000  A0A075B6J9                 11.864
+            A0A075B6Q5                 12.824
+            A0A075B6R2                 14.377
+            A0A075B6S5                 12.867
+            A0A087WSY4                 13.261
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.762
-            Q9UI40;Q9UI40-2            13.981
-            Q9UIW2                     12.220
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   11.847
-            Q9UP79                     11.736
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.135
+            Q9UI40;Q9UI40-2            12.264
+            Q9UIW2                     12.081
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.723
+            Q9UP79                     11.536
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -1172,13 +1232,19 @@ Name: intensity, Length: 46401, dtype: float64
 self supervised deep learning model which were newly retained using the
 new approach</p></li>
 </ol>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">,</span> <span class="n">pred_real_na</span><span class="p">])</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
 <span class="n">X</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1261,11 +1327,11 @@ new approach</p></li>
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>14.092</td>
+      <td>14.147</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>16.029</td>
+      <td>16.010</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -1280,12 +1346,12 @@ new approach</p></li>
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>17.081</td>
+      <td>16.867</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>14.191</td>
+      <td>13.928</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -1337,7 +1403,7 @@ new approach</p></li>
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>15.857</td>
+      <td>16.053</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -1396,10 +1462,10 @@ new approach</p></li>
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>15.360</td>
+      <td>15.250</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>15.606</td>
+      <td>15.915</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -1420,7 +1486,7 @@ new approach</p></li>
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>15.699</td>
+      <td>15.298</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -1429,14 +1495,14 @@ new approach</p></li>
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>14.284</td>
+      <td>14.584</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>11.378</td>
-      <td>11.264</td>
+      <td>11.153</td>
+      <td>11.360</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -1444,7 +1510,7 @@ new approach</p></li>
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>15.202</td>
+      <td>14.573</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -1468,23 +1534,23 @@ new approach</p></li>
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>14.488</td>
+      <td>14.308</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>16.851</td>
+      <td>17.033</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>14.473</td>
+      <td>14.481</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>11.280</td>
+      <td>11.188</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -1492,7 +1558,7 @@ new approach</p></li>
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>15.117</td>
+      <td>15.318</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -1515,7 +1581,12 @@ new approach</p></li>
 <p>210 rows × 1421 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># could be just observed, drop columns with missing values</span>
 <span class="n">ald_study</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
@@ -1530,6 +1601,7 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1608,15 +1680,15 @@ new approach</p></li>
       <td>17.584</td>
       <td>16.988</td>
       <td>20.054</td>
-      <td>11.625</td>
+      <td>11.864</td>
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>12.882</td>
+      <td>13.415</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>13.460</td>
+      <td>13.477</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -1630,13 +1702,13 @@ new approach</p></li>
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>12.456</td>
+      <td>13.554</td>
       <td>19.067</td>
       <td>16.188</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>11.165</td>
+      <td>13.143</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -1656,7 +1728,7 @@ new approach</p></li>
       <td>15.671</td>
       <td>17.012</td>
       <td>18.569</td>
-      <td>13.648</td>
+      <td>13.862</td>
       <td>...</td>
       <td>15.229</td>
       <td>14.728</td>
@@ -1688,7 +1760,7 @@ new approach</p></li>
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>13.387</td>
+      <td>12.685</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -1749,7 +1821,7 @@ new approach</p></li>
       <td>16.482</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>12.224</td>
+      <td>12.334</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>16.064</td>
@@ -1780,14 +1852,14 @@ new approach</p></li>
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>12.818</td>
+      <td>12.652</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>13.420</td>
-      <td>12.056</td>
+      <td>13.733</td>
+      <td>12.037</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -1821,21 +1893,21 @@ new approach</p></li>
       <td>16.132</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>12.175</td>
+      <td>13.536</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>15.202</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>13.024</td>
+      <td>12.304</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>13.170</td>
+      <td>12.139</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -1866,13 +1938,19 @@ new approach</p></li>
 <p>210 rows × 1213 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">new_features</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;A0A075B6H7&#39;, &#39;A0A075B6Q5&#39;, &#39;A0A075B7B8&#39;, &#39;A0A087WSY4&#39;,
        &#39;A0A087WTT8;A0A0A0MQX5;O94779;O94779-2&#39;, &#39;A0A087WXB8;Q9Y274&#39;,
@@ -1891,7 +1969,12 @@ new approach</p></li>
 </div>
 </div>
 <p>Binarize targets, but also keep groups for stratification</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_to_group</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">target</span> <span class="o">=</span> <span class="n">target</span> <span class="o">&gt;=</span> <span class="n">args</span><span class="o">.</span><span class="n">cutoff_target</span>
@@ -1899,6 +1982,7 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1945,7 +2029,12 @@ new approach</p></li>
 </section>
 <section id="best-number-of-parameters-by-cv">
 <h2>Best number of parameters by CV<a class="headerlink" href="#best-number-of-parameters-by-cv" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_ald</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">ald_study</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
                                                 <span class="n">groups</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">)</span>
@@ -1957,22 +2046,23 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 335.68it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  3.71it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  3.87it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  3.63it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  3.51it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  3.29it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  3.24it/s]
-100%|██████████| 8/8 [00:03&lt;00:00,  2.65it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  3.37it/s]
-100%|██████████| 10/10 [00:03&lt;00:00,  2.79it/s]
-100%|██████████| 11/11 [00:04&lt;00:00,  2.54it/s]
-100%|██████████| 12/12 [00:04&lt;00:00,  2.77it/s]
-100%|██████████| 13/13 [00:04&lt;00:00,  2.98it/s]
-100%|██████████| 14/14 [00:05&lt;00:00,  2.68it/s]
-100%|██████████| 15/15 [00:05&lt;00:00,  2.50it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 360.74it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  3.79it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  4.36it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.77it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  3.30it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  3.08it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  2.75it/s]
+100%|██████████| 8/8 [00:03&lt;00:00,  2.38it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.68it/s]
+100%|██████████| 10/10 [00:03&lt;00:00,  2.50it/s]
+100%|██████████| 11/11 [00:04&lt;00:00,  2.33it/s]
+100%|██████████| 12/12 [00:04&lt;00:00,  2.51it/s]
+100%|██████████| 13/13 [00:04&lt;00:00,  2.75it/s]
+100%|██████████| 14/14 [00:05&lt;00:00,  2.44it/s]
+100%|██████████| 15/15 [00:06&lt;00:00,  2.41it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2053,85 +2143,85 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.080</td>
-      <td>0.034</td>
-      <td>0.650</td>
-      <td>0.423</td>
-      <td>0.091</td>
-      <td>0.082</td>
-      <td>0.153</td>
-      <td>0.127</td>
-      <td>0.538</td>
-      <td>0.039</td>
-      <td>0.851</td>
+      <td>0.004</td>
       <td>0.066</td>
-      <td>0.824</td>
-      <td>0.090</td>
+      <td>0.023</td>
+      <td>0.756</td>
+      <td>0.355</td>
+      <td>0.114</td>
+      <td>0.083</td>
+      <td>0.192</td>
+      <td>0.126</td>
+      <td>0.550</td>
+      <td>0.040</td>
+      <td>0.849</td>
+      <td>0.064</td>
+      <td>0.823</td>
+      <td>0.088</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>2</th>
+      <td>0.006</td>
       <td>0.005</td>
-      <td>0.003</td>
-      <td>0.061</td>
+      <td>0.079</td>
       <td>0.026</td>
-      <td>0.616</td>
-      <td>0.145</td>
-      <td>0.451</td>
-      <td>0.112</td>
-      <td>0.510</td>
-      <td>0.100</td>
-      <td>0.615</td>
-      <td>0.070</td>
-      <td>0.694</td>
-      <td>0.087</td>
-      <td>0.648</td>
-      <td>0.101</td>
+      <td>0.697</td>
+      <td>0.118</td>
+      <td>0.638</td>
+      <td>0.124</td>
+      <td>0.657</td>
+      <td>0.090</td>
+      <td>0.712</td>
+      <td>0.073</td>
+      <td>0.788</td>
+      <td>0.073</td>
+      <td>0.731</td>
+      <td>0.092</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.075</td>
-      <td>0.033</td>
-      <td>0.804</td>
-      <td>0.082</td>
-      <td>0.732</td>
-      <td>0.094</td>
-      <td>0.762</td>
-      <td>0.071</td>
-      <td>0.799</td>
-      <td>0.056</td>
-      <td>0.911</td>
-      <td>0.042</td>
-      <td>0.896</td>
-      <td>0.045</td>
+      <td>0.005</td>
+      <td>0.061</td>
+      <td>0.026</td>
+      <td>0.706</td>
+      <td>0.117</td>
+      <td>0.624</td>
+      <td>0.135</td>
+      <td>0.653</td>
+      <td>0.099</td>
+      <td>0.712</td>
+      <td>0.078</td>
+      <td>0.791</td>
+      <td>0.076</td>
+      <td>0.729</td>
+      <td>0.095</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.007</td>
       <td>0.006</td>
-      <td>0.088</td>
-      <td>0.032</td>
-      <td>0.793</td>
-      <td>0.081</td>
-      <td>0.772</td>
-      <td>0.111</td>
-      <td>0.777</td>
-      <td>0.075</td>
-      <td>0.811</td>
-      <td>0.062</td>
-      <td>0.914</td>
-      <td>0.042</td>
-      <td>0.897</td>
-      <td>0.049</td>
+      <td>0.005</td>
+      <td>0.069</td>
+      <td>0.024</td>
+      <td>0.694</td>
+      <td>0.115</td>
+      <td>0.609</td>
+      <td>0.134</td>
+      <td>0.639</td>
+      <td>0.096</td>
+      <td>0.701</td>
+      <td>0.074</td>
+      <td>0.786</td>
+      <td>0.077</td>
+      <td>0.718</td>
+      <td>0.097</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2139,125 +2229,125 @@ new approach</p></li>
       <th>5</th>
       <td>0.005</td>
       <td>0.004</td>
+      <td>0.072</td>
+      <td>0.025</td>
+      <td>0.727</td>
+      <td>0.108</td>
+      <td>0.647</td>
+      <td>0.106</td>
+      <td>0.677</td>
+      <td>0.078</td>
+      <td>0.730</td>
+      <td>0.061</td>
+      <td>0.823</td>
       <td>0.064</td>
-      <td>0.022</td>
-      <td>0.800</td>
-      <td>0.089</td>
-      <td>0.802</td>
-      <td>0.115</td>
-      <td>0.795</td>
-      <td>0.077</td>
-      <td>0.826</td>
-      <td>0.064</td>
-      <td>0.917</td>
-      <td>0.042</td>
-      <td>0.903</td>
-      <td>0.047</td>
+      <td>0.784</td>
+      <td>0.088</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>6</th>
       <td>0.005</td>
-      <td>0.003</td>
-      <td>0.080</td>
-      <td>0.029</td>
-      <td>0.800</td>
-      <td>0.091</td>
-      <td>0.806</td>
-      <td>0.114</td>
-      <td>0.797</td>
-      <td>0.078</td>
-      <td>0.827</td>
-      <td>0.065</td>
-      <td>0.915</td>
-      <td>0.043</td>
-      <td>0.902</td>
-      <td>0.047</td>
+      <td>0.005</td>
+      <td>0.057</td>
+      <td>0.021</td>
+      <td>0.715</td>
+      <td>0.099</td>
+      <td>0.669</td>
+      <td>0.112</td>
+      <td>0.685</td>
+      <td>0.082</td>
+      <td>0.734</td>
+      <td>0.066</td>
+      <td>0.822</td>
+      <td>0.066</td>
+      <td>0.779</td>
+      <td>0.092</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.006</td>
-      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.052</td>
+      <td>0.015</td>
+      <td>0.795</td>
+      <td>0.092</td>
+      <td>0.798</td>
+      <td>0.107</td>
+      <td>0.791</td>
       <td>0.074</td>
-      <td>0.024</td>
-      <td>0.813</td>
-      <td>0.087</td>
-      <td>0.812</td>
-      <td>0.101</td>
-      <td>0.808</td>
-      <td>0.074</td>
-      <td>0.836</td>
+      <td>0.821</td>
       <td>0.062</td>
-      <td>0.916</td>
-      <td>0.044</td>
-      <td>0.904</td>
-      <td>0.047</td>
+      <td>0.899</td>
+      <td>0.051</td>
+      <td>0.878</td>
+      <td>0.060</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.007</td>
-      <td>0.005</td>
-      <td>0.076</td>
-      <td>0.030</td>
-      <td>0.808</td>
-      <td>0.088</td>
-      <td>0.804</td>
-      <td>0.099</td>
-      <td>0.802</td>
-      <td>0.072</td>
-      <td>0.830</td>
-      <td>0.061</td>
-      <td>0.914</td>
-      <td>0.044</td>
-      <td>0.902</td>
-      <td>0.047</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.049</td>
+      <td>0.017</td>
+      <td>0.791</td>
+      <td>0.092</td>
+      <td>0.797</td>
+      <td>0.109</td>
+      <td>0.788</td>
+      <td>0.074</td>
+      <td>0.819</td>
+      <td>0.063</td>
+      <td>0.897</td>
+      <td>0.051</td>
+      <td>0.876</td>
+      <td>0.060</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.007</td>
       <td>0.006</td>
-      <td>0.090</td>
-      <td>0.034</td>
-      <td>0.856</td>
-      <td>0.080</td>
-      <td>0.820</td>
-      <td>0.088</td>
-      <td>0.833</td>
-      <td>0.065</td>
-      <td>0.858</td>
-      <td>0.054</td>
-      <td>0.929</td>
-      <td>0.042</td>
-      <td>0.921</td>
-      <td>0.043</td>
+      <td>0.004</td>
+      <td>0.066</td>
+      <td>0.024</td>
+      <td>0.797</td>
+      <td>0.091</td>
+      <td>0.804</td>
+      <td>0.102</td>
+      <td>0.795</td>
+      <td>0.073</td>
+      <td>0.825</td>
+      <td>0.062</td>
+      <td>0.896</td>
+      <td>0.051</td>
+      <td>0.876</td>
+      <td>0.058</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.006</td>
-      <td>0.005</td>
-      <td>0.069</td>
-      <td>0.025</td>
-      <td>0.854</td>
-      <td>0.086</td>
-      <td>0.819</td>
-      <td>0.091</td>
-      <td>0.832</td>
-      <td>0.067</td>
-      <td>0.856</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.060</td>
+      <td>0.023</td>
+      <td>0.810</td>
+      <td>0.079</td>
+      <td>0.831</td>
+      <td>0.107</td>
+      <td>0.816</td>
+      <td>0.068</td>
+      <td>0.843</td>
+      <td>0.058</td>
+      <td>0.904</td>
+      <td>0.051</td>
+      <td>0.890</td>
       <td>0.056</td>
-      <td>0.927</td>
-      <td>0.044</td>
-      <td>0.915</td>
-      <td>0.049</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2265,104 +2355,104 @@ new approach</p></li>
       <th>11</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.061</td>
-      <td>0.024</td>
-      <td>0.850</td>
-      <td>0.073</td>
-      <td>0.824</td>
-      <td>0.089</td>
-      <td>0.834</td>
-      <td>0.063</td>
-      <td>0.858</td>
-      <td>0.053</td>
-      <td>0.930</td>
-      <td>0.045</td>
-      <td>0.919</td>
-      <td>0.048</td>
+      <td>0.052</td>
+      <td>0.015</td>
+      <td>0.813</td>
+      <td>0.076</td>
+      <td>0.823</td>
+      <td>0.099</td>
+      <td>0.813</td>
+      <td>0.065</td>
+      <td>0.841</td>
+      <td>0.055</td>
+      <td>0.906</td>
+      <td>0.051</td>
+      <td>0.895</td>
+      <td>0.056</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>12</th>
       <td>0.006</td>
-      <td>0.005</td>
+      <td>0.006</td>
+      <td>0.075</td>
+      <td>0.032</td>
+      <td>0.822</td>
+      <td>0.085</td>
+      <td>0.830</td>
+      <td>0.094</td>
+      <td>0.823</td>
       <td>0.071</td>
-      <td>0.040</td>
-      <td>0.845</td>
-      <td>0.077</td>
-      <td>0.828</td>
-      <td>0.096</td>
-      <td>0.833</td>
-      <td>0.072</td>
-      <td>0.858</td>
+      <td>0.848</td>
       <td>0.061</td>
-      <td>0.928</td>
-      <td>0.045</td>
-      <td>0.917</td>
-      <td>0.047</td>
+      <td>0.909</td>
+      <td>0.052</td>
+      <td>0.900</td>
+      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>13</th>
       <td>0.007</td>
-      <td>0.005</td>
-      <td>0.073</td>
-      <td>0.025</td>
-      <td>0.841</td>
-      <td>0.075</td>
-      <td>0.819</td>
-      <td>0.095</td>
-      <td>0.826</td>
-      <td>0.069</td>
-      <td>0.852</td>
-      <td>0.058</td>
-      <td>0.927</td>
-      <td>0.045</td>
-      <td>0.915</td>
-      <td>0.048</td>
+      <td>0.006</td>
+      <td>0.077</td>
+      <td>0.033</td>
+      <td>0.821</td>
+      <td>0.085</td>
+      <td>0.825</td>
+      <td>0.097</td>
+      <td>0.820</td>
+      <td>0.074</td>
+      <td>0.846</td>
+      <td>0.063</td>
+      <td>0.908</td>
+      <td>0.052</td>
+      <td>0.899</td>
+      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.007</td>
-      <td>0.007</td>
+      <td>0.005</td>
+      <td>0.003</td>
       <td>0.064</td>
-      <td>0.024</td>
-      <td>0.837</td>
-      <td>0.076</td>
-      <td>0.819</td>
-      <td>0.095</td>
-      <td>0.824</td>
-      <td>0.067</td>
-      <td>0.850</td>
-      <td>0.057</td>
-      <td>0.926</td>
-      <td>0.045</td>
-      <td>0.914</td>
-      <td>0.047</td>
+      <td>0.025</td>
+      <td>0.818</td>
+      <td>0.090</td>
+      <td>0.815</td>
+      <td>0.098</td>
+      <td>0.813</td>
+      <td>0.074</td>
+      <td>0.840</td>
+      <td>0.064</td>
+      <td>0.905</td>
+      <td>0.054</td>
+      <td>0.896</td>
+      <td>0.055</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.007</td>
-      <td>0.007</td>
+      <td>0.005</td>
+      <td>0.004</td>
       <td>0.060</td>
-      <td>0.023</td>
-      <td>0.842</td>
-      <td>0.075</td>
-      <td>0.818</td>
-      <td>0.093</td>
-      <td>0.827</td>
-      <td>0.069</td>
-      <td>0.852</td>
-      <td>0.058</td>
-      <td>0.923</td>
-      <td>0.043</td>
-      <td>0.911</td>
-      <td>0.047</td>
+      <td>0.021</td>
+      <td>0.814</td>
+      <td>0.089</td>
+      <td>0.813</td>
+      <td>0.098</td>
+      <td>0.809</td>
+      <td>0.071</td>
+      <td>0.837</td>
+      <td>0.061</td>
+      <td>0.905</td>
+      <td>0.053</td>
+      <td>0.894</td>
+      <td>0.056</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2370,7 +2460,12 @@ new approach</p></li>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_all</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
                                                 <span class="n">groups</span><span class="o">=</span><span class="n">target_to_group</span><span class="p">)</span>
@@ -2379,22 +2474,23 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 454.47it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  4.83it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  3.83it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  3.27it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  2.75it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  3.37it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  2.59it/s]
-100%|██████████| 8/8 [00:02&lt;00:00,  3.57it/s]
-100%|██████████| 9/9 [00:03&lt;00:00,  2.94it/s]
-100%|██████████| 10/10 [00:05&lt;00:00,  1.97it/s]
-100%|██████████| 11/11 [00:04&lt;00:00,  2.28it/s]
-100%|██████████| 12/12 [00:05&lt;00:00,  2.14it/s]
-100%|██████████| 13/13 [00:04&lt;00:00,  2.75it/s]
-100%|██████████| 14/14 [00:05&lt;00:00,  2.43it/s]
-100%|██████████| 15/15 [00:06&lt;00:00,  2.36it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 115.22it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  5.44it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  3.63it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.52it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  2.79it/s]
+100%|██████████| 6/6 [00:02&lt;00:00,  3.00it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  2.71it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  3.01it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.93it/s]
+100%|██████████| 10/10 [00:03&lt;00:00,  2.80it/s]
+100%|██████████| 11/11 [00:04&lt;00:00,  2.34it/s]
+100%|██████████| 12/12 [00:05&lt;00:00,  2.33it/s]
+100%|██████████| 13/13 [00:04&lt;00:00,  2.90it/s]
+100%|██████████| 14/14 [00:04&lt;00:00,  2.87it/s]
+100%|██████████| 15/15 [00:05&lt;00:00,  2.85it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2475,10 +2571,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.053</td>
-      <td>0.013</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.066</td>
+      <td>0.025</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2487,304 +2583,304 @@ new approach</p></li>
       <td>0.000</td>
       <td>0.496</td>
       <td>0.008</td>
-      <td>0.857</td>
+      <td>0.854</td>
       <td>0.063</td>
-      <td>0.826</td>
-      <td>0.088</td>
+      <td>0.824</td>
+      <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.060</td>
-      <td>0.022</td>
-      <td>0.702</td>
-      <td>0.087</td>
-      <td>0.607</td>
-      <td>0.102</td>
-      <td>0.644</td>
-      <td>0.073</td>
-      <td>0.706</td>
-      <td>0.052</td>
-      <td>0.804</td>
-      <td>0.064</td>
-      <td>0.755</td>
-      <td>0.082</td>
+      <td>0.000</td>
+      <td>0.050</td>
+      <td>0.013</td>
+      <td>0.740</td>
+      <td>0.113</td>
+      <td>0.550</td>
+      <td>0.119</td>
+      <td>0.622</td>
+      <td>0.094</td>
+      <td>0.701</td>
+      <td>0.062</td>
+      <td>0.753</td>
+      <td>0.075</td>
+      <td>0.695</td>
+      <td>0.099</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.073</td>
-      <td>0.028</td>
-      <td>0.694</td>
-      <td>0.118</td>
-      <td>0.598</td>
-      <td>0.110</td>
-      <td>0.635</td>
-      <td>0.087</td>
-      <td>0.699</td>
+      <td>0.002</td>
+      <td>0.058</td>
+      <td>0.024</td>
+      <td>0.724</td>
+      <td>0.117</td>
+      <td>0.533</td>
+      <td>0.127</td>
+      <td>0.604</td>
+      <td>0.100</td>
+      <td>0.689</td>
       <td>0.066</td>
-      <td>0.821</td>
-      <td>0.064</td>
-      <td>0.769</td>
-      <td>0.084</td>
+      <td>0.752</td>
+      <td>0.072</td>
+      <td>0.701</td>
+      <td>0.095</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.000</td>
-      <td>0.049</td>
-      <td>0.008</td>
-      <td>0.714</td>
-      <td>0.121</td>
-      <td>0.601</td>
-      <td>0.106</td>
-      <td>0.644</td>
-      <td>0.084</td>
-      <td>0.708</td>
+      <td>0.066</td>
+      <td>0.025</td>
+      <td>0.695</td>
+      <td>0.113</td>
+      <td>0.530</td>
+      <td>0.117</td>
+      <td>0.593</td>
+      <td>0.094</td>
+      <td>0.677</td>
       <td>0.063</td>
-      <td>0.819</td>
-      <td>0.063</td>
-      <td>0.764</td>
-      <td>0.087</td>
+      <td>0.749</td>
+      <td>0.070</td>
+      <td>0.693</td>
+      <td>0.091</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>5</th>
       <td>0.004</td>
-      <td>0.003</td>
-      <td>0.059</td>
-      <td>0.022</td>
-      <td>0.792</td>
+      <td>0.000</td>
+      <td>0.046</td>
+      <td>0.000</td>
+      <td>0.721</td>
       <td>0.097</td>
-      <td>0.740</td>
-      <td>0.119</td>
-      <td>0.759</td>
-      <td>0.085</td>
-      <td>0.797</td>
-      <td>0.069</td>
-      <td>0.887</td>
-      <td>0.053</td>
-      <td>0.863</td>
-      <td>0.067</td>
+      <td>0.607</td>
+      <td>0.105</td>
+      <td>0.653</td>
+      <td>0.081</td>
+      <td>0.716</td>
+      <td>0.060</td>
+      <td>0.784</td>
+      <td>0.065</td>
+      <td>0.745</td>
+      <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.006</td>
-      <td>0.005</td>
-      <td>0.069</td>
-      <td>0.025</td>
-      <td>0.787</td>
-      <td>0.095</td>
-      <td>0.731</td>
-      <td>0.117</td>
-      <td>0.751</td>
-      <td>0.083</td>
-      <td>0.791</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.058</td>
+      <td>0.019</td>
+      <td>0.705</td>
+      <td>0.093</td>
+      <td>0.600</td>
+      <td>0.109</td>
+      <td>0.642</td>
+      <td>0.081</td>
+      <td>0.707</td>
+      <td>0.059</td>
+      <td>0.779</td>
       <td>0.067</td>
-      <td>0.884</td>
-      <td>0.052</td>
-      <td>0.860</td>
-      <td>0.066</td>
+      <td>0.741</td>
+      <td>0.088</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.004</td>
-      <td>0.000</td>
-      <td>0.052</td>
-      <td>0.012</td>
-      <td>0.781</td>
-      <td>0.102</td>
-      <td>0.728</td>
-      <td>0.116</td>
-      <td>0.748</td>
-      <td>0.087</td>
-      <td>0.787</td>
-      <td>0.070</td>
-      <td>0.882</td>
-      <td>0.054</td>
-      <td>0.859</td>
+      <td>0.005</td>
+      <td>0.005</td>
       <td>0.067</td>
+      <td>0.023</td>
+      <td>0.764</td>
+      <td>0.092</td>
+      <td>0.775</td>
+      <td>0.116</td>
+      <td>0.763</td>
+      <td>0.077</td>
+      <td>0.798</td>
+      <td>0.064</td>
+      <td>0.886</td>
+      <td>0.054</td>
+      <td>0.857</td>
+      <td>0.066</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.052</td>
-      <td>0.013</td>
-      <td>0.784</td>
-      <td>0.099</td>
-      <td>0.730</td>
-      <td>0.116</td>
-      <td>0.750</td>
-      <td>0.084</td>
-      <td>0.789</td>
-      <td>0.069</td>
-      <td>0.881</td>
-      <td>0.054</td>
-      <td>0.857</td>
-      <td>0.068</td>
+      <td>0.000</td>
+      <td>0.048</td>
+      <td>0.008</td>
+      <td>0.764</td>
+      <td>0.095</td>
+      <td>0.777</td>
+      <td>0.131</td>
+      <td>0.763</td>
+      <td>0.088</td>
+      <td>0.799</td>
+      <td>0.072</td>
+      <td>0.887</td>
+      <td>0.056</td>
+      <td>0.860</td>
+      <td>0.065</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.052</td>
-      <td>0.013</td>
-      <td>0.785</td>
-      <td>0.108</td>
-      <td>0.725</td>
-      <td>0.115</td>
-      <td>0.746</td>
-      <td>0.083</td>
-      <td>0.786</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.049</td>
+      <td>0.011</td>
+      <td>0.765</td>
+      <td>0.093</td>
+      <td>0.782</td>
+      <td>0.124</td>
+      <td>0.767</td>
+      <td>0.082</td>
+      <td>0.801</td>
       <td>0.068</td>
-      <td>0.878</td>
-      <td>0.055</td>
-      <td>0.855</td>
-      <td>0.068</td>
+      <td>0.885</td>
+      <td>0.056</td>
+      <td>0.858</td>
+      <td>0.066</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
       <td>0.004</td>
-      <td>0.000</td>
-      <td>0.051</td>
-      <td>0.011</td>
-      <td>0.777</td>
-      <td>0.090</td>
-      <td>0.735</td>
-      <td>0.116</td>
-      <td>0.751</td>
-      <td>0.086</td>
-      <td>0.790</td>
-      <td>0.070</td>
-      <td>0.902</td>
-      <td>0.050</td>
-      <td>0.884</td>
-      <td>0.060</td>
+      <td>0.002</td>
+      <td>0.053</td>
+      <td>0.013</td>
+      <td>0.780</td>
+      <td>0.091</td>
+      <td>0.791</td>
+      <td>0.124</td>
+      <td>0.779</td>
+      <td>0.082</td>
+      <td>0.812</td>
+      <td>0.069</td>
+      <td>0.886</td>
+      <td>0.054</td>
+      <td>0.856</td>
+      <td>0.064</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.006</td>
-      <td>0.007</td>
-      <td>0.069</td>
-      <td>0.028</td>
-      <td>0.777</td>
-      <td>0.093</td>
-      <td>0.736</td>
-      <td>0.119</td>
-      <td>0.751</td>
-      <td>0.086</td>
-      <td>0.790</td>
-      <td>0.070</td>
-      <td>0.903</td>
-      <td>0.050</td>
-      <td>0.887</td>
-      <td>0.060</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.062</td>
+      <td>0.023</td>
+      <td>0.795</td>
+      <td>0.082</td>
+      <td>0.809</td>
+      <td>0.114</td>
+      <td>0.797</td>
+      <td>0.075</td>
+      <td>0.827</td>
+      <td>0.064</td>
+      <td>0.901</td>
+      <td>0.052</td>
+      <td>0.876</td>
+      <td>0.062</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>12</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.058</td>
-      <td>0.020</td>
-      <td>0.777</td>
-      <td>0.095</td>
-      <td>0.740</td>
-      <td>0.120</td>
-      <td>0.753</td>
-      <td>0.088</td>
-      <td>0.791</td>
-      <td>0.072</td>
-      <td>0.903</td>
-      <td>0.049</td>
-      <td>0.887</td>
-      <td>0.058</td>
+      <td>0.000</td>
+      <td>0.051</td>
+      <td>0.012</td>
+      <td>0.795</td>
+      <td>0.084</td>
+      <td>0.811</td>
+      <td>0.114</td>
+      <td>0.797</td>
+      <td>0.075</td>
+      <td>0.827</td>
+      <td>0.064</td>
+      <td>0.899</td>
+      <td>0.052</td>
+      <td>0.874</td>
+      <td>0.063</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.054</td>
+      <td>0.001</td>
+      <td>0.051</td>
       <td>0.014</td>
-      <td>0.770</td>
-      <td>0.089</td>
-      <td>0.738</td>
-      <td>0.118</td>
-      <td>0.748</td>
+      <td>0.809</td>
       <td>0.084</td>
-      <td>0.787</td>
-      <td>0.070</td>
-      <td>0.904</td>
-      <td>0.048</td>
-      <td>0.889</td>
-      <td>0.056</td>
+      <td>0.809</td>
+      <td>0.117</td>
+      <td>0.804</td>
+      <td>0.077</td>
+      <td>0.834</td>
+      <td>0.065</td>
+      <td>0.902</td>
+      <td>0.051</td>
+      <td>0.882</td>
+      <td>0.058</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.006</td>
-      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.048</td>
+      <td>0.008</td>
+      <td>0.807</td>
+      <td>0.086</td>
+      <td>0.805</td>
+      <td>0.116</td>
+      <td>0.800</td>
+      <td>0.077</td>
+      <td>0.830</td>
       <td>0.065</td>
-      <td>0.024</td>
-      <td>0.764</td>
-      <td>0.085</td>
-      <td>0.745</td>
-      <td>0.113</td>
-      <td>0.749</td>
-      <td>0.075</td>
-      <td>0.787</td>
-      <td>0.062</td>
-      <td>0.902</td>
-      <td>0.047</td>
-      <td>0.886</td>
-      <td>0.055</td>
+      <td>0.901</td>
+      <td>0.050</td>
+      <td>0.881</td>
+      <td>0.058</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.063</td>
-      <td>0.032</td>
-      <td>0.783</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.046</td>
+      <td>0.020</td>
+      <td>0.804</td>
+      <td>0.087</td>
+      <td>0.799</td>
+      <td>0.120</td>
+      <td>0.796</td>
       <td>0.082</td>
-      <td>0.763</td>
-      <td>0.119</td>
-      <td>0.767</td>
-      <td>0.080</td>
-      <td>0.803</td>
-      <td>0.066</td>
-      <td>0.906</td>
-      <td>0.047</td>
-      <td>0.889</td>
-      <td>0.055</td>
+      <td>0.827</td>
+      <td>0.069</td>
+      <td>0.900</td>
+      <td>0.051</td>
+      <td>0.878</td>
+      <td>0.060</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2792,7 +2888,12 @@ new approach</p></li>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_feat_new</span> <span class="o">=</span> <span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">find_n_best_features</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">new_features</span><span class="p">],</span>
                                                 <span class="n">y</span><span class="o">=</span><span class="n">target</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span>
@@ -2802,22 +2903,23 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 960.23it/s]
-100%|██████████| 2/2 [00:00&lt;00:00, 18.88it/s]
-100%|██████████| 3/3 [00:00&lt;00:00, 17.62it/s]
-100%|██████████| 4/4 [00:00&lt;00:00, 13.70it/s]
-100%|██████████| 5/5 [00:00&lt;00:00, 16.65it/s]
-100%|██████████| 6/6 [00:00&lt;00:00, 11.40it/s]
-100%|██████████| 7/7 [00:00&lt;00:00, 14.35it/s]
-100%|██████████| 8/8 [00:00&lt;00:00, 11.17it/s]
-100%|██████████| 9/9 [00:00&lt;00:00, 12.31it/s]
-100%|██████████| 10/10 [00:00&lt;00:00, 12.54it/s]
-100%|██████████| 11/11 [00:00&lt;00:00, 13.43it/s]
-100%|██████████| 12/12 [00:00&lt;00:00, 13.27it/s]
-100%|██████████| 13/13 [00:00&lt;00:00, 14.57it/s]
-100%|██████████| 14/14 [00:00&lt;00:00, 16.36it/s]
-100%|██████████| 15/15 [00:01&lt;00:00, 14.19it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 974.51it/s]
+100%|██████████| 2/2 [00:00&lt;00:00, 16.20it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 17.91it/s]
+100%|██████████| 4/4 [00:00&lt;00:00, 15.68it/s]
+100%|██████████| 5/5 [00:00&lt;00:00, 17.82it/s]
+100%|██████████| 6/6 [00:00&lt;00:00, 19.57it/s]
+100%|██████████| 7/7 [00:00&lt;00:00, 14.49it/s]
+100%|██████████| 8/8 [00:00&lt;00:00, 10.22it/s]
+100%|██████████| 9/9 [00:00&lt;00:00, 11.13it/s]
+100%|██████████| 10/10 [00:00&lt;00:00, 14.11it/s]
+100%|██████████| 11/11 [00:00&lt;00:00, 13.35it/s]
+100%|██████████| 12/12 [00:00&lt;00:00, 16.88it/s]
+100%|██████████| 13/13 [00:01&lt;00:00, 10.44it/s]
+100%|██████████| 14/14 [00:00&lt;00:00, 24.38it/s]
+100%|██████████| 15/15 [00:00&lt;00:00, 24.05it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2898,10 +3000,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.051</td>
-      <td>0.014</td>
+      <td>0.056</td>
+      <td>0.017</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2910,304 +3012,304 @@ new approach</p></li>
       <td>0.000</td>
       <td>0.500</td>
       <td>0.000</td>
-      <td>0.742</td>
-      <td>0.067</td>
-      <td>0.694</td>
+      <td>0.732</td>
+      <td>0.068</td>
+      <td>0.683</td>
       <td>0.083</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.076</td>
-      <td>0.031</td>
-      <td>0.583</td>
-      <td>0.113</td>
-      <td>0.416</td>
-      <td>0.103</td>
-      <td>0.480</td>
-      <td>0.096</td>
-      <td>0.598</td>
-      <td>0.067</td>
-      <td>0.676</td>
-      <td>0.079</td>
-      <td>0.636</td>
-      <td>0.093</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.053</td>
+      <td>0.016</td>
+      <td>0.614</td>
+      <td>0.111</td>
+      <td>0.430</td>
+      <td>0.105</td>
+      <td>0.496</td>
+      <td>0.086</td>
+      <td>0.611</td>
+      <td>0.055</td>
+      <td>0.680</td>
+      <td>0.064</td>
+      <td>0.632</td>
+      <td>0.071</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>0.005</td>
       <td>0.003</td>
-      <td>0.000</td>
-      <td>0.041</td>
-      <td>0.006</td>
-      <td>0.576</td>
-      <td>0.101</td>
-      <td>0.397</td>
+      <td>0.062</td>
+      <td>0.022</td>
+      <td>0.614</td>
       <td>0.113</td>
-      <td>0.462</td>
-      <td>0.101</td>
-      <td>0.591</td>
-      <td>0.063</td>
-      <td>0.671</td>
-      <td>0.080</td>
-      <td>0.630</td>
-      <td>0.094</td>
+      <td>0.429</td>
+      <td>0.106</td>
+      <td>0.494</td>
+      <td>0.084</td>
+      <td>0.610</td>
+      <td>0.053</td>
+      <td>0.678</td>
+      <td>0.067</td>
+      <td>0.617</td>
+      <td>0.078</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.063</td>
-      <td>0.023</td>
-      <td>0.588</td>
-      <td>0.120</td>
-      <td>0.433</td>
-      <td>0.112</td>
-      <td>0.491</td>
-      <td>0.100</td>
-      <td>0.603</td>
-      <td>0.069</td>
-      <td>0.679</td>
-      <td>0.077</td>
-      <td>0.615</td>
-      <td>0.095</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.047</td>
+      <td>0.011</td>
+      <td>0.618</td>
+      <td>0.113</td>
+      <td>0.432</td>
+      <td>0.108</td>
+      <td>0.496</td>
+      <td>0.080</td>
+      <td>0.612</td>
+      <td>0.053</td>
+      <td>0.700</td>
+      <td>0.070</td>
+      <td>0.634</td>
+      <td>0.080</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.003</td>
+      <td>0.004</td>
       <td>0.001</td>
-      <td>0.042</td>
-      <td>0.008</td>
-      <td>0.658</td>
-      <td>0.101</td>
-      <td>0.569</td>
-      <td>0.115</td>
-      <td>0.604</td>
-      <td>0.090</td>
-      <td>0.675</td>
-      <td>0.068</td>
-      <td>0.784</td>
-      <td>0.065</td>
-      <td>0.732</td>
-      <td>0.082</td>
+      <td>0.047</td>
+      <td>0.005</td>
+      <td>0.609</td>
+      <td>0.128</td>
+      <td>0.416</td>
+      <td>0.100</td>
+      <td>0.483</td>
+      <td>0.079</td>
+      <td>0.602</td>
+      <td>0.058</td>
+      <td>0.695</td>
+      <td>0.072</td>
+      <td>0.631</td>
+      <td>0.080</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.005</td>
       <td>0.004</td>
+      <td>0.003</td>
       <td>0.054</td>
-      <td>0.023</td>
-      <td>0.688</td>
-      <td>0.098</td>
-      <td>0.592</td>
-      <td>0.126</td>
-      <td>0.629</td>
-      <td>0.098</td>
-      <td>0.696</td>
-      <td>0.072</td>
-      <td>0.797</td>
-      <td>0.064</td>
-      <td>0.740</td>
-      <td>0.080</td>
+      <td>0.018</td>
+      <td>0.605</td>
+      <td>0.123</td>
+      <td>0.412</td>
+      <td>0.107</td>
+      <td>0.477</td>
+      <td>0.079</td>
+      <td>0.599</td>
+      <td>0.054</td>
+      <td>0.689</td>
+      <td>0.071</td>
+      <td>0.624</td>
+      <td>0.079</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
       <td>0.004</td>
-      <td>0.001</td>
-      <td>0.044</td>
-      <td>0.008</td>
-      <td>0.686</td>
-      <td>0.099</td>
-      <td>0.585</td>
-      <td>0.119</td>
+      <td>0.002</td>
+      <td>0.047</td>
+      <td>0.011</td>
+      <td>0.596</td>
+      <td>0.111</td>
+      <td>0.422</td>
+      <td>0.110</td>
+      <td>0.483</td>
+      <td>0.086</td>
+      <td>0.602</td>
+      <td>0.057</td>
+      <td>0.683</td>
+      <td>0.073</td>
       <td>0.625</td>
-      <td>0.092</td>
-      <td>0.693</td>
-      <td>0.070</td>
-      <td>0.794</td>
-      <td>0.067</td>
-      <td>0.739</td>
-      <td>0.082</td>
+      <td>0.079</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.057</td>
-      <td>0.017</td>
-      <td>0.666</td>
-      <td>0.106</td>
-      <td>0.591</td>
-      <td>0.097</td>
-      <td>0.620</td>
-      <td>0.082</td>
-      <td>0.683</td>
-      <td>0.067</td>
-      <td>0.795</td>
-      <td>0.067</td>
-      <td>0.737</td>
-      <td>0.086</td>
+      <td>0.001</td>
+      <td>0.046</td>
+      <td>0.013</td>
+      <td>0.574</td>
+      <td>0.114</td>
+      <td>0.426</td>
+      <td>0.112</td>
+      <td>0.480</td>
+      <td>0.093</td>
+      <td>0.594</td>
+      <td>0.065</td>
+      <td>0.680</td>
+      <td>0.073</td>
+      <td>0.617</td>
+      <td>0.077</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>9</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.050</td>
-      <td>0.010</td>
+      <td>0.052</td>
+      <td>0.017</td>
+      <td>0.571</td>
+      <td>0.115</td>
+      <td>0.418</td>
+      <td>0.102</td>
+      <td>0.473</td>
+      <td>0.084</td>
+      <td>0.589</td>
+      <td>0.062</td>
       <td>0.673</td>
-      <td>0.105</td>
-      <td>0.599</td>
-      <td>0.092</td>
-      <td>0.628</td>
-      <td>0.080</td>
-      <td>0.689</td>
-      <td>0.066</td>
-      <td>0.792</td>
-      <td>0.067</td>
-      <td>0.735</td>
-      <td>0.086</td>
+      <td>0.072</td>
+      <td>0.612</td>
+      <td>0.076</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.004</td>
-      <td>0.003</td>
-      <td>0.048</td>
-      <td>0.020</td>
-      <td>0.667</td>
-      <td>0.104</td>
-      <td>0.591</td>
-      <td>0.109</td>
-      <td>0.621</td>
-      <td>0.090</td>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.060</td>
+      <td>0.022</td>
+      <td>0.659</td>
+      <td>0.098</td>
+      <td>0.603</td>
+      <td>0.120</td>
+      <td>0.623</td>
+      <td>0.087</td>
       <td>0.685</td>
-      <td>0.071</td>
-      <td>0.794</td>
       <td>0.067</td>
-      <td>0.733</td>
-      <td>0.086</td>
+      <td>0.770</td>
+      <td>0.069</td>
+      <td>0.738</td>
+      <td>0.073</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>11</th>
       <td>0.004</td>
-      <td>0.000</td>
-      <td>0.051</td>
-      <td>0.014</td>
+      <td>0.002</td>
+      <td>0.046</td>
+      <td>0.017</td>
       <td>0.675</td>
-      <td>0.099</td>
-      <td>0.612</td>
-      <td>0.110</td>
-      <td>0.636</td>
-      <td>0.087</td>
-      <td>0.696</td>
-      <td>0.069</td>
-      <td>0.792</td>
-      <td>0.066</td>
-      <td>0.737</td>
-      <td>0.084</td>
-      <td>210.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.053</td>
-      <td>0.021</td>
-      <td>0.662</td>
-      <td>0.100</td>
-      <td>0.601</td>
-      <td>0.107</td>
-      <td>0.625</td>
-      <td>0.086</td>
-      <td>0.686</td>
-      <td>0.068</td>
-      <td>0.786</td>
-      <td>0.065</td>
-      <td>0.730</td>
-      <td>0.085</td>
-      <td>210.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>0.005</td>
-      <td>0.002</td>
-      <td>0.049</td>
-      <td>0.008</td>
-      <td>0.668</td>
-      <td>0.099</td>
-      <td>0.609</td>
-      <td>0.104</td>
-      <td>0.632</td>
-      <td>0.085</td>
-      <td>0.692</td>
-      <td>0.068</td>
-      <td>0.785</td>
-      <td>0.063</td>
-      <td>0.738</td>
+      <td>0.091</td>
+      <td>0.615</td>
+      <td>0.112</td>
+      <td>0.637</td>
+      <td>0.081</td>
+      <td>0.697</td>
+      <td>0.061</td>
+      <td>0.775</td>
+      <td>0.067</td>
+      <td>0.744</td>
       <td>0.076</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
-      <th>14</th>
-      <td>0.005</td>
+      <th>12</th>
       <td>0.003</td>
-      <td>0.057</td>
-      <td>0.017</td>
-      <td>0.654</td>
-      <td>0.100</td>
-      <td>0.602</td>
-      <td>0.108</td>
-      <td>0.623</td>
-      <td>0.089</td>
-      <td>0.683</td>
-      <td>0.071</td>
-      <td>0.781</td>
-      <td>0.066</td>
-      <td>0.730</td>
+      <td>0.001</td>
+      <td>0.041</td>
+      <td>0.014</td>
+      <td>0.650</td>
+      <td>0.086</td>
+      <td>0.597</td>
+      <td>0.102</td>
+      <td>0.617</td>
       <td>0.081</td>
+      <td>0.680</td>
+      <td>0.060</td>
+      <td>0.784</td>
+      <td>0.059</td>
+      <td>0.754</td>
+      <td>0.068</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.045</td>
+      <td>0.017</td>
+      <td>0.677</td>
+      <td>0.083</td>
+      <td>0.624</td>
+      <td>0.100</td>
+      <td>0.644</td>
+      <td>0.077</td>
+      <td>0.701</td>
+      <td>0.060</td>
+      <td>0.794</td>
+      <td>0.057</td>
+      <td>0.759</td>
+      <td>0.072</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>0.046</td>
+      <td>0.021</td>
+      <td>0.674</td>
+      <td>0.090</td>
+      <td>0.612</td>
+      <td>0.112</td>
+      <td>0.635</td>
+      <td>0.087</td>
+      <td>0.696</td>
+      <td>0.065</td>
+      <td>0.791</td>
+      <td>0.059</td>
+      <td>0.757</td>
+      <td>0.073</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.005</td>
       <td>0.003</td>
-      <td>0.056</td>
-      <td>0.020</td>
-      <td>0.652</td>
-      <td>0.095</td>
-      <td>0.603</td>
-      <td>0.111</td>
-      <td>0.621</td>
-      <td>0.088</td>
-      <td>0.682</td>
-      <td>0.070</td>
-      <td>0.778</td>
-      <td>0.066</td>
-      <td>0.725</td>
-      <td>0.080</td>
+      <td>0.002</td>
+      <td>0.040</td>
+      <td>0.017</td>
+      <td>0.669</td>
+      <td>0.089</td>
+      <td>0.610</td>
+      <td>0.112</td>
+      <td>0.632</td>
+      <td>0.086</td>
+      <td>0.693</td>
+      <td>0.064</td>
+      <td>0.790</td>
+      <td>0.059</td>
+      <td>0.755</td>
+      <td>0.073</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -3215,7 +3317,12 @@ new approach</p></li>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_feat_best</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span><span class="s1">&#39;ald&#39;</span><span class="p">:</span> <span class="n">cv_feat_ald</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),</span>
@@ -3227,6 +3334,7 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3254,51 +3362,51 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>fit_time</th>
-      <td>9</td>
-      <td>11</td>
-      <td>2</td>
+      <td>13</td>
+      <td>7</td>
+      <td>10</td>
     </tr>
     <tr>
       <th>score_time</th>
-      <td>9</td>
-      <td>3</td>
       <td>2</td>
+      <td>7</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>test_precision</th>
-      <td>9</td>
-      <td>5</td>
-      <td>6</td>
+      <td>12</td>
+      <td>13</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>test_recall</th>
+      <td>10</td>
       <td>12</td>
-      <td>15</td>
-      <td>11</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>test_f1</th>
-      <td>11</td>
-      <td>15</td>
-      <td>11</td>
+      <td>12</td>
+      <td>13</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>test_balanced_accuracy</th>
-      <td>11</td>
-      <td>15</td>
-      <td>6</td>
+      <td>12</td>
+      <td>13</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>test_roc_auc</th>
-      <td>11</td>
-      <td>15</td>
-      <td>6</td>
+      <td>12</td>
+      <td>13</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>test_average_precision</th>
-      <td>9</td>
-      <td>15</td>
-      <td>6</td>
+      <td>12</td>
+      <td>13</td>
+      <td>13</td>
     </tr>
     <tr>
       <th>n_observations</th>
@@ -3313,7 +3421,12 @@ new approach</p></li>
 </section>
 <section id="train-test-split">
 <h2>Train, test split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">model_selection</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span>
     <span class="n">X</span><span class="p">,</span>
@@ -3326,8 +3439,14 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">njab</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">combine_value_counts</span><span class="p">(</span>
     <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">],</span>
@@ -3338,6 +3457,7 @@ new approach</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3376,12 +3496,18 @@ new approach</p></li>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AD   
 False   98
@@ -3398,7 +3524,12 @@ Name: count, dtype: int64
 <li><p><code class="docutils literal notranslate"><span class="pre">run_model</span></code> returns dataclasses with the further needed results</p></li>
 <li><p>add mrmr selection of data (select best number of features to use instead of fixing it)</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span>
                 <span class="n">X_test</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">],</span>
@@ -3414,13 +3545,19 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 15/15 [00:05&lt;00:00,  2.85it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:03&lt;00:00,  3.91it/s]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># all(results_model_full.test.roc.tpr</span>
 <span class="c1">#     ==</span>
@@ -3428,8 +3565,14 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
                 <span class="n">X_test</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
@@ -3445,13 +3588,19 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 6/6 [00:00&lt;00:00, 16.23it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:00&lt;00:00, 17.26it/s]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">splits_ald</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span>
     <span class="n">X_train</span><span class="o">=</span><span class="n">ald_study</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span>
@@ -3468,15 +3617,21 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 11/11 [00:03&lt;00:00,  3.14it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 12/12 [00:02&lt;00:00,  4.31it/s]
 </pre></div>
 </div>
 </div>
 </div>
 <section id="roc-auc">
 <h3>ROC-AUC<a class="headerlink" href="#roc-auc" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
 <span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
@@ -3488,14 +3643,20 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/auc_roc_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/aeb9044d135d8659b56d68dd47d4468a77c715e826069dda7920a76c5c3bf598.png" src="../../../_images/aeb9044d135d8659b56d68dd47d4468a77c715e826069dda7920a76c5c3bf598.png" />
+<img alt="../../../_images/d357f370c6d43feaa610e81b0c151dd315c0dc4fde8dfe6f4cbff9d8d02392aa.png" src="../../../_images/d357f370c6d43feaa610e81b0c151dd315c0dc4fde8dfe6f4cbff9d8d02392aa.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">results_ald_full</span><span class="p">,</span> <span class="n">results_model_full</span><span class="p">,</span> <span class="n">results_model_new</span><span class="p">]</span>
 
@@ -3505,6 +3666,7 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3554,133 +3716,133 @@ Name: count, dtype: int64
       <td>0.056</td>
       <td>0.000</td>
       <td>0.056</td>
-      <td>0.042</td>
       <td>0.000</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.000</td>
-      <td>0.167</td>
+      <td>0.667</td>
       <td>0.000</td>
-      <td>0.278</td>
-      <td>0.042</td>
       <td>0.167</td>
+      <td>0.125</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>0.125</td>
+      <td>0.667</td>
       <td>0.042</td>
       <td>0.167</td>
-      <td>0.083</td>
-      <td>0.278</td>
       <td>0.125</td>
       <td>0.167</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.042</td>
-      <td>0.611</td>
-      <td>0.083</td>
-      <td>0.444</td>
       <td>0.125</td>
-      <td>0.278</td>
+      <td>0.833</td>
+      <td>0.042</td>
+      <td>0.556</td>
+      <td>0.167</td>
+      <td>0.167</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.083</td>
-      <td>0.611</td>
-      <td>0.125</td>
-      <td>0.444</td>
+      <td>0.292</td>
+      <td>0.833</td>
       <td>0.167</td>
-      <td>0.278</td>
+      <td>0.556</td>
+      <td>0.167</td>
+      <td>0.222</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.083</td>
-      <td>0.778</td>
-      <td>0.125</td>
-      <td>0.611</td>
+      <td>0.292</td>
+      <td>0.889</td>
       <td>0.167</td>
-      <td>0.333</td>
+      <td>0.611</td>
+      <td>0.208</td>
+      <td>0.222</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.125</td>
-      <td>0.778</td>
+      <td>0.375</td>
+      <td>0.889</td>
       <td>0.208</td>
       <td>0.611</td>
       <td>0.208</td>
-      <td>0.333</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.125</td>
-      <td>0.889</td>
+      <td>0.375</td>
+      <td>0.944</td>
       <td>0.208</td>
-      <td>0.722</td>
-      <td>0.208</td>
-      <td>0.556</td>
+      <td>0.667</td>
+      <td>0.458</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.500</td>
-      <td>0.889</td>
-      <td>0.292</td>
-      <td>0.722</td>
+      <td>0.917</td>
+      <td>0.944</td>
       <td>0.417</td>
-      <td>0.556</td>
+      <td>0.667</td>
+      <td>0.458</td>
+      <td>0.722</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.500</td>
-      <td>0.944</td>
-      <td>0.292</td>
-      <td>0.778</td>
+      <td>0.917</td>
+      <td>1.000</td>
       <td>0.417</td>
-      <td>0.611</td>
+      <td>0.722</td>
+      <td>0.542</td>
+      <td>0.722</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.625</td>
-      <td>0.944</td>
-      <td>0.417</td>
-      <td>0.778</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>0.458</td>
+      <td>0.722</td>
       <td>0.542</td>
-      <td>0.611</td>
+      <td>0.778</td>
     </tr>
     <tr>
       <th>12</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.458</td>
+      <td>0.778</td>
       <td>0.625</td>
-      <td>1.000</td>
-      <td>0.417</td>
-      <td>0.833</td>
-      <td>0.542</td>
-      <td>0.667</td>
+      <td>0.778</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>1.000</td>
-      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>0.500</td>
-      <td>0.833</td>
-      <td>0.583</td>
-      <td>0.667</td>
+      <td>0.778</td>
+      <td>0.625</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>14</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>0.500</td>
-      <td>0.944</td>
-      <td>0.583</td>
-      <td>0.944</td>
+      <td>0.833</td>
+      <td>0.667</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>15</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>0.583</td>
-      <td>0.944</td>
-      <td>0.792</td>
+      <td>0.833</td>
+      <td>0.667</td>
       <td>0.944</td>
     </tr>
     <tr>
@@ -3688,18 +3850,36 @@ Name: count, dtype: int64
       <td>NaN</td>
       <td>NaN</td>
       <td>0.583</td>
-      <td>1.000</td>
+      <td>0.944</td>
       <td>0.792</td>
-      <td>1.000</td>
+      <td>0.944</td>
     </tr>
     <tr>
       <th>17</th>
       <td>NaN</td>
       <td>NaN</td>
+      <td>0.625</td>
+      <td>0.944</td>
+      <td>0.792</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.625</td>
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>1.000</td>
+      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
@@ -3708,7 +3888,12 @@ Name: count, dtype: int64
 </section>
 <section id="features-selected">
 <h3>Features selected<a class="headerlink" href="#features-selected" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">[</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">selected_features</span><span class="p">,</span>
@@ -3727,6 +3912,7 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3766,87 +3952,75 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>1</th>
-      <td>Q9P2E7;Q9P2E7-2</td>
-      <td>K7ER15;Q9H0R4;Q9H0R4-2</td>
-      <td>J3KSJ8;Q9UD71;Q9UD71-2</td>
+      <td>Q9NX62</td>
+      <td>Q8TER0;Q8TER0-5</td>
+      <td>Q96MU8;Q96MU8-2;Q96MU8-3</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>P01597;P04432</td>
-      <td>P02741</td>
-      <td>P51688</td>
+      <td>Q641Q3;Q641Q3-2</td>
+      <td>Q96MU8;Q96MU8-2;Q96MU8-3</td>
+      <td>A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3</td>
     </tr>
     <tr>
       <th>3</th>
       <td>P61981</td>
+      <td>Q14894</td>
+      <td>F8WBF9;Q5TH30;Q9UGV2;Q9UGV2-2;Q9UGV2-3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>P14174</td>
       <td>P61981</td>
       <td>P31321</td>
     </tr>
     <tr>
-      <th>4</th>
+      <th>5</th>
       <td>P04075</td>
       <td>Q9Y2T3;Q9Y2T3-3</td>
-      <td>A0A0C4DGV4;E9PLX3;O43504;R4GMU8</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>P14174</td>
-      <td>Q14894</td>
-      <td>Q96GD0</td>
+      <td>Q9NUQ9</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>P00338;P00338-3</td>
-      <td>P63104</td>
-      <td>None</td>
+      <td>C9JF17;P05090</td>
+      <td>P14174</td>
+      <td>A0A0C4DGV4;E9PLX3;O43504;R4GMU8</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Q02818</td>
-      <td>P25189;P25189-2</td>
-      <td>None</td>
+      <td>Q9Y2T3;Q9Y2T3-3</td>
+      <td>P04075</td>
+      <td>J3KSJ8;Q9UD71;Q9UD71-2</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Q9Y2T3;Q9Y2T3-3</td>
-      <td>P04075</td>
-      <td>None</td>
+      <td>Q6EMK4</td>
+      <td>P63104</td>
+      <td>Q9H741</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>Q13231;Q13231-3</td>
-      <td>P14174</td>
-      <td>None</td>
+      <td>P00338;P00338-3</td>
+      <td>P00492</td>
+      <td>Q9Y281;Q9Y281-3</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>P14618</td>
-      <td>P00492</td>
-      <td>None</td>
+      <td>P63104</td>
+      <td>P15151-2</td>
+      <td>Q96GD0</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>None</td>
-      <td>P00338;P00338-3</td>
-      <td>None</td>
+      <td>P05413;S4R371</td>
+      <td>P25189;P25189-2</td>
+      <td>A0A075B7B8</td>
     </tr>
     <tr>
       <th>12</th>
       <td>None</td>
-      <td>P15151-2</td>
-      <td>None</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>None</td>
-      <td>Q6EMK4</td>
-      <td>None</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>None</td>
-      <td>A0A0C4DGY8;D6RA00;Q9UHY7</td>
-      <td>None</td>
+      <td>P00338;P00338-3</td>
+      <td>P48147</td>
     </tr>
   </tbody>
 </table>
@@ -3855,7 +4029,12 @@ Name: count, dtype: int64
 </section>
 <section id="precision-recall-plot">
 <h3>Precision-Recall plot<a class="headerlink" href="#precision-recall-plot" title="Permalink to this heading">#</a></h3>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
 
@@ -3868,14 +4047,20 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/prec_recall_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/1ab992a05e52f5233b5904e482ca235e4d9fabb57326f4a51747c743d56b50be.png" src="../../../_images/1ab992a05e52f5233b5904e482ca235e4d9fabb57326f4a51747c743d56b50be.png" />
+<img alt="../../../_images/e327335791dc60369cba348aba0cf8f00f35e62dd276ae86d4821269d2c7dca3.png" src="../../../_images/e327335791dc60369cba348aba0cf8f00f35e62dd276ae86d4821269d2c7dca3.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prec_recall_curve</span> <span class="o">=</span> <span class="n">parse_prc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">)</span>
 <span class="n">prec_recall_curve</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
@@ -3883,6 +4068,7 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3946,8 +4132,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>3</th>
-      <td>0.462</td>
-      <td>1.000</td>
+      <td>0.436</td>
+      <td>0.944</td>
       <td>0.462</td>
       <td>1.000</td>
       <td>0.462</td>
@@ -3955,8 +4141,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>4</th>
-      <td>0.474</td>
-      <td>1.000</td>
+      <td>0.447</td>
+      <td>0.944</td>
       <td>0.474</td>
       <td>1.000</td>
       <td>0.474</td>
@@ -3964,8 +4150,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>5</th>
-      <td>0.486</td>
-      <td>1.000</td>
+      <td>0.459</td>
+      <td>0.944</td>
       <td>0.486</td>
       <td>1.000</td>
       <td>0.486</td>
@@ -3973,8 +4159,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>6</th>
-      <td>0.500</td>
-      <td>1.000</td>
+      <td>0.472</td>
+      <td>0.944</td>
       <td>0.500</td>
       <td>1.000</td>
       <td>0.472</td>
@@ -3982,8 +4168,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>7</th>
-      <td>0.514</td>
-      <td>1.000</td>
+      <td>0.486</td>
+      <td>0.944</td>
       <td>0.514</td>
       <td>1.000</td>
       <td>0.486</td>
@@ -3991,8 +4177,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>8</th>
-      <td>0.529</td>
-      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.944</td>
       <td>0.529</td>
       <td>1.000</td>
       <td>0.500</td>
@@ -4000,8 +4186,8 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>9</th>
-      <td>0.545</td>
-      <td>1.000</td>
+      <td>0.515</td>
+      <td>0.944</td>
       <td>0.545</td>
       <td>1.000</td>
       <td>0.515</td>
@@ -4011,10 +4197,10 @@ Name: count, dtype: int64
       <th>10</th>
       <td>0.531</td>
       <td>0.944</td>
-      <td>0.562</td>
-      <td>1.000</td>
       <td>0.531</td>
       <td>0.944</td>
+      <td>0.500</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>11</th>
@@ -4022,125 +4208,125 @@ Name: count, dtype: int64
       <td>0.944</td>
       <td>0.548</td>
       <td>0.944</td>
-      <td>0.548</td>
-      <td>0.944</td>
+      <td>0.516</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>12</th>
       <td>0.567</td>
       <td>0.944</td>
-      <td>0.567</td>
-      <td>0.944</td>
       <td>0.533</td>
       <td>0.889</td>
+      <td>0.500</td>
+      <td>0.833</td>
     </tr>
     <tr>
       <th>13</th>
       <td>0.586</td>
       <td>0.944</td>
-      <td>0.586</td>
-      <td>0.944</td>
       <td>0.517</td>
       <td>0.833</td>
+      <td>0.483</td>
+      <td>0.778</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.571</td>
-      <td>0.889</td>
-      <td>0.571</td>
-      <td>0.889</td>
+      <td>0.607</td>
+      <td>0.944</td>
+      <td>0.536</td>
+      <td>0.833</td>
       <td>0.500</td>
       <td>0.778</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.593</td>
-      <td>0.889</td>
+      <td>0.630</td>
+      <td>0.944</td>
       <td>0.556</td>
       <td>0.833</td>
-      <td>0.481</td>
-      <td>0.722</td>
+      <td>0.519</td>
+      <td>0.778</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>0.615</td>
-      <td>0.889</td>
-      <td>0.577</td>
-      <td>0.833</td>
-      <td>0.462</td>
-      <td>0.667</td>
+      <td>0.654</td>
+      <td>0.944</td>
+      <td>0.538</td>
+      <td>0.778</td>
+      <td>0.500</td>
+      <td>0.722</td>
     </tr>
     <tr>
       <th>17</th>
       <td>0.640</td>
       <td>0.889</td>
-      <td>0.600</td>
-      <td>0.833</td>
-      <td>0.480</td>
-      <td>0.667</td>
+      <td>0.560</td>
+      <td>0.778</td>
+      <td>0.520</td>
+      <td>0.722</td>
     </tr>
     <tr>
       <th>18</th>
       <td>0.667</td>
       <td>0.889</td>
-      <td>0.583</td>
-      <td>0.778</td>
-      <td>0.458</td>
-      <td>0.611</td>
+      <td>0.542</td>
+      <td>0.722</td>
+      <td>0.542</td>
+      <td>0.722</td>
     </tr>
     <tr>
       <th>19</th>
       <td>0.696</td>
       <td>0.889</td>
-      <td>0.609</td>
-      <td>0.778</td>
-      <td>0.478</td>
-      <td>0.611</td>
+      <td>0.565</td>
+      <td>0.722</td>
+      <td>0.522</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>0.727</td>
-      <td>0.889</td>
-      <td>0.636</td>
-      <td>0.778</td>
-      <td>0.500</td>
-      <td>0.611</td>
+      <td>0.682</td>
+      <td>0.833</td>
+      <td>0.545</td>
+      <td>0.667</td>
+      <td>0.545</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>0.762</td>
-      <td>0.889</td>
+      <td>0.714</td>
+      <td>0.833</td>
+      <td>0.571</td>
       <td>0.667</td>
-      <td>0.778</td>
-      <td>0.524</td>
-      <td>0.611</td>
+      <td>0.571</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>0.800</td>
-      <td>0.889</td>
-      <td>0.650</td>
-      <td>0.722</td>
-      <td>0.500</td>
-      <td>0.556</td>
+      <td>0.750</td>
+      <td>0.833</td>
+      <td>0.600</td>
+      <td>0.667</td>
+      <td>0.600</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>0.842</td>
-      <td>0.889</td>
-      <td>0.684</td>
-      <td>0.722</td>
-      <td>0.526</td>
-      <td>0.556</td>
+      <td>0.789</td>
+      <td>0.833</td>
+      <td>0.632</td>
+      <td>0.667</td>
+      <td>0.632</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>24</th>
       <td>0.833</td>
       <td>0.833</td>
-      <td>0.722</td>
-      <td>0.722</td>
-      <td>0.556</td>
-      <td>0.556</td>
+      <td>0.667</td>
+      <td>0.667</td>
+      <td>0.667</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>25</th>
@@ -4148,22 +4334,22 @@ Name: count, dtype: int64
       <td>0.778</td>
       <td>0.706</td>
       <td>0.667</td>
-      <td>0.588</td>
-      <td>0.556</td>
+      <td>0.706</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>0.875</td>
-      <td>0.778</td>
+      <td>0.812</td>
+      <td>0.722</td>
       <td>0.688</td>
       <td>0.611</td>
-      <td>0.625</td>
-      <td>0.556</td>
+      <td>0.688</td>
+      <td>0.611</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>0.867</td>
-      <td>0.722</td>
+      <td>0.800</td>
+      <td>0.667</td>
       <td>0.733</td>
       <td>0.611</td>
       <td>0.667</td>
@@ -4173,15 +4359,15 @@ Name: count, dtype: int64
       <th>28</th>
       <td>0.857</td>
       <td>0.667</td>
-      <td>0.786</td>
-      <td>0.611</td>
+      <td>0.714</td>
+      <td>0.556</td>
       <td>0.643</td>
       <td>0.500</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>0.846</td>
-      <td>0.611</td>
+      <td>0.923</td>
+      <td>0.667</td>
       <td>0.769</td>
       <td>0.556</td>
       <td>0.615</td>
@@ -4189,62 +4375,62 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>30</th>
-      <td>0.917</td>
-      <td>0.611</td>
-      <td>0.750</td>
-      <td>0.500</td>
+      <td>1.000</td>
+      <td>0.667</td>
+      <td>0.833</td>
+      <td>0.556</td>
       <td>0.583</td>
       <td>0.389</td>
     </tr>
     <tr>
       <th>31</th>
+      <td>1.000</td>
+      <td>0.611</td>
       <td>0.909</td>
       <td>0.556</td>
-      <td>0.727</td>
-      <td>0.444</td>
       <td>0.545</td>
       <td>0.333</td>
     </tr>
     <tr>
       <th>32</th>
+      <td>1.000</td>
+      <td>0.556</td>
       <td>0.900</td>
       <td>0.500</td>
-      <td>0.800</td>
-      <td>0.444</td>
-      <td>0.600</td>
-      <td>0.333</td>
+      <td>0.500</td>
+      <td>0.278</td>
     </tr>
     <tr>
       <th>33</th>
+      <td>1.000</td>
+      <td>0.500</td>
       <td>0.889</td>
       <td>0.444</td>
-      <td>0.778</td>
-      <td>0.389</td>
-      <td>0.556</td>
-      <td>0.278</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td>0.875</td>
-      <td>0.389</td>
-      <td>0.750</td>
-      <td>0.333</td>
-      <td>0.625</td>
-      <td>0.278</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>0.857</td>
-      <td>0.333</td>
-      <td>0.714</td>
-      <td>0.278</td>
-      <td>0.571</td>
+      <td>0.444</td>
       <td>0.222</td>
     </tr>
     <tr>
+      <th>34</th>
+      <td>1.000</td>
+      <td>0.444</td>
+      <td>0.875</td>
+      <td>0.389</td>
+      <td>0.500</td>
+      <td>0.222</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>1.000</td>
+      <td>0.389</td>
+      <td>0.857</td>
+      <td>0.333</td>
+      <td>0.429</td>
+      <td>0.167</td>
+    </tr>
+    <tr>
       <th>36</th>
-      <td>0.833</td>
-      <td>0.278</td>
+      <td>1.000</td>
+      <td>0.333</td>
       <td>0.833</td>
       <td>0.278</td>
       <td>0.500</td>
@@ -4252,21 +4438,21 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>37</th>
-      <td>0.800</td>
-      <td>0.222</td>
       <td>1.000</td>
       <td>0.278</td>
-      <td>0.600</td>
-      <td>0.167</td>
+      <td>0.800</td>
+      <td>0.222</td>
+      <td>0.400</td>
+      <td>0.111</td>
     </tr>
     <tr>
       <th>38</th>
-      <td>0.750</td>
-      <td>0.167</td>
       <td>1.000</td>
       <td>0.222</td>
       <td>0.750</td>
       <td>0.167</td>
+      <td>0.250</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>39</th>
@@ -4274,8 +4460,8 @@ Name: count, dtype: int64
       <td>0.167</td>
       <td>1.000</td>
       <td>0.167</td>
-      <td>0.667</td>
-      <td>0.111</td>
+      <td>0.333</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>40</th>
@@ -4292,8 +4478,8 @@ Name: count, dtype: int64
       <td>0.056</td>
       <td>1.000</td>
       <td>0.056</td>
-      <td>0.000</td>
-      <td>0.000</td>
+      <td>1.000</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>42</th>
@@ -4312,7 +4498,12 @@ Name: count, dtype: int64
 </section>
 <section id="train-data-plots">
 <h2>Train data plots<a class="headerlink" href="#train-data-plots" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
 
@@ -4325,14 +4516,20 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/prec_recall_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/b06c2f7947549e3cf56efa9a703b8cf62ec54ffb2a25ec8987165feda8c4fda8.png" src="../../../_images/b06c2f7947549e3cf56efa9a703b8cf62ec54ffb2a25ec8987165feda8c4fda8.png" />
+<img alt="../../../_images/9a09711167b3b991492a3aa013bec7fb28503a441d0ddea1a87a9f1b2c9cfbca.png" src="../../../_images/9a09711167b3b991492a3aa013bec7fb28503a441d0ddea1a87a9f1b2c9cfbca.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
 <span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
@@ -4344,11 +4541,12 @@ Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/auc_roc_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/4bd379b44601bcbbb5c48d8844e5010e5dbbae2445c0b45b40a05403772e8e42.png" src="../../../_images/4bd379b44601bcbbb5c48d8844e5010e5dbbae2445c0b45b40a05403772e8e42.png" />
+<img alt="../../../_images/b05b1a5b2765bce3cb81be9d565025e830cbabf1bda6aa53c8ea15fffbca2641.png" src="../../../_images/b05b1a5b2765bce3cb81be9d565025e830cbabf1bda6aa53c8ea15fffbca2641.png" />
 </div>
 </div>
 <p>Options:</p>
@@ -4357,12 +4555,19 @@ Name: count, dtype: int64
 (select best cutoff of training data, evaluate on test data)</p></li>
 <li><p>plot X_train PCA/UMAP, map X_test</p></li>
 </ul>
-<div class="cell docutils container">
+<p>Output files:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;results_VAE all.pkl&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/results_VAE all.pkl&#39;),
  &#39;results_VAE new.pkl&#39;: PosixPath(&#39;runs/alzheimer_study/diff_analysis/AD/PI_vs_VAE/results_VAE new.pkl&#39;),
