@@ -20,7 +20,7 @@
 # - compare missing values predicition by model with baseline method
 #   (default: draw from shifted normal distribution. short RSN)
 
-# %%
+# %% tags=["hide-input"]
 import logging
 from pathlib import Path
 
@@ -38,7 +38,7 @@ import vaep.nb
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -65,13 +65,13 @@ out_folder = 'diff_analysis'
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
 
-# %%
+# %% tags=["hide-input"]
 if not model:
     model = model_key
 params = vaep.nb.get_params(args, globals=globals(), remove=True)
 params
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.Config()
 args.fn_clinical_data = Path(params["fn_clinical_data"])
 args.folder_experiment = Path(params["folder_experiment"])
@@ -87,7 +87,7 @@ args
 # %% [markdown]
 # Outputs of this notebook will be stored here
 
-# %%
+# %% tags=["hide-input"]
 files_out = {}
 args.out_folder
 
@@ -97,25 +97,25 @@ args.out_folder
 # %% [markdown]
 # ### MS proteomics
 
-# %%
+# %% tags=["hide-input"]
 data = vaep.io.datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
-# %%
+# %% tags=["hide-input"]
 observed = pd.concat([data.train_X, data.val_y, data.test_y])
 observed
 
 # %% [markdown]
 # ### Clinical data
 
-# %%
+# %% tags=["hide-input"]
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
 cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
 df_clinic[[args.target, *args.covar]].describe()
 
 
-# %%
+# %% tags=["hide-input"]
 # ## Additional annotations
 # - additional annotations of features (e.g. gene names for protein groups)
 
@@ -136,13 +136,13 @@ gene_to_PG
 # - only complete data is used for Differential Analysis
 # - covariates are not imputed
 
-# %%
+# %% tags=["hide-input"]
 df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
 
 # %% [markdown]
 # Data description of data used:
 
-# %%
+# %% tags=["hide-input"]
 mask_sample_with_complete_clinical_data = df_clinic[[args.target, *args.covar]].notna().all(axis=1)
 fname = args.out_folder / 'mask_sample_with_complete_clinical_data.csv'
 files_out[fname.name] = fname.as_posix()
@@ -153,13 +153,13 @@ idx_complete_data = (mask_sample_with_complete_clinical_data
                      .index)
 df_clinic.loc[idx_complete_data, [args.target, *args.covar]].describe()
 
-# %%
+# %% tags=["hide-input"]
 df_clinic.loc[idx_complete_data, args.target].value_counts()
 
 # %% [markdown]
 # check which patients with kleiner score have misssing covariates
 
-# %%
+# %% tags=["hide-input"]
 df_clinic.loc[(~mask_sample_with_complete_clinical_data
                & df_clinic[args.target].notna()),
               [args.target, *args.covar]]
@@ -167,7 +167,7 @@ df_clinic.loc[(~mask_sample_with_complete_clinical_data
 # %% [markdown]
 # Save feature frequency of observed data based on complete clinical data
 
-# %%
+# %% tags=["hide-input"]
 feat_freq_observed = observed.unstack().loc[idx_complete_data].notna().sum()
 feat_freq_observed.name = 'frequency'
 
@@ -181,7 +181,7 @@ _ = ax.set_xticklabels([l_.get_text().split(';')[0] for l_ in ax.get_xticklabels
 # %% [markdown]
 # ## ALD study approach using all measurments
 
-# %%
+# %% tags=["hide-input"]
 DATA_COMPLETENESS = 0.6
 # MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
@@ -192,7 +192,7 @@ ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(observed.unsta
 
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 if args.fn_qc_samples:
     # Move this to data-preprocessing
     qc_samples = pd.read_pickle(args.fn_qc_samples)
@@ -208,7 +208,7 @@ if args.fn_qc_samples:
 
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
                                        feat_completness_over_samples=cutoffs.feat_completness_over_samples,
                                        min_feat_in_sample=cutoffs.min_feat_in_sample)
@@ -218,14 +218,14 @@ vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 # %% [markdown]
 # ## load model predictions for (real) missing data
 
-# %%
+# %% tags=["hide-input"]
 list(args.out_preds.iterdir())
 
-# %%
+# %% tags=["hide-input"]
 template_pred = str(args.out_preds / args.template_pred)
 template_pred
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_preds / args.template_pred.format(args.model)
 fname
 
@@ -235,7 +235,7 @@ fname
 # otherwise -> use all data
 #
 # - use columns which are provided by model
-# %%
+# %% tags=["hide-input"]
 # ALD study approach -> has access to simulated missing data!
 # (VAE model did not see this data)
 pred_real_na = None
@@ -260,7 +260,7 @@ pred_real_na
 # plot subsets to highlight differences
 
 
-# %%
+# %% tags=["hide-input"]
 def plot_distributions(observed: pd.Series,
                        imputation: pd.Series = None,
                        model_key: str = 'MODEL',
@@ -307,7 +307,7 @@ fname = args.out_folder / 'dist_plots' / f'real_na_obs_vs_{args.model_key}.pdf'
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 if pred_real_na is not None:
     counts_per_bin = pd.concat([
         vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
@@ -318,7 +318,7 @@ if pred_real_na is not None:
 # %% [markdown]
 # ## Mean shift by model
 
-# %%
+# %% tags=["hide-input"]
 if pred_real_na is not None:
     shifts = (vaep.imputation.compute_moments_shift(observed, pred_real_na,
                                                     names=('observed', args.model_key)))
@@ -327,7 +327,7 @@ if pred_real_na is not None:
 # %% [markdown]
 # Or by averaging over the calculation by sample
 
-# %%
+# %% tags=["hide-input"]
 if pred_real_na is not None:
     index_level = 0  # per sample
     mean_by_sample = pd.DataFrame(
@@ -344,11 +344,11 @@ if pred_real_na is not None:
 # ## Differential analysis
 # Impute missing values (or not)
 
-# %%
+# %% tags=["hide-input"]
 df = pd.concat([observed, pred_real_na]).unstack()
 df.loc[idx_complete_data]
 
-# %%
+# %% tags=["hide-input"]
 # * if some features were not imputed -> drop them
 # ? could be changed: let a model decide if a feature should be imputed, otherwise don't.
 if pred_real_na is not None:
@@ -360,7 +360,7 @@ if pred_real_na is not None:
 # %% [markdown]
 # Targets - Clinical variables
 
-# %%
+# %% tags=["hide-input"]
 scores = njab.stats.ancova.AncovaAll(df_proteomics=df,
                                      df_clinic=df_clinic,
                                      target=args.target,
@@ -369,7 +369,7 @@ scores = njab.stats.ancova.AncovaAll(df_proteomics=df,
                                      ).ancova()
 scores
 
-# %%
+# %% tags=["hide-input"]
 # features are in first index position
 feat_idx = scores.index.get_level_values(0)
 if gene_to_PG is not None:
@@ -379,20 +379,21 @@ if gene_to_PG is not None:
               )
 scores
 
-# %%
+# %% tags=["hide-input"]
 scores.columns = pd.MultiIndex.from_product([[str(args.model_key)], scores.columns],
                                             names=('model', 'var'))
 scores.loc[pd.IndexSlice[:, args.target], :]
 
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_folder / 'scores' / f'diff_analysis_scores_{str(args.model_key)}.pkl'
 files_out[fname.name] = fname.as_posix()
 fname.parent.mkdir(exist_ok=True, parents=True)
 scores.to_pickle(fname)
 fname
 
+# %% [markdown]
+# Saved files:
 
-# %%
+# %% tags=["hide-input"]
 files_out
-# %%

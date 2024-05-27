@@ -20,7 +20,7 @@
 # - model: any other selected imputation method
 
 
-# %%
+# %% tags=["hide-input"]
 import logging
 from pathlib import Path
 from typing import List
@@ -74,7 +74,7 @@ def parse_prc(*res: List[njab.sklearn.types.Results]) -> pd.DataFrame:
     return ret
 
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -98,11 +98,11 @@ baseline = 'RSN'  # default is RSN, as this was used in the original ALD Niu. et
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
 
-# %%
+# %% tags=["hide-input"]
 params = vaep.nb.get_params(args, globals=globals())
 params
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args,
@@ -113,7 +113,7 @@ args = vaep.nb.add_default_paths(args,
 args.update_from_dict(params)
 args
 
-# %%
+# %% tags=["hide-input"]
 files_out = dict()
 
 # %% [markdown]
@@ -129,7 +129,7 @@ target
 # %% [markdown]
 # ### Measured data
 
-# %%
+# %% tags=["hide-input"]
 data = vaep.io.datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 data = pd.concat([data.train_X, data.val_y, data.test_y])
@@ -141,7 +141,7 @@ data.sample(5)
 # %% [markdown]
 # ### Load ALD data or create
 
-# %%
+# %% tags=["hide-input"]
 DATA_COMPLETENESS = 0.6
 MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
@@ -167,7 +167,7 @@ column_name_first_prot_to_pg = {
 ald_study = ald_study.rename(columns=column_name_first_prot_to_pg)
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 mask_has_target = data.index.levels[0].intersection(target.index)
 assert not mask_has_target.empty, f"No data for target: {data.index.levels[0]} and {target.index}"
 print(
@@ -177,14 +177,14 @@ target, data, ald_study = target.loc[mask_has_target], data.loc[mask_has_target]
 # %% [markdown]
 # ### Load semi-supervised model imputations
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_preds / args.template_pred.format(args.model_key)
 print(f"missing values pred. by {args.model_key}: {fname}")
 load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_pred_file
 pred_real_na = load_single_csv_pred_file(fname).loc[mask_has_target]
 pred_real_na.sample(3)
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_preds / args.template_pred.format(args.baseline)
 pred_real_na_baseline = load_single_csv_pred_file(fname)  # .loc[mask_has_target]
 pred_real_na_baseline
@@ -204,11 +204,11 @@ pred_real_na_baseline
 # self supervised deep learning model which were newly retained using the
 # new approach
 
-# %%
+# %% tags=["hide-input"]
 X = pd.concat([data, pred_real_na]).unstack()
 X
 
-# %%
+# %% tags=["hide-input"]
 # could be just observed, drop columns with missing values
 ald_study = pd.concat(
     [ald_study.stack(),
@@ -220,7 +220,7 @@ ald_study = pd.concat(
 ).unstack()
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 new_features = X.columns.difference(ald_study.columns)
 new_features
 
@@ -228,7 +228,7 @@ new_features
 # Binarize targets, but also keep groups for stratification
 #
 
-# %%
+# %% tags=["hide-input"]
 target_to_group = target.copy()
 target = target >= args.cutoff_target
 pd.crosstab(target.squeeze(), target_to_group.squeeze())
@@ -236,7 +236,7 @@ pd.crosstab(target.squeeze(), target_to_group.squeeze())
 # %% [markdown]
 # ## Best number of parameters by CV
 
-# %%
+# %% tags=["hide-input"]
 cv_feat_ald = njab.sklearn.find_n_best_features(X=ald_study, y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_ald = (cv_feat_ald
@@ -245,20 +245,20 @@ cv_feat_ald = (cv_feat_ald
                .agg(['mean', 'std']))
 cv_feat_ald
 
-# %%
+# %% tags=["hide-input"]
 cv_feat_all = njab.sklearn.find_n_best_features(X=X, y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_all = cv_feat_all.drop('test_case', axis=1).groupby('n_features').agg(['mean', 'std'])
 cv_feat_all
 
-# %%
+# %% tags=["hide-input"]
 cv_feat_new = njab.sklearn.find_n_best_features(X=X.loc[:, new_features],
                                                 y=target, name=args.target,
                                                 groups=target_to_group)
 cv_feat_new = cv_feat_new.drop('test_case', axis=1).groupby('n_features').agg(['mean', 'std'])
 cv_feat_new
 
-# %%
+# %% tags=["hide-input"]
 n_feat_best = pd.DataFrame(
     {'ald': cv_feat_ald.loc[:, pd.IndexSlice[:, 'mean']].idxmax(),
      'all': cv_feat_all.loc[:, pd.IndexSlice[:, 'mean']].idxmax(),
@@ -270,7 +270,7 @@ n_feat_best
 # %% [markdown]
 # ## Train, test split
 
-# %%
+# %% tags=["hide-input"]
 X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
     X,
     target,
@@ -280,7 +280,7 @@ X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(
 idx_train = X_train.index
 idx_test = X_test.index
 
-# %%
+# %% tags=["hide-input"]
 njab.pandas.combine_value_counts(
     pd.concat([y_train, y_test],
               axis=1,
@@ -288,7 +288,7 @@ njab.pandas.combine_value_counts(
               ).rename(columns={0: 'train', 1: 'test'})
 )
 
-# %%
+# %% tags=["hide-input"]
 y_train.value_counts()
 
 # %% [markdown]
@@ -297,7 +297,7 @@ y_train.value_counts()
 # - `run_model` returns dataclasses with the further needed results
 # - add mrmr selection of data (select best number of features to use instead of fixing it)
 
-# %%
+# %% tags=["hide-input"]
 splits = Splits(X_train=X.loc[idx_train],
                 X_test=X.loc[idx_test],
                 y_train=y_train,
@@ -311,12 +311,12 @@ files_out[fname.name] = fname
 vaep.io.to_pickle(results_model_full, fname)
 
 
-# %%
+# %% tags=["hide-input"]
 # all(results_model_full.test.roc.tpr
 #     ==
 #     vaep.sklearn.Results.from_pickle(fname).test.roc.tpr)
 
-# %%
+# %% tags=["hide-input"]
 splits = Splits(X_train=X.loc[idx_train, new_features],
                 X_test=X.loc[idx_test, new_features],
                 y_train=y_train,
@@ -329,7 +329,7 @@ fname = args.out_folder / f'results_{results_model_new.name}.pkl'
 files_out[fname.name] = fname
 vaep.io.to_pickle(results_model_new, fname)
 
-# %%
+# %% tags=["hide-input"]
 splits_ald = Splits(
     X_train=ald_study.loc[idx_train],
     X_test=ald_study.loc[idx_test],
@@ -346,7 +346,7 @@ vaep.io.to_pickle(results_ald_full, fname)
 # %% [markdown]
 # ### ROC-AUC
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.test, results_ald_full.name, ax)
 plot_split_auc(results_model_full.test, results_model_full.name, ax)
@@ -355,7 +355,7 @@ fname = args.out_folder / 'auc_roc_curve.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 res = [results_ald_full, results_model_full, results_model_new]
 
 auc_roc_curve = parse_roc(*res)
@@ -365,7 +365,7 @@ auc_roc_curve
 # %% [markdown]
 # ### Features selected
 
-# %%
+# %% tags=["hide-input"]
 selected_features = pd.DataFrame(
     [results_ald_full.selected_features,
      results_model_full.selected_features,
@@ -384,7 +384,7 @@ selected_features
 # %% [markdown]
 # ### Precision-Recall plot
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 
 ax = plot_split_prc(results_ald_full.test, results_ald_full.name, ax)
@@ -394,7 +394,7 @@ fname = folder = args.out_folder / 'prec_recall_curve.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 prec_recall_curve = parse_prc(*res)
 prec_recall_curve.to_excel(fname.with_suffix('.xlsx'))
 prec_recall_curve
@@ -402,7 +402,7 @@ prec_recall_curve
 # %% [markdown]
 # ## Train data plots
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 
 ax = plot_split_prc(results_ald_full.train, results_ald_full.name, ax)
@@ -412,7 +412,7 @@ fname = folder = args.out_folder / 'prec_recall_curve_train.pdf'
 files_out[fname.name] = fname
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(1, 1, figsize=figsize)
 plot_split_auc(results_ald_full.train, results_ald_full.name, ax)
 plot_split_auc(results_model_full.train, results_model_full.name, ax)
@@ -426,6 +426,8 @@ vaep.savefig(fig, name=fname)
 # - F1 results for test data for best cutoff on training data?
 #   (select best cutoff of training data, evaluate on test data)
 # - plot X_train PCA/UMAP, map X_test
+#
+# Output files:
 
-# %%
+# %% tags=["hide-input"]
 files_out

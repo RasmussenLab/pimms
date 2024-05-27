@@ -17,7 +17,7 @@
 #
 # - load scores based on `16_ald_diff_analysis`
 
-# %%
+# %% tags=["hide-input"]
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -34,7 +34,7 @@ plt.rcParams['figure.figsize'] = (2, 2)
 fontsize = 5
 vaep.plotting.make_large_descriptors(fontsize)
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -58,7 +58,7 @@ annotaitons_gene_col = 'PG.Genes'
 params = vaep.nb.get_params(args, globals=globals())
 params
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args,
@@ -74,7 +74,7 @@ args.scores_folder = scores_folder = (args.folder_experiment
                                       / 'scores')
 args
 
-# %%
+# %% tags=["hide-input"]
 files_in = {
     'freq_features_observed.csv': args.folder_experiment / 'freq_features_observed.csv',
 }
@@ -83,10 +83,10 @@ files_in
 # %% [markdown]
 # ## Excel file for exports
 
-# %%
+# %% tags=["hide-input"]
 files_out = dict()
 
-# %%
+# %% tags=["hide-input"]
 writer_args = dict(float_format='%.3f')
 
 fname = args.out_folder / 'diff_analysis_compare_methods.xlsx'
@@ -97,47 +97,47 @@ fname
 # %% [markdown]
 # ## Load scores
 
-# %%
+# %% tags=["hide-input"]
 [x for x in args.scores_folder.iterdir() if 'scores' in str(x)]
 
-# %%
+# %% tags=["hide-input"]
 fname = args.scores_folder / f'diff_analysis_scores_{args.baseline}.pkl'
 scores_baseline = pd.read_pickle(fname)
 scores_baseline
 
-# %%
+# %% tags=["hide-input"]
 fname = args.scores_folder / f'diff_analysis_scores_{args.model_key}.pkl'
 scores_model = pd.read_pickle(fname)
 scores_model
 
-# %%
+# %% tags=["hide-input"]
 scores = scores_model.join(scores_baseline, how='outer')[[args.baseline, args.model_key]]
 scores
 
-# %%
+# %% tags=["hide-input"]
 models = vaep.nb.Config.from_dict(
     vaep.pandas.index_to_dict(scores.columns.get_level_values(0)))
 vars(models)
 
-# %%
+# %% tags=["hide-input"]
 scores.describe()
 
-# %%
+# %% tags=["hide-input"]
 scores = scores.loc[pd.IndexSlice[:, args.target], :]
 scores.to_excel(writer, 'scores', **writer_args)
 scores
 
-# %%
+# %% tags=["hide-input"]
 scores.describe()
 
-# %%
+# %% tags=["hide-input"]
 scores.describe(include=['bool', 'O'])
 
 
 # %% [markdown]
 # ## Load frequencies of observed features
 
-# %%
+# %% tags=["hide-input"]
 freq_feat = pd.read_csv(files_in['freq_features_observed.csv'], index_col=0)
 freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
 freq_feat
@@ -145,7 +145,7 @@ freq_feat
 # %% [markdown]
 # ## Compare shared features
 
-# %%
+# %% tags=["hide-input"]
 scores_common = (scores
                  .dropna()
                  .reset_index(-1, drop=True)
@@ -155,7 +155,7 @@ scores_common = (scores
 scores_common
 
 
-# %%
+# %% tags=["hide-input"]
 def annotate_decision(scores, model, model_column):
     return scores[(model_column, 'rejected')].replace({False: f'{model} (no) ', True: f'{model} (yes)'})
 
@@ -172,7 +172,7 @@ for model, model_column in models.items():
 annotations.name = 'Differential Analysis Comparison'
 annotations.value_counts()
 
-# %%
+# %% tags=["hide-input"]
 mask_different = (
     (scores_common.loc[:, pd.IndexSlice[:, 'rejected']].any(axis=1))
     & ~(scores_common.loc[:, pd.IndexSlice[:, 'rejected']].all(axis=1))
@@ -180,11 +180,11 @@ mask_different = (
 
 scores_common.loc[mask_different]
 
-# %%
+# %% tags=["hide-input"]
 _to_write = scores_common.loc[mask_different]
 _to_write.to_excel(writer, 'differences', **writer_args)
 
-# %%
+# %% tags=["hide-input"]
 var = 'qvalue'
 to_plot = [scores_common[v][var] for v in models.values()]
 for s, k in zip(to_plot, models.keys()):
@@ -197,7 +197,7 @@ to_plot
 # %% [markdown]
 # ## Plot of intensities for most extreme example
 
-# %%
+# %% tags=["hide-input"]
 # should it be possible to run not only RSN?
 to_plot['diff_qvalue'] = (to_plot[str(args.baseline)] - to_plot[str(args.model_key)]).abs()
 to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
@@ -207,7 +207,7 @@ to_plot.loc[mask_different].sort_values('diff_qvalue', ascending=False)
 #
 # - first only using created annotations
 
-# %%
+# %% tags=["hide-input"]
 figsize = (2, 2)
 size = 5
 fig, ax = plt.subplots(figsize=figsize)
@@ -238,7 +238,7 @@ vaep.savefig(fig, name=fname)
 # %% [markdown]
 # - showing how many features were measured ("observed")
 
-# %%
+# %% tags=["hide-input"]
 figsize = (2.5, 2.5)
 fig, ax = plt.subplots(figsize=figsize)
 ax = sns.scatterplot(data=to_plot,
@@ -267,7 +267,7 @@ vaep.savefig(
 # ## Only features contained in model
 # - this block exist due to a specific part in the ALD analysis of the paper
 
-# %%
+# %% tags=["hide-input"]
 scores_model_only = scores.reset_index(level=-1, drop=True)
 _diff = scores_model_only.index.difference(scores_common.index)
 if not _diff.empty:
@@ -282,7 +282,7 @@ if not _diff.empty:
 else:
     scores_model_only = None
 
-# %%
+# %% tags=["hide-input"]
 if not _diff.empty:
     scores_model_only.to_excel(writer, 'only_model', **writer_args)
     display(scores_model_only.rejected.value_counts())
@@ -293,7 +293,7 @@ if not _diff.empty:
 # %% [markdown]
 # ## DISEASES DB lookup
 
-# %%
+# %% tags=["hide-input"]
 data = vaep.databases.diseases.get_disease_association(
     doid=args.disease_ontology, limit=10000)
 data = pd.DataFrame.from_dict(data, orient='index').rename_axis('ENSP', axis=0)
@@ -305,9 +305,9 @@ data
 # ## Shared features
 # ToDo: new script -> DISEASES DB lookup
 
-# %%
+# %% tags=["hide-input"]
 
-# %%
+# %% tags=["hide-input"]
 feat_name = scores.index.names[0]  # first index level is feature name
 if args.annotaitons_gene_col in scores.index.names:
     logger.info(f"Found gene annotation in scores index:  {scores.index.names}")
@@ -317,7 +317,7 @@ else:
     import sys
     sys.exit(0)
 
-# %%
+# %% tags=["hide-input"]
 gene_to_PG = (scores.droplevel(
     list(set(scores.index.names) - {feat_name, args.annotaitons_gene_col})
 )
@@ -328,7 +328,7 @@ gene_to_PG = (scores.droplevel(
 )
 gene_to_PG.head()
 
-# %%
+# %% tags=["hide-input"]
 disease_associations_all = data.join(
     gene_to_PG).dropna().reset_index().set_index(feat_name).join(annotations)
 disease_associations_all
@@ -336,27 +336,27 @@ disease_associations_all
 # %% [markdown]
 # ## only by model
 
-# %%
+# %% tags=["hide-input"]
 idx = disease_associations_all.index.intersection(scores_model_only.index)
 disease_assocications_new = disease_associations_all.loc[idx].sort_values(
     'score', ascending=False)
 disease_assocications_new.head(20)
 
-# %%
+# %% tags=["hide-input"]
 mask = disease_assocications_new.loc[idx, 'score'] >= 2.0
 disease_assocications_new.loc[idx].loc[mask]
 
 # %% [markdown]
 # ## Only by model which were significant
 
-# %%
+# %% tags=["hide-input"]
 idx = disease_associations_all.index.intersection(
     scores_model_only_rejected.index)
 disease_assocications_new_rejected = disease_associations_all.loc[idx].sort_values(
     'score', ascending=False)
 disease_assocications_new_rejected.head(20)
 
-# %%
+# %% tags=["hide-input"]
 mask = disease_assocications_new_rejected.loc[idx, 'score'] >= 2.0
 disease_assocications_new_rejected.loc[idx].loc[mask]
 
@@ -367,13 +367,13 @@ disease_assocications_new_rejected.loc[idx].loc[mask]
 mask = (scores_common[(str(args.model_key), 'rejected')] & mask_different)
 mask.sum()
 
-# %%
+# %% tags=["hide-input"]
 idx = disease_associations_all.index.intersection(mask.index[mask])
 disease_assocications_shared_rejected_by_model = (disease_associations_all.loc[idx].sort_values(
     'score', ascending=False))
 disease_assocications_shared_rejected_by_model.head(20)
 
-# %%
+# %% tags=["hide-input"]
 mask = disease_assocications_shared_rejected_by_model.loc[idx, 'score'] >= 2.0
 disease_assocications_shared_rejected_by_model.loc[idx].loc[mask]
 
@@ -384,7 +384,7 @@ disease_assocications_shared_rejected_by_model.loc[idx].loc[mask]
 mask = (scores_common[(str(args.baseline), 'rejected')] & mask_different)
 mask.sum()
 
-# %%
+# %% tags=["hide-input"]
 idx = disease_associations_all.index.intersection(mask.index[mask])
 disease_assocications_shared_rejected_by_RSN = (
     disease_associations_all
@@ -392,14 +392,14 @@ disease_assocications_shared_rejected_by_RSN = (
     .sort_values('score', ascending=False))
 disease_assocications_shared_rejected_by_RSN.head(20)
 
-# %%
+# %% tags=["hide-input"]
 mask = disease_assocications_shared_rejected_by_RSN.loc[idx, 'score'] >= 2.0
 disease_assocications_shared_rejected_by_RSN.loc[idx].loc[mask]
 
 # %% [markdown]
 # ## Write to excel
 
-# %%
+# %% tags=["hide-input"]
 disease_associations_all.to_excel(
     writer, sheet_name='disease_assoc_all', **writer_args)
 disease_assocications_new.to_excel(
@@ -410,8 +410,6 @@ disease_assocications_new_rejected.to_excel(
 # %% [markdown]
 # ## Outputs
 
-# %%
+# %% tags=["hide-input"]
 writer.close()
-
-# %%
 files_out
