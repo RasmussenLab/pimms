@@ -95,7 +95,7 @@ writer = pd.ExcelWriter(fname)
 fname
 
 # %% [markdown]
-# # Load scores
+# ## Load scores
 
 # %%
 [x for x in args.scores_folder.iterdir() if 'scores' in str(x)]
@@ -143,7 +143,7 @@ freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
 freq_feat
 
 # %% [markdown]
-# # Compare shared features
+# ## Compare shared features
 
 # %%
 scores_common = (scores
@@ -264,7 +264,7 @@ vaep.savefig(
     fig, name=files_out[f'diff_analysis_comparision_2_{args.model_key}'])
 
 # %% [markdown]
-# # Only features contained in model
+# ## Only features contained in model
 # - this block exist due to a specific part in the ALD analysis of the paper
 
 # %%
@@ -291,7 +291,7 @@ if not _diff.empty:
         writer, 'only_model_rejected', **writer_args)
 
 # %% [markdown]
-# # DISEASES DB lookup
+# ## DISEASES DB lookup
 
 # %%
 data = vaep.databases.diseases.get_disease_association(
@@ -408,7 +408,7 @@ disease_assocications_new_rejected.to_excel(
     writer, sheet_name='disease_assoc_new_rejected', **writer_args)
 
 # %% [markdown]
-# # Outputs
+# ## Outputs
 
 # %%
 writer.close()

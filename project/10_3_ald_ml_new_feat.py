@@ -190,7 +190,7 @@ pred_real_na_baseline = load_single_csv_pred_file(fname)  # .loc[mask_has_target
 pred_real_na_baseline
 
 # %% [markdown]
-# # Model predictions
+# ## Model predictions
 # General approach:
 #   - use one train, test split of the data
 #   - select best 10 features from training data `X_train`, `y_train` before binarization of target

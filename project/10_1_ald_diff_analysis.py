@@ -92,10 +92,10 @@ files_out = {}
 args.out_folder
 
 # %% [markdown]
-# # Data
+# ## Data
 
 # %% [markdown]
-# ## MS proteomics
+# ### MS proteomics
 
 # %%
 data = vaep.io.datasplits.DataSplits.from_folder(
@@ -106,7 +106,7 @@ observed = pd.concat([data.train_X, data.val_y, data.test_y])
 observed
 
 # %% [markdown]
-# ## Clinical data
+# ### Clinical data
 
 # %%
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
@@ -341,7 +341,7 @@ if pred_real_na is not None:
     display(mean_by_sample)
 
 # %% [markdown]
-# # Differential analysis
+# ## Differential analysis
 # Impute missing values (or not)
 
 # %%
