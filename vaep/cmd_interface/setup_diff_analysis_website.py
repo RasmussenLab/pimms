@@ -11,7 +11,7 @@ def split_nb_name(nb: str) -> list:
 
 INDEX_RST = textwrap.dedent("""\
     Differential Analysis Notebooks
-    ================================
+    -------------------------------
 
     Inspect the notebooks associated with the differential analysis workflow.
 
@@ -73,19 +73,19 @@ def main():
 
     nb_1 = ''
     for nb in groups['1']:
-        nb_1 += " " * 4 + split_nb_name(nb.name)[-1] + f" <{nb}>\n"
+        nb_1 += " " * 4 + split_nb_name(nb.name)[-1] + f" <{nb.as_posix()}>\n"
 
     nb_2 = ''
     for nb in groups['2']:
-        nb_2 += " " * 4 + ' '.join(nb.parent.name.split('_')) + f" <{nb}>\n"
+        nb_2 += " " * 4 + ' '.join(nb.parent.name.split('_')) + f" <{nb.as_posix()}>\n"
 
     nb_3 = ''
     for nb in groups['3']:
-        nb_3 += " " * 4 + ' '.join(nb.parent.name.split('_')) + f" <{nb}>\n"
+        nb_3 += " " * 4 + ' '.join(nb.parent.name.split('_')) + f" <{nb.as_posix()}>\n"
     print(nb_3)
 
     nb_4 = groups['4'][0]
-    nb_4 = " " * 4 + "Compare single features" + f" <{nb_4}>\n"
+    nb_4 = " " * 4 + "Compare single features" + f" <{nb_4.as_posix()}>\n"
 
     index_rst = INDEX_RST.format(nb_1=nb_1,
                                  nb_2=nb_2,

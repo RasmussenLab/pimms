@@ -13,16 +13,12 @@
 # ---
 
 # %% [markdown]
-# # Compare outcomes from differential analysis based on different imputation methods
+# # Fit logistic regression model
 #
-# - load scores based on `10_1_ald_diff_analysis.ipynb`
-# - compare performance for set of features included in original Study
-#   to the set of features included in Niu. et. al 2022
-#   (by lowering the threshold for feature completeness))
-# - RSN should be set as baseline if Niu et. al 2022 data is used
-#
-# This notebook could be adapted to compare
-# 1. different set of features which were classified "significant" (is there signal)?
+# - based on different imputation methods
+# - baseline: reference
+# - model: any other selected imputation method
+
 
 # %%
 import logging
