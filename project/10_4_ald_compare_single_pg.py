@@ -39,13 +39,12 @@ logging.getLogger('fontTools').setLevel(logging.WARNING)
 plt.rcParams['figure.figsize'] = [4, 2.5]  # [16.0, 7.0] , [4, 3]
 vaep.plotting.make_large_descriptors(7)
 
-# %% [markdown]
-# ## Parameters
-
-# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
+
+# %% [markdown]
+# ## Parameters
 
 # %% tags=["parameters"]
 folder_experiment = 'runs/appl_ald_data/plasma/proteinGroups'
@@ -64,9 +63,6 @@ ref_method_score = None  # filepath to reference method score
 
 # %% tags=["hide-input"]
 params = vaep.nb.get_params(args, globals=globals())
-params
-
-# %% tags=["hide-input"]
 args = vaep.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
 args = vaep.nb.add_default_paths(args,
@@ -81,25 +77,37 @@ args.folder_scores = (args.folder_experiment
 args.update_from_dict(params)
 args
 
+# %% [markdown]
+# Write outputs to excel
+
 # %% tags=["hide-input"]
 files_out = dict()
 
 fname = args.out_folder / 'diff_analysis_compare_DA.xlsx'
 writer = pd.ExcelWriter(fname)
 files_out[fname.name] = fname.as_posix()
+logger.info("Writing to excel file: %s", fname)
 
+# %% [markdown]
+# ## Load scores
+# List dump of scores:
 
 # %% tags=["hide-input"]
 score_dumps = [fname for fname in Path(
     args.folder_scores).iterdir() if fname.suffix == '.pkl']
 score_dumps
 
+# %% [markdown]
+# Load scores from dumps:
+
 # %% tags=["hide-input"]
 scores = pd.concat([pd.read_pickle(fname) for fname in score_dumps], axis=1)
 scores
 
+# %% [markdown]
+# If reference dump is provided, add it to the scores
+
 # %% tags=["hide-input"]
-# Reference dump
 if args.ref_method_score:
     scores_reference = (pd
                         .read_pickle(args.ref_method_score)
@@ -109,13 +117,16 @@ if args.ref_method_score:
     logger.info(f'Added reference method scores from {args.ref_method_score}')
 
 # %% [markdown]
-# ## Load frequencies of observed features
+# ### Load frequencies of observed features
 
 # %% tags=["hide-input"]
 fname = args.folder_experiment / 'freq_features_observed.csv'
 freq_feat = pd.read_csv(fname, index_col=0)
 freq_feat.columns = pd.MultiIndex.from_tuples([('data', 'frequency'),])
 freq_feat
+
+# %% [markdown]
+# ### Assemble qvalues
 
 # %% tags=["hide-input"]
 qvalues = scores.loc[pd.IndexSlice[:, args.target],
@@ -130,6 +141,9 @@ qvalues.to_pickle(fname)
 qvalues.to_excel(writer, sheet_name='qvalues_all')
 qvalues
 
+# %% [markdown]
+# ### Assemble pvalues
+
 # %% tags=["hide-input"]
 pvalues = scores.loc[pd.IndexSlice[:, args.target],
                      pd.IndexSlice[:, 'p-unc']
@@ -142,6 +156,9 @@ files_out[fname.name] = fname.as_posix()
 pvalues.to_pickle(fname)
 pvalues.to_excel(writer, sheet_name='pvalues_all')
 pvalues
+
+# %% [markdown]
+# ### Assemble rejected features
 
 # %% tags=["hide-input"]
 da_target = scores.loc[pd.IndexSlice[:, args.target],
@@ -157,6 +174,9 @@ count_rejected = njab.pandas.combine_value_counts(da_target.droplevel(-1, axis=1
 count_rejected.to_excel(writer, sheet_name='count_rejected')
 count_rejected
 
+# %% [markdown]
+# ### Tabulate rejected decisions by method:
+
 # %% tags=["hide-input"]
 # # ! This uses implicitly that RSN is not available for some protein groups
 # # ! Make an explicit list of the 313 protein groups available in original data
@@ -165,22 +185,36 @@ count_rejected_common = njab.pandas.combine_value_counts(da_target.loc[mask_comm
 count_rejected_common.to_excel(writer, sheet_name='count_rejected_common')
 count_rejected_common
 
+# %% [markdown]
+# ### Tabulate rejected decisions by method for newly included features (if available)
+
 # %% tags=["hide-input"]
 count_rejected_new = njab.pandas.combine_value_counts(da_target.loc[~mask_common].droplevel(-1, axis=1))
 count_rejected_new.to_excel(writer, sheet_name='count_rejected_new')
 count_rejected_new
 
+# %% [markdown]
+# ### Tabulate rejected decisions by method for all features
+
 # %% tags=["hide-input"]
 da_target.to_excel(writer, sheet_name='equality_rejected_all')
+logger.info("Written to sheet 'equality_rejected_all' in excel file.")
 da_target
+
+# %% [markdown]
+# Tabulate number of equal decison by method (`True`) to the ones with varying 
+# decision depending on the method (`False`)
 
 # %% tags=["hide-input"]
 da_target_same = (da_target.sum(axis=1) == 0) | da_target.all(axis=1)
 da_target_same.value_counts()
 
+# %% [markdown]
+# List frequency of features with varying decisions
+
 # %% tags=["hide-input"]
 feat_idx_w_diff = da_target_same[~da_target_same].index
-feat_idx_w_diff
+feat_idx_w_diff.to_frame()[['frequency']].reset_index(-1, drop=True)
 
 # %% [markdown]
 # take only those with different decisions
