@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g3dbdb67 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g11eb80b documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g3dbdb67 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g11eb80b documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -373,12 +373,12 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ms-proteomics">MS proteomics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ms-proteomics-or-specified-omics-data">MS proteomics or specified omics data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clinical-data">Clinical data</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ald-study-approach-using-all-measurments">ALD study approach using all measurments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-model-predictions-for-real-missing-data">load model predictions for (real) missing data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ald-study-approach-using-all-measurements">ALD study approach using all measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-model-predictions-for-real-missing-data">Load model predictions for (real) missing data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-shift-by-model">Mean shift by model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#differential-analysis">Differential analysis</a></li>
 </ul>
@@ -395,7 +395,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="differential-analysis-compare-model-imputation-with-standard-imputation">
 <h1>Differential Analysis - Compare model imputation with standard imputation<a class="headerlink" href="#differential-analysis-compare-model-imputation-with-standard-imputation" title="Permalink to this heading">#</a></h1>
 <ul class="simple">
-<li><p>load missing values predictions</p></li>
+<li><p>load missing values predictions (if specified)</p></li>
 <li><p>leave all other values as they were</p></li>
 <li><p>compare missing values predicition by model with baseline method
 (default: draw from shifted normal distribution. short RSN)</p></li>
@@ -445,6 +445,7 @@ document.write(`
 </div>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<p>Default and set parameters for the notebook.</p>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/appl_ald_data/plasma/proteinGroups&quot;</span>
@@ -481,6 +482,7 @@ document.write(`
 </div>
 </div>
 </div>
+<p>Add set parameters to configuration</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -580,7 +582,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </div>
 </div>
-<p>Outputs of this notebook will be stored here</p>
+<p>Outputs of this notebook will be stored here:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -603,8 +605,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </section>
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
-<section id="ms-proteomics">
-<h3>MS proteomics<a class="headerlink" href="#ms-proteomics" title="Permalink to this heading">#</a></h3>
+<section id="ms-proteomics-or-specified-omics-data">
+<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Permalink to this heading">#</a></h3>
+<p>Aggregated from data splits of the imputation workflow run before.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -660,6 +663,7 @@ Name: intensity, Length: 252009, dtype: float64
 </section>
 <section id="clinical-data">
 <h3>Clinical data<a class="headerlink" href="#clinical-data" title="Permalink to this heading">#</a></h3>
+<p>Describe numerical data specified for use:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -956,7 +960,7 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
-<p>check which patients with kleiner score have misssing covariates</p>
+<p>Check which patients with kleiner score have misssing covariates:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1144,8 +1148,9 @@ Name: count, dtype: int64
 </div>
 </section>
 </section>
-<section id="ald-study-approach-using-all-measurments">
-<h2>ALD study approach using all measurments<a class="headerlink" href="#ald-study-approach-using-all-measurments" title="Permalink to this heading">#</a></h2>
+<section id="ald-study-approach-using-all-measurements">
+<h2>ALD study approach using all measurements<a class="headerlink" href="#ald-study-approach-using-all-measurements" title="Permalink to this heading">#</a></h2>
+<p>Use parameters as specified in <a class="reference external" href="https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study" rel="noopener noreferrer" target="_blank">ALD study</a>.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1894,7 +1899,8 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </div>
 </section>
 <section id="load-model-predictions-for-real-missing-data">
-<h2>load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Permalink to this heading">#</a></h2>
+<h2>Load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Permalink to this heading">#</a></h2>
+<p>Load from:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1902,138 +1908,9 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_preds</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;runs/alzheimer_study/preds/pred_val_VAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_CF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_KNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_LLS.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQ.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_Median.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_KNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_RF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_DAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_KNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_DAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQ.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MINDET.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_RF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_SVDMETHOD.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQ.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MINDET.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_COLMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_BPCA.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_Median.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_TRKNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_TRKNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQ.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MINIMUM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MINIMUM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_ZERO.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_LLS.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_CF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MINPROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_IRM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_KNN_IMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_VAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_Median.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_IRM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_IRM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_CF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_COLMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_COLMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_BPCA.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_QRILC.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_ZERO.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MINDET.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_KNN_IMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_BPCA.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_ROWMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_KNN_IMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_TRKNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_IRM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_QRILC.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_TRKNN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_MINPROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_LLS.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_DAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_ZERO.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_RF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_SVDMETHOD.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_ROWMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_SVDMETHOD.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_ROWMEDIAN.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MINIMUM.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_QRILC.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_test_MINDET.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_VAE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MINPROB.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_BPCA.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_all_LLS.csv&#39;),
- PosixPath(&#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;)]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">template_pred</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="p">)</span>
-<span class="n">template_pred</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;runs/alzheimer_study/preds/pred_real_na_{}.csv&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># available_files = list(args.out_preds.iterdir())</span>
+<span class="n">template_pred</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="p">)</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 <span class="n">fname</span>
 </pre></div>
 </div>
@@ -2045,12 +1922,12 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </div>
 </div>
 </div>
-<p>Baseline comparison
-In case of RSN -&gt; use filtering as done in original paper (Niu et al. 2022)
-otherwise -&gt; use all data</p>
+<p>Baseline comparison:</p>
 <ul class="simple">
-<li><p>use columns which are provided by model</p></li>
+<li><p>in case of RSN -&gt; use filtering as done in original <a class="reference external" href="https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study" rel="noopener noreferrer" target="_blank">ALD study</a> (Niu et al. 2022)</p></li>
+<li><p>otherwise -&gt; use all data</p></li>
 </ul>
+<p>Use columns which are provided by model</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2058,9 +1935,7 @@ otherwise -&gt; use all data</p>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ALD study approach -&gt; has access to simulated missing data!</span>
-<span class="c1"># (VAE model did not see this data)</span>
-<span class="n">pred_real_na</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_real_na</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">model_key</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
     <span class="n">pred_real_na</span> <span class="o">=</span> <span class="p">(</span><span class="n">vaep</span>
                     <span class="o">.</span><span class="n">analyzers</span>
@@ -2082,23 +1957,23 @@ otherwise -&gt; use all data</p>
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 11.864
-            A0A075B6Q5                 12.824
-            A0A075B6R2                 14.377
-            A0A075B6S5                 12.867
-            A0A087WSY4                 13.261
+Sample_000  A0A075B6J9                 13.015
+            A0A075B6Q5                 12.360
+            A0A075B6R2                 12.996
+            A0A075B6S5                 13.047
+            A0A087WSY4                 13.596
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.135
-            Q9UI40;Q9UI40-2            12.264
-            Q9UIW2                     12.081
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.723
-            Q9UP79                     11.536
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.884
+            Q9UI40;Q9UI40-2            12.032
+            Q9UIW2                     12.221
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.917
+            Q9UP79                     11.949
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
-<p>plot subsets to highlight differences</p>
+<p>Plot unchanged observed intensities to imputed intensity distribution (if available):</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2159,9 +2034,10 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/50986a18b5287e7f3a925b218afa961ee087677b4fa80d9785ec5e25fa2c2091.png" src="../../../_images/50986a18b5287e7f3a925b218afa961ee087677b4fa80d9785ec5e25fa2c2091.png" />
+<img alt="../../../_images/646929b08c538f96582bb63ebaaf572ee5e19b2ccf9a37f9b0d475b317250106.png" src="../../../_images/646929b08c538f96582bb63ebaaf572ee5e19b2ccf9a37f9b0d475b317250106.png" />
 </div>
 </div>
+<p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2175,14 +2051,173 @@ Name: intensity, Length: 46401, dtype: float64
         <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">pred_real_na</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
     <span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">counts_per_bin</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counts per bin saved to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">counts_per_bin</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.xlsx
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>observed</th>
+      <th>PI</th>
+    </tr>
+    <tr>
+      <th>bin</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>(6, 7]</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(7, 8]</th>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(8, 9]</th>
+      <td>39</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(9, 10]</th>
+      <td>136</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>(10, 11]</th>
+      <td>529</td>
+      <td>731</td>
+    </tr>
+    <tr>
+      <th>(11, 12]</th>
+      <td>1,731</td>
+      <td>8,023</td>
+    </tr>
+    <tr>
+      <th>(12, 13]</th>
+      <td>4,644</td>
+      <td>21,443</td>
+    </tr>
+    <tr>
+      <th>(13, 14]</th>
+      <td>12,161</td>
+      <td>13,911</td>
+    </tr>
+    <tr>
+      <th>(14, 15]</th>
+      <td>27,515</td>
+      <td>2,202</td>
+    </tr>
+    <tr>
+      <th>(15, 16]</th>
+      <td>44,723</td>
+      <td>69</td>
+    </tr>
+    <tr>
+      <th>(16, 17]</th>
+      <td>45,981</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(17, 18]</th>
+      <td>36,274</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(18, 19]</th>
+      <td>25,049</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(19, 20]</th>
+      <td>20,386</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(20, 21]</th>
+      <td>13,495</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(21, 22]</th>
+      <td>8,234</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(22, 23]</th>
+      <td>4,885</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(23, 24]</th>
+      <td>2,459</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(24, 25]</th>
+      <td>1,237</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(25, 26]</th>
+      <td>1,392</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(26, 27]</th>
+      <td>643</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(27, 28]</th>
+      <td>88</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(28, 29]</th>
+      <td>216</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>(29, 30]</th>
+      <td>163</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 </section>
 <section id="mean-shift-by-model">
 <h2>Mean shift by model<a class="headerlink" href="#mean-shift-by-model" title="Permalink to this heading">#</a></h2>
+<p>Compare how imputed values are shifted in comparsion to overall distribution.</p>
+<p>First by using all intensities without any grouping:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2234,15 +2269,15 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>PI</th>
       <td>12.694</td>
-      <td>0.785</td>
+      <td>0.790</td>
       <td>1.724</td>
-      <td>0.306</td>
+      <td>0.308</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>Or by averaging over the calculation by sample</p>
+<p>Then by averaging over the calculation by sample:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2297,22 +2332,22 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>mean</th>
       <td>17.133</td>
-      <td>12.664</td>
+      <td>12.662</td>
     </tr>
     <tr>
       <th>std</th>
       <td>2.564</td>
-      <td>0.753</td>
+      <td>0.758</td>
     </tr>
     <tr>
       <th>mean_shift</th>
       <td>0.000</td>
-      <td>1.743</td>
+      <td>1.744</td>
     </tr>
     <tr>
       <th>std shrinkage</th>
       <td>1.000</td>
-      <td>0.294</td>
+      <td>0.296</td>
     </tr>
   </tbody>
 </table>
@@ -2321,7 +2356,7 @@ Name: intensity, Length: 46401, dtype: float64
 </section>
 <section id="differential-analysis">
 <h2>Differential analysis<a class="headerlink" href="#differential-analysis" title="Permalink to this heading">#</a></h2>
-<p>Impute missing values (or not)</p>
+<p>Combine observed and imputed data (if available) for differential analysis:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2417,11 +2452,11 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>13.415</td>
+      <td>13.454</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>13.477</td>
+      <td>12.939</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -2436,12 +2471,12 @@ Name: intensity, Length: 46401, dtype: float64
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>13.554</td>
+      <td>13.227</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>13.143</td>
+      <td>13.086</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -2493,7 +2528,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>12.685</td>
+      <td>13.644</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -2552,10 +2587,10 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>11.907</td>
+      <td>11.255</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>12.334</td>
+      <td>11.476</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -2576,7 +2611,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>14.534</td>
+      <td>12.991</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -2585,14 +2620,14 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>12.652</td>
+      <td>11.946</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>13.733</td>
-      <td>12.037</td>
+      <td>12.677</td>
+      <td>13.531</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -2600,7 +2635,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>12.102</td>
+      <td>13.558</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -2624,23 +2659,23 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>11.862</td>
+      <td>13.529</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>13.536</td>
+      <td>13.520</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>12.304</td>
+      <td>12.179</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>12.139</td>
+      <td>13.442</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2648,7 +2683,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>14.314</td>
+      <td>13.396</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -2679,7 +2714,7 @@ Name: intensity, Length: 46401, dtype: float64
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># * if some features were not imputed -&gt; drop them</span>
-<span class="o">?</span> could <span class="n">be</span> <span class="n">changed</span><span class="p">:</span> <span class="n">let</span> <span class="n">a</span> <span class="n">model</span> <span class="n">decide</span> <span class="k">if</span> <span class="n">a</span> <span class="n">feature</span> <span class="n">should</span> <span class="n">be</span> <span class="n">imputed</span><span class="p">,</span> <span class="n">otherwise</span> <span class="n">don</span><span class="s1">&#39;t.</span>
+<span class="c1"># ? could be changed: let a model decide if a feature should be imputed, otherwise don&#39;t.</span>
 <span class="k">if</span> <span class="n">pred_real_na</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;DataFrame has missing entries after imputation.&quot;</span><span class="p">)</span>
@@ -2689,13 +2724,8 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </div>
 </details>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Object ` could be changed: let a model decide if a feature should be imputed, otherwise don&#39;t.` not found.
-</pre></div>
 </div>
-</div>
-</div>
-<p>Targets - Clinical variables</p>
+<p>Results for target and clinical variables:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2709,191 +2739,7 @@ Name: intensity, Length: 46401, dtype: float64
                                      <span class="n">covar</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">covar</span><span class="p">,</span>
                                      <span class="n">value_name</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">value_name</span>
                                      <span class="p">)</span><span class="o">.</span><span class="n">ancova</span><span class="p">()</span>
-<span class="n">scores</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>SS</th>
-      <th>DF</th>
-      <th>F</th>
-      <th>p-unc</th>
-      <th>np2</th>
-      <th>-Log10 pvalue</th>
-      <th>qvalue</th>
-      <th>rejected</th>
-    </tr>
-    <tr>
-      <th>protein groups</th>
-      <th>Source</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
-      <th>AD</th>
-      <td>0.251</td>
-      <td>1</td>
-      <td>0.422</td>
-      <td>0.517</td>
-      <td>0.002</td>
-      <td>0.287</td>
-      <td>0.668</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>age</th>
-      <td>0.266</td>
-      <td>1</td>
-      <td>0.447</td>
-      <td>0.505</td>
-      <td>0.002</td>
-      <td>0.297</td>
-      <td>0.658</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>Kiel</th>
-      <td>2.486</td>
-      <td>1</td>
-      <td>4.170</td>
-      <td>0.043</td>
-      <td>0.021</td>
-      <td>1.371</td>
-      <td>0.106</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>Magdeburg</th>
-      <td>4.941</td>
-      <td>1</td>
-      <td>8.289</td>
-      <td>0.004</td>
-      <td>0.042</td>
-      <td>2.352</td>
-      <td>0.017</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>Sweden</th>
-      <td>8.159</td>
-      <td>1</td>
-      <td>13.687</td>
-      <td>0.000</td>
-      <td>0.067</td>
-      <td>3.549</td>
-      <td>0.002</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">S4R3U6</th>
-      <th>AD</th>
-      <td>0.792</td>
-      <td>1</td>
-      <td>0.801</td>
-      <td>0.372</td>
-      <td>0.004</td>
-      <td>0.429</td>
-      <td>0.537</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>age</th>
-      <td>0.591</td>
-      <td>1</td>
-      <td>0.597</td>
-      <td>0.441</td>
-      <td>0.003</td>
-      <td>0.356</td>
-      <td>0.597</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>Kiel</th>
-      <td>0.036</td>
-      <td>1</td>
-      <td>0.037</td>
-      <td>0.848</td>
-      <td>0.000</td>
-      <td>0.072</td>
-      <td>0.913</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>Magdeburg</th>
-      <td>0.791</td>
-      <td>1</td>
-      <td>0.800</td>
-      <td>0.372</td>
-      <td>0.004</td>
-      <td>0.429</td>
-      <td>0.537</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>Sweden</th>
-      <td>21.102</td>
-      <td>1</td>
-      <td>21.335</td>
-      <td>0.000</td>
-      <td>0.100</td>
-      <td>5.150</td>
-      <td>0.000</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table>
-<p>7105 rows × 8 columns</p>
-</div></div></div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># features are in first index position</span>
+<span class="c1"># features are in first index position</span>
 <span class="n">feat_idx</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">gene_to_PG</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span>
@@ -2951,57 +2797,57 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.251</td>
+      <td>0.613</td>
       <td>1</td>
-      <td>0.422</td>
-      <td>0.517</td>
-      <td>0.002</td>
-      <td>0.287</td>
-      <td>0.668</td>
+      <td>1.157</td>
+      <td>0.284</td>
+      <td>0.006</td>
+      <td>0.547</td>
+      <td>0.446</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.266</td>
+      <td>0.099</td>
       <td>1</td>
-      <td>0.447</td>
-      <td>0.505</td>
-      <td>0.002</td>
-      <td>0.297</td>
-      <td>0.658</td>
+      <td>0.187</td>
+      <td>0.666</td>
+      <td>0.001</td>
+      <td>0.177</td>
+      <td>0.782</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>2.486</td>
+      <td>1.870</td>
       <td>1</td>
-      <td>4.170</td>
-      <td>0.043</td>
-      <td>0.021</td>
-      <td>1.371</td>
-      <td>0.106</td>
+      <td>3.526</td>
+      <td>0.062</td>
+      <td>0.018</td>
+      <td>1.208</td>
+      <td>0.144</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>4.941</td>
+      <td>3.990</td>
       <td>1</td>
-      <td>8.289</td>
-      <td>0.004</td>
-      <td>0.042</td>
-      <td>2.352</td>
-      <td>0.017</td>
+      <td>7.523</td>
+      <td>0.007</td>
+      <td>0.038</td>
+      <td>2.176</td>
+      <td>0.024</td>
       <td>True</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>8.159</td>
+      <td>6.174</td>
       <td>1</td>
-      <td>13.687</td>
-      <td>0.000</td>
-      <td>0.067</td>
-      <td>3.549</td>
-      <td>0.002</td>
+      <td>11.640</td>
+      <td>0.001</td>
+      <td>0.057</td>
+      <td>3.103</td>
+      <td>0.004</td>
       <td>True</td>
     </tr>
     <tr>
@@ -3019,56 +2865,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>0.792</td>
+      <td>0.612</td>
       <td>1</td>
-      <td>0.801</td>
-      <td>0.372</td>
-      <td>0.004</td>
-      <td>0.429</td>
-      <td>0.537</td>
+      <td>0.623</td>
+      <td>0.431</td>
+      <td>0.003</td>
+      <td>0.366</td>
+      <td>0.590</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.591</td>
+      <td>2.031</td>
       <td>1</td>
-      <td>0.597</td>
-      <td>0.441</td>
-      <td>0.003</td>
-      <td>0.356</td>
-      <td>0.597</td>
+      <td>2.066</td>
+      <td>0.152</td>
+      <td>0.011</td>
+      <td>0.817</td>
+      <td>0.284</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.036</td>
+      <td>0.086</td>
       <td>1</td>
-      <td>0.037</td>
-      <td>0.848</td>
+      <td>0.088</td>
+      <td>0.768</td>
       <td>0.000</td>
-      <td>0.072</td>
-      <td>0.913</td>
+      <td>0.115</td>
+      <td>0.856</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>0.791</td>
+      <td>1.941</td>
       <td>1</td>
-      <td>0.800</td>
-      <td>0.372</td>
-      <td>0.004</td>
-      <td>0.429</td>
-      <td>0.537</td>
+      <td>1.975</td>
+      <td>0.162</td>
+      <td>0.010</td>
+      <td>0.792</td>
+      <td>0.296</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>21.102</td>
+      <td>17.261</td>
       <td>1</td>
-      <td>21.335</td>
+      <td>17.558</td>
       <td>0.000</td>
-      <td>0.100</td>
-      <td>5.150</td>
+      <td>0.084</td>
+      <td>4.371</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -3077,6 +2923,7 @@ Name: intensity, Length: 46401, dtype: float64
 <p>7105 rows × 8 columns</p>
 </div></div></div>
 </div>
+<p>Only for target:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3146,61 +2993,61 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.251</td>
+      <td>0.613</td>
       <td>1</td>
-      <td>0.422</td>
-      <td>0.517</td>
-      <td>0.002</td>
-      <td>0.287</td>
-      <td>0.668</td>
+      <td>1.157</td>
+      <td>0.284</td>
+      <td>0.006</td>
+      <td>0.547</td>
+      <td>0.446</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
-      <td>3.214</td>
+      <td>3.260</td>
       <td>1</td>
-      <td>4.062</td>
-      <td>0.045</td>
-      <td>0.021</td>
-      <td>1.344</td>
-      <td>0.112</td>
+      <td>3.828</td>
+      <td>0.052</td>
+      <td>0.020</td>
+      <td>1.285</td>
+      <td>0.125</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
-      <td>3.240</td>
+      <td>2.565</td>
       <td>1</td>
-      <td>3.096</td>
-      <td>0.080</td>
-      <td>0.016</td>
-      <td>1.097</td>
-      <td>0.176</td>
+      <td>2.765</td>
+      <td>0.098</td>
+      <td>0.014</td>
+      <td>1.009</td>
+      <td>0.206</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
-      <td>0.071</td>
+      <td>0.088</td>
       <td>1</td>
-      <td>0.322</td>
-      <td>0.571</td>
+      <td>0.452</td>
+      <td>0.502</td>
       <td>0.002</td>
-      <td>0.243</td>
-      <td>0.708</td>
+      <td>0.299</td>
+      <td>0.652</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
-      <td>5.589</td>
+      <td>8.011</td>
       <td>1</td>
-      <td>1.391</td>
-      <td>0.240</td>
-      <td>0.007</td>
-      <td>0.620</td>
-      <td>0.396</td>
+      <td>2.051</td>
+      <td>0.154</td>
+      <td>0.011</td>
+      <td>0.813</td>
+      <td>0.286</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3224,19 +3071,19 @@ Name: intensity, Length: 46401, dtype: float64
       <td>0.175</td>
       <td>0.010</td>
       <td>0.756</td>
-      <td>0.318</td>
+      <td>0.315</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
-      <td>2.891</td>
+      <td>2.874</td>
       <td>1</td>
-      <td>3.322</td>
-      <td>0.070</td>
-      <td>0.017</td>
-      <td>1.155</td>
-      <td>0.158</td>
+      <td>3.593</td>
+      <td>0.060</td>
+      <td>0.018</td>
+      <td>1.225</td>
+      <td>0.140</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3254,25 +3101,25 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
-      <td>1.606</td>
+      <td>0.961</td>
       <td>1</td>
-      <td>1.771</td>
-      <td>0.185</td>
-      <td>0.009</td>
-      <td>0.733</td>
-      <td>0.330</td>
+      <td>1.234</td>
+      <td>0.268</td>
+      <td>0.006</td>
+      <td>0.572</td>
+      <td>0.429</td>
       <td>False</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
-      <td>0.792</td>
+      <td>0.612</td>
       <td>1</td>
-      <td>0.801</td>
-      <td>0.372</td>
-      <td>0.004</td>
-      <td>0.429</td>
-      <td>0.537</td>
+      <td>0.623</td>
+      <td>0.431</td>
+      <td>0.003</td>
+      <td>0.366</td>
+      <td>0.590</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -3280,6 +3127,7 @@ Name: intensity, Length: 46401, dtype: float64
 <p>1421 rows × 8 columns</p>
 </div></div></div>
 </div>
+<p>Save all results to file:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3373,12 +3221,12 @@ Name: intensity, Length: 46401, dtype: float64
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ms-proteomics">MS proteomics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ms-proteomics-or-specified-omics-data">MS proteomics or specified omics data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clinical-data">Clinical data</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ald-study-approach-using-all-measurments">ALD study approach using all measurments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-model-predictions-for-real-missing-data">load model predictions for (real) missing data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ald-study-approach-using-all-measurements">ALD study approach using all measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-model-predictions-for-real-missing-data">Load model predictions for (real) missing data</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-shift-by-model">Mean shift by model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#differential-analysis">Differential analysis</a></li>
 </ul>

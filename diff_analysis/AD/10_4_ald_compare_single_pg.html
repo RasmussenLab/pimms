@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Compare predictions between model and RSN &#8212; pimms_workflow 0.1.dev1+g3dbdb67 documentation</title>
+    <title>Compare predictions between model and RSN &#8212; pimms_workflow 0.1.dev1+g11eb80b documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g3dbdb67 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g11eb80b documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -372,7 +372,16 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-frequencies-of-observed-features">Load frequencies of observed features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-scores">Load scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-frequencies-of-observed-features">Load frequencies of observed features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-qvalues">Assemble qvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-pvalues">Assemble pvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-rejected-features">Assemble rejected features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method">Tabulate rejected decisions by method:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method-for-newly-included-features-if-available">Tabulate rejected decisions by method for newly included features (if available)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method-for-all-features">Tabulate rejected decisions by method for all features</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plots-for-inspecting-imputations-for-diverging-decisions">Plots for inspecting imputations (for diverging decisions)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-target">Load target</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measurments">Measurments</a></li>
@@ -420,21 +429,8 @@ document.write(`
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>  <span class="c1"># [16.0, 7.0] , [4, 3]</span>
 <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
+
+<span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">globals</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </pre></div>
@@ -442,6 +438,8 @@ document.write(`
 </div>
 </details>
 </div>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="s1">&#39;runs/appl_ald_data/plasma/proteinGroups&#39;</span>
@@ -483,50 +481,7 @@ document.write(`
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-<span class="n">params</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Removed from global namespace: folder_experiment
-root - INFO     Removed from global namespace: fn_clinical_data
-root - INFO     Removed from global namespace: make_plots
-root - INFO     Removed from global namespace: model_key
-root - INFO     Removed from global namespace: sample_id_col
-root - INFO     Removed from global namespace: target
-root - INFO     Removed from global namespace: cutoff_target
-root - INFO     Removed from global namespace: out_folder
-root - INFO     Removed from global namespace: file_format
-root - INFO     Removed from global namespace: baseline
-root - INFO     Removed from global namespace: template_pred
-root - INFO     Removed from global namespace: ref_method_score
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;folder_experiment&#39;: &#39;runs/alzheimer_study&#39;,
- &#39;fn_clinical_data&#39;: &#39;runs/alzheimer_study/data/clinical_data.csv&#39;,
- &#39;make_plots&#39;: False,
- &#39;model_key&#39;: &#39;VAE&#39;,
- &#39;sample_id_col&#39;: &#39;Sample ID&#39;,
- &#39;target&#39;: &#39;AD&#39;,
- &#39;cutoff_target&#39;: 0.5,
- &#39;out_folder&#39;: &#39;diff_analysis&#39;,
- &#39;file_format&#39;: &#39;csv&#39;,
- &#39;baseline&#39;: &#39;PI&#39;,
- &#39;template_pred&#39;: &#39;pred_real_na_{}.csv&#39;,
- &#39;ref_method_score&#39;: None}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
                                  <span class="n">out_root</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span>
@@ -544,7 +499,19 @@ root - INFO     Removed from global namespace: ref_method_score
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Already set attribute: folder_experiment has value runs/alzheimer_study
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Removed from global namespace: folder_experiment
+root - INFO     Removed from global namespace: fn_clinical_data
+root - INFO     Removed from global namespace: make_plots
+root - INFO     Removed from global namespace: model_key
+root - INFO     Removed from global namespace: sample_id_col
+root - INFO     Removed from global namespace: target
+root - INFO     Removed from global namespace: cutoff_target
+root - INFO     Removed from global namespace: out_folder
+root - INFO     Removed from global namespace: file_format
+root - INFO     Removed from global namespace: baseline
+root - INFO     Removed from global namespace: template_pred
+root - INFO     Removed from global namespace: ref_method_score
+root - INFO     Already set attribute: folder_experiment has value runs/alzheimer_study
 root - INFO     Already set attribute: out_folder has value diff_analysis
 </pre></div>
 </div>
@@ -570,6 +537,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </div>
 </div>
+<p>Write outputs to excel</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -582,11 +550,21 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;diff_analysis_compare_DA.xlsx&#39;</span>
 <span class="n">writer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Writing to excel file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Writing to excel file: runs/alzheimer_study/diff_analysis/AD/diff_analysis_compare_DA.xlsx
+</pre></div>
 </div>
+</div>
+</div>
+</section>
+<section id="load-scores">
+<h2>Load scores<a class="headerlink" href="#load-scores" title="Permalink to this heading">#</a></h2>
+<p>List dump of scores:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -615,6 +593,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </div>
 </div>
+<p>Load scores from dumps:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -714,17 +693,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
       <td>0.834</td>
-      <td>1</td>
+      <td>1.000</td>
       <td>6.088</td>
       <td>0.015</td>
       <td>0.033</td>
       <td>1.837</td>
-      <td>NaN</td>
+      <td>0.043</td>
       <td>True</td>
-      <td>0.251</td>
+      <td>0.613</td>
       <td>1</td>
       <td>...</td>
-      <td>0.009</td>
+      <td>0.013</td>
       <td>True</td>
       <td>0.830</td>
       <td>1</td>
@@ -738,17 +717,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>age</th>
       <td>0.002</td>
-      <td>1</td>
+      <td>1.000</td>
       <td>0.015</td>
       <td>0.903</td>
       <td>0.000</td>
       <td>0.044</td>
-      <td>NaN</td>
+      <td>0.943</td>
       <td>False</td>
-      <td>0.266</td>
+      <td>0.099</td>
       <td>1</td>
       <td>...</td>
-      <td>0.918</td>
+      <td>0.860</td>
       <td>False</td>
       <td>0.001</td>
       <td>1</td>
@@ -762,17 +741,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>Kiel</th>
       <td>0.145</td>
-      <td>1</td>
+      <td>1.000</td>
       <td>1.061</td>
       <td>0.304</td>
       <td>0.006</td>
       <td>0.517</td>
-      <td>NaN</td>
+      <td>0.461</td>
       <td>False</td>
-      <td>2.486</td>
+      <td>1.870</td>
       <td>1</td>
       <td>...</td>
-      <td>0.333</td>
+      <td>0.294</td>
       <td>False</td>
       <td>0.106</td>
       <td>1</td>
@@ -786,17 +765,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>Magdeburg</th>
       <td>0.273</td>
-      <td>1</td>
+      <td>1.000</td>
       <td>1.996</td>
       <td>0.159</td>
       <td>0.011</td>
       <td>0.797</td>
-      <td>NaN</td>
+      <td>0.286</td>
       <td>False</td>
-      <td>4.941</td>
+      <td>3.990</td>
       <td>1</td>
       <td>...</td>
-      <td>0.230</td>
+      <td>0.200</td>
       <td>False</td>
       <td>0.219</td>
       <td>1</td>
@@ -810,17 +789,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>Sweden</th>
       <td>1.209</td>
-      <td>1</td>
+      <td>1.000</td>
       <td>8.827</td>
       <td>0.003</td>
       <td>0.047</td>
       <td>2.472</td>
-      <td>NaN</td>
+      <td>0.013</td>
       <td>True</td>
-      <td>8.159</td>
+      <td>6.174</td>
       <td>1</td>
       <td>...</td>
-      <td>0.005</td>
+      <td>0.004</td>
       <td>True</td>
       <td>1.101</td>
       <td>1</td>
@@ -857,131 +836,135 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>...</td>
     </tr>
     <tr>
-      <th rowspan="5" valign="top">S4R3U6</th>
-      <th>AD</th>
-      <td>0.095</td>
-      <td>1</td>
-      <td>0.151</td>
-      <td>0.698</td>
-      <td>0.001</td>
-      <td>0.156</td>
+      <th>Q9NY15</th>
+      <th>Sweden</th>
       <td>NaN</td>
-      <td>False</td>
-      <td>0.792</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>166.241</td>
       <td>1</td>
       <td>...</td>
-      <td>0.110</td>
-      <td>False</td>
-      <td>0.051</td>
+      <td>0.002</td>
+      <td>True</td>
+      <td>0.028</td>
       <td>1</td>
-      <td>0.119</td>
-      <td>0.730</td>
+      <td>0.168</td>
+      <td>0.682</td>
       <td>0.001</td>
-      <td>0.136</td>
-      <td>0.829</td>
+      <td>0.166</td>
+      <td>0.795</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>age</th>
-      <td>1.370</td>
-      <td>1</td>
-      <td>2.171</td>
-      <td>0.143</td>
-      <td>0.018</td>
-      <td>0.844</td>
+      <th>Q9NZU1</th>
+      <th>Sweden</th>
       <td>NaN</td>
-      <td>False</td>
-      <td>0.591</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.023</td>
       <td>1</td>
       <td>...</td>
-      <td>0.301</td>
+      <td>0.310</td>
       <td>False</td>
-      <td>1.214</td>
+      <td>0.621</td>
       <td>1</td>
-      <td>2.845</td>
-      <td>0.093</td>
-      <td>0.015</td>
-      <td>1.030</td>
-      <td>0.194</td>
+      <td>0.701</td>
+      <td>0.403</td>
+      <td>0.004</td>
+      <td>0.394</td>
+      <td>0.564</td>
       <td>False</td>
     </tr>
     <tr>
+      <th rowspan="2" valign="top">Q9UMX0;Q9UMX0-2;Q9UMX0-4</th>
       <th>Kiel</th>
-      <td>1.396</td>
-      <td>1</td>
-      <td>2.213</td>
-      <td>0.139</td>
-      <td>0.018</td>
-      <td>0.856</td>
       <td>NaN</td>
-      <td>False</td>
-      <td>0.036</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.839</td>
       <td>1</td>
       <td>...</td>
-      <td>0.052</td>
+      <td>0.899</td>
       <td>False</td>
-      <td>0.861</td>
+      <td>0.001</td>
       <td>1</td>
-      <td>2.018</td>
-      <td>0.157</td>
-      <td>0.010</td>
-      <td>0.804</td>
-      <td>0.289</td>
+      <td>0.004</td>
+      <td>0.950</td>
+      <td>0.000</td>
+      <td>0.022</td>
+      <td>0.972</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>0.556</td>
-      <td>1</td>
-      <td>0.882</td>
-      <td>0.350</td>
-      <td>0.007</td>
-      <td>0.456</td>
       <td>NaN</td>
-      <td>False</td>
-      <td>0.791</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.190</td>
       <td>1</td>
       <td>...</td>
-      <td>0.080</td>
+      <td>0.504</td>
       <td>False</td>
-      <td>0.216</td>
+      <td>0.108</td>
       <td>1</td>
-      <td>0.506</td>
-      <td>0.478</td>
-      <td>0.003</td>
-      <td>0.321</td>
-      <td>0.631</td>
+      <td>0.394</td>
+      <td>0.531</td>
+      <td>0.002</td>
+      <td>0.275</td>
+      <td>0.676</td>
       <td>False</td>
     </tr>
     <tr>
+      <th>Q9Y281;Q9Y281-3</th>
       <th>Sweden</th>
-      <td>8.519</td>
-      <td>1</td>
-      <td>13.502</td>
-      <td>0.000</td>
-      <td>0.101</td>
-      <td>3.447</td>
       <td>NaN</td>
-      <td>True</td>
-      <td>21.102</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3.611</td>
       <td>1</td>
       <td>...</td>
-      <td>0.000</td>
-      <td>True</td>
-      <td>3.965</td>
+      <td>0.061</td>
+      <td>False</td>
+      <td>0.203</td>
       <td>1</td>
-      <td>9.288</td>
-      <td>0.003</td>
-      <td>0.046</td>
-      <td>2.580</td>
-      <td>0.011</td>
-      <td>True</td>
+      <td>4.602</td>
+      <td>0.033</td>
+      <td>0.024</td>
+      <td>1.479</td>
+      <td>0.086</td>
+      <td>False</td>
     </tr>
   </tbody>
 </table>
 <p>7105 rows × 72 columns</p>
 </div></div></div>
 </div>
+<p>If reference dump is provided, add it to the scores</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -989,8 +972,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reference dump</span>
-<span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ref_method_score</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ref_method_score</span><span class="p">:</span>
     <span class="n">scores_reference</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span>
                         <span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ref_method_score</span><span class="p">)</span>
                         <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;None&#39;</span><span class="p">:</span> <span class="s1">&#39;None (100%)&#39;</span><span class="p">},</span>
@@ -1002,9 +984,8 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </details>
 </div>
-</section>
 <section id="load-frequencies-of-observed-features">
-<h2>Load frequencies of observed features<a class="headerlink" href="#load-frequencies-of-observed-features" title="Permalink to this heading">#</a></h2>
+<h3>Load frequencies of observed features<a class="headerlink" href="#load-frequencies-of-observed-features" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1104,6 +1085,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <p>1421 rows × 1 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="assemble-qvalues">
+<h3>Assemble qvalues<a class="headerlink" href="#assemble-qvalues" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1195,70 +1179,70 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
       <th>186</th>
-      <td>NaN</td>
-      <td>0.668</td>
+      <td>0.043</td>
+      <td>0.446</td>
       <td>0.023</td>
-      <td>0.016</td>
-      <td>0.029</td>
       <td>0.021</td>
-      <td>0.077</td>
-      <td>0.009</td>
+      <td>0.025</td>
+      <td>0.019</td>
+      <td>0.099</td>
+      <td>0.013</td>
       <td>0.039</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
       <th>195</th>
-      <td>NaN</td>
-      <td>0.112</td>
+      <td>0.092</td>
+      <td>0.125</td>
       <td>0.071</td>
-      <td>0.071</td>
-      <td>0.078</td>
-      <td>0.071</td>
+      <td>0.080</td>
       <td>0.072</td>
-      <td>0.067</td>
+      <td>0.071</td>
+      <td>0.070</td>
+      <td>0.070</td>
       <td>0.087</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
       <th>174</th>
-      <td>NaN</td>
-      <td>0.176</td>
+      <td>0.586</td>
+      <td>0.206</td>
       <td>0.394</td>
-      <td>0.445</td>
-      <td>0.500</td>
-      <td>0.493</td>
-      <td>0.441</td>
-      <td>0.254</td>
+      <td>0.499</td>
+      <td>0.564</td>
+      <td>0.442</td>
+      <td>0.444</td>
+      <td>0.423</td>
       <td>0.832</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
       <th>196</th>
-      <td>NaN</td>
-      <td>0.708</td>
+      <td>0.404</td>
+      <td>0.652</td>
       <td>0.396</td>
-      <td>0.375</td>
-      <td>0.388</td>
-      <td>0.372</td>
-      <td>0.463</td>
-      <td>0.388</td>
+      <td>0.371</td>
+      <td>0.396</td>
+      <td>0.376</td>
+      <td>0.447</td>
+      <td>0.379</td>
       <td>0.418</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
       <th>91</th>
-      <td>NaN</td>
-      <td>0.396</td>
+      <td>0.027</td>
+      <td>0.286</td>
       <td>0.048</td>
-      <td>0.049</td>
-      <td>0.012</td>
-      <td>0.016</td>
-      <td>0.341</td>
-      <td>0.017</td>
+      <td>0.031</td>
+      <td>0.009</td>
+      <td>0.011</td>
+      <td>0.491</td>
+      <td>0.020</td>
       <td>0.124</td>
     </tr>
     <tr>
@@ -1279,70 +1263,70 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>Q9Y6R7</th>
       <th>AD</th>
       <th>197</th>
-      <td>NaN</td>
-      <td>0.318</td>
+      <td>0.307</td>
+      <td>0.315</td>
       <td>0.289</td>
       <td>0.282</td>
       <td>0.292</td>
       <td>0.282</td>
-      <td>0.302</td>
-      <td>0.284</td>
+      <td>0.303</td>
+      <td>0.286</td>
       <td>0.315</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
       <th>173</th>
-      <td>NaN</td>
-      <td>0.158</td>
+      <td>0.501</td>
+      <td>0.140</td>
       <td>0.205</td>
-      <td>0.414</td>
-      <td>0.336</td>
-      <td>0.362</td>
-      <td>0.212</td>
-      <td>0.221</td>
+      <td>0.225</td>
+      <td>0.300</td>
+      <td>0.358</td>
+      <td>0.122</td>
+      <td>0.284</td>
       <td>0.455</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
       <th>AD</th>
       <th>197</th>
-      <td>NaN</td>
+      <td>0.174</td>
       <td>0.182</td>
       <td>0.160</td>
-      <td>0.156</td>
+      <td>0.155</td>
       <td>0.162</td>
-      <td>0.157</td>
-      <td>0.170</td>
-      <td>0.157</td>
+      <td>0.156</td>
+      <td>0.171</td>
+      <td>0.160</td>
       <td>0.178</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
       <th>119</th>
-      <td>NaN</td>
-      <td>0.330</td>
+      <td>0.651</td>
+      <td>0.429</td>
       <td>0.472</td>
-      <td>0.908</td>
-      <td>0.534</td>
-      <td>0.868</td>
-      <td>0.995</td>
-      <td>0.699</td>
+      <td>0.877</td>
+      <td>0.564</td>
+      <td>0.588</td>
+      <td>0.657</td>
+      <td>0.576</td>
       <td>0.667</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
       <th>126</th>
-      <td>NaN</td>
-      <td>0.537</td>
+      <td>0.802</td>
+      <td>0.590</td>
       <td>0.080</td>
-      <td>0.104</td>
-      <td>0.234</td>
-      <td>0.160</td>
-      <td>0.335</td>
-      <td>0.110</td>
+      <td>0.049</td>
+      <td>0.196</td>
+      <td>0.089</td>
+      <td>0.533</td>
+      <td>0.086</td>
       <td>0.829</td>
     </tr>
   </tbody>
@@ -1350,6 +1334,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <p>1421 rows × 9 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="assemble-pvalues">
+<h3>Assemble pvalues<a class="headerlink" href="#assemble-pvalues" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1442,13 +1429,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>186</th>
       <td>0.015</td>
-      <td>0.517</td>
+      <td>0.284</td>
       <td>0.008</td>
-      <td>0.005</td>
-      <td>0.010</td>
-      <td>0.008</td>
-      <td>0.030</td>
-      <td>0.003</td>
+      <td>0.007</td>
+      <td>0.009</td>
+      <td>0.007</td>
+      <td>0.042</td>
+      <td>0.004</td>
       <td>0.012</td>
     </tr>
     <tr>
@@ -1456,13 +1443,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>195</th>
       <td>0.037</td>
-      <td>0.045</td>
+      <td>0.052</td>
+      <td>0.031</td>
+      <td>0.037</td>
       <td>0.031</td>
       <td>0.032</td>
-      <td>0.034</td>
-      <td>0.032</td>
-      <td>0.028</td>
-      <td>0.030</td>
+      <td>0.027</td>
+      <td>0.031</td>
       <td>0.033</td>
     </tr>
     <tr>
@@ -1470,13 +1457,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>174</th>
       <td>0.432</td>
-      <td>0.080</td>
+      <td>0.098</td>
       <td>0.264</td>
-      <td>0.315</td>
-      <td>0.360</td>
-      <td>0.362</td>
-      <td>0.293</td>
-      <td>0.153</td>
+      <td>0.370</td>
+      <td>0.429</td>
+      <td>0.313</td>
+      <td>0.296</td>
+      <td>0.292</td>
       <td>0.736</td>
     </tr>
     <tr>
@@ -1484,13 +1471,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>196</th>
       <td>0.254</td>
-      <td>0.571</td>
+      <td>0.502</td>
       <td>0.266</td>
-      <td>0.252</td>
-      <td>0.256</td>
-      <td>0.249</td>
-      <td>0.314</td>
-      <td>0.262</td>
+      <td>0.250</td>
+      <td>0.260</td>
+      <td>0.253</td>
+      <td>0.298</td>
+      <td>0.254</td>
       <td>0.259</td>
     </tr>
     <tr>
@@ -1498,13 +1485,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>91</th>
       <td>0.008</td>
-      <td>0.240</td>
+      <td>0.154</td>
       <td>0.020</td>
-      <td>0.020</td>
-      <td>0.004</td>
-      <td>0.005</td>
-      <td>0.205</td>
-      <td>0.006</td>
+      <td>0.012</td>
+      <td>0.003</td>
+      <td>0.003</td>
+      <td>0.341</td>
+      <td>0.007</td>
       <td>0.053</td>
     </tr>
     <tr>
@@ -1540,13 +1527,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>173</th>
       <td>0.344</td>
-      <td>0.070</td>
+      <td>0.060</td>
       <td>0.113</td>
-      <td>0.286</td>
-      <td>0.211</td>
-      <td>0.240</td>
-      <td>0.109</td>
-      <td>0.127</td>
+      <td>0.132</td>
+      <td>0.182</td>
+      <td>0.237</td>
+      <td>0.054</td>
+      <td>0.174</td>
       <td>0.291</td>
     </tr>
     <tr>
@@ -1568,13 +1555,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>119</th>
       <td>0.505</td>
-      <td>0.185</td>
+      <td>0.268</td>
       <td>0.334</td>
-      <td>0.855</td>
-      <td>0.397</td>
-      <td>0.803</td>
-      <td>0.992</td>
-      <td>0.587</td>
+      <td>0.812</td>
+      <td>0.429</td>
+      <td>0.463</td>
+      <td>0.523</td>
+      <td>0.446</td>
       <td>0.520</td>
     </tr>
     <tr>
@@ -1582,13 +1569,13 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <th>AD</th>
       <th>126</th>
       <td>0.698</td>
-      <td>0.372</td>
+      <td>0.431</td>
       <td>0.036</td>
-      <td>0.051</td>
-      <td>0.133</td>
-      <td>0.086</td>
-      <td>0.200</td>
-      <td>0.054</td>
+      <td>0.020</td>
+      <td>0.106</td>
+      <td>0.042</td>
+      <td>0.384</td>
+      <td>0.039</td>
       <td>0.730</td>
     </tr>
   </tbody>
@@ -1596,6 +1583,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <p>1421 rows × 9 columns</p>
 </div></div></div>
 </div>
+</section>
+<section id="assemble-rejected-features">
+<h3>Assemble rejected features<a class="headerlink" href="#assemble-rejected-features" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1653,31 +1643,34 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>False</th>
       <td>1,054</td>
-      <td>1,029</td>
+      <td>1,027</td>
       <td>936</td>
-      <td>932</td>
-      <td>968</td>
-      <td>949</td>
-      <td>1,004</td>
-      <td>945</td>
+      <td>934</td>
+      <td>966</td>
+      <td>940</td>
+      <td>1,007</td>
+      <td>958</td>
       <td>1,069</td>
     </tr>
     <tr>
       <th>True</th>
       <td>367</td>
-      <td>392</td>
+      <td>394</td>
       <td>485</td>
-      <td>489</td>
-      <td>453</td>
-      <td>472</td>
-      <td>417</td>
-      <td>476</td>
+      <td>487</td>
+      <td>455</td>
+      <td>481</td>
+      <td>414</td>
+      <td>463</td>
       <td>352</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+</section>
+<section id="tabulate-rejected-decisions-by-method">
+<h3>Tabulate rejected decisions by method:<a class="headerlink" href="#tabulate-rejected-decisions-by-method" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1729,31 +1722,34 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th>False</th>
       <td>1,054</td>
-      <td>1,029</td>
+      <td>1,027</td>
       <td>936</td>
-      <td>932</td>
-      <td>968</td>
-      <td>949</td>
-      <td>1,004</td>
-      <td>945</td>
+      <td>934</td>
+      <td>966</td>
+      <td>940</td>
+      <td>1,007</td>
+      <td>958</td>
       <td>1,069</td>
     </tr>
     <tr>
       <th>True</th>
       <td>367</td>
-      <td>392</td>
+      <td>394</td>
       <td>485</td>
-      <td>489</td>
-      <td>453</td>
-      <td>472</td>
-      <td>417</td>
-      <td>476</td>
+      <td>487</td>
+      <td>455</td>
+      <td>481</td>
+      <td>414</td>
+      <td>463</td>
       <td>352</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+</section>
+<section id="tabulate-rejected-decisions-by-method-for-newly-included-features-if-available">
+<h3>Tabulate rejected decisions by method for newly included features (if available)<a class="headerlink" href="#tabulate-rejected-decisions-by-method-for-newly-included-features-if-available" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1803,6 +1799,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </table>
 </div></div></div>
 </div>
+</section>
+<section id="tabulate-rejected-decisions-by-method-for-all-features">
+<h3>Tabulate rejected decisions by method for all features<a class="headerlink" href="#tabulate-rejected-decisions-by-method-for-all-features" title="Permalink to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1811,12 +1810,16 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">da_target</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;equality_rejected_all&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Written to sheet &#39;equality_rejected_all&#39; in excel file.&quot;</span><span class="p">)</span>
 <span class="n">da_target</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Written to sheet &#39;equality_rejected_all&#39; in excel file.
+</pre></div>
+</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2028,7 +2031,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>False</td>
       <td>False</td>
       <td>False</td>
-      <td>False</td>
+      <td>True</td>
       <td>False</td>
       <td>False</td>
       <td>False</td>
@@ -2040,6 +2043,8 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <p>1421 rows × 9 columns</p>
 </div></div></div>
 </div>
+<p>Tabulate number of equal decison by method (<code class="docutils literal notranslate"><span class="pre">True</span></code>) to the ones with varying
+decision depending on the method (<code class="docutils literal notranslate"><span class="pre">False</span></code>)</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2054,13 +2059,14 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True    1,108
-False     313
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True    1,098
+False     323
 Name: count, dtype: int64
 </pre></div>
 </div>
 </div>
 </div>
+<p>List frequency of features with varying decisions</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2069,37 +2075,99 @@ Name: count, dtype: int64
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feat_idx_w_diff</span> <span class="o">=</span> <span class="n">da_target_same</span><span class="p">[</span><span class="o">~</span><span class="n">da_target_same</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
-<span class="n">feat_idx_w_diff</span>
+<span class="n">feat_idx_w_diff</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()[[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MultiIndex([(                    &#39;A0A024QZX5;A0A087X1N8;P35237&#39;, &#39;AD&#39;, 186),
-            (                                      &#39;A0A075B6H7&#39;, &#39;AD&#39;,  91),
-            (                                      &#39;A0A075B6J9&#39;, &#39;AD&#39;, 156),
-            (                                      &#39;A0A075B6Q5&#39;, &#39;AD&#39;, 104),
-            (                                      &#39;A0A075B6R2&#39;, &#39;AD&#39;, 164),
-            (                                      &#39;A0A075B6S5&#39;, &#39;AD&#39;, 129),
-            (                                      &#39;A0A075B7B8&#39;, &#39;AD&#39;,  57),
-            (           &#39;A0A087WTT8;A0A0A0MQX5;O94779;O94779-2&#39;, &#39;AD&#39;, 114),
-            (&#39;A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2&#39;, &#39;AD&#39;, 134),
-            (    &#39;A0A087WVV2;A0A0A0MRV0;Q9P2E9;Q9P2E9-2;V9GY78&#39;, &#39;AD&#39;, 185),
-            ...
-            (                                          &#39;Q9UIW2&#39;, &#39;AD&#39;, 162),
-            (                                          &#39;Q9UJ14&#39;, &#39;AD&#39;, 169),
-            (                               &#39;Q9ULP0-3;Q9ULP0-6&#39;, &#39;AD&#39;, 136),
-            (                                          &#39;Q9ULZ9&#39;, &#39;AD&#39;, 171),
-            (                                          &#39;Q9UNW1&#39;, &#39;AD&#39;, 171),
-            (                                          &#39;Q9UP79&#39;, &#39;AD&#39;, 135),
-            (                                          &#39;Q9UPU3&#39;, &#39;AD&#39;, 163),
-            (                                          &#39;Q9UQ52&#39;, &#39;AD&#39;, 188),
-            (                                 &#39;Q9Y281;Q9Y281-3&#39;, &#39;AD&#39;,  51),
-            (                                          &#39;Q9Y6C2&#39;, &#39;AD&#39;, 119)],
-           names=[&#39;protein groups&#39;, &#39;Source&#39;, &#39;frequency&#39;], length=313)
-</pre></div>
-</div>
-</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th></th>
+      <th>frequency</th>
+    </tr>
+    <tr>
+      <th>protein groups</th>
+      <th>Source</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A0A024QZX5;A0A087X1N8;P35237</th>
+      <th>AD</th>
+      <td>186</td>
+    </tr>
+    <tr>
+      <th>A0A075B6H7</th>
+      <th>AD</th>
+      <td>91</td>
+    </tr>
+    <tr>
+      <th>A0A075B6H9</th>
+      <th>AD</th>
+      <td>189</td>
+    </tr>
+    <tr>
+      <th>A0A075B6I0</th>
+      <th>AD</th>
+      <td>194</td>
+    </tr>
+    <tr>
+      <th>A0A075B6J9</th>
+      <th>AD</th>
+      <td>156</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>Q9UP79</th>
+      <th>AD</th>
+      <td>135</td>
+    </tr>
+    <tr>
+      <th>Q9UPU3</th>
+      <th>AD</th>
+      <td>163</td>
+    </tr>
+    <tr>
+      <th>Q9UQ52</th>
+      <th>AD</th>
+      <td>188</td>
+    </tr>
+    <tr>
+      <th>Q9Y6C2</th>
+      <th>AD</th>
+      <td>119</td>
+    </tr>
+    <tr>
+      <th>S4R3U6</th>
+      <th>AD</th>
+      <td>126</td>
+    </tr>
+  </tbody>
+</table>
+<p>323 rows × 1 columns</p>
+</div></div></div>
 </div>
 <p>take only those with different decisions</p>
 <div class="cell tag_hide-input docutils container">
@@ -2142,6 +2210,7 @@ Name: count, dtype: int64
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="plots-for-inspecting-imputations-for-diverging-decisions">
 <h2>Plots for inspecting imputations (for diverging decisions)<a class="headerlink" href="#plots-for-inspecting-imputations-for-diverging-decisions" title="Permalink to this heading">#</a></h2>
@@ -2581,7 +2650,16 @@ but this was not done in the original study which considered several different t
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-frequencies-of-observed-features">Load frequencies of observed features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-scores">Load scores</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#load-frequencies-of-observed-features">Load frequencies of observed features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-qvalues">Assemble qvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-pvalues">Assemble pvalues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assemble-rejected-features">Assemble rejected features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method">Tabulate rejected decisions by method:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method-for-newly-included-features-if-available">Tabulate rejected decisions by method for newly included features (if available)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabulate-rejected-decisions-by-method-for-all-features">Tabulate rejected decisions by method for all features</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plots-for-inspecting-imputations-for-diverging-decisions">Plots for inspecting imputations (for diverging decisions)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-target">Load target</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measurments">Measurments</a></li>
