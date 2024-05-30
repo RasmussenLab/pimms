@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+gaf8d0f3 documentation</title>
+    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+g76e2615 documentation</title>
   
   
   
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gaf8d0f3 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g76e2615 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -392,7 +392,12 @@ document.write(`
 <ul class="simple">
 <li><p>BiocManager could be moved to methods who are installed from BioConductor</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">packages_base_R</span><span class="w"> </span><span class="o">&lt;-</span>
 <span class="w">  </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;BiocManager&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;reshape2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;data.table&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;readr&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;tibble&quot;</span><span class="p">)</span>
@@ -424,6 +429,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loading required package: BiocManager
 
@@ -457,7 +463,12 @@ Loading required package: tibble
 <li><p>seems quite hacky</p></li>
 <li><p>code is only slightly adapted from repo to run here, mainly to install packages on the fly</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">nafunctions</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zero&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.data.frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -738,6 +749,7 @@ Loading required package: tibble
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
@@ -919,7 +931,12 @@ Save the header row for later use.</p></li>
 </div></div>
 </div>
 <p>Uncomment to test certain methods (only for debugging, as at least one method per package is tested using Github Actions)</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># to_test &lt;- c(</span>
 <span class="c1"># &#39;ZERO&#39;,</span>
@@ -957,6 +974,7 @@ Save the header row for later use.</p></li>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Impute and save predictions with original feature and column names</p>
 <div class="cell docutils container">
@@ -1044,6 +1062,7 @@ Save the header row for later use.</p></li>
 </table>
 </div></div>
 </div>
+<p>Transform predictions to long format</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">id.vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">feat_name</span><span class="p">)</span>
@@ -1126,12 +1145,19 @@ Save the header row for later use.</p></li>
 </table>
 </div></div>
 </div>
-<div class="cell docutils container">
+<p>Check dimension of long format dataframe</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dim</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><style>
 .list-inline {list-style: none; margin:0; padding: 0}
@@ -1141,31 +1167,30 @@ Save the header row for later use.</p></li>
 <ol class=list-inline><li>71601</li><li>3</li></ol>
 </div></div>
 </div>
-<div class="cell docutils container">
+<p>Save predictions to disk</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">file.path</span><span class="p">(</span><span class="n">folder_experiment</span><span class="p">,</span>
 <span class="w">                  </span><span class="s">&#39;preds&#39;</span><span class="p">,</span>
 <span class="w">                  </span><span class="nf">paste0</span><span class="p">(</span><span class="s">&#39;pred_all_&#39;</span><span class="p">,</span><span class="w"> </span><span class="nf">toupper</span><span class="p">(</span><span class="n">method</span><span class="p">),</span><span class="w"> </span><span class="s">&#39;.csv&#39;</span><span class="p">))</span>
+<span class="nf">write_csv</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fname</span><span class="p">)</span>
 <span class="n">fname</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_html">'runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv'</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">write_csv</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fname</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Warning message:
 “The `path` argument of `write_csv()` is deprecated as of readr 1.4.0.
 <span class=" -Color -Color-Cyan">ℹ</span> Please use the `file` argument instead.”
 </pre></div>
 </div>
-</div>
+<div class="output text_html">'runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv'</div></div>
 </div>
 </section>
 </section>
