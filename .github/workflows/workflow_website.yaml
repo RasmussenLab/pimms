@@ -1,4 +1,4 @@
-name: Build workflow website on smaller development dataset (for protein groups)
+name: Build workflow website on public Alzheimer dataset (for protein groups)
 on:
   pull_request:
     branches: [main, dev]
