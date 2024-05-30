@@ -1,8 +1,8 @@
 # %% [markdown]
-# # Scikit-learn styple transformers of the data
+# # PIMMS Tutorial: Scikit-learn style transformers
 #
 # 1. Load data into pandas dataframe
-# 2. Fit transformer on training data
+# 2. Fit model on training data, potentially specify validation data
 # 3. Impute only missing values with predictions from model
 #
 # Autoencoders need wide training data, i.e. a sample with all its features' intensities, whereas
@@ -21,7 +21,7 @@ if IN_COLAB:
     except metadata.PackageNotFoundError:
         print("Install PIMMS...")
         # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
-        # !pip install pimms-learn   
+        # !pip install pimms-learn
 
 # %% [markdown]
 # If on colab, please restart the environment and run everything from here on.
@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 
 
 from vaep.plotting.defaults import color_model_mapping
-import vaep.plotting.data 
+import vaep.plotting.data
 import vaep.sampling
 
 from vaep.sklearn.cf_transformer import CollaborativeFilteringTransformer
