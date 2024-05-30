@@ -1,24 +1,33 @@
 # PIMMS
-[![Read the Docs](https://img.shields.io/readthedocs/pimms)](https://readthedocs.org/projects/pimms/) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RasmussenLab/pimms/ci.yaml)](https://github.com/RasmussenLab/pimms/actions)
+[![Read the Docs](https://img.shields.io/readthedocs/pimms)](https://readthedocs.org/projects/pimms/) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RasmussenLab/pimms/ci.yaml)](https://github.com/RasmussenLab/pimms/actions) [![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)
 
 
 PIMMS stands for Proteomics Imputation Modeling Mass Spectrometry 
 and is a hommage to our dear British friends 
 who are missing as part of the EU for far too long already
-(Pimms is also a British summer drink).
+(Pimms is a British summer drink).
 
-The pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
+The publication is accepted in Nature Communications 
+and the pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
 > `PIMMS` was called `vaep` during development.  
-> Before entire refactoring has to been completed the imported package will be
-`vaep`.
+> Before entire refactoring has to been completed the imported package will be `vaep`.
 
-We provide functionality as a python package, an excutable workflow and notebooks.
+We provide functionality as a python package, an excutable workflow or simply in notebooks.
 
-The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this in colab. [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
+For any questions, please [open an issue](https://github.com/RasmussenLab/pimms/issues) or contact me directly.
 
+## Getting started
 
-## Python package
+The models can be used with the scikit-learn interface in the spirit of other scikit-learn imputers. You can try this using our tutorial in colab:
+
+[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
+
+It uses the scikit-learn interface. The PIMMS models in the scikit-learn interface
+can be executed on the entire data or by specifying a valdiation split for checking training process.
+In our experiments overfitting wasn't a big issue, but it's easy to check.
+
+## Install Python package
 
 For interactive use of the models provided in PIMMS, you can use our
 [python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
@@ -28,7 +37,7 @@ The interface is similar to scikit-learn.
 pip install pimms-learn
 ```
 
-Then you can use the models on a pandas DataFrame with missing values. Try this in the tutorial on Colab:
+Then you can use the models on a pandas DataFrame with missing values. You can try this in the tutorial on Colab by uploading your data:
 [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
 
 ## Notebooks as scripts using papermill
@@ -37,13 +46,15 @@ If you want to run a model on your prepared data, you can run notebooks prefixed
 `01_`, i.e. [`project/01_*.ipynb`](https://github.com/RasmussenLab/pimms/tree/HEAD/project) after cloning the repository. Using jupytext also python percentage script versions
 are saved.
 
-```
+```bash
+# navigat to your desired folder
+git clone https://github.com/RasmussenLab/pimms.git # get all notebooks
 cd project # project folder as pwd
+# pip install pimms-learn papermill # if not already installed
 papermill 01_0_split_data.ipynb --help-notebook
 papermill 01_1_train_vae.ipynb --help-notebook
 ```
-
-> Mistyped argument names won't throw an error when using papermill
+> :warning: Mistyped argument names won't throw an error when using papermill, but a warning is printed on the console thanks to my contributions:)
 
 ## PIMMS comparison workflow and differential analysis workflow
 
@@ -55,7 +66,43 @@ It is built on top of
   - the [Snakefile_v2.smk](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow/Snakefile_v2.smk) (v2 of imputation workflow), specified in on configuration
   - the [Snakefile_ald_comparision](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow/Snakefile_ald_comparison.smk) workflow for differential analysis
 
+The associated notebooks are index with `01_*` for the comparsion workflow and `10_*` for the differential analysis workflow. The `project` folder can be copied separately to any location if the package is installed. It's standalone folder. It's main folders are:
 
+```bash
+# project folder:
+project
+│   README.md # see description of notebooks and hints on execution in project folder
+|---config # configuration files for experiments ("workflows")
+|---data # data for experiments
+|---runs # results of experiments
+|---src # source code or binaries for some R packges
+|---tutorials # some tutorials for libraries used in the project
+|---workflow # snakemake workflows
+```
+
+To re-execute the entire workflow locally, have a look at the [configuration files](https://github.com/RasmussenLab/pimms/tree/HEAD/project/config/alzheimer_study) for the published Alzheimer workflow:
+
+- [`config/alzheimer_study/config.yaml`](https://github.com/RasmussenLab/pimms/blob/HEAD/project/config/alzheimer_study/comparison.yaml)
+- [`config/alzheimer_study/comparsion.yaml`](https://github.com/RasmussenLab/pimms/blob/HEAD/project/config/alzheimer_study/config.yaml)
+
+To execute that workflow, follow the Setup instructions below and run the following command in the project folder:
+
+```bash
+# being in the project folder
+snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -n # one core/process, dry-run
+snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c2 # two cores/process, execute
+# after imputation workflow, execute the comparison workflow
+snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c1
+# If you want to build the website locally: https://www.rasmussenlab.org/pimms/
+pip install .[docs]
+pimms-setup-imputation-comparison -f project/runs/alzheimer_study/
+pimms-add-diff-comp -f project/runs/alzheimer_study/ -sf_cp project/runs/alzheimer_study/diff_analysis/AD
+cd project/runs/alzheimer_study/
+sphinx-build -n --keep-going -b html ./ ./_build/
+# open ./_build/index.html
+```
+
+## Setup workflow and development environment
 
 ### Setup comparison workflow
 
@@ -63,7 +110,7 @@ The core funtionality is available as a standalone software on PyPI under the na
 conda (or mamba) and pip to setup an analysis environment. For a detailed description of setting up
 conda (or mamba), see [instructions on setting up a virtual environment](https://github.com/RasmussenLab/pimms/blob/HEAD/docs/venv_setup.md).
 
-Download the repository
+Download the repository:
 
 ```
 git clone https://github.com/RasmussenLab/pimms.git
@@ -80,14 +127,14 @@ mamba env create -n pimms -f environment.yml # faster, less then 5mins
 
 If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment:
 
-### Install development dependencies
+### Install pytorch first (M-chips)
 
 Check how to install pytorch for your system [here](https://pytorch.org/get-started).
 
 - select the version compatible with your cuda version if you have an nvidia gpu or a Mac M-chip.
 
 ```bash
-conda create -n vaep python=3.8 pip
+conda create -n vaep python=3.9 pip
 conda activate vaep
 # Follow instructions on https://pytorch.org/get-started 
 # conda env update -f environment.yml -n vaep # should not install the rest.
@@ -101,28 +148,16 @@ papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_test.ipynb # sec
 python 04_1_train_pimms_models.py # just execute the code
 ```
 
-### Entire development installation
+### Let Snakemake handle installation
 
+If you only want to execute the workflow, you can use snakemake to build the environments for you:
+
+> Snakefile workflow for imputation v1 only support that atm.
 
 ```bash
-conda create -n pimms_dev -c pytorch -c nvidia -c fastai -c bioconda -c plotly -c conda-forge --file requirements.txt --file requirements_R.txt --file requirements_dev.txt
-pip install -e . # other pip dependencies missing
-snakemake --configfile config/single_dev_dataset/example/config.yaml -F -n
+snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n # dry-run
+snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda # execute with one core
 ```
-
-or if you want to update an existing environment
-
-
-```
-conda update  -c defaults -c conda-forge -c fastai -c bioconda -c plotly --file requirements.txt --file requirements_R.txt --file requirements_dev.txt
-```
-
-or using the environment.yml file (can fail on certain systems)
-
-```
-conda env create -f environment.yml
-```
-
 
 ### Troubleshooting
 
@@ -133,16 +168,16 @@ Trouble shoot your R installation by opening jupyter lab
 jupyter lab # open 01_1_train_NAGuideR.ipynb
 ```
 
-## Run an analysis
+## Run example
 
 Change to the [`project` folder](./project) and see it's [README](project/README.md)
-You can subselect models by editing the config file:  [`config.yaml`](project/config/single_dev_dataset/proteinGroups_N50/config.yaml) file.
+You can subselect models by editing the config file:  [`config.yaml`](https://github.com/RasmussenLab/pimms/tree/HEAD/project/config/single_dev_dataset/proteinGroups_N50) file.
 
 ```
 conda activate pimms # activate virtual environment
 cd project # go to project folder
 pwd # so be in ./pimms/project
-snakemake -c1 -p -n # dryrun demo workflow
+snakemake -c1 -p -n # dryrun demo workflow, potentiall add --use-conda
 snakemake -c1 -p
 ```
 
@@ -234,7 +269,3 @@ From the brief description in the table the exact procedure is not always clear.
 | MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | | Missing not at random algorithm using low rank approximation
 | ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
 | ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
-
-
-## Build status
-[![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)
