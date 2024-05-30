@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+g8706c61 documentation</title>
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+g699b4b8 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g8706c61 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g699b4b8 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -164,14 +164,13 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-CART.html">MICE-CART</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MICE-NORM.html">MICE-NORM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
@@ -180,7 +179,6 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SEQKNN.html">SEQKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
@@ -189,6 +187,42 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_2_performance_plots.html">Compare models</a></li>
 
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/10_4_ald_compare_single_pg.html">Compare single features</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 </ul>
 
     </div>
@@ -351,17 +385,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="transfer-predictions-from-naguider">
 <h1>Transfer predictions from NAGuideR<a class="headerlink" href="#transfer-predictions-from-naguider" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">vaep</span>
 <span class="kn">import</span> <span class="nn">vaep.models</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="kn">import</span> <span class="nn">vaep.pandas</span>
+<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 
 <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
@@ -369,8 +409,14 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># catch passed parameters</span>
 <span class="n">args</span> <span class="o">=</span> <span class="kc">None</span>
@@ -378,6 +424,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Papermill script parameters:</p>
 <div class="cell tag_parameters docutils container">
@@ -396,14 +443,19 @@ document.write(`
 <div class="cell tag_injected-parameters docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
-<span class="n">dumps</span> <span class="o">=</span> <span class="s2">&quot;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_BPCA.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_COLMEDIAN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQ.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQROB.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IRM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_KNN_IMPUTE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_LLS.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-CART.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-NORM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINDET.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINIMUM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINPROB.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MLE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MSIMPUTE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_PI.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_QRILC.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_RF.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ROWMEDIAN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SEQKNN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SVDMETHOD.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_TRKNN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ZERO.csv&quot;</span>
-<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/dev_dataset_small/proteinGroups_N50&quot;</span>
+<span class="n">dumps</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&quot;</span>
+<span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>Some argument transformations</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -411,53 +463,72 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/data&#39;),
- &#39;dumps&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_BPCA.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_COLMEDIAN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQ.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQROB.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IRM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_KNN_IMPUTE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_LLS.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-CART.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-NORM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINDET.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINIMUM.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINPROB.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MLE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MSIMPUTE.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_PI.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_QRILC.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_RF.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ROWMEDIAN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SEQKNN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SVDMETHOD.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_TRKNN.csv,runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ZERO.csv&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
+ &#39;dumps&#39;: &#39;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
- &#39;folder_experiment&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
+ &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
  &#39;identifer_str&#39;: &#39;_all_&#39;,
- &#39;out_figures&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/figures&#39;),
- &#39;out_folder&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_metrics&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_models&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50&#39;),
- &#39;out_preds&#39;: Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds&#39;)}
+ &#39;out_figures&#39;: Path(&#39;runs/alzheimer_study/figures&#39;),
+ &#39;out_folder&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_metrics&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_models&#39;: Path(&#39;runs/alzheimer_study&#39;),
+ &#39;out_preds&#39;: Path(&#39;runs/alzheimer_study/preds&#39;)}
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span> <span class="o">=</span> <span class="p">{}</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>load data splits</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_dataset_small/proteinGroups_N50/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
 </div>
 <p>Validation and test data split of simulated missing values</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">val_pred_fake_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -482,35 +553,35 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>Gene Names</th>
+      <th>protein groups</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SEH1L</th>
-      <td>27.180</td>
+      <th>Sample_158</th>
+      <th>Q9UN70;Q9UN70-2</th>
+      <td>14.630</td>
     </tr>
     <tr>
-      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SLC9A3R1</th>
-      <td>30.259</td>
+      <th>Sample_050</th>
+      <th>Q9Y287</th>
+      <td>15.755</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>KYNU</th>
-      <td>30.629</td>
+      <th>Sample_107</th>
+      <th>Q8N475;Q8N475-2</th>
+      <td>15.029</td>
     </tr>
     <tr>
-      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>ADD3</th>
-      <td>24.541</td>
+      <th>Sample_199</th>
+      <th>P06307</th>
+      <td>19.376</td>
     </tr>
     <tr>
-      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>CALM2;CALM1</th>
-      <td>33.934</td>
+      <th>Sample_067</th>
+      <th>Q5VUB5</th>
+      <td>15.309</td>
     </tr>
     <tr>
       <th>...</th>
@@ -518,42 +589,48 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
       <td>...</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>PPP2R4;DKFZp781M17165</th>
-      <td>28.717</td>
+      <th>Sample_111</th>
+      <th>F6SYF8;Q9UBP4</th>
+      <td>22.822</td>
     </tr>
     <tr>
-      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>MED23</th>
-      <td>24.966</td>
+      <th>Sample_002</th>
+      <th>A0A0A0MT36</th>
+      <td>18.165</td>
     </tr>
     <tr>
-      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RBMXL1</th>
-      <td>26.654</td>
+      <th>Sample_049</th>
+      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
+      <td>15.525</td>
     </tr>
     <tr>
-      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SMARCA1</th>
-      <td>27.917</td>
+      <th>Sample_182</th>
+      <th>Q8NFT8</th>
+      <td>14.379</td>
     </tr>
     <tr>
-      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RGPD3;RGPD4</th>
-      <td>24.289</td>
+      <th>Sample_123</th>
+      <th>Q16853;Q16853-2</th>
+      <td>14.504</td>
     </tr>
   </tbody>
 </table>
-<p>9327 rows × 1 columns</p>
+<p>12600 rows × 1 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred_fake_na</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;observed&#39;</span><span class="p">)</span>
 <span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -579,48 +656,59 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
   <tbody>
     <tr>
       <th>count</th>
-      <td>9,327.000</td>
+      <td>12,600.000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>27.230</td>
+      <td>16.339</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>2.888</td>
+      <td>2.741</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>19.974</td>
+      <td>7.209</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>24.905</td>
+      <td>14.412</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>26.929</td>
+      <td>15.935</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>29.174</td>
+      <td>17.910</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>37.689</td>
+      <td>30.140</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find and load prediction files, filter for validation and test data</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">entire_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">dumps</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
@@ -631,34 +719,38 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_BPCA.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_COLMEDIAN.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQ.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQROB.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IRM.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_KNN_IMPUTE.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_LLS.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-CART.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-NORM.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINDET.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINIMUM.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINPROB.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MLE.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MSIMPUTE.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_PI.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_QRILC.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_RF.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ROWMEDIAN.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SEQKNN.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SVDMETHOD.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_TRKNN.csv&#39;),
- Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ZERO.csv&#39;)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Path(&#39;runs/alzheimer_study/preds/pred_all_BPCA.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQ.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_IRM.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_LLS.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MINDET.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_TRKNN.csv&#39;),
+ Path(&#39;runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;)]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
 <span class="n">idx_real_na</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
@@ -696,105 +788,104 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/dev_datase
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_BPCA.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_COLMEDIAN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IMPSEQ.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IMPSEQROB.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IRM.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_LLS.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-CART.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MICE-CART.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MICE-CART.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MICE-CART.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MICE-NORM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MICE-NORM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MICE-NORM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MICE-NORM.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINDET.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINIMUM.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINPROB.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MLE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MSIMPUTE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_PI.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_QRILC.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_RF.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_ROWMEDIAN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SEQKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_SEQKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_SEQKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_SEQKNN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_SVDMETHOD.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_TRKNN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_all_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_ZERO.csv&#39;)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_BPCA.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_BPCA.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_BPCA.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_BPCA.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_COLMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_COLMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_COLMEDIAN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQ.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQ.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQROB.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IRM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IRM.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_KNN_IMPUTE.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_LLS.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_LLS.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_LLS.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_LLS.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINDET.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINDET.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINDET.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINDET.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINIMUM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINIMUM.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINIMUM.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINPROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINPROB.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINPROB.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_QRILC.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_QRILC.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_RF.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_RF.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ROWMEDIAN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ROWMEDIAN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_SVDMETHOD.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_SVDMETHOD.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_TRKNN.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_TRKNN.csv&#39;)
+vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ZERO.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ZERO.csv&#39;)
+vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ZERO.csv&#39;)
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">val_pred_fake_na</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -823,23 +914,23 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <th>IRM</th>
       <th>KNN_IMPUTE</th>
       <th>LLS</th>
-      <th>MICE-CART</th>
-      <th>MICE-NORM</th>
+      <th>MINDET</th>
+      <th>MINIMUM</th>
       <th>...</th>
       <th>MLE</th>
       <th>MSIMPUTE</th>
+      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
       <th>ROWMEDIAN</th>
-      <th>SEQKNN</th>
       <th>SVDMETHOD</th>
       <th>TRKNN</th>
       <th>ZERO</th>
     </tr>
     <tr>
       <th>Sample ID</th>
-      <th>Gene Names</th>
+      <th>protein groups</th>
       <th></th>
       <th></th>
       <th></th>
@@ -865,128 +956,128 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
   </thead>
   <tbody>
     <tr>
-      <th>2020_01_15_13_56_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SEH1L</th>
-      <td>27.180</td>
-      <td>26.560</td>
-      <td>26.936</td>
-      <td>26.530</td>
-      <td>2,489.427</td>
-      <td>26.156</td>
-      <td>26.198</td>
-      <td>26.976</td>
-      <td>25.002</td>
-      <td>26.340</td>
-      <td>...</td>
-      <td>2,489.427</td>
-      <td>26.243</td>
-      <td>21.912</td>
-      <td>26.115</td>
-      <td>26.772</td>
-      <td>28.397</td>
-      <td>26.395</td>
-      <td>27.094</td>
-      <td>26.818</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2020_01_04_10_03_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SLC9A3R1</th>
-      <td>30.259</td>
-      <td>28.092</td>
-      <td>26.764</td>
-      <td>28.323</td>
-      <td>2,655.110</td>
-      <td>27.482</td>
-      <td>27.482</td>
-      <td>27.612</td>
-      <td>27.842</td>
-      <td>28.726</td>
-      <td>...</td>
-      <td>27.270</td>
-      <td>26.741</td>
-      <td>22.762</td>
-      <td>28.188</td>
-      <td>28.969</td>
-      <td>30.188</td>
-      <td>27.484</td>
-      <td>27.021</td>
-      <td>28.079</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>KYNU</th>
-      <td>30.629</td>
-      <td>30.857</td>
-      <td>27.666</td>
-      <td>31.074</td>
+      <th>Sample_158</th>
+      <th>Q9UN70;Q9UN70-2</th>
+      <td>14.630</td>
+      <td>15.469</td>
+      <td>16.800</td>
       <td>NaN</td>
-      <td>31.058</td>
-      <td>30.769</td>
-      <td>31.011</td>
-      <td>31.042</td>
-      <td>30.953</td>
+      <td>NaN</td>
+      <td>15.871</td>
+      <td>15.937</td>
+      <td>15.858</td>
+      <td>11.916</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,411.950</td>
-      <td>29.974</td>
-      <td>23.862</td>
-      <td>28.832</td>
-      <td>30.791</td>
-      <td>30.994</td>
-      <td>30.890</td>
-      <td>27.938</td>
-      <td>30.934</td>
+      <td>2,513.638</td>
+      <td>7.043</td>
+      <td>8.369</td>
+      <td>12.608</td>
+      <td>14.562</td>
+      <td>15.621</td>
+      <td>15.752</td>
+      <td>17.206</td>
+      <td>15.700</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>ADD3</th>
-      <td>24.541</td>
-      <td>26.012</td>
-      <td>27.883</td>
-      <td>26.199</td>
+      <th>Sample_050</th>
+      <th>Q9Y287</th>
+      <td>15.755</td>
+      <td>16.453</td>
+      <td>17.288</td>
       <td>NaN</td>
-      <td>26.414</td>
-      <td>25.867</td>
-      <td>26.651</td>
-      <td>25.208</td>
-      <td>26.056</td>
+      <td>16.106</td>
+      <td>17.472</td>
+      <td>16.961</td>
+      <td>17.058</td>
+      <td>12.900</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>31.437</td>
-      <td>24.470</td>
-      <td>22.906</td>
-      <td>22.538</td>
-      <td>25.854</td>
-      <td>26.171</td>
-      <td>26.139</td>
-      <td>28.211</td>
-      <td>26.198</td>
+      <td>19.829</td>
+      <td>7.222</td>
+      <td>8.482</td>
+      <td>12.988</td>
+      <td>15.983</td>
+      <td>17.079</td>
+      <td>17.221</td>
+      <td>17.807</td>
+      <td>16.738</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2020_02_05_20_55_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>CALM2;CALM1</th>
-      <td>33.934</td>
-      <td>33.543</td>
-      <td>28.877</td>
-      <td>33.720</td>
+      <th>Sample_107</th>
+      <th>Q8N475;Q8N475-2</th>
+      <td>15.029</td>
+      <td>13.110</td>
+      <td>17.187</td>
       <td>NaN</td>
-      <td>34.019</td>
-      <td>33.929</td>
-      <td>32.876</td>
-      <td>33.767</td>
-      <td>33.854</td>
+      <td>2,582.130</td>
+      <td>12.680</td>
+      <td>15.437</td>
+      <td>14.397</td>
+      <td>12.313</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,560.813</td>
-      <td>31.476</td>
-      <td>24.879</td>
-      <td>30.102</td>
-      <td>33.459</td>
-      <td>32.923</td>
-      <td>33.711</td>
-      <td>29.077</td>
-      <td>31.534</td>
+      <td>2,582.130</td>
+      <td>6.225</td>
+      <td>7.481</td>
+      <td>11.750</td>
+      <td>13.433</td>
+      <td>14.721</td>
+      <td>14.846</td>
+      <td>17.434</td>
+      <td>13.776</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_199</th>
+      <th>P06307</th>
+      <td>19.376</td>
+      <td>19.639</td>
+      <td>16.711</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>19.632</td>
+      <td>18.861</td>
+      <td>19.005</td>
+      <td>12.285</td>
+      <td>7.068</td>
+      <td>...</td>
+      <td>2,483.120</td>
+      <td>8.694</td>
+      <td>9.476</td>
+      <td>11.689</td>
+      <td>17.496</td>
+      <td>19.129</td>
+      <td>18.973</td>
+      <td>17.111</td>
+      <td>19.015</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_067</th>
+      <th>Q5VUB5</th>
+      <td>15.309</td>
+      <td>15.465</td>
+      <td>16.743</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>15.976</td>
+      <td>15.079</td>
+      <td>15.104</td>
+      <td>11.827</td>
+      <td>7.068</td>
+      <td>...</td>
+      <td>2,569.564</td>
+      <td>6.384</td>
+      <td>7.657</td>
+      <td>11.832</td>
+      <td>12.681</td>
+      <td>14.959</td>
+      <td>14.726</td>
+      <td>17.031</td>
+      <td>14.699</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1015,151 +1106,163 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <td>...</td>
     </tr>
     <tr>
-      <th>2020_05_20_15_35_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>PPP2R4;DKFZp781M17165</th>
-      <td>28.717</td>
-      <td>28.356</td>
-      <td>27.666</td>
-      <td>28.360</td>
+      <th>Sample_111</th>
+      <th>F6SYF8;Q9UBP4</th>
+      <td>22.822</td>
+      <td>22.994</td>
+      <td>17.042</td>
       <td>NaN</td>
-      <td>29.042</td>
-      <td>28.674</td>
-      <td>27.554</td>
-      <td>28.054</td>
-      <td>28.250</td>
+      <td>2,634.108</td>
+      <td>22.983</td>
+      <td>22.837</td>
+      <td>22.836</td>
+      <td>12.161</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,411.950</td>
-      <td>27.191</td>
-      <td>23.488</td>
-      <td>25.650</td>
-      <td>28.297</td>
-      <td>28.379</td>
-      <td>28.348</td>
-      <td>27.877</td>
-      <td>27.833</td>
+      <td>2,634.108</td>
+      <td>10.576</td>
+      <td>10.906</td>
+      <td>13.381</td>
+      <td>22.096</td>
+      <td>22.874</td>
+      <td>22.918</td>
+      <td>17.330</td>
+      <td>22.872</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2020_03_11_11_25_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>MED23</th>
-      <td>24.966</td>
-      <td>24.068</td>
-      <td>28.024</td>
-      <td>24.065</td>
+      <th>Sample_002</th>
+      <th>A0A0A0MT36</th>
+      <td>18.165</td>
+      <td>15.882</td>
+      <td>16.792</td>
       <td>NaN</td>
-      <td>24.942</td>
-      <td>24.429</td>
-      <td>23.591</td>
-      <td>23.557</td>
-      <td>24.237</td>
-      <td>...</td>
-      <td>2,405.878</td>
-      <td>23.280</td>
-      <td>24.425</td>
-      <td>19.159</td>
-      <td>23.610</td>
-      <td>24.092</td>
-      <td>24.284</td>
-      <td>28.370</td>
-      <td>24.326</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2020_03_07_18_15_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RBMXL1</th>
-      <td>26.654</td>
-      <td>25.310</td>
-      <td>27.899</td>
-      <td>25.713</td>
       <td>NaN</td>
-      <td>26.489</td>
-      <td>24.439</td>
-      <td>25.663</td>
-      <td>25.427</td>
-      <td>25.111</td>
+      <td>17.237</td>
+      <td>15.446</td>
+      <td>15.579</td>
+      <td>12.586</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,561.146</td>
-      <td>23.272</td>
-      <td>24.347</td>
-      <td>20.550</td>
-      <td>24.833</td>
-      <td>24.882</td>
-      <td>24.804</td>
-      <td>28.146</td>
-      <td>24.912</td>
+      <td>2,448.503</td>
+      <td>6.517</td>
+      <td>7.848</td>
+      <td>12.660</td>
+      <td>13.915</td>
+      <td>15.838</td>
+      <td>15.877</td>
+      <td>16.879</td>
+      <td>15.671</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>SMARCA1</th>
-      <td>27.917</td>
-      <td>27.982</td>
-      <td>28.072</td>
-      <td>27.953</td>
-      <td>2,580.391</td>
-      <td>28.596</td>
-      <td>28.126</td>
-      <td>28.426</td>
-      <td>27.909</td>
-      <td>27.918</td>
+      <th>Sample_049</th>
+      <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
+      <td>15.525</td>
+      <td>15.406</td>
+      <td>17.032</td>
+      <td>NaN</td>
+      <td>2,487.550</td>
+      <td>15.313</td>
+      <td>15.995</td>
+      <td>15.903</td>
+      <td>12.352</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,580.391</td>
-      <td>25.044</td>
-      <td>23.768</td>
-      <td>26.038</td>
-      <td>28.159</td>
-      <td>28.194</td>
-      <td>27.996</td>
-      <td>28.322</td>
-      <td>27.329</td>
+      <td>2,487.550</td>
+      <td>6.409</td>
+      <td>8.155</td>
+      <td>11.629</td>
+      <td>13.459</td>
+      <td>15.768</td>
+      <td>16.278</td>
+      <td>17.215</td>
+      <td>15.574</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2020_05_20_12_33_Q-Exactive-HF-X-Orbitrap_6070</th>
-      <th>RGPD3;RGPD4</th>
-      <td>24.289</td>
-      <td>24.521</td>
-      <td>27.366</td>
-      <td>24.485</td>
-      <td>2,510.969</td>
-      <td>24.577</td>
-      <td>24.216</td>
-      <td>24.342</td>
-      <td>23.946</td>
-      <td>25.137</td>
+      <th>Sample_182</th>
+      <th>Q8NFT8</th>
+      <td>14.379</td>
+      <td>14.322</td>
+      <td>16.764</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>14.873</td>
+      <td>14.675</td>
+      <td>13.456</td>
+      <td>12.504</td>
+      <td>7.068</td>
       <td>...</td>
-      <td>2,510.969</td>
-      <td>23.768</td>
-      <td>23.139</td>
-      <td>23.921</td>
-      <td>24.479</td>
-      <td>25.215</td>
-      <td>24.095</td>
-      <td>27.520</td>
-      <td>24.876</td>
+      <td>2,426.191</td>
+      <td>4.557</td>
+      <td>6.287</td>
+      <td>12.007</td>
+      <td>12.494</td>
+      <td>13.943</td>
+      <td>13.995</td>
+      <td>17.125</td>
+      <td>14.518</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Sample_123</th>
+      <th>Q16853;Q16853-2</th>
+      <td>14.504</td>
+      <td>14.582</td>
+      <td>16.686</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>14.748</td>
+      <td>14.824</td>
+      <td>14.931</td>
+      <td>12.689</td>
+      <td>7.068</td>
+      <td>...</td>
+      <td>2,461.806</td>
+      <td>6.402</td>
+      <td>7.664</td>
+      <td>12.859</td>
+      <td>13.644</td>
+      <td>14.747</td>
+      <td>14.849</td>
+      <td>16.981</td>
+      <td>14.485</td>
       <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>9327 rows × 23 columns</p>
+<p>12600 rows × 21 columns</p>
 </div></div></div>
 </div>
 <p>Metrics for simulated missing values (NA)</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
 <span class="n">d_metrics</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">val_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
@@ -1184,22 +1287,20 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <th></th>
       <th>BPCA</th>
       <th>COLMEDIAN</th>
-      <th>IMPSEQ</th>
       <th>IMPSEQROB</th>
       <th>IRM</th>
       <th>KNN_IMPUTE</th>
       <th>LLS</th>
-      <th>MICE-CART</th>
-      <th>MICE-NORM</th>
       <th>MINDET</th>
-      <th>...</th>
+      <th>MINIMUM</th>
+      <th>MINPROB</th>
       <th>MLE</th>
       <th>MSIMPUTE</th>
+      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
       <th>ROWMEDIAN</th>
-      <th>SEQKNN</th>
       <th>SVDMETHOD</th>
       <th>TRKNN</th>
       <th>ZERO</th>
@@ -1208,75 +1309,69 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
   <tbody>
     <tr>
       <th>MSE</th>
-      <td>0.720</td>
-      <td>7.387</td>
-      <td>0.710</td>
-      <td>5,675,240.507</td>
-      <td>1.047</td>
-      <td>1.223</td>
-      <td>4.003</td>
-      <td>0.876</td>
-      <td>0.834</td>
-      <td>22.039</td>
-      <td>...</td>
-      <td>3,929,184.222</td>
-      <td>1.794</td>
-      <td>19.840</td>
-      <td>8.954</td>
-      <td>0.935</td>
-      <td>2.645</td>
-      <td>0.812</td>
-      <td>7.472</td>
-      <td>1.195</td>
-      <td>739.006</td>
+      <td>0.388</td>
+      <td>7.712</td>
+      <td>6,179,879.361</td>
+      <td>0.709</td>
+      <td>0.702</td>
+      <td>108.639</td>
+      <td>25.619</td>
+      <td>97.284</td>
+      <td>25.851</td>
+      <td>5,393,471.689</td>
+      <td>94.670</td>
+      <td>74.316</td>
+      <td>23.022</td>
+      <td>4.397</td>
+      <td>0.453</td>
+      <td>0.695</td>
+      <td>8.040</td>
+      <td>0.426</td>
+      <td>281.082</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.574</td>
-      <td>2.286</td>
-      <td>0.568</td>
-      <td>2,309.433</td>
-      <td>0.757</td>
-      <td>0.733</td>
-      <td>0.834</td>
-      <td>0.640</td>
-      <td>0.638</td>
-      <td>3.928</td>
-      <td>...</td>
-      <td>1,619.653</td>
-      <td>1.063</td>
-      <td>3.645</td>
-      <td>2.462</td>
-      <td>0.667</td>
-      <td>1.253</td>
-      <td>0.629</td>
-      <td>2.282</td>
-      <td>0.728</td>
-      <td>27.041</td>
+      <td>0.406</td>
+      <td>2.204</td>
+      <td>2,433.435</td>
+      <td>0.575</td>
+      <td>0.535</td>
+      <td>0.695</td>
+      <td>4.267</td>
+      <td>9.468</td>
+      <td>4.268</td>
+      <td>2,132.119</td>
+      <td>9.625</td>
+      <td>8.471</td>
+      <td>3.957</td>
+      <td>1.635</td>
+      <td>0.446</td>
+      <td>0.580</td>
+      <td>2.283</td>
+      <td>0.436</td>
+      <td>16.536</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>...</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
-      <td>2,195.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
+      <td>2,892.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1290,8 +1385,6 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
-      <td>...</td>
-      <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
@@ -1304,18 +1397,23 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     </tr>
   </tbody>
 </table>
-<p>4 rows × 22 columns</p>
 </div></div></div>
 </div>
 <section id="test-datasplit">
 <h2>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">added_metrics</span> <span class="o">=</span> <span class="n">d_metrics</span><span class="o">.</span><span class="n">add_metrics</span><span class="p">(</span><span class="n">test_pred_fake_na</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;test_fake_na&#39;</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">added_metrics</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
@@ -1340,22 +1438,20 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <th></th>
       <th>BPCA</th>
       <th>COLMEDIAN</th>
-      <th>IMPSEQ</th>
       <th>IMPSEQROB</th>
       <th>IRM</th>
       <th>KNN_IMPUTE</th>
       <th>LLS</th>
-      <th>MICE-CART</th>
-      <th>MICE-NORM</th>
       <th>MINDET</th>
-      <th>...</th>
+      <th>MINIMUM</th>
+      <th>MINPROB</th>
       <th>MLE</th>
       <th>MSIMPUTE</th>
+      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
       <th>ROWMEDIAN</th>
-      <th>SEQKNN</th>
       <th>SVDMETHOD</th>
       <th>TRKNN</th>
       <th>ZERO</th>
@@ -1364,75 +1460,69 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
   <tbody>
     <tr>
       <th>MSE</th>
-      <td>0.821</td>
-      <td>7.904</td>
-      <td>0.799</td>
-      <td>5,664,599.976</td>
-      <td>1.147</td>
-      <td>1.274</td>
-      <td>3.339</td>
-      <td>0.951</td>
-      <td>0.891</td>
-      <td>21.700</td>
-      <td>...</td>
-      <td>3,921,428.382</td>
-      <td>1.841</td>
-      <td>19.567</td>
-      <td>8.857</td>
-      <td>1.031</td>
-      <td>2.860</td>
-      <td>0.869</td>
-      <td>8.023</td>
-      <td>1.225</td>
-      <td>736.164</td>
+      <td>0.557</td>
+      <td>7.941</td>
+      <td>6,227,545.432</td>
+      <td>0.834</td>
+      <td>0.870</td>
+      <td>0.688</td>
+      <td>24.975</td>
+      <td>95.562</td>
+      <td>25.130</td>
+      <td>5,505,296.129</td>
+      <td>93.951</td>
+      <td>73.576</td>
+      <td>22.552</td>
+      <td>4.326</td>
+      <td>0.578</td>
+      <td>0.843</td>
+      <td>8.370</td>
+      <td>0.562</td>
+      <td>277.956</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.607</td>
-      <td>2.363</td>
-      <td>0.598</td>
-      <td>2,309.947</td>
-      <td>0.787</td>
-      <td>0.729</td>
-      <td>0.856</td>
-      <td>0.665</td>
-      <td>0.655</td>
-      <td>3.850</td>
-      <td>...</td>
-      <td>1,621.030</td>
-      <td>1.063</td>
-      <td>3.550</td>
-      <td>2.454</td>
-      <td>0.688</td>
-      <td>1.314</td>
-      <td>0.647</td>
-      <td>2.367</td>
-      <td>0.745</td>
-      <td>26.979</td>
+      <td>0.453</td>
+      <td>2.217</td>
+      <td>2,451.991</td>
+      <td>0.597</td>
+      <td>0.578</td>
+      <td>0.524</td>
+      <td>4.190</td>
+      <td>9.369</td>
+      <td>4.182</td>
+      <td>2,175.538</td>
+      <td>9.580</td>
+      <td>8.417</td>
+      <td>3.900</td>
+      <td>1.631</td>
+      <td>0.483</td>
+      <td>0.624</td>
+      <td>2.314</td>
+      <td>0.470</td>
+      <td>16.437</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>...</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
-      <td>2,207.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
+      <td>2,976.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1446,8 +1536,6 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
-      <td>...</td>
-      <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
@@ -1460,10 +1548,14 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     </tr>
   </tbody>
 </table>
-<p>4 rows × 22 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
     <span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">column_levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
@@ -1471,6 +1563,7 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1505,18 +1598,18 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     <tr>
       <th rowspan="4" valign="top">BPCA</th>
       <th>MSE</th>
-      <td>0.720</td>
-      <td>0.821</td>
+      <td>0.388</td>
+      <td>0.557</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.574</td>
-      <td>0.607</td>
+      <td>0.406</td>
+      <td>0.453</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>2,195.000</td>
-      <td>2,207.000</td>
+      <td>2,892.000</td>
+      <td>2,976.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1526,8 +1619,8 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     <tr>
       <th>COLMEDIAN</th>
       <th>MSE</th>
-      <td>7.387</td>
-      <td>7.904</td>
+      <td>7.712</td>
+      <td>7.941</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1544,18 +1637,18 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     <tr>
       <th rowspan="4" valign="top">ZERO</th>
       <th>MSE</th>
-      <td>739.006</td>
-      <td>736.164</td>
+      <td>281.082</td>
+      <td>277.956</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>27.041</td>
-      <td>26.979</td>
+      <td>16.536</td>
+      <td>16.437</td>
     </tr>
     <tr>
       <th>N</th>
-      <td>2,195.000</td>
-      <td>2,207.000</td>
+      <td>2,892.000</td>
+      <td>2,976.000</td>
     </tr>
     <tr>
       <th>prop</th>
@@ -1564,10 +1657,15 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
     </tr>
   </tbody>
 </table>
-<p>88 rows × 2 columns</p>
+<p>76 rows × 2 columns</p>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">order_methods</span> <span class="o">=</span> <span class="n">metrics_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">IndexSlice</span><span class="p">[:,</span>
                                              <span class="s1">&#39;MAE&#39;</span><span class="p">],</span> <span class="s1">&#39;valid_fake_na&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
@@ -1575,49 +1673,58 @@ vaep - INFO     Save fname = Path(&#39;runs/dev_dataset_small/proteinGroups_N50/
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model       metric_name
-IMPSEQ      MAE               0.568
-BPCA        MAE               0.574
-SEQKNN      MAE               0.629
-MICE-NORM   MAE               0.638
-MICE-CART   MAE               0.640
-RF          MAE               0.667
-TRKNN       MAE               0.728
-KNN_IMPUTE  MAE               0.733
-IRM         MAE               0.757
-LLS         MAE               0.834
-MSIMPUTE    MAE               1.063
-ROWMEDIAN   MAE               1.253
-SVDMETHOD   MAE               2.282
-COLMEDIAN   MAE               2.286
-QRILC       MAE               2.462
-PI          MAE               3.645
-MINDET      MAE               3.928
-MINPROB     MAE               4.028
-MINIMUM     MAE               6.970
-ZERO        MAE              27.041
-MLE         MAE           1,619.653
-IMPSEQROB   MAE           2,309.433
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
+BPCA           MAE               0.406
+TRKNN          MAE               0.436
+RF             MAE               0.446
+KNN_IMPUTE     MAE               0.535
+IRM            MAE               0.575
+ROWMEDIAN      MAE               0.580
+LLS            MAE               0.695
+QRILC          MAE               1.635
+COLMEDIAN      MAE               2.204
+SVDMETHOD      MAE               2.283
+PI             MAE               3.957
+MINDET         MAE               4.267
+MINPROB        MAE               4.268
+MSIMPUTE_MNAR  MAE               8.471
+MINIMUM        MAE               9.468
+MSIMPUTE       MAE               9.625
+ZERO           MAE              16.536
+MLE            MAE           2,132.119
+IMPSEQROB      MAE           2,433.435
 Name: valid_fake_na, dtype: float64
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top_5</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">order_methods</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">6</span><span class="p">]]</span>
 <span class="n">top_5</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;observed&#39;, &#39;IMPSEQ&#39;, &#39;BPCA&#39;, &#39;SEQKNN&#39;, &#39;MICE-NORM&#39;, &#39;MICE-CART&#39;, &#39;RF&#39;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;observed&#39;, &#39;BPCA&#39;, &#39;TRKNN&#39;, &#39;RF&#39;, &#39;KNN_IMPUTE&#39;, &#39;IRM&#39;, &#39;ROWMEDIAN&#39;]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">ax</span><span class="p">,</span> <span class="n">errors_bind</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">plot_errors_binned</span><span class="p">(</span>
@@ -1630,87 +1737,88 @@ Name: valid_fake_na, dtype: float64
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/dev_dataset_small/proteinGroups_N50/figures/NAGuideR_errors_per_bin_val.png
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/NAGuideR_errors_per_bin_val.png
 </pre></div>
 </div>
-<img alt="_images/c650af798da3ca3513d60dd29e9ea29557767058fd0aa8ab1f1e80faf3745986.png" src="_images/c650af798da3ca3513d60dd29e9ea29557767058fd0aa8ab1f1e80faf3745986.png" />
+<img alt="_images/2f6b9d72665fb0b1789037940ea1e95f962a6cfedb26b35682f0acfdefd525c6.png" src="_images/2f6b9d72665fb0b1789037940ea1e95f962a6cfedb26b35682f0acfdefd525c6.png" />
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files_out</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;pred_val_BPCA.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_BPCA.csv&#39;,
- &#39;pred_test_BPCA.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_BPCA.csv&#39;,
- &#39;pred_real_na_BPCA.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_BPCA.csv&#39;,
- &#39;pred_val_COLMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_COLMEDIAN.csv&#39;,
- &#39;pred_test_COLMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_COLMEDIAN.csv&#39;,
- &#39;pred_real_na_COLMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_COLMEDIAN.csv&#39;,
- &#39;pred_val_IMPSEQ.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IMPSEQ.csv&#39;,
- &#39;pred_test_IMPSEQ.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IMPSEQ.csv&#39;,
- &#39;pred_real_na_IMPSEQ.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IMPSEQ.csv&#39;,
- &#39;pred_val_IMPSEQROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IMPSEQROB.csv&#39;,
- &#39;pred_test_IMPSEQROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IMPSEQROB.csv&#39;,
- &#39;pred_real_na_IMPSEQROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IMPSEQROB.csv&#39;,
- &#39;pred_val_IRM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_IRM.csv&#39;,
- &#39;pred_test_IRM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_IRM.csv&#39;,
- &#39;pred_real_na_IRM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_IRM.csv&#39;,
- &#39;pred_val_KNN_IMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_KNN_IMPUTE.csv&#39;,
- &#39;pred_test_KNN_IMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_KNN_IMPUTE.csv&#39;,
- &#39;pred_real_na_KNN_IMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_KNN_IMPUTE.csv&#39;,
- &#39;pred_val_LLS.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_LLS.csv&#39;,
- &#39;pred_test_LLS.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_LLS.csv&#39;,
- &#39;pred_real_na_LLS.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_LLS.csv&#39;,
- &#39;pred_val_MICE-CART.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MICE-CART.csv&#39;,
- &#39;pred_test_MICE-CART.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MICE-CART.csv&#39;,
- &#39;pred_real_na_MICE-CART.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MICE-CART.csv&#39;,
- &#39;pred_val_MICE-NORM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MICE-NORM.csv&#39;,
- &#39;pred_test_MICE-NORM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MICE-NORM.csv&#39;,
- &#39;pred_real_na_MICE-NORM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MICE-NORM.csv&#39;,
- &#39;pred_val_MINDET.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINDET.csv&#39;,
- &#39;pred_test_MINDET.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINDET.csv&#39;,
- &#39;pred_real_na_MINDET.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINDET.csv&#39;,
- &#39;pred_val_MINIMUM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINIMUM.csv&#39;,
- &#39;pred_test_MINIMUM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINIMUM.csv&#39;,
- &#39;pred_real_na_MINIMUM.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINIMUM.csv&#39;,
- &#39;pred_val_MINPROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MINPROB.csv&#39;,
- &#39;pred_test_MINPROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MINPROB.csv&#39;,
- &#39;pred_real_na_MINPROB.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MINPROB.csv&#39;,
- &#39;pred_val_MLE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MLE.csv&#39;,
- &#39;pred_test_MLE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MLE.csv&#39;,
- &#39;pred_real_na_MLE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MLE.csv&#39;,
- &#39;pred_val_MSIMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_MSIMPUTE.csv&#39;,
- &#39;pred_test_MSIMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_MSIMPUTE.csv&#39;,
- &#39;pred_real_na_MSIMPUTE.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_MSIMPUTE.csv&#39;,
- &#39;pred_val_PI.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_PI.csv&#39;,
- &#39;pred_test_PI.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_PI.csv&#39;,
- &#39;pred_real_na_PI.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_PI.csv&#39;,
- &#39;pred_val_QRILC.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_QRILC.csv&#39;,
- &#39;pred_test_QRILC.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_QRILC.csv&#39;,
- &#39;pred_real_na_QRILC.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_QRILC.csv&#39;,
- &#39;pred_val_RF.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_RF.csv&#39;,
- &#39;pred_test_RF.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_RF.csv&#39;,
- &#39;pred_real_na_RF.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_RF.csv&#39;,
- &#39;pred_val_ROWMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_ROWMEDIAN.csv&#39;,
- &#39;pred_test_ROWMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_ROWMEDIAN.csv&#39;,
- &#39;pred_real_na_ROWMEDIAN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_ROWMEDIAN.csv&#39;,
- &#39;pred_val_SEQKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_SEQKNN.csv&#39;,
- &#39;pred_test_SEQKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_SEQKNN.csv&#39;,
- &#39;pred_real_na_SEQKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_SEQKNN.csv&#39;,
- &#39;pred_val_SVDMETHOD.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_SVDMETHOD.csv&#39;,
- &#39;pred_test_SVDMETHOD.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_SVDMETHOD.csv&#39;,
- &#39;pred_real_na_SVDMETHOD.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_SVDMETHOD.csv&#39;,
- &#39;pred_val_TRKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_TRKNN.csv&#39;,
- &#39;pred_test_TRKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_TRKNN.csv&#39;,
- &#39;pred_real_na_TRKNN.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_TRKNN.csv&#39;,
- &#39;pred_val_ZERO.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_val_ZERO.csv&#39;,
- &#39;pred_test_ZERO.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_test_ZERO.csv&#39;,
- &#39;pred_real_na_ZERO.csv&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/preds/pred_real_na_ZERO.csv&#39;,
- &#39;NAGuideR_errors_per_bin_val.png&#39;: &#39;runs/dev_dataset_small/proteinGroups_N50/figures/NAGuideR_errors_per_bin_val.png&#39;}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;pred_val_BPCA.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_BPCA.csv&#39;,
+ &#39;pred_test_BPCA.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_BPCA.csv&#39;,
+ &#39;pred_real_na_BPCA.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_BPCA.csv&#39;,
+ &#39;pred_val_COLMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_COLMEDIAN.csv&#39;,
+ &#39;pred_test_COLMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_COLMEDIAN.csv&#39;,
+ &#39;pred_real_na_COLMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_COLMEDIAN.csv&#39;,
+ &#39;pred_val_IMPSEQ.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_IMPSEQ.csv&#39;,
+ &#39;pred_test_IMPSEQ.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_IMPSEQ.csv&#39;,
+ &#39;pred_real_na_IMPSEQ.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQ.csv&#39;,
+ &#39;pred_val_IMPSEQROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_IMPSEQROB.csv&#39;,
+ &#39;pred_test_IMPSEQROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_IMPSEQROB.csv&#39;,
+ &#39;pred_real_na_IMPSEQROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQROB.csv&#39;,
+ &#39;pred_val_IRM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_IRM.csv&#39;,
+ &#39;pred_test_IRM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_IRM.csv&#39;,
+ &#39;pred_real_na_IRM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_IRM.csv&#39;,
+ &#39;pred_val_KNN_IMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_KNN_IMPUTE.csv&#39;,
+ &#39;pred_test_KNN_IMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_KNN_IMPUTE.csv&#39;,
+ &#39;pred_real_na_KNN_IMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_KNN_IMPUTE.csv&#39;,
+ &#39;pred_val_LLS.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_LLS.csv&#39;,
+ &#39;pred_test_LLS.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_LLS.csv&#39;,
+ &#39;pred_real_na_LLS.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_LLS.csv&#39;,
+ &#39;pred_val_MINDET.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MINDET.csv&#39;,
+ &#39;pred_test_MINDET.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MINDET.csv&#39;,
+ &#39;pred_real_na_MINDET.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MINDET.csv&#39;,
+ &#39;pred_val_MINIMUM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MINIMUM.csv&#39;,
+ &#39;pred_test_MINIMUM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MINIMUM.csv&#39;,
+ &#39;pred_real_na_MINIMUM.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MINIMUM.csv&#39;,
+ &#39;pred_val_MINPROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MINPROB.csv&#39;,
+ &#39;pred_test_MINPROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MINPROB.csv&#39;,
+ &#39;pred_real_na_MINPROB.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MINPROB.csv&#39;,
+ &#39;pred_val_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;,
+ &#39;pred_test_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;,
+ &#39;pred_real_na_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;,
+ &#39;pred_val_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;,
+ &#39;pred_test_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;,
+ &#39;pred_real_na_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;,
+ &#39;pred_val_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_test_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_real_na_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;,
+ &#39;pred_val_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;,
+ &#39;pred_test_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;,
+ &#39;pred_real_na_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;,
+ &#39;pred_val_QRILC.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_QRILC.csv&#39;,
+ &#39;pred_test_QRILC.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_QRILC.csv&#39;,
+ &#39;pred_real_na_QRILC.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_QRILC.csv&#39;,
+ &#39;pred_val_RF.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_RF.csv&#39;,
+ &#39;pred_test_RF.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_RF.csv&#39;,
+ &#39;pred_real_na_RF.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_RF.csv&#39;,
+ &#39;pred_val_ROWMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_ROWMEDIAN.csv&#39;,
+ &#39;pred_test_ROWMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_ROWMEDIAN.csv&#39;,
+ &#39;pred_real_na_ROWMEDIAN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_ROWMEDIAN.csv&#39;,
+ &#39;pred_val_SVDMETHOD.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_SVDMETHOD.csv&#39;,
+ &#39;pred_test_SVDMETHOD.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_SVDMETHOD.csv&#39;,
+ &#39;pred_real_na_SVDMETHOD.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_SVDMETHOD.csv&#39;,
+ &#39;pred_val_TRKNN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_TRKNN.csv&#39;,
+ &#39;pred_test_TRKNN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_TRKNN.csv&#39;,
+ &#39;pred_real_na_TRKNN.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_TRKNN.csv&#39;,
+ &#39;pred_val_ZERO.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_ZERO.csv&#39;,
+ &#39;pred_test_ZERO.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_ZERO.csv&#39;,
+ &#39;pred_real_na_ZERO.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_ZERO.csv&#39;,
+ &#39;NAGuideR_errors_per_bin_val.png&#39;: &#39;runs/alzheimer_study/figures/NAGuideR_errors_per_bin_val.png&#39;}
 </pre></div>
 </div>
 </div>
