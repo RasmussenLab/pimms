@@ -11,7 +11,7 @@ on:
 jobs:
     test-tutorial-on-colab:
         name: Test tutorial on latest colab image
-        runs-on: ubuntu-latest-2core # increase disk space  
+        runs-on: ubuntu-latest-4core # increase disk space  
         # https://console.cloud.google.com/artifacts/docker/colab-images/europe/public/runtime
         container:
             image: europe-docker.pkg.dev/colab-images/public/runtime:latest

@@ -204,3 +204,17 @@ jupytext 00_5_training_data_exploration.py --to ipynb -o - | papermill - runs/ex
 - finds files originationg from fractionation experiments
 - plot mask indicating presence/abscence of peptide measurement in an experiment
 - intensity log-transformation: 
+
+## Adhoc analysis
+
+Compare performance splitting samples into train, validation and test set.
+Use scikit-learn `KNN_IMPUTER` as it's easiest to tweak and understand.
+
+```bash
+# classic:
+jupytext --to ipynb -k - -o - 01_1_train_KNN.py | papermill - runs/rev3/01_1_train_KNN.ipynb
+# train only on samples without simulated missing values, add simulated missing values to test and validation samples
+jupytext --to ipynb -k - -o - 01_1_train_KNN_unique_samples.py | papermill - runs/rev3/01_1_train_KNN_unique_samples.ipynb
+# new comparison (check if the old nb could be used for this purpose)
+jupytext --to ipynb -k - -o - 01_3_revision3.py | papermill - runs/rev3/01_3_revision3.ipynb
+```
