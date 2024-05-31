@@ -199,15 +199,15 @@ print(f"Saving to: {fname}")
 
 # %% tags=["hide-input"]
 # model_key could be used as key from config file
-# ? load only specified configs?
-# ? case: no config file available?
+# # ? load only specified configs?
+# # ? case: no config file available?
 all_configs = collect(
     paths=(fname for fname in args.out_models.iterdir()
            if fname.suffix == '.yaml'
            and 'model_config' in fname.name),
     load_fn=load_config_file
 )
-model_configs = pd.DataFrame(all_configs).set_index('model')
+model_configs = pd.DataFrame(all_configs).set_index('id')
 model_configs.T.to_excel(writer, sheet_name='model_params')
 model_configs.T
 

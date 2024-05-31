@@ -49,6 +49,10 @@ models:
           model: KNN
           neighbors: 3
           file_format: csv
+    - KNN5:
+          model: KNN
+          neighbors: 5
+          file_format: csv
 NAGuideR_methods:
     - BPCA
     - COLMEDIAN
