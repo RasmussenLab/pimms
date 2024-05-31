@@ -285,7 +285,7 @@ def get_lower_whiskers(df: pd.DataFrame, factor: float = 1.5) -> pd.Series:
     return ret
 
 
-def get_counts_per_bin(df: pd.DataFrame, bins: range, columns: Optional[List[str]] = None):
+def get_counts_per_bin(df: pd.DataFrame, bins: range, columns: Optional[List[str]] = None) -> pd.DataFrame:
     """Return counts per bin for selected columns in DataFrame."""
     counts_per_bin = dict()
     if columns is None:

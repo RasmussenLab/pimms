@@ -395,9 +395,10 @@ def get_consecutive_data_indices(df, n_samples):
     return df.loc[index[start_sample:start_sample + n_samples]]
 
 
-def corr_lower_triangle(df):
-    """Compute the correlation matrix, returning only unique values."""
-    corr_df = df.corr()
+def corr_lower_triangle(df, **kwargs):
+    """Compute the correlation matrix, returning only unique values.
+    """
+    corr_df = df.corr(**kwargs)
     lower_triangle = pd.DataFrame(
         np.tril(np.ones(corr_df.shape), -1)).astype(bool)
     lower_triangle.index, lower_triangle.columns = corr_df.index, corr_df.columns

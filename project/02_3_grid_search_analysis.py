@@ -17,22 +17,25 @@
 # # Analyis of grid hyperparameter search
 
 # %%
+import snakemake
 import logging
 import pathlib
-import pandas as pd
-import plotly.express as px
+
 import matplotlib
 import matplotlib.pyplot as plt
+import pandas as pd
+import plotly.express as px
 import seaborn as sns
 
-import vaep.plotting.plotly as px_vaep
-from vaep.analyzers import compare_predictions
-from vaep import sampling
-from vaep.io import datasplits
-import vaep.utils
-import vaep.pandas
 import vaep.io
 import vaep.nb
+import vaep.pandas
+import vaep.plotting.plotly as px_vaep
+import vaep.utils
+from vaep import sampling
+from vaep.analyzers import compare_predictions
+from vaep.io import datasplits
+
 matplotlib.rcParams['figure.figsize'] = [12.0, 6.0]
 
 
@@ -66,9 +69,11 @@ except AssertionError:
 # not robust
 try:
     ORDER = {'model': snakemake.params.models}
+    FILE_FORMAT = snakemake.params.file_format
 except AttributeError:
     ORDER = {'model': ['CF', 'DAE', 'VAE']}
-FILE_FORMAT = snakemake.params.file_format
+    FILE_FORMAT = 'csv'
+
 
 # %%
 path_metrics = pathlib.Path(metrics_csv)
@@ -319,6 +324,9 @@ hover_data['data_split'] = True
 hover_data['metric_value'] = ':.4f'
 
 # %%
+view = metrics_long[["model", "n_params", "data_split", "metric_name", "metric_value"]]
+
+# %%
 plt.rcParams['figure.figsize'] = (7, 4)
 plt.rcParams['lines.linewidth'] = 2
 plt.rcParams['lines.markersize'] = 3
@@ -327,7 +335,7 @@ vaep.plotting.make_large_descriptors(7)
 col_order = ('valid_fake_na', 'test_fake_na')
 row_order = ('MAE', 'MSE')
 fg = sns.relplot(
-    data=metrics_long,
+    data=view,
     x='n_params',
     y='metric_value',
     col="data_split",
@@ -363,6 +371,7 @@ fg.tight_layout()
 fname
 fname = FOLDER / "hyperpar_results_by_parameters_val+test.pdf"
 files_out[fname.name] = fname.as_posix()
+view.to_excel(fname.with_suffix('.xlsx'))
 fg.savefig(fname)
 fg.savefig(fname.with_suffix('.png'), dpi=300)
 
