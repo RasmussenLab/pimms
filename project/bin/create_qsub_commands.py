@@ -27,7 +27,7 @@ print()
 # %%
 for dataset, perc in product(datasets, mnar_mcar):
     cmd = (
-        "snakemake -s workflow/Snakefile_v2"
+        "snakemake -s workflow/Snakefile_v2.smk"
         f" --configfile config/single_dev_dataset/mnar_mcar/{dataset}.yaml"
         f" --config frac_mnar={perc/100:.2f}"
         f" config_split=runs/mnar_mcar/{dataset}_{perc}MNAR/01_0_split_data.yaml"

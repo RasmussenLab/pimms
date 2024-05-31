@@ -16,24 +16,25 @@
 # %% [markdown]
 # # Variational Autoencoder
 
-# %%
+# %% tags=["hide-input"]
 import logging
 
 import pandas as pd
+from IPython.display import display
 
 import vaep
 import vaep.model
 import vaep.models as models
+import vaep.nb
 from vaep.io import datasplits
 
-import vaep.nb
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 logger.info("Median Imputation")
 
 figures = {}  # collection of ax or figures
 
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -60,11 +61,11 @@ meta_cat_col: str = None  # category column in meta data
 # Some argument transformations
 
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.args_from_dict(args)
 args
 
@@ -72,25 +73,25 @@ args
 # %% [markdown]
 # Some naming conventions
 
-# %%
+# %% tags=["hide-input"]
 TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 
 # %% [markdown]
 # ## Load data in long format
 
-# %%
+# %% tags=["hide-input"]
 data = datasplits.DataSplits.from_folder(args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
 
-# %%
+# %% tags=["hide-input"]
 data.train_X.sample(5)
 
 # %% [markdown]
 # Infer index names from long format
 
-# %%
+# %% tags=["hide-input"]
 index_columns = list(data.train_X.index.names)
 sample_id = index_columns.pop(args.sample_idx_position)
 if len(index_columns) == 1:
@@ -108,7 +109,7 @@ else:
 # %% [markdown]
 # load meta data for splits
 
-# %%
+# %% tags=["hide-input"]
 if args.fn_rawfile_metadata:
     df_meta = pd.read_csv(args.fn_rawfile_metadata, index_col=0)
     display(df_meta.loc[data.train_X.index.levels[0]])
@@ -124,7 +125,7 @@ else:
 #     - Not used for predictions or early stopping.
 #     - [x] add some additional NAs based on distribution of data
 
-# %%
+# %% tags=["hide-input"]
 freq_feat = vaep.io.datasplits.load_freq(args.data)
 freq_feat.head()  # training data
 
@@ -134,11 +135,11 @@ freq_feat.head()  # training data
 # %% [markdown]
 # The validation fake NA is used to by all models to evaluate training performance.
 
-# %%
+# %% tags=["hide-input"]
 val_pred_fake_na = data.val_y.to_frame(name='observed')
 val_pred_fake_na
 
-# %%
+# %% tags=["hide-input"]
 test_pred_fake_na = data.test_y.to_frame(name='observed')
 test_pred_fake_na.describe()
 
@@ -148,7 +149,7 @@ test_pred_fake_na.describe()
 #
 # - Autoencoder need data in wide format
 
-# %%
+# %% tags=["hide-input"]
 data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
@@ -157,14 +158,14 @@ data.train_X.head()
 # %% [markdown]
 # ### Add interpolation performance
 
-# %%
+# %% tags=["hide-input"]
 # interpolated = vaep.pandas.interpolate(wide_df = data.train_X)
 # val_pred_fake_na['interpolated'] = interpolated
 # test_pred_fake_na['interpolated'] = interpolated
 # del interpolated
 # test_pred_fake_na
 
-# %%
+# %% tags=["hide-input"]
 # Add median pred performance
 args.n_params = data.train_X.shape[-1]
 medians_train = data.train_X.median()
@@ -176,7 +177,7 @@ test_pred_fake_na = test_pred_fake_na.join(medians_train)
 val_pred_fake_na
 
 
-# %%
+# %% tags=["hide-input"]
 if args.save_pred_real_na:
     mask = data.train_X.isna().stack()
     idx_real_na = mask.index[mask]
@@ -196,19 +197,19 @@ if args.save_pred_real_na:
 # %% [markdown]
 # ### Plots
 #
-# %%
+# %% tags=["hide-input"]
 feat_freq_val = val_pred_fake_na['observed'].groupby(level=-1).count()
 feat_freq_val.name = 'freq_val'
 ax = feat_freq_val.plot.box()
 
-# %%
+# %% tags=["hide-input"]
 # # scatter plot between overall feature freq and split freq
 # freq_feat.to_frame('overall').join(feat_freq_val).plot.scatter(x='overall', y='freq_val')
 
-# %%
+# %% tags=["hide-input"]
 feat_freq_val.value_counts().sort_index().head()  # require more than one feat?
 
-# %%
+# %% tags=["hide-input"]
 errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
 errors_val = errors_val.abs().groupby(level=-1).mean()
 errors_val = errors_val.join(freq_feat).sort_values(by='freq', ascending=True)
@@ -221,36 +222,28 @@ errors_val_smoothed[errors_val.columns[:-
 ax = errors_val_smoothed.plot(x='freq', figsize=(15, 10))
 # errors_val_smoothed
 
-# %%
+# %% tags=["hide-input"]
 errors_val = val_pred_fake_na.drop('observed', axis=1).sub(val_pred_fake_na['observed'], axis=0)
 errors_val.abs().groupby(level=-1).agg(['mean', 'count'])
 
-# %%
+# %% tags=["hide-input"]
 errors_val
 
 # %% [markdown]
 # ## Comparisons
-#
-# > Note: The interpolated values have less predictions for comparisons than the ones based on models (CF, DAE, VAE)
-# > The comparison is therefore not 100% fair as the interpolated samples will have more common ones (especailly the sparser the data)
-# > Could be changed.
 
 # %% [markdown]
 # ### Validation data
 #
-# - all measured (identified, observed) peptides in validation data
-#
-# > Does not make too much sense to compare collab and AEs,
-# > as the setup differs of training and validation data differs
 
-# %%
+# %% tags=["hide-input"]
 # papermill_description=metrics
 d_metrics = models.Metrics()
 
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(val_pred_fake_na, 'valid_fake_na')
 added_metrics
 
@@ -261,31 +254,31 @@ added_metrics
 # explicitly to misssing before it was fed to the model for
 # reconstruction.
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(test_pred_fake_na, 'test_fake_na')
 added_metrics
 
 # %% [markdown]
 # The fake NA for the validation step are real test data (not used for training nor early stopping)
 
-# %%
+# %% tags=["hide-input"]
 
 # %% [markdown]
 # ### Save all metrics as json
 
-# %%
+# %% tags=["hide-input"]
 vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
 d_metrics
 
 
-# %%
+# %% tags=["hide-input"]
 metrics_df = models.get_df_from_nested_dict(d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
 # %% [markdown]
 # ## Save predictions
 
-# %%
+# %% tags=["hide-input"]
 # val
 fname = args.out_preds / f"pred_val_{args.model_key}.csv"
 setattr(args, fname.stem, fname.as_posix())  # add [] assignment?
@@ -298,9 +291,9 @@ test_pred_fake_na.to_csv(fname)
 # %% [markdown]
 # ## Config
 
-# %%
+# %% tags=["hide-input"]
 figures  # switch to fnames?
 
-# %%
+# %% tags=["hide-input"]
 args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args

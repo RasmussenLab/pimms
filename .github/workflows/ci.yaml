@@ -20,13 +20,13 @@ jobs:
              "macos-13",
              # "windows-latest" # rrcovNA cannot be build from source on windows-server
              ]
-        python-version: ["3.8"]
+        python-version: ["3.8", "3.9", "3.10"]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Miniconda
       # ! change action https://github.com/mamba-org/setup-micromamba
-      uses: conda-incubator/setup-miniconda@v2
+      uses: conda-incubator/setup-miniconda@v3
       with: 
         miniforge-variant: Mambaforge
         # miniforge-version: latest
@@ -82,9 +82,9 @@ jobs:
         snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
     # https://github.com/actions/upload-artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: example-workflow-results-${{ matrix.os }}
+        name: ${{ matrix.os }}-${{ matrix.python-version }}-example-workflow-results
         path: |
           project/runs/example/
           environment.yml
@@ -113,7 +113,6 @@ jobs:
       
       - name: Run pytest
         run: pytest .
-
 
   publish:
     name: Publish package

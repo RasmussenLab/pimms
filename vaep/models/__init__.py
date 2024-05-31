@@ -23,6 +23,10 @@ logger = logging.getLogger(__name__)
 
 NUMPY_ONE = np.int64(1)
 
+__all__ = ['ae', 'analysis', 'collab', 'vae', 'plot_loss', 'plot_training_losses',
+           'calc_net_weight_count', 'RecorderDump', 'split_prediction_by_mask',
+           'compare_indices', 'collect_metrics', 'calculte_metrics',
+           'Metrics', 'get_df_from_nested_dict']
 
 
 def plot_loss(recorder: learner.Recorder,
@@ -312,7 +316,8 @@ class Metrics():
 
 
 def get_df_from_nested_dict(nested_dict,
-                            column_levels=('data_split', 'model', 'metric_name'),
+                            column_levels=(
+                                'data_split', 'model', 'metric_name'),
                             row_name='subset'):
     metrics = {}
     for k, run_metrics in nested_dict.items():

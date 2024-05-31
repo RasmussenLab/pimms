@@ -1,4 +1,4 @@
-name: Build workflow website on smaller development dataset (for protein groups)
+name: Build workflow website on public Alzheimer dataset (for protein groups)
 on:
   pull_request:
     branches: [main, dev]
@@ -29,32 +29,39 @@ jobs:
         activate-environment: vaep
         auto-activate-base: true
         # auto-update-conda: true
+    - name: Dry-run workflow
+      run: | 
+        cd project
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -n
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
         cd project
-        snakemake -p -c1 -n
-        snakemake -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
     - name: Run demo workflow again (in case of installation issues)
       run: | 
         cd project
-        snakemake -p -c1 -n
-        snakemake -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
+    - name: Run differential analysis workflow
+      run: | 
+        cd project
+        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c4
     - name: Install website dependencies
       run: |
         pip install .[docs]
     - name: Build imputation comparison website
       run: |
-        pimms-setup-imputation-comparison -f project/runs/dev_dataset_small/proteinGroups_N50/
-        cd project/runs/dev_dataset_small/proteinGroups_N50/
+        pimms-setup-imputation-comparison -f project/runs/alzheimer_study/
+        pimms-add-diff-comp -f project/runs/alzheimer_study/ -sf_cp project/runs/alzheimer_study/diff_analysis/AD
+        cd project/runs/alzheimer_study/
         sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
       uses: actions/upload-artifact@v3
       with:
-        name: example-workflow-results-${{ matrix.os }}
-        path: project/runs/dev_dataset_small/proteinGroups_N50/_build/
+        name: alzheimer-study
+        path: project/runs/alzheimer_study/
     - name: Publish workflow as website
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: project/runs/dev_dataset_small/proteinGroups_N50/_build/
+        publish_dir: project/runs/alzheimer_study/_build/

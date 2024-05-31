@@ -10,7 +10,8 @@ from vaep.io import datasets
 from vaep.io.datasets import DatasetWithMaskAndNoTarget, DatasetWithTarget
 
 data = np.random.random(size=(10, 5))
-mask = ~(data < 0.1)
+threshold = max(0.15, data.min() + 0.02)
+mask = ~(data < threshold)
 data_w_na = np.where(mask, data, np.nan)
 
 assert (data != data_w_na).any()

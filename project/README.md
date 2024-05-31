@@ -27,7 +27,8 @@ or as long formated data.
 | sample_03 | Protein B | 0.2       |
 | sample_03 | Protein C | 0.1       |
 
-Currently `pickle`d and `csv` files are supported.
+Currently `pickle`d and `csv` files are supported. If you use csv files, make sure
+to set an index name for the columns (default: `Sample ID`). It's done mostly automatically.
 
 Optionally, ThermoRawFileParser output cab be used as metadata.
 along further as e.g. clinical metadata for each sample.
@@ -82,125 +83,58 @@ papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data
 
 tag | notebook  | Description
 --- | ---  |  --- 
+Tutorials | 
+tut  | 04_1_train_pimms_models.ipynb | main tutorial showing scikit-learn interface partly with validatio data
+tut  | 04_1_train_DAE_VAE_wo_val_data.ipynb | 
 Single experiment |
 run  | 01_0_split_data.ipynb               | Create train, validation and test data splits
+run  | 01_0_transform_data_to_wide_format.ipynb | Transform train split to wide format for R models
 run  | 01_1_train_<model>.ipynb            | Train a single model e.g. (VAE, DAE, CF)
+run  | 01_1_train_NAGuideR_methods.ipynb   | Train supported R models
+run  | 01_1_transfer_NAGuideR_pred.ipynb   | Transfer R model predictions to correct format in Python
 run  | 01_2_performance_plots.ipynb        | Performance of single model run
 Grid search and best model analysis |
-grid | 02_1_aggregate_metrics.py.ipynb    | Aggregate metrics
-grid | 02_2_aggregate_configs.py.ipynb    | Aggregate model configurations
+grid | 02_1_{aggregate|join}_metrics.py.ipynb    | Aggregate or join metrics
+grid | 02_2_{aggregate|join}_configs.py.ipynb    | Aggregate or join model configurations
 grid | 02_3_grid_search_analysis.ipynb    | Analyze different runs with varying hyperparameters on a dataset
 grid | 02_4_best_models_over_all_data     | Show best models and best models across data types
 best | 03_1_best_models_comparison.ipynb  | best model trained repeatedly or across datasets
-Applications |
-ald | 16_ald_data.ipynb               | preprocess data -> could be move to data folder
-ald | 16_ald_diff_analysis.ipynb      | differential analysis (DA), dump scores 
-ald | 16_ald_compare_methods.ipynb    | DA comparison between methods
-ald | 16_ald_ml_new_feat.ipynb        | ML model comparison
-ald | 16_ald_compare_single_pg.ipynb  | [DEV] Compare imputation for feat between methods (dist plots)
+Differential analysis workflow |
+ald | 10_0_ald_data.ipynb               | preprocess data -> could be move to data folder
+ald | 10_1_ald_diff_analysis.ipynb      | differential analysis (DA), dump scores 
+ald | 10_2_ald_compare_methods.ipynb    | DA comparison between methods
+ald | 10_3_ald_ml_new_feat.ipynb        | ML model comparison
+ald | 10_4_ald_compare_single_pg.ipynb  | Compare imputation for feat between methods (dist plots)
+ald | 10_5_comp_diff_analysis_repetitions.ipynb | [Not in workflow] Compare 10x repeated differential analysis workflow
+ald | 10_6_interpret_repeated_ald_da.py | [Not in workflow] Interpret 10x repeated differential analysis
+ald | 10_7_ald_reduced_dataset_plots.ipynb | [Not in workflow] Plots releated reduced dataset (80% dataset)
+Data inspection and manipulations for experiments |
+data | 00_5_training_data_exploration.py | Inspect dataset
+data | 00_6_0_permute_data.ipynb | Permute data per column to check overfitting of models (mean unchanged per column)
+data | 00_8_add_random_missing_values.py | Script to add random missing values to ALD data
+Publication specific notebooks |
+pub | 03_2_best_models_comparison_fig2.ipynb | Best models comparison in Fig. 2
+pub | 03_3_combine_experiment_result_tables.ipynb | Combine HeLa experiment results for reporting
+pub | 03_4_join_tables.py | Combine ALD experiment results for reporting
+pub | 03_6_setup_comparison_rev3.py | Analyze setup of KNN comparison for rev 3
 Miscancellous notebooks on different topics (partly exploration) |
 misc | misc_embeddings.ipynb                | FastAI Embeddings
 misc | misc_illustrations.ipynb             | Illustrations of certain concepts (e.g. draw from shifted random distribution)
 misc | misc_json_formats.ipynb              | Investigate storring training data as json with correct encoding
-misc | misc_MaxQuantOutput.ipynb            | \[documentation\] Analyze MQ output, show MaxQuantOutput class behaviour
-misc | misc_protein_support.ipynb           | peptide sequences mapped to protein sequences
 misc | misc_pytorch_fastai_dataset.ipynb    | Dataset functionality
 misc | misc_pytorch_fastai_dataloaders.ipynb| Dataloading functionality
 misc | misc_sampling_in_pandas.ipynb        | How to sample in pandas
 
-# Notebook descriptions (To be completed)
+## KNN adhoc analysis using jupytext and papermill
 
-## Inspect dataset
-
-### `00_5_training_data_exploration.py`
-
-Can be execute manually
+Compare performance splitting samples into train, validation and test set.
+Use scikit-learn `KNN_IMPUTER` as it's easiest to tweak and understand.
 
 ```bash
-jupytext 00_5_training_data_exploration.py --to ipynb -o - | papermill - runs/example/00_5_training_data_exploration.ipynb -f config/single_dev_dataset/example/inspect_data.yaml
+# classic:
+jupytext --to ipynb -k - -o - 01_1_train_KNN.py | papermill - runs/rev3/01_1_train_KNN.ipynb
+# train only on samples without simulated missing values, add simulated missing values to test and validation samples
+jupytext --to ipynb -k - -o - 01_1_train_KNN_unique_samples.py | papermill - runs/rev3/01_1_train_KNN_unique_samples.ipynb
+# new comparison (check if the old nb could be used for this purpose)
+jupytext --to ipynb -k - -o - 01_3_revision3.py | papermill - runs/rev3/01_3_revision3.ipynb
 ```
-
-## Single experiment run
-### `01_0_split_data.ipynb`
-
-- select data according to procedure described in **Fig. S1**
-
-### `01_1_train_<model>.ipynb`
-- notebooks for training model `X` (e.g. `VAE`, `DAE` or `CF`)
-
-### `01_2_performance_plots.ipynb`
-
-## Grid search and best model analysis
-
-### `02_1_aggregate_metrics.py.ipynb` and `02_1_join_metrics.py.ipynb`
-- helper script to collect `metrics`. 
-### `02_2_aggregate_configs.py.ipynb` and `02_2_join_configs.py.ipynb`
-
-- helper script to collect `config`urations.
-
-### `02_3_grid_search_analysis.ipynb`
-
-- analyze different runs with varying hyperparameters on a single data set
-- run for each protein group, peptides and precursor data set
-
-### `02_4_best_models_over_all_data.ipynb`	
-
-- show best models across data sets in grid search
-
-### `03_1_best_models_comparison.ipynb`
-
-## Misc
-
-### `misc_clustering_proteins.ipynb`
-
-- first PCA analysis of proteins from Annelaura
-
-### `misc_data_exploration_proteins.ipynb` 
-
-### `misc_embeddings.ipynb`
-
-### `misc_illustrations.ipynb`
-- illustrations for presentations
-- e.g. shifted normal imputation
-
-### `misc_pytorch_fastai_dataloaders.ipynb`
-
-### `misc_pytorch_fastai_dataset.ipynb`
-### `misc_id_mapper.ipynb`
-
-### `misc_json_formats.ipynb`
-
-### `run_ipynbs.py`
-
-### `misc_protein_support.ipynb`
-
-- map peptide sequences to protein sequences
-- calculate some metrics
-
-### `misc_sampling_in_pandas.ipynb`
-
-### `misc_MaxQuantOutput.ipynb`
-- misc
-
-### 01 Analysis Fasta
-
-#### `misc_FASTA_tryptic_digest.ipynb`
-
-- analysis FASTA file used for protein search
-
-#### `misc_FASTA_data_agg_by_gene.ipynb`
-
-- analysis of gene to protein mapping of fasta file
-
-### 02 Analysis dataset
-
-#### `erda_data_available.ipynb`
-- analyze `count_all_peptides.json`: How many peptides are identified overall in all
-  processed files 
-
-> erda notebook: `00_mq_count_peptides.ipynb`
-
-#### `misc_data_exploration_peptides.ipynb` 
-- finds files originationg from fractionation experiments
-- plot mask indicating presence/abscence of peptide measurement in an experiment
-- intensity log-transformation: 

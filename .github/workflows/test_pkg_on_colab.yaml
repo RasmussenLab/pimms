@@ -1,0 +1,26 @@
+name: Test that tutorial runs on latest colab image
+
+on:
+    push:
+        branches: [dev]
+    pull_request:
+        branches: [main, dev]
+    schedule:
+        - cron: '0 2 3 * *'
+
+jobs:
+    test-tutorial-on-colab:
+        name: Test tutorial on latest colab image
+        runs-on: ubuntu-latest-4core # increase disk space  
+        # https://console.cloud.google.com/artifacts/docker/colab-images/europe/public/runtime
+        container:
+            image: europe-docker.pkg.dev/colab-images/public/runtime:latest
+        steps:
+        - uses: actions/checkout@v4
+        - name: Install pimms-learn and papermill
+          run: | 
+            python3 -m pip install pimms-learn papermill
+        - name: Run tutorial
+          run: |
+            cd project
+            papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb

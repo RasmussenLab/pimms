@@ -15,12 +15,12 @@
 # %% [markdown]
 # # Differential Analysis - Compare model imputation with standard imputation
 #
-# - load missing values predictions
+# - load missing values predictions (if specified)
 # - leave all other values as they were
 # - compare missing values predicition by model with baseline method
 #   (default: draw from shifted normal distribution. short RSN)
 
-# %%
+# %% tags=["hide-input"]
 import logging
 from pathlib import Path
 
@@ -38,13 +38,14 @@ import vaep.nb
 logger = vaep.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
 
 # %% [markdown]
 # ## Parameters
+# Default and set parameters for the notebook.
 
 # %% tags=["parameters"]
 folder_experiment = "runs/appl_ald_data/plasma/proteinGroups"
@@ -64,14 +65,16 @@ value_name = 'intensity'
 out_folder = 'diff_analysis'
 template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
+# %% [markdown]
+# Add set parameters to configuration
 
-# %%
+# %% tags=["hide-input"]
 if not model:
     model = model_key
 params = vaep.nb.get_params(args, globals=globals(), remove=True)
 params
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.Config()
 args.fn_clinical_data = Path(params["fn_clinical_data"])
 args.folder_experiment = Path(params["folder_experiment"])
@@ -85,37 +88,39 @@ args.update_from_dict(params)
 args
 
 # %% [markdown]
-# Outputs of this notebook will be stored here
+# Outputs of this notebook will be stored here:
 
-# %%
+# %% tags=["hide-input"]
 files_out = {}
 args.out_folder
 
 # %% [markdown]
-# # Data
+# ## Data
 
 # %% [markdown]
-# ## MS proteomics
+# ### MS proteomics or specified omics data
+# Aggregated from data splits of the imputation workflow run before.
 
-# %%
+# %% tags=["hide-input"]
 data = vaep.io.datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
-# %%
+# %% tags=["hide-input"]
 observed = pd.concat([data.train_X, data.val_y, data.test_y])
 observed
 
 # %% [markdown]
-# ## Clinical data
+# ### Clinical data
+# Describe numerical data specified for use:
 
-# %%
+# %% tags=["hide-input"]
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
 cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
 df_clinic[[args.target, *args.covar]].describe()
 
 
-# %%
+# %% tags=["hide-input"]
 # ## Additional annotations
 # - additional annotations of features (e.g. gene names for protein groups)
 
@@ -136,13 +141,13 @@ gene_to_PG
 # - only complete data is used for Differential Analysis
 # - covariates are not imputed
 
-# %%
+# %% tags=["hide-input"]
 df_clinic[[args.target, *args.covar]].isna().any(axis=1).sum()
 
 # %% [markdown]
 # Data description of data used:
 
-# %%
+# %% tags=["hide-input"]
 mask_sample_with_complete_clinical_data = df_clinic[[args.target, *args.covar]].notna().all(axis=1)
 fname = args.out_folder / 'mask_sample_with_complete_clinical_data.csv'
 files_out[fname.name] = fname.as_posix()
@@ -153,13 +158,13 @@ idx_complete_data = (mask_sample_with_complete_clinical_data
                      .index)
 df_clinic.loc[idx_complete_data, [args.target, *args.covar]].describe()
 
-# %%
+# %% tags=["hide-input"]
 df_clinic.loc[idx_complete_data, args.target].value_counts()
 
 # %% [markdown]
-# check which patients with kleiner score have misssing covariates
+# Check which patients with kleiner score have misssing covariates:
 
-# %%
+# %% tags=["hide-input"]
 df_clinic.loc[(~mask_sample_with_complete_clinical_data
                & df_clinic[args.target].notna()),
               [args.target, *args.covar]]
@@ -167,7 +172,7 @@ df_clinic.loc[(~mask_sample_with_complete_clinical_data
 # %% [markdown]
 # Save feature frequency of observed data based on complete clinical data
 
-# %%
+# %% tags=["hide-input"]
 feat_freq_observed = observed.unstack().loc[idx_complete_data].notna().sum()
 feat_freq_observed.name = 'frequency'
 
@@ -179,9 +184,10 @@ ax = feat_freq_observed.sort_values().plot(marker='.', rot=90)
 _ = ax.set_xticklabels([l_.get_text().split(';')[0] for l_ in ax.get_xticklabels()])
 
 # %% [markdown]
-# ## ALD study approach using all measurments
+# ## ALD study approach using all measurements
+# Use parameters as specified in [ALD study](https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study).
 
-# %%
+# %% tags=["hide-input"]
 DATA_COMPLETENESS = 0.6
 # MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
@@ -192,7 +198,7 @@ ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(observed.unsta
 
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 if args.fn_qc_samples:
     # Move this to data-preprocessing
     qc_samples = pd.read_pickle(args.fn_qc_samples)
@@ -208,7 +214,7 @@ if args.fn_qc_samples:
 
 ald_study
 
-# %%
+# %% tags=["hide-input"]
 fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
                                        feat_completness_over_samples=cutoffs.feat_completness_over_samples,
                                        min_feat_in_sample=cutoffs.min_feat_in_sample)
@@ -216,28 +222,22 @@ vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 
 
 # %% [markdown]
-# ## load model predictions for (real) missing data
+# ## Load model predictions for (real) missing data
+# Load from:
 
-# %%
-list(args.out_preds.iterdir())
-
-# %%
+# %% tags=["hide-input"]
+# available_files = list(args.out_preds.iterdir())
 template_pred = str(args.out_preds / args.template_pred)
-template_pred
-
-# %%
 fname = args.out_preds / args.template_pred.format(args.model)
 fname
 
 # %% [markdown]
-# Baseline comparison
-# In case of RSN -> use filtering as done in original paper (Niu et al. 2022)
-# otherwise -> use all data
+# Baseline comparison:
+# - in case of RSN -> use filtering as done in original [ALD study](https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study) (Niu et al. 2022)
+# - otherwise -> use all data
 #
-# - use columns which are provided by model
-# %%
-# ALD study approach -> has access to simulated missing data!
-# (VAE model did not see this data)
+# Use columns which are provided by model
+# %% tags=["hide-input"]
 pred_real_na = None
 if args.model_key and str(args.model_key) != 'None':
     pred_real_na = (vaep
@@ -257,10 +257,10 @@ pred_real_na
 
 
 # %% [markdown]
-# plot subsets to highlight differences
+# Plot unchanged observed intensities to imputed intensity distribution (if available):
 
 
-# %%
+# %% tags=["hide-input"]
 def plot_distributions(observed: pd.Series,
                        imputation: pd.Series = None,
                        model_key: str = 'MODEL',
@@ -296,30 +296,46 @@ def plot_distributions(observed: pd.Series,
         ax.set_ylabel('observations')
         ax.locator_params(axis='y', integer=True)
         ax.yaxis.set_major_formatter("{x:,.0f}")
-    return fig
+    return fig, bins
 
 
 vaep.plotting.make_large_descriptors(6)
-fig = plot_distributions(observed,
-                         imputation=pred_real_na,
-                         model_key=args.model_key, figsize=(2.5, 2))
+fig, bins = plot_distributions(observed,
+                               imputation=pred_real_na,
+                               model_key=args.model_key, figsize=(2.5, 2))
 fname = args.out_folder / 'dist_plots' / f'real_na_obs_vs_{args.model_key}.pdf'
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(fig, name=fname)
 
 # %% [markdown]
-# ## Mean shift by model
+# Dump frequency of histograms to file for reporting (if imputed values are used)
 
-# %%
+# %% tags=["hide-input"]
+if pred_real_na is not None:
+    counts_per_bin = pd.concat([
+        vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
+        vaep.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
+    ], axis=1)
+    counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
+    logger.info("Counts per bin saved to %s", fname.with_suffix('.xlsx'))
+    display(counts_per_bin)
+
+# %% [markdown]
+# ## Mean shift by model
+# Compare how imputed values are shifted in comparsion to overall distribution.
+#
+# First by using all intensities without any grouping:
+
+# %% tags=["hide-input"]
 if pred_real_na is not None:
     shifts = (vaep.imputation.compute_moments_shift(observed, pred_real_na,
                                                     names=('observed', args.model_key)))
     display(pd.DataFrame(shifts).T)
 
 # %% [markdown]
-# Or by averaging over the calculation by sample
+# Then by averaging over the calculation by sample:
 
-# %%
+# %% tags=["hide-input"]
 if pred_real_na is not None:
     index_level = 0  # per sample
     mean_by_sample = pd.DataFrame(
@@ -333,16 +349,16 @@ if pred_real_na is not None:
     display(mean_by_sample)
 
 # %% [markdown]
-# # Differential analysis
-# Impute missing values (or not)
+# ## Differential analysis
+# Combine observed and imputed data (if available) for differential analysis:
 
-# %%
+# %% tags=["hide-input"]
 df = pd.concat([observed, pred_real_na]).unstack()
 df.loc[idx_complete_data]
 
-# %%
+# %% tags=["hide-input"]
 # * if some features were not imputed -> drop them
-# ? could be changed: let a model decide if a feature should be imputed, otherwise don't.
+# # ? could be changed: let a model decide if a feature should be imputed, otherwise don't.
 if pred_real_na is not None:
     if df.isna().sum().sum():
         logger.warning("DataFrame has missing entries after imputation.")
@@ -350,18 +366,15 @@ if pred_real_na is not None:
     df = df.dropna(axis=1)
 
 # %% [markdown]
-# Targets - Clinical variables
+# Results for target and clinical variables:
 
-# %%
+# %% tags=["hide-input"]
 scores = njab.stats.ancova.AncovaAll(df_proteomics=df,
                                      df_clinic=df_clinic,
                                      target=args.target,
                                      covar=args.covar,
                                      value_name=args.value_name
                                      ).ancova()
-scores
-
-# %%
 # features are in first index position
 feat_idx = scores.index.get_level_values(0)
 if gene_to_PG is not None:
@@ -371,20 +384,26 @@ if gene_to_PG is not None:
               )
 scores
 
-# %%
+# %% [markdown]
+# Only for target:
+
+# %% tags=["hide-input"]
 scores.columns = pd.MultiIndex.from_product([[str(args.model_key)], scores.columns],
                                             names=('model', 'var'))
 scores.loc[pd.IndexSlice[:, args.target], :]
 
+# %% [markdown]
+# Save all results to file:
 
-# %%
+# %% tags=["hide-input"]
 fname = args.out_folder / 'scores' / f'diff_analysis_scores_{str(args.model_key)}.pkl'
 files_out[fname.name] = fname.as_posix()
 fname.parent.mkdir(exist_ok=True, parents=True)
 scores.to_pickle(fname)
 fname
 
+# %% [markdown]
+# Saved files:
 
-# %%
+# %% tags=["hide-input"]
 files_out
-# %%

@@ -26,7 +26,7 @@
 #     - as for validation data
 #     - top N based on validation data
 
-# %%
+# %% tags=["hide-input"]
 import logging
 import random
 from pathlib import Path
@@ -77,7 +77,7 @@ def build_text(s):
     return ret
 
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -104,19 +104,19 @@ save_agg_pred: bool = False  # save aggregated predictions of validation and tes
 # %% [markdown]
 # Some argument transformations
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.args_from_dict(args)
 args
 
-# %%
+# %% tags=["hide-input"]
 figures = {}
 dumps = {}
 
-# %%
+# %% tags=["hide-input"]
 TARGET_COL = 'observed'
 METRIC = 'MAE'
 MIN_FREQ = None
@@ -128,17 +128,17 @@ if args.sel_models:
     SEL_MODELS = args.sel_models.split(',')
 
 
-# %%
+# %% tags=["hide-input"]
 # list(sns.color_palette().as_hex()) # string representation of colors
 if args.plot_to_n > 10:
     logger.warning("Set maximum of models to 10 (maximum)")
     args.overwrite_entry('plot_to_n', 10)
 
-# %%
+# %% tags=["hide-input"]
 data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
-# %%
+# %% tags=["hide-input"]
 fig, axes = plt.subplots(1, 2, sharey=True, sharex=True)
 
 vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
@@ -158,13 +158,13 @@ vaep.savefig(fig, name=fname)
 # %% [markdown]
 # ## data completeness across entire data
 
-# %%
+# %% tags=["hide-input"]
 # load frequency of training features...
 # needs to be pickle -> index.name needed
 freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')
 freq_feat.head()  # training data
 
-# %%
+# %% tags=["hide-input"]
 prop = freq_feat / len(data.train_X.index.levels[0])
 prop.sort_values().to_frame().plot(
     xlabel=f'{data.val_y.index.names[-1]}',
@@ -173,21 +173,21 @@ prop.sort_values().to_frame().plot(
 # %% [markdown]
 # View training data in wide format
 
-# %%
+# %% tags=["hide-input"]
 data.to_wide_format()
 data.train_X
 
 # %% [markdown]
 # Number of samples and features:
 
-# %%
+# %% tags=["hide-input"]
 N_SAMPLES, M_FEAT = data.train_X.shape
 print(f"N samples: {N_SAMPLES:,d}, M features: {M_FEAT}")
 
 # %% [markdown]
 # Collect outputs in excel file:
 
-# %%
+# %% tags=["hide-input"]
 fname = args.folder_experiment / '01_2_performance_summary.xlsx'
 dumps[fname.stem] = fname
 writer = pd.ExcelWriter(fname)
@@ -197,24 +197,24 @@ print(f"Saving to: {fname}")
 # ## Model specifications
 # - used for bar plot annotations
 
-# %%
+# %% tags=["hide-input"]
 # model_key could be used as key from config file
-# ? load only specified configs?
-# ? case: no config file available?
+# # ? load only specified configs?
+# # ? case: no config file available?
 all_configs = collect(
     paths=(fname for fname in args.out_models.iterdir()
            if fname.suffix == '.yaml'
            and 'model_config' in fname.name),
     load_fn=load_config_file
 )
-model_configs = pd.DataFrame(all_configs).set_index('model')
+model_configs = pd.DataFrame(all_configs).set_index('id')
 model_configs.T.to_excel(writer, sheet_name='model_params')
 model_configs.T
 
 # %% [markdown]
 # Set Feature name (columns are features, rows are samples)
 
-# %%
+# %% tags=["hide-input"]
 # index name
 freq_feat.index.name = data.train_X.columns.name
 # sample index name
@@ -228,7 +228,7 @@ sample_index_name = data.train_X.index.name
 # ## Validation data
 # - set top N models to plot based on validation data split
 
-# %%
+# %% tags=["hide-input"]
 pred_val = compare_predictions.load_split_prediction_by_modelkey(
     experiment_folder=args.folder_experiment,
     split='val',
@@ -242,7 +242,7 @@ pred_val[MODELS]
 # %% [markdown]
 # Describe absolute error
 
-# %%
+# %% tags=["hide-input"]
 errors_val = (pred_val
               .drop(TARGET_COL, axis=1)
               .sub(pred_val[TARGET_COL], axis=0)
@@ -251,7 +251,7 @@ errors_val  # over all samples and all features
 
 # %% [markdown]
 # ### Select top N for plotting and set colors
-# %%
+# %% tags=["hide-input"]
 ORDER_MODELS = (errors_val
                 .abs()
                 .mean()
@@ -260,7 +260,7 @@ ORDER_MODELS = (errors_val
                 .to_list())
 ORDER_MODELS
 
-# %%
+# %% tags=["hide-input"]
 pred_val = pred_val[[TARGET_COL] + ORDER_MODELS]
 if args.save_agg_pred:
     fname = args.folder_experiment / '01_2_agg_pred_val.csv'
@@ -269,7 +269,7 @@ if args.save_agg_pred:
     logger.info(f"Saved aggregated predictions to: {fname}")
 pred_val
 
-# %%
+# %% tags=["hide-input"]
 mae_stats_ordered_val = errors_val.abs().describe()[ORDER_MODELS]
 mae_stats_ordered_val.to_excel(writer, sheet_name='mae_stats_ordered_val', float_format='%.5f')
 mae_stats_ordered_val.T
@@ -282,11 +282,11 @@ mae_stats_ordered_val.T
 # > 1. The order of "new" models is important for the color assignment.
 # > 2. User defined model keys for the same model with two configuration will yield different colors.
 
-# %%
+# %% tags=["hide-input"]
 COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
 vaep.plotting.defaults.ModelColorVisualizer(ORDER_MODELS, COLORS_TO_USE)
 
-# %%
+# %% tags=["hide-input"]
 TOP_N_ORDER = ORDER_MODELS[:args.plot_to_n]
 TOP_N_COLOR_PALETTE = {model: color for model,
                        color in zip(TOP_N_ORDER, COLORS_TO_USE)}
@@ -296,10 +296,10 @@ TOP_N_ORDER
 # %% [markdown]
 # ### Correlation per sample
 
-# %%
+# %% tags=["hide-input"]
 corr_per_sample_val = (pred_val
                        .groupby(sample_index_name)
-                       .aggregate(
+                       .apply(
                            lambda df: df.corr().loc[TARGET_COL]
                        )[ORDER_MODELS])
 
@@ -321,11 +321,12 @@ dumps[fname.stem] = fname
 with pd.ExcelWriter(fname) as w:
     corr_per_sample_val.describe().to_excel(w, sheet_name='summary')
     corr_per_sample_val.to_excel(w, sheet_name='correlations')
+    corr_per_sample_val[TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
 
-# %%
+# %% tags=["hide-input"]
 treshold = vaep.pandas.get_lower_whiskers(
     corr_per_sample_val[TOP_N_ORDER]).min()
 mask = (corr_per_sample_val[TOP_N_ORDER] < treshold).any(axis=1)
@@ -335,12 +336,12 @@ corr_per_sample_val.loc[mask].style.highlight_min(
 # %% [markdown]
 # ### Error plot
 
-# %%
+# %% tags=["hide-input"]
 c_error_min = 4.5
 mask = (errors_val[MODELS].abs() > c_error_min).any(axis=1)
 errors_val.loc[mask].sort_index(level=1).head()
 
-# %%
+# %% tags=["hide-input"]
 errors_val = errors_val.abs().groupby(
     freq_feat.index.name).mean()  # absolute error
 errors_val = errors_val.join(freq_feat)
@@ -348,10 +349,10 @@ errors_val = errors_val.sort_values(by=freq_feat.name, ascending=True)
 errors_val.head()
 
 
-# %%
+# %% tags=["hide-input"]
 errors_val.describe()[ORDER_MODELS].T  # mean of means
 
-# %%
+# %% tags=["hide-input"]
 c_avg_error = 2
 mask = (errors_val[TOP_N_ORDER] >= c_avg_error).any(axis=1)
 errors_val.loc[mask]
@@ -361,7 +362,7 @@ errors_val.loc[mask]
 # ### Error by non-decimal number of intensity
 # - number of observations in parentheses.
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 3))
 ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     pred_val[
@@ -378,7 +379,7 @@ fname = args.out_figures / f'2_{group}_errors_binned_by_feat_median_val.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
-# %%
+# %% tags=["hide-input"]
 # # ! only used for reporting
 plotted = vaep.plotting.errors.get_data_for_errors_by_median(
     errors=errors_binned,
@@ -389,7 +390,7 @@ plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
 plotted
 
 
-# %%
+# %% tags=["hide-input"]
 errors_binned.head()
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
@@ -398,7 +399,7 @@ errors_binned.head()
 # %% [markdown]
 # ## test data
 
-# %%
+# %% tags=["hide-input"]
 pred_test = compare_predictions.load_split_prediction_by_modelkey(
     experiment_folder=args.folder_experiment,
     split='test',
@@ -416,17 +417,17 @@ pred_test
 # %% [markdown]
 # Write averages for all models to excel (from before?)
 
-# %%
+# %% tags=["hide-input"]
 errors_test_mae = vaep.pandas.calc_errors.get_absolute_error(
     pred_test
 )
 mae_stats_ordered_test = errors_test_mae.describe()[ORDER_MODELS]
 mae_stats_ordered_test
 
-# %%
+# %% tags=["hide-input"]
 mae_stats_ordered_test.to_excel(writer, sheet_name='mae_stats_ordered_test', float_format='%.5f')
 
-# %%
+# %% tags=["hide-input"]
 cp_mean_perf = pd.concat([
     mae_stats_ordered_val.loc['mean'],
     mae_stats_ordered_test.loc['mean'],
@@ -437,13 +438,13 @@ cp_mean_perf = pd.concat([
 cp_mean_perf.to_excel(writer, sheet_name='cp_mean_perf', float_format='%.5f')
 cp_mean_perf
 
-# %%
+# %% tags=["hide-input"]
 writer.close()
 
 # %% [markdown]
 # ### Intensity distribution as histogram
 # Plot top 4 models predictions for intensities in test data
-# %%
+# %% tags=["hide-input"]
 min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
 top_n = 4
 fig, axes = plt.subplots(ncols=top_n, figsize=(8, 2), sharey=True)
@@ -476,7 +477,7 @@ fname = args.out_figures / f'2_{group}_intensity_binned_top_{top_n}_models_test.
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 counts_per_bin = vaep.pandas.get_counts_per_bin(df=pred_test,
                                                 bins=bins,
                                                 columns=[TARGET_COL, *ORDER_MODELS[:top_n]])
@@ -487,10 +488,10 @@ counts_per_bin
 # %% [markdown]
 # ### Correlation per sample
 
-# %%
+# %% tags=["hide-input"]
 corr_per_sample_test = (pred_test
                         .groupby(sample_index_name)
-                        .aggregate(lambda df: df.corr().loc[TARGET_COL])
+                        .apply(lambda df: df.corr().loc[TARGET_COL])
                         [ORDER_MODELS])
 corr_per_sample_test = corr_per_sample_test.join(
     pred_test
@@ -501,7 +502,7 @@ corr_per_sample_test = corr_per_sample_test.join(
 too_few_obs = corr_per_sample_test['n_obs'] < 3
 corr_per_sample_test.loc[~too_few_obs].describe()
 
-# %%
+# %% tags=["hide-input"]
 # # ! add minimum
 kwargs = dict(ylim=(0.7, 1), rot=90,
               flierprops=dict(markersize=3),
@@ -521,32 +522,33 @@ dumps[fname.stem] = fname.with_suffix('.xlsx')
 with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_sample_test.describe().to_excel(w, sheet_name='summary')
     corr_per_sample_test.to_excel(w, sheet_name='correlations')
+    corr_per_sample_test.loc[~too_few_obs, TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
 # %% [markdown]
 # identify samples which are below lower whisker for models
 
-# %%
+# %% tags=["hide-input"]
 treshold = vaep.pandas.get_lower_whiskers(
     corr_per_sample_test[TOP_N_ORDER]).min()
 mask = (corr_per_sample_test[TOP_N_ORDER] < treshold).any(axis=1)
 corr_per_sample_test.loc[mask].style.highlight_min(
     axis=1) if mask.sum() else 'Nothing to display'
 
-# %%
+# %% tags=["hide-input"]
 feature_names = pred_test.index.levels[-1]
 N_SAMPLES = pred_test.index
 M = len(feature_names)
 pred_test.loc[pd.IndexSlice[:, feature_names[random.randint(0, M - 1)]], :]
 
-# %%
-options = random.sample(set(feature_names), 1)
+# %% tags=["hide-input"]
+options = random.sample(sorted(set(feature_names)), 1)
 pred_test.loc[pd.IndexSlice[:, options[0]], :]
 
 # %% [markdown]
 # ### Correlation per feature
 
-# %%
-corr_per_feat_test = pred_test.groupby(FEAT_NAME).aggregate(
+# %% tags=["hide-input"]
+corr_per_feat_test = pred_test.groupby(FEAT_NAME).apply(
     lambda df: df.corr().loc[TARGET_COL])[ORDER_MODELS]
 corr_per_feat_test = corr_per_feat_test.join(pred_test.groupby(FEAT_NAME)[
     TARGET_COL].count().rename('n_obs'))
@@ -554,10 +556,10 @@ corr_per_feat_test = corr_per_feat_test.join(pred_test.groupby(FEAT_NAME)[
 too_few_obs = corr_per_feat_test['n_obs'] < 3
 corr_per_feat_test.loc[~too_few_obs].describe()
 
-# %%
+# %% tags=["hide-input"]
 corr_per_feat_test.loc[too_few_obs].dropna(thresh=3, axis=0)
 
-# %%
+# %% tags=["hide-input"]
 kwargs = dict(rot=90,
               flierprops=dict(markersize=1),
               ylabel=f'correlation per {FEAT_NAME_DISPLAY}')
@@ -576,13 +578,14 @@ with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(
         w, sheet_name='summary')
     corr_per_feat_test.to_excel(w, sheet_name='correlations')
+    corr_per_feat_test.loc[~too_few_obs, TOP_N_ORDER].to_excel(w, sheet_name='correlations_plotted')
 
-# %%
+# %% tags=["hide-input"]
 feat_count_test = data.test_y.stack().groupby(FEAT_NAME).count()
 feat_count_test.name = 'count'
 feat_count_test.head()
 
-# %%
+# %% tags=["hide-input"]
 treshold = vaep.pandas.get_lower_whiskers(
     corr_per_feat_test[TOP_N_ORDER]).min()
 mask = (corr_per_feat_test[TOP_N_ORDER] < treshold).any(axis=1)
@@ -609,23 +612,23 @@ else:
 # %% [markdown]
 # ### Error plot
 
-# %%
+# %% tags=["hide-input"]
 metrics = vaep.models.Metrics()
 test_metrics = metrics.add_metrics(
     pred_test[['observed', *TOP_N_ORDER]], key='test data')
 test_metrics = pd.DataFrame(test_metrics)[TOP_N_ORDER]
 test_metrics
 
-# %%
+# %% tags=["hide-input"]
 n_in_comparison = int(test_metrics.loc['N'].unique()[0])
 n_in_comparison
 
-# %%
+# %% tags=["hide-input"]
 _to_plot = test_metrics.loc[METRIC].to_frame().T
 _to_plot.index = [feature_names.name]
 _to_plot
 
-# %%
+# %% tags=["hide-input"]
 try:
     text = model_configs[["latent_dim", "hidden_layers"]].apply(
         build_text,
@@ -639,7 +642,7 @@ _to_plot = _to_plot.fillna('')
 _to_plot
 
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(4, 2))  # size of the plot can be adjusted
 ax = _to_plot.loc[[feature_names.name]].plot.bar(
     rot=0,
@@ -655,7 +658,7 @@ fname = args.out_figures / f'2_{group}_performance_test.pdf'
 figures[fname.stem] = fname
 vaep.savefig(fig, name=fname)
 
-# %%
+# %% tags=["hide-input"]
 dumps[fname.stem] = fname.with_suffix('.csv')
 _to_plot_long = _to_plot.T
 _to_plot_long = _to_plot_long.rename(
@@ -668,7 +671,7 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 # %% [markdown]
 # ### Plot error by median feature intensity
 
-# %%
+# %% tags=["hide-input"]
 vaep.plotting.make_large_descriptors(7)
 fig, ax = plt.subplots(figsize=(8, 2))
 
@@ -692,7 +695,7 @@ dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned
 
-# %%
+# %% tags=["hide-input"]
 # # ! only used for reporting
 plotted = vaep.plotting.errors.get_data_for_errors_by_median(
     errors=errors_binned,
@@ -703,7 +706,7 @@ plotted.to_excel(fname.with_suffix('.xlsx'), index=False)
 plotted
 
 
-# %%
+# %% tags=["hide-input"]
 (errors_binned
  .set_index(
      ['model', errors_binned.columns[-1]]
@@ -714,7 +717,7 @@ plotted
 # %% [markdown]
 # ### Custom model selection
 
-# %%
+# %% tags=["hide-input"]
 if SEL_MODELS:
     metrics = vaep.models.Metrics()
     test_metrics = metrics.add_metrics(
@@ -768,7 +771,7 @@ if SEL_MODELS:
     _to_plot_long.to_csv(fname.with_suffix('.csv'))
 
 
-# %%
+# %% tags=["hide-input"]
 # custom selection
 if SEL_MODELS:
     vaep.plotting.make_large_descriptors(7)
@@ -814,7 +817,7 @@ if SEL_MODELS:
 #
 # - number of observations in parentheses.
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
     pred_test[
@@ -829,15 +832,16 @@ fname = args.out_figures / f'2_{group}_test_errors_binned_by_int.pdf'
 figures[fname.stem] = fname
 vaep.savefig(ax.get_figure(), name=fname)
 
-# %%
+# %% tags=["hide-input"]
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
 errors_binned.head()
 
 # %% [markdown]
 # ## Figures dumped to disk
-# %%
+# %% tags=["hide-input"]
 figures
 
-# %%
+# %% tags=["hide-input"]
 dumps
+print("done")
