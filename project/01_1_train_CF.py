@@ -16,31 +16,26 @@
 # %% [markdown]
 # # Collaborative Filtering
 
-# %%
+# %% tags=["hide-input"]
 import logging
-
 from pprint import pprint
 
 import matplotlib.pyplot as plt
-
-from fastai.tabular.all import *
+# overwriting Recorder callback with custom plot_loss
+from fastai import learner
 from fastai.collab import *
-
-from fastai.collab import (EmbeddingDotBias, Learner, MSELossFlat, EarlyStoppingCallback, default_device)
+from fastai.collab import (EarlyStoppingCallback, EmbeddingDotBias, Learner,
+                           MSELossFlat, default_device)
+from fastai.tabular.all import *
 
 import vaep
 import vaep.model
 import vaep.models as models
-from vaep.models import plot_loss, RecorderDump
-
 import vaep.nb
-from vaep import sampling
 from vaep.io import datasplits
-
 from vaep.logging import setup_logger
+from vaep.models import RecorderDump, plot_loss
 
-# overwriting Recorder callback with custom plot_loss
-from fastai import learner
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
 
@@ -54,7 +49,7 @@ figures = {}  # collection of ax or figures
 # %% [markdown]
 # Papermill script parameters:
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -83,11 +78,11 @@ save_pred_real_na: bool = True  # Save all predictions for missing values
 # %% [markdown]
 # Some argument transformations
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.args_from_dict(args)
 
 # # Currently not needed -> DotProduct used, not a FNN
@@ -101,7 +96,7 @@ args
 # %% [markdown]
 # Some naming conventions
 
-# %%
+# %% tags=["hide-input"]
 TEMPLATE_MODEL_PARAMS = 'model_params_{}.json'
 
 if not args.cuda:
@@ -111,24 +106,24 @@ if not args.cuda:
 # %% [markdown]
 # ## Load data in long format
 
-# %%
+# %% tags=["hide-input"]
 data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
 # %% [markdown]
 # data is loaded in long format
 
-# %%
+# %% tags=["hide-input"]
 data.train_X
 
-# %%
+# %% tags=["hide-input"]
 # # ! add check that specified data is available
 # silent error in fastai if e.g. target column is not available
 
 # %% [markdown]
 # Infer index names from long format
 
-# %%
+# %% tags=["hide-input"]
 index_columns = list(data.train_X.index.names)
 sample_id = index_columns.pop(args.sample_idx_position)
 if len(index_columns) == 1:
@@ -151,11 +146,11 @@ else:
 # %% [markdown]
 # The validation simulated NA is used to by all models to evaluate training performance.
 
-# %%
+# %% tags=["hide-input"]
 val_pred_simulated_na = data.val_y.to_frame(name='observed')
 val_pred_simulated_na
 
-# %%
+# %% tags=["hide-input"]
 test_pred_simulated_na = data.test_y.to_frame(name='observed')
 test_pred_simulated_na.describe()
 
@@ -166,7 +161,7 @@ test_pred_simulated_na.describe()
 # - save custom collab batch size (increase AE batch size by a factor), could be setup separately.
 # - the test data is used to evaluate the performance after training
 
-# %%
+# %% tags=["hide-input"]
 # larger mini-batches speed up training
 ana_collab = models.collab.CollabAnalysis(
     datasplits=data,
@@ -179,12 +174,12 @@ ana_collab = models.collab.CollabAnalysis(
                       ),
     batch_size=args.batch_size)
 
-# %%
+# %% tags=["hide-input"]
 print("Args:")
 pprint(ana_collab.model_kwargs)
 
 
-# %%
+# %% tags=["hide-input"]
 ana_collab.model = EmbeddingDotBias.from_classes(
     classes=ana_collab.dls.classes,
     **ana_collab.model_kwargs)
@@ -206,7 +201,7 @@ else:
 # %% [markdown]
 # ### Training
 
-# %%
+# %% tags=["hide-input"]
 # papermill_description=train_collab
 suggested_lr = ana_collab.learn.lr_find()
 print(f"{suggested_lr.valley = :.5f}")
@@ -234,7 +229,7 @@ vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
 # %% [markdown]
 # Compare simulated_na data predictions to original values
 
-# %%
+# %% tags=["hide-input"]
 # this could be done using the validation data laoder now
 ana_collab.test_dl = ana_collab.dls.test_dl(
     data.val_y.reset_index())  # test_dl is here validation data
@@ -246,12 +241,12 @@ val_pred_simulated_na
 # %% [markdown]
 # select test data predictions
 
-# %%
+# %% tags=["hide-input"]
 ana_collab.test_dl = ana_collab.dls.test_dl(data.test_y.reset_index())
 test_pred_simulated_na['CF'], _ = ana_collab.learn.get_preds(dl=ana_collab.test_dl)
 test_pred_simulated_na
 
-# %%
+# %% tags=["hide-input"]
 if args.save_pred_real_na:
     pred_real_na = models.collab.get_missing_values(
         df_train_long=data.train_X,
@@ -266,7 +261,7 @@ if args.save_pred_real_na:
 #
 # - Autoencoder need data in wide format
 
-# %%
+# %% tags=["hide-input"]
 data.to_wide_format()
 args.M = data.train_X.shape[-1]
 data.train_X.head()
@@ -280,7 +275,7 @@ data.train_X.head()
 # > Does not make to much sense to compare collab and AEs,
 # > as the setup differs of training and validation data differs
 
-# %%
+# %% tags=["hide-input"]
 # papermill_description=metrics
 d_metrics = models.Metrics()
 
@@ -318,7 +313,7 @@ metrics_df
 # %% [markdown]
 # ## Save predictions
 
-# %%
+# %% tags=["hide-input"]
 # save simulated missing values for both splits
 val_pred_simulated_na.to_csv(args.out_preds / f"pred_val_{args.model_key}.csv")
 test_pred_simulated_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv")
@@ -326,8 +321,8 @@ test_pred_simulated_na.to_csv(args.out_preds / f"pred_test_{args.model_key}.csv"
 # %% [markdown]
 # ## Config
 
-# %%
+# %% tags=["hide-input"]
 args.dump(fname=args.out_models / f"model_config_{args.model_key}.yaml")
 args
 
-# %%
+# %% tags=["hide-input"]

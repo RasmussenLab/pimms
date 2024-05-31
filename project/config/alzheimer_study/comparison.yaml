@@ -1,0 +1,22 @@
+folder_experiment: runs/alzheimer_study
+fn_clinical_data: https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/clinic_ml.csv
+target: AD
+covar:
+  AD: age,Kiel,Magdeburg,Sweden
+cutoffs:
+  AD: 0.5
+disease_ontology: # code from https://disease-ontology.org/
+  AD: 10652 # Alzheimer disease
+f_annotations: null
+annotaitons_gene_col: null
+baseline: PI
+ref_method_score:
+make_plots: false
+methods:
+  - Median
+  - CF
+  - DAE
+  - VAE
+  - QRILC
+  - TRKNN
+  - RF

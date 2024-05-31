@@ -19,7 +19,7 @@
 #
 # - BiocManager could be moved to methods who are installed from BioConductor
 
-# + vscode={"languageId": "r"}
+# + tags=["hide-input"] vscode={"languageId": "r"}
 packages_base_R <-
   c("BiocManager", "reshape2", "data.table", "readr", "tibble")
 
@@ -58,7 +58,7 @@ for (package in packages_base_R) {
 # - seems quite hacky
 # - code is only slightly adapted from repo to run here, mainly to install packages on the fly
 
-# + vscode={"languageId": "r"}
+# + tags=["hide-input"] vscode={"languageId": "r"}
 nafunctions <- function(x, method = "zero") {
   df <- df1 <- as.data.frame(x)
   method <- tolower(method)
@@ -407,7 +407,7 @@ original_header[1:5]
 
 # Uncomment to test certain methods (only for debugging, as at least one method per package is tested using Github Actions)
 
-# + vscode={"languageId": "r"}
+# + tags=["hide-input"] vscode={"languageId": "r"}
 # to_test <- c(
 # 'ZERO',
 # 'MINIMUM',
@@ -450,20 +450,28 @@ pred <- nafunctions(df, method)
 pred <- tibble::as_tibble(cbind(rownames(pred), pred))
 names(pred) <- original_header
 pred
+# -
+
+# Transform predictions to long format
+
 # + vscode={"languageId": "r"}
 pred <- reshape2::melt(pred, id.vars = feat_name)
 names(pred) <- c(feat_name, 'Sample ID', method)
 pred <- pred[reshape2::melt(is.na(df))['value'] == TRUE, ]
 pred
+# -
 
-# + vscode={"languageId": "r"}
+# Check dimension of long format dataframe
+
+# + tags=["hide-input"] vscode={"languageId": "r"}
 dim(pred)
+# -
 
-# + vscode={"languageId": "r"}
+# Save predictions to disk
+
+# + tags=["hide-input"] vscode={"languageId": "r"}
 fname = file.path(folder_experiment,
                   'preds',
                   paste0('pred_all_', toupper(method), '.csv'))
-fname
-
-# + vscode={"languageId": "r"}
 write_csv(pred, path = fname)
+fname

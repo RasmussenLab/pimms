@@ -1,0 +1,79 @@
+# config for Snakefile_v2.smk
+config_split: runs/alzheimer_study/split.yaml # ! will be build by workflow
+config_train: runs/alzheimer_study/train_{model}.yaml # ! will be build by workflow
+folder_experiment: runs/alzheimer_study # folder to save the results
+fn_rawfile_metadata: https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv # metadata file
+cuda: False # use GPU?
+file_format: csv # intermediate file formats
+split_data: # for 01_01_split_data.ipynb -> check parameters
+    FN_INTENSITIES: https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/proteome.csv
+    sample_completeness: 0.5
+    feat_prevalence: 0.25
+    column_names:
+        - protein groups
+    index_col: 0
+    meta_cat_col: _collection site
+    meta_date_col: null  # null if no date column, translated to None in Python
+    frac_mnar: 0.25
+    frac_non_train: 0.1
+models:
+    - Median: # name used for model with this configuration
+          model: Median # model used
+    - CF:
+          model: CF # notebook: 01_1_train_{model}.ipynb will be 01_1_train_CF.ipynb
+          latent_dim: 50
+          batch_size: 1024
+          epochs_max: 100
+          sample_idx_position: 0
+          cuda: False
+          save_pred_real_na: True
+    - DAE:
+          model: DAE
+          latent_dim: 10
+          batch_size: 64
+          epochs_max: 300
+          hidden_layers: "64"
+          sample_idx_position: 0
+          cuda: False
+          save_pred_real_na: True
+    - VAE:
+          model: VAE
+          latent_dim: 10
+          batch_size: 64
+          epochs_max: 300
+          hidden_layers: "64"
+          sample_idx_position: 0
+          cuda: False
+          save_pred_real_na: True
+    - KNN:
+          model: KNN
+          neighbors: 3
+          file_format: csv
+    - KNN5:
+          model: KNN
+          neighbors: 5
+          file_format: csv
+NAGuideR_methods:
+    - BPCA
+    - COLMEDIAN
+    - IMPSEQ
+    - IMPSEQROB
+    - IRM
+    - KNN_IMPUTE
+    - LLS
+    # - MICE-CART > 1h20min on GitHub small runner
+    # - MICE-NORM ~ 1h on GitHub small runner
+    - MINDET
+    - MINIMUM
+    - MINPROB
+    - MLE
+    - MSIMPUTE
+    - MSIMPUTE_MNAR
+    - PI
+    - QRILC
+    - RF
+    - ROWMEDIAN
+    # - SEQKNN # Error in x[od, ismiss, drop = FALSE]: subscript out of bounds
+    - SVDMETHOD
+    - TRKNN
+    - ZERO

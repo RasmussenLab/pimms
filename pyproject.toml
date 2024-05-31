@@ -34,6 +34,7 @@ dependencies = [
 
 [project.scripts]
 pimms-setup-imputation-comparison = "vaep.cmd_interface.setup_imp_cp_website:main"
+pimms-add-diff-comp = "vaep.cmd_interface.setup_diff_analysis_website:main"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/RasmussenLab/pimms/issues"

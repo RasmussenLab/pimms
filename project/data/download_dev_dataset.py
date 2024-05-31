@@ -1,22 +1,9 @@
-# Data Folder
+"""Download the development dataset of HeLa cells from PRIDE.
 
-> Put you files here.
+Instrument: Q_Exactive_HF_X_Orbitrap_6070
 
-## Download development dataset
-
-The large development data sets can be obtained from PRIDE. An example for the protein
-groups level data is provided below and as an executable script.
-
-### Download large development dataset
-Execute the script to download and save the large Hela protein group data for instrument 6070:
-
-```bash
-python download_dev_dataset.py
-```
-
-This script contains the following code:
-
-```python
+Can be adapted to save all instruments or other datasets.
+"""
 import io
 import zipfile
 from pathlib import Path
@@ -53,19 +40,3 @@ print(f'saved data to: {fname.with_suffix(".pkl")}')
 fname = FOLDER / 'metadata.csv'
 meta.loc[idx_6070].to_csv(fname)
 print(f'saved metadata to: {fname}')
-```
-### Run snakemake workflow
-
-Then you will be able to run the snakemake workflow for the larger 
-development dataset:
-
-```bash
-snakemake --configfile config/single_dev_dataset/proteinGroups/config.yaml -c1 -n
-```
-
-The smaller development data set on the protein groups level is also shipped with this
-repository and can be found in the [`dev_datasets/HeLa_6070`](dev_datasets/HeLa_6070/) folder.
-
-```bash
-snakemake -c1 -n
-```

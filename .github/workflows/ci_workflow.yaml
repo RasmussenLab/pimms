@@ -1,0 +1,55 @@
+name: run workflow with conda envs
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  release:
+  # schedule:
+  #   - cron: '0 2 * * 3,6'
+jobs:
+  run-integration-tests-with-conda-install:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -el {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [
+            "ubuntu-latest",
+            "macos-13",
+            # "windows-latest" # rrcovNA cannot be build from source on windows-server
+          ]
+        python-version: ["3.10"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Miniconda
+        # ! change action https://github.com/mamba-org/setup-micromamba
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-variant: Mambaforge
+          use-mamba: true
+          channel-priority: disabled
+          python-version: ${{ matrix.python-version }}
+          environment-file: snakemake_env.yml
+          activate-environment: snakemake
+          auto-activate-base: true
+      - name: inspect-conda-environment
+        run: |
+          conda info
+          conda list
+      - name: Dry-run workflow
+        run: |
+          cd project
+          snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n --use-conda
+      - name: Run demo workflow (integration test)
+        continue-on-error: true
+        run: |
+          cd project
+          snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
+      - name: Run demo workflow again (in case of installation issues)
+        run: |
+          cd project
+          snakemake -p -c1 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda

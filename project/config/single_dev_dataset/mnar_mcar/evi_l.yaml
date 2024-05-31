@@ -1,4 +1,4 @@
-# config for Snakefile_v2
+# config for Snakefile_v2.smk
 config_split: runs/mnar_mcar/pg_l_50MNAR/01_0_split_data.yaml # ! will be build
 config_train: runs/mnar_mcar/pg_l_50MNAR/train_{model}.yaml # ! will be build, should say model_key next
 folder_experiment: runs/mnar_mcar/pg_l_50MNAR

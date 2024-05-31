@@ -15,23 +15,25 @@
 
 # %% [markdown]
 # # Transfer predictions from NAGuideR
+#
 
-# %%
-from pathlib import Path
+# %% tags=["hide-input"]
 import logging
-import pandas as pd
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import pandas as pd
 
 import vaep
 import vaep.models
-from vaep.io import datasplits
 import vaep.pandas
+from vaep.io import datasplits
 
 vaep.plotting.make_large_descriptors(5)
 
 logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
 
-# %%
+# %% tags=["hide-input"]
 # catch passed parameters
 args = None
 args = dict(globals()).keys()
@@ -52,18 +54,18 @@ dumps: list = None  # list of dumps to be used
 # Some argument transformations
 
 
-# %%
+# %% tags=["hide-input"]
 args = vaep.nb.get_params(args, globals=globals())
 args = vaep.nb.args_from_dict(args)
 args
 
-# %%
+# %% tags=["hide-input"]
 files_out = {}
 
 # %% [markdown]
 # load data splits
 
-# %%
+# %% tags=["hide-input"]
 data = datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
@@ -71,18 +73,18 @@ data = datasplits.DataSplits.from_folder(
 # %% [markdown]
 # Validation and test data split of simulated missing values
 
-# %%
+# %% tags=["hide-input"]
 val_pred_fake_na = data.val_y.to_frame(name='observed')
 val_pred_fake_na
 
-# %%
+# %% tags=["hide-input"]
 test_pred_fake_na = data.test_y.to_frame(name='observed')
 test_pred_fake_na.describe()
 
-# %%
+# %% tags=["hide-input"]
 # Find and load prediction files, filter for validation and test data
 
-# %%
+# %% tags=["hide-input"]
 if args.dumps is not None:
     entire_pred = [Path(s) for s in args.dumps.split(',')]
 else:
@@ -90,7 +92,7 @@ else:
                        if '_all_' in str(file))
 entire_pred
 
-# %%
+# %% tags=["hide-input"]
 mask = data.train_X.unstack().isna().stack()
 idx_real_na = mask.index[mask]
 idx_real_na = (idx_real_na
@@ -124,42 +126,42 @@ for fpath in entire_pred:
     logger.info(f"Save {fname = }")
 
 # del pred
-# %%
+# %% tags=["hide-input"]
 val_pred_fake_na
 
 # %% [markdown]
 # Metrics for simulated missing values (NA)
 
-# %%
+# %% tags=["hide-input"]
 # papermill_description=metrics
 d_metrics = vaep.models.Metrics()
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(val_pred_fake_na.dropna(how='all', axis=1), 'valid_fake_na')
 pd.DataFrame(added_metrics)
 
 # %% [markdown]
 # ## Test Datasplit
 
-# %%
+# %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(test_pred_fake_na.dropna(how='all', axis=1), 'test_fake_na')
 pd.DataFrame(added_metrics)
 
-# %%
+# %% tags=["hide-input"]
 metrics_df = vaep.models.get_df_from_nested_dict(
     d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
-# %%
+# %% tags=["hide-input"]
 order_methods = metrics_df.loc[pd.IndexSlice[:,
                                              'MAE'], 'valid_fake_na'].sort_values()
 order_methods
 
-# %%
+# %% tags=["hide-input"]
 top_5 = ['observed', *order_methods.droplevel(-1).index[:6]]
 top_5
 
-# %%
+# %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 2))
 ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
     val_pred_fake_na[top_5],
@@ -169,5 +171,5 @@ fname = args.out_figures / 'NAGuideR_errors_per_bin_val.png'
 files_out[fname.name] = fname.as_posix()
 vaep.savefig(ax.get_figure(), fname)
 
-# %%
+# %% tags=["hide-input"]
 files_out

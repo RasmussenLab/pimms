@@ -1,0 +1,36 @@
+# Dev Environment
+name: trainRmodels
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - papermill # execute ipynb's
+  - jupyter
+  # R packages (listed in NAGuideR)
+  - r-base
+  - r-devtools # is it needed for source installs on windows server?
+  - r-irkernel
+  - r-reshape2
+  - r-stringi # + rmarkdown hack for reshape2
+  - r-stringr # reshape2
+  - r-tidyverse
+  - r-gdata
+  - r-glmnet
+  - r-e1071
+  - r-norm
+  - r-missforest
+  - r-vim
+  - r-mice
+  - r-cluster
+  - r-mvtnorm
+  - r-rrcov
+  - r-gmm
+  - r-tmvtnorm
+  - r-igraph
+  # - bioconductor-biocinstaller
+  # - r-imputelcmd # bioconda
+  # - bioconductor-impute
+  # - bioconductor-pcamethods
+  # - rrcovNA, GMSimpute
+  # SeqKnn, pcaMethods, DreamAI # bioconductor
