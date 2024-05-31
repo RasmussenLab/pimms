@@ -43,10 +43,12 @@ def get_min_max_iterable(series: Iterable[pd.Series]) -> Tuple[int]:
 
 def plot_histogram_intensities(s: pd.Series,
                                interval_bins=1,
-                               min_max=(15, 40),
+                               min_max: Tuple[int] = None,
                                ax=None,
                                **kwargs) -> Tuple[Axes, range]:
     """Plot intensities in Series in a certain range and equally spaced intervals."""
+    if min_max is None:
+        min_max = get_min_max_iterable([s])
     min_bin, max_bin = min_max
     bins = range(min_bin, max_bin, interval_bins)
     ax = s.plot.hist(bins=bins, xticks=list(bins),

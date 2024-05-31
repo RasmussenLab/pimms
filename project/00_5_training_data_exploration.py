@@ -26,22 +26,22 @@
 
 # %%
 from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
 
+import matplotlib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 
-import matplotlib
-
 import vaep
-from vaep import plotting
-from vaep.pandas import missing_data
 import vaep.data_handling
+from vaep import plotting
 from vaep.analyzers import analyzers
+from vaep.pandas import missing_data
 from vaep.utils import create_random_df
 
 logger = vaep.logging.setup_nb_logger()
@@ -51,48 +51,13 @@ matplotlib.rcParams.update({'font.size': 6,
                             'figure.figsize': [4.0, 2.0]})
 
 
-def only_every_x_ticks(ax, x=2, axis=None):
-    """Sparse out ticks on both axis by factor x"""
-    if axis is None:
-        ax.set_xticks(ax.get_xticks()[::x])
-        ax.set_yticks(ax.get_yticks()[::x])
-    else:
-        if axis == 0:
-            ax.set_xticks(ax.get_xticks()[::x])
-        elif axis == 1:
-            ax.set_yticks(ax.get_yticks()[::x])
-        else:
-            raise ValueError(f'axis must be 0 or 1, got {axis}')
-    return ax
-
-
-def use_first_n_chars_in_labels(ax, x=2):
-    """Take first N characters of labels and use them as new labels"""
-    # xaxis
-    _new_labels = [_l.get_text()[:x]
-                   for _l in ax.get_xticklabels()]
-    _ = ax.set_xticklabels(_new_labels)
-    # yaxis
-    _new_labels = [_l.get_text()[:x] for _l in ax.get_yticklabels()]
-    _ = ax.set_yticklabels(_new_labels)
-    return ax
-
-
-def split_xticklabels(ax, PG_SEPARATOR=';'):
-    """Split labels by PG_SEPARATOR and only use first part"""
-    if PG_SEPARATOR is not None:
-        _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
-                       for _l in ax.get_xticklabels()]
-        _ = ax.set_xticklabels(_new_labels)
-    return ax
-
-
 def get_clustermap(data,
                    figsize=(8, 8),
                    cbar_pos: tuple[float, float, float, float] = (
                        0.02, 0.83, 0.03, 0.15),
                    **kwargs):
     from sklearn.impute import SimpleImputer
+
     from vaep.pandas import _add_indices
     X = SimpleImputer().fit_transform(data)
     X = _add_indices(X, data)
@@ -172,6 +137,10 @@ if FN_INTENSITIES.suffix == '.pkl':
     data = pd.read_pickle(FN_INTENSITIES)
 elif FN_INTENSITIES.suffix == '.csv':
     data = pd.read_csv(FN_INTENSITIES, index_col=INDEX_COL, nrows=N_FIRST_ROWS)
+elif FN_INTENSITIES.suffix == '.tsv':
+    data = pd.read_csv(FN_INTENSITIES, sep='\t', index_col=INDEX_COL, nrows=N_FIRST_ROWS)
+else:
+    raise ValueError(f'File extension {FN_INTENSITIES.suffix} not supported')
 data
 
 # %%
@@ -373,10 +342,10 @@ if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_yticks([])
 # cg.fig.suptitle(f'Present-absent pattern of {FEATURES_CUTOFF_TEXT}')
 ax.set_title(f'Present-absent pattern of {FEATURES_CUTOFF_TEXT}')
-cg.fig.tight_layout()
+cg.figure.tight_layout()
 fname = FIGUREFOLDER / 'clustermap_present_absent_pattern.png'
 files_out[fname.name] = fname
-vaep.savefig(cg.fig,
+vaep.savefig(cg.figure,
              name=fname,
              pdf=False,
              dpi=600)
@@ -390,16 +359,19 @@ assert (len(cg.dendrogram_row.reordered_ind), len(
 
 # %%
 vaep.plotting.make_large_descriptors(5)
-fig, ax = plt.subplots(figsize=(8, 8))
+fig, ax = plt.subplots(figsize=(7.5, 3.5))
 ax = sns.heatmap(
     selected.iloc[cg.dendrogram_row.reordered_ind,
                   cg.dendrogram_col.reordered_ind],
+    robust=True,
+    cbar=False,
+    annot=False,
     ax=ax,
 )
 ax.set_title(f'Heatmap of intensities clustered by missing pattern of {FEATURES_CUTOFF_TEXT}',
              fontsize=8)
-only_every_x_ticks(ax, x=2)
-use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+vaep.plotting.only_every_x_ticks(ax, x=2)
+vaep.plotting.use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if PG_SEPARATOR is not None:
     _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
                    for _l in ax.get_xticklabels()]
@@ -428,8 +400,8 @@ ax = sns.heatmap(
 )
 ax.set_title(f'Heatmap of feature correlation of {FEATURES_CUTOFF_TEXT}',
              fontsize=8)
-_ = only_every_x_ticks(ax, x=2)
-_ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+_ = vaep.plotting.only_every_x_ticks(ax, x=2)
+_ = vaep.plotting.use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if PG_SEPARATOR is not None:
     _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
                    for _l in ax.get_xticklabels()]
@@ -455,8 +427,8 @@ ax = sns.heatmap(
     cbar_kws={'shrink': 0.75},
     square=True,
 )
-_ = only_every_x_ticks(ax, x=2)
-_ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+_ = vaep.plotting.only_every_x_ticks(ax, x=2)
+_ = vaep.plotting.use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 if NO_TICK_LABELS_ON_HEATMAP:
     ax.set_xticks([])
     ax.set_yticks([])
@@ -477,8 +449,8 @@ if PG_SEPARATOR is not None:
     _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
                    for _l in ax.get_xticklabels()]
     _ = ax.set_xticklabels(_new_labels)
-_ = only_every_x_ticks(ax, x=2, axis=0)
-_ = use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
+_ = vaep.plotting.only_every_x_ticks(ax, x=2, axis=0)
+_ = vaep.plotting.use_first_n_chars_in_labels(ax, x=SAMPLE_FIRST_N_CHARS)
 # ax.set_title(f'Clustermap of intensities based on {FEATURES_CUTOFF_TEXT}', fontsize=7)
 # cg.fig.tight_layout()  # tight_layout makes the cbar a bit ugly
 cg.fig.suptitle(f'Clustermap of intensities based on {FEATURES_CUTOFF_TEXT}', fontsize=7)

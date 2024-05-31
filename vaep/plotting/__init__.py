@@ -128,6 +128,9 @@ def make_large_descriptors(size='xx-large'):
                          })
 
 
+set_font_sizes = make_large_descriptors
+
+
 def add_prop_as_second_yaxis(ax: matplotlib.axes.Axes, n_samples: int,
                              format_str: str = '{x:,.3f}') -> matplotlib.axes.Axes:
     """Add proportion as second axis. Try to align cleverly
@@ -327,3 +330,39 @@ def plot_cutoffs(df: pd.DataFrame,
     if min_feat_in_sample is not None:
         ax.axhline(min_feat_in_sample)
     return fig, axes
+
+
+def only_every_x_ticks(ax, x=2, axis=None):
+    """Sparse out ticks on both axis by factor x"""
+    if axis is None:
+        ax.set_xticks(ax.get_xticks()[::x])
+        ax.set_yticks(ax.get_yticks()[::x])
+    else:
+        if axis == 0:
+            ax.set_xticks(ax.get_xticks()[::x])
+        elif axis == 1:
+            ax.set_yticks(ax.get_yticks()[::x])
+        else:
+            raise ValueError(f'axis must be 0 or 1, got {axis}')
+    return ax
+
+
+def use_first_n_chars_in_labels(ax, x=2):
+    """Take first N characters of labels and use them as new labels"""
+    # xaxis
+    _new_labels = [_l.get_text()[:x]
+                   for _l in ax.get_xticklabels()]
+    _ = ax.set_xticklabels(_new_labels)
+    # yaxis
+    _new_labels = [_l.get_text()[:x] for _l in ax.get_yticklabels()]
+    _ = ax.set_yticklabels(_new_labels)
+    return ax
+
+
+def split_xticklabels(ax, PG_SEPARATOR=';'):
+    """Split labels by PG_SEPARATOR and only use first part"""
+    if PG_SEPARATOR is not None:
+        _new_labels = [_l.get_text().split(PG_SEPARATOR)[0]
+                       for _l in ax.get_xticklabels()]
+        _ = ax.set_xticklabels(_new_labels)
+    return ax
