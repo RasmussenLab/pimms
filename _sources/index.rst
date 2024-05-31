@@ -16,6 +16,7 @@ Inspect the notebooks associated with the imputation workflow.
     :caption: PIMMS models
 
     VAE <01_1_train_VAE.ipynb>
+    KNN5 <01_1_train_KNN5.ipynb>
     KNN <01_1_train_KNN.ipynb>
     Median <01_1_train_Median.ipynb>
     DAE <01_1_train_DAE.ipynb>

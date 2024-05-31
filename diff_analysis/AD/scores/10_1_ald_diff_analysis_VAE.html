@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g7e56496 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g076e76f documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g7e56496 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g076e76f documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -154,6 +154,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
@@ -1957,17 +1958,17 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.479
-            A0A075B6Q5                 15.677
-            A0A075B6R2                 16.581
-            A0A075B6S5                 16.253
-            A0A087WSY4                 16.248
+Sample_000  A0A075B6J9                 15.883
+            A0A075B6Q5                 16.026
+            A0A075B6R2                 16.828
+            A0A075B6S5                 16.370
+            A0A087WSY4                 16.578
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.070
-            Q9UI40;Q9UI40-2            15.762
-            Q9UIW2                     16.578
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.532
-            Q9UP79                     16.004
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.940
+            Q9UI40;Q9UI40-2            16.313
+            Q9UIW2                     16.899
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.218
+            Q9UP79                     16.047
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -2034,7 +2035,7 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_VAE.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/825ed238d7f99e0bd7a43e8c460d1267dae86a8ad2c870792172b2c049ec376b.png" src="../../../_images/825ed238d7f99e0bd7a43e8c460d1267dae86a8ad2c870792172b2c049ec376b.png" />
+<img alt="../../../_images/4a621cbf7c8665c7eb98c6006cd865a9fca04f02d2e7f1cc98b81c936e75d0b7.png" src="../../../_images/4a621cbf7c8665c7eb98c6006cd865a9fca04f02d2e7f1cc98b81c936e75d0b7.png" />
 </div>
 </div>
 <p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
@@ -2102,27 +2103,27 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>(8, 9]</th>
       <td>39</td>
-      <td>7</td>
+      <td>15</td>
     </tr>
     <tr>
       <th>(9, 10]</th>
       <td>136</td>
-      <td>89</td>
+      <td>80</td>
     </tr>
     <tr>
       <th>(10, 11]</th>
       <td>529</td>
-      <td>570</td>
+      <td>591</td>
     </tr>
     <tr>
       <th>(11, 12]</th>
       <td>1,731</td>
-      <td>1,652</td>
+      <td>1,733</td>
     </tr>
     <tr>
       <th>(12, 13]</th>
       <td>4,644</td>
-      <td>3,833</td>
+      <td>3,779</td>
     </tr>
     <tr>
       <th>(13, 14]</th>
@@ -2132,57 +2133,57 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>(14, 15]</th>
       <td>27,515</td>
-      <td>11,885</td>
+      <td>12,005</td>
     </tr>
     <tr>
       <th>(15, 16]</th>
       <td>44,723</td>
-      <td>11,810</td>
+      <td>11,600</td>
     </tr>
     <tr>
       <th>(16, 17]</th>
       <td>45,981</td>
-      <td>5,689</td>
+      <td>5,764</td>
     </tr>
     <tr>
       <th>(17, 18]</th>
       <td>36,274</td>
-      <td>1,883</td>
+      <td>1,850</td>
     </tr>
     <tr>
       <th>(18, 19]</th>
       <td>25,049</td>
-      <td>641</td>
+      <td>628</td>
     </tr>
     <tr>
       <th>(19, 20]</th>
       <td>20,386</td>
-      <td>305</td>
+      <td>315</td>
     </tr>
     <tr>
       <th>(20, 21]</th>
       <td>13,495</td>
-      <td>222</td>
+      <td>193</td>
     </tr>
     <tr>
       <th>(21, 22]</th>
       <td>8,234</td>
-      <td>84</td>
+      <td>83</td>
     </tr>
     <tr>
       <th>(22, 23]</th>
       <td>4,885</td>
-      <td>65</td>
+      <td>64</td>
     </tr>
     <tr>
       <th>(23, 24]</th>
       <td>2,459</td>
-      <td>16</td>
+      <td>50</td>
     </tr>
     <tr>
       <th>(24, 25]</th>
       <td>1,237</td>
-      <td>1</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>(25, 26]</th>
@@ -2268,10 +2269,10 @@ Name: intensity, Length: 46401, dtype: float64
     </tr>
     <tr>
       <th>VAE</th>
-      <td>14.766</td>
-      <td>1.665</td>
-      <td>0.917</td>
-      <td>0.649</td>
+      <td>14.764</td>
+      <td>1.681</td>
+      <td>0.918</td>
+      <td>0.655</td>
     </tr>
   </tbody>
 </table>
@@ -2332,22 +2333,22 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>mean</th>
       <td>17.133</td>
-      <td>14.740</td>
+      <td>14.736</td>
     </tr>
     <tr>
       <th>std</th>
       <td>2.564</td>
-      <td>1.623</td>
+      <td>1.640</td>
     </tr>
     <tr>
       <th>mean_shift</th>
       <td>0.000</td>
-      <td>0.933</td>
+      <td>0.935</td>
     </tr>
     <tr>
       <th>std shrinkage</th>
       <td>1.000</td>
-      <td>0.633</td>
+      <td>0.640</td>
     </tr>
   </tbody>
 </table>
@@ -2452,11 +2453,11 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>14.304</td>
+      <td>14.059</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>15.896</td>
+      <td>15.777</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -2471,12 +2472,12 @@ Name: intensity, Length: 46401, dtype: float64
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>16.733</td>
+      <td>16.709</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>14.213</td>
+      <td>14.191</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -2528,7 +2529,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>15.749</td>
+      <td>15.793</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -2587,10 +2588,10 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>15.483</td>
+      <td>15.317</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>16.060</td>
+      <td>16.149</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -2611,7 +2612,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>15.118</td>
+      <td>15.790</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -2620,14 +2621,14 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>14.613</td>
+      <td>14.678</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>11.055</td>
-      <td>11.253</td>
+      <td>11.170</td>
+      <td>11.029</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -2635,7 +2636,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>14.440</td>
+      <td>14.940</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -2659,23 +2660,23 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>13.936</td>
+      <td>14.762</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>16.727</td>
+      <td>17.049</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>14.453</td>
+      <td>14.484</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>11.242</td>
+      <td>11.139</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2683,7 +2684,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>14.532</td>
+      <td>15.201</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -2797,56 +2798,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>1.019</td>
+      <td>1.010</td>
       <td>1</td>
-      <td>7.452</td>
+      <td>7.329</td>
       <td>0.007</td>
-      <td>0.038</td>
-      <td>2.159</td>
-      <td>0.019</td>
+      <td>0.037</td>
+      <td>2.131</td>
+      <td>0.021</td>
       <td>True</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.008</td>
+      <td>0.007</td>
       <td>1</td>
-      <td>0.055</td>
-      <td>0.815</td>
+      <td>0.054</td>
+      <td>0.817</td>
       <td>0.000</td>
-      <td>0.089</td>
-      <td>0.875</td>
+      <td>0.088</td>
+      <td>0.877</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.266</td>
+      <td>0.280</td>
       <td>1</td>
-      <td>1.949</td>
-      <td>0.164</td>
-      <td>0.010</td>
-      <td>0.784</td>
-      <td>0.269</td>
+      <td>2.033</td>
+      <td>0.156</td>
+      <td>0.011</td>
+      <td>0.808</td>
+      <td>0.257</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>0.456</td>
+      <td>0.494</td>
       <td>1</td>
-      <td>3.336</td>
-      <td>0.069</td>
-      <td>0.017</td>
-      <td>1.159</td>
-      <td>0.135</td>
+      <td>3.583</td>
+      <td>0.060</td>
+      <td>0.018</td>
+      <td>1.223</td>
+      <td>0.120</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>1.673</td>
+      <td>1.723</td>
       <td>1</td>
-      <td>12.239</td>
+      <td>12.504</td>
       <td>0.001</td>
-      <td>0.060</td>
-      <td>3.235</td>
+      <td>0.061</td>
+      <td>3.293</td>
       <td>0.002</td>
       <td>True</td>
     </tr>
@@ -2865,56 +2866,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>2.289</td>
+      <td>2.077</td>
       <td>1</td>
-      <td>4.236</td>
-      <td>0.041</td>
-      <td>0.022</td>
-      <td>1.388</td>
-      <td>0.087</td>
+      <td>4.004</td>
+      <td>0.047</td>
+      <td>0.021</td>
+      <td>1.330</td>
+      <td>0.097</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.593</td>
+      <td>0.499</td>
       <td>1</td>
-      <td>1.098</td>
-      <td>0.296</td>
-      <td>0.006</td>
-      <td>0.529</td>
-      <td>0.427</td>
+      <td>0.962</td>
+      <td>0.328</td>
+      <td>0.005</td>
+      <td>0.484</td>
+      <td>0.458</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>2.850</td>
+      <td>2.388</td>
       <td>1</td>
-      <td>5.273</td>
-      <td>0.023</td>
-      <td>0.027</td>
-      <td>1.643</td>
-      <td>0.053</td>
+      <td>4.604</td>
+      <td>0.033</td>
+      <td>0.024</td>
+      <td>1.479</td>
+      <td>0.073</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>2.719</td>
+      <td>2.255</td>
       <td>1</td>
-      <td>5.031</td>
-      <td>0.026</td>
-      <td>0.026</td>
-      <td>1.584</td>
-      <td>0.060</td>
+      <td>4.347</td>
+      <td>0.038</td>
+      <td>0.022</td>
+      <td>1.416</td>
+      <td>0.083</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>18.420</td>
+      <td>13.608</td>
       <td>1</td>
-      <td>34.086</td>
+      <td>26.228</td>
       <td>0.000</td>
-      <td>0.151</td>
-      <td>7.652</td>
+      <td>0.121</td>
+      <td>6.132</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -2993,61 +2994,61 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>1.019</td>
+      <td>1.010</td>
       <td>1</td>
-      <td>7.452</td>
+      <td>7.329</td>
       <td>0.007</td>
-      <td>0.038</td>
-      <td>2.159</td>
-      <td>0.019</td>
+      <td>0.037</td>
+      <td>2.131</td>
+      <td>0.021</td>
       <td>True</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
-      <td>2.918</td>
+      <td>2.880</td>
       <td>1</td>
-      <td>4.741</td>
-      <td>0.031</td>
+      <td>4.681</td>
+      <td>0.032</td>
       <td>0.024</td>
-      <td>1.513</td>
-      <td>0.068</td>
+      <td>1.498</td>
+      <td>0.071</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
-      <td>0.116</td>
+      <td>0.107</td>
       <td>1</td>
-      <td>0.964</td>
-      <td>0.327</td>
+      <td>0.879</td>
+      <td>0.350</td>
       <td>0.005</td>
-      <td>0.485</td>
-      <td>0.458</td>
+      <td>0.457</td>
+      <td>0.479</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
-      <td>0.182</td>
+      <td>0.184</td>
       <td>1</td>
-      <td>1.315</td>
-      <td>0.253</td>
+      <td>1.326</td>
+      <td>0.251</td>
       <td>0.007</td>
-      <td>0.597</td>
-      <td>0.378</td>
+      <td>0.600</td>
+      <td>0.374</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
-      <td>6.080</td>
+      <td>4.868</td>
       <td>1</td>
-      <td>8.252</td>
-      <td>0.005</td>
-      <td>0.041</td>
-      <td>2.344</td>
-      <td>0.013</td>
+      <td>7.372</td>
+      <td>0.007</td>
+      <td>0.037</td>
+      <td>2.141</td>
+      <td>0.020</td>
       <td>True</td>
     </tr>
     <tr>
@@ -3071,19 +3072,19 @@ Name: intensity, Length: 46401, dtype: float64
       <td>0.175</td>
       <td>0.010</td>
       <td>0.756</td>
-      <td>0.283</td>
+      <td>0.282</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
-      <td>0.436</td>
+      <td>0.630</td>
       <td>1</td>
-      <td>1.342</td>
-      <td>0.248</td>
-      <td>0.007</td>
-      <td>0.605</td>
-      <td>0.373</td>
+      <td>1.908</td>
+      <td>0.169</td>
+      <td>0.010</td>
+      <td>0.773</td>
+      <td>0.274</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3095,31 +3096,31 @@ Name: intensity, Length: 46401, dtype: float64
       <td>0.083</td>
       <td>0.016</td>
       <td>1.079</td>
-      <td>0.156</td>
+      <td>0.157</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
-      <td>0.137</td>
+      <td>0.108</td>
       <td>1</td>
-      <td>0.121</td>
-      <td>0.729</td>
-      <td>0.001</td>
-      <td>0.137</td>
-      <td>0.812</td>
+      <td>0.085</td>
+      <td>0.770</td>
+      <td>0.000</td>
+      <td>0.113</td>
+      <td>0.841</td>
       <td>False</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
-      <td>2.289</td>
+      <td>2.077</td>
       <td>1</td>
-      <td>4.236</td>
-      <td>0.041</td>
-      <td>0.022</td>
-      <td>1.388</td>
-      <td>0.087</td>
+      <td>4.004</td>
+      <td>0.047</td>
+      <td>0.021</td>
+      <td>1.330</td>
+      <td>0.097</td>
       <td>False</td>
     </tr>
   </tbody>
