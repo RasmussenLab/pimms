@@ -5,8 +5,8 @@ from typing import Tuple
 import pandas as pd
 # import explicit objects for functional annotations
 from fastai.collab import *
-from fastai.collab import (Categorify, CollabDataLoaders, IndexSplitter,
-                           TabularCollab, TransformBlock)
+from fastai.collab import (Categorify, IndexSplitter, TabularCollab,
+                           TransformBlock)
 from fastai.tabular.all import *
 
 import vaep.io.dataloaders
@@ -49,37 +49,30 @@ class CollabAnalysis(analysis.ModelAnalysis):
                  item_column: str = 'peptide',
                  target_column: str = 'intensity',
                  model_kwargs: dict = None,
-                 batch_size: int = 64):
+                 batch_size: int = 1_024):
         if datasplits.val_y is not None:
-            self.X, self.frac = combine_data(datasplits.train_X,
-                                             datasplits.val_y)
+            self.X, _ = combine_data(datasplits.train_X,
+                                     datasplits.val_y)
         else:
-            self.X, self.frac = datasplits.train_X.reset_index(), 0.0
+            self.X, _ = datasplits.train_X.reset_index(), 0.0
         self.batch_size = batch_size
-        self.dls = CollabDataLoaders.from_df(self.X, valid_pct=self.frac,
-                                             seed=42,
-                                             user_name=sample_column,
-                                             item_name=item_column,
-                                             rating_name=target_column,
-                                             bs=self.batch_size)
         user_name = sample_column
         item_name = item_column
         rating_name = target_column
         cat_names = [user_name, item_name]
-        ratings = self.X
         splits = None
         if datasplits.val_y is not None:
             idx_splitter = IndexSplitter(
-                list(range(len(datasplits.train_X), len(datasplits.train_X) + len(datasplits.val_y))))
+                list(range(len(datasplits.train_X), len(self.X))))
             splits = idx_splitter(self.X)
-        to = TabularCollab(
-            ratings,
-            [Categorify],
-            cat_names,
+        self.to = TabularCollab(
+            self.X,
+            procs=[Categorify],
+            cat_names=cat_names,
             y_names=[rating_name],
             y_block=TransformBlock(),
             splits=splits)
-        self.dls = to.dataloaders(path='.', bs=self.batch_size)
+        self.dls = self.to.dataloaders(path='.', bs=self.batch_size)
         self.params = {}
         if model_kwargs is None:
             model_kwargs = {}
