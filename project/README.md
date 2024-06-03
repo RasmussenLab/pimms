@@ -84,8 +84,7 @@ papermill  01_0_split_data.ipynb runs/experiment_03/%DATASET%/experiment_03_data
 tag | notebook  | Description
 --- | ---  |  --- 
 Tutorials | 
-tut  | 04_1_train_pimms_models.ipynb | main tutorial showing scikit-learn interface partly with validatio data
-tut  | 04_1_train_DAE_VAE_wo_val_data.ipynb | 
+-  | 04_1_train_pimms_models.ipynb | main tutorial showing scikit-learn (Transformer) interface partly with or without validation data
 Single experiment |
 run  | 01_0_split_data.ipynb               | Create train, validation and test data splits
 run  | 01_0_transform_data_to_wide_format.ipynb | Transform train split to wide format for R models

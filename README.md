@@ -11,7 +11,7 @@ The publication is accepted in Nature Communications
 and the pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
 > `PIMMS` was called `vaep` during development.  
-> Before entire refactoring has to been completed the imported package will be `vaep`.
+> Before entire refactoring has been completed the imported package will be `vaep`.
 
 We provide functionality as a python package, an excutable workflow or simply in notebooks.
 

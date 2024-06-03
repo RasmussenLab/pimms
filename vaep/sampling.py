@@ -1,12 +1,10 @@
 import logging
-from typing import Union, Tuple
-
+from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
 
 from vaep.io.datasplits import DataSplits
-
 
 logger = logging.getLogger(__name__)
 
@@ -184,8 +182,7 @@ def sample_mnar_mcar(df_long: pd.DataFrame,
     return splits, thresholds, fake_na_mcar, fake_na_mnar
 
 
-def get_thresholds(df_long: pd.DataFrame,
-                   frac_non_train: float,
+def get_thresholds(df_long: pd.DataFrame, frac_non_train: float,
                    random_state: int) -> pd.Series:
     """Get thresholds for MNAR/MCAR sampling. Thresholds are sampled from a normal
     distrubiton with a mean of the quantile of the simulated missing data.
@@ -207,10 +204,47 @@ def get_thresholds(df_long: pd.DataFrame,
     """
     quantile_frac = df_long.quantile(frac_non_train)
     rng = np.random.default_rng(random_state)
-    thresholds = pd.Series(rng.normal(loc=float(quantile_frac),
-                                      scale=float(0.3 * df_long.std()),
-                                      size=len(df_long),
-                                      ),
-                           index=df_long.index,
-                           )
+    thresholds = pd.Series(
+        rng.normal(
+            loc=float(quantile_frac),
+            scale=float(0.3 * df_long.std()),
+            size=len(df_long),
+        ),
+        index=df_long.index,
+    )
     return thresholds
+
+
+def check_split_integrity(splits: DataSplits) -> DataSplits:
+    """Check if IDs in are only in validation or test data for rare cases.
+    Returns the corrected splits."""
+    diff = (splits
+            .val_y
+            .index
+            .levels[-1]
+            .difference(splits
+                        .train_X
+                        .index
+                        .levels[-1]
+                        ).to_list())
+    if diff:
+        logger.warning(f"Remove from val: {diff.to_list()}")
+        to_remove = splits.val_y.loc[pd.IndexSlice[:, diff]]
+        splits.train_X = pd.concat([splits.train_X, to_remove])
+        splits.val_y = splits.val_y.drop(to_remove.index)
+
+    diff = (splits
+            .test_y
+            .index
+            .levels[-1]
+            .difference(splits
+                        .train_X
+                        .index
+                        .levels[-1]
+                        ).to_list())
+    if diff:
+        logger.warning(f"Remove from test: {diff.to_list()}")
+        to_remove = splits.test_y.loc[pd.IndexSlice[:, diff]]
+        splits.train_X = pd.concat([splits.train_X, to_remove])
+        splits.test_y = splits.test_y.drop(to_remove.index)
+    return splits
