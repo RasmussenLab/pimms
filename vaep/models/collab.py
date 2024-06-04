@@ -11,8 +11,7 @@ from fastai.tabular.all import *
 
 import vaep.io.dataloaders
 import vaep.io.datasplits
-
-from . import analysis
+from vaep.models import analysis
 
 logger = logging.getLogger(__name__)
 

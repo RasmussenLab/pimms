@@ -7,7 +7,30 @@ import numpy as np
 import omegaconf
 import pandas as pd
 
-from .calc_errors import calc_errors_per_feat, get_absolute_error
+from vaep.pandas.calc_errors import calc_errors_per_feat, get_absolute_error
+
+__all__ = [
+    'calc_errors_per_feat',
+    'get_absolute_error',
+    'unique_cols',
+    'get_unique_non_unique_columns',
+    'prop_unique_index',
+    'replace_with',
+    'index_to_dict',
+    'get_columns_accessor',
+    'get_columns_accessor_from_iterable',
+    'select_max_by',
+    'get_columns_namedtuple',
+    'highlight_min',
+    '_add_indices',
+    'interpolate',
+    'flatten_dict_of_dicts',
+    'key_map',
+    'parse_query_expression',
+    'length',
+    'get_last_index_matching_proportion',
+    'get_lower_whiskers',
+    'get_counts_per_bin']
 
 
 def unique_cols(s: pd.Series) -> bool:
@@ -285,16 +308,15 @@ def get_lower_whiskers(df: pd.DataFrame, factor: float = 1.5) -> pd.Series:
     return ret
 
 
-def get_counts_per_bin(df: pd.DataFrame, bins: range, columns: Optional[List[str]] = None) -> pd.DataFrame:
+def get_counts_per_bin(df: pd.DataFrame,
+                       bins: range,
+                       columns: Optional[List[str]] = None) -> pd.DataFrame:
     """Return counts per bin for selected columns in DataFrame."""
     counts_per_bin = dict()
     if columns is None:
         columns = df.columns.to_list()
     for col in columns:
-        _series = (pd.cut(df[col], bins=bins)
-                   .to_frame()
-                   .groupby(col)
-                   .size())
+        _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
         _series.index.name = 'bin'
         counts_per_bin[col] = _series
     counts_per_bin = pd.DataFrame(counts_per_bin)
