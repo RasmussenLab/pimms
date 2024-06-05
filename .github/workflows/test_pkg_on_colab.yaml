@@ -1,10 +1,10 @@
 name: Test that tutorial runs on latest colab image
 
 on:
-    push:
-        branches: [dev]
+    # push:
+    #     branches: [main]
     pull_request:
-        branches: [main, dev]
+        branches: [main]
     schedule:
         - cron: '0 2 3 * *'
 
