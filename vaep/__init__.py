@@ -8,7 +8,7 @@ from __future__ import annotations
 import logging as _logging
 from importlib import metadata
 
-import njab
+# import njab
 
 import vaep.logging
 import vaep.nb
@@ -31,6 +31,6 @@ __all__ = ['logging', 'nb', 'pandas', 'plotting', 'savefig']
 # set some defaults
 
 
-njab.pandas.set_pandas_number_formatting(float_format='{:,.3f}')
+# njab.pandas.set_pandas_number_formatting(float_format='{:,.3f}')
 
 vaep.plotting.make_large_descriptors('x-large')

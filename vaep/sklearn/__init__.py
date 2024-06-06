@@ -4,7 +4,7 @@ Might be moved to a separate package in the future.
 """
 import logging
 
-from njab.sklearn import run_pca
+# from njab.sklearn import run_pca
 from sklearn.impute import SimpleImputer
 
 from vaep.io import add_indices
