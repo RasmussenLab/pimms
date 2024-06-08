@@ -20,6 +20,8 @@
 # - BiocManager could be moved to methods who are installed from BioConductor
 
 # + tags=["hide-input"] vscode={"languageId": "r"}
+options("install.lock"=FALSE)
+
 packages_base_R <-
   c("BiocManager", "reshape2", "data.table", "readr", "tibble")
 
