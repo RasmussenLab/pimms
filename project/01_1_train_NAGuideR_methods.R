@@ -20,7 +20,7 @@
 # - BiocManager could be moved to methods who are installed from BioConductor
 
 # + tags=["hide-input"] vscode={"languageId": "r"}
-options("install.lock"=FALSE)
+# options("install.lock"=FALSE)
 
 packages_base_R <-
   c("BiocManager", "reshape2", "data.table", "readr", "tibble")
@@ -132,6 +132,7 @@ nafunctions <- function(x, method = "zero") {
   else if (method == "qrilc") {
     install_bioconductor("impute")
     install_bioconductor("pcaMethods")
+    install_rpackage('gmm')
     install_rpackage('imputeLCMD')
     xxm <- t(df1)
     data_zero1 <-
@@ -141,6 +142,7 @@ nafunctions <- function(x, method = "zero") {
   else if (method == "mindet") {
     install_bioconductor("impute")
     install_bioconductor("pcaMethods")
+    install_rpackage('gmm')
     install_rpackage('imputeLCMD')
     xxm <- as.matrix(df1)
     df <- imputeLCMD::impute.MinDet(xxm, q = 0.01)
@@ -148,6 +150,7 @@ nafunctions <- function(x, method = "zero") {
   else if (method == "minprob") {
     install_bioconductor("impute")
     install_bioconductor("pcaMethods")
+    install_rpackage('gmm')
     install_rpackage('imputeLCMD')
     xxm <- as.matrix(df1)
     df <-
@@ -280,6 +283,7 @@ nafunctions <- function(x, method = "zero") {
     
     install_bioconductor("impute")
     install_bioconductor("pcaMethods")
+    install_rpackage('gmm')
     install_rpackage('imputeLCMD')
     install_rpackage("magrittr")
     install_rpackage("glmnet")
