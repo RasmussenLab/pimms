@@ -16,8 +16,7 @@ from fastai import learner
 from fastcore.foundation import L
 
 import vaep
-
-from . import ae, analysis, collab, vae
+from vaep.models import ae, analysis, collab, vae
 
 logger = logging.getLogger(__name__)
 

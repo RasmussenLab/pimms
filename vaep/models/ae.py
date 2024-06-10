@@ -21,7 +21,7 @@ import vaep.io.datasplits
 import vaep.models
 import vaep.transform
 
-from . import analysis
+from vaep.models import analysis
 
 logger = logging.getLogger(__name__)
 

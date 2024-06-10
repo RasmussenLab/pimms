@@ -69,17 +69,25 @@ jobs:
         mkdir runs
         papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models.ipynb
         papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models_no_val.ipynb -p sample_splits False
-    - name: Run demo workflow (integration test)
+    - name: Dry-Run demo workflow (integration test)
       continue-on-error: true
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
+    - name: Run demo workflow (integration test)
+      continue-on-error: true
+      run: | 
+       cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
     - name: Run demo workflow again (in case of installation issues)
+      continue-on-error: true
       run: | 
         cd project
-        snakemake -p -c1 -n --configfile config/single_dev_dataset/example/config.yaml
         snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
+    - name: Run demo workflow again (in case of installation issues) - one thread
+      run: | 
+        cd project
+        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml
     - name: Archive results
     # https://github.com/actions/upload-artifact
       uses: actions/upload-artifact@v4

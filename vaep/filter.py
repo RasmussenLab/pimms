@@ -4,8 +4,6 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-# ! use in data selection and tutorial
-
 
 def select_features(df: pd.DataFrame,
                     feat_prevalence: float = .2,

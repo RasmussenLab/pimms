@@ -9,10 +9,7 @@ import logging as _logging
 from importlib import metadata
 
 import njab
-import pandas as pd
-import pandas.io.formats.format as pf
 
-# from . import logging, nb, pandas, plotting
 import vaep.logging
 import vaep.nb
 import vaep.pandas
