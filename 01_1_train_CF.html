@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g01e21ff documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g0874f5f documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g01e21ff documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g0874f5f documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -478,6 +478,7 @@ document.write(`
 <span class="c1"># model</span>
 <span class="c1"># Dimensionality of encoding dimension (latent space of model)</span>
 <span class="n">latent_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># hidden_layers:str = &#39;128_64&#39; # Underscore separated string of layers, &#39;128 64&#39; for the encoder, reversed for decoder</span>
 <span class="n">sample_idx_position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># position of index which is sample ID</span>
 <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;CF&#39;</span>  <span class="c1"># model name</span>
 <span class="n">model_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;CF&#39;</span>  <span class="c1"># potentially alternative key for model (grid search)</span>
@@ -1002,8 +1003,8 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00437
-No improvement since epoch 13: early stopping
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00302
+No improvement since epoch 16: early stopping
 vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
@@ -1035,97 +1036,115 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
   <tbody>
     <tr>
       <td>0</td>
-      <td>8.508893</td>
-      <td>12.470579</td>
+      <td>8.911344</td>
+      <td>13.146944</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>5.568771</td>
-      <td>7.727538</td>
+      <td>7.143838</td>
+      <td>10.466833</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1.908453</td>
-      <td>2.601928</td>
+      <td>3.878257</td>
+      <td>5.535239</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>0.775243</td>
-      <td>1.002924</td>
+      <td>1.418271</td>
+      <td>2.013826</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>0.583847</td>
-      <td>0.746183</td>
+      <td>0.715362</td>
+      <td>0.949652</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.530492</td>
-      <td>0.708028</td>
+      <td>0.578714</td>
+      <td>0.755472</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.503945</td>
-      <td>0.677349</td>
+      <td>0.548215</td>
+      <td>0.732264</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.446997</td>
-      <td>0.619980</td>
+      <td>0.542492</td>
+      <td>0.731495</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.414369</td>
-      <td>0.573121</td>
+      <td>0.528316</td>
+      <td>0.686635</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.386322</td>
-      <td>0.531533</td>
+      <td>0.446083</td>
+      <td>0.617690</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.349207</td>
-      <td>0.503100</td>
+      <td>0.397760</td>
+      <td>0.557945</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.316047</td>
-      <td>0.485794</td>
+      <td>0.375954</td>
+      <td>0.521005</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.276385</td>
-      <td>0.466317</td>
+      <td>0.346355</td>
+      <td>0.504360</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>0.244323</td>
-      <td>0.453173</td>
+      <td>0.319758</td>
+      <td>0.481004</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>0.219632</td>
-      <td>0.460790</td>
+      <td>0.283289</td>
+      <td>0.463086</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>0.255832</td>
+      <td>0.459539</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>0.220841</td>
+      <td>0.449861</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>0.209065</td>
+      <td>0.458697</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/bf089c7641f9c1cedc1aa02c5c519d60b6ab1f1197ff41230885154af2e68ab3.png" src="_images/bf089c7641f9c1cedc1aa02c5c519d60b6ab1f1197ff41230885154af2e68ab3.png" />
-<img alt="_images/b7d51765b6776eef19cae158de94f5cb305413f46fd36d230e1c5bf8672c00d5.png" src="_images/b7d51765b6776eef19cae158de94f5cb305413f46fd36d230e1c5bf8672c00d5.png" />
+</table></div><img alt="_images/e1f57f8722d0fe0aa6eabd9dff2c0d6c4561637d06a8ac44bfe033956feff925.png" src="_images/e1f57f8722d0fe0aa6eabd9dff2c0d6c4561637d06a8ac44bfe033956feff925.png" />
+<img alt="_images/71f5c6ad3c5fb91024e89d63d659b730cdfa834a411c101fb2df8af06bc86757.png" src="_images/71f5c6ad3c5fb91024e89d63d659b730cdfa834a411c101fb2df8af06bc86757.png" />
 </div>
 </div>
 </section>
@@ -1200,31 +1219,31 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.807</td>
+      <td>15.720</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.554</td>
+      <td>16.451</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.008</td>
+      <td>13.905</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>20.152</td>
+      <td>19.659</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.021</td>
+      <td>15.266</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1236,31 +1255,31 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>23.342</td>
+      <td>22.768</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.039</td>
+      <td>16.505</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.277</td>
+      <td>14.895</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.608</td>
+      <td>13.435</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.418</td>
+      <td>14.487</td>
     </tr>
   </tbody>
 </table>
@@ -1333,27 +1352,27 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.523</td>
+      <td>17.312</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.139</td>
+      <td>17.887</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.663</td>
+      <td>22.493</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>14.931</td>
+      <td>15.307</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.624</td>
+      <td>16.697</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1365,27 +1384,27 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.702</td>
+      <td>16.010</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.234</td>
+      <td>13.577</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.657</td>
+      <td>13.755</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.280</td>
+      <td>15.502</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.450</td>
+      <td>16.282</td>
     </tr>
   </tbody>
 </table>
@@ -1677,8 +1696,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4607896979131578,
-  &#39;MAE&#39;: 0.45840481333887056,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.45869746217679197,
+  &#39;MAE&#39;: 0.45644073568339333,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1702,8 +1721,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.48617468795535523,
-  &#39;MAE&#39;: 0.467025158255396,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4761975847328677,
+  &#39;MAE&#39;: 0.4609316523044688,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1761,13 +1780,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.461</td>
-      <td>0.486</td>
+      <td>0.459</td>
+      <td>0.476</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.458</td>
-      <td>0.467</td>
+      <td>0.456</td>
+      <td>0.461</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1823,7 +1842,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 15,
+ &#39;epoch_trained&#39;: 18,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
