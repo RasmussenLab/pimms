@@ -11,11 +11,8 @@ import pandas as pd
 import seaborn
 
 import vaep.pandas
-
-from . import data, defaults, errors, plotly
-from .errors import plot_rolling_error
-
-# from . defaults import order_categories, labels_dict, IDX_ORDER
+from vaep.plotting import data, defaults, errors, plotly
+from vaep.plotting.errors import plot_rolling_error
 
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()

@@ -13,6 +13,7 @@
 # %%
 import os
 from importlib import metadata
+
 IN_COLAB = 'COLAB_GPU' in os.environ
 if IN_COLAB:
     try:
@@ -25,30 +26,59 @@ if IN_COLAB:
 
 # %% [markdown]
 # If on colab, please restart the environment and run everything from here on.
+#
+# Specify example data:
 
 # %%
 import os
+
 IN_COLAB = 'COLAB_GPU' in os.environ
 
 fn_intensities = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
 if IN_COLAB:
-    fn_intensities = 'https://raw.githubusercontent.com/RasmussenLab/pimms/main/project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
+    fn_intensities = ('https://raw.githubusercontent.com/RasmussenLab/pimms/main/'
+                      'project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv')
+
+# %% [markdown]
+# Load package.
 
 # %%
-import numpy as np
-import pandas as pd
+import logging
+import random
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from IPython.display import display
 
-
-from vaep.plotting.defaults import color_model_mapping
+import vaep.filter
 import vaep.plotting.data
 import vaep.sampling
-
-from vaep.sklearn.cf_transformer import CollaborativeFilteringTransformer
+from vaep.plotting.defaults import color_model_mapping
 from vaep.sklearn.ae_transformer import AETransformer
+from vaep.sklearn.cf_transformer import CollaborativeFilteringTransformer
 
 vaep.plotting.make_large_descriptors(8)
+
+
+logger = logger = vaep.logging.setup_nb_logger()
+logging.getLogger('fontTools').setLevel(logging.ERROR)
+
+# %% [markdown]
+# ## Parameters
+# Can be set by papermill on the command line or manually in the (colab) notebook.
+
+# %%
+fn_intensities: str = fn_intensities  # path or url to the data file in csv format
+index_name: str = 'Sample ID'  # name of the index column
+column_name: str = 'protein group'  # name of the column index
+select_features: bool = True  # Whether to select features based on prevalence
+feat_prevalence: float = 0.2  # minimum prevalence of a feature to be included
+sample_completeness: float = 0.3  # minimum completeness of a sample to be included
+sample_splits: bool = True  # Whether to sample validation and test data
+frac_non_train: float = 0.1  # fraction of non training data (validation and test split)
+frac_mnar: float = 0.0  # fraction of missing not at random data, rest: missing completely at random
+random_state: int = 42  # random state for reproducibility
 
 # %% [markdown]
 # ## Data
@@ -63,14 +93,12 @@ df.head()
 # that the data can be transformed very easily into long format:
 
 # %%
-df.index.name = 'Sample ID'  # already set
-df.columns.name = 'protein group'  # not set due to csv disk file format
+df.index.name = index_name  # already set
+df.columns.name = column_name  # not set due to csv disk file format
 df.head()
 
 # %% [markdown]
-#
-
-# %% [markdown]
+# ### Data transformation: log2 transformation
 # Transform the data using the logarithm, here using base 2:
 
 # %%
@@ -79,7 +107,7 @@ df.head()
 
 
 # %% [markdown]
-# two plots on data availability:
+# ### two plots inspecting data availability
 #
 # 1. proportion of missing values per feature median (N = protein groups)
 # 2. CDF of available intensities per protein group
@@ -94,31 +122,14 @@ df.notna().sum().sort_values().plot()
 
 
 # %% [markdown]
+# ### Data selection
 # define a minimum feature and sample frequency for a feature to be included
 
 # %%
-SELECT_FEAT = True
-
-
-def select_features(df, feat_prevalence=.2, axis=0):
-    # # ! vaep.filter.select_features
-    N = df.shape[axis]
-    minimum_freq = N * feat_prevalence
-    freq = df.notna().sum(axis=axis)
-    mask = freq >= minimum_freq
-    print(f"Drop {(~mask).sum()} along axis {axis}.")
-    freq = freq.loc[mask]
-    if axis == 0:
-        df = df.loc[:, mask]
-    else:
-        df = df.loc[mask]
-    return df
-
-
-if SELECT_FEAT:
+if select_features:
     # potentially this can take a few iterations to stabilize.
-    df = select_features(df, feat_prevalence=.2)
-    df = select_features(df=df, feat_prevalence=.3, axis=1)
+    df = vaep.filter.select_features(df, feat_prevalence=feat_prevalence)
+    df = vaep.filter.select_features(df=df, feat_prevalence=sample_completeness, axis=1)
 df.shape
 
 
@@ -127,17 +138,36 @@ df.shape
 
 # %%
 df = df.stack().to_frame('intensity')
-df.head()
+df
 
+# %% [markdown]
+# ## Optionally: Sample data
+# - models can be trained without subsetting the data
+# - allows evaluation of the models
+
+# %%
+if sample_splits:
+    splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
+        df_long=df,
+        frac_non_train=frac_non_train,
+        frac_mnar=frac_mnar,
+        random_state=random_state,
+    )
+    splits = vaep.sampling.check_split_integrity(splits)
+else:
+    splits = vaep.sampling.DataSplits(is_wide_format=False)
+    splits.train_X = df
 
 # %% [markdown]
 # The resulting DataFrame with one column has an `MulitIndex` with the sample and feature identifier.
 
 # %% [markdown]
 # ## Collaborative Filtering
+#
+# Inspect annotations of the scikit-learn like Transformer:
 
 # %%
-# # # # CollaborativeFilteringTransformer?
+# # CollaborativeFilteringTransformer?
 
 # %% [markdown]
 # Let's set up collaborative filtering without a validation or test set, using
@@ -157,10 +187,14 @@ cf_model = CollaborativeFilteringTransformer(
 # > This will probably mean setting up a validation set within the model.
 
 # %%
-cf_model.fit(df,
+cf_model.fit(splits.train_X,
+             splits.val_y,
              cuda=False,
              epochs_max=20,
              )
+
+# %% [markdown]
+# Impute missing values usin `transform` method:
 
 # %%
 df_imputed = cf_model.transform(df).unstack()
@@ -179,7 +213,6 @@ df_imputed = df_imputed.unstack()  # back to wide-format
 assert len(df) == len(observed)
 assert df_imputed.shape[0] * df_imputed.shape[1] == len(imputed) + len(observed)
 
-# %%
 fig, axes = plt.subplots(2, figsize=(8, 4))
 
 min_max = vaep.plotting.data.get_min_max_iterable(
@@ -210,55 +243,32 @@ _ = ax.legend()
 # ## AutoEncoder architectures
 
 # %%
-# Reload data (for demonstration)
-
-df = pd.read_csv(fn_intensities, index_col=0)
-df.index.name = 'Sample ID'  # already set
-df.columns.name = 'protein group'  # not set due to csv disk file format
-df = np.log2(df + 1)  # log transform
-df.head()
+# Use wide format of data
+splits.to_wide_format()
+splits.train_X
 
 # %% [markdown]
-# The AutoEncoder model currently need validation data for training.
-# We will use 10% of the training data for validation.
-# > Expect this limitation to be dropped in the next release. It will still be recommended
-# > to use validation data for early stopping.
+# Validation data for early stopping (if specified)
 
 # %%
-freq_feat = df.notna().sum()
-freq_feat.head()  # training data
+splits.val_y
 
 # %% [markdown]
-# We will use the `sampling` module to sample the validation data from the training data.
-# Could be split differently by providing another `weights` vector.
+# Training and validation need the same shape:
 
 # %%
-val_X, train_X = vaep.sampling.sample_data(df.stack(),
-                                           sample_index_to_drop=0,
-                                           weights=freq_feat,
-                                           frac=0.1,
-                                           random_state=42,)
-val_X, train_X = val_X.unstack(), train_X.unstack()
-val_X = pd.DataFrame(pd.NA, index=train_X.index,
-                     columns=train_X.columns).fillna(val_X)
+if splits.val_y is not None:
+    splits.val_y = pd.DataFrame(pd.NA, index=splits.train_X.index,
+                                columns=splits.train_X.columns).fillna(splits.val_y)
+
+    print(splits.train_X.shape, splits.val_y.shape)
 
 # %% [markdown]
-# Training data and validation data have the same shape:
+# Select either `DAE` or `VAE` model by chance:
 
 # %%
-val_X.shape, train_X.shape
-
-# %% [markdown]
-# ... but different number of intensities (non-missing values):
-
-# %%
-train_X.notna().sum().sum(), val_X.notna().sum().sum(),
-
-# %% [markdown]
-# Select either `DAE` or `VAE` model:
-
-# %%
-model_selected = 'VAE'  # 'DAE'
+model_selected = random.choice(['DAE', 'VAE'])
+print("Selected model by chance:", model_selected)
 model = AETransformer(
     model=model_selected,
     hidden_layers=[512,],
@@ -268,59 +278,56 @@ model = AETransformer(
 )
 
 # %%
-model.fit(train_X, val_X,
+model.fit(splits.train_X, splits.val_y,
           epochs_max=50,
           cuda=False)
 
+# %% [markdown]
+# Impute missing values using `transform` method:
+
 # %%
-df_imputed = model.transform(train_X)
+df_imputed = model.transform(splits.train_X).stack()
 df_imputed
 
 # %% [markdown]
 # Evaluate the model using the validation data:
 
 # %%
-pred_val = val_X.stack().to_frame('observed')
-pred_val[model_selected] = df_imputed.stack()
-pred_val
+if splits.val_y is not None:
+    pred_val = splits.val_y.stack().to_frame('observed')
+    pred_val[model_selected] = df_imputed
+    val_metrics = vaep.models.calculte_metrics(pred_val, 'observed')
+    display(val_metrics)
 
-# %%
-val_metrics = vaep.models.calculte_metrics(pred_val, 'observed')
-# val_metrics = metrics.add_metrics(
-#     pred_val, key='test data')
-# val_metrics = pd.DataFrame(val_metrics)
-# val_metrics
-pd.DataFrame(val_metrics)
+    fig, ax = plt.subplots(figsize=(8, 2))
 
-# %%
-fig, ax = plt.subplots(figsize=(8, 2))
-
-ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
-    pred=pred_val,
-    target_col='observed',
-    feat_medians=train_X.median(),
-    ax=ax,
-    metric_name='MAE',
-    palette=color_model_mapping
-)
+    ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+        pred=pred_val,
+        target_col='observed',
+        feat_medians=splits.train_X.median(),
+        ax=ax,
+        metric_name='MAE',
+        palette=color_model_mapping)
 
 # %% [markdown]
 # replace predicted values with validation data values
 
 # %%
-df_imputed = df_imputed.replace(val_X)
+splits.to_long_format()
+df_imputed = df_imputed.replace(splits.val_y).replace(splits.test_y)
+df_imputed
+
+# %% [markdown]
+# Plot the distribution of the imputed values vs the observed data:
 
 # %%
-df = df.stack()  # long-format
-df_imputed = df_imputed.stack()  # long-format
-observed = df_imputed.loc[df.index]
-imputed = df_imputed.loc[df_imputed.index.difference(df.index)]
+observed = df_imputed.loc[df.index].squeeze()
+imputed = df_imputed.loc[df_imputed.index.difference(df.index)].squeeze()
 
-# %%
 fig, axes = plt.subplots(2, figsize=(8, 4))
 
-min_max = vaep.plotting.data.get_min_max_iterable(
-    [observed, imputed])
+min_max = vaep.plotting.data.get_min_max_iterable([observed, imputed])
+
 label_template = '{method} (N={n:,d})'
 ax, _ = vaep.plotting.data.plot_histogram_intensities(
     observed,
@@ -342,6 +349,3 @@ ax, _ = vaep.plotting.data.plot_histogram_intensities(
     color=color_model_mapping[model_selected],
     alpha=1)
 _ = ax.legend()
-
-
-# %%

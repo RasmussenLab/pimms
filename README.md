@@ -11,7 +11,7 @@ The publication is accepted in Nature Communications
 and the pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
 
 > `PIMMS` was called `vaep` during development.  
-> Before entire refactoring has to been completed the imported package will be `vaep`.
+> Before entire refactoring has been completed the imported package will be `vaep`.
 
 We provide functionality as a python package, an excutable workflow or simply in notebooks.
 
@@ -127,17 +127,24 @@ mamba env create -n pimms -f environment.yml # faster, less then 5mins
 
 If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment:
 
-### Install pytorch first (M-chips)
+### Install pytorch first
+
+> :warning: We currently see issues with some installations on M1 chips. A dependency
+> for one workflow is polars, which causes the issue. This should be [fixed now](https://github.com/RasmussenLab/njab/pull/13) 
+> for general use by delayed import 
+> of `mrmr-selection` in `njab`. If you encounter issues, please open an issue.
 
 Check how to install pytorch for your system [here](https://pytorch.org/get-started).
 
 - select the version compatible with your cuda version if you have an nvidia gpu or a Mac M-chip.
 
 ```bash
-conda create -n vaep python=3.9 pip
-conda activate vaep
-# Follow instructions on https://pytorch.org/get-started 
-# conda env update -f environment.yml -n vaep # should not install the rest.
+conda create -n pimms python=3.9 pip
+conda activate pimms
+# Follow instructions on https://pytorch.org/get-started: 
+# CUDA is not available on MacOS, please use default package
+# pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+conda install pytorch::pytorch torchvision torchaudio fastai -c pytorch -c fastai -y
 pip install pimms-learn
 pip install jupyterlab papermill # use run notebook interactively or as a script
 

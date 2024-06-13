@@ -2,7 +2,7 @@
 """
 from types import SimpleNamespace
 
-from . import compare_predictions, diff_analysis
+from vaep.analyzers import compare_predictions, diff_analysis
 
 __all__ = ['diff_analysis', 'compare_predictions', 'Analysis']
 

@@ -8,12 +8,13 @@ import pandas as pd
 from fastai import learner
 from fastai.callback.tracker import EarlyStoppingCallback
 from fastai.collab import *
-from fastai.collab import CollabDataLoaders, EmbeddingDotBias, TabularCollab
+from fastai.collab import EmbeddingDotBias, TabularCollab
 from fastai.data.block import TransformBlock
 from fastai.data.transforms import IndexSplitter
 from fastai.learner import Learner
 from fastai.losses import MSELossFlat
 from fastai.tabular.all import *
+from fastai.tabular.all import TransformBlock
 from fastai.tabular.core import Categorify
 from fastai.torch_core import default_device
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -89,21 +90,16 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         if not cuda:
             default_device(use=False)  # set to cpu
         if y is not None:
-            X, frac = collab.combine_data(X, y)
+            # Concatenate train and validation observations into on dataframe
+            first_N_train = len(X)
+            X, _ = collab.combine_data(X, y)
         else:
-            X, frac = X.reset_index(), 0.0
+            X, _ = X.reset_index(), 0.0
 
-        self.dls = CollabDataLoaders.from_df(
-            X,
-            valid_pct=frac,
-            seed=42,
-            user_name=self.sample_column,
-            item_name=self.item_column,
-            rating_name=self.target_column,
-            bs=self.batch_size)
         splits = None
         if y is not None:
-            idx_splitter = IndexSplitter(list(range(len(X), len(X) + len(y))))
+            # specify positional indices of validation data
+            idx_splitter = IndexSplitter(list(range(first_N_train, len(X))))
             splits = idx_splitter(X)
 
         self.cat_names = [self.sample_column, self.item_column]

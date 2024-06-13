@@ -1,10 +1,10 @@
 name: Test that tutorial runs on latest colab image
 
 on:
-    push:
-        branches: [dev]
+    # push:
+    #     branches: [main]
     pull_request:
-        branches: [main, dev]
+        branches: [main]
     schedule:
         - cron: '0 2 3 * *'
 
@@ -24,3 +24,5 @@ jobs:
           run: |
             cd project
             papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
+            papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_no_val.ipynb -p sample_splits False
+

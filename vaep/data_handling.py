@@ -4,8 +4,6 @@ Functionality to handle protein and peptide datasets.
 import numpy as np
 import pandas as pd
 
-# coverage
-
 
 def coverage(X: pd.DataFrame, coverage_col: float, coverage_row: float):
     """Select proteins by column depending on their coverage.

@@ -69,7 +69,6 @@ cuda: bool = True  # Use the GPU for training?
 # model
 # Dimensionality of encoding dimension (latent space of model)
 latent_dim: int = 10
-# hidden_layers:str = '128_64' # Underscore separated string of layers, '128 64' for the encoder, reversed for decoder
 sample_idx_position: int = 0  # position of index which is sample ID
 model: str = 'CF'  # model name
 model_key: str = 'CF'  # potentially alternative key for model (grid search)

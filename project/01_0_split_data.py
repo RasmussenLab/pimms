@@ -724,38 +724,7 @@ splits.train_X.groupby(level=-1).count().describe()
 # -> or raise error as feature completness treshold is so low that less than 3 samples
 # per feature are allowd.
 
-diff = (splits
-        .val_y
-        .index
-        .levels[-1]
-        .difference(splits
-                    .train_X
-                    .index
-                    .levels[-1]
-                    ).to_list())
-if diff:
-    to_remove = splits.val_y.loc[pd.IndexSlice[:, diff]]
-    display(to_remove)
-    splits.train_X = pd.concat([splits.train_X, to_remove])
-    splits.val_y = splits.val_y.drop(to_remove.index)
-diff
-
-# %% tags=["hide-input"]
-diff = (splits
-        .test_y
-        .index
-        .levels[-1]
-        .difference(splits
-                    .train_X
-                    .index
-                    .levels[-1]
-                    ).to_list())
-if diff:
-    to_remove = splits.test_y.loc[pd.IndexSlice[:, diff]]
-    display(to_remove)
-    splits.train_X = pd.concat([splits.train_X, to_remove])
-    splits.test_y = splits.test_y.drop(to_remove.index)
-diff
+splits = vaep.sampling.check_split_integrity(splits)
 
 # %% [markdown]
 # Some tools require at least 4 observation in the training data,
@@ -963,5 +932,3 @@ figures
 # %% tags=["hide-input"]
 writer.close()
 dumps
-
-# %% tags=["hide-input"]
