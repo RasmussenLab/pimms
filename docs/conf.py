@@ -89,6 +89,8 @@ intersphinx_mapping = {
 # a list of builtin themes.
 
 html_theme = 'sphinx_book_theme'  # pip install sphinx-book-theme
+html_logo = 'logos/logo.png'
+html_favicon = "logos/logo_thumbnail.png"
 
 # See:
 # https://github.com/executablebooks/MyST-NB/blob/master/docs/conf.py
@@ -117,7 +119,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
 
 # -- Setup for sphinx-apidoc -------------------------------------------------
 
