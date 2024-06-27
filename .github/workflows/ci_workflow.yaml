@@ -5,10 +5,12 @@ on:
   pull_request:
     branches: [main, dev]
   release:
-  # schedule:
-  #   - cron: '0 2 * * 3,6'
+    types: [published]
+  schedule:
+    - cron: '0 3 * * 3,6'
 jobs:
   run-integration-tests-with-conda-install:
+    name: ${{ matrix.os }} - Workflow with snakemake conda envs
     runs-on: ${{ matrix.os }}
     defaults:
       run:
