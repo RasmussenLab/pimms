@@ -1,5 +1,5 @@
 Welcome to proteomics imputation modelling mass spectrometry (PIMMS) documentation!
-================================
+===================================================================================
 
 .. https://github.com/sphinx-doc/sphinx/issues/7000#issuecomment-1006645012
 .. https://stackoverflow.com/a/54519037

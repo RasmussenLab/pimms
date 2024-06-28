@@ -5,6 +5,7 @@ on:
   pull_request:
     branches: [main, dev]
   release:
+    types: [published]
   schedule:
     - cron: '0 2 * * 3,6'
 jobs:

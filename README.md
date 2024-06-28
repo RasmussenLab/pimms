@@ -1,17 +1,17 @@
-# PIMMS
+![log](docs/logos/logo.png)
 [![Read the Docs](https://img.shields.io/readthedocs/pimms)](https://readthedocs.org/projects/pimms/) [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RasmussenLab/pimms/ci.yaml)](https://github.com/RasmussenLab/pimms/actions) [![Documentation Status](https://readthedocs.org/projects/pimms/badge/?version=latest)](https://pimms.readthedocs.io/en/latest/?badge=latest)
-
 
 PIMMS stands for Proteomics Imputation Modeling Mass Spectrometry 
 and is a hommage to our dear British friends 
 who are missing as part of the EU for far too long already
 (Pimms is a British summer drink).
 
-The publication is accepted in Nature Communications 
-and the pre-print is available [on biorxiv](https://doi.org/10.1101/2023.01.12.523792).
+We published the [work](https://www.nature.com/articles/s41467-024-48711-5) in Nature Communications as open access: 
 
-> `PIMMS` was called `vaep` during development.  
-> Before entire refactoring has been completed the imported package will be `vaep`.
+> Webel, H., Niu, L., Nielsen, A.B. et al.  
+> Imputation of label-free quantitative mass spectrometry-based proteomics data using self-supervised deep learning.  
+> Nat Commun 15, 5405 (2024).  
+> https://doi.org/10.1038/s41467-024-48711-5
 
 We provide functionality as a python package, an excutable workflow or simply in notebooks.
 
@@ -39,6 +39,9 @@ pip install pimms-learn
 
 Then you can use the models on a pandas DataFrame with missing values. You can try this in the tutorial on Colab by uploading your data:
 [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
+
+> `PIMMS` was called `vaep` during development.  
+> Before entire refactoring has been completed the imported package will be `vaep`.
 
 ## Notebooks as scripts using papermill
 
