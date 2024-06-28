@@ -31,16 +31,27 @@ learner.Recorder.plot_loss = plot_loss
 class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
     """Collaborative Filtering transformer.
 
+    Collaborative filtering operates on long data specifying two identifiers
+    (sample and feature) with a quantitative value to predict. Therefore we need to specify
+    three columns. The sample and feature identifiers are embedded into a space which is
+    then used to predict the quantitative value.
+
 
     Parameters
     ----------
-    demo_param : str, default='demo'
-        A parameter used for demonstation of how to pass and store paramters.
+    target_column : str
+        Target column name to predict, e.g. intensity
+    item_column: str
+        Column name for features (items) to embed, e.g. peptides
+    sample_column: str
+        Sample column name, e.g. Sample_ID
+    n_factors : int, optional
+        number of dimension of item and sample embeddings, by default 15
+    out_folder : str, optional
+        Output folder for model, by default '.'
+    batch_size : int, optional
+        Batch size for training of data in long format, by default 4096
 
-    Attributes
-    ----------
-    n_features_ : int
-        The number of features of the data passed to :meth:`fit`.
     """
 
     def __init__(self,
@@ -49,7 +60,6 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
                  item_column: str,
                  n_factors: int = 15,
                  out_folder: str = '.',
-                 #  y_range:Optional[tuple[int]]=None,
                  batch_size: int = 4096,
                  ):
         self.target_column = target_column
@@ -61,25 +71,35 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         self.batch_size = batch_size
 
     def fit(self, X: pd.Series, y: pd.Series = None,
+            epochs_max=20,
             cuda: bool = True,
-            patience: int = 1,
-            epochs_max=20,):
-        """A reference implementation of a fitting function for a transformer.
+            patience: int = 1):
+        """Fit the collaborative filtering model to the data provided in long-format.
 
         Parameters
         ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
-        y : None
-            There is no need of a target in a transformer, yet the pipeline API
-            requires this parameter.
+        X : Series, shape (n_samples, )
+            The training data as a Series with the target_column as entries and name,
+            which has the item_column and sample_column set in a MultiIndex.
+            Is of shape (n_samples, )
+
+        y : Series, optional
+            The validation data as a Series with the target_column as entries and name,
+            which has the item_column and sample_column set in a MultiIndex.
+            Is of shape (n_samples, ), by default None
+
+        epochs_max : int, optional
+            Maximal number of epochs to train, by default 100
+        cuda : bool, optional
+            If the model should be trained with an accelerator, by default True
+        patience : Optional[int], optional
+            If added, early stopping is added with specified patience, by default None
 
         Returns
         -------
-        self : object
-            Returns self.
+        AETransformer
+            Return itself fitted to the training data.
         """
-        # ! X = check_array(X, accept_sparse=True)
         self.model_kwargs = dict(
 
 
@@ -116,7 +136,6 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
             **self.model_kwargs)
 
         self.n_params = models.calc_net_weight_count(self.model)
-        # ana_collab.params['n_parameters'] = args.n_params
         self.learn = Learner(dls=self.dls,
                              model=self.model,
                              loss_func=MSELossFlat(),
@@ -125,7 +144,6 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         if cuda:
             self.learn.model = self.learn.model.cuda()
 
-        #
         suggested_lr = self.learn.lr_find()
         print(f"{suggested_lr.valley = :.5f}")
 
@@ -141,18 +159,18 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
-        """ A reference implementation of a transform function.
+        """Predict the mising features in the long data based on the index of
+        sample_column and item_column.
 
         Parameters
         ----------
-        X : {array-like, sparse-matrix}, shape (n_samples, n_features)
-            The input samples.
+        X : Series, shape (n_samples, )
+            The training data with columns target_column, item_column and sample_column.
 
         Returns
         -------
-        X_transformed : array, shape (n_samples, n_features)
-            The array containing the element-wise square roots of the values
-            in ``X``.
+        X_transformed : pd.Series (n_samples, n_features)
+            The complete data with imputed values in long format
         """
         # Check is fit had been called
         check_is_fitted(self, 'epochs_trained_')
@@ -169,6 +187,7 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         return pd.concat([X, pred_na])
 
     def plot_loss(self, y, figsize=(8, 4)):  # -> Axes:
+        """Plot the training and validation loss of the model."""
         fig, ax = plt.subplots(figsize=figsize)
         ax.set_title('CF loss: Reconstruction loss')
         self.learn.recorder.plot_loss(skip_start=5, ax=ax,
