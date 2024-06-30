@@ -36,9 +36,10 @@ class AETransformer(TransformerMixin, BaseEstimator):
     """Autoencoder transformer (Denoising or Variational).
 
     Autoencoder transformer which can be used to impute missing values
-    in a dataset it is fitted to. Currently the data is standard normalized
-    for fitting the model, but imputations are provided the original scale
+    in a dataset it is fitted to. The data is standard normalized
+    for fitting the model, but imputations are provided on the original scale
     after internally fitting the model.
+
     The data uses the wide data format with samples as rows and features as columns.
 
 

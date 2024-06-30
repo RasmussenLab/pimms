@@ -36,6 +36,8 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
     three columns. The sample and feature identifiers are embedded into a space which is
     then used to predict the quantitative value.
 
+    The data is expected as a Series with a MultiIndex of the sample and feature identifiers,
+    and the quantitative value as its values.
 
     Parameters
     ----------
@@ -78,15 +80,17 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
 
         Parameters
         ----------
-        X : Series, shape (n_samples, )
-            The training data as a Series with the target_column as entries and name,
-            which has the item_column and sample_column set in a MultiIndex.
-            Is of shape (n_samples, )
+        X : Series, shape (n_values, )
+            The training data as a Series with the target_column as it values
+            and target_column as its name. The Series has a MultiIndex defined by the
+            item_column and sample_column.
+            Is of shape (n_values, )
 
         y : Series, optional
-            The validation data as a Series with the target_column as entries and name,
-            which has the item_column and sample_column set in a MultiIndex.
-            Is of shape (n_samples, ), by default None
+            The validation data as a Series with the target_column as it values
+            and target_column as its name. The Series has a MultiIndex defined by the
+            item_column and sample_column.
+            Is of shape (n_values, ), by default None
 
         epochs_max : int, optional
             Maximal number of epochs to train, by default 100
