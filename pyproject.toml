@@ -28,7 +28,7 @@ dependencies = [
   "fastai",
   "omegaconf",
   "tqdm",
-  "mrmr-selection",
+  "mrmr-selection@git+https://github.com/smazzanti/mrmr.git",
   "pingouin",
 ]
 
