@@ -1,33 +1,27 @@
 """Scikit-learn style interface for Denoising and Variational Autoencoder model."""
 from __future__ import annotations
 
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-import sklearn
-
 from pathlib import Path
-import pandas as pd
-
-from fastai.losses import MSELossFlat
-from fastai.callback.tracker import EarlyStoppingCallback
-from fastai.learner import Learner
-from fastai.basics import *
-from fastai.callback.all import *
-from fastai.torch_basics import *
-
-from fastai import learner
-
-from sklearn.utils.validation import check_is_fitted
-from sklearn.base import BaseEstimator, TransformerMixin
-
 from typing import Optional
 
+import pandas as pd
+import sklearn
+from fastai import learner
+from fastai.basics import *
+from fastai.callback.all import *
+from fastai.callback.tracker import EarlyStoppingCallback
+from fastai.learner import Learner
+from fastai.losses import MSELossFlat
+from fastai.torch_basics import *
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.utils.validation import check_is_fitted
+
 import vaep.models as models
-from vaep.models import ae
-
-
 # patch plotting function
-from vaep.models import plot_loss
+from vaep.models import ae, plot_loss
+
 learner.Recorder.plot_loss = plot_loss
 
 
@@ -39,18 +33,29 @@ default_pipeline = sklearn.pipeline.Pipeline(
 
 
 class AETransformer(TransformerMixin, BaseEstimator):
-    """Collaborative Filtering transformer.
+    """Autoencoder transformer (Denoising or Variational).
+
+    Autoencoder transformer which can be used to impute missing values
+    in a dataset it is fitted to. The data is standard normalized
+    for fitting the model, but imputations are provided on the original scale
+    after internally fitting the model.
+
+    The data uses the wide data format with samples as rows and features as columns.
 
 
     Parameters
     ----------
-    demo_param : str, default='demo'
-        A parameter used for demonstation of how to pass and store paramters.
+    hidden_layers : list[int]
+        Architecture for encoder. Decoder is mirrored.
+    dim_latent : int, optional
+        Hidden space dimension, by default 15
+    out_folder : str, optional
+        Output folder for model, by default '.'
+    model : str, optional
+        Model type ("VAE", "DAE"), by default 'VAE'
+    batch_size : int, optional
+        Batch size for training, by default 64
 
-    Attributes
-    ----------
-    n_features_ : int
-        The number of features of the data passed to :meth:`fit`.
     """
 
     def __init__(self,
@@ -78,8 +83,6 @@ class AETransformer(TransformerMixin, BaseEstimator):
         else:
             raise ValueError(f'Unknown model {model}, choose either "VAE" or "DAE"')
         self.model_name = model
-        # ! patience?
-        # EarlyStoppingCallback(patience=args.patience)
 
     def fit(self,
             X: pd.DataFrame,
@@ -87,6 +90,27 @@ class AETransformer(TransformerMixin, BaseEstimator):
             epochs_max: int = 100,
             cuda: bool = True,
             patience: Optional[int] = None):
+        """Fit the model to the data.
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            training data of dimension N_samples x M_features
+        y : pd.DataFrame, optional
+            validation data points which are missing in X of dimension
+            N_sample x M_features, by default None
+        epochs_max : int, optional
+            Maximal number of epochs to train, by default 100
+        cuda : bool, optional
+            If the model should be trained with an accelerator, by default True
+        patience : Optional[int], optional
+            If added, early stopping is added with specified patience, by default None
+
+        Returns
+        -------
+        AETransformer
+            Return itself fitted to the training data.
+        """
         self.analysis = ae.AutoEncoderAnalysis(  # datasplits=data,
             train_df=X,
             val_df=y,
@@ -103,8 +127,6 @@ class AETransformer(TransformerMixin, BaseEstimator):
         if cuda:
             self.analysis.model = self.analysis.model.cuda()
 
-        # results = []
-        # loss_fct = partial(models.vae.loss_fct, results=results)
         cbs = self.cbs
         if patience is not None:
             cbs = [*self.cbs, EarlyStoppingCallback(patience=patience)]
@@ -129,18 +151,18 @@ class AETransformer(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
-        """ A reference implementation of a transform function.
+        """Impute the data using the trained model.
 
         Parameters
         ----------
-        X : {array-like, sparse-matrix}, shape (n_samples, n_features)
-            The input samples.
+        X : pd.DataFrame
+            The data to be imputed, shape (N_samples, N_features).
+
 
         Returns
         -------
-        X_transformed : array, shape (n_samples, n_features)
-            The array containing the element-wise square roots of the values
-            in ``X``.
+        X_transformed : array, shape (N_samples, M_features)
+            Return the imputed DataFrame using the model.
         """
         # Check is fit had been called
         check_is_fitted(self, 'epochs_trained_')

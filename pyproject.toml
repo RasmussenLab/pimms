@@ -16,7 +16,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-  "njab>=0.0.5",
+  "njab>=0.0.8",
   "numpy",
   "matplotlib",
   "pandas",
@@ -33,6 +33,8 @@ dependencies = [
 ]
 
 [project.scripts]
+# pimms-report-imputation-comparison
+# pimms-report-diff-analysis
 pimms-setup-imputation-comparison = "vaep.cmd_interface.setup_imp_cp_website:main"
 pimms-add-diff-comp = "vaep.cmd_interface.setup_diff_analysis_website:main"
 
