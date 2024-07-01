@@ -6,7 +6,6 @@ Adapted to the setup of learning missing values.
 - loss is adapted to Dataset and FastAI adaptions
 - batchnorm1D for now (not weight norm)
 """
-import math
 from typing import List
 
 import torch
@@ -14,6 +13,9 @@ import torch.nn.functional as F
 from torch import nn
 
 leaky_relu_default = nn.LeakyReLU(.1)
+
+PI = torch.tensor(torch.pi)
+log_of_2 = torch.log(torch.tensor(2.))
 
 
 class VAE(nn.Module):
@@ -100,7 +102,7 @@ def compute_kld(z_mu, z_logvar):
 
 
 def gaussian_log_prob(z, mu, logvar):
-    return -0.5 * (math.log(2 * math.pi) + logvar + (z - mu)**2 / torch.exp(logvar))
+    return -0.5 * (torch.log(2. * PI) + logvar + (z - mu)**2 / torch.exp(logvar))
 
 
 def loss_fct(pred, y, reduction='sum', results: List = None, freebits=0.1):
@@ -109,8 +111,8 @@ def loss_fct(pred, y, reduction='sum', results: List = None, freebits=0.1):
 
     l_rec = -torch.sum(gaussian_log_prob(batch, x_mu, x_logvar))
     l_reg = torch.sum((F.relu(compute_kld(z_mu, z_logvar)
-                              - freebits * math.log(2))
-                       + freebits * math.log(2)),
+                              - freebits * log_of_2)
+                       + freebits * log_of_2),
                       1)
 
     if results is not None:
