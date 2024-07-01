@@ -13,7 +13,7 @@ We published the [work](https://www.nature.com/articles/s41467-024-48711-5) in N
 > Nat Commun 15, 5405 (2024).  
 > https://doi.org/10.1038/s41467-024-48711-5
 
-We provide functionality as a python package, an excutable workflow or simply in notebooks.
+We provide new functionality as a python package for simple use (in notebooks) and a workflow for comparsion with other methdos.
 
 For any questions, please [open an issue](https://github.com/RasmussenLab/pimms/issues) or contact me directly.
 
@@ -42,22 +42,6 @@ Then you can use the models on a pandas DataFrame with missing values. You can t
 
 > `PIMMS` was called `vaep` during development.  
 > Before entire refactoring has been completed the imported package will be `vaep`.
-
-## Notebooks as scripts using papermill
-
-If you want to run a model on your prepared data, you can run notebooks prefixed with 
-`01_`, i.e. [`project/01_*.ipynb`](https://github.com/RasmussenLab/pimms/tree/HEAD/project) after cloning the repository. Using jupytext also python percentage script versions
-are saved.
-
-```bash
-# navigat to your desired folder
-git clone https://github.com/RasmussenLab/pimms.git # get all notebooks
-cd project # project folder as pwd
-# pip install pimms-learn papermill # if not already installed
-papermill 01_0_split_data.ipynb --help-notebook
-papermill 01_1_train_vae.ipynb --help-notebook
-```
-> :warning: Mistyped argument names won't throw an error when using papermill, but a warning is printed on the console thanks to my contributions:)
 
 ## PIMMS comparison workflow and differential analysis workflow
 
@@ -88,7 +72,8 @@ To re-execute the entire workflow locally, have a look at the [configuration fil
 - [`config/alzheimer_study/config.yaml`](https://github.com/RasmussenLab/pimms/blob/HEAD/project/config/alzheimer_study/comparison.yaml)
 - [`config/alzheimer_study/comparsion.yaml`](https://github.com/RasmussenLab/pimms/blob/HEAD/project/config/alzheimer_study/config.yaml)
 
-To execute that workflow, follow the Setup instructions below and run the following command in the project folder:
+To execute that workflow, follow the Setup instructions below and run the following commands
+in the project folder:
 
 ```bash
 # being in the project folder
@@ -105,9 +90,31 @@ sphinx-build -n --keep-going -b html ./ ./_build/
 # open ./_build/index.html
 ```
 
+## Notebooks as scripts using papermill
+
+The above workflow is based on notebooks as scripts, which can then be rendered as html files.'Using jupytext also python percentage script versions are saved.
+
+If you want to run a specific model on your data, you can run notebooks prefixed with 
+`01_`, i.e. [`project/01_*.ipynb`](https://github.com/RasmussenLab/pimms/tree/HEAD/project) after
+creating hte appropriate data split. Start by cloning the repository. 
+
+```bash
+# navigat to your desired folder
+git clone https://github.com/RasmussenLab/pimms.git # get all notebooks
+cd project # project folder as pwd
+# pip install pimms-learn papermill # if not already installed
+papermill 01_0_split_data.ipynb --help-notebook
+papermill 01_1_train_vae.ipynb --help-notebook
+```
+> :warning: Mistyped argument names won't throw an error when using papermill, but a warning is printed on the console thanks to my contributions:)
+
 ## Setup workflow and development environment
 
-### Setup comparison workflow
+Either (1) install one big conda environment based on an environment file, 
+or (2) install packages using a mix of conda and pip,
+or (3) use snakemake separately with rule specific conda environments.
+
+### Setup comparison workflow (1)
 
 The core funtionality is available as a standalone software on PyPI under the name `pimms-learn`. However, running the entire snakemake workflow in enabled using 
 conda (or mamba) and pip to setup an analysis environment. For a detailed description of setting up
@@ -130,7 +137,7 @@ mamba env create -n pimms -f environment.yml # faster, less then 5mins
 
 If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): Install the pytorch dependencies first, then the rest of the environment:
 
-### Install pytorch first
+### Install pytorch first (2)
 
 > :warning: We currently see issues with some installations on M1 chips. A dependency
 > for one workflow is polars, which causes the issue. This should be [fixed now](https://github.com/RasmussenLab/njab/pull/13) 
@@ -158,7 +165,7 @@ papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_test.ipynb # sec
 python 04_1_train_pimms_models.py # just execute the code
 ```
 
-### Let Snakemake handle installation
+### Let Snakemake handle installation (3)
 
 If you only want to execute the workflow, you can use snakemake to build the environments for you:
 
@@ -178,7 +185,7 @@ Trouble shoot your R installation by opening jupyter lab
 jupyter lab # open 01_1_train_NAGuideR.ipynb
 ```
 
-## Run example
+## Run example on HeLa data
 
 Change to the [`project` folder](./project) and see it's [README](project/README.md)
 You can subselect models by editing the config file:  [`config.yaml`](https://github.com/RasmussenLab/pimms/tree/HEAD/project/config/single_dev_dataset/proteinGroups_N50) file.
@@ -242,40 +249,44 @@ assert df_imputed.isna().sum().sum() == 0
 df_imputed
 ```
 
+> [!NOTE]: The imputation is simpler if you use the provide scikit-learn Transformer
+> interface (see [Tutorial](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)).
+
 ## Available imputation methods
 
-Packages either are based on this repository, or were referenced by NAGuideR (Table S1).
-From the brief description in the table the exact procedure is not always clear.
+Packages either are based on this repository, were referenced by NAGuideR or released recently.
+From the brief description in this table the exact procedure is not always clear.
 
-| Method        | Package           | source       | status | name              |
+| Method        | Package           | source       | links  | name              |
 | ------------- | ----------------- | ------       | ------ |------------------ | 
-| CF            | pimms             | pip          | | Collaborative Filtering |
-| DAE           | pimms             | pip          | | Denoising Autoencoder   |
-| VAE           | pimms             | pip          | | Variational Autoencoder |     
+| CF            | pimms             | pip          | [paper](https://doi.org/10.1038/s41467-024-48711-5) | Collaborative Filtering |
+| DAE           | pimms             | pip          | [paper](https://doi.org/10.1038/s41467-024-48711-5) | Denoising Autoencoder   |
+| VAE           | pimms             | pip          | [paper](https://doi.org/10.1038/s41467-024-48711-5) | Variational Autoencoder |     
 |  |   | | | 
-| ZERO          | -                 | -            | | replace NA with 0 |
-| MINIMUM       | -                 | -            | | replace NA with global minimum    |
-| COLMEDIAN     | e1071             | CRAN         | | replace NA with column median  |
-| ROWMEDIAN     | e1071             | CRAN         | | replace NA with row median     |
-| KNN_IMPUTE    | impute            | BIOCONDUCTOR | | k nearest neighbor imputation   |
-| SEQKNN        | SeqKnn            | tar file     | | Sequential k- nearest neighbor imputation <br> starts with feature with least missing values and re-use imputed values for not yet imputed features
-| BPCA          | pcaMethods        | BIOCONDUCTOR | | Bayesian PCA missing value imputation
-| SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
-| LLS           | pcaMethods        | BIOCONDUCTOR | | Local least squares imputation of a feature based on k most correlated features
+| ZERO          | -                 | -            | - | replace NA with 0 |
+| MINIMUM       | -                 | -            | - | replace NA with global minimum    |
+| COLMEDIAN     | e1071             | CRAN         | - | replace NA with column median  |
+| ROWMEDIAN     | e1071             | CRAN         | - | replace NA with row median     |
+| KNN_IMPUTE    | impute            | BIOCONDUCTOR | [docs](https://bioconductor.org/packages/release/bioc/html/impute.html) | k nearest neighbor imputation   |
+| SEQKNN        | SeqKnn            | tar file     | [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-5-160) | Sequential k- nearest neighbor imputation <br> starts with feature with least missing values and re-use imputed values for not yet imputed features
+| BPCA          | pcaMethods        | BIOCONDUCTOR | [paper](https://doi.org/10.1093/bioinformatics/btm069) | Bayesian PCA missing value imputation
+| SVDMETHOD     | pcaMethods        | BIOCONDUCTOR | [paper](https://doi.org/10.1093/bioinformatics/btm069) | replace NA initially with zero, use k most significant eigenvalues using Singular Value Decomposition for imputation until convergence
+| LLS           | pcaMethods        | BIOCONDUCTOR | [paper](https://doi.org/10.1093/bioinformatics/btm069) | Local least squares imputation of a feature based on k most correlated features
 | MLE           | norm              | CRAN         | | Maximum likelihood estimation
-| QRILC         | imputeLCMD        | CRAN         | | quantile regression imputation of left-censored data, i.e. by random draws from a truncated distribution which parameters were estimated by quantile regression
-| MINDET        | imputeLCMD        | CRAN         | | replace NA with q-quantile minimum in a sample
-| MINPROB       | imputeLCMD        | CRAN         | | replace NA by random draws from q-quantile minimum centered distribution
-| IRM           | VIM               | CRAN         | | iterativ robust model-based imputation (one feature at at time)
-| IMPSEQ        | rrcovNA           | CRAN         | | Sequential imputation of missing values by minimizing the determinant of the covariance matrix with imputed values
-| IMPSEQROB     | rrcovNA           | CRAN         | | Sequential imputation of missing values using robust estimators
-| MICE-NORM     | mice              | CRAN         | | Multivariate Imputation by Chained Equations (MICE) using Bayesian linear regression
-| MICE-CART     | mice              | CRAN         | | Multivariate Imputation by Chained Equations (MICE) using regression trees
-| TRKNN         | -                 | script       | | truncation k-nearest neighbor imputation 
-| RF            | missForest        | CRAN         | | Random Forest imputation (one feature at a time)
+| QRILC         | imputeLCMD        | CRAN         | [paper](https://doi.org/10.1021/acs.jproteome.5b00981)| quantile regression imputation of left-censored data, i.e. by random draws from a truncated distribution which parameters were estimated by quantile regression
+| MINDET        | imputeLCMD        | CRAN         | [paper](https://doi.org/10.1021/acs.jproteome.5b00981) | replace NA with q-quantile minimum in a sample
+| MINPROB       | imputeLCMD        | CRAN         | [paper](https://doi.org/10.1021/acs.jproteome.5b00981) | replace NA by random draws from q-quantile minimum centered distribution
+| IRM           | VIM               | CRAN         | [paper](https://doi.org/10.18637/jss.v074.i07) | iterativ robust model-based imputation (one feature at at time)
+| IMPSEQ        | rrcovNA           | CRAN         | [paper](https://doi.org/10.1007/s11634-010-0075-2) | Sequential imputation of missing values by minimizing the determinant of the covariance matrix with imputed values
+| IMPSEQROB     | rrcovNA           | CRAN         | [paper](https://doi.org/10.1007/s11634-010-0075-2) | Sequential imputation of missing values using robust estimators
+| MICE-NORM     | mice              | CRAN         | [paper](https://doi.org/10.1002%2Fmpr.329)| Multivariate Imputation by Chained Equations (MICE) using Bayesian linear regression
+| MICE-CART     | mice              | CRAN         | [paper](https://doi.org/10.1002%2Fmpr.329)| Multivariate Imputation by Chained Equations (MICE) using regression trees
+| TRKNN         | -                 | script       | [paper](https://doi.org/10.1186/s12859-017-1547-6) | truncation k-nearest neighbor imputation 
+| RF            | missForest        | CRAN         | [paper](https://doi.org/10.1093/bioinformatics/btr597) | Random Forest imputation (one feature at a time)
 | PI            | -                 | -            | | Downshifted normal distribution (per sample)
-| GSIMP         | -                 | script       | | QRILC initialization and iterative Gibbs sampling with generalized linear models (glmnet)
-| MSIMPUTE      | msImpute          | BIOCONDUCTOR | | Missing at random algorithm using low rank approximation
-| MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | | Missing not at random algorithm using low rank approximation
-| ~~grr~~       | DreamAI           | -            | Fails to install | Rigde regression 
-| ~~GMS~~       | GMSimpute         | tar file     | Fails on Windows | Lasso model
+| GSIMP         | -                 | script       | [paper](https://doi.org/10.1371/journal.pcbi.1005973) | QRILC initialization and iterative Gibbs sampling with generalized linear models (glmnet) - slow
+| MSIMPUTE      | msImpute          | BIOCONDUCTOR | [paper](https://doi.org/10.1016/j.mcpro.2023.100558) | Missing at random algorithm using low rank approximation
+| MSIMPUTE_MNAR | msImpute          | BIOCONDUCTOR | [paper](https://doi.org/10.1016/j.mcpro.2023.100558) | Missing not at random algorithm using low rank approximation
+
+
+DreamAI and GMSimpute are not available for installation on Windows or failed to install.
