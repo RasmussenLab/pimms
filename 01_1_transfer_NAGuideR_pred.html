@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+g87d8e0b documentation</title>
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+gb230be0 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g87d8e0b documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gb230be0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -399,14 +399,14 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.models</span>
-<span class="kn">import</span> <span class="nn">vaep.pandas</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.pandas</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 
-<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;vaep&#39;</span><span class="p">))</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pimmslearn&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -458,8 +458,8 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">args</span>
 </pre></div>
 </div>
@@ -509,9 +509,9 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -791,86 +791,86 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_BPCA.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_BPCA.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_COLMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_COLMEDIAN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQ.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQ.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQROB.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IRM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IRM.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_KNN_IMPUTE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_LLS.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_LLS.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINDET.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINDET.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINIMUM.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINIMUM.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINPROB.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINPROB.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_QRILC.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_QRILC.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_RF.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_RF.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ROWMEDIAN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ROWMEDIAN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_SVDMETHOD.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_SVDMETHOD.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_TRKNN.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_TRKNN.csv&#39;)
-vaep - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ZERO.csv&#39;)
-vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ZERO.csv&#39;)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_BPCA.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_BPCA.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_BPCA.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_BPCA.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_COLMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_COLMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_COLMEDIAN.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQ.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQ.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQ.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQ.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IMPSEQROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IMPSEQROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IMPSEQROB.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_IRM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_IRM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_IRM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_IRM.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_KNN_IMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_KNN_IMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_KNN_IMPUTE.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_LLS.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_LLS.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_LLS.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_LLS.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINDET.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINDET.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINDET.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINDET.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINIMUM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINIMUM.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINIMUM.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MINPROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MINPROB.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MINPROB.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_QRILC.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_QRILC.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_QRILC.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_RF.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_RF.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_RF.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ROWMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ROWMEDIAN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ROWMEDIAN.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_SVDMETHOD.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_SVDMETHOD.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_SVDMETHOD.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_TRKNN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_TRKNN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_TRKNN.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_TRKNN.csv&#39;)
+pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_ZERO.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_ZERO.csv&#39;)
+pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_ZERO.csv&#39;)
 </pre></div>
 </div>
 </div>
@@ -973,9 +973,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,513.638</td>
       <td>7.043</td>
       <td>8.369</td>
-      <td>10.851</td>
-      <td>14.686</td>
-      <td>15.699</td>
+      <td>13.711</td>
+      <td>14.913</td>
+      <td>15.868</td>
       <td>15.752</td>
       <td>17.206</td>
       <td>15.700</td>
@@ -998,9 +998,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>19.829</td>
       <td>7.222</td>
       <td>8.482</td>
-      <td>14.503</td>
-      <td>15.792</td>
-      <td>16.749</td>
+      <td>12.081</td>
+      <td>16.040</td>
+      <td>16.931</td>
       <td>17.221</td>
       <td>17.807</td>
       <td>16.738</td>
@@ -1023,9 +1023,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,582.130</td>
       <td>6.225</td>
       <td>7.481</td>
-      <td>13.330</td>
-      <td>13.533</td>
-      <td>14.773</td>
+      <td>13.874</td>
+      <td>13.367</td>
+      <td>14.590</td>
       <td>14.846</td>
       <td>17.434</td>
       <td>13.776</td>
@@ -1048,9 +1048,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,483.120</td>
       <td>8.694</td>
       <td>9.476</td>
-      <td>13.557</td>
-      <td>16.901</td>
-      <td>19.108</td>
+      <td>13.218</td>
+      <td>17.077</td>
+      <td>19.404</td>
       <td>18.973</td>
       <td>17.111</td>
       <td>19.015</td>
@@ -1073,9 +1073,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,569.564</td>
       <td>6.384</td>
       <td>7.657</td>
-      <td>13.220</td>
-      <td>12.874</td>
-      <td>15.003</td>
+      <td>11.537</td>
+      <td>12.876</td>
+      <td>14.835</td>
       <td>14.726</td>
       <td>17.031</td>
       <td>14.699</td>
@@ -1123,9 +1123,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,634.108</td>
       <td>10.576</td>
       <td>10.906</td>
-      <td>14.059</td>
-      <td>22.334</td>
-      <td>22.729</td>
+      <td>12.680</td>
+      <td>22.266</td>
+      <td>22.973</td>
       <td>22.918</td>
       <td>17.330</td>
       <td>22.872</td>
@@ -1148,9 +1148,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,448.503</td>
       <td>6.517</td>
       <td>7.848</td>
-      <td>13.192</td>
-      <td>12.563</td>
-      <td>15.705</td>
+      <td>11.170</td>
+      <td>13.140</td>
+      <td>16.096</td>
       <td>15.877</td>
       <td>16.879</td>
       <td>15.671</td>
@@ -1173,9 +1173,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,487.550</td>
       <td>6.409</td>
       <td>8.155</td>
-      <td>13.673</td>
-      <td>14.749</td>
-      <td>15.424</td>
+      <td>12.911</td>
+      <td>13.515</td>
+      <td>15.451</td>
       <td>16.278</td>
       <td>17.215</td>
       <td>15.574</td>
@@ -1198,9 +1198,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,426.191</td>
       <td>4.557</td>
       <td>6.287</td>
-      <td>13.752</td>
-      <td>12.356</td>
-      <td>13.275</td>
+      <td>13.020</td>
+      <td>12.062</td>
+      <td>13.692</td>
       <td>13.995</td>
       <td>17.125</td>
       <td>14.518</td>
@@ -1223,9 +1223,9 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>2,461.806</td>
       <td>6.402</td>
       <td>7.664</td>
-      <td>10.847</td>
-      <td>13.391</td>
-      <td>14.608</td>
+      <td>12.960</td>
+      <td>13.699</td>
+      <td>14.689</td>
       <td>14.849</td>
       <td>16.981</td>
       <td>14.485</td>
@@ -1245,7 +1245,7 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># papermill_description=metrics</span>
-<span class="n">d_metrics</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
+<span class="n">d_metrics</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Metrics</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1318,13 +1318,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>108.639</td>
       <td>25.619</td>
       <td>97.284</td>
-      <td>25.970</td>
+      <td>26.071</td>
       <td>5,393,471.689</td>
       <td>94.670</td>
       <td>74.316</td>
-      <td>23.275</td>
-      <td>4.213</td>
-      <td>0.448</td>
+      <td>23.043</td>
+      <td>4.398</td>
+      <td>0.462</td>
       <td>0.695</td>
       <td>8.040</td>
       <td>0.426</td>
@@ -1340,13 +1340,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>0.695</td>
       <td>4.267</td>
       <td>9.468</td>
-      <td>4.281</td>
+      <td>4.293</td>
       <td>2,132.119</td>
       <td>9.625</td>
       <td>8.471</td>
-      <td>3.972</td>
-      <td>1.623</td>
-      <td>0.444</td>
+      <td>3.967</td>
+      <td>1.644</td>
+      <td>0.446</td>
       <td>0.580</td>
       <td>2.283</td>
       <td>0.436</td>
@@ -1469,13 +1469,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>0.688</td>
       <td>24.975</td>
       <td>95.562</td>
-      <td>24.990</td>
+      <td>25.331</td>
       <td>5,505,296.129</td>
       <td>93.951</td>
       <td>73.576</td>
-      <td>22.544</td>
-      <td>4.446</td>
-      <td>0.587</td>
+      <td>22.619</td>
+      <td>4.425</td>
+      <td>0.582</td>
       <td>0.843</td>
       <td>8.370</td>
       <td>0.562</td>
@@ -1491,13 +1491,13 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
       <td>0.524</td>
       <td>4.190</td>
       <td>9.369</td>
-      <td>4.183</td>
+      <td>4.205</td>
       <td>2,175.538</td>
       <td>9.580</td>
       <td>8.417</td>
-      <td>3.884</td>
-      <td>1.639</td>
-      <td>0.488</td>
+      <td>3.890</td>
+      <td>1.652</td>
+      <td>0.487</td>
       <td>0.624</td>
       <td>2.314</td>
       <td>0.470</td>
@@ -1558,7 +1558,7 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_df</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_df_from_nested_dict</span><span class="p">(</span>
     <span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">column_levels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;metric_name&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 <span class="n">metrics_df</span>
 </pre></div>
@@ -1679,17 +1679,17 @@ vaep - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_Z
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
 BPCA           MAE               0.406
 TRKNN          MAE               0.436
-RF             MAE               0.444
+RF             MAE               0.446
 KNN_IMPUTE     MAE               0.535
 IRM            MAE               0.575
 ROWMEDIAN      MAE               0.580
 LLS            MAE               0.695
-QRILC          MAE               1.623
+QRILC          MAE               1.644
 COLMEDIAN      MAE               2.204
 SVDMETHOD      MAE               2.283
-PI             MAE               3.972
+PI             MAE               3.967
 MINDET         MAE               4.267
-MINPROB        MAE               4.281
+MINPROB        MAE               4.293
 MSIMPUTE_MNAR  MAE               8.471
 MINIMUM        MAE               9.468
 MSIMPUTE       MAE               9.625
@@ -1728,22 +1728,22 @@ Name: valid_fake_na, dtype: float64
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">,</span> <span class="n">errors_bind</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">plot_errors_binned</span><span class="p">(</span>
+<span class="n">ax</span><span class="p">,</span> <span class="n">errors_bind</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">plot_errors_binned</span><span class="p">(</span>
     <span class="n">val_pred_fake_na</span><span class="p">[</span><span class="n">top_5</span><span class="p">],</span>
     <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="s1">&#39;NAGuideR_errors_per_bin_val.png&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/NAGuideR_errors_per_bin_val.png
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/NAGuideR_errors_per_bin_val.png
 </pre></div>
 </div>
-<img alt="_images/4c3a85b1e90e35296b5641ffc4890b15ef4f3b203dcfd2c04c7cc9efcef08dbd.png" src="_images/4c3a85b1e90e35296b5641ffc4890b15ef4f3b203dcfd2c04c7cc9efcef08dbd.png" />
+<img alt="_images/e69ea318b415e44e1d062af80032d3020f5000c4583915ad31f363249053fe17.png" src="_images/e69ea318b415e44e1d062af80032d3020f5000c4583915ad31f363249053fe17.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
