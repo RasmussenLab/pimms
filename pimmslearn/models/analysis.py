@@ -1,9 +1,9 @@
-import vaep.transform
+import pimmslearn.transform
 import torch.nn
 import fastai.data.core
 import fastai.learner
 
-from vaep.analyzers import Analysis
+from pimmslearn.analyzers import Analysis
 
 
 class ModelAnalysis(Analysis):
@@ -13,4 +13,4 @@ class ModelAnalysis(Analysis):
     dls: fastai.data.core.DataLoaders
     learn: fastai.learner.Learner
     params: dict
-    transform: vaep.transform.VaepPipeline
+    transform: pimmslearn.transform.VaepPipeline

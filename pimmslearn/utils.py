@@ -3,7 +3,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
-from vaep.io.datasplits import long_format
+from pimmslearn.io.datasplits import long_format
 
 
 def append_to_filepath(filepath: Union[pathlib.Path, str],

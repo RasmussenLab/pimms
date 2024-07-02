@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from vaep.imputation import imputation_KNN, imputation_normal_distribution, impute_shifted_normal
+from pimmslearn.imputation import imputation_KNN, imputation_normal_distribution, impute_shifted_normal
 """
 # Test Data set was created from a sample by shuffling:
 

@@ -4,7 +4,7 @@ from typing import Tuple, Union
 import numpy as np
 import pandas as pd
 
-from vaep.io.datasplits import DataSplits
+from pimmslearn.io.datasplits import DataSplits
 
 logger = logging.getLogger(__name__)
 

@@ -1,4 +1,4 @@
-from vaep.plotting.defaults import assign_colors
+from pimmslearn.plotting.defaults import assign_colors
 
 
 def test_assign_colors():

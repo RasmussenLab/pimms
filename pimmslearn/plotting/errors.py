@@ -11,7 +11,7 @@ import seaborn as sns
 from matplotlib.axes import Axes
 from seaborn.categorical import _BarPlotter
 
-import vaep.pandas.calc_errors
+import pimmslearn.pandas.calc_errors
 
 
 def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
@@ -22,7 +22,7 @@ def plot_errors_binned(pred: pd.DataFrame, target_col='observed',
     assert target_col in pred.columns, f'Specify `target_col` parameter, `pred` do no contain: {target_col}'
     models_order = pred.columns.to_list()
     models_order.remove(target_col)
-    errors_binned = vaep.pandas.calc_errors.calc_errors_per_bin(
+    errors_binned = pimmslearn.pandas.calc_errors.calc_errors_per_bin(
         pred=pred, target_col=target_col)
 
     meta_cols = ['bin', 'n_obs']  # calculated along binned error
@@ -61,7 +61,7 @@ def plot_errors_by_median(pred: pd.DataFrame,
                           metric_name: Optional[str] = None,
                           errwidth: float = 1.2) -> tuple[Axes, pd.DataFrame]:
     # calculate absolute errors
-    errors = vaep.pandas.get_absolute_error(pred, y_true=target_col)
+    errors = pimmslearn.pandas.get_absolute_error(pred, y_true=target_col)
     errors.columns.name = 'model'
 
     # define bins by integer value of median feature intensity

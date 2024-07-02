@@ -18,9 +18,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.validation import check_is_fitted
 
-import vaep.models as models
+import pimmslearn.models as models
 # patch plotting function
-from vaep.models import ae, plot_loss
+from pimmslearn.models import ae, plot_loss
 
 learner.Recorder.plot_loss = plot_loss
 

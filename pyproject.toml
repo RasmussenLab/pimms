@@ -35,8 +35,8 @@ dependencies = [
 [project.scripts]
 # pimms-report-imputation-comparison
 # pimms-report-diff-analysis
-pimms-setup-imputation-comparison = "vaep.cmd_interface.setup_imp_cp_website:main"
-pimms-add-diff-comp = "vaep.cmd_interface.setup_diff_analysis_website:main"
+pimms-setup-imputation-comparison = "pimmslearn.cmd_interface.setup_imp_cp_website:main"
+pimms-add-diff-comp = "pimmslearn.cmd_interface.setup_diff_analysis_website:main"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/RasmussenLab/pimms/issues"
@@ -65,4 +65,4 @@ requires = ["setuptools>=64", "setuptools_scm>=8", "wheel"]
 # used to pick up the version from the git tags or the latest commit.
 
 [tool.setuptools.packages.find]
-include = ["vaep"]
+include = ["pimmslearn"]

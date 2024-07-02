@@ -10,9 +10,9 @@ import numpy as np
 import pandas as pd
 import seaborn
 
-import vaep.pandas
-from vaep.plotting import data, defaults, errors, plotly
-from vaep.plotting.errors import plot_rolling_error
+import pimmslearn.pandas
+from pimmslearn.plotting import data, defaults, errors, plotly
+from pimmslearn.plotting.errors import plot_rolling_error
 
 seaborn.set_style("whitegrid")
 # seaborn.set_theme()
@@ -270,11 +270,11 @@ def plot_counts(df_counts: pd.DataFrame, n_samples,
                           count_col=feat_col_name,
                           ax=ax, **kwargs)
     df_counts['prop'] = df_counts[feat_col_name] / n_samples
-    n_feat_cutoff = vaep.pandas.get_last_index_matching_proportion(
+    n_feat_cutoff = pimmslearn.pandas.get_last_index_matching_proportion(
         df_counts=df_counts, prop=prop_feat, prop_col='prop')
     n_samples_cutoff = df_counts.loc[n_feat_cutoff, feat_col_name]
     logger.info(f'{n_feat_cutoff = }, {n_samples_cutoff = }')
-    x_lim_max = vaep.pandas.get_last_index_matching_proportion(
+    x_lim_max = pimmslearn.pandas.get_last_index_matching_proportion(
         df_counts, min_feat_prop, prop_col='prop')
     logger.info(f'{x_lim_max = }')
     ax.set_xlim(-1, x_lim_max)

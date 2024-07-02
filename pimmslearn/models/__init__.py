@@ -15,8 +15,8 @@ import torch
 from fastai import learner
 from fastcore.foundation import L
 
-import vaep
-from vaep.models import ae, analysis, collab, vae
+import pimmslearn
+from pimmslearn.models import ae, analysis, collab, vae
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ def plot_training_losses(learner: learner.Learner,
                                norm_train=norm_train, norm_val=norm_val)
     name = name.lower()
     _ = RecorderDump(learner.recorder, name).save(folder)
-    vaep.savefig(fig, name=f'{name}_training',
+    pimmslearn.savefig(fig, name=f'{name}_training',
                  folder=folder)
     return fig
 
@@ -218,7 +218,7 @@ def collect_metrics(metrics_jsons: List, key_fct: Callable) -> dict:
         logger.debug(f"{key = }")
         with open(fname) as f:
             loaded = json.load(f)
-        loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
+        loaded = pimmslearn.pandas.flatten_dict_of_dicts(loaded)
 
         if key not in all_metrics:
             all_metrics[key] = loaded
@@ -320,7 +320,7 @@ def get_df_from_nested_dict(nested_dict,
                             row_name='subset'):
     metrics = {}
     for k, run_metrics in nested_dict.items():
-        metrics[k] = vaep.pandas.flatten_dict_of_dicts(run_metrics)
+        metrics[k] = pimmslearn.pandas.flatten_dict_of_dicts(run_metrics)
 
     metrics = pd.DataFrame.from_dict(metrics, orient='index')
     metrics.columns.names = column_levels

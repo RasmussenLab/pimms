@@ -13,11 +13,11 @@ import seaborn
 from njab.sklearn import run_pca
 from sklearn.impute import SimpleImputer
 
-import vaep
-from vaep.analyzers import Analysis
-from vaep.io.datasplits import long_format, wide_format
-from vaep.io.load import verify_df
-from vaep.pandas import _add_indices
+import pimmslearn
+from pimmslearn.analyzers import Analysis
+from pimmslearn.io.datasplits import long_format, wide_format
+from pimmslearn.io.load import verify_df
+from pimmslearn.pandas import _add_indices
 
 logger = logging.getLogger(__name__)
 
@@ -379,7 +379,7 @@ class LatentAnalysis(Analysis):
                 meta=meta_data.loc[self.latent_reduced.index],
                 title=f'{self.model_name} latent space PCA of {self.latent_dim} dimensions by {meta_key}')
         if save:
-            vaep.plotting._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
+            pimmslearn.plotting._savefig(fig, name=f'{self.model_name}_latent_by_{meta_key}',
                                    folder=self.folder)
         return fig, ax
 

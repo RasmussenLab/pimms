@@ -1,4 +1,4 @@
-from vaep.models.collect_dumps import select_content
+from pimmslearn.models.collect_dumps import select_content
 
 
 def test_select_content():

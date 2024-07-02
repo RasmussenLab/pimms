@@ -8,7 +8,7 @@ from typing import Tuple, Union
 import numpy as np
 import pandas as pd
 
-import vaep.pandas
+import pimmslearn.pandas
 
 PathsList = namedtuple('PathsList', ['files', 'folder'])
 
@@ -86,7 +86,7 @@ def get_fname_from_keys(keys, folder='.', file_ext='.pkl', remove_duplicates=Tru
         keys = list(dict.fromkeys(keys))
     folder = Path(folder)
     folder.mkdir(exist_ok=True, parents=True)
-    fname_dataset = folder / '{}{}'.format(vaep.pandas.replace_with(
+    fname_dataset = folder / '{}{}'.format(pimmslearn.pandas.replace_with(
         ' '.join(keys), replace='- ', replace_with='_'), file_ext)
     return fname_dataset
 

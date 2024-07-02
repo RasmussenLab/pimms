@@ -6,9 +6,9 @@ from fastai.data.core import DataLoaders
 from fastai.data.load import DataLoader
 from torch.utils.data import Dataset
 
-from vaep.io import datasets
-from vaep.io.datasets import DatasetWithTarget
-from vaep.transform import VaepPipeline
+from pimmslearn.io import datasets
+from pimmslearn.io.datasets import DatasetWithTarget
+from pimmslearn.transform import VaepPipeline
 
 
 def get_dls(train_X: pandas.DataFrame,
@@ -42,8 +42,8 @@ def get_dls(train_X: pandas.DataFrame,
     from sklearn.impute import SimpleImputer
     from sklearn.preprocessing import StandardScaler
 
-    from vaep.dataloader import get_dls
-    from vaep.transform import VaepPipeline
+    from pimmslearn.dataloader import get_dls
+    from pimmslearn.transform import VaepPipeline
 
     dae_default_pipeline = sklearn.pipeline.Pipeline(
         [('normalize', StandardScaler()),
@@ -86,7 +86,7 @@ def get_test_dl(df: pandas.DataFrame,
     ----------
     df : pandas.DataFrame
         Test data in a DataFrame
-    transformer : vaep.transform.VaepPipeline
+    transformer : pimmslearn.transform.VaepPipeline
         Pipeline with separate encode and decode
     dataset : torch.utils.data.Dataset, optional
         torch Dataset to yield encoded samples, by default DatasetWithTarget

@@ -7,7 +7,7 @@ import logging
 from njab.sklearn import run_pca
 from sklearn.impute import SimpleImputer
 
-from vaep.io import add_indices
+from pimmslearn.io import add_indices
 
 logger = logging.getLogger(__name__)
 

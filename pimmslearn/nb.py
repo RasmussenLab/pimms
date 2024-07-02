@@ -2,7 +2,7 @@ from pathlib import Path
 from pprint import pformat
 import yaml
 
-import vaep.io
+import pimmslearn.io
 
 import logging
 logger = logging.getLogger()
@@ -40,7 +40,7 @@ class Config():
             except AttributeError:
                 raise AttributeError(
                     'Specify fname or set "out_folder" attribute.')
-        d = vaep.io.parse_dict(input_dict=self.__dict__)
+        d = pimmslearn.io.parse_dict(input_dict=self.__dict__)
         with open(fname, 'w') as f:
             yaml.dump(d, f)
         logger.info(f"Dumped config to: {fname}")

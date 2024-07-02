@@ -9,9 +9,9 @@ from fastai.collab import (Categorify, IndexSplitter, TabularCollab,
                            TransformBlock)
 from fastai.tabular.all import *
 
-import vaep.io.dataloaders
-import vaep.io.datasplits
-from vaep.models import analysis
+import pimmslearn.io.dataloaders
+import pimmslearn.io.datasplits
+from pimmslearn.models import analysis
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ def combine_data(train_df: pd.DataFrame, val_df: pd.DataFrame) -> Tuple[pd.DataF
 class CollabAnalysis(analysis.ModelAnalysis):
 
     def __init__(self,
-                 datasplits: vaep.io.datasplits.DataSplits,
+                 datasplits: pimmslearn.io.datasplits.DataSplits,
                  sample_column: str = 'Sample ID',
                  item_column: str = 'peptide',
                  target_column: str = 'intensity',

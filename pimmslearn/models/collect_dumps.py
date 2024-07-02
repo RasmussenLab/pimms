@@ -5,7 +5,7 @@ from pathlib import Path
 import json
 import yaml
 from typing import Iterable, Callable
-import vaep.pandas
+import pimmslearn.pandas
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def load_config_file(fname: Path, first_split='config_') -> dict:
 def load_metric_file(fname: Path, first_split='metrics_') -> dict:
     with open(fname) as f:
         loaded = json.load(f)
-    loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
+    loaded = pimmslearn.pandas.flatten_dict_of_dicts(loaded)
     key = f"{fname.parent.name}_{select_content(fname.stem, first_split=first_split)}"
     return key, loaded
 

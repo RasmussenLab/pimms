@@ -1,6 +1,6 @@
 """Autoencoder model trained using denoising procedure.
 
-Variational Autencoder model adapter should be moved to vaep.models.vae.
+Variational Autencoder model adapter should be moved to pimmslearn.models.vae.
 Or model class could be put somewhere else.
 """
 import logging
@@ -15,22 +15,21 @@ from fastai.basics import L
 from fastai.callback.core import Callback
 from torch import nn
 
-import vaep.io.dataloaders
-import vaep.io.datasets
-import vaep.io.datasplits
-import vaep.models
-import vaep.transform
-
-from vaep.models import analysis
+import pimmslearn.io.dataloaders
+import pimmslearn.io.datasets
+import pimmslearn.io.datasplits
+import pimmslearn.models
+import pimmslearn.transform
+from pimmslearn.models import analysis
 
 logger = logging.getLogger(__name__)
 
 
 def get_preds_from_df(df: pd.DataFrame,
                       learn: fastai.learner.Learner,
-                      transformer: vaep.transform.VaepPipeline,
+                      transformer: pimmslearn.transform.VaepPipeline,
                       position_pred_tuple: int = None,
-                      dataset: torch.utils.data.Dataset = vaep.io.datasets.DatasetWithTarget):
+                      dataset: torch.utils.data.Dataset = pimmslearn.io.datasets.DatasetWithTarget):
     """Get predictions for specified DataFrame, using a fastai learner
     and a custom sklearn Pipeline.
 
@@ -40,22 +39,22 @@ def get_preds_from_df(df: pd.DataFrame,
         DataFrame to create predictions from.
     learn : fastai.learner.Learner
         fastai Learner with trained model
-    transformer : vaep.transform.VaepPipeline
+    transformer : pimmslearn.transform.VaepPipeline
         Pipeline with separate encode and decode
     position_pred_tuple : int, optional
         In that the model returns multiple outputs, select the one which contains
         the predictions matching the target variable (VAE case), by default None
     dataset : torch.utils.data.Dataset, optional
-        Dataset to build batches from, by default vaep.io.datasets.DatasetWithTarget
+        Dataset to build batches from, by default pimmslearn.io.datasets.DatasetWithTarget
 
     Returns
     -------
     tuple
         tuple of pandas DataFrames (prediciton and target) based on learn.get_preds
     """
-    dl = vaep.io.dataloaders.get_test_dl(df=df,
-                                         transformer=transformer,
-                                         dataset=dataset)
+    dl = pimmslearn.io.dataloaders.get_test_dl(df=df,
+                                               transformer=transformer,
+                                               dataset=dataset)
     res = learn.get_preds(dl=dl)  # -> dl could be int
     if position_pred_tuple is not None and issubclass(type(res[0]), tuple):
         res = (res[0][position_pred_tuple], *res[1:])
@@ -272,11 +271,11 @@ class AutoEncoderAnalysis(analysis.ModelAnalysis):
                  decode: List[str],
                  bs=64
                  ):
-        self.transform = vaep.transform.VaepPipeline(
+        self.transform = pimmslearn.transform.VaepPipeline(
             df_train=train_df,
             encode=transform,
             decode=decode)
-        self.dls = vaep.io.dataloaders.get_dls(
+        self.dls = pimmslearn.io.dataloaders.get_dls(
             train_X=train_df,
             valid_X=val_df,
             transformer=self.transform, bs=bs)
@@ -286,7 +285,7 @@ class AutoEncoderAnalysis(analysis.ModelAnalysis):
         self.params = dict(self.kwargs_model)
         self.model = model(**self.kwargs_model)
 
-        self.n_params_ae = vaep.models.calc_net_weight_count(self.model)
+        self.n_params_ae = pimmslearn.models.calc_net_weight_count(self.model)
         self.params['n_parameters'] = self.n_params_ae
         self.learn = None
 
@@ -296,4 +295,4 @@ class AutoEncoderAnalysis(analysis.ModelAnalysis):
         return get_preds_from_df(df=df_wide, learn=self.learn, transformer=self.transform)
 
     def get_test_dl(self, df_wide: pd.DataFrame, bs: int = 64) -> pd.DataFrame:
-        return vaep.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)
+        return pimmslearn.io.dataloaders.get_test_dl(df=df_wide, transformer=self.transform, bs=bs)

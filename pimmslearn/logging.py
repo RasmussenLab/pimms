@@ -42,7 +42,7 @@ def setup_logger_w_file(logger, level=logging.INFO, fname_base=None):
     Examples
     --------
     >>> import logging
-    >>> logger = logging.getLogger('vaep')
+    >>> logger = logging.getLogger('pimmslearn')
     >>> _ = setup_logger_w_file(logger) # no logging to file
     >>> logger.handlers = [] # reset logger
     >>> _ = setup_logger_w_file() #

@@ -20,10 +20,10 @@ from fastai.torch_core import default_device
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
 
-import vaep
-import vaep.models as models
+import pimmslearn
+import pimmslearn.models as models
 # patch plotting function
-from vaep.models import collab, plot_loss
+from pimmslearn.models import collab, plot_loss
 
 learner.Recorder.plot_loss = plot_loss
 
@@ -196,9 +196,9 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         ax.set_title('CF loss: Reconstruction loss')
         self.learn.recorder.plot_loss(skip_start=5, ax=ax,
                                       with_valid=True if y is not None else False)
-        vaep.savefig(fig, name='collab_training',
+        pimmslearn.savefig(fig, name='collab_training',
                      folder=self.out_folder)
         self.model_kwargs['batch_size'] = self.batch_size
-        vaep.io.dump_json(self.model_kwargs,
+        pimmslearn.io.dump_json(self.model_kwargs,
                           self.out_folder / 'model_params_{}.json'.format('CF'))
         return ax

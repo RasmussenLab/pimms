@@ -2,7 +2,7 @@
 """
 from types import SimpleNamespace
 
-from vaep.analyzers import compare_predictions, diff_analysis
+from pimmslearn.analyzers import compare_predictions, diff_analysis
 
 __all__ = ['diff_analysis', 'compare_predictions', 'Analysis']
 

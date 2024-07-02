@@ -8,8 +8,8 @@ from typing import Union
 
 import pandas as pd
 
-from vaep.io.format import class_full_module, classname
-from vaep.pandas import interpolate
+from pimmslearn.io.format import class_full_module, classname
+from pimmslearn.pandas import interpolate
 
 logger = logging.getLogger(__name__)
 

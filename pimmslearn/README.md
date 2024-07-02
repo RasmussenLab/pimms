@@ -2,10 +2,10 @@
 
 ## Imputation
 - imputation of data is done based on the standard variation or KNN imputation
-- adapted scripts from Annelaura are under `vaep/imputation.py`
+- adapted scripts from Annelaura are under `pimmslearn/imputation.py`
 
 ## Transform
-- transformation of intensity data is in `vaep/transfrom.py`
+- transformation of intensity data is in `pimmslearn/transfrom.py`
 
 
 ## Utils
