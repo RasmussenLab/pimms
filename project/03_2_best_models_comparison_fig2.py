@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -22,12 +22,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-import vaep.plotting
-import vaep.pandas
-import vaep.nb
+import pimmslearn.plotting
+import pimmslearn.pandas
+import pimmslearn.nb
 
 import logging
-from vaep.logging import setup_logger
+from pimmslearn.logging import setup_logger
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 
@@ -68,7 +68,7 @@ df
 # color mapping globally defined for article figures
 
 # %%
-COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
+COLORS_TO_USE_MAPPTING = pimmslearn.plotting.defaults.color_model_mapping
 print(COLORS_TO_USE_MAPPTING.keys())
 sns.color_palette(palette=COLORS_TO_USE_MAPPTING.values())
 
@@ -105,7 +105,7 @@ ax = (metrics
            ))
 
 
-ax = vaep.plotting.add_height_to_barplot(ax, size=6, rotated=True)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=6, rotated=True)
 ax.set_ylim((0, 0.75))
 ax.legend(fontsize=5, loc='lower right')
 text = (
@@ -115,10 +115,10 @@ text = (
     .stack().loc[pd.IndexSlice[ORDER_MODELS, ORDER_DATA]]
 
 )
-ax = vaep.plotting.add_text_to_barplot(ax, text, size=6)
+ax = pimmslearn.plotting.add_text_to_barplot(ax, text, size=6)
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, fname)
+pimmslearn.savefig(fig, fname)
 
 
 # %%

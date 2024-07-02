@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -26,14 +26,14 @@ import pandas as pd
 import seaborn as sns
 from IPython.display import display
 
-import vaep
-import vaep.databases.diseases
+import pimmslearn
+import pimmslearn.databases.diseases
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 
 plt.rcParams['figure.figsize'] = (2, 2)
 fontsize = 5
-vaep.plotting.make_large_descriptors(fontsize)
+pimmslearn.plotting.make_large_descriptors(fontsize)
 logging.getLogger('fontTools').setLevel(logging.ERROR)
 
 # catch passed parameters
@@ -61,10 +61,10 @@ annotaitons_gene_col = 'PG.Genes'
 # Add set parameters to configuration
 
 # %% tags=["hide-input"]
-params = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.Config()
+params = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args,
+args = pimmslearn.nb.add_default_paths(args,
                                  out_root=(
                                      args.folder_experiment
                                      / params["out_folder"]
@@ -124,8 +124,8 @@ scores
 # Models in comparison (name mapping)
 
 # %% tags=["hide-input"]
-models = vaep.nb.Config.from_dict(
-    vaep.pandas.index_to_dict(scores.columns.get_level_values(0)))
+models = pimmslearn.nb.Config.from_dict(
+    pimmslearn.pandas.index_to_dict(scores.columns.get_level_values(0)))
 vars(models)
 
 # %% [markdown]
@@ -262,7 +262,7 @@ files_out[f'diff_analysis_comparision_1_{args.model_key}'] = (
     args.out_folder /
     f'diff_analysis_comparision_1_{args.model_key}')
 fname = files_out[f'diff_analysis_comparision_1_{args.model_key}']
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # - also showing how many features were measured ("observed") by size of circle
@@ -288,7 +288,7 @@ ax.vlines(0.05, 0, 1, color='grey', linestyles='dotted')
 sns.move_legend(ax, "upper right")
 files_out[f'diff_analysis_comparision_2_{args.model_key}'] = (
     args.out_folder / f'diff_analysis_comparision_2_{args.model_key}')
-vaep.savefig(
+pimmslearn.savefig(
     fig, name=files_out[f'diff_analysis_comparision_2_{args.model_key}'])
 
 # %% [markdown]
@@ -325,7 +325,7 @@ if not _diff.empty:
 # Query diseases database for gene associations with specified disease ontology id.
 
 # %% tags=["hide-input"]
-data = vaep.databases.diseases.get_disease_association(
+data = pimmslearn.databases.diseases.get_disease_association(
     doid=args.disease_ontology, limit=10000)
 data = pd.DataFrame.from_dict(data, orient='index').rename_axis('ENSP', axis=0)
 data = data.rename(columns={'name': args.annotaitons_gene_col}).reset_index(

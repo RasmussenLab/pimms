@@ -51,17 +51,17 @@ import numpy as np
 import pandas as pd
 from IPython.display import display
 
-import vaep.filter
-import vaep.plotting.data
-import vaep.sampling
-from vaep.plotting.defaults import color_model_mapping
-from vaep.sklearn.ae_transformer import AETransformer
-from vaep.sklearn.cf_transformer import CollaborativeFilteringTransformer
+import pimmslearn.filter
+import pimmslearn.plotting.data
+import pimmslearn.sampling
+from pimmslearn.plotting.defaults import color_model_mapping
+from pimmslearn.sklearn.ae_transformer import AETransformer
+from pimmslearn.sklearn.cf_transformer import CollaborativeFilteringTransformer
 
-vaep.plotting.make_large_descriptors(8)
+pimmslearn.plotting.make_large_descriptors(8)
 
 
-logger = logger = vaep.logging.setup_nb_logger()
+logger = logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.ERROR)
 
 # %% [markdown]
@@ -113,7 +113,7 @@ df.head()
 # 2. CDF of available intensities per protein group
 
 # %%
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+ax = pimmslearn.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='boxplot')
 
 
@@ -128,8 +128,8 @@ df.notna().sum().sort_values().plot()
 # %%
 if select_features:
     # potentially this can take a few iterations to stabilize.
-    df = vaep.filter.select_features(df, feat_prevalence=feat_prevalence)
-    df = vaep.filter.select_features(df=df, feat_prevalence=sample_completeness, axis=1)
+    df = pimmslearn.filter.select_features(df, feat_prevalence=feat_prevalence)
+    df = pimmslearn.filter.select_features(df=df, feat_prevalence=sample_completeness, axis=1)
 df.shape
 
 
@@ -147,15 +147,15 @@ df
 
 # %%
 if sample_splits:
-    splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
+    splits, thresholds, fake_na_mcar, fake_na_mnar = pimmslearn.sampling.sample_mnar_mcar(
         df_long=df,
         frac_non_train=frac_non_train,
         frac_mnar=frac_mnar,
         random_state=random_state,
     )
-    splits = vaep.sampling.check_split_integrity(splits)
+    splits = pimmslearn.sampling.check_split_integrity(splits)
 else:
-    splits = vaep.sampling.DataSplits(is_wide_format=False)
+    splits = pimmslearn.sampling.DataSplits(is_wide_format=False)
     splits.train_X = df
 
 # %% [markdown]
@@ -215,10 +215,10 @@ assert df_imputed.shape[0] * df_imputed.shape[1] == len(imputed) + len(observed)
 
 fig, axes = plt.subplots(2, figsize=(8, 4))
 
-min_max = vaep.plotting.data.get_min_max_iterable(
+min_max = pimmslearn.plotting.data.get_min_max_iterable(
     [observed, imputed])
 label_template = '{method} (N={n:,d})'
-ax, _ = vaep.plotting.data.plot_histogram_intensities(
+ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
     observed,
     ax=axes[0],
     min_max=min_max,
@@ -228,7 +228,7 @@ ax, _ = vaep.plotting.data.plot_histogram_intensities(
     color='grey',
     alpha=1)
 _ = ax.legend()
-ax, _ = vaep.plotting.data.plot_histogram_intensities(
+ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
     imputed,
     ax=axes[1],
     min_max=min_max,
@@ -296,12 +296,12 @@ df_imputed
 if splits.val_y is not None:
     pred_val = splits.val_y.stack().to_frame('observed')
     pred_val[model_selected] = df_imputed
-    val_metrics = vaep.models.calculte_metrics(pred_val, 'observed')
+    val_metrics = pimmslearn.models.calculte_metrics(pred_val, 'observed')
     display(val_metrics)
 
     fig, ax = plt.subplots(figsize=(8, 2))
 
-    ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+    ax, errors_binned = pimmslearn.plotting.errors.plot_errors_by_median(
         pred=pred_val,
         target_col='observed',
         feat_medians=splits.train_X.median(),
@@ -326,10 +326,10 @@ imputed = df_imputed.loc[df_imputed.index.difference(df.index)].squeeze()
 
 fig, axes = plt.subplots(2, figsize=(8, 4))
 
-min_max = vaep.plotting.data.get_min_max_iterable([observed, imputed])
+min_max = pimmslearn.plotting.data.get_min_max_iterable([observed, imputed])
 
 label_template = '{method} (N={n:,d})'
-ax, _ = vaep.plotting.data.plot_histogram_intensities(
+ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
     observed,
     ax=axes[0],
     min_max=min_max,
@@ -339,7 +339,7 @@ ax, _ = vaep.plotting.data.plot_histogram_intensities(
     color='grey',
     alpha=1)
 _ = ax.legend()
-ax, _ = vaep.plotting.data.plot_histogram_intensities(
+ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
     imputed,
     ax=axes[1],
     min_max=min_max,

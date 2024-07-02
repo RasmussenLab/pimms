@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -35,19 +35,19 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from torch.nn import Sigmoid
 
-import vaep
-import vaep.model
-import vaep.models as models
-import vaep.nb
-from vaep.analyzers import analyzers
-from vaep.io import datasplits
+import pimmslearn
+import pimmslearn.model
+import pimmslearn.models as models
+import pimmslearn.nb
+from pimmslearn.analyzers import analyzers
+from pimmslearn.io import datasplits
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import ae, plot_loss
+from pimmslearn.models import ae, plot_loss
 
 learner.Recorder.plot_loss = plot_loss
 
 
-logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 logger.info(
     "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
@@ -94,11 +94,11 @@ meta_cat_col: str = None  # category column in meta data
 
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 
 if isinstance(args.hidden_layers, str):
     args.overwrite_entry("hidden_layers", [int(x)
@@ -167,7 +167,7 @@ else:
 #     - [x] add some additional NAs based on distribution of data
 
 # %% tags=["hide-input"]
-freq_feat = vaep.io.datasplits.load_freq(args.data)
+freq_feat = pimmslearn.io.datasplits.load_freq(args.data)
 freq_feat.head()  # training data
 
 # %% [markdown]
@@ -288,8 +288,8 @@ results.clear()  # reset results
 # needs class as argument, not instance, but serialization needs instance
 analysis.params['last_decoder_activation'] = Sigmoid()
 
-vaep.io.dump_json(
-    vaep.io.parse_dict(
+pimmslearn.io.dump_json(
+    pimmslearn.io.parse_dict(
         analysis.params, types=[
             (torch.nn.modules.module.Module, lambda m: str(m))
         ]),
@@ -364,13 +364,13 @@ analysis.model = analysis.model.cpu()
 # assert analysis.dls.valid.data.equals(analysis.dls.train.data)
 # Reconstruct DataLoader for case that during training singleton batches were dropped
 _dl = torch.utils.data.DataLoader(
-    vaep.io.datasets.DatasetWithTarget(
+    pimmslearn.io.datasets.DatasetWithTarget(
         analysis.dls.valid.data),
     batch_size=args.batch_size,
     shuffle=False)
-df_latent = vaep.model.get_latent_space(analysis.model.get_mu_and_logvar,
-                                        dl=_dl,
-                                        dl_index=analysis.dls.valid.data.index)
+df_latent = pimmslearn.model.get_latent_space(analysis.model.get_mu_and_logvar,
+                                              dl=_dl,
+                                              dl_index=analysis.dls.valid.data.index)
 df_latent
 
 # %% tags=["hide-input"]
@@ -453,8 +453,8 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=["hide-input"]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
-                  f'metrics_{args.model_key}.json')
+pimmslearn.io.dump_json(d_metrics.metrics, args.out_metrics /
+                        f'metrics_{args.model_key}.json')
 d_metrics
 
 # %% tags=["hide-input"]

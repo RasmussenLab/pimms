@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 import njab
 import pandas as pd
 
-import vaep
+import pimmslearn
 
 plt.rcParams['figure.figsize'] = [4, 2]  # [16.0, 7.0] , [4, 3]
-vaep.plotting.make_large_descriptors(6)
+pimmslearn.plotting.make_large_descriptors(6)
 
 
 NONE_COL_NAME = 'No imputation\n(None)'
@@ -22,7 +22,7 @@ ORDER_MODELS = ['DAE', 'VAE', 'TRKNN', 'RF', 'CF', 'Median', 'QRILC', NONE_COL_N
 REF_MODEL = 'None (100%)'
 CUTOFF = 0.05
 
-COLORS_TO_USE_MAPPTING = vaep.plotting.defaults.color_model_mapping
+COLORS_TO_USE_MAPPTING = pimmslearn.plotting.defaults.color_model_mapping
 COLORS_TO_USE_MAPPTING[NONE_COL_NAME] = COLORS_TO_USE_MAPPTING['None']
 
 COLORS_CONTIGENCY_TABLE = {
@@ -138,7 +138,7 @@ ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'lost_signal_da_counts.pdf'
 da_target_sel_counts.fillna(0).to_excel(writer, sheet_name=fname.stem)
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(ax.figure, fname)
+pimmslearn.savefig(ax.figure, fname)
 
 # %%
 ax = plot_qvalues(df=sel,
@@ -151,7 +151,7 @@ ax.set_xlabel("q-value using 100% of the data without imputation")
 ax.set_ylabel("q-value using 80% of the data")
 fname = out_folder / 'lost_signal_qvalues.pdf'
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(ax.figure, fname)
+pimmslearn.savefig(ax.figure, fname)
 
 
 # %% [markdown]
@@ -185,7 +185,7 @@ ax.locator_params(axis='y', integer=True)
 fname = out_folder / 'gained_signal_da_counts.pdf'
 da_target_sel_counts.fillna(0).to_excel(writer, sheet_name=fname.stem)
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(ax.figure, fname)
+pimmslearn.savefig(ax.figure, fname)
 
 # %%
 ax = plot_qvalues(sel,
@@ -197,7 +197,7 @@ ax.set_ylabel("q-value using 80% of the data")
 ax.legend(loc='upper right')
 fname = out_folder / 'gained_signal_qvalues.pdf'
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(ax.figure, fname)
+pimmslearn.savefig(ax.figure, fname)
 
 # %% [markdown]
 # Saved files

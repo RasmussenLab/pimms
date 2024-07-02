@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -16,7 +16,7 @@
 from pathlib import Path
 import pandas as pd
 
-from vaep.models.collect_dumps import collect_metrics
+from pimmslearn.models.collect_dumps import collect_metrics
 
 # %%
 all_metrics = collect_metrics(snakemake.input)

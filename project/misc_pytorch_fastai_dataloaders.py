@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -32,14 +32,14 @@ from fastcore.transform import Pipeline
 
 import torch
 
-from vaep.logging import setup_nb_logger
+from pimmslearn.logging import setup_nb_logger
 setup_nb_logger()
 
-from vaep.io.datasplits import DataSplits
-from vaep.io.datasets import DatasetWithMaskAndNoTarget, to_tensor
-from vaep.transform import VaepPipeline
-from vaep.models import ae
-from vaep.utils import create_random_df
+from pimmslearn.io.datasplits import DataSplits
+from pimmslearn.io.datasets import DatasetWithMaskAndNoTarget, to_tensor
+from pimmslearn.transform import VaepPipeline
+from pimmslearn.models import ae
+from pimmslearn.utils import create_random_df
 
 np.random.seed(42)
 print(f"fastai version: {fastai.__version__}")
@@ -312,7 +312,7 @@ import sklearn
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
-import vaep
+import pimmslearn
 # import importlib; importlib.reload(vaep); importlib.reload(vaep.transform)
 
 dae_default_pipeline = sklearn.pipeline.Pipeline(
@@ -329,7 +329,7 @@ valid_ds = DatasetWithMaskAndNoTarget(data.val_y, dae_transforms)
 valid_ds[:4]
 
 # %%
-from vaep.io.dataloaders import get_dls
+from pimmslearn.io.dataloaders import get_dls
 dls = get_dls(data.train_X, data.val_y, dae_transforms, bs=4)    
 dls.valid.one_batch()
 
@@ -394,7 +394,7 @@ dls.one_batch()
 # ## Variational Autoencoder
 
 # %%
-from vaep.transform import MinMaxScaler
+from pimmslearn.transform import MinMaxScaler
 
 args_vae = {}
 args_vae['SCALER'] = MinMaxScaler

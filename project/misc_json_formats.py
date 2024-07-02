@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -22,8 +22,8 @@
 
 # %%
 import pandas as pd
-from vaep.io.data_objects import MqAllSummaries
-from vaep.pandas import get_unique_non_unique_columns
+from pimmslearn.io.data_objects import MqAllSummaries
+from pimmslearn.pandas import get_unique_non_unique_columns
 
 mq_all_summaries = MqAllSummaries()
 
