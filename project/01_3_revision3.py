@@ -27,21 +27,21 @@ import numpy as np
 import pandas as pd
 import yaml
 
-import vaep
-import vaep.imputation
-import vaep.models
-import vaep.nb
-from vaep.analyzers import compare_predictions
-from vaep.models.collect_dumps import select_content
+import pimmslearn
+import pimmslearn.imputation
+import pimmslearn.models
+import pimmslearn.nb
+from pimmslearn.analyzers import compare_predictions
+from pimmslearn.models.collect_dumps import select_content
 
 pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
 plt.rcParams.update({'figure.figsize': (3, 2)})
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
@@ -97,11 +97,11 @@ folder_experiment = 'runs/rev3'
 # Some argument transformations
 
 # %%
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %%
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 # %%
@@ -154,14 +154,14 @@ pred_val = pred_val.dropna()
 pred_test = pred_test.dropna()
 
 # %%
-metrics = vaep.models.Metrics()
+metrics = pimmslearn.models.Metrics()
 test_metrics = metrics.add_metrics(
     pred_test, key='test data')
 test_metrics = pd.DataFrame(test_metrics)
 test_metrics
 
 # %%
-metrics = vaep.models.Metrics()
+metrics = pimmslearn.models.Metrics()
 val_metrics = metrics.add_metrics(
     pred_val, key='validation data')
 val_metrics = pd.DataFrame(val_metrics)

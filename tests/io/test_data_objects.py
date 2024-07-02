@@ -1,7 +1,7 @@
 import io
 from tokenize import group
 import pandas as pd
-from vaep.pandas import select_max_by
+from pimmslearn.pandas import select_max_by
 
 #                         m/z Protein group IDs         Intensity   Score
 # Sequence     Charge

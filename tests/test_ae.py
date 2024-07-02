@@ -1,5 +1,5 @@
-import vaep
-from vaep.models import ae
+import pimmslearn
+from pimmslearn.models import ae
 
 
 expected_repr = """Autoencoder(

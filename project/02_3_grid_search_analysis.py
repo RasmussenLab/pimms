@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -17,7 +17,6 @@
 # # Analyis of grid hyperparameter search
 
 # %%
-import snakemake
 import logging
 import pathlib
 
@@ -26,15 +25,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.express as px
 import seaborn as sns
+import snakemake
 
-import vaep.io
-import vaep.nb
-import vaep.pandas
-import vaep.plotting.plotly as px_vaep
-import vaep.utils
-from vaep import sampling
-from vaep.analyzers import compare_predictions
-from vaep.io import datasplits
+import pimmslearn.io
+import pimmslearn.nb
+import pimmslearn.pandas
+import pimmslearn.plotting.plotly as px_pimmslearn
+import pimmslearn.utils
+from pimmslearn import sampling
+from pimmslearn.analyzers import compare_predictions
+from pimmslearn.io import datasplits
 
 matplotlib.rcParams['figure.figsize'] = [12.0, 6.0]
 
@@ -43,7 +43,7 @@ pd.options.display.max_columns = 45
 pd.options.display.max_rows = 100
 pd.options.display.multi_sparse = False
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 # %% [markdown]
@@ -187,7 +187,7 @@ _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
+pimmslearn.savefig(fig, name='top_10_models_validation_fake_na', folder=FOLDER)
 
 # %% [markdown]
 # ## Create metrics in long format
@@ -330,7 +330,7 @@ view = metrics_long[["model", "n_params", "data_split", "metric_name", "metric_v
 plt.rcParams['figure.figsize'] = (7, 4)
 plt.rcParams['lines.linewidth'] = 2
 plt.rcParams['lines.markersize'] = 3
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
 col_order = ('valid_fake_na', 'test_fake_na')
 row_order = ('MAE', 'MSE')
@@ -344,7 +344,7 @@ fg = sns.relplot(
     row_order=row_order,
     hue="model",
     # style="day",
-    palette=vaep.plotting.defaults.color_model_mapping,
+    palette=pimmslearn.plotting.defaults.color_model_mapping,
     height=2,
     aspect=1.8,
     kind="scatter",
@@ -589,7 +589,7 @@ freq_feat.name = 'freq'
 freq_feat.head()  # training data
 
 # %%
-errors = vaep.pandas.calc_errors_per_feat(
+errors = pimmslearn.pandas.calc_errors_per_feat(
     pred=pred_split, freq_feat=freq_feat, target_col='observed')
 errors
 
@@ -603,7 +603,7 @@ ax = (errors['n_obs']
             xlabel='number of samples',
             ylabel='observations')
       )
-vaep.savefig(ax.get_figure(), files_out[f'n_obs_error_counts_{dataset}.pdf'])
+pimmslearn.savefig(ax.get_figure(), files_out[f'n_obs_error_counts_{dataset}.pdf'])
 
 # %%
 ax = errors.plot.scatter('freq', 'n_obs')
@@ -645,7 +645,7 @@ print(msg_annotation)
 
 files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'] = (
     FOLDER / f'best_models_ld_{min_latent}_rolling_errors_by_freq')
-vaep.savefig(
+pimmslearn.savefig(
     ax.get_figure(),
     name=files_out[f'best_models_ld_{min_latent}_rolling_errors_by_freq'])
 
@@ -658,19 +658,19 @@ errors_smoothed_long
 # Save html versin of curve with annotation of errors
 
 # %%
-fig = px_vaep.line((errors_smoothed_long
-                    .loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
-                    .join(n_obs_error_is_based_on)
-                    .sort_values(by='freq')),
-                   x=freq_feat.name,
-                   color='model',
-                   y='rolling error average',
-                   hover_data=['n_obs'],
-                   # title=f'Rolling average error by feature frequency {msg_annotation}',
-                   labels=labels_dict,
-                   category_orders={'model': order},
-                   )
-fig = px_vaep.apply_default_layout(fig)
+fig = px.line((errors_smoothed_long
+               .loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
+               .join(n_obs_error_is_based_on)
+               .sort_values(by='freq')),
+              x=freq_feat.name,
+              color='model',
+              y='rolling error average',
+              hover_data=['n_obs'],
+              # title=f'Rolling average error by feature frequency {msg_annotation}',
+              labels=labels_dict,
+              category_orders={'model': order},
+              )
+fig = px_pimmslearn.apply_default_layout(fig)
 fig.update_layout(legend_title_text='')  # remove legend title
 files_out[f'best_models_ld_{min_latent}_errors_by_freq_plotly.html'] = (
     FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_plotly.html')
@@ -700,7 +700,7 @@ ax = errors_smoothed.loc[errors_smoothed['freq'] >= FREQ_MIN].groupby(by='freq'
 )
 files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'] = (
     FOLDER / f'best_models_ld_{min_latent}_errors_by_freq_averaged')
-vaep.savefig(
+pimmslearn.savefig(
     ax.get_figure(),
     files_out[f'best_models_ld_{min_latent}_errors_by_freq_averaged'])
 
@@ -783,7 +783,7 @@ ax.set_ylabel('observations')
 freq_feat
 
 # %%
-errors = vaep.pandas.calc_errors_per_feat(
+errors = pimmslearn.pandas.calc_errors_per_feat(
     pred=pred_split, freq_feat=freq_feat, target_col='observed')
 idx_name = errors.index.name
 errors
@@ -792,8 +792,8 @@ errors
 files_out[f'best_models_errors_counts_obs_{dataset}.pdf'] = (FOLDER /
                                                              f'n_obs_error_counts_{dataset}.pdf')
 ax = errors['n_obs'].value_counts().sort_index().plot(style='.')
-vaep.savefig(ax.get_figure(),
-             files_out[f'best_models_errors_counts_obs_{dataset}.pdf'])
+pimmslearn.savefig(ax.get_figure(),
+                   files_out[f'best_models_errors_counts_obs_{dataset}.pdf'])
 
 # %%
 n_obs_error_is_based_on = errors['n_obs']
@@ -823,7 +823,7 @@ ax = (errors_smoothed
             # title=f'Rolling average error by feature frequency {msg_annotation}'
             ))
 
-vaep.savefig(
+pimmslearn.savefig(
     ax.get_figure(),
     folder=FOLDER,
     name=f'best_models_rolling_errors_{dataset}')
@@ -891,7 +891,7 @@ _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
 files_out[f'pred_corr_per_feat_{dataset}'] = (FOLDER /
                                               f'pred_corr_per_feat_{dataset}')
-vaep.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_feat_{dataset}'])
+pimmslearn.savefig(ax.get_figure(), name=files_out[f'pred_corr_per_feat_{dataset}'])
 
 # %%
 files_out[f'pred_corr_per_feat_{dataset}.xlsx'] = (FOLDER /
@@ -923,8 +923,8 @@ _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
 files_out[f'pred_corr_per_sample_{dataset}'] = (FOLDER /
                                                 f'pred_corr_per_sample_{dataset}')
-vaep.savefig(ax.get_figure(),
-             name=files_out[f'pred_corr_per_sample_{dataset}'])
+pimmslearn.savefig(ax.get_figure(),
+                   name=files_out[f'pred_corr_per_sample_{dataset}'])
 
 # %%
 files_out[f'pred_corr_per_sample_{dataset}.xlsx'] = (FOLDER /

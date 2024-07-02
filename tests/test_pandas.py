@@ -1,6 +1,6 @@
 from numpy import nan
 import pandas as pd
-import vaep.pandas
+import pimmslearn.pandas
 
 
 def test_interpolate():
@@ -33,7 +33,7 @@ def test_interpolate():
         # all peptides from pep4 dropped as expected
     }
 
-    actual = vaep.pandas.interpolate(df_test_data).to_dict()
+    actual = pimmslearn.pandas.interpolate(df_test_data).to_dict()
 
     assert actual == expected
     assert df_test_data.equals(pd.DataFrame(test_data))
@@ -48,7 +48,7 @@ def test_flatten_dict_of_dicts():
         "a": {'a1': {'a2': 1, 'a3': 2}},
         "b": {'b1': {'b2': 3, 'b3': 4}}
     }
-    actual = vaep.pandas.flatten_dict_of_dicts(data)
+    actual = pimmslearn.pandas.flatten_dict_of_dicts(data)
 
     assert expected == actual
 
@@ -70,7 +70,7 @@ def test_key_map():
                           'beta': ('a', 'b'),
                           'gamma': ('a', 'b'),
                           'delta': ('a', 'b')}}
-    actual = vaep.pandas.key_map(d)
+    actual = pimmslearn.pandas.key_map(d)
     assert expected == actual
 
     d = {'one': {'alpha': {'a': 0.5, 'b': 0.3}},
@@ -88,5 +88,5 @@ def test_key_map():
                           'beta': ('a', 'b'),
                           'gamma': ('a', 'b'),
                           'delta': None}}
-    actual = vaep.pandas.key_map(d)
+    actual = pimmslearn.pandas.key_map(d)
     assert expected == actual

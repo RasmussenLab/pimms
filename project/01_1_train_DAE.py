@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -28,18 +28,18 @@ from IPython.display import display
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
-import vaep
-import vaep.model
-import vaep.models as models
-from vaep.analyzers import analyzers
-from vaep.io import datasplits
+import pimmslearn
+import pimmslearn.model
+import pimmslearn.models as models
+from pimmslearn.analyzers import analyzers
+from pimmslearn.io import datasplits
 # overwriting Recorder callback with custom plot_loss
-from vaep.models import ae, plot_loss
+from pimmslearn.models import ae, plot_loss
 
 learner.Recorder.plot_loss = plot_loss
 
 
-logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 logger.info(
     "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
@@ -88,11 +88,11 @@ meta_cat_col: str = None  # category column in meta data
 
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 
 if isinstance(args.hidden_layers, str):
     args.overwrite_entry("hidden_layers", [int(x)
@@ -252,8 +252,8 @@ suggested_lr
 # dump model config
 
 # %% tags=["hide-input"]
-vaep.io.dump_json(analysis.params, args.out_models /
-                  TEMPLATE_MODEL_PARAMS.format(args.model_key))
+pimmslearn.io.dump_json(analysis.params, args.out_models /
+                        TEMPLATE_MODEL_PARAMS.format(args.model_key))
 
 
 # %% tags=["hide-input"]
@@ -327,9 +327,9 @@ if args.save_pred_real_na:
 
 # %% tags=["hide-input"]
 analysis.model.cpu()
-df_latent = vaep.model.get_latent_space(analysis.model.encoder,
-                                        dl=analysis.dls.valid,
-                                        dl_index=analysis.dls.valid.data.index)
+df_latent = pimmslearn.model.get_latent_space(analysis.model.encoder,
+                                              dl=analysis.dls.valid,
+                                              dl_index=analysis.dls.valid.data.index)
 df_latent
 
 # %% tags=["hide-input"]
@@ -381,8 +381,8 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=["hide-input"]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
-                  f'metrics_{args.model_key}.json')
+pimmslearn.io.dump_json(d_metrics.metrics, args.out_metrics /
+                        f'metrics_{args.model_key}.json')
 d_metrics
 
 # %% tags=["hide-input"]

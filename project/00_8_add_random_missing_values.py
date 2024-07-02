@@ -6,7 +6,7 @@
 from pathlib import Path
 from typing import Optional, Union
 import pandas as pd
-import vaep.nb
+import pimmslearn.nb
 
 # %%
 # catch passed parameters
@@ -33,8 +33,8 @@ fn_intensities = "data/ALD_study/processed/ald_plasma_proteinGroups.pkl"
 fn_intensities = Path(fn_intensities)
 if not out_root:
     out_root = fn_intensities.parent
-args = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 # %%

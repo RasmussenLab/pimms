@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -28,16 +28,16 @@ import njab
 import pandas as pd
 import seaborn
 
-import vaep
-import vaep.analyzers
-import vaep.imputation
-import vaep.io.datasplits
+import pimmslearn
+import pimmslearn.analyzers
+import pimmslearn.imputation
+import pimmslearn.io.datasplits
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 plt.rcParams['figure.figsize'] = [4, 2.5]  # [16.0, 7.0] , [4, 3]
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
 # catch passed parameters
 args = None
@@ -62,10 +62,10 @@ ref_method_score = None  # filepath to reference method score
 
 
 # %% tags=["hide-input"]
-params = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.Config()
+params = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args,
+args = pimmslearn.nb.add_default_paths(args,
                                  out_root=(args.folder_experiment
                                            / params["out_folder"]
                                            / params["target"]))
@@ -276,7 +276,7 @@ pd.crosstab(target.squeeze(), target_to_group.squeeze())
 # ## Measurments
 
 # %% tags=["hide-input"]
-data = vaep.io.datasplits.DataSplits.from_folder(
+data = pimmslearn.io.datasplits.DataSplits.from_folder(
     args.data,
     file_format=args.file_format)
 data = pd.concat([data.train_X, data.val_y, data.test_y]).unstack()
@@ -318,7 +318,7 @@ pred_paths = [
 pred_paths
 
 # %% tags=["hide-input"]
-load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_pred_file
+load_single_csv_pred_file = pimmslearn.analyzers.compare_predictions.load_single_csv_pred_file
 pred_real_na = dict()
 for method in model_keys:
     fname = args.out_preds / args.template_pred.format(method)
@@ -356,7 +356,7 @@ folder.mkdir(parents=True, exist_ok=True)
 
 
 # %% tags=["hide-input"]
-min_y_int, max_y_int = vaep.plotting.data.get_min_max_iterable(
+min_y_int, max_y_int = pimmslearn.plotting.data.get_min_max_iterable(
     [data.stack(), pred_real_na.stack()])
 min_max = min_y_int, max_y_int
 
@@ -467,7 +467,7 @@ for i, idx in enumerate(feat_sel):
     fname = (folder /
              f'{first_pg}_swarmplot.pdf')
     files_out[fname.name] = fname.as_posix()
-    vaep.savefig(
+    pimmslearn.savefig(
         fig,
         name=fname)
     plt.close()

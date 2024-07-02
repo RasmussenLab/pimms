@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -28,19 +28,19 @@ from fastai.collab import (EarlyStoppingCallback, EmbeddingDotBias, Learner,
                            MSELossFlat, default_device)
 from fastai.tabular.all import *
 
-import vaep
-import vaep.model
-import vaep.models as models
-import vaep.nb
-from vaep.io import datasplits
-from vaep.logging import setup_logger
-from vaep.models import RecorderDump, plot_loss
+import pimmslearn
+import pimmslearn.model
+import pimmslearn.models as models
+import pimmslearn.nb
+from pimmslearn.io import datasplits
+from pimmslearn.logging import setup_logger
+from pimmslearn.models import RecorderDump, plot_loss
 
 learner.Recorder.plot_loss = plot_loss
 # import fastai.callback.hook # Learner.summary
 
 
-logger = setup_logger(logger=logging.getLogger('vaep'))
+logger = setup_logger(logger=logging.getLogger('pimmslearn'))
 logger.info(
     "Experiment 03 - Analysis of latent spaces and performance comparisions")
 
@@ -78,11 +78,11 @@ save_pred_real_na: bool = True  # Save all predictions for missing values
 # Some argument transformations
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 
 # # Currently not needed -> DotProduct used, not a FNN
 # if isinstance(args.hidden_layers, str):
@@ -216,11 +216,11 @@ recorder_dump = RecorderDump(
     recorder=ana_collab.learn.recorder, name='CF')
 recorder_dump.save(args.out_figures)
 del recorder_dump
-vaep.savefig(fig, name='collab_training',
-             folder=args.out_figures)
+pimmslearn.savefig(fig, name='collab_training',
+                   folder=args.out_figures)
 ana_collab.model_kwargs['batch_size'] = ana_collab.batch_size
-vaep.io.dump_json(ana_collab.model_kwargs, args.out_models /
-                  TEMPLATE_MODEL_PARAMS.format('CF'))
+pimmslearn.io.dump_json(ana_collab.model_kwargs, args.out_models /
+                        TEMPLATE_MODEL_PARAMS.format('CF'))
 
 # %% [markdown]
 # ### Predictions
@@ -300,8 +300,8 @@ added_metrics
 # Save all metrics as json
 
 # %%
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
-                  f'metrics_{args.model_key}.json')
+pimmslearn.io.dump_json(d_metrics.metrics, args.out_metrics /
+                        f'metrics_{args.model_key}.json')
 
 
 # %%

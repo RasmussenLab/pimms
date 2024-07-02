@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -19,13 +19,13 @@
 # Datasets are provided to `DataLoaders` which perform the aggreation to batches.
 
 # %%
-from vaep.io.datasplits import long_format
+from pimmslearn.io.datasplits import long_format
 from fastai.collab import CollabDataLoaders
 import random
 
 import pandas as pd
-import vaep.io.datasets as datasets
-import vaep.utils as test_data
+import pimmslearn.io.datasets as datasets
+import pimmslearn.utils as test_data
 
 # %%
 N, M = 15, 7

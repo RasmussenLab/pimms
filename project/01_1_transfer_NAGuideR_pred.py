@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,14 +24,14 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-import vaep
-import vaep.models
-import vaep.pandas
-from vaep.io import datasplits
+import pimmslearn
+import pimmslearn.models
+import pimmslearn.pandas
+from pimmslearn.io import datasplits
 
-vaep.plotting.make_large_descriptors(5)
+pimmslearn.plotting.make_large_descriptors(5)
 
-logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 
 # %% tags=["hide-input"]
 # catch passed parameters
@@ -55,8 +55,8 @@ dumps: list = None  # list of dumps to be used
 
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 # %% tags=["hide-input"]
@@ -134,7 +134,7 @@ val_pred_fake_na
 
 # %% tags=["hide-input"]
 # papermill_description=metrics
-d_metrics = vaep.models.Metrics()
+d_metrics = pimmslearn.models.Metrics()
 
 # %% tags=["hide-input"]
 added_metrics = d_metrics.add_metrics(val_pred_fake_na.dropna(how='all', axis=1), 'valid_fake_na')
@@ -148,7 +148,7 @@ added_metrics = d_metrics.add_metrics(test_pred_fake_na.dropna(how='all', axis=1
 pd.DataFrame(added_metrics)
 
 # %% tags=["hide-input"]
-metrics_df = vaep.models.get_df_from_nested_dict(
+metrics_df = pimmslearn.models.get_df_from_nested_dict(
     d_metrics.metrics, column_levels=['model', 'metric_name']).T
 metrics_df
 
@@ -163,13 +163,13 @@ top_5
 
 # %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 2))
-ax, errors_bind = vaep.plotting.errors.plot_errors_binned(
+ax, errors_bind = pimmslearn.plotting.errors.plot_errors_binned(
     val_pred_fake_na[top_5],
     ax=ax,
 )
 fname = args.out_figures / 'NAGuideR_errors_per_bin_val.png'
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
 files_out

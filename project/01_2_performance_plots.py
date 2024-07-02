@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -37,22 +37,22 @@ import pandas as pd
 import yaml
 from IPython.display import display
 
-import vaep
-import vaep.imputation
-import vaep.models
-import vaep.nb
-from vaep.analyzers import compare_predictions
-from vaep.io import datasplits
-from vaep.models.collect_dumps import collect, select_content
+import pimmslearn
+import pimmslearn.imputation
+import pimmslearn.models
+import pimmslearn.nb
+from pimmslearn.analyzers import compare_predictions
+from pimmslearn.io import datasplits
+from pimmslearn.models.collect_dumps import collect, select_content
 
 pd.options.display.max_rows = 30
 pd.options.display.min_rows = 10
 pd.options.display.max_colwidth = 100
 
 plt.rcParams.update({'figure.figsize': (4, 2)})
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 
@@ -105,11 +105,11 @@ save_agg_pred: bool = False  # save aggregated predictions of validation and tes
 # Some argument transformations
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 # %% tags=["hide-input"]
@@ -141,9 +141,9 @@ data = datasplits.DataSplits.from_folder(
 # %% tags=["hide-input"]
 fig, axes = plt.subplots(1, 2, sharey=True, sharex=True)
 
-vaep.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
+pimmslearn.plotting.data.plot_observations(data.val_y.unstack(), ax=axes[0],
                                      title='Validation split', size=1, xlabel='')
-vaep.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
+pimmslearn.plotting.data.plot_observations(data.test_y.unstack(), ax=axes[1],
                                      title='Test split', size=1, xlabel='')
 fig.suptitle("Simulated missing values per sample", size=8)
 # hide axis and use only for common x label
@@ -153,7 +153,7 @@ plt.xlabel(f'Samples ordered by identified {data.val_y.index.names[-1]}')
 group = 1
 fname = args.out_figures / f'2_{group}_fake_na_val_test_splits.png'
 figures[fname.stem] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # ## data completeness across entire data
@@ -161,7 +161,7 @@ vaep.savefig(fig, name=fname)
 # %% tags=["hide-input"]
 # load frequency of training features...
 # needs to be pickle -> index.name needed
-freq_feat = vaep.io.datasplits.load_freq(args.data, file='freq_features.json')
+freq_feat = pimmslearn.io.datasplits.load_freq(args.data, file='freq_features.json')
 freq_feat.head()  # training data
 
 # %% tags=["hide-input"]
@@ -283,8 +283,8 @@ mae_stats_ordered_val.T
 # > 2. User defined model keys for the same model with two configuration will yield different colors.
 
 # %% tags=["hide-input"]
-COLORS_TO_USE = vaep.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
-vaep.plotting.defaults.ModelColorVisualizer(ORDER_MODELS, COLORS_TO_USE)
+COLORS_TO_USE = pimmslearn.plotting.defaults.assign_colors(list(k.upper() for k in ORDER_MODELS))
+pimmslearn.plotting.defaults.ModelColorVisualizer(ORDER_MODELS, COLORS_TO_USE)
 
 # %% tags=["hide-input"]
 TOP_N_ORDER = ORDER_MODELS[:args.plot_to_n]
@@ -314,7 +314,7 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
 fname = args.out_figures / f'2_{group}_pred_corr_val_per_sample.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 
 fname = args.out_figures / f'2_{group}_pred_corr_val_per_sample.xlsx'
 dumps[fname.stem] = fname
@@ -327,7 +327,7 @@ with pd.ExcelWriter(fname) as w:
 # identify samples which are below lower whisker for models
 
 # %% tags=["hide-input"]
-treshold = vaep.pandas.get_lower_whiskers(
+treshold = pimmslearn.pandas.get_lower_whiskers(
     corr_per_sample_val[TOP_N_ORDER]).min()
 mask = (corr_per_sample_val[TOP_N_ORDER] < treshold).any(axis=1)
 corr_per_sample_val.loc[mask].style.highlight_min(
@@ -364,7 +364,7 @@ errors_val.loc[mask]
 
 # %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 3))
-ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+ax, errors_binned = pimmslearn.plotting.errors.plot_errors_by_median(
     pred_val[
         [TARGET_COL] + TOP_N_ORDER
     ],
@@ -377,11 +377,11 @@ ax.set_ylabel(f"Average error ({METRIC})")
 ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_errors_binned_by_feat_median_val.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 
 # %% tags=["hide-input"]
 # # ! only used for reporting
-plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+plotted = pimmslearn.plotting.errors.get_data_for_errors_by_median(
     errors=errors_binned,
     feat_name=FEAT_NAME_DISPLAY,
     metric_name=METRIC
@@ -418,7 +418,7 @@ pred_test
 # Write averages for all models to excel (from before?)
 
 # %% tags=["hide-input"]
-errors_test_mae = vaep.pandas.calc_errors.get_absolute_error(
+errors_test_mae = pimmslearn.pandas.calc_errors.get_absolute_error(
     pred_test
 )
 mae_stats_ordered_test = errors_test_mae.describe()[ORDER_MODELS]
@@ -445,7 +445,7 @@ writer.close()
 # ### Intensity distribution as histogram
 # Plot top 4 models predictions for intensities in test data
 # %% tags=["hide-input"]
-min_max = vaep.plotting.data.min_max(pred_test[TARGET_COL])
+min_max = pimmslearn.plotting.data.min_max(pred_test[TARGET_COL])
 top_n = 4
 fig, axes = plt.subplots(ncols=top_n, figsize=(8, 2), sharey=True)
 
@@ -454,13 +454,13 @@ for model, color, ax in zip(
         COLORS_TO_USE[:top_n],
         axes):
 
-    ax, bins = vaep.plotting.data.plot_histogram_intensities(
+    ax, bins = pimmslearn.plotting.data.plot_histogram_intensities(
         pred_test[TARGET_COL],
         color='grey',
         min_max=min_max,
         ax=ax
     )
-    ax, _ = vaep.plotting.data.plot_histogram_intensities(
+    ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
         pred_test[model],
         color=color,
         min_max=min_max,
@@ -475,10 +475,10 @@ axes[0].set_ylabel('Number of observations')
 
 fname = args.out_figures / f'2_{group}_intensity_binned_top_{top_n}_models_test.pdf'
 figures[fname.stem] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% tags=["hide-input"]
-counts_per_bin = vaep.pandas.get_counts_per_bin(df=pred_test,
+counts_per_bin = pimmslearn.pandas.get_counts_per_bin(df=pred_test,
                                                 bins=bins,
                                                 columns=[TARGET_COL, *ORDER_MODELS[:top_n]])
 
@@ -516,7 +516,7 @@ ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                    horizontalalignment='right')
 fname = args.out_figures / f'2_{group}_pred_corr_test_per_sample.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 
 dumps[fname.stem] = fname.with_suffix('.xlsx')
 with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
@@ -528,7 +528,7 @@ with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
 # identify samples which are below lower whisker for models
 
 # %% tags=["hide-input"]
-treshold = vaep.pandas.get_lower_whiskers(
+treshold = pimmslearn.pandas.get_lower_whiskers(
     corr_per_sample_test[TOP_N_ORDER]).min()
 mask = (corr_per_sample_test[TOP_N_ORDER] < treshold).any(axis=1)
 corr_per_sample_test.loc[mask].style.highlight_min(
@@ -572,7 +572,7 @@ _ = ax.set_xticklabels(ax.get_xticklabels(), rotation=45,
                        horizontalalignment='right')
 fname = args.out_figures / f'2_{group}_pred_corr_test_per_feat.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 dumps[fname.stem] = fname.with_suffix('.xlsx')
 with pd.ExcelWriter(fname.with_suffix('.xlsx')) as w:
     corr_per_feat_test.loc[~too_few_obs].describe().to_excel(
@@ -586,7 +586,7 @@ feat_count_test.name = 'count'
 feat_count_test.head()
 
 # %% tags=["hide-input"]
-treshold = vaep.pandas.get_lower_whiskers(
+treshold = pimmslearn.pandas.get_lower_whiskers(
     corr_per_feat_test[TOP_N_ORDER]).min()
 mask = (corr_per_feat_test[TOP_N_ORDER] < treshold).any(axis=1)
 
@@ -613,7 +613,7 @@ else:
 # ### Error plot
 
 # %% tags=["hide-input"]
-metrics = vaep.models.Metrics()
+metrics = pimmslearn.models.Metrics()
 test_metrics = metrics.add_metrics(
     pred_test[['observed', *TOP_N_ORDER]], key='test data')
 test_metrics = pd.DataFrame(test_metrics)[TOP_N_ORDER]
@@ -651,12 +651,12 @@ ax = _to_plot.loc[[feature_names.name]].plot.bar(
     color=COLORS_TO_USE,
     ax=ax,
     width=.7)
-ax = vaep.plotting.add_height_to_barplot(ax, size=7)
-ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=7)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=7)
+ax = pimmslearn.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=7)
 ax.set_xticklabels([])
 fname = args.out_figures / f'2_{group}_performance_test.pdf'
 figures[fname.stem] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% tags=["hide-input"]
 dumps[fname.stem] = fname.with_suffix('.csv')
@@ -672,10 +672,10 @@ _to_plot_long.to_csv(fname.with_suffix('.csv'))
 # ### Plot error by median feature intensity
 
 # %% tags=["hide-input"]
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 fig, ax = plt.subplots(figsize=(8, 2))
 
-ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+ax, errors_binned = pimmslearn.plotting.errors.plot_errors_by_median(
     pred=pred_test[
         [TARGET_COL] + TOP_N_ORDER
     ],
@@ -686,10 +686,10 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
     palette=COLORS_TO_USE
 )
 ax.legend(loc='best', ncols=len(TOP_N_ORDER))
-vaep.plotting.make_large_descriptors(6)
+pimmslearn.plotting.make_large_descriptors(6)
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 
 dumps[fname.stem] = fname.with_suffix('.csv')
 errors_binned.to_csv(fname.with_suffix('.csv'))
@@ -697,7 +697,7 @@ errors_binned
 
 # %% tags=["hide-input"]
 # # ! only used for reporting
-plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+plotted = pimmslearn.plotting.errors.get_data_for_errors_by_median(
     errors=errors_binned,
     feat_name=FEAT_NAME_DISPLAY,
     metric_name=METRIC
@@ -719,7 +719,7 @@ plotted
 
 # %% tags=["hide-input"]
 if SEL_MODELS:
-    metrics = vaep.models.Metrics()
+    metrics = pimmslearn.models.Metrics()
     test_metrics = metrics.add_metrics(
         pred_test[['observed', *SEL_MODELS]], key='test data')
     test_metrics = pd.DataFrame(test_metrics)[SEL_MODELS]
@@ -749,18 +749,18 @@ if SEL_MODELS:
         rot=0,
         ylabel=f"{METRIC} for {FEAT_NAME_DISPLAY} ({n_in_comparison:,} intensities)",
         # title=f'performance on test data (based on {n_in_comparison:,} measurements)',
-        color=vaep.plotting.defaults.assign_colors(
+        color=pimmslearn.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS)),
         ax=ax,
         width=.7)
     ax.legend(loc='best', ncols=len(SEL_MODELS))
-    ax = vaep.plotting.add_height_to_barplot(ax, size=5)
-    ax = vaep.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
+    ax = pimmslearn.plotting.add_height_to_barplot(ax, size=5)
+    ax = pimmslearn.plotting.add_text_to_barplot(ax, _to_plot.loc["text"], size=5)
     ax.set_xticklabels([])
 
     fname = args.out_figures / f'2_{group}_performance_test_sel.pdf'
     figures[fname.stem] = fname
-    vaep.savefig(fig, name=fname)
+    pimmslearn.savefig(fig, name=fname)
 
     dumps[fname.stem] = fname.with_suffix('.csv')
     _to_plot_long = _to_plot.T
@@ -774,10 +774,10 @@ if SEL_MODELS:
 # %% tags=["hide-input"]
 # custom selection
 if SEL_MODELS:
-    vaep.plotting.make_large_descriptors(7)
+    pimmslearn.plotting.make_large_descriptors(7)
     fig, ax = plt.subplots(figsize=(8, 2))
 
-    ax, errors_binned = vaep.plotting.errors.plot_errors_by_median(
+    ax, errors_binned = pimmslearn.plotting.errors.plot_errors_by_median(
         pred=pred_test[
             [TARGET_COL] + SEL_MODELS
         ],
@@ -785,7 +785,7 @@ if SEL_MODELS:
         ax=ax,
         metric_name=METRIC,
         feat_name=FEAT_NAME_DISPLAY,
-        palette=vaep.plotting.defaults.assign_colors(
+        palette=pimmslearn.plotting.defaults.assign_colors(
             list(k.upper() for k in SEL_MODELS))
     )
     # ax.set_ylim(0, 1.5)
@@ -794,16 +794,16 @@ if SEL_MODELS:
     #     text.set_fontsize(6)
     fname = args.out_figures / f'2_{group}_test_errors_binned_by_feat_medians_sel.pdf'
     figures[fname.stem] = fname
-    vaep.savefig(ax.get_figure(), name=fname)
+    pimmslearn.savefig(ax.get_figure(), name=fname)
     plt.show(fig)
 
     dumps[fname.stem] = fname.with_suffix('.csv')
     errors_binned.to_csv(fname.with_suffix('.csv'))
-    vaep.plotting.make_large_descriptors(6)
+    pimmslearn.plotting.make_large_descriptors(6)
     # ax.xaxis.set_tick_params(rotation=0) # horizontal
 
     # # ! only used for reporting
-    plotted = vaep.plotting.errors.get_data_for_errors_by_median(
+    plotted = pimmslearn.plotting.errors.get_data_for_errors_by_median(
         errors=errors_binned,
         feat_name=FEAT_NAME_DISPLAY,
         metric_name=METRIC
@@ -819,7 +819,7 @@ if SEL_MODELS:
 
 # %% tags=["hide-input"]
 fig, ax = plt.subplots(figsize=(8, 2))
-ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
+ax, errors_binned = pimmslearn.plotting.errors.plot_errors_binned(
     pred_test[
         [TARGET_COL] + TOP_N_ORDER
     ],
@@ -830,7 +830,7 @@ ax, errors_binned = vaep.plotting.errors.plot_errors_binned(
 ax.legend(loc='best', ncols=len(TOP_N_ORDER))
 fname = args.out_figures / f'2_{group}_test_errors_binned_by_int.pdf'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), name=fname)
+pimmslearn.savefig(ax.get_figure(), name=fname)
 
 # %% tags=["hide-input"]
 dumps[fname.stem] = fname.with_suffix('.csv')

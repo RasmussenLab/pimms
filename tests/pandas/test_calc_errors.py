@@ -1,7 +1,7 @@
 import pandas as pd
 from pytest import fixture
 
-from vaep.pandas import calc_errors
+from pimmslearn.pandas import calc_errors
 
 
 @fixture

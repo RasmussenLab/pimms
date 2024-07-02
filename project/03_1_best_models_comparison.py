@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -21,15 +21,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-import vaep.nb
-import vaep.pandas
-import vaep.plotting
-from vaep.logging import setup_logger
+import pimmslearn.nb
+import pimmslearn.pandas
+import pimmslearn.plotting
+from pimmslearn.logging import setup_logger
 
 logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
 # %%
 IDX = [['proteinGroups', 'peptides', 'evidence'],
@@ -81,7 +81,7 @@ to_plot
 logger.setLevel(20)  # reset debug
 ax = to_plot['mean'].plot.bar(rot=0,
                               width=.8,
-                              color=vaep.plotting.defaults.color_model_mapping,
+                              color=pimmslearn.plotting.defaults.color_model_mapping,
                               yerr=to_plot['std'])
 ax.set_xlabel('')
 
@@ -114,7 +114,7 @@ g = sns.catplot(x="data level", y="MAE", hue='model', data=view_long,
                 errcolor="black",
                 hue_order=IDX[1],
                 order=IDX[0],
-                palette=vaep.plotting.defaults.color_model_mapping,
+                palette=pimmslearn.plotting.defaults.color_model_mapping,
                 alpha=0.9,
                 height=2,  # set the height of the figure
                 aspect=1.8  # set the aspect ratio of the figure
@@ -123,7 +123,7 @@ g = sns.catplot(x="data level", y="MAE", hue='model', data=view_long,
 # map data to stripplot
 g.map(sns.stripplot, 'data level', 'MAE', 'model',
       hue_order=IDX[1], order=IDX[0],
-      palette=vaep.plotting.defaults.color_model_mapping,
+      palette=pimmslearn.plotting.defaults.color_model_mapping,
       dodge=True, alpha=1, ec='k', linewidth=1,
       s=2)
 
@@ -132,7 +132,7 @@ ax = fig.get_axes()[0]
 _ = ax.set_xlabel('')
 
 # %%
-vaep.savefig(fig, FOLDER / "model_performance_repeated_runs.pdf", tight_layout=False)
+pimmslearn.savefig(fig, FOLDER / "model_performance_repeated_runs.pdf", tight_layout=False)
 
 # %%
 writer.close()

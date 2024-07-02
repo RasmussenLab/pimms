@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from vaep.io.datasplits import DataSplits, wide_format
+from pimmslearn.io.datasplits import DataSplits, wide_format
 import pytest
 import numpy.testing as npt
 

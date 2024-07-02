@@ -1,6 +1,6 @@
 import numpy as np
 
-from vaep.utils import create_random_missing_data
+from pimmslearn.utils import create_random_missing_data
 
 
 def test_create_random_missing_data():

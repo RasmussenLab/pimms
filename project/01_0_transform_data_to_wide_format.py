@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -20,9 +20,9 @@
 # %% tags=["hide-input"]
 import pandas as pd
 
-import vaep
-import vaep.models
-from vaep.io import datasplits
+import pimmslearn
+import pimmslearn.models
+from pimmslearn.io import datasplits
 
 # %% tags=["hide-input"]
 # catch passed parameters
@@ -41,11 +41,11 @@ file_format_in: str = 'csv'  # file format of original splits, default pickle (p
 file_format_out: str = 'csv'  # file format of transformed splits, default csv
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-params = vaep.nb.args_from_dict(args)
+params = pimmslearn.nb.args_from_dict(args)
 # params = OmegaConf.create(args)
 params
 

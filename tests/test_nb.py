@@ -1,5 +1,5 @@
 import pytest
-from vaep.nb import Config
+from pimmslearn.nb import Config
 
 
 def test_Config():

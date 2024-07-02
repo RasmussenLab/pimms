@@ -1,5 +1,5 @@
 import pathlib
-from vaep.utils import append_to_filepath
+from pimmslearn.utils import append_to_filepath
 
 
 def test_append_to_filepath():

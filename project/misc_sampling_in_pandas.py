@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -22,7 +22,7 @@
 # ## Some random data
 
 # %%
-from vaep.utils import create_random_df
+from pimmslearn.utils import create_random_df
 X = create_random_df(100, 15, prop_na=0.1).stack().to_frame(
     'intensity').reset_index()
 

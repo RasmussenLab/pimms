@@ -7,11 +7,11 @@ from pathlib import Path
 from typing import Union, List
 
 import numpy as np
-import vaep
-import vaep.analyzers.analyzers
-from vaep.utils import create_random_df
+import pimmslearn
+import pimmslearn.analyzers.analyzers
+from pimmslearn.utils import create_random_df
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 
 # %%
@@ -38,11 +38,11 @@ random_seed: int = 42  # Random seed for reproducibility
 file_format: str = 'pkl'
 
 # %%
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %%
-args = vaep.nb.Config().from_dict(args)
+args = pimmslearn.nb.Config().from_dict(args)
 args
 
 
@@ -71,7 +71,7 @@ logger.info(f"File format (extension): {FILE_EXT}  (!specifies data loading func
 
 # %%
 constructor = getattr(
-    vaep.analyzers.analyzers.AnalyzePeptides,
+    pimmslearn.analyzers.analyzers.AnalyzePeptides,
     FILE_FORMAT_TO_CONSTRUCTOR_IN[FILE_EXT])  # AnalyzePeptides.from_csv
 analysis = constructor(fname=args.FN_INTENSITIES,
                        index_col=args.index_col,
@@ -94,11 +94,11 @@ FILE_FORMAT_TO_CONSTRUCTOR = {'csv': 'to_csv',
 
 method = getattr(df, FILE_FORMAT_TO_CONSTRUCTOR.get(FILE_EXT))
 
-fname = vaep.utils.append_to_filepath(args.FN_INTENSITIES, 'permuted')
+fname = pimmslearn.utils.append_to_filepath(args.FN_INTENSITIES, 'permuted')
 method(fname)
 # %%
 constructor = getattr(
-    vaep.analyzers.analyzers.AnalyzePeptides,
+    pimmslearn.analyzers.analyzers.AnalyzePeptides,
     FILE_FORMAT_TO_CONSTRUCTOR_IN[FILE_EXT])  # AnalyzePeptides.from_csv
 analysis = constructor(fname=args.FN_INTENSITIES,
                        index_col=args.index_col,

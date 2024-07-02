@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -32,19 +32,19 @@ import sklearn
 from njab.plotting.metrics import plot_split_auc, plot_split_prc
 from njab.sklearn.types import Splits
 
-import vaep
-import vaep.analyzers
-import vaep.io.datasplits
+import pimmslearn
+import pimmslearn.analyzers
+import pimmslearn.io.datasplits
 
 plt.rcParams['figure.figsize'] = (2.5, 2.5)
 plt.rcParams['lines.linewidth'] = 1
 plt.rcParams['lines.markersize'] = 2
 fontsize = 5
 figsize = (2.5, 2.5)
-vaep.plotting.make_large_descriptors(fontsize)
+pimmslearn.plotting.make_large_descriptors(fontsize)
 
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.ERROR)
 
 
@@ -99,10 +99,10 @@ template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 
 
 # %% tags=["hide-input"]
-params = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.Config()
+params = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.Config()
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args,
+args = pimmslearn.nb.add_default_paths(args,
                                  out_root=(args.folder_experiment
                                            / params["out_folder"]
                                            / params["target"]
@@ -128,7 +128,7 @@ target
 # Aggregated from data splits of the imputation workflow run before.
 
 # %% tags=["hide-input"]
-data = vaep.io.datasplits.DataSplits.from_folder(
+data = pimmslearn.io.datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 data = pd.concat([data.train_X, data.val_y, data.test_y])
 data.sample(5)
@@ -146,7 +146,7 @@ MIN_N_PROTEIN_GROUPS: int = 200
 FRAC_PROTEIN_GROUPS: int = 0.622
 CV_QC_SAMPLE: float = 0.4
 
-ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(data.unstack(
+ald_study, cutoffs = pimmslearn.analyzers.diff_analysis.select_raw_data(data.unstack(
 ), data_completeness=DATA_COMPLETENESS, frac_protein_groups=FRAC_PROTEIN_GROUPS)
 
 if args.fn_qc_samples:
@@ -158,7 +158,7 @@ if args.fn_qc_samples:
     ax = qc_cv_feat.plot.box(ax=ax)
     ax.set_ylabel('Coefficient of Variation')
     print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
-    ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples)]
+    ald_study = ald_study[pimmslearn.analyzers.diff_analysis.select_feat(qc_samples)]
 
 column_name_first_prot_to_pg = {
     pg.split(';')[0]: pg for pg in data.unstack().columns}
@@ -182,7 +182,7 @@ target, data, ald_study = target.loc[mask_has_target], data.loc[mask_has_target]
 # %% tags=["hide-input"]
 fname = args.out_preds / args.template_pred.format(args.model_key)
 print(f"missing values pred. by {args.model_key}: {fname}")
-load_single_csv_pred_file = vaep.analyzers.compare_predictions.load_single_csv_pred_file
+load_single_csv_pred_file = pimmslearn.analyzers.compare_predictions.load_single_csv_pred_file
 pred_real_na = load_single_csv_pred_file(fname).loc[mask_has_target]
 pred_real_na.sample(3)
 
@@ -329,7 +329,7 @@ results_model_full = njab.sklearn.run_model(
 results_model_full.name = f'{args.model_key} all'
 fname = args.out_folder / f'results_{results_model_full.name}.pkl'
 files_out[fname.name] = fname
-vaep.io.to_pickle(results_model_full, fname)
+pimmslearn.io.to_pickle(results_model_full, fname)
 
 splits = Splits(X_train=X.loc[idx_train, new_features],
                 X_test=X.loc[idx_test, new_features],
@@ -341,7 +341,7 @@ results_model_new = njab.sklearn.run_model(
 results_model_new.name = f'{args.model_key} new'
 fname = args.out_folder / f'results_{results_model_new.name}.pkl'
 files_out[fname.name] = fname
-vaep.io.to_pickle(results_model_new, fname)
+pimmslearn.io.to_pickle(results_model_new, fname)
 
 splits_ald = Splits(
     X_train=ald_study.loc[idx_train],
@@ -354,7 +354,7 @@ results_ald_full = njab.sklearn.run_model(
 results_ald_full.name = 'ALD study all'
 fname = args.out_folder / f'results_{results_ald_full.name}.pkl'
 files_out[fname.name] = fname
-vaep.io.to_pickle(results_ald_full, fname)
+pimmslearn.io.to_pickle(results_ald_full, fname)
 
 # %% [markdown]
 # ### ROC-AUC on test split
@@ -366,7 +366,7 @@ plot_split_auc(results_model_full.test, results_model_full.name, ax)
 plot_split_auc(results_model_new.test, results_model_new.name, ax)
 fname = args.out_folder / 'auc_roc_curve.pdf'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # Data used to plot ROC:
@@ -408,7 +408,7 @@ ax = plot_split_prc(results_model_full.test, results_model_full.name, ax)
 ax = plot_split_prc(results_model_new.test, results_model_new.name, ax)
 fname = folder = args.out_folder / 'prec_recall_curve.pdf'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # Data used to plot PRC:
@@ -429,7 +429,7 @@ ax = plot_split_prc(results_model_full.train, results_model_full.name, ax)
 ax = plot_split_prc(results_model_new.train, results_model_new.name, ax)
 fname = folder = args.out_folder / 'prec_recall_curve_train.pdf'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% tags=["hide-input"]
 fig, ax = plt.subplots(1, 1, figsize=figsize)
@@ -438,7 +438,7 @@ plot_split_auc(results_model_full.train, results_model_full.name, ax)
 plot_split_auc(results_model_new.train, results_model_new.name, ax)
 fname = folder = args.out_folder / 'auc_roc_curve_train.pdf'
 files_out[fname.name] = fname
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # Output files:

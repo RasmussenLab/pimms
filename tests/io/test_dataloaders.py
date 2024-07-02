@@ -2,9 +2,9 @@ import sklearn
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
-from vaep.transform import VaepPipeline
-from vaep.io.dataloaders import get_dls
-from vaep.utils import create_random_df
+from pimmslearn.transform import VaepPipeline
+from pimmslearn.io.dataloaders import get_dls
+from pimmslearn.utils import create_random_df
 
 
 def test_get_dls():

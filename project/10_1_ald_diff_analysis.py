@@ -5,7 +5,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -29,13 +29,13 @@ import njab.stats
 import pandas as pd
 from IPython.display import display
 
-import vaep
-import vaep.analyzers
-import vaep.imputation
-import vaep.io.datasplits
-import vaep.nb
+import pimmslearn
+import pimmslearn.analyzers
+import pimmslearn.imputation
+import pimmslearn.io.datasplits
+import pimmslearn.nb
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 # %% tags=["hide-input"]
@@ -71,14 +71,14 @@ template_pred = 'pred_real_na_{}.csv'  # fixed, do not change
 # %% tags=["hide-input"]
 if not model:
     model = model_key
-params = vaep.nb.get_params(args, globals=globals(), remove=True)
+params = pimmslearn.nb.get_params(args, globals=globals(), remove=True)
 params
 
 # %% tags=["hide-input"]
-args = vaep.nb.Config()
+args = pimmslearn.nb.Config()
 args.fn_clinical_data = Path(params["fn_clinical_data"])
 args.folder_experiment = Path(params["folder_experiment"])
-args = vaep.nb.add_default_paths(args,
+args = pimmslearn.nb.add_default_paths(args,
                                  out_root=(args.folder_experiment
                                            / params["out_folder"]
                                            / params["target"]
@@ -102,7 +102,7 @@ args.out_folder
 # Aggregated from data splits of the imputation workflow run before.
 
 # %% tags=["hide-input"]
-data = vaep.io.datasplits.DataSplits.from_folder(
+data = pimmslearn.io.datasplits.DataSplits.from_folder(
     args.data, file_format=args.file_format)
 
 # %% tags=["hide-input"]
@@ -116,7 +116,7 @@ observed
 # %% tags=["hide-input"]
 df_clinic = pd.read_csv(args.fn_clinical_data, index_col=0)
 df_clinic = df_clinic.loc[observed.index.levels[0]]
-cols_clinic = vaep.pandas.get_columns_accessor(df_clinic)
+cols_clinic = pimmslearn.pandas.get_columns_accessor(df_clinic)
 df_clinic[[args.target, *args.covar]].describe()
 
 
@@ -193,7 +193,7 @@ DATA_COMPLETENESS = 0.6
 FRAC_PROTEIN_GROUPS: int = 0.622
 CV_QC_SAMPLE: float = 0.4  # Coef. of variation on 13 QC samples
 
-ald_study, cutoffs = vaep.analyzers.diff_analysis.select_raw_data(observed.unstack(
+ald_study, cutoffs = pimmslearn.analyzers.diff_analysis.select_raw_data(observed.unstack(
 ), data_completeness=DATA_COMPLETENESS, frac_protein_groups=FRAC_PROTEIN_GROUPS)
 
 ald_study
@@ -207,18 +207,18 @@ if args.fn_qc_samples:
     fig, ax = plt.subplots(figsize=(4, 7))
     ax = qc_cv_feat.plot.box(ax=ax)
     ax.set_ylabel('Coefficient of Variation')
-    vaep.savefig(fig, name='cv_qc_samples', folder=args.out_figures)
+    pimmslearn.savefig(fig, name='cv_qc_samples', folder=args.out_figures)
     print((qc_cv_feat < CV_QC_SAMPLE).value_counts())
     # only to ald_study data
-    ald_study = ald_study[vaep.analyzers.diff_analysis.select_feat(qc_samples[ald_study.columns])]
+    ald_study = ald_study[pimmslearn.analyzers.diff_analysis.select_feat(qc_samples[ald_study.columns])]
 
 ald_study
 
 # %% tags=["hide-input"]
-fig, axes = vaep.plotting.plot_cutoffs(observed.unstack(),
+fig, axes = pimmslearn.plotting.plot_cutoffs(observed.unstack(),
                                        feat_completness_over_samples=cutoffs.feat_completness_over_samples,
                                        min_feat_in_sample=cutoffs.min_feat_in_sample)
-vaep.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
+pimmslearn.savefig(fig, name='tresholds_normal_imputation', folder=args.out_figures)
 
 
 # %% [markdown]
@@ -240,7 +240,7 @@ fname
 # %% tags=["hide-input"]
 pred_real_na = None
 if args.model_key and str(args.model_key) != 'None':
-    pred_real_na = (vaep
+    pred_real_na = (pimmslearn
                     .analyzers
                     .compare_predictions
                     .load_single_csv_pred_file(fname)
@@ -268,7 +268,7 @@ def plot_distributions(observed: pd.Series,
                        sharex=True):
     """Plots distributions of intensities provided as dictionary of labels to pd.Series."""
     series_ = [observed, imputation] if imputation is not None else [observed]
-    min_bin, max_bin = vaep.plotting.data.get_min_max_iterable([observed])
+    min_bin, max_bin = pimmslearn.plotting.data.get_min_max_iterable([observed])
 
     if imputation is not None:
         fig, axes = plt.subplots(len(series_), figsize=figsize, sharex=sharex)
@@ -288,7 +288,7 @@ def plot_distributions(observed: pd.Series,
     if imputation is not None:
         ax = axes[1]
         label = f'Missing values imputed using {model_key.upper()}'
-        color = vaep.plotting.defaults.color_model_mapping.get(model_key, None)
+        color = pimmslearn.plotting.defaults.color_model_mapping.get(model_key, None)
         if color is None:
             color = f'C{1}'
         ax = imputation.hist(ax=ax, bins=bins, color=color)
@@ -299,13 +299,13 @@ def plot_distributions(observed: pd.Series,
     return fig, bins
 
 
-vaep.plotting.make_large_descriptors(6)
+pimmslearn.plotting.make_large_descriptors(6)
 fig, bins = plot_distributions(observed,
                                imputation=pred_real_na,
                                model_key=args.model_key, figsize=(2.5, 2))
 fname = args.out_folder / 'dist_plots' / f'real_na_obs_vs_{args.model_key}.pdf'
 files_out[fname.name] = fname.as_posix()
-vaep.savefig(fig, name=fname)
+pimmslearn.savefig(fig, name=fname)
 
 # %% [markdown]
 # Dump frequency of histograms to file for reporting (if imputed values are used)
@@ -313,8 +313,8 @@ vaep.savefig(fig, name=fname)
 # %% tags=["hide-input"]
 if pred_real_na is not None:
     counts_per_bin = pd.concat([
-        vaep.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
-        vaep.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
+        pimmslearn.pandas.get_counts_per_bin(observed.to_frame('observed'), bins=bins),
+        pimmslearn.pandas.get_counts_per_bin(pred_real_na.to_frame(args.model_key), bins=bins)
     ], axis=1)
     counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
     logger.info("Counts per bin saved to %s", fname.with_suffix('.xlsx'))
@@ -328,7 +328,7 @@ if pred_real_na is not None:
 
 # %% tags=["hide-input"]
 if pred_real_na is not None:
-    shifts = (vaep.imputation.compute_moments_shift(observed, pred_real_na,
+    shifts = (pimmslearn.imputation.compute_moments_shift(observed, pred_real_na,
                                                     names=('observed', args.model_key)))
     display(pd.DataFrame(shifts).T)
 
@@ -339,8 +339,8 @@ if pred_real_na is not None:
 if pred_real_na is not None:
     index_level = 0  # per sample
     mean_by_sample = pd.DataFrame(
-        {'observed': vaep.imputation.stats_by_level(observed, index_level=index_level),
-         args.model_key: vaep.imputation.stats_by_level(pred_real_na, index_level=index_level)
+        {'observed': pimmslearn.imputation.stats_by_level(observed, index_level=index_level),
+         args.model_key: pimmslearn.imputation.stats_by_level(pred_real_na, index_level=index_level)
          })
     mean_by_sample.loc['mean_shift'] = (mean_by_sample.loc['mean', 'observed'] -
                                         mean_by_sample.loc['mean']).abs() / mean_by_sample.loc['std', 'observed']

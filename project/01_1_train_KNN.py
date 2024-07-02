@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -24,15 +24,15 @@ import sklearn
 import sklearn.impute
 from IPython.display import display
 
-import vaep
-import vaep.model
-import vaep.models as models
-import vaep.nb
-from vaep import sampling
-from vaep.io import datasplits
-from vaep.models import ae
+import pimmslearn
+import pimmslearn.model
+import pimmslearn.models as models
+import pimmslearn.nb
+from pimmslearn import sampling
+from pimmslearn.io import datasplits
+from pimmslearn.models import ae
 
-logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures
@@ -73,8 +73,8 @@ meta_cat_col: str = None  # category column in meta data
 # Some argument transformations
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 
@@ -222,7 +222,7 @@ added_metrics
 # Save all metrics as json
 
 # %% tags=["hide-input"]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
+pimmslearn.io.dump_json(d_metrics.metrics, args.out_metrics / f'metrics_{args.model_key}.json')
 d_metrics
 
 # %% tags=["hide-input"]
