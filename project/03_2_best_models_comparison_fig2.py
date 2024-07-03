@@ -28,7 +28,7 @@ import pimmslearn.nb
 
 import logging
 from pimmslearn.logging import setup_logger
-logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
+logger = setup_logger(logger=logging.getLogger('pimmslearn'), level=10)
 
 
 # %%

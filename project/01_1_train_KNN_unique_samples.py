@@ -31,7 +31,7 @@ from pimmslearn import sampling
 from pimmslearn.io import datasplits
 from pimmslearn.models import ae
 
-logger = pimmslearn.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 logger.info("Experiment 03 - Analysis of latent spaces and performance comparisions")
 
 figures = {}  # collection of ax or figures

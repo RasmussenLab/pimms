@@ -585,7 +585,7 @@ logger.info(
 # %%
 freq_feat = sampling.frequency_by_index(data.train_X, 0)
 freq_feat.name = 'freq'
-# freq_feat = vaep.io.datasplits.load_freq(data_folder) # could be loaded from datafolder
+# freq_feat = pimmslearn.io.datasplits.load_freq(data_folder) # could be loaded from datafolder
 freq_feat.head()  # training data
 
 # %%
@@ -837,17 +837,17 @@ errors_smoothed_long
 # Save html versin of curve with annotation of errors
 
 # %%
-fig = px_vaep.line((errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
-                                        .join(n_obs_error_is_based_on)
-                                        .sort_values(by='freq')),
-                   x=freq_feat.name,
-                   color='model',
-                   y='rolling error average',
-                   title=f'Rolling average error by feature frequency {msg_annotation}',
-                   labels=labels_dict,
-                   hover_data=[feat_count.name, idx_name, 'n_obs'],
-                   category_orders={'model': order_models})
-fig = px_vaep.apply_default_layout(fig)
+fig = px.line((errors_smoothed_long.loc[errors_smoothed_long[freq_feat.name] >= FREQ_MIN]
+               .join(n_obs_error_is_based_on)
+               .sort_values(by='freq')),
+              x=freq_feat.name,
+              color='model',
+              y='rolling error average',
+              title=f'Rolling average error by feature frequency {msg_annotation}',
+              labels=labels_dict,
+              hover_data=[feat_count.name, idx_name, 'n_obs'],
+              category_orders={'model': order_models})
+fig = px.apply_default_layout(fig)
 fig.update_layout(legend_title_text='')  # remove legend title
 files_out[f'best_models_errors_{dataset}_by_freq_plotly.html'] = (FOLDER /
                                                                   f'best_models_errors_{dataset}_by_freq_plotly.html')

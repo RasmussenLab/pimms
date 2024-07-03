@@ -7,9 +7,9 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.16.2
 #   kernelspec:
-#     display_name: vaep
+#     display_name: Python 3
 #     language: python
-#     name: vaep
+#     name: python3
 # ---
 
 # %% [markdown]

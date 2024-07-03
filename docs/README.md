@@ -8,16 +8,10 @@ In order to build the docs you need to
 
 Command to be run from `path/to/pimms/docs`, i.e. from within the `docs` package folder: 
 
-```bash
-# pip install pimms[docs]
-# pwd: ./vaep/docs
-conda env update -f environment.yml
-```
-
-If you prefer pip, run 
+Install pimms-learn with docs option locally
 
 ```bash
-# pwd: ./vaep
+# pwd: ./pimms
 pip install .[docs]
 ```
 
@@ -31,7 +25,7 @@ Options:
 ```bash	
 # pwd: ./pimms/docs
 # apidoc
-sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../vaep
+sphinx-apidoc --force --implicit-namespaces --module-first -o reference ../pimmslearn
 # build docs
 sphinx-build -n -W --keep-going -b html ./ ./_build/
 ```

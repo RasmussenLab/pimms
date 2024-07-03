@@ -46,7 +46,7 @@ echo config_split $config_split
 echo config_train $config_train
 
 . ~/setup_conda.sh
-conda activate vaep
+conda activate pimms
 
 snakemake -s workflow/Snakefile_v2.smk --jobs 10 -k -p -c2 --latency-wait 60 --rerun-incomplete \
 --configfile $configfile \

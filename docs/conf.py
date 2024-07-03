@@ -131,7 +131,7 @@ if os.environ.get("READTHEDOCS") == "True":
     from pathlib import Path
 
     PROJECT_ROOT = Path(__file__).parent.parent
-    PACKAGE_ROOT = PROJECT_ROOT / "vaep"
+    PACKAGE_ROOT = PROJECT_ROOT / "pimmslearn"
 
     def run_apidoc(_):
         from sphinx.ext import apidoc

@@ -26,7 +26,7 @@ import pimmslearn.pandas
 import pimmslearn.plotting
 from pimmslearn.logging import setup_logger
 
-logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
+logger = setup_logger(logger=logging.getLogger('pimmslearn'), level=10)
 
 plt.rcParams['figure.figsize'] = [4.0, 2.0]
 pimmslearn.plotting.make_large_descriptors(7)

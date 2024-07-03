@@ -1,5 +1,5 @@
 # Dev Environment
-name: vaep
+name: pimms
 channels:
   - conda-forge
   - pytorch
