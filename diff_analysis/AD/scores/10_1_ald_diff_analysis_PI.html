@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g75d4ae8 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g75d4ae8 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -416,13 +416,13 @@ document.write(`
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 
-<span class="kn">import</span> <span class="nn">pimmslearn</span>
-<span class="kn">import</span> <span class="nn">pimmslearn.analyzers</span>
-<span class="kn">import</span> <span class="nn">pimmslearn.imputation</span>
-<span class="kn">import</span> <span class="nn">pimmslearn.io.datasplits</span>
-<span class="kn">import</span> <span class="nn">pimmslearn.nb</span>
+<span class="kn">import</span> <span class="nn">vaep</span>
+<span class="kn">import</span> <span class="nn">vaep.analyzers</span>
+<span class="kn">import</span> <span class="nn">vaep.imputation</span>
+<span class="kn">import</span> <span class="nn">vaep.io.datasplits</span>
+<span class="kn">import</span> <span class="nn">vaep.nb</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -493,7 +493,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">model_key</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">params</span>
 </pre></div>
 </div>
@@ -539,10 +539,10 @@ root - INFO     Removed from global namespace: template_pred
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">fn_clinical_data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;fn_clinical_data&quot;</span><span class="p">])</span>
 <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
                                  <span class="n">out_root</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span>
                                            <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;out_folder&quot;</span><span class="p">]</span>
                                            <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
@@ -616,16 +616,16 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -674,7 +674,7 @@ Name: intensity, Length: 252009, dtype: float64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_clinic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fn_clinical_data</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">df_clinic</span> <span class="o">=</span> <span class="n">df_clinic</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">observed</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-<span class="n">cols_clinic</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_columns_accessor</span><span class="p">(</span><span class="n">df_clinic</span><span class="p">)</span>
+<span class="n">cols_clinic</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_columns_accessor</span><span class="p">(</span><span class="n">df_clinic</span><span class="p">)</span>
 <span class="n">df_clinic</span><span class="p">[[</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">covar</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1164,7 +1164,7 @@ Name: count, dtype: int64
 <span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.622</span>
 <span class="n">CV_QC_SAMPLE</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># Coef. of variation on 13 QC samples</span>
 
-<span class="n">ald_study</span><span class="p">,</span> <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_raw_data</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
+<span class="n">ald_study</span><span class="p">,</span> <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_raw_data</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
 <span class="p">),</span> <span class="n">data_completeness</span><span class="o">=</span><span class="n">DATA_COMPLETENESS</span><span class="p">,</span> <span class="n">frac_protein_groups</span><span class="o">=</span><span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">)</span>
 
 <span class="n">ald_study</span>
@@ -1530,10 +1530,10 @@ root - INFO     Finally: N samples: 210, M feat: 1213
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">qc_cv_feat</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficient of Variation&#39;</span><span class="p">)</span>
-    <span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cv_qc_samples&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
+    <span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cv_qc_samples&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">((</span><span class="n">qc_cv_feat</span> <span class="o">&lt;</span> <span class="n">CV_QC_SAMPLE</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
     <span class="c1"># only to ald_study data</span>
-    <span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="p">[</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_feat</span><span class="p">(</span><span class="n">qc_samples</span><span class="p">[</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">])]</span>
+    <span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="p">[</span><span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_feat</span><span class="p">(</span><span class="n">qc_samples</span><span class="p">[</span><span class="n">ald_study</span><span class="o">.</span><span class="n">columns</span><span class="p">])]</span>
 
 <span class="n">ald_study</span>
 </pre></div>
@@ -1883,16 +1883,16 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_cutoffs</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">unstack</span><span class="p">(),</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_cutoffs</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">unstack</span><span class="p">(),</span>
                                        <span class="n">feat_completness_over_samples</span><span class="o">=</span><span class="n">cutoffs</span><span class="o">.</span><span class="n">feat_completness_over_samples</span><span class="p">,</span>
                                        <span class="n">min_feat_in_sample</span><span class="o">=</span><span class="n">cutoffs</span><span class="o">.</span><span class="n">min_feat_in_sample</span><span class="p">)</span>
-<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tresholds_normal_imputation&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tresholds_normal_imputation&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/tresholds_normal_imputation
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/tresholds_normal_imputation
 </pre></div>
 </div>
 <img alt="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" src="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" />
@@ -1938,7 +1938,7 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pred_real_na</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">model_key</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-    <span class="n">pred_real_na</span> <span class="o">=</span> <span class="p">(</span><span class="n">pimmslearn</span>
+    <span class="n">pred_real_na</span> <span class="o">=</span> <span class="p">(</span><span class="n">vaep</span>
                     <span class="o">.</span><span class="n">analyzers</span>
                     <span class="o">.</span><span class="n">compare_predictions</span>
                     <span class="o">.</span><span class="n">load_single_csv_pred_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -1958,17 +1958,17 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 12.193
-            A0A075B6Q5                 11.641
-            A0A075B6R2                 13.307
-            A0A075B6S5                 14.731
-            A0A087WSY4                 11.595
+Sample_000  A0A075B6J9                 12.794
+            A0A075B6Q5                 12.116
+            A0A075B6R2                 12.780
+            A0A075B6S5                 12.567
+            A0A087WSY4                 14.278
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.565
-            Q9UI40;Q9UI40-2            12.643
-            Q9UIW2                     11.752
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.176
-            Q9UP79                     12.585
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.247
+            Q9UI40;Q9UI40-2            12.257
+            Q9UIW2                     12.765
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.561
+            Q9UP79                     12.373
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -1989,7 +1989,7 @@ Name: intensity, Length: 46401, dtype: float64
                        <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plots distributions of intensities provided as dictionary of labels to pd.Series.&quot;&quot;&quot;</span>
     <span class="n">series_</span> <span class="o">=</span> <span class="p">[</span><span class="n">observed</span><span class="p">,</span> <span class="n">imputation</span><span class="p">]</span> <span class="k">if</span> <span class="n">imputation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">observed</span><span class="p">]</span>
-    <span class="n">min_bin</span><span class="p">,</span> <span class="n">max_bin</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_min_max_iterable</span><span class="p">([</span><span class="n">observed</span><span class="p">])</span>
+    <span class="n">min_bin</span><span class="p">,</span> <span class="n">max_bin</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get_min_max_iterable</span><span class="p">([</span><span class="n">observed</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">imputation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">series_</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="n">sharex</span><span class="p">)</span>
@@ -2009,7 +2009,7 @@ Name: intensity, Length: 46401, dtype: float64
     <span class="k">if</span> <span class="n">imputation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Missing values imputed using </span><span class="si">{</span><span class="n">model_key</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">color_model_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">color_model_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;C</span><span class="si">{</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">imputation</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
@@ -2020,22 +2020,22 @@ Name: intensity, Length: 46401, dtype: float64
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">bins</span>
 
 
-<span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">plot_distributions</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span>
                                <span class="n">imputation</span><span class="o">=</span><span class="n">pred_real_na</span><span class="p">,</span>
                                <span class="n">model_key</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;dist_plots&#39;</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;real_na_obs_vs_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.pdf&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/9b8ce62644c7bf4bd1779060e570d6d400931b634ebd91b5f97a8129e2e8c8d6.png" src="../../../_images/9b8ce62644c7bf4bd1779060e570d6d400931b634ebd91b5f97a8129e2e8c8d6.png" />
+<img alt="../../../_images/1d08aaac4ded79ea14d2e07fb98fe4eac07d337ff582fb402d4560315af69e9a.png" src="../../../_images/1d08aaac4ded79ea14d2e07fb98fe4eac07d337ff582fb402d4560315af69e9a.png" />
 </div>
 </div>
 <p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
@@ -2048,8 +2048,8 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pred_real_na</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">counts_per_bin</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
-        <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">),</span>
-        <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">pred_real_na</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+        <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">),</span>
+        <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">pred_real_na</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
     <span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">counts_per_bin</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Counts per bin saved to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
@@ -2108,42 +2108,42 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>(9, 10]</th>
       <td>136</td>
-      <td>23</td>
+      <td>15</td>
     </tr>
     <tr>
       <th>(10, 11]</th>
       <td>529</td>
-      <td>746</td>
+      <td>721</td>
     </tr>
     <tr>
       <th>(11, 12]</th>
       <td>1,731</td>
-      <td>7,981</td>
+      <td>8,048</td>
     </tr>
     <tr>
       <th>(12, 13]</th>
       <td>4,644</td>
-      <td>21,391</td>
+      <td>21,503</td>
     </tr>
     <tr>
       <th>(13, 14]</th>
       <td>12,161</td>
-      <td>13,982</td>
+      <td>13,942</td>
     </tr>
     <tr>
       <th>(14, 15]</th>
       <td>27,515</td>
-      <td>2,197</td>
+      <td>2,091</td>
     </tr>
     <tr>
       <th>(15, 16]</th>
       <td>44,723</td>
-      <td>81</td>
+      <td>79</td>
     </tr>
     <tr>
       <th>(16, 17]</th>
       <td>45,981</td>
-      <td>0</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>(17, 18]</th>
@@ -2227,7 +2227,7 @@ Name: intensity, Length: 46401, dtype: float64
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pred_real_na</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">shifts</span> <span class="o">=</span> <span class="p">(</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">compute_moments_shift</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">pred_real_na</span><span class="p">,</span>
+    <span class="n">shifts</span> <span class="o">=</span> <span class="p">(</span><span class="n">vaep</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">compute_moments_shift</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">pred_real_na</span><span class="p">,</span>
                                                     <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)))</span>
     <span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">shifts</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
@@ -2269,10 +2269,10 @@ Name: intensity, Length: 46401, dtype: float64
     </tr>
     <tr>
       <th>PI</th>
-      <td>12.696</td>
-      <td>0.792</td>
-      <td>1.723</td>
-      <td>0.308</td>
+      <td>12.693</td>
+      <td>0.785</td>
+      <td>1.725</td>
+      <td>0.306</td>
     </tr>
   </tbody>
 </table>
@@ -2289,8 +2289,8 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pred_real_na</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">index_level</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># per sample</span>
     <span class="n">mean_by_sample</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span><span class="s1">&#39;observed&#39;</span><span class="p">:</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">stats_by_level</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">index_level</span><span class="o">=</span><span class="n">index_level</span><span class="p">),</span>
-         <span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">:</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">stats_by_level</span><span class="p">(</span><span class="n">pred_real_na</span><span class="p">,</span> <span class="n">index_level</span><span class="o">=</span><span class="n">index_level</span><span class="p">)</span>
+        <span class="p">{</span><span class="s1">&#39;observed&#39;</span><span class="p">:</span> <span class="n">vaep</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">stats_by_level</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">index_level</span><span class="o">=</span><span class="n">index_level</span><span class="p">),</span>
+         <span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">:</span> <span class="n">vaep</span><span class="o">.</span><span class="n">imputation</span><span class="o">.</span><span class="n">stats_by_level</span><span class="p">(</span><span class="n">pred_real_na</span><span class="p">,</span> <span class="n">index_level</span><span class="o">=</span><span class="n">index_level</span><span class="p">)</span>
          <span class="p">})</span>
     <span class="n">mean_by_sample</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;mean_shift&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_by_sample</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;observed&#39;</span><span class="p">]</span> <span class="o">-</span>
                                         <span class="n">mean_by_sample</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">mean_by_sample</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">,</span> <span class="s1">&#39;observed&#39;</span><span class="p">]</span>
@@ -2338,7 +2338,7 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>std</th>
       <td>2.564</td>
-      <td>0.761</td>
+      <td>0.753</td>
     </tr>
     <tr>
       <th>mean_shift</th>
@@ -2348,7 +2348,7 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>std shrinkage</th>
       <td>1.000</td>
-      <td>0.297</td>
+      <td>0.294</td>
     </tr>
   </tbody>
 </table>
@@ -2453,11 +2453,11 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>13.188</td>
+      <td>13.360</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>12.398</td>
+      <td>11.919</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -2472,12 +2472,12 @@ Name: intensity, Length: 46401, dtype: float64
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>12.607</td>
+      <td>13.101</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>13.436</td>
+      <td>11.612</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -2529,7 +2529,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>12.837</td>
+      <td>11.577</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -2588,10 +2588,10 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>13.320</td>
+      <td>13.943</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>12.755</td>
+      <td>12.224</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -2612,7 +2612,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>13.405</td>
+      <td>13.131</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -2621,14 +2621,14 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>11.718</td>
+      <td>11.877</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>12.215</td>
-      <td>11.881</td>
+      <td>12.353</td>
+      <td>11.741</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -2636,7 +2636,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>12.876</td>
+      <td>13.611</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -2660,23 +2660,23 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>12.298</td>
+      <td>13.475</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>11.684</td>
+      <td>12.907</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>13.100</td>
+      <td>11.712</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>12.876</td>
+      <td>11.884</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2684,7 +2684,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>12.336</td>
+      <td>13.058</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -2798,56 +2798,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.343</td>
+      <td>0.524</td>
       <td>1</td>
-      <td>0.804</td>
-      <td>0.371</td>
+      <td>0.794</td>
+      <td>0.374</td>
       <td>0.004</td>
-      <td>0.431</td>
-      <td>0.536</td>
+      <td>0.427</td>
+      <td>0.538</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.027</td>
+      <td>0.105</td>
       <td>1</td>
-      <td>0.064</td>
-      <td>0.801</td>
-      <td>0.000</td>
-      <td>0.097</td>
-      <td>0.878</td>
+      <td>0.159</td>
+      <td>0.690</td>
+      <td>0.001</td>
+      <td>0.161</td>
+      <td>0.800</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>1.266</td>
+      <td>2.443</td>
       <td>1</td>
-      <td>2.971</td>
-      <td>0.086</td>
-      <td>0.015</td>
-      <td>1.063</td>
-      <td>0.186</td>
+      <td>3.698</td>
+      <td>0.056</td>
+      <td>0.019</td>
+      <td>1.252</td>
+      <td>0.133</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>3.538</td>
+      <td>5.612</td>
       <td>1</td>
-      <td>8.299</td>
+      <td>8.493</td>
       <td>0.004</td>
-      <td>0.042</td>
-      <td>2.355</td>
-      <td>0.017</td>
+      <td>0.043</td>
+      <td>2.399</td>
+      <td>0.016</td>
       <td>True</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>5.626</td>
+      <td>9.070</td>
       <td>1</td>
-      <td>13.196</td>
+      <td>13.727</td>
       <td>0.000</td>
-      <td>0.065</td>
-      <td>3.443</td>
+      <td>0.067</td>
+      <td>3.558</td>
       <td>0.002</td>
       <td>True</td>
     </tr>
@@ -2866,56 +2866,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>0.584</td>
+      <td>0.009</td>
       <td>1</td>
-      <td>0.594</td>
-      <td>0.442</td>
-      <td>0.003</td>
-      <td>0.355</td>
-      <td>0.600</td>
+      <td>0.011</td>
+      <td>0.917</td>
+      <td>0.000</td>
+      <td>0.038</td>
+      <td>0.955</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.753</td>
+      <td>1.831</td>
       <td>1</td>
-      <td>0.767</td>
-      <td>0.382</td>
-      <td>0.004</td>
-      <td>0.418</td>
-      <td>0.546</td>
+      <td>2.154</td>
+      <td>0.144</td>
+      <td>0.011</td>
+      <td>0.842</td>
+      <td>0.273</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.000</td>
+      <td>0.140</td>
       <td>1</td>
-      <td>0.000</td>
-      <td>0.991</td>
-      <td>0.000</td>
-      <td>0.004</td>
-      <td>0.995</td>
+      <td>0.165</td>
+      <td>0.685</td>
+      <td>0.001</td>
+      <td>0.164</td>
+      <td>0.797</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>1.475</td>
+      <td>1.787</td>
       <td>1</td>
-      <td>1.501</td>
-      <td>0.222</td>
-      <td>0.008</td>
-      <td>0.654</td>
-      <td>0.374</td>
+      <td>2.103</td>
+      <td>0.149</td>
+      <td>0.011</td>
+      <td>0.828</td>
+      <td>0.280</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>23.267</td>
+      <td>24.578</td>
       <td>1</td>
-      <td>23.675</td>
+      <td>28.925</td>
       <td>0.000</td>
-      <td>0.110</td>
-      <td>5.623</td>
+      <td>0.132</td>
+      <td>6.661</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -2994,61 +2994,61 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.343</td>
+      <td>0.524</td>
       <td>1</td>
-      <td>0.804</td>
-      <td>0.371</td>
+      <td>0.794</td>
+      <td>0.374</td>
       <td>0.004</td>
-      <td>0.431</td>
-      <td>0.536</td>
+      <td>0.427</td>
+      <td>0.538</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
-      <td>3.071</td>
+      <td>3.552</td>
       <td>1</td>
-      <td>4.221</td>
-      <td>0.041</td>
-      <td>0.022</td>
-      <td>1.384</td>
-      <td>0.105</td>
+      <td>4.070</td>
+      <td>0.045</td>
+      <td>0.021</td>
+      <td>1.346</td>
+      <td>0.113</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
-      <td>1.694</td>
+      <td>2.863</td>
       <td>1</td>
-      <td>1.910</td>
-      <td>0.169</td>
-      <td>0.010</td>
-      <td>0.773</td>
-      <td>0.307</td>
+      <td>3.319</td>
+      <td>0.070</td>
+      <td>0.017</td>
+      <td>1.155</td>
+      <td>0.159</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
-      <td>0.087</td>
+      <td>0.089</td>
       <td>1</td>
-      <td>0.444</td>
-      <td>0.506</td>
+      <td>0.459</td>
+      <td>0.499</td>
       <td>0.002</td>
-      <td>0.296</td>
-      <td>0.655</td>
+      <td>0.302</td>
+      <td>0.650</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
-      <td>10.055</td>
+      <td>7.745</td>
       <td>1</td>
-      <td>2.381</td>
-      <td>0.124</td>
-      <td>0.012</td>
-      <td>0.905</td>
-      <td>0.248</td>
+      <td>1.941</td>
+      <td>0.165</td>
+      <td>0.010</td>
+      <td>0.782</td>
+      <td>0.302</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3078,13 +3078,13 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
-      <td>2.383</td>
+      <td>3.720</td>
       <td>1</td>
-      <td>2.897</td>
-      <td>0.090</td>
-      <td>0.015</td>
-      <td>1.044</td>
-      <td>0.193</td>
+      <td>3.786</td>
+      <td>0.053</td>
+      <td>0.019</td>
+      <td>1.275</td>
+      <td>0.128</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3096,31 +3096,31 @@ Name: intensity, Length: 46401, dtype: float64
       <td>0.083</td>
       <td>0.016</td>
       <td>1.079</td>
-      <td>0.181</td>
+      <td>0.182</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
-      <td>3.859</td>
+      <td>0.858</td>
       <td>1</td>
-      <td>4.977</td>
-      <td>0.027</td>
-      <td>0.025</td>
-      <td>1.571</td>
-      <td>0.075</td>
+      <td>1.093</td>
+      <td>0.297</td>
+      <td>0.006</td>
+      <td>0.527</td>
+      <td>0.458</td>
       <td>False</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
-      <td>0.584</td>
+      <td>0.009</td>
       <td>1</td>
-      <td>0.594</td>
-      <td>0.442</td>
-      <td>0.003</td>
-      <td>0.355</td>
-      <td>0.600</td>
+      <td>0.011</td>
+      <td>0.917</td>
+      <td>0.000</td>
+      <td>0.038</td>
+      <td>0.955</td>
       <td>False</td>
     </tr>
   </tbody>
