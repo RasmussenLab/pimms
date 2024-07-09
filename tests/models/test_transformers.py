@@ -26,6 +26,8 @@ def test_CollaborativeFilteringTransformer():
     series.name = value_name  # ! important
     # run for 2 epochs
     model.fit(series, cuda=False, epochs_max=2)
+    df_imputed = model.transform(series).unstack()
+    assert df_imputed.isna().sum().sum() == 0
 
 
 @pytest.mark.parametrize("model", ['DAE', 'VAE'])
@@ -46,3 +48,5 @@ def test_AETransformer(model):
               cuda=False,
               epochs_max=2,
               )
+    df_imputed = model.transform(df)
+    assert df_imputed.isna().sum().sum() == 0
