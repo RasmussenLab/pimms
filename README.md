@@ -31,17 +31,89 @@ In our experiments overfitting wasn't a big issue, but it's easy to check.
 
 For interactive use of the models provided in PIMMS, you can use our
 [python package `pimms-learn`](https://pypi.org/project/pimms-learn/).
-The interface is similar to scikit-learn.
+The interface is similar to scikit-learn. The package is then availabe as `pimmslearn`
+for import in your Python session.
 
 ```
 pip install pimms-learn
+# import pimmslearn # in your python script
 ```
 
-Then you can use the models on a pandas DataFrame with missing values. You can try this in the tutorial on Colab by uploading your data:
-[![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
+The most basic use for imputation is using a DataFrame.
 
-> `PIMMS` was called `vaep` during development.  
-> Before entire refactoring has been completed the imported package will be `vaep`.
+```python
+import numpy as np
+import pandas as pd
+from pimmslearn.sklearn.ae_transformer import AETransformer
+from pimmslearn.sklearn.cf_transformer import CollaborativeFilteringTransformer
+
+fn_intensities = ('https://raw.githubusercontent.com/RasmussenLab/pimms/main/'
+                  'project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv')
+index_name = 'Sample ID'
+column_name = 'protein group'
+value_name = 'intensity'
+
+df = pd.read_csv(fn_intensities, index_col=0)
+df = np.log2(df + 1)
+
+df.index.name = index_name  # already set
+df.columns.name = column_name  # not set due to csv disk file format
+
+# df # see details below to see a preview of the DataFrame
+
+# use the Denoising or Variational Autoencoder
+model = AETransformer(
+    model='DAE', # or 'VAE'
+    hidden_layers=[512,],
+    latent_dim=50, # dimension of joint sample and item embedding
+    batch_size=10,
+)
+model.fit(df,
+          cuda=False,
+          epochs_max=100,
+          )
+df_imputed = model.transform(df)
+
+# or use the collaborative filtering model
+series = df.stack()
+series.name = value_name  # ! important
+model = CollaborativeFilteringTransformer(
+    target_column=value_name,
+    sample_column=index_name,
+    item_column=column_name,
+    n_factors=30, # dimension of separate sample and item embedding
+    batch_size = 4096
+)
+model.fit(series, cuda=False, epochs_max=20)
+df_imputed = model.transform(series).unstack()
+```
+
+<details>
+  <summary>see log2 transformed DataFrame</summary>
+  
+  First 10 rows and 10 columns. notice that the indices are named:
+
+  | Sample ID                                      |    AAAS |     AACS |    AAMDC |     AAMP |     AAR2 |    AARS |    AARS2 |   AASDHPPT |    AATF |   ABCB10 |
+  |:-----------------------------------------------|--------:|---------:|---------:|---------:|---------:|--------:|---------:|-----------:|--------:|---------:|
+  protein group | 
+  | 2019_12_18_14_35_Q-Exactive-HF-X-Orbitrap_6070 | 28.3493 |  26.1332 | nan      |  26.7769 |  27.2478 | 32.1949 |  27.1526 |    27.8721 | 28.6025 |  26.1103 |
+  | 2019_12_19_19_48_Q-Exactive-HF-X-Orbitrap_6070 | 27.6574 |  25.0186 |  24.2362 |  26.2707 |  27.2107 | 31.9792 |  26.5302 |    28.1915 | 27.9419 |  25.7349 |
+  | 2019_12_20_14_15_Q-Exactive-HF-X-Orbitrap_6070 | 28.3522 |  23.7405 | nan      |  27.0979 |  27.3774 | 32.8845 |  27.5145 |    28.4756 | 28.7709 |  26.7868 |
+  | 2019_12_27_12_29_Q-Exactive-HF-X-Orbitrap_6070 | 26.8255 | nan      | nan      |  26.2563 | nan      | 31.9264 |  26.1569 |    27.6349 | 27.8508 |  25.346  |
+  | 2019_12_29_15_06_Q-Exactive-HF-X-Orbitrap_6070 | 27.4037 |  26.9485 |  23.8644 |  26.9816 |  26.5198 | 31.8438 |  25.3421 |    27.4164 | 27.4741 | nan      |
+  | 2019_12_29_18_18_Q-Exactive-HF-X-Orbitrap_6070 | 27.8913 |  26.481  |  26.3475 |  27.8494 |  26.917  | 32.2737 | nan      |    27.4041 | 28.0811 | nan      |
+  | 2020_01_02_17_38_Q-Exactive-HF-X-Orbitrap_6070 | 25.4983 | nan      | nan      | nan      | nan      | 30.2256 | nan      |    23.8013 | 25.1304 | nan      |
+  | 2020_01_03_11_17_Q-Exactive-HF-X-Orbitrap_6070 | 27.3519 | nan      |  24.4331 |  25.2752 |  24.8459 | 30.9793 | nan      |    24.893  | 25.3238 | nan      |
+  | 2020_01_03_16_58_Q-Exactive-HF-X-Orbitrap_6070 | 27.6197 |  25.6238 |  23.5204 |  27.1356 |  25.9713 | 31.4154 |  25.3596 |    25.1191 | 25.75   | nan      |
+  | 2020_01_03_20_10_Q-Exactive-HF-X-Orbitrap_6070 | 27.2998 | nan      |  25.6604 |  27.7328 |  26.8965 | 31.4546 |  25.4369 |    26.8135 | 26.2008 | nan      |
+  ...
+
+</details>
+
+
+For hints on how to add validation (and potentially test data) to use early stopping,
+see the tutorial: [![open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)
+
 
 ## PIMMS comparison workflow and differential analysis workflow
 
@@ -169,7 +241,11 @@ python 04_1_train_pimms_models.py # just execute the code
 
 If you only want to execute the workflow, you can use snakemake to build the environments for you:
 
-> Snakefile workflow for imputation v1 only support that atm.
+Install snakemake e.g. using the provided [`snakemake_env.yml`](https://github.com/RasmussenLab/pimms/blob/HEAD/snakemake_env.yml)
+file as used in 
+[this workflow](https://github.com/RasmussenLab/pimms/blob/HEAD/.github/workflows/ci_workflow.yaml).
+
+> [!NOTE] Snakefile workflow for imputation v1 only support that atm.
 
 ```bash
 snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n # dry-run
@@ -236,7 +312,7 @@ To combine them with the observed data you can run
 # ipython or python session
 # be in ./pimms/project
 folder_data = 'runs/example/data'
-data = vaep.io.datasplits.DataSplits.from_folder(
+data = pimmslearn.io.datasplits.DataSplits.from_folder(
     folder_data, file_format='pkl')
 observed = pd.concat([data.train_X, data.val_y, data.test_y])
 # load predictions for missing values of a certain model
@@ -249,7 +325,7 @@ assert df_imputed.isna().sum().sum() == 0
 df_imputed
 ```
 
-> [!NOTE]: The imputation is simpler if you use the provide scikit-learn Transformer
+> [!NOTE] The imputation is simpler if you use the provide scikit-learn Transformer
 > interface (see [Tutorial](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)).
 
 ## Available imputation methods
