@@ -89,7 +89,7 @@ df_imputed = model.transform(series).unstack()
 ```
 
 <details>
-  <summary>:mag: see log2 transformed DataFrame</summary>
+  <summary>🔍 see log2 transformed DataFrame</summary>
   
   First 10 rows and 10 columns. notice that the indices are named:
 
@@ -178,7 +178,7 @@ cd project # project folder as pwd
 papermill 01_0_split_data.ipynb --help-notebook
 papermill 01_1_train_vae.ipynb --help-notebook
 ```
-> :warning: Mistyped argument names won't throw an error when using papermill, but a warning is printed on the console thanks to my contributions:)
+> ⚠️ Mistyped argument names won't throw an error when using papermill, but a warning is printed on the console thanks to my contributions:)
 
 ## Setup workflow and development environment
 
@@ -211,7 +211,7 @@ If on Mac M1, M2 or having otherwise issue using your accelerator (e.g. GPUs): I
 
 ### Install pytorch first (2)
 
-> :warning: We currently see issues with some installations on M1 chips. A dependency
+> ⚠️ We currently see issues with some installations on M1 chips. A dependency
 > for one workflow is polars, which causes the issue. This should be [fixed now](https://github.com/RasmussenLab/njab/pull/13) 
 > for general use by delayed import 
 > of `mrmr-selection` in `njab`. If you encounter issues, please open an issue.
@@ -245,7 +245,7 @@ Install snakemake e.g. using the provided [`snakemake_env.yml`](https://github.c
 file as used in 
 [this workflow](https://github.com/RasmussenLab/pimms/blob/HEAD/.github/workflows/ci_workflow.yaml).
 
-> :warning: Snakefile workflow for imputation v1 only support that atm.
+> ⚠️ Snakefile workflow for imputation v1 only support that atm.
 
 ```bash
 snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n # dry-run
