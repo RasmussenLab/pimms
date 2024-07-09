@@ -6,8 +6,8 @@ import pytest
 import torch
 from numpy import nan
 
-from vaep.io import datasets
-from vaep.io.datasets import DatasetWithMaskAndNoTarget, DatasetWithTarget
+from pimmslearn.io import datasets
+from pimmslearn.io.datasets import DatasetWithMaskAndNoTarget, DatasetWithTarget
 
 data = np.random.random(size=(10, 5))
 threshold = max(0.15, data.min() + 0.02)

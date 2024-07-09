@@ -5,11 +5,11 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
-#     display_name: vaep
+#     display_name: Python 3
 #     language: python
-#     name: vaep
+#     name: python3
 # ---
 
 # %%
@@ -18,7 +18,7 @@ from pathlib import Path
 import njab
 import pandas as pd
 
-import vaep
+import pimmslearn
 
 # %%
 pickled_qvalues = snakemake.input.qvalues

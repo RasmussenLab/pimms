@@ -4,8 +4,8 @@ import pytest
 import sklearn
 from sklearn import impute, preprocessing
 
-from vaep.io.datasets import to_tensor
-from vaep.transform import VaepPipeline
+from pimmslearn.io.datasets import to_tensor
+from pimmslearn.transform import VaepPipeline
 
 
 def test_Vaep_Pipeline():

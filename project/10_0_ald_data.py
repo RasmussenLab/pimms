@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -21,9 +21,9 @@ from pathlib import Path
 import yaml
 import numpy as np
 import pandas as pd
-import vaep
+import pimmslearn
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 
 pd.options.display.max_columns = 50
 pd.options.display.max_rows = 100
@@ -45,7 +45,7 @@ fnames = dict(
     annotations=folder_data / 'ald_experiment_annotations.csv',
     clinic=folder_data / 'labtest_integrated_numeric.csv',
     raw_meta=folder_data / 'ald_metadata_rawfiles.csv')
-fnames = vaep.nb.Config.from_dict(fnames)  # could be handeled kwargs as in normal dict
+fnames = pimmslearn.nb.Config.from_dict(fnames)  # could be handeled kwargs as in normal dict
 
 
 # %%
@@ -343,12 +343,12 @@ kwargs = {'xlabel': 'peptide number ordered by completeness',
           'ylabel': 'peptide was found in # samples',
           'title': 'peptide measurement distribution'}
 
-ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+ax = pimmslearn.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
 ), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(df), ax=None, **kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, name='data_aggPeptides_completness', folder=folder_run)
+pimmslearn.savefig(fig, name='data_aggPeptides_completness', folder=folder_run)
 
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples
@@ -505,12 +505,12 @@ kwargs = {'xlabel': 'protein group number ordered by completeness',
           'ylabel': 'peptide was found in # samples',
           'title': 'protein group measurement distribution'}
 
-ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+ax = pimmslearn.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
 ), feat_col_name='count', n_samples=len(df), ax=None, min_feat_prop=.0, **kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, name='data_proteinGroups_completness', folder=folder_run)
+pimmslearn.savefig(fig, name='data_proteinGroups_completness', folder=folder_run)
 
 
 # %% [markdown]
@@ -678,7 +678,7 @@ mask_idx_duplicated = df.index.duplicated(False)
 df.loc[mask_idx_duplicated].sort_index()
 
 # %%
-df = vaep.pandas.select_max_by(df=df.reset_index(),
+df = pimmslearn.pandas.select_max_by(df=df.reset_index(),
                                grouping_columns=sel_cols[:-1],
                                selection_column=sel_cols[-1]).set_index(sel_cols[:-1])
 
@@ -730,12 +730,12 @@ kwargs = {'xlabel': 'peptide number ordered by completeness',
           'ylabel': 'peptide was found in # samples',
           'title': 'peptide measurement distribution'}
 
-ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+ax = pimmslearn.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
 ), feat_col_name='count', feature_name='Aggregated peptides', n_samples=len(df), ax=None, **kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, name='data_liver_aggPeptides_completness', folder=folder_run)
+pimmslearn.savefig(fig, name='data_liver_aggPeptides_completness', folder=folder_run)
 
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples
@@ -884,13 +884,13 @@ kwargs = {'xlabel': 'protein group number ordered by completeness',
           'ylabel': 'peptide was found in # samples',
           'title': 'protein group measurement distribution'}
 
-ax = vaep.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
+ax = pimmslearn.plotting.plot_counts(des_data.T.sort_values(by='count', ascending=False).reset_index(
 ), feat_col_name='count', n_samples=len(df), ax=None, **kwargs)
 
 fig = ax.get_figure()
 fig.tight_layout()
 fnames.fig_liver_pg_completness = folder_run / 'data_liver_proteinGroups_completness'
-vaep.savefig(fig, name=fnames.fig_liver_pg_completness)
+pimmslearn.savefig(fig, name=fnames.fig_liver_pg_completness)
 
 # %% [markdown]
 # ### Select features which are present in at least 25% of the samples

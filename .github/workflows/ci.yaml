@@ -35,7 +35,7 @@ jobs:
         channel-priority: disabled
         python-version: ${{ matrix.python-version }}
         environment-file: environment.yml
-        activate-environment: vaep
+        activate-environment: pimms
         auto-activate-base: true
         # auto-update-conda: true
     - name: inspect-conda-environment

@@ -3,10 +3,10 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from vaep.io.datasplits import to_long_format
-from vaep.sampling import feature_frequency, frequency_by_index, sample_data
+from pimmslearn.io.datasplits import to_long_format
+from pimmslearn.sampling import feature_frequency, frequency_by_index, sample_data
 
-from vaep.utils import create_random_df
+from pimmslearn.utils import create_random_df
 
 
 @pytest.fixture

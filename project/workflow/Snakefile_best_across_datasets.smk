@@ -51,7 +51,7 @@ rule collect_metrics:
     run:
         from pathlib import Path
         import pandas as pd
-        import vaep.models
+        import pimmslearn.models
 
         REPITITION_NAME = params.repitition_name
 
@@ -62,7 +62,7 @@ rule collect_metrics:
             return key
 
 
-        all_metrics = vaep.models.collect_metrics(input.metrics, key_from_fname)
+        all_metrics = pimmslearn.models.collect_metrics(input.metrics, key_from_fname)
         metrics = pd.DataFrame(all_metrics).T
         metrics.index.names = ("data level", REPITITION_NAME)
         metrics

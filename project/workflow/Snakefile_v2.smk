@@ -138,7 +138,7 @@ rule train_NAGuideR_model:
         method="{method}",
         name="{method}",
     conda:
-        "vaep"
+        "pimms"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r train_split {input.train_split}"
@@ -191,7 +191,7 @@ rule train_models:
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
     conda:
-        "vaep"
+        "pimms"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"

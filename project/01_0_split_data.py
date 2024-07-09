@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -31,14 +31,14 @@ import plotly.express as px
 from IPython.display import display
 from sklearn.model_selection import train_test_split
 
-import vaep
-import vaep.io.load
-from vaep.analyzers import analyzers
-from vaep.io.datasplits import DataSplits
-from vaep.sampling import feature_frequency
-from vaep.sklearn import get_PCA
+import pimmslearn
+import pimmslearn.io.load
+from pimmslearn.analyzers import analyzers
+from pimmslearn.io.datasplits import DataSplits
+from pimmslearn.sampling import feature_frequency
+from pimmslearn.sklearn import get_PCA
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 logger.info("Split data and make diagnostic plots")
 logging.getLogger('fontTools').setLevel(logging.WARNING)
 
@@ -57,7 +57,7 @@ def align_meta_data(df: pd.DataFrame, df_meta: pd.DataFrame):
 pd.options.display.max_columns = 32
 plt.rcParams['figure.figsize'] = [4, 2]
 
-vaep.plotting.make_large_descriptors(7)
+pimmslearn.plotting.make_large_descriptors(7)
 
 figures = {}  # collection of ax or figures
 dumps = {}  # collection of data dumps
@@ -96,11 +96,11 @@ feat_name_display: str = None  # display name for feature name (e.g. 'protein gr
 
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 # %% tags=["hide-input"]
@@ -134,7 +134,7 @@ logger.info(
 # %% tags=["hide-input"]
 # # ! factor out file reading to a separate module, not class
 # AnalyzePeptides.from_csv
-constructor = getattr(vaep.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
+constructor = getattr(pimmslearn.io.load, FILE_FORMAT_TO_CONSTRUCTOR[FILE_EXT])
 df = constructor(fname=args.FN_INTENSITIES,
                  index_col=args.index_col,
                  )
@@ -364,7 +364,7 @@ ax.set_xlabel(f'{args.feat_name_display.capitalize()} per eligable sample')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_hist_features_per_sample'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
 ax = df.notna().sum(axis=0).sort_values().plot()
@@ -375,41 +375,41 @@ ax.set_xlabel(f'{args.feat_name_display.capitalize()} prevalence')
 ax.set_ylabel('observations')
 fname = args.out_figures / f'0_{group}_feature_prevalence'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 
 # %% [markdown]
 # ### Number off observations accross feature value
 
 # %% tags=["hide-input"]
-min_max = vaep.plotting.data.min_max(df.stack())
-ax, bins = vaep.plotting.data.plot_histogram_intensities(
+min_max = pimmslearn.plotting.data.min_max(df.stack())
+ax, bins = pimmslearn.plotting.data.plot_histogram_intensities(
     df.stack(), min_max=min_max)
 ax.set_xlabel('Intensity binned')
 fname = args.out_figures / f'0_{group}_intensity_distribution_overall'
 
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+ax = pimmslearn.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter'
 ax.set_xlabel(
     f'{args.feat_name_display.capitalize()} binned by their median intensity'
     f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
-ax, _data_feat_median_over_prop_missing = vaep.plotting.data.plot_feat_median_over_prop_missing(
+ax, _data_feat_median_over_prop_missing = pimmslearn.plotting.data.plot_feat_median_over_prop_missing(
     data=df, type='boxplot', return_plot_data=True)
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot'
 ax.set_xlabel(
     f'{args.feat_name_display.capitalize()} binned by their median intensity'
     f' (N {args.feat_name_display})')
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 _data_feat_median_over_prop_missing.to_csv(fname.with_suffix('.csv'))
 # _data_feat_median_over_prop_missing.to_excel(fname.with_suffix('.xlsx'))
 del _data_feat_median_over_prop_missing
@@ -443,7 +443,7 @@ if args.meta_cat_col:
     fname = (args.out_figures
              / f'0_{group}_pca_sample_by_{"_".join(args.meta_cat_col.split())}')
     figures[fname.stem] = fname
-    vaep.savefig(fig, fname)
+    pimmslearn.savefig(fig, fname)
 
 # %% tags=["hide-input"]
 if args.meta_date_col != 'PlaceholderTime':
@@ -452,7 +452,7 @@ if args.meta_date_col != 'PlaceholderTime':
         df=pcs[pcs_name], ax=ax, dates=pcs[args.meta_date_col], title=f'by {args.meta_date_col}')
     fname = args.out_figures / f'0_{group}_pca_sample_by_date'
     figures[fname.stem] = fname
-    vaep.savefig(fig, fname)
+    pimmslearn.savefig(fig, fname)
 
 # %% [markdown]
 # - size: number of features in a single sample
@@ -470,7 +470,7 @@ analyzers.plot_scatter(
 fname = (args.out_figures
          / f'0_{group}_pca_sample_by_{"_".join(col_identified_feat.split())}.pdf')
 figures[fname.stem] = fname
-vaep.savefig(fig, fname)
+pimmslearn.savefig(fig, fname)
 
 # %% tags=["hide-input"]
 # # ! write principal components to excel (if needed)
@@ -517,12 +517,12 @@ ax = df_w_date.plot.box(rot=80,
                         boxprops=dict(linewidth=.4, color='darkblue'),
                         flierprops=dict(markersize=.4, color='lightblue'),
                         )
-_ = vaep.plotting.select_xticks(ax)
+_ = pimmslearn.plotting.select_xticks(ax)
 fig = ax.get_figure()
 fname = args.out_figures / f'0_{group}_median_boxplot'
 df_w_date.to_pickle(fname.with_suffix('.pkl'))
 figures[fname.stem] = fname
-vaep.savefig(fig, fname)
+pimmslearn.savefig(fig, fname)
 del df_w_date
 
 # %% [markdown]
@@ -549,13 +549,13 @@ if not args.meta_date_col == 'PlaceholderTime':
                                               #   fontsize=6,
                                               figsize=(8, 2),
                                               s=5,
-                                              xticks=vaep.plotting.select_dates(
+                                              xticks=pimmslearn.plotting.select_dates(
                                                   median_sample_intensity[dates.name])
                                               )
     fig = ax.get_figure()
     fname = args.out_figures / f'0_{group}_median_scatter'
     figures[fname.stem] = fname
-    vaep.savefig(fig, fname)
+    pimmslearn.savefig(fig, fname)
 
 # %% [markdown]
 # - the closer the labels are there denser the samples are measured around that time.
@@ -610,13 +610,13 @@ splits.__annotations__
 # Simulated missing values are not used for validation and testing.
 
 # %% tags=["hide-input"]
-df_long = vaep.io.datasplits.long_format(df)
+df_long = pimmslearn.io.datasplits.long_format(df)
 df_long.head()
 
 # %% tags=["hide-input"]
 group = 2
 
-splits, thresholds, fake_na_mcar, fake_na_mnar = vaep.sampling.sample_mnar_mcar(
+splits, thresholds, fake_na_mcar, fake_na_mnar = pimmslearn.sampling.sample_mnar_mcar(
     df_long=df_long,
     frac_non_train=args.frac_non_train,
     frac_mnar=args.frac_mnar,
@@ -631,7 +631,7 @@ N_MNAR = len(fake_na_mnar)
 
 fig, axes = plt.subplots(1, 2, figsize=(6, 2))
 ax = axes[0]
-plot_histogram_intensities = partial(vaep.plotting.data.plot_histogram_intensities,
+plot_histogram_intensities = partial(pimmslearn.plotting.data.plot_histogram_intensities,
                                      min_max=min_max,
                                      alpha=0.8)
 plot_histogram_intensities(
@@ -661,10 +661,10 @@ if args.use_every_nth_xtick > 1:
 ax.legend()
 fname = args.out_figures / f'0_{group}_mnar_mcar_histograms.pdf'
 figures[fname.stem] = fname
-vaep.savefig(fig, fname)
+pimmslearn.savefig(fig, fname)
 
 # %% tags=["hide-input"]
-counts_per_bin = vaep.pandas.get_counts_per_bin(
+counts_per_bin = pimmslearn.pandas.get_counts_per_bin(
     df=pd.concat(
         [df_long.squeeze().to_frame('observed'),
          thresholds.to_frame('threshold'),
@@ -724,7 +724,7 @@ splits.train_X.groupby(level=-1).count().describe()
 # -> or raise error as feature completness treshold is so low that less than 3 samples
 # per feature are allowd.
 
-splits = vaep.sampling.check_split_integrity(splits)
+splits = pimmslearn.sampling.check_split_integrity(splits)
 
 # %% [markdown]
 # Some tools require at least 4 observation in the training data,
@@ -818,10 +818,10 @@ if args.use_every_nth_xtick > 1:
 ax.set_xlabel('Intensity bins')
 fname = args.out_figures / f'0_{group}_val_over_train_split.pdf'
 figures[fname.name] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
-min_bin, max_bin = vaep.plotting.data.min_max(splits.val_y)
+min_bin, max_bin = pimmslearn.plotting.data.min_max(splits.val_y)
 bins = range(int(min_bin), int(max_bin) + 1, 1)
 ax = splits_df.plot.hist(bins=bins,
                          xticks=list(bins),
@@ -836,10 +836,10 @@ ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = args.out_figures / f'0_{group}_splits_freq_stacked.pdf'
 figures[fname.name] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
-counts_per_bin = vaep.pandas.get_counts_per_bin(df=splits_df, bins=bins)
+counts_per_bin = pimmslearn.pandas.get_counts_per_bin(df=splits_df, bins=bins)
 counts_per_bin.to_excel(fname.with_suffix('.xlsx'))
 counts_per_bin
 
@@ -857,7 +857,7 @@ ax.set_xlabel('Intensity bins')
 ax.yaxis.set_major_formatter("{x:,.0f}")
 fname = args.out_figures / f'0_{group}_val_test_split_freq_stacked_.pdf'
 figures[fname.name] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 
 # %% [markdown]
@@ -867,18 +867,18 @@ vaep.savefig(ax.get_figure(), fname)
 splits.to_wide_format()
 
 # %% tags=["hide-input"]
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+ax = pimmslearn.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='scatter')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_scatter_train'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
-ax = vaep.plotting.data.plot_feat_median_over_prop_missing(
+ax = pimmslearn.plotting.data.plot_feat_median_over_prop_missing(
     data=splits.train_X, type='boxplot')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_train'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% tags=["hide-input"]
 medians = (splits
@@ -909,7 +909,7 @@ for ax in s_axes:
     _ = ax.set_ylabel('Frequency')
 fname = args.out_figures / f'0_{group}_intensity_median_vs_prop_missing_boxplot_val_train'
 figures[fname.stem] = fname
-vaep.savefig(ax.get_figure(), fname)
+pimmslearn.savefig(ax.get_figure(), fname)
 
 # %% [markdown]
 # ## Save parameters

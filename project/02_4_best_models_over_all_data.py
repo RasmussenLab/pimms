@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -21,8 +21,8 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import vaep.plotting
-import vaep.nb
+import pimmslearn.plotting
+import pimmslearn.nb
 
 
 pd.options.display.max_columns = 45
@@ -31,9 +31,9 @@ pd.options.display.multi_sparse = False
 
 plt.rcParams['figure.figsize'] = [12.0, 6.0]
 
-vaep.plotting.make_large_descriptors()
+pimmslearn.plotting.make_large_descriptors()
 
-logger = vaep.logging.setup_nb_logger()
+logger = pimmslearn.logging.setup_nb_logger()
 
 # %% [markdown]
 # ## Read input
@@ -190,11 +190,11 @@ ax = _to_plot.plot.bar(rot=0,
                        xlabel='',
                        ylabel=f"{METRIC} (log2 intensities)",
                        width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax, size=12)
-ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=12)
+ax = pimmslearn.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, fname, folder=FOLDER)
+pimmslearn.savefig(fig, fname, folder=FOLDER)
 
 # %% [markdown]
 # ### Validation data results
@@ -220,11 +220,11 @@ ax = _to_plot.plot.bar(rot=0,
                        xlabel='',
                        ylabel=f"{METRIC} (log2 intensities)",
                        width=.8)
-ax = vaep.plotting.add_height_to_barplot(ax, size=12)
-ax = vaep.plotting.add_text_to_barplot(ax, text, size=12)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=12)
+ax = pimmslearn.plotting.add_text_to_barplot(ax, text, size=12)
 fig = ax.get_figure()
 fig.tight_layout()
-vaep.savefig(fig, fname, folder=FOLDER)
+pimmslearn.savefig(fig, fname, folder=FOLDER)
 
 # %%
 fname = 'best_models_1_val_plotly'
@@ -333,10 +333,10 @@ ax = (to_plot
               '#b15928']
       )
       )
-ax = vaep.plotting.add_height_to_barplot(ax, size=11)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=11)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fig.tight_layout()
-vaep.savefig(fig, fname, folder=FOLDER)
+pimmslearn.savefig(fig, fname, folder=FOLDER)
 
 # %% [markdown]
 # plotly version with additional information
@@ -411,10 +411,10 @@ ax = (to_plot
               '#b15928']
       )
       )
-ax = vaep.plotting.add_height_to_barplot(ax, size=11)
+ax = pimmslearn.plotting.add_height_to_barplot(ax, size=11)
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
 fig.tight_layout()
-vaep.savefig(fig, fname, folder=FOLDER)
+pimmslearn.savefig(fig, fname, folder=FOLDER)
 
 # %% [markdown]
 # plotly version with additional information

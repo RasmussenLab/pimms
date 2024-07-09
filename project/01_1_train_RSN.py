@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.15.0
+#       jupytext_version: 1.16.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -22,14 +22,14 @@ import logging
 import pandas as pd
 from IPython.display import display
 
-import vaep
-import vaep.imputation
-import vaep.model
-import vaep.models as models
-import vaep.nb
-from vaep.io import datasplits
+import pimmslearn
+import pimmslearn.imputation
+import pimmslearn.model
+import pimmslearn.models as models
+import pimmslearn.nb
+from pimmslearn.io import datasplits
 
-logger = vaep.logging.setup_logger(logging.getLogger('vaep'))
+logger = pimmslearn.logging.setup_logger(logging.getLogger('pimmslearn'))
 logger.info("Median Imputation")
 
 figures = {}  # collection of ax or figures
@@ -68,11 +68,11 @@ meta_cat_col: str = None  # category column in meta data
 
 
 # %% tags=["hide-input"]
-args = vaep.nb.get_params(args, globals=globals())
+args = pimmslearn.nb.get_params(args, globals=globals())
 args
 
 # %% tags=["hide-input"]
-args = vaep.nb.args_from_dict(args)
+args = pimmslearn.nb.args_from_dict(args)
 args
 
 
@@ -129,7 +129,7 @@ else:
 #
 
 # %% tags=["hide-input"]
-freq_feat = vaep.io.datasplits.load_freq(args.data)
+freq_feat = pimmslearn.io.datasplits.load_freq(args.data)
 freq_feat.head()  # training data
 
 # %% [markdown]
@@ -159,7 +159,7 @@ data.train_X.head()
 # ### Impute using shifted normal distribution
 
 # %% tags=["hide-input"]
-imputed_shifted_normal = vaep.imputation.impute_shifted_normal(
+imputed_shifted_normal = pimmslearn.imputation.impute_shifted_normal(
     data.train_X,
     mean_shift=1.8,
     std_shrinkage=0.3,
@@ -197,10 +197,10 @@ if args.save_pred_real_na:
 # ### Plots
 #
 # %% tags=["hide-input"]
-ax, _ = vaep.plotting.errors.plot_errors_binned(val_pred_fake_na)
+ax, _ = pimmslearn.plotting.errors.plot_errors_binned(val_pred_fake_na)
 
 # %% tags=["hide-input"]
-ax, _ = vaep.plotting.errors.plot_errors_binned(test_pred_fake_na)
+ax, _ = pimmslearn.plotting.errors.plot_errors_binned(test_pred_fake_na)
 
 # %% [markdown]
 # ## Comparisons
@@ -240,8 +240,8 @@ added_metrics
 # ### Save all metrics as json
 
 # %% tags=["hide-input"]
-vaep.io.dump_json(d_metrics.metrics, args.out_metrics /
-                  f'metrics_{args.model_key}.json')
+pimmslearn.io.dump_json(d_metrics.metrics, args.out_metrics /
+                        f'metrics_{args.model_key}.json')
 d_metrics
 
 # %% tags=["hide-input"]

@@ -1,5 +1,5 @@
 from pathlib import Path
-from vaep.io.types import resolve_type
+from pimmslearn.io.types import resolve_type
 from snakemake.utils import min_version
 from snakemake.logging import logger
 

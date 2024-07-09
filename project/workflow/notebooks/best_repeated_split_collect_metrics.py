@@ -16,7 +16,7 @@
 import json
 from pathlib import Path
 import pandas as pd
-import vaep.models.collect_dumps
+import pimmslearn.models.collect_dumps
 
 REPITITION_NAME = snakemake.params.repitition_name
 
@@ -28,14 +28,14 @@ def load_metric_file(fname: Path):
     fname = Path(fname)
     with open(fname) as f:
         loaded = json.load(f)
-    loaded = vaep.pandas.flatten_dict_of_dicts(loaded)
+    loaded = pimmslearn.pandas.flatten_dict_of_dicts(loaded)
     key = key_from_fname(fname) # '_'.join(key_from_fname(fname))
     return key, loaded
 
 load_metric_file(snakemake.input.metrics[0])
 
 # %%
-all_metrics = vaep.models.collect_dumps.collect(snakemake.input.metrics, load_metric_file)
+all_metrics = pimmslearn.models.collect_dumps.collect(snakemake.input.metrics, load_metric_file)
 metrics = pd.DataFrame(all_metrics)
 metrics = metrics.set_index('id')
 metrics.index = pd.MultiIndex.from_tuples(

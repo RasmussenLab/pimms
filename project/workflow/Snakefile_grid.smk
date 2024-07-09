@@ -1,4 +1,4 @@
-from vaep.io.types import resolve_type
+from pimmslearn.io.types import resolve_type
 from snakemake.utils import min_version
 
 min_version("6.0")
