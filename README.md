@@ -89,7 +89,7 @@ df_imputed = model.transform(series).unstack()
 ```
 
 <details>
-  <summary>see log2 transformed DataFrame</summary>
+  <summary>:mag: see log2 transformed DataFrame</summary>
   
   First 10 rows and 10 columns. notice that the indices are named:
 
@@ -245,7 +245,7 @@ Install snakemake e.g. using the provided [`snakemake_env.yml`](https://github.c
 file as used in 
 [this workflow](https://github.com/RasmussenLab/pimms/blob/HEAD/.github/workflows/ci_workflow.yaml).
 
-> [!NOTE] Snakefile workflow for imputation v1 only support that atm.
+> :warning: Snakefile workflow for imputation v1 only support that atm.
 
 ```bash
 snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n # dry-run
@@ -325,7 +325,7 @@ assert df_imputed.isna().sum().sum() == 0
 df_imputed
 ```
 
-> [!NOTE] The imputation is simpler if you use the provide scikit-learn Transformer
+> :warning: The imputation is simpler if you use the provide scikit-learn Transformer
 > interface (see [Tutorial](https://colab.research.google.com/github/RasmussenLab/pimms/blob/HEAD/project/04_1_train_pimms_models.ipynb)).
 
 ## Available imputation methods
