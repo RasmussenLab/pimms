@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+g519da87 documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g519da87 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -419,19 +419,19 @@ document.write(`
                            <span class="n">MSELossFlat</span><span class="p">,</span> <span class="n">default_device</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">fastai.tabular.all</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.model</span>
-<span class="kn">import</span> <span class="nn">vaep.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="kn">import</span> <span class="nn">vaep.nb</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
-<span class="kn">from</span> <span class="nn">vaep.logging</span> <span class="kn">import</span> <span class="n">setup_logger</span>
-<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">RecorderDump</span><span class="p">,</span> <span class="n">plot_loss</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.model</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.nb</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.logging</span> <span class="kn">import</span> <span class="n">setup_logger</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.models</span> <span class="kn">import</span> <span class="n">RecorderDump</span><span class="p">,</span> <span class="n">plot_loss</span>
 
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 <span class="c1"># import fastai.callback.hook # Learner.summary</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">setup_logger</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;vaep&#39;</span><span class="p">))</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">setup_logger</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pimmslearn&#39;</span><span class="p">))</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
     <span class="s2">&quot;Experiment 03 - Analysis of latent spaces and performance comparisions&quot;</span><span class="p">)</span>
 
@@ -441,7 +441,7 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
 </pre></div>
 </div>
 </div>
@@ -511,7 +511,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span>
 </pre></div>
 </div>
@@ -542,7 +542,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
 <span class="c1"># # Currently not needed -&gt; DotProduct used, not a FNN</span>
 <span class="c1"># if isinstance(args.hidden_layers, str):</span>
@@ -611,9 +611,9 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -690,7 +690,7 @@ Name: intensity, Length: 226809, dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
 </pre></div>
 </div>
 </div>
@@ -976,11 +976,11 @@ Name: intensity, Length: 226809, dtype: float64
     <span class="n">recorder</span><span class="o">=</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">recorder</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CF&#39;</span><span class="p">)</span>
 <span class="n">recorder_dump</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">recorder_dump</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;collab_training&#39;</span><span class="p">,</span>
-             <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;collab_training&#39;</span><span class="p">,</span>
+                   <span class="n">folder</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span><span class="p">)</span>
 <span class="n">ana_collab</span><span class="o">.</span><span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ana_collab</span><span class="o">.</span><span class="n">batch_size</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">model_kwargs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span>
-                  <span class="n">TEMPLATE_MODEL_PARAMS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;CF&#39;</span><span class="p">))</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">ana_collab</span><span class="o">.</span><span class="n">model_kwargs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span>
+                        <span class="n">TEMPLATE_MODEL_PARAMS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;CF&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1002,9 +1002,9 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00209
-No improvement since epoch 17: early stopping
-vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00437
+No improvement since epoch 13: early stopping
+pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
 <div class="output text_html">
@@ -1035,121 +1035,97 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
   <tbody>
     <tr>
       <td>0</td>
-      <td>9.140012</td>
-      <td>13.579723</td>
+      <td>8.466748</td>
+      <td>12.454225</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>8.231165</td>
-      <td>12.267309</td>
+      <td>5.547058</td>
+      <td>7.640819</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>6.292692</td>
-      <td>9.346949</td>
+      <td>1.899256</td>
+      <td>2.528308</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>3.449856</td>
-      <td>5.047034</td>
+      <td>0.759737</td>
+      <td>0.991235</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1.387221</td>
-      <td>1.995405</td>
+      <td>0.575894</td>
+      <td>0.752733</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.729253</td>
-      <td>0.971405</td>
+      <td>0.554333</td>
+      <td>0.728310</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.576905</td>
-      <td>0.760352</td>
+      <td>0.540858</td>
+      <td>0.707837</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.554954</td>
-      <td>0.728531</td>
+      <td>0.479669</td>
+      <td>0.652685</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.540143</td>
-      <td>0.718635</td>
+      <td>0.414402</td>
+      <td>0.579527</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.527355</td>
-      <td>0.696235</td>
+      <td>0.386905</td>
+      <td>0.538006</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.463977</td>
-      <td>0.621528</td>
+      <td>0.347393</td>
+      <td>0.501931</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.409281</td>
-      <td>0.566832</td>
+      <td>0.314385</td>
+      <td>0.479284</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.390066</td>
-      <td>0.541612</td>
+      <td>0.279947</td>
+      <td>0.468650</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>0.365047</td>
-      <td>0.522028</td>
+      <td>0.248774</td>
+      <td>0.463336</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>0.332080</td>
-      <td>0.488528</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>15</td>
-      <td>0.311599</td>
-      <td>0.469948</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>16</td>
-      <td>0.282983</td>
-      <td>0.465018</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>17</td>
-      <td>0.266218</td>
-      <td>0.442697</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>18</td>
-      <td>0.235263</td>
-      <td>0.442870</td>
+      <td>0.227567</td>
+      <td>0.468580</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/42fc71657015048dfc698d573b7de2be8dbd3a0cea131e9805dc6184d73874e4.png" src="_images/42fc71657015048dfc698d573b7de2be8dbd3a0cea131e9805dc6184d73874e4.png" />
-<img alt="_images/ad1f3853af215f7cab9e8aeedd985df81201170c81c2521ed55bb498e9941374.png" src="_images/ad1f3853af215f7cab9e8aeedd985df81201170c81c2521ed55bb498e9941374.png" />
+</table></div><img alt="_images/c2dd3bcac49131289d12b46e0015ae00db49ad74d24398d1a172df1cc754f44d.png" src="_images/c2dd3bcac49131289d12b46e0015ae00db49ad74d24398d1a172df1cc754f44d.png" />
+<img alt="_images/e942d0f744758616e4eb6994e165c0d35c3f6e3f1cc822ee683fa721d6235a34.png" src="_images/e942d0f744758616e4eb6994e165c0d35c3f6e3f1cc822ee683fa721d6235a34.png" />
 </div>
 </div>
 </section>
@@ -1224,31 +1200,31 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.539</td>
+      <td>15.352</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.484</td>
+      <td>16.476</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>13.612</td>
+      <td>14.192</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.185</td>
+      <td>19.083</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.210</td>
+      <td>15.005</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1260,31 +1236,31 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>23.069</td>
+      <td>23.249</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>15.621</td>
+      <td>15.581</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.420</td>
+      <td>15.758</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.292</td>
+      <td>13.715</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.586</td>
+      <td>14.354</td>
     </tr>
   </tbody>
 </table>
@@ -1357,27 +1333,27 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.341</td>
+      <td>17.470</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.049</td>
+      <td>17.975</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.144</td>
+      <td>22.321</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.401</td>
+      <td>15.305</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.708</td>
+      <td>16.546</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1389,27 +1365,27 @@ vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_tr
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.504</td>
+      <td>15.908</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>12.731</td>
+      <td>13.035</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.853</td>
+      <td>14.090</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>14.844</td>
+      <td>15.334</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.377</td>
+      <td>16.710</td>
     </tr>
   </tbody>
 </table>
@@ -1701,8 +1677,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4428703511804791,
-  &#39;MAE&#39;: 0.44448496435735985,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4685800599560968,
+  &#39;MAE&#39;: 0.46147734462228274,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1726,8 +1702,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4641851586272969,
-  &#39;MAE&#39;: 0.44989071127267927,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4870607141089688,
+  &#39;MAE&#39;: 0.4642784914646437,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1737,8 +1713,8 @@ reconstruction.</p>
 <p>Save all metrics as json</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_metrics</span> <span class="o">/</span>
-                  <span class="sa">f</span><span class="s1">&#39;metrics_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_metrics</span> <span class="o">/</span>
+                        <span class="sa">f</span><span class="s1">&#39;metrics_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1785,13 +1761,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.443</td>
-      <td>0.464</td>
+      <td>0.469</td>
+      <td>0.487</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.444</td>
-      <td>0.450</td>
+      <td>0.461</td>
+      <td>0.464</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1847,7 +1823,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 19,
+ &#39;epoch_trained&#39;: 15,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
