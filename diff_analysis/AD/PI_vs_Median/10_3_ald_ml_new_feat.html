@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
+    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+gd9e211d documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gd9e211d documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -433,19 +433,19 @@ document.write(`
 <span class="kn">from</span> <span class="nn">njab.plotting.metrics</span> <span class="kn">import</span> <span class="n">plot_split_auc</span><span class="p">,</span> <span class="n">plot_split_prc</span>
 <span class="kn">from</span> <span class="nn">njab.sklearn.types</span> <span class="kn">import</span> <span class="n">Splits</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.analyzers</span>
-<span class="kn">import</span> <span class="nn">vaep.io.datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.analyzers</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.io.datasplits</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.markersize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
 
@@ -526,10 +526,10 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
                                  <span class="n">out_root</span><span class="o">=</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span>
                                            <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;out_folder&quot;</span><span class="p">]</span>
                                            <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span>
@@ -681,7 +681,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">DataSplits</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">file_format</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">test_y</span><span class="p">])</span>
 <span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -690,17 +690,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
-Sample_078  P32119           16.205
-Sample_194  P51693-2         17.845
-Sample_172  Q13790           15.921
-Sample_075  P20338           16.044
-Sample_082  Q6EMK4           17.326
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                           
+Sample_196  Q99784                                                      17.324
+Sample_056  Q13508;Q13508-2;Q13508-3                                    17.996
+Sample_203  Q9NRN5                                                      17.851
+Sample_071  Q9BXJ3                                                      16.824
+Sample_049  A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4   16.260
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -723,7 +723,7 @@ Name: intensity, dtype: float64
 <span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.622</span>
 <span class="n">CV_QC_SAMPLE</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>
 
-<span class="n">ald_study</span><span class="p">,</span> <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_raw_data</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
+<span class="n">ald_study</span><span class="p">,</span> <span class="n">cutoffs</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_raw_data</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span>
 <span class="p">),</span> <span class="n">data_completeness</span><span class="o">=</span><span class="n">DATA_COMPLETENESS</span><span class="p">,</span> <span class="n">frac_protein_groups</span><span class="o">=</span><span class="n">FRAC_PROTEIN_GROUPS</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">fn_qc_samples</span><span class="p">:</span>
@@ -735,7 +735,7 @@ Name: intensity, dtype: float64
     <span class="n">ax</span> <span class="o">=</span> <span class="n">qc_cv_feat</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Coefficient of Variation&#39;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">((</span><span class="n">qc_cv_feat</span> <span class="o">&lt;</span> <span class="n">CV_QC_SAMPLE</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
-    <span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="p">[</span><span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_feat</span><span class="p">(</span><span class="n">qc_samples</span><span class="p">)]</span>
+    <span class="n">ald_study</span> <span class="o">=</span> <span class="n">ald_study</span><span class="p">[</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">diff_analysis</span><span class="o">.</span><span class="n">select_feat</span><span class="p">(</span><span class="n">qc_samples</span><span class="p">)]</span>
 
 <span class="n">column_name_first_prot_to_pg</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">pg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">pg</span> <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
@@ -1124,7 +1124,7 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_preds</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">template_pred</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing values pred. by </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">load_single_csv_pred_file</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">compare_predictions</span><span class="o">.</span><span class="n">load_single_csv_pred_file</span>
+<span class="n">load_single_csv_pred_file</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">analyzers</span><span class="o">.</span><span class="n">compare_predictions</span><span class="o">.</span><span class="n">load_single_csv_pred_file</span>
 <span class="n">pred_real_na</span> <span class="o">=</span> <span class="n">load_single_csv_pred_file</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask_has_target</span><span class="p">]</span>
 <span class="n">pred_real_na</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
@@ -1135,10 +1135,10 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>missing values pred. by Median: runs/alzheimer_study/preds/pred_real_na_Median.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups        
-Sample_104  E7EPS8;P28827;P28827-2   15.055
-Sample_010  Q495W5;Q495W5-2          14.175
-Sample_009  Q6UWP8                   12.467
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                           
+Sample_051  H0Y6Q1;O75354;O75354-2;O75354-3;Q5QPI7;Q5QPI9;Q5QPJ3;Q5QPJ4;Q5QPJ6;Q5QPJ7   14.559
+Sample_172  P67936                                                                      16.592
+Sample_049  A0A0A0MSN4;P12821;P12821-2                                                  14.933
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -1163,17 +1163,17 @@ Name: intensity, dtype: float64
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 13.848
-            A0A075B6Q5                 13.108
-            A0A075B6R2                 12.672
-            A0A075B6S5                 12.553
-            A0A087WSY4                 12.134
+Sample_000  A0A075B6J9                 13.288
+            A0A075B6Q5                 12.776
+            A0A075B6R2                 13.299
+            A0A075B6S5                 12.779
+            A0A087WSY4                 13.030
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.095
-            Q9UI40;Q9UI40-2            13.511
-            Q9UIW2                     13.491
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.673
-            Q9UP79                     12.966
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.555
+            Q9UI40;Q9UI40-2            13.316
+            Q9UIW2                     12.828
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.034
+            Q9UP79                     13.221
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -1649,15 +1649,15 @@ new approach</p></li>
       <td>17.584</td>
       <td>16.988</td>
       <td>20.054</td>
-      <td>13.848</td>
+      <td>13.288</td>
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>13.429</td>
+      <td>12.847</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>12.955</td>
+      <td>12.588</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -1671,13 +1671,13 @@ new approach</p></li>
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>12.814</td>
+      <td>13.955</td>
       <td>19.067</td>
       <td>16.188</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>12.891</td>
+      <td>12.683</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -1697,7 +1697,7 @@ new approach</p></li>
       <td>15.671</td>
       <td>17.012</td>
       <td>18.569</td>
-      <td>11.237</td>
+      <td>13.371</td>
       <td>...</td>
       <td>15.229</td>
       <td>14.728</td>
@@ -1729,7 +1729,7 @@ new approach</p></li>
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>13.550</td>
+      <td>13.910</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -1790,7 +1790,7 @@ new approach</p></li>
       <td>16.482</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>12.061</td>
+      <td>13.066</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>16.064</td>
@@ -1821,14 +1821,14 @@ new approach</p></li>
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>13.029</td>
+      <td>13.149</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>13.122</td>
-      <td>11.692</td>
+      <td>12.932</td>
+      <td>12.773</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -1862,21 +1862,21 @@ new approach</p></li>
       <td>16.132</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>13.798</td>
+      <td>12.995</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>15.202</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>13.055</td>
+      <td>12.901</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>12.881</td>
+      <td>13.336</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2020,21 +2020,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 414.46it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  3.90it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  4.03it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  2.51it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  2.69it/s]
-100%|██████████| 6/6 [00:02&lt;00:00,  2.42it/s]
-100%|██████████| 7/7 [00:03&lt;00:00,  1.91it/s]
-100%|██████████| 8/8 [00:02&lt;00:00,  2.78it/s]
-100%|██████████| 9/9 [00:05&lt;00:00,  1.78it/s]
-100%|██████████| 10/10 [00:04&lt;00:00,  2.50it/s]
-100%|██████████| 11/11 [00:05&lt;00:00,  2.04it/s]
-100%|██████████| 12/12 [00:06&lt;00:00,  1.90it/s]
-100%|██████████| 13/13 [00:06&lt;00:00,  2.13it/s]
-100%|██████████| 14/14 [00:05&lt;00:00,  2.62it/s]
-100%|██████████| 15/15 [00:06&lt;00:00,  2.36it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 379.78it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  2.91it/s]
+100%|██████████| 3/3 [00:01&lt;00:00,  2.88it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  2.21it/s]
+100%|██████████| 5/5 [00:02&lt;00:00,  2.13it/s]
+100%|██████████| 6/6 [00:02&lt;00:00,  2.73it/s]
+100%|██████████| 7/7 [00:03&lt;00:00,  1.98it/s]
+100%|██████████| 8/8 [00:04&lt;00:00,  1.81it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.75it/s]
+100%|██████████| 10/10 [00:04&lt;00:00,  2.01it/s]
+100%|██████████| 11/11 [00:05&lt;00:00,  1.85it/s]
+100%|██████████| 12/12 [00:05&lt;00:00,  2.36it/s]
+100%|██████████| 13/13 [00:04&lt;00:00,  2.66it/s]
+100%|██████████| 14/14 [00:05&lt;00:00,  2.38it/s]
+100%|██████████| 15/15 [00:06&lt;00:00,  2.17it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2115,316 +2115,316 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.087</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.059</td>
+      <td>0.023</td>
+      <td>0.825</td>
+      <td>0.292</td>
+      <td>0.135</td>
+      <td>0.085</td>
+      <td>0.224</td>
+      <td>0.127</td>
+      <td>0.560</td>
       <td>0.042</td>
-      <td>0.829</td>
-      <td>0.271</td>
-      <td>0.143</td>
-      <td>0.081</td>
-      <td>0.236</td>
-      <td>0.121</td>
-      <td>0.563</td>
-      <td>0.041</td>
-      <td>0.861</td>
+      <td>0.860</td>
       <td>0.060</td>
-      <td>0.828</td>
-      <td>0.086</td>
+      <td>0.827</td>
+      <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.005</td>
-      <td>0.004</td>
-      <td>0.066</td>
-      <td>0.023</td>
-      <td>0.650</td>
-      <td>0.096</td>
-      <td>0.568</td>
-      <td>0.106</td>
-      <td>0.599</td>
-      <td>0.081</td>
-      <td>0.669</td>
-      <td>0.058</td>
-      <td>0.727</td>
-      <td>0.071</td>
-      <td>0.653</td>
-      <td>0.084</td>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.090</td>
+      <td>0.042</td>
+      <td>0.664</td>
+      <td>0.099</td>
+      <td>0.535</td>
+      <td>0.114</td>
+      <td>0.583</td>
+      <td>0.080</td>
+      <td>0.664</td>
+      <td>0.053</td>
+      <td>0.737</td>
+      <td>0.069</td>
+      <td>0.663</td>
+      <td>0.090</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.074</td>
-      <td>0.034</td>
-      <td>0.765</td>
-      <td>0.105</td>
-      <td>0.715</td>
-      <td>0.110</td>
-      <td>0.733</td>
-      <td>0.081</td>
-      <td>0.774</td>
-      <td>0.067</td>
-      <td>0.875</td>
-      <td>0.059</td>
-      <td>0.833</td>
+      <td>0.004</td>
+      <td>0.063</td>
+      <td>0.031</td>
+      <td>0.748</td>
+      <td>0.084</td>
+      <td>0.737</td>
+      <td>0.116</td>
+      <td>0.737</td>
+      <td>0.079</td>
+      <td>0.776</td>
+      <td>0.064</td>
+      <td>0.854</td>
+      <td>0.062</td>
+      <td>0.822</td>
       <td>0.079</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.007</td>
       <td>0.006</td>
-      <td>0.090</td>
-      <td>0.038</td>
-      <td>0.779</td>
-      <td>0.100</td>
-      <td>0.740</td>
-      <td>0.111</td>
-      <td>0.753</td>
-      <td>0.084</td>
-      <td>0.790</td>
-      <td>0.068</td>
-      <td>0.888</td>
-      <td>0.057</td>
-      <td>0.864</td>
-      <td>0.067</td>
+      <td>0.006</td>
+      <td>0.063</td>
+      <td>0.033</td>
+      <td>0.763</td>
+      <td>0.085</td>
+      <td>0.762</td>
+      <td>0.125</td>
+      <td>0.756</td>
+      <td>0.082</td>
+      <td>0.793</td>
+      <td>0.066</td>
+      <td>0.857</td>
+      <td>0.064</td>
+      <td>0.823</td>
+      <td>0.081</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.005</td>
-      <td>0.005</td>
-      <td>0.060</td>
-      <td>0.020</td>
-      <td>0.762</td>
+      <td>0.007</td>
+      <td>0.007</td>
+      <td>0.079</td>
+      <td>0.039</td>
+      <td>0.776</td>
       <td>0.099</td>
-      <td>0.755</td>
-      <td>0.113</td>
-      <td>0.752</td>
-      <td>0.077</td>
-      <td>0.787</td>
-      <td>0.065</td>
-      <td>0.890</td>
-      <td>0.054</td>
-      <td>0.863</td>
-      <td>0.066</td>
+      <td>0.768</td>
+      <td>0.101</td>
+      <td>0.766</td>
+      <td>0.073</td>
+      <td>0.799</td>
+      <td>0.061</td>
+      <td>0.878</td>
+      <td>0.053</td>
+      <td>0.846</td>
+      <td>0.073</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.005</td>
-      <td>0.005</td>
-      <td>0.071</td>
-      <td>0.032</td>
-      <td>0.762</td>
-      <td>0.099</td>
-      <td>0.755</td>
-      <td>0.114</td>
-      <td>0.752</td>
-      <td>0.080</td>
-      <td>0.788</td>
+      <td>0.007</td>
+      <td>0.010</td>
+      <td>0.076</td>
+      <td>0.035</td>
+      <td>0.771</td>
+      <td>0.107</td>
+      <td>0.769</td>
+      <td>0.110</td>
+      <td>0.764</td>
+      <td>0.081</td>
+      <td>0.797</td>
       <td>0.067</td>
-      <td>0.889</td>
-      <td>0.054</td>
-      <td>0.861</td>
-      <td>0.066</td>
+      <td>0.877</td>
+      <td>0.052</td>
+      <td>0.847</td>
+      <td>0.072</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.008</td>
-      <td>0.009</td>
-      <td>0.072</td>
-      <td>0.033</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.055</td>
+      <td>0.020</td>
       <td>0.767</td>
-      <td>0.099</td>
+      <td>0.106</td>
       <td>0.768</td>
-      <td>0.118</td>
+      <td>0.103</td>
       <td>0.761</td>
-      <td>0.086</td>
-      <td>0.796</td>
-      <td>0.072</td>
-      <td>0.888</td>
-      <td>0.054</td>
-      <td>0.862</td>
-      <td>0.066</td>
+      <td>0.077</td>
+      <td>0.795</td>
+      <td>0.065</td>
+      <td>0.875</td>
+      <td>0.051</td>
+      <td>0.846</td>
+      <td>0.070</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.085</td>
-      <td>0.040</td>
-      <td>0.823</td>
-      <td>0.088</td>
-      <td>0.800</td>
-      <td>0.114</td>
-      <td>0.806</td>
-      <td>0.078</td>
-      <td>0.836</td>
-      <td>0.064</td>
-      <td>0.915</td>
-      <td>0.046</td>
-      <td>0.898</td>
-      <td>0.055</td>
+      <td>0.004</td>
+      <td>0.066</td>
+      <td>0.028</td>
+      <td>0.796</td>
+      <td>0.094</td>
+      <td>0.786</td>
+      <td>0.091</td>
+      <td>0.787</td>
+      <td>0.075</td>
+      <td>0.818</td>
+      <td>0.063</td>
+      <td>0.896</td>
+      <td>0.048</td>
+      <td>0.881</td>
+      <td>0.057</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.062</td>
-      <td>0.024</td>
+      <td>0.007</td>
+      <td>0.006</td>
+      <td>0.088</td>
+      <td>0.041</td>
+      <td>0.813</td>
+      <td>0.083</td>
+      <td>0.842</td>
+      <td>0.081</td>
       <td>0.824</td>
-      <td>0.087</td>
-      <td>0.834</td>
-      <td>0.104</td>
-      <td>0.824</td>
-      <td>0.071</td>
-      <td>0.850</td>
-      <td>0.061</td>
-      <td>0.913</td>
+      <td>0.064</td>
+      <td>0.849</td>
+      <td>0.056</td>
+      <td>0.918</td>
+      <td>0.042</td>
+      <td>0.905</td>
       <td>0.048</td>
-      <td>0.902</td>
-      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.008</td>
-      <td>0.007</td>
-      <td>0.093</td>
-      <td>0.030</td>
-      <td>0.827</td>
-      <td>0.084</td>
-      <td>0.817</td>
-      <td>0.095</td>
-      <td>0.818</td>
-      <td>0.066</td>
-      <td>0.844</td>
-      <td>0.056</td>
-      <td>0.927</td>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.067</td>
+      <td>0.037</td>
+      <td>0.812</td>
+      <td>0.082</td>
+      <td>0.843</td>
+      <td>0.080</td>
+      <td>0.825</td>
+      <td>0.063</td>
+      <td>0.849</td>
+      <td>0.055</td>
+      <td>0.917</td>
       <td>0.042</td>
-      <td>0.918</td>
-      <td>0.044</td>
+      <td>0.904</td>
+      <td>0.048</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>11</th>
       <td>0.005</td>
-      <td>0.005</td>
-      <td>0.066</td>
-      <td>0.032</td>
-      <td>0.830</td>
-      <td>0.081</td>
-      <td>0.816</td>
-      <td>0.094</td>
-      <td>0.819</td>
-      <td>0.064</td>
-      <td>0.846</td>
+      <td>0.006</td>
       <td>0.054</td>
-      <td>0.925</td>
-      <td>0.045</td>
-      <td>0.915</td>
-      <td>0.047</td>
+      <td>0.013</td>
+      <td>0.811</td>
+      <td>0.081</td>
+      <td>0.841</td>
+      <td>0.082</td>
+      <td>0.823</td>
+      <td>0.063</td>
+      <td>0.847</td>
+      <td>0.055</td>
+      <td>0.916</td>
+      <td>0.044</td>
+      <td>0.903</td>
+      <td>0.050</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.005</td>
-      <td>0.003</td>
+      <td>0.008</td>
+      <td>0.010</td>
+      <td>0.079</td>
+      <td>0.040</td>
+      <td>0.811</td>
+      <td>0.087</td>
+      <td>0.839</td>
+      <td>0.088</td>
+      <td>0.821</td>
+      <td>0.066</td>
+      <td>0.846</td>
+      <td>0.057</td>
+      <td>0.914</td>
+      <td>0.046</td>
+      <td>0.899</td>
       <td>0.054</td>
-      <td>0.015</td>
-      <td>0.826</td>
-      <td>0.077</td>
-      <td>0.825</td>
-      <td>0.093</td>
-      <td>0.822</td>
-      <td>0.062</td>
-      <td>0.848</td>
-      <td>0.053</td>
-      <td>0.924</td>
-      <td>0.045</td>
-      <td>0.915</td>
-      <td>0.047</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.006</td>
-      <td>0.004</td>
-      <td>0.075</td>
-      <td>0.025</td>
-      <td>0.821</td>
-      <td>0.076</td>
-      <td>0.824</td>
-      <td>0.091</td>
-      <td>0.819</td>
-      <td>0.059</td>
-      <td>0.845</td>
-      <td>0.051</td>
-      <td>0.922</td>
+      <td>0.007</td>
+      <td>0.005</td>
+      <td>0.092</td>
+      <td>0.043</td>
+      <td>0.806</td>
+      <td>0.090</td>
+      <td>0.829</td>
+      <td>0.086</td>
+      <td>0.813</td>
+      <td>0.064</td>
+      <td>0.839</td>
+      <td>0.056</td>
+      <td>0.912</td>
       <td>0.046</td>
-      <td>0.913</td>
-      <td>0.048</td>
+      <td>0.897</td>
+      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>14</th>
+      <td>0.009</td>
       <td>0.007</td>
-      <td>0.006</td>
-      <td>0.089</td>
-      <td>0.030</td>
-      <td>0.823</td>
-      <td>0.074</td>
-      <td>0.824</td>
-      <td>0.092</td>
-      <td>0.820</td>
-      <td>0.061</td>
-      <td>0.846</td>
-      <td>0.052</td>
-      <td>0.921</td>
-      <td>0.046</td>
-      <td>0.912</td>
-      <td>0.048</td>
+      <td>0.084</td>
+      <td>0.041</td>
+      <td>0.803</td>
+      <td>0.093</td>
+      <td>0.821</td>
+      <td>0.091</td>
+      <td>0.808</td>
+      <td>0.068</td>
+      <td>0.834</td>
+      <td>0.059</td>
+      <td>0.911</td>
+      <td>0.047</td>
+      <td>0.896</td>
+      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.079</td>
-      <td>0.038</td>
-      <td>0.821</td>
-      <td>0.075</td>
-      <td>0.826</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.076</td>
+      <td>0.039</td>
+      <td>0.796</td>
       <td>0.089</td>
-      <td>0.820</td>
-      <td>0.061</td>
-      <td>0.846</td>
-      <td>0.052</td>
-      <td>0.920</td>
-      <td>0.046</td>
-      <td>0.910</td>
-      <td>0.049</td>
+      <td>0.822</td>
+      <td>0.086</td>
+      <td>0.805</td>
+      <td>0.064</td>
+      <td>0.832</td>
+      <td>0.056</td>
+      <td>0.911</td>
+      <td>0.047</td>
+      <td>0.896</td>
+      <td>0.054</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2449,21 +2449,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 473.93it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  3.90it/s]
-100%|██████████| 3/3 [00:01&lt;00:00,  2.89it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  3.07it/s]
-100%|██████████| 5/5 [00:02&lt;00:00,  2.09it/s]
-100%|██████████| 6/6 [00:02&lt;00:00,  2.15it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  2.37it/s]
-100%|██████████| 8/8 [00:04&lt;00:00,  1.94it/s]
-100%|██████████| 9/9 [00:03&lt;00:00,  2.28it/s]
-100%|██████████| 10/10 [00:04&lt;00:00,  2.34it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 477.55it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  4.16it/s]
+100%|██████████| 3/3 [00:01&lt;00:00,  2.49it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.58it/s]
+100%|██████████| 5/5 [00:02&lt;00:00,  2.39it/s]
+100%|██████████| 6/6 [00:03&lt;00:00,  1.82it/s]
+100%|██████████| 7/7 [00:03&lt;00:00,  2.24it/s]
+100%|██████████| 8/8 [00:03&lt;00:00,  2.11it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.34it/s]
+100%|██████████| 10/10 [00:04&lt;00:00,  2.35it/s]
 100%|██████████| 11/11 [00:04&lt;00:00,  2.24it/s]
-100%|██████████| 12/12 [00:05&lt;00:00,  2.24it/s]
-100%|██████████| 13/13 [00:05&lt;00:00,  2.18it/s]
-100%|██████████| 14/14 [00:06&lt;00:00,  2.20it/s]
-100%|██████████| 15/15 [00:06&lt;00:00,  2.27it/s]
+100%|██████████| 12/12 [00:05&lt;00:00,  2.19it/s]
+100%|██████████| 13/13 [00:05&lt;00:00,  2.30it/s]
+100%|██████████| 14/14 [00:05&lt;00:00,  2.42it/s]
+100%|██████████| 15/15 [00:06&lt;00:00,  2.29it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2544,10 +2544,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.005</td>
-      <td>0.004</td>
-      <td>0.076</td>
-      <td>0.027</td>
+      <td>0.009</td>
+      <td>0.007</td>
+      <td>0.103</td>
+      <td>0.040</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2565,10 +2565,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.079</td>
-      <td>0.035</td>
+      <td>0.004</td>
+      <td>0.068</td>
+      <td>0.027</td>
       <td>0.751</td>
       <td>0.123</td>
       <td>0.440</td>
@@ -2588,8 +2588,8 @@ new approach</p></li>
       <th>3</th>
       <td>0.007</td>
       <td>0.006</td>
-      <td>0.093</td>
-      <td>0.041</td>
+      <td>0.091</td>
+      <td>0.039</td>
       <td>0.713</td>
       <td>0.084</td>
       <td>0.671</td>
@@ -2607,10 +2607,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.005</td>
-      <td>0.004</td>
-      <td>0.075</td>
-      <td>0.028</td>
+      <td>0.008</td>
+      <td>0.009</td>
+      <td>0.106</td>
+      <td>0.035</td>
       <td>0.705</td>
       <td>0.087</td>
       <td>0.671</td>
@@ -2628,10 +2628,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.007</td>
       <td>0.006</td>
-      <td>0.085</td>
-      <td>0.036</td>
+      <td>0.006</td>
+      <td>0.068</td>
+      <td>0.025</td>
       <td>0.739</td>
       <td>0.096</td>
       <td>0.678</td>
@@ -2650,8 +2650,8 @@ new approach</p></li>
     <tr>
       <th>6</th>
       <td>0.006</td>
-      <td>0.005</td>
-      <td>0.090</td>
+      <td>0.006</td>
+      <td>0.080</td>
       <td>0.037</td>
       <td>0.747</td>
       <td>0.106</td>
@@ -2670,10 +2670,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.078</td>
-      <td>0.033</td>
+      <td>0.008</td>
+      <td>0.009</td>
+      <td>0.095</td>
+      <td>0.038</td>
       <td>0.741</td>
       <td>0.105</td>
       <td>0.703</td>
@@ -2691,10 +2691,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.006</td>
-      <td>0.007</td>
-      <td>0.065</td>
-      <td>0.027</td>
+      <td>0.005</td>
+      <td>0.005</td>
+      <td>0.056</td>
+      <td>0.017</td>
       <td>0.788</td>
       <td>0.095</td>
       <td>0.766</td>
@@ -2712,10 +2712,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.055</td>
-      <td>0.013</td>
+      <td>0.005</td>
+      <td>0.005</td>
+      <td>0.054</td>
+      <td>0.015</td>
       <td>0.785</td>
       <td>0.103</td>
       <td>0.769</td>
@@ -2735,8 +2735,8 @@ new approach</p></li>
       <th>10</th>
       <td>0.005</td>
       <td>0.003</td>
-      <td>0.068</td>
-      <td>0.030</td>
+      <td>0.059</td>
+      <td>0.020</td>
       <td>0.773</td>
       <td>0.100</td>
       <td>0.752</td>
@@ -2754,10 +2754,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.061</td>
-      <td>0.024</td>
+      <td>0.062</td>
+      <td>0.019</td>
       <td>0.816</td>
       <td>0.086</td>
       <td>0.816</td>
@@ -2775,10 +2775,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.059</td>
-      <td>0.023</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.056</td>
+      <td>0.017</td>
       <td>0.816</td>
       <td>0.087</td>
       <td>0.820</td>
@@ -2796,10 +2796,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.057</td>
-      <td>0.019</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.060</td>
+      <td>0.023</td>
       <td>0.840</td>
       <td>0.086</td>
       <td>0.799</td>
@@ -2817,10 +2817,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.056</td>
-      <td>0.014</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.061</td>
+      <td>0.021</td>
       <td>0.840</td>
       <td>0.089</td>
       <td>0.801</td>
@@ -2838,10 +2838,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.006</td>
       <td>0.005</td>
+      <td>0.003</td>
       <td>0.066</td>
-      <td>0.026</td>
+      <td>0.024</td>
       <td>0.840</td>
       <td>0.090</td>
       <td>0.797</td>
@@ -2879,21 +2879,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 986.90it/s]
-100%|██████████| 2/2 [00:00&lt;00:00, 21.26it/s]
-100%|██████████| 3/3 [00:00&lt;00:00, 15.44it/s]
-100%|██████████| 4/4 [00:00&lt;00:00, 12.18it/s]
-100%|██████████| 5/5 [00:00&lt;00:00, 14.66it/s]
-100%|██████████| 6/6 [00:00&lt;00:00, 16.87it/s]
-100%|██████████| 7/7 [00:00&lt;00:00, 17.64it/s]
-100%|██████████| 8/8 [00:00&lt;00:00, 14.67it/s]
-100%|██████████| 9/9 [00:00&lt;00:00, 13.35it/s]
-100%|██████████| 10/10 [00:00&lt;00:00, 10.83it/s]
-100%|██████████| 11/11 [00:00&lt;00:00, 13.65it/s]
-100%|██████████| 12/12 [00:00&lt;00:00, 12.81it/s]
-100%|██████████| 13/13 [00:00&lt;00:00, 13.38it/s]
-100%|██████████| 14/14 [00:01&lt;00:00, 12.90it/s]
-100%|██████████| 15/15 [00:01&lt;00:00, 11.68it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 927.33it/s]
+100%|██████████| 2/2 [00:00&lt;00:00, 25.46it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 13.39it/s]
+100%|██████████| 4/4 [00:00&lt;00:00, 10.81it/s]
+100%|██████████| 5/5 [00:00&lt;00:00, 17.44it/s]
+100%|██████████| 6/6 [00:00&lt;00:00, 18.71it/s]
+100%|██████████| 7/7 [00:00&lt;00:00, 18.80it/s]
+100%|██████████| 8/8 [00:00&lt;00:00, 14.05it/s]
+100%|██████████| 9/9 [00:00&lt;00:00, 14.13it/s]
+100%|██████████| 10/10 [00:00&lt;00:00, 11.06it/s]
+100%|██████████| 11/11 [00:00&lt;00:00, 15.34it/s]
+100%|██████████| 12/12 [00:01&lt;00:00, 11.68it/s]
+100%|██████████| 13/13 [00:01&lt;00:00, 12.31it/s]
+100%|██████████| 14/14 [00:01&lt;00:00, 11.03it/s]
+100%|██████████| 15/15 [00:01&lt;00:00,  9.50it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2974,10 +2974,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.003</td>
-      <td>0.066</td>
-      <td>0.026</td>
+      <td>0.071</td>
+      <td>0.028</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2995,10 +2995,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.006</td>
-      <td>0.008</td>
-      <td>0.078</td>
-      <td>0.030</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.068</td>
+      <td>0.028</td>
       <td>0.759</td>
       <td>0.123</td>
       <td>0.409</td>
@@ -3016,10 +3016,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.006</td>
+      <td>0.007</td>
       <td>0.005</td>
-      <td>0.073</td>
-      <td>0.030</td>
+      <td>0.071</td>
+      <td>0.029</td>
       <td>0.745</td>
       <td>0.122</td>
       <td>0.382</td>
@@ -3037,10 +3037,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.007</td>
       <td>0.005</td>
-      <td>0.066</td>
-      <td>0.023</td>
+      <td>0.003</td>
+      <td>0.067</td>
+      <td>0.026</td>
       <td>0.691</td>
       <td>0.094</td>
       <td>0.457</td>
@@ -3059,9 +3059,9 @@ new approach</p></li>
     <tr>
       <th>5</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.050</td>
-      <td>0.008</td>
+      <td>0.000</td>
+      <td>0.049</td>
+      <td>0.012</td>
       <td>0.708</td>
       <td>0.106</td>
       <td>0.470</td>
@@ -3080,8 +3080,8 @@ new approach</p></li>
     <tr>
       <th>6</th>
       <td>0.003</td>
-      <td>0.002</td>
-      <td>0.040</td>
+      <td>0.001</td>
+      <td>0.037</td>
       <td>0.010</td>
       <td>0.698</td>
       <td>0.119</td>
@@ -3100,10 +3100,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.004</td>
+      <td>0.003</td>
       <td>0.002</td>
-      <td>0.041</td>
-      <td>0.009</td>
+      <td>0.032</td>
+      <td>0.012</td>
       <td>0.704</td>
       <td>0.109</td>
       <td>0.491</td>
@@ -3123,8 +3123,8 @@ new approach</p></li>
       <th>8</th>
       <td>0.004</td>
       <td>0.002</td>
-      <td>0.049</td>
-      <td>0.009</td>
+      <td>0.046</td>
+      <td>0.010</td>
       <td>0.690</td>
       <td>0.101</td>
       <td>0.548</td>
@@ -3142,10 +3142,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.005</td>
-      <td>0.007</td>
-      <td>0.056</td>
-      <td>0.023</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.047</td>
+      <td>0.011</td>
       <td>0.738</td>
       <td>0.103</td>
       <td>0.584</td>
@@ -3163,10 +3163,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.053</td>
-      <td>0.018</td>
+      <td>0.006</td>
+      <td>0.004</td>
+      <td>0.073</td>
+      <td>0.030</td>
       <td>0.754</td>
       <td>0.101</td>
       <td>0.613</td>
@@ -3186,8 +3186,8 @@ new approach</p></li>
       <th>11</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.062</td>
-      <td>0.022</td>
+      <td>0.066</td>
+      <td>0.023</td>
       <td>0.757</td>
       <td>0.098</td>
       <td>0.651</td>
@@ -3207,7 +3207,7 @@ new approach</p></li>
       <th>12</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.060</td>
+      <td>0.061</td>
       <td>0.019</td>
       <td>0.771</td>
       <td>0.104</td>
@@ -3228,8 +3228,8 @@ new approach</p></li>
       <th>13</th>
       <td>0.005</td>
       <td>0.003</td>
-      <td>0.068</td>
-      <td>0.027</td>
+      <td>0.064</td>
+      <td>0.023</td>
       <td>0.790</td>
       <td>0.092</td>
       <td>0.660</td>
@@ -3248,9 +3248,9 @@ new approach</p></li>
     <tr>
       <th>14</th>
       <td>0.005</td>
-      <td>0.004</td>
-      <td>0.065</td>
-      <td>0.023</td>
+      <td>0.003</td>
+      <td>0.052</td>
+      <td>0.010</td>
       <td>0.781</td>
       <td>0.091</td>
       <td>0.643</td>
@@ -3268,10 +3268,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.004</td>
-      <td>0.000</td>
+      <td>0.005</td>
+      <td>0.002</td>
       <td>0.051</td>
-      <td>0.009</td>
+      <td>0.010</td>
       <td>0.773</td>
       <td>0.095</td>
       <td>0.648</td>
@@ -3338,49 +3338,49 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>fit_time</th>
-      <td>10</td>
-      <td>5</td>
-      <td>4</td>
+      <td>14</td>
+      <td>1</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>score_time</th>
+      <td>13</td>
+      <td>4</td>
       <td>10</td>
-      <td>3</td>
-      <td>2</td>
     </tr>
     <tr>
       <th>test_precision</th>
-      <td>11</td>
+      <td>1</td>
       <td>13</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_recall</th>
-      <td>9</td>
+      <td>10</td>
       <td>12</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_f1</th>
-      <td>9</td>
+      <td>10</td>
       <td>14</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_balanced_accuracy</th>
-      <td>9</td>
+      <td>10</td>
       <td>14</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_roc_auc</th>
-      <td>10</td>
+      <td>9</td>
       <td>13</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_average_precision</th>
-      <td>10</td>
+      <td>9</td>
       <td>13</td>
       <td>13</td>
     </tr>
@@ -3488,7 +3488,7 @@ new approach</p></li>
 <span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1"> all&#39;</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_model_full</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
 <span class="n">splits</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span><span class="n">X_train</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
                 <span class="n">X_test</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">,</span> <span class="n">new_features</span><span class="p">],</span>
@@ -3500,7 +3500,7 @@ new approach</p></li>
 <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1"> new&#39;</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_new</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_model_new</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
 <span class="n">splits_ald</span> <span class="o">=</span> <span class="n">Splits</span><span class="p">(</span>
     <span class="n">X_train</span><span class="o">=</span><span class="n">ald_study</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">],</span>
@@ -3513,15 +3513,15 @@ new approach</p></li>
 <span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ALD study all&#39;</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;results_</span><span class="si">{</span><span class="n">results_ald_full</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.pkl&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_ald_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">results_ald_full</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:06&lt;00:00,  2.15it/s]
-100%|██████████| 13/13 [00:01&lt;00:00, 10.49it/s]
-100%|██████████| 10/10 [00:03&lt;00:00,  2.54it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:04&lt;00:00,  2.92it/s]
+100%|██████████| 13/13 [00:01&lt;00:00,  9.56it/s]
+100%|██████████| 9/9 [00:03&lt;00:00,  2.75it/s]
 </pre></div>
 </div>
 </div>
@@ -3541,16 +3541,16 @@ new approach</p></li>
 <span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;auc_roc_curve.pdf&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/9c2c9918010cce2a9e357dc6fafce87a8b221fc70acff997bbd2d1eac98b9bf1.png" src="../../../_images/9c2c9918010cce2a9e357dc6fafce87a8b221fc70acff997bbd2d1eac98b9bf1.png" />
+<img alt="../../../_images/0a2746b0dd5591863da2676f53e8696d2b380461761b05a28023df969ff06eea.png" src="../../../_images/0a2746b0dd5591863da2676f53e8696d2b380461761b05a28023df969ff06eea.png" />
 </div>
 </div>
 <p>Data used to plot ROC:</p>
@@ -3625,7 +3625,7 @@ new approach</p></li>
     <tr>
       <th>2</th>
       <td>0.000</td>
-      <td>0.778</td>
+      <td>0.889</td>
       <td>0.000</td>
       <td>0.389</td>
       <td>0.042</td>
@@ -3633,8 +3633,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.208</td>
-      <td>0.778</td>
+      <td>0.333</td>
+      <td>0.889</td>
       <td>0.042</td>
       <td>0.389</td>
       <td>0.083</td>
@@ -3642,8 +3642,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.208</td>
-      <td>0.833</td>
+      <td>0.333</td>
+      <td>0.944</td>
       <td>0.042</td>
       <td>0.500</td>
       <td>0.083</td>
@@ -3651,8 +3651,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.292</td>
-      <td>0.833</td>
+      <td>0.750</td>
+      <td>0.944</td>
       <td>0.125</td>
       <td>0.500</td>
       <td>0.167</td>
@@ -3660,8 +3660,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.292</td>
-      <td>0.944</td>
+      <td>0.750</td>
+      <td>1.000</td>
       <td>0.125</td>
       <td>0.556</td>
       <td>0.167</td>
@@ -3669,8 +3669,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.333</td>
-      <td>0.944</td>
+      <td>1.000</td>
+      <td>1.000</td>
       <td>0.208</td>
       <td>0.556</td>
       <td>0.208</td>
@@ -3678,8 +3678,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.333</td>
-      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>0.208</td>
       <td>0.611</td>
       <td>0.208</td>
@@ -3687,8 +3687,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>1.000</td>
-      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>0.250</td>
       <td>0.611</td>
       <td>0.250</td>
@@ -3873,55 +3873,55 @@ new approach</p></li>
     </tr>
     <tr>
       <th>1</th>
-      <td>Q8NBI6</td>
+      <td>P09417</td>
       <td>B1AN99;P35030;P35030-2;P35030-3;P35030-4;P35030-5</td>
       <td>P51688</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>A0A1B0GV23;A0A1B0GVD5;A0A1B0GWE8;P07339</td>
+      <td>J3KNE3;P68402</td>
       <td>P10636-2;P10636-6</td>
       <td>Q8NFP4;Q8NFP4-2</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>P14174</td>
+      <td>P61981</td>
       <td>P10643</td>
       <td>A0A087WTT8;A0A0A0MQX5;O94779;O94779-2</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>P61981</td>
+      <td>P04075</td>
       <td>P04075</td>
       <td>Q504Y2</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>P04075</td>
+      <td>P14174</td>
       <td>P14174</td>
       <td>Q96GD0</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>Q9Y2T3;Q9Y2T3-3</td>
+      <td>P08294</td>
       <td>P25189;P25189-2</td>
       <td>A0A075B7B8</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>P00338;P00338-3</td>
+      <td>Q9Y2T3;Q9Y2T3-3</td>
       <td>P61981</td>
       <td>J3KSJ8;Q9UD71;Q9UD71-2</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>C9JF17;P05090</td>
+      <td>P00338;P00338-3</td>
       <td>P00338;P00338-3</td>
       <td>A6PVN5;F6WIT2;Q15257;Q15257-2;Q15257-3</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>Q6EMK4</td>
+      <td>None</td>
       <td>P00492</td>
       <td>A0A0J9YW36;Q9NZ72;Q9NZ72-2</td>
     </tr>
@@ -3964,16 +3964,16 @@ new approach</p></li>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;prec_recall_curve.pdf&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/6edf1168e44d75d9e979cd75513e49a90e55c0bb5de513d514a5fa1e6f6ddbde.png" src="../../../_images/6edf1168e44d75d9e979cd75513e49a90e55c0bb5de513d514a5fa1e6f6ddbde.png" />
+<img alt="../../../_images/578333338b35ae086ac13679c91f1a5a6005956238770915625d1254d7d4f5de.png" src="../../../_images/578333338b35ae086ac13679c91f1a5a6005956238770915625d1254d7d4f5de.png" />
 </div>
 </div>
 <p>Data used to plot PRC:</p>
@@ -4090,8 +4090,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.514</td>
-      <td>1.000</td>
+      <td>0.486</td>
+      <td>0.944</td>
       <td>0.514</td>
       <td>1.000</td>
       <td>0.457</td>
@@ -4099,8 +4099,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.529</td>
-      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.944</td>
       <td>0.529</td>
       <td>1.000</td>
       <td>0.471</td>
@@ -4108,8 +4108,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.545</td>
-      <td>1.000</td>
+      <td>0.515</td>
+      <td>0.944</td>
       <td>0.515</td>
       <td>0.944</td>
       <td>0.455</td>
@@ -4117,8 +4117,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.562</td>
-      <td>1.000</td>
+      <td>0.531</td>
+      <td>0.944</td>
       <td>0.531</td>
       <td>0.944</td>
       <td>0.438</td>
@@ -4126,8 +4126,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.581</td>
-      <td>1.000</td>
+      <td>0.548</td>
+      <td>0.944</td>
       <td>0.548</td>
       <td>0.944</td>
       <td>0.419</td>
@@ -4135,8 +4135,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.600</td>
-      <td>1.000</td>
+      <td>0.567</td>
+      <td>0.944</td>
       <td>0.567</td>
       <td>0.944</td>
       <td>0.433</td>
@@ -4144,8 +4144,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.621</td>
-      <td>1.000</td>
+      <td>0.586</td>
+      <td>0.944</td>
       <td>0.586</td>
       <td>0.944</td>
       <td>0.414</td>
@@ -4153,8 +4153,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.643</td>
-      <td>1.000</td>
+      <td>0.607</td>
+      <td>0.944</td>
       <td>0.607</td>
       <td>0.944</td>
       <td>0.429</td>
@@ -4162,8 +4162,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.667</td>
-      <td>1.000</td>
+      <td>0.630</td>
+      <td>0.944</td>
       <td>0.593</td>
       <td>0.889</td>
       <td>0.444</td>
@@ -4171,8 +4171,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>16</th>
-      <td>0.692</td>
-      <td>1.000</td>
+      <td>0.654</td>
+      <td>0.944</td>
       <td>0.615</td>
       <td>0.889</td>
       <td>0.462</td>
@@ -4189,8 +4189,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>18</th>
-      <td>0.708</td>
-      <td>0.944</td>
+      <td>0.667</td>
+      <td>0.889</td>
       <td>0.667</td>
       <td>0.889</td>
       <td>0.458</td>
@@ -4207,8 +4207,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>20</th>
-      <td>0.682</td>
-      <td>0.833</td>
+      <td>0.727</td>
+      <td>0.889</td>
       <td>0.727</td>
       <td>0.889</td>
       <td>0.500</td>
@@ -4216,8 +4216,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>21</th>
-      <td>0.714</td>
-      <td>0.833</td>
+      <td>0.762</td>
+      <td>0.889</td>
       <td>0.714</td>
       <td>0.833</td>
       <td>0.524</td>
@@ -4225,8 +4225,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>22</th>
-      <td>0.750</td>
-      <td>0.833</td>
+      <td>0.800</td>
+      <td>0.889</td>
       <td>0.700</td>
       <td>0.778</td>
       <td>0.550</td>
@@ -4234,8 +4234,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>23</th>
-      <td>0.737</td>
-      <td>0.778</td>
+      <td>0.842</td>
+      <td>0.889</td>
       <td>0.684</td>
       <td>0.722</td>
       <td>0.579</td>
@@ -4243,8 +4243,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>24</th>
-      <td>0.778</td>
-      <td>0.778</td>
+      <td>0.889</td>
+      <td>0.889</td>
       <td>0.667</td>
       <td>0.667</td>
       <td>0.611</td>
@@ -4252,8 +4252,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>25</th>
-      <td>0.824</td>
-      <td>0.778</td>
+      <td>0.941</td>
+      <td>0.889</td>
       <td>0.647</td>
       <td>0.611</td>
       <td>0.588</td>
@@ -4261,8 +4261,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>26</th>
-      <td>0.875</td>
-      <td>0.778</td>
+      <td>1.000</td>
+      <td>0.889</td>
       <td>0.688</td>
       <td>0.611</td>
       <td>0.562</td>
@@ -4270,8 +4270,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>27</th>
-      <td>0.933</td>
-      <td>0.778</td>
+      <td>1.000</td>
+      <td>0.833</td>
       <td>0.667</td>
       <td>0.556</td>
       <td>0.600</td>
@@ -4434,16 +4434,16 @@ new approach</p></li>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_split_prc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;prec_recall_curve_train.pdf&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve_train.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/24be4102f2ca673f5f0e2bdc0f9a63053aed449029d8cb9303c85c9de8523435.png" src="../../../_images/24be4102f2ca673f5f0e2bdc0f9a63053aed449029d8cb9303c85c9de8523435.png" />
+<img alt="../../../_images/adead35cdc7a2006c92d8db180c822b0af896ba2168b75d90d1225034f00c950.png" src="../../../_images/adead35cdc7a2006c92d8db180c822b0af896ba2168b75d90d1225034f00c950.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4459,16 +4459,16 @@ new approach</p></li>
 <span class="n">plot_split_auc</span><span class="p">(</span><span class="n">results_model_new</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">results_model_new</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">folder</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="s1">&#39;auc_roc_curve_train.pdf&#39;</span>
 <span class="n">files_out</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve_train.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/62bb8b8bcb927c42c8b24ea5bd14f04478a9ce6f96e788c0631b59006eb8229d.png" src="../../../_images/62bb8b8bcb927c42c8b24ea5bd14f04478a9ce6f96e788c0631b59006eb8229d.png" />
+<img alt="../../../_images/84e64773e929900c10c5beae250a61913c34873e53a1f96f026ad13a14709dde.png" src="../../../_images/84e64773e929900c10c5beae250a61913c34873e53a1f96f026ad13a14709dde.png" />
 </div>
 </div>
 <p>Output files:</p>

@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Compare outcomes from differential analysis based on different imputation methods &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
+    <title>Compare outcomes from differential analysis based on different imputation methods &#8212; pimms_workflow 0.1.dev1+gd9e211d documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gd9e211d documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -436,14 +436,14 @@ document.write(`
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.databases.diseases</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.databases.diseases</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="n">fontsize</span><span class="p">)</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
 <span class="c1"># catch passed parameters</span>
@@ -496,10 +496,10 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;folder_experiment&quot;</span><span class="p">])</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">add_default_paths</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
                                  <span class="n">out_root</span><span class="o">=</span><span class="p">(</span>
                                      <span class="n">args</span><span class="o">.</span><span class="n">folder_experiment</span>
                                      <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;out_folder&quot;</span><span class="p">]</span>
@@ -644,57 +644,57 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.253</td>
+      <td>0.396</td>
       <td>1</td>
-      <td>0.412</td>
-      <td>0.522</td>
-      <td>0.002</td>
-      <td>0.282</td>
-      <td>0.671</td>
+      <td>0.614</td>
+      <td>0.434</td>
+      <td>0.003</td>
+      <td>0.362</td>
+      <td>0.595</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
       <td>0.058</td>
       <td>1</td>
-      <td>0.094</td>
-      <td>0.759</td>
+      <td>0.090</td>
+      <td>0.764</td>
       <td>0.000</td>
-      <td>0.120</td>
+      <td>0.117</td>
       <td>0.852</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>2.129</td>
+      <td>2.158</td>
       <td>1</td>
-      <td>3.465</td>
-      <td>0.064</td>
-      <td>0.018</td>
-      <td>1.192</td>
-      <td>0.148</td>
+      <td>3.345</td>
+      <td>0.069</td>
+      <td>0.017</td>
+      <td>1.161</td>
+      <td>0.157</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>5.844</td>
+      <td>5.616</td>
       <td>1</td>
-      <td>9.511</td>
-      <td>0.002</td>
-      <td>0.047</td>
-      <td>2.630</td>
-      <td>0.010</td>
+      <td>8.704</td>
+      <td>0.004</td>
+      <td>0.044</td>
+      <td>2.447</td>
+      <td>0.015</td>
       <td>True</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>10.579</td>
+      <td>8.810</td>
       <td>1</td>
-      <td>17.218</td>
+      <td>13.654</td>
       <td>0.000</td>
-      <td>0.083</td>
-      <td>4.300</td>
-      <td>0.000</td>
+      <td>0.067</td>
+      <td>3.542</td>
+      <td>0.002</td>
       <td>True</td>
     </tr>
     <tr>
@@ -712,56 +712,56 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>0.187</td>
+      <td>0.799</td>
       <td>1</td>
-      <td>0.207</td>
-      <td>0.650</td>
-      <td>0.001</td>
-      <td>0.187</td>
-      <td>0.774</td>
+      <td>0.966</td>
+      <td>0.327</td>
+      <td>0.005</td>
+      <td>0.485</td>
+      <td>0.494</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.261</td>
+      <td>1.261</td>
       <td>1</td>
-      <td>0.289</td>
-      <td>0.592</td>
-      <td>0.002</td>
-      <td>0.228</td>
-      <td>0.725</td>
+      <td>1.523</td>
+      <td>0.219</td>
+      <td>0.008</td>
+      <td>0.660</td>
+      <td>0.371</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.001</td>
+      <td>0.022</td>
       <td>1</td>
-      <td>0.001</td>
-      <td>0.981</td>
+      <td>0.027</td>
+      <td>0.871</td>
       <td>0.000</td>
-      <td>0.008</td>
-      <td>0.989</td>
+      <td>0.060</td>
+      <td>0.923</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>1.122</td>
+      <td>1.176</td>
       <td>1</td>
-      <td>1.239</td>
-      <td>0.267</td>
-      <td>0.006</td>
-      <td>0.573</td>
-      <td>0.426</td>
+      <td>1.420</td>
+      <td>0.235</td>
+      <td>0.007</td>
+      <td>0.629</td>
+      <td>0.392</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>18.255</td>
+      <td>15.880</td>
       <td>1</td>
-      <td>20.165</td>
+      <td>19.179</td>
       <td>0.000</td>
-      <td>0.095</td>
-      <td>4.911</td>
+      <td>0.091</td>
+      <td>4.708</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -1047,9 +1047,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>1.907</td>
       <td>0.039</td>
       <td>True</td>
-      <td>0.522</td>
-      <td>0.282</td>
-      <td>0.671</td>
+      <td>0.434</td>
+      <td>0.362</td>
+      <td>0.595</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1058,8 +1058,8 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.027</td>
       <td>0.966</td>
       <td>False</td>
-      <td>0.759</td>
-      <td>0.120</td>
+      <td>0.764</td>
+      <td>0.117</td>
       <td>0.852</td>
       <td>False</td>
     </tr>
@@ -1069,9 +1069,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.435</td>
       <td>0.532</td>
       <td>False</td>
-      <td>0.064</td>
-      <td>1.192</td>
-      <td>0.148</td>
+      <td>0.069</td>
+      <td>1.161</td>
+      <td>0.157</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1080,9 +1080,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.707</td>
       <td>0.343</td>
       <td>False</td>
-      <td>0.002</td>
-      <td>2.630</td>
-      <td>0.010</td>
+      <td>0.004</td>
+      <td>2.447</td>
+      <td>0.015</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1092,8 +1092,8 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.016</td>
       <td>True</td>
       <td>0.000</td>
-      <td>4.300</td>
-      <td>0.000</td>
+      <td>3.542</td>
+      <td>0.002</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1115,9 +1115,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.136</td>
       <td>0.829</td>
       <td>False</td>
-      <td>0.650</td>
-      <td>0.187</td>
-      <td>0.774</td>
+      <td>0.327</td>
+      <td>0.485</td>
+      <td>0.494</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1126,9 +1126,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>1.030</td>
       <td>0.194</td>
       <td>False</td>
-      <td>0.592</td>
-      <td>0.228</td>
-      <td>0.725</td>
+      <td>0.219</td>
+      <td>0.660</td>
+      <td>0.371</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1137,9 +1137,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.804</td>
       <td>0.289</td>
       <td>False</td>
-      <td>0.981</td>
-      <td>0.008</td>
-      <td>0.989</td>
+      <td>0.871</td>
+      <td>0.060</td>
+      <td>0.923</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1148,9 +1148,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.321</td>
       <td>0.631</td>
       <td>False</td>
-      <td>0.267</td>
-      <td>0.573</td>
-      <td>0.426</td>
+      <td>0.235</td>
+      <td>0.629</td>
+      <td>0.392</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1160,7 +1160,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.011</td>
       <td>True</td>
       <td>0.000</td>
-      <td>4.911</td>
+      <td>4.708</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -1177,8 +1177,8 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
-    <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">index_to_dict</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">Config</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+    <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">index_to_dict</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
 <span class="nb">vars</span><span class="p">(</span><span class="n">models</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1254,17 +1254,17 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>2.475</td>
       <td>0.334</td>
       <td>0.261</td>
-      <td>2.477</td>
-      <td>0.337</td>
+      <td>2.476</td>
+      <td>0.338</td>
     </tr>
     <tr>
       <th>std</th>
       <td>0.303</td>
       <td>4.536</td>
       <td>0.332</td>
-      <td>0.303</td>
-      <td>5.344</td>
-      <td>0.331</td>
+      <td>0.302</td>
+      <td>5.332</td>
+      <td>0.330</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1281,26 +1281,26 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.332</td>
       <td>0.013</td>
       <td>0.004</td>
-      <td>0.328</td>
-      <td>0.015</td>
+      <td>0.329</td>
+      <td>0.016</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>0.114</td>
       <td>0.943</td>
       <td>0.228</td>
-      <td>0.123</td>
-      <td>0.912</td>
-      <td>0.245</td>
+      <td>0.120</td>
+      <td>0.922</td>
+      <td>0.239</td>
     </tr>
     <tr>
       <th>75%</th>
       <td>0.465</td>
       <td>2.503</td>
       <td>0.620</td>
-      <td>0.469</td>
-      <td>2.414</td>
-      <td>0.626</td>
+      <td>0.468</td>
+      <td>2.404</td>
+      <td>0.624</td>
     </tr>
     <tr>
       <th>max</th>
@@ -1308,7 +1308,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>57.961</td>
       <td>1.000</td>
       <td>1.000</td>
-      <td>145.647</td>
+      <td>145.087</td>
       <td>1.000</td>
     </tr>
   </tbody>
@@ -1391,9 +1391,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>1.907</td>
       <td>0.039</td>
       <td>True</td>
-      <td>0.522</td>
-      <td>0.282</td>
-      <td>0.671</td>
+      <td>0.434</td>
+      <td>0.362</td>
+      <td>0.595</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1403,9 +1403,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>1.478</td>
       <td>0.087</td>
       <td>False</td>
-      <td>0.057</td>
-      <td>1.246</td>
-      <td>0.134</td>
+      <td>0.055</td>
+      <td>1.256</td>
+      <td>0.132</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1415,9 +1415,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.133</td>
       <td>0.832</td>
       <td>False</td>
-      <td>0.055</td>
-      <td>1.260</td>
       <td>0.131</td>
+      <td>0.884</td>
+      <td>0.255</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1427,9 +1427,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.587</td>
       <td>0.418</td>
       <td>False</td>
-      <td>0.590</td>
-      <td>0.229</td>
-      <td>0.724</td>
+      <td>0.518</td>
+      <td>0.286</td>
+      <td>0.666</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1439,9 +1439,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>1.278</td>
       <td>0.124</td>
       <td>False</td>
-      <td>0.121</td>
-      <td>0.918</td>
-      <td>0.242</td>
+      <td>0.147</td>
+      <td>0.831</td>
+      <td>0.279</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1465,7 +1465,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>False</td>
       <td>0.175</td>
       <td>0.756</td>
-      <td>0.315</td>
+      <td>0.317</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1475,9 +1475,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.536</td>
       <td>0.455</td>
       <td>False</td>
-      <td>0.047</td>
-      <td>1.327</td>
-      <td>0.116</td>
+      <td>0.028</td>
+      <td>1.551</td>
+      <td>0.077</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1489,7 +1489,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>False</td>
       <td>0.083</td>
       <td>1.079</td>
-      <td>0.181</td>
+      <td>0.182</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1499,9 +1499,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.284</td>
       <td>0.667</td>
       <td>False</td>
-      <td>0.307</td>
-      <td>0.512</td>
-      <td>0.470</td>
+      <td>0.288</td>
+      <td>0.540</td>
+      <td>0.453</td>
       <td>False</td>
     </tr>
     <tr>
@@ -1511,9 +1511,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
       <td>0.136</td>
       <td>0.829</td>
       <td>False</td>
-      <td>0.650</td>
-      <td>0.187</td>
-      <td>0.774</td>
+      <td>0.327</td>
+      <td>0.485</td>
+      <td>0.494</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -1582,18 +1582,18 @@ of the numeric values:</p>
       <td>0.283</td>
       <td>1.311</td>
       <td>0.368</td>
-      <td>0.251</td>
-      <td>1.399</td>
-      <td>0.334</td>
+      <td>0.256</td>
+      <td>1.397</td>
+      <td>0.339</td>
     </tr>
     <tr>
       <th>std</th>
       <td>0.302</td>
       <td>1.599</td>
       <td>0.325</td>
-      <td>0.289</td>
-      <td>1.639</td>
-      <td>0.314</td>
+      <td>0.293</td>
+      <td>1.635</td>
+      <td>0.318</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1601,7 +1601,7 @@ of the numeric values:</p>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
-      <td>0.001</td>
+      <td>0.000</td>
       <td>0.000</td>
     </tr>
     <tr>
@@ -1610,35 +1610,35 @@ of the numeric values:</p>
       <td>0.310</td>
       <td>0.051</td>
       <td>0.012</td>
-      <td>0.367</td>
-      <td>0.040</td>
+      <td>0.362</td>
+      <td>0.041</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>0.171</td>
       <td>0.767</td>
       <td>0.309</td>
-      <td>0.128</td>
-      <td>0.893</td>
-      <td>0.253</td>
+      <td>0.120</td>
+      <td>0.921</td>
+      <td>0.240</td>
     </tr>
     <tr>
       <th>75%</th>
       <td>0.490</td>
       <td>1.760</td>
       <td>0.640</td>
-      <td>0.430</td>
-      <td>1.909</td>
-      <td>0.590</td>
+      <td>0.435</td>
+      <td>1.904</td>
+      <td>0.596</td>
     </tr>
     <tr>
       <th>max</th>
       <td>1.000</td>
       <td>14.393</td>
       <td>1.000</td>
-      <td>0.998</td>
-      <td>24.117</td>
-      <td>0.999</td>
+      <td>1.000</td>
+      <td>24.061</td>
+      <td>1.000</td>
     </tr>
   </tbody>
 </table>
@@ -1892,9 +1892,9 @@ of the numeric values:</p>
       <td>1.907</td>
       <td>0.039</td>
       <td>True</td>
-      <td>0.522</td>
-      <td>0.282</td>
-      <td>0.671</td>
+      <td>0.434</td>
+      <td>0.362</td>
+      <td>0.595</td>
       <td>False</td>
       <td>186</td>
     </tr>
@@ -1904,9 +1904,9 @@ of the numeric values:</p>
       <td>1.478</td>
       <td>0.087</td>
       <td>False</td>
-      <td>0.057</td>
-      <td>1.246</td>
-      <td>0.134</td>
+      <td>0.055</td>
+      <td>1.256</td>
+      <td>0.132</td>
       <td>False</td>
       <td>195</td>
     </tr>
@@ -1916,9 +1916,9 @@ of the numeric values:</p>
       <td>0.133</td>
       <td>0.832</td>
       <td>False</td>
-      <td>0.055</td>
-      <td>1.260</td>
       <td>0.131</td>
+      <td>0.884</td>
+      <td>0.255</td>
       <td>False</td>
       <td>174</td>
     </tr>
@@ -1928,9 +1928,9 @@ of the numeric values:</p>
       <td>0.587</td>
       <td>0.418</td>
       <td>False</td>
-      <td>0.590</td>
-      <td>0.229</td>
-      <td>0.724</td>
+      <td>0.518</td>
+      <td>0.286</td>
+      <td>0.666</td>
       <td>False</td>
       <td>196</td>
     </tr>
@@ -1940,9 +1940,9 @@ of the numeric values:</p>
       <td>1.278</td>
       <td>0.124</td>
       <td>False</td>
-      <td>0.121</td>
-      <td>0.918</td>
-      <td>0.242</td>
+      <td>0.147</td>
+      <td>0.831</td>
+      <td>0.279</td>
       <td>False</td>
       <td>91</td>
     </tr>
@@ -1966,7 +1966,7 @@ of the numeric values:</p>
       <td>False</td>
       <td>0.175</td>
       <td>0.756</td>
-      <td>0.315</td>
+      <td>0.317</td>
       <td>False</td>
       <td>197</td>
     </tr>
@@ -1976,9 +1976,9 @@ of the numeric values:</p>
       <td>0.536</td>
       <td>0.455</td>
       <td>False</td>
-      <td>0.047</td>
-      <td>1.327</td>
-      <td>0.116</td>
+      <td>0.028</td>
+      <td>1.551</td>
+      <td>0.077</td>
       <td>False</td>
       <td>173</td>
     </tr>
@@ -1990,7 +1990,7 @@ of the numeric values:</p>
       <td>False</td>
       <td>0.083</td>
       <td>1.079</td>
-      <td>0.181</td>
+      <td>0.182</td>
       <td>False</td>
       <td>197</td>
     </tr>
@@ -2000,9 +2000,9 @@ of the numeric values:</p>
       <td>0.284</td>
       <td>0.667</td>
       <td>False</td>
-      <td>0.307</td>
-      <td>0.512</td>
-      <td>0.470</td>
+      <td>0.288</td>
+      <td>0.540</td>
+      <td>0.453</td>
       <td>False</td>
       <td>119</td>
     </tr>
@@ -2012,9 +2012,9 @@ of the numeric values:</p>
       <td>0.136</td>
       <td>0.829</td>
       <td>False</td>
-      <td>0.650</td>
-      <td>0.187</td>
-      <td>0.774</td>
+      <td>0.327</td>
+      <td>0.485</td>
+      <td>0.494</td>
       <td>False</td>
       <td>126</td>
     </tr>
@@ -2053,10 +2053,10 @@ of the numeric values:</p>
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Differential Analysis Comparison
-Median (no)  - PI (no)    974
-Median (yes) - PI (yes)   290
-Median (no)  - PI (yes)    95
-Median (yes) - PI (no)     62
+Median (no)  - PI (no)    971
+Median (yes) - PI (yes)   287
+Median (no)  - PI (yes)    98
+Median (yes) - PI (no)     65
 Name: count, dtype: int64
 </pre></div>
 </div>
@@ -2146,9 +2146,9 @@ Name: count, dtype: int64
       <td>1.907</td>
       <td>0.039</td>
       <td>True</td>
-      <td>0.522</td>
-      <td>0.282</td>
-      <td>0.671</td>
+      <td>0.434</td>
+      <td>0.362</td>
+      <td>0.595</td>
       <td>False</td>
       <td>186</td>
     </tr>
@@ -2158,9 +2158,9 @@ Name: count, dtype: int64
       <td>3.031</td>
       <td>0.004</td>
       <td>True</td>
-      <td>0.021</td>
-      <td>1.669</td>
-      <td>0.063</td>
+      <td>0.030</td>
+      <td>1.526</td>
+      <td>0.081</td>
       <td>False</td>
       <td>194</td>
     </tr>
@@ -2170,9 +2170,9 @@ Name: count, dtype: int64
       <td>2.343</td>
       <td>0.017</td>
       <td>True</td>
-      <td>0.526</td>
-      <td>0.279</td>
-      <td>0.675</td>
+      <td>0.294</td>
+      <td>0.532</td>
+      <td>0.459</td>
       <td>False</td>
       <td>164</td>
     </tr>
@@ -2182,9 +2182,9 @@ Name: count, dtype: int64
       <td>3.270</td>
       <td>0.003</td>
       <td>True</td>
-      <td>0.122</td>
-      <td>0.912</td>
-      <td>0.245</td>
+      <td>0.618</td>
+      <td>0.209</td>
+      <td>0.746</td>
       <td>False</td>
       <td>57</td>
     </tr>
@@ -2194,9 +2194,9 @@ Name: count, dtype: int64
       <td>1.765</td>
       <td>0.051</td>
       <td>False</td>
-      <td>0.016</td>
-      <td>1.795</td>
-      <td>0.050</td>
+      <td>0.000</td>
+      <td>3.621</td>
+      <td>0.001</td>
       <td>True</td>
       <td>114</td>
     </tr>
@@ -2213,26 +2213,26 @@ Name: count, dtype: int64
       <td>...</td>
     </tr>
     <tr>
-      <th>Q9UIB8;Q9UIB8-2;Q9UIB8-3;Q9UIB8-4;Q9UIB8-5;Q9UIB8-6</th>
-      <td>0.291</td>
-      <td>0.536</td>
-      <td>0.455</td>
-      <td>False</td>
-      <td>0.000</td>
-      <td>3.453</td>
-      <td>0.002</td>
-      <td>True</td>
-      <td>115</td>
-    </tr>
-    <tr>
       <th>Q9ULZ9</th>
       <td>0.432</td>
       <td>0.364</td>
       <td>0.591</td>
       <td>False</td>
-      <td>0.000</td>
-      <td>3.668</td>
       <td>0.001</td>
+      <td>3.078</td>
+      <td>0.004</td>
+      <td>True</td>
+      <td>171</td>
+    </tr>
+    <tr>
+      <th>Q9UNW1</th>
+      <td>0.932</td>
+      <td>0.030</td>
+      <td>0.962</td>
+      <td>False</td>
+      <td>0.014</td>
+      <td>1.857</td>
+      <td>0.044</td>
       <td>True</td>
       <td>171</td>
     </tr>
@@ -2242,9 +2242,9 @@ Name: count, dtype: int64
       <td>2.739</td>
       <td>0.008</td>
       <td>True</td>
-      <td>0.323</td>
-      <td>0.491</td>
-      <td>0.485</td>
+      <td>0.233</td>
+      <td>0.632</td>
+      <td>0.390</td>
       <td>False</td>
       <td>135</td>
     </tr>
@@ -2254,9 +2254,9 @@ Name: count, dtype: int64
       <td>0.767</td>
       <td>0.309</td>
       <td>False</td>
-      <td>0.001</td>
-      <td>2.943</td>
-      <td>0.006</td>
+      <td>0.002</td>
+      <td>2.788</td>
+      <td>0.008</td>
       <td>True</td>
       <td>163</td>
     </tr>
@@ -2266,15 +2266,15 @@ Name: count, dtype: int64
       <td>2.922</td>
       <td>0.005</td>
       <td>True</td>
-      <td>0.110</td>
-      <td>0.957</td>
-      <td>0.227</td>
+      <td>0.104</td>
+      <td>0.983</td>
+      <td>0.216</td>
       <td>False</td>
       <td>188</td>
     </tr>
   </tbody>
 </table>
-<p>157 rows × 9 columns</p>
+<p>163 rows × 9 columns</p>
 </div></div></div>
 </div>
 </section>
@@ -2337,35 +2337,35 @@ Name: count, dtype: int64
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <td>0.039</td>
-      <td>0.671</td>
+      <td>0.595</td>
       <td>186</td>
       <td>Median (yes) - PI (no)</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <td>0.087</td>
-      <td>0.134</td>
+      <td>0.132</td>
       <td>195</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <td>0.832</td>
-      <td>0.131</td>
+      <td>0.255</td>
       <td>174</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <td>0.418</td>
-      <td>0.724</td>
+      <td>0.666</td>
       <td>196</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <td>0.124</td>
-      <td>0.242</td>
+      <td>0.279</td>
       <td>91</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
@@ -2379,35 +2379,35 @@ Name: count, dtype: int64
     <tr>
       <th>Q9Y6R7</th>
       <td>0.315</td>
-      <td>0.315</td>
+      <td>0.317</td>
       <td>197</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <td>0.455</td>
-      <td>0.116</td>
+      <td>0.077</td>
       <td>173</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
       <td>0.178</td>
-      <td>0.181</td>
+      <td>0.182</td>
       <td>197</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
       <td>0.667</td>
-      <td>0.470</td>
+      <td>0.453</td>
       <td>119</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <td>0.829</td>
-      <td>0.774</td>
+      <td>0.494</td>
       <td>126</td>
       <td>Median (no)  - PI (no)</td>
     </tr>
@@ -2467,44 +2467,44 @@ Name: count, dtype: int64
   </thead>
   <tbody>
     <tr>
-      <th>Q6NUJ2</th>
-      <td>0.972</td>
-      <td>0.002</td>
-      <td>165</td>
-      <td>Median (no)  - PI (yes)</td>
-      <td>0.970</td>
+      <th>A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2</th>
+      <td>0.012</td>
+      <td>0.973</td>
+      <td>134</td>
+      <td>Median (yes) - PI (no)</td>
+      <td>0.961</td>
     </tr>
     <tr>
-      <th>B1AJZ9;B1AJZ9-4;H0YE38;Q5JYW6</th>
-      <td>0.045</td>
-      <td>0.982</td>
-      <td>68</td>
-      <td>Median (yes) - PI (no)</td>
-      <td>0.937</td>
+      <th>Q6P4E1;Q6P4E1-4;Q6P4E1-5</th>
+      <td>0.978</td>
+      <td>0.037</td>
+      <td>178</td>
+      <td>Median (no)  - PI (yes)</td>
+      <td>0.941</td>
     </tr>
     <tr>
       <th>P52758</th>
       <td>0.937</td>
-      <td>0.004</td>
+      <td>0.001</td>
       <td>119</td>
       <td>Median (no)  - PI (yes)</td>
-      <td>0.933</td>
-    </tr>
-    <tr>
-      <th>P55268</th>
-      <td>0.021</td>
-      <td>0.933</td>
-      <td>194</td>
-      <td>Median (yes) - PI (no)</td>
-      <td>0.912</td>
+      <td>0.936</td>
     </tr>
     <tr>
       <th>A0A140T9S5;Q9Y334;Q9Y334-2</th>
       <td>0.045</td>
-      <td>0.941</td>
+      <td>0.974</td>
       <td>92</td>
       <td>Median (yes) - PI (no)</td>
-      <td>0.897</td>
+      <td>0.930</td>
+    </tr>
+    <tr>
+      <th>Q9UNW1</th>
+      <td>0.962</td>
+      <td>0.044</td>
+      <td>171</td>
+      <td>Median (no)  - PI (yes)</td>
+      <td>0.918</td>
     </tr>
     <tr>
       <th>...</th>
@@ -2515,48 +2515,48 @@ Name: count, dtype: int64
       <td>...</td>
     </tr>
     <tr>
-      <th>Q9BUJ0</th>
-      <td>0.045</td>
-      <td>0.062</td>
-      <td>185</td>
+      <th>E9PF59;P42658;P42658-2</th>
+      <td>0.026</td>
+      <td>0.053</td>
+      <td>189</td>
       <td>Median (yes) - PI (no)</td>
-      <td>0.017</td>
-    </tr>
-    <tr>
-      <th>Q9P2E7;Q9P2E7-2</th>
-      <td>0.058</td>
-      <td>0.043</td>
-      <td>196</td>
-      <td>Median (no)  - PI (yes)</td>
-      <td>0.016</td>
-    </tr>
-    <tr>
-      <th>P26572</th>
-      <td>0.058</td>
-      <td>0.048</td>
-      <td>194</td>
-      <td>Median (no)  - PI (yes)</td>
-      <td>0.010</td>
-    </tr>
-    <tr>
-      <th>A0A087WTT8;A0A0A0MQX5;O94779;O94779-2</th>
-      <td>0.051</td>
-      <td>0.050</td>
-      <td>114</td>
-      <td>Median (no)  - PI (yes)</td>
-      <td>0.001</td>
+      <td>0.027</td>
     </tr>
     <tr>
       <th>A0A087X0M8</th>
       <td>0.049</td>
-      <td>0.050</td>
+      <td>0.068</td>
       <td>189</td>
       <td>Median (yes) - PI (no)</td>
-      <td>0.001</td>
+      <td>0.019</td>
+    </tr>
+    <tr>
+      <th>P11362;P11362-2;P11362-20;P11362-8;P11362-9</th>
+      <td>0.036</td>
+      <td>0.050</td>
+      <td>195</td>
+      <td>Median (yes) - PI (no)</td>
+      <td>0.014</td>
+    </tr>
+    <tr>
+      <th>Q9P2E7;Q9P2E7-2</th>
+      <td>0.058</td>
+      <td>0.047</td>
+      <td>196</td>
+      <td>Median (no)  - PI (yes)</td>
+      <td>0.011</td>
+    </tr>
+    <tr>
+      <th>Q9BUJ0</th>
+      <td>0.045</td>
+      <td>0.055</td>
+      <td>185</td>
+      <td>Median (yes) - PI (no)</td>
+      <td>0.010</td>
     </tr>
   </tbody>
 </table>
-<p>157 rows × 5 columns</p>
+<p>163 rows × 5 columns</p>
 </div></div></div>
 </div>
 <section id="differences-plotted-with-created-annotations">
@@ -2593,16 +2593,16 @@ Name: count, dtype: int64
     <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span>
     <span class="sa">f</span><span class="s1">&#39;diff_analysis_comparision_1_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">files_out</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;diff_analysis_comparision_1_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/diff_analysis_comparision_1_Median
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/diff_analysis_comparision_1_Median
 </pre></div>
 </div>
-<img alt="../../../_images/ff6a2879832c24d12b12f0f697261475053ebfafd44820bb140142e115860832.png" src="../../../_images/ff6a2879832c24d12b12f0f697261475053ebfafd44820bb140142e115860832.png" />
+<img alt="../../../_images/b43866472be05ea9d4f678cf9c88f78a0111a5e9b03a00f2fc51fbdf60bd7873.png" src="../../../_images/b43866472be05ea9d4f678cf9c88f78a0111a5e9b03a00f2fc51fbdf60bd7873.png" />
 </div>
 </div>
 <ul class="simple">
@@ -2635,17 +2635,17 @@ Name: count, dtype: int64
 <span class="n">sns</span><span class="o">.</span><span class="n">move_legend</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
 <span class="n">files_out</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;diff_analysis_comparision_2_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">args</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;diff_analysis_comparision_2_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">files_out</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;diff_analysis_comparision_2_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/diff_analysis_comparision_2_Median
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/diff_analysis_comparision_2_Median
 </pre></div>
 </div>
-<img alt="../../../_images/cf3b879e45f6fa024f2fcb23a1e919d3dcda903aceb9ac5bf1eefdb70d941f72.png" src="../../../_images/cf3b879e45f6fa024f2fcb23a1e919d3dcda903aceb9ac5bf1eefdb70d941f72.png" />
+<img alt="../../../_images/03327aa06a9b69826ee16060c39fa5f1c631562c2ba790dc1f65565e81e313df.png" src="../../../_images/03327aa06a9b69826ee16060c39fa5f1c631562c2ba790dc1f65565e81e313df.png" />
 </div>
 </div>
 </section>
@@ -2705,7 +2705,7 @@ Name: count, dtype: int64
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">diseases</span><span class="o">.</span><span class="n">get_disease_association</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">diseases</span><span class="o">.</span><span class="n">get_disease_association</span><span class="p">(</span>
     <span class="n">doid</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">disease_ontology</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s1">&#39;ENSP&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">annotaitons_gene_col</span><span class="p">})</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
@@ -2829,7 +2829,7 @@ Name: count, dtype: int64
 </details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     No gene annotation in scores index:  [&#39;protein groups&#39;, &#39;Source&#39;] Exiting.
-/usr/share/miniconda3/envs/vaep/lib/python3.8/site-packages/IPython/core/interactiveshell.py:3516: UserWarning: To exit: use &#39;exit&#39;, &#39;quit&#39;, or Ctrl-D.
+/usr/share/miniconda3/envs/pimms/lib/python3.8/site-packages/IPython/core/interactiveshell.py:3516: UserWarning: To exit: use &#39;exit&#39;, &#39;quit&#39;, or Ctrl-D.
   warn(&quot;To exit: use &#39;exit&#39;, &#39;quit&#39;, or Ctrl-D.&quot;, stacklevel=1)
 </pre></div>
 </div>

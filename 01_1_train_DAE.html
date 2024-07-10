@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Denoising Autoencoder &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
+    <title>Denoising Autoencoder &#8212; pimms_workflow 0.1.dev1+gd9e211d documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gd9e211d documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -428,18 +428,18 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.model</span>
-<span class="kn">import</span> <span class="nn">vaep.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="kn">from</span> <span class="nn">vaep.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
-<span class="kn">from</span> <span class="nn">vaep.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.model</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="c1"># overwriting Recorder callback with custom plot_loss</span>
-<span class="kn">from</span> <span class="nn">vaep.models</span> <span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.models</span> <span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
 
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;vaep&#39;</span><span class="p">))</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pimmslearn&#39;</span><span class="p">))</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
     <span class="s2">&quot;Experiment 03 - Analysis of latent spaces and performance comparisions&quot;</span><span class="p">)</span>
 
@@ -449,7 +449,7 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn - INFO     Experiment 03 - Analysis of latent spaces and performance comparisions
 </pre></div>
 </div>
 </div>
@@ -528,7 +528,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span>
 </pre></div>
 </div>
@@ -562,7 +562,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">hidden_layers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">args</span><span class="o">.</span><span class="n">overwrite_entry</span><span class="p">(</span><span class="s2">&quot;hidden_layers&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -632,9 +632,9 @@ document.write(`
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -653,12 +653,12 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups        
-Sample_002  Q9ULP0-3;Q9ULP0-6        15.393
-Sample_190  Q9NPC4                   14.732
-Sample_021  G3XAP6;P49747;P49747-2   15.855
-Sample_158  A0A0C4DH31               15.602
-Sample_199  B3KTY4;Q9H156;Q9H156-2    9.181
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
+Sample_017  O60888;O60888-2;O60888-3   18.207
+Sample_006  A0A0J9YW40                 14.720
+Sample_208  A0A0G2JPR0                 19.484
+Sample_063  Q9NY15                     15.165
+Sample_061  Q9NPH3;Q9NPH3-2;Q9NPH3-5   15.657
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -691,7 +691,7 @@ Name: intensity, dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn - INFO     sample_id = &#39;Sample ID&#39;, single feature: index_column = &#39;protein groups&#39;
 </pre></div>
 </div>
 </div>
@@ -2527,7 +2527,7 @@ current version. Try again later</p>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.019054606556892395)
 </pre></div>
 </div>
-<img alt="_images/cb624758b614cb98ad77dd9e40fbd2c38f224f93fe56b8ae1823a76204bae6ba.png" src="_images/cb624758b614cb98ad77dd9e40fbd2c38f224f93fe56b8ae1823a76204bae6ba.png" />
+<img alt="_images/f32d3b1e15e524f4fd0082331c4e6103aeb3dc3e2026b0a268cf546521b40655.png" src="_images/f32d3b1e15e524f4fd0082331c4e6103aeb3dc3e2026b0a268cf546521b40655.png" />
 </div>
 </div>
 <p>dump model config</p>
@@ -2538,8 +2538,8 @@ current version. Try again later</p>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span>
-                  <span class="n">TEMPLATE_MODEL_PARAMS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_models</span> <span class="o">/</span>
+                        <span class="n">TEMPLATE_MODEL_PARAMS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -2587,630 +2587,720 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>64918.218750</td>
-      <td>4057.710449</td>
+      <td>64891.589844</td>
+      <td>4025.398926</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>63294.343750</td>
-      <td>4061.134033</td>
+      <td>63338.296875</td>
+      <td>4004.869141</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>61930.742188</td>
-      <td>4011.837891</td>
+      <td>61967.148438</td>
+      <td>3960.580566</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>60609.824219</td>
-      <td>3910.634033</td>
+      <td>60705.214844</td>
+      <td>3878.872803</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>59295.210938</td>
-      <td>3781.609863</td>
+      <td>59404.796875</td>
+      <td>3760.551758</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>57998.105469</td>
-      <td>3645.720459</td>
+      <td>58126.550781</td>
+      <td>3620.333984</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>56708.699219</td>
-      <td>3510.727051</td>
+      <td>56849.847656</td>
+      <td>3476.984619</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>55417.027344</td>
-      <td>3385.103516</td>
+      <td>55590.054688</td>
+      <td>3335.656738</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>54131.796875</td>
-      <td>3281.441650</td>
+      <td>54330.535156</td>
+      <td>3200.772949</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>52872.855469</td>
-      <td>3188.583252</td>
+      <td>53061.332031</td>
+      <td>3085.702637</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>51640.261719</td>
-      <td>3111.204834</td>
+      <td>51784.558594</td>
+      <td>2986.692383</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>50464.449219</td>
-      <td>3043.713623</td>
+      <td>50529.187500</td>
+      <td>2898.850098</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>49414.894531</td>
-      <td>2976.866699</td>
+      <td>49333.917969</td>
+      <td>2822.091064</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>48363.523438</td>
-      <td>2905.430664</td>
+      <td>48187.410156</td>
+      <td>2758.990967</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>47368.773438</td>
-      <td>2839.785645</td>
+      <td>47114.648438</td>
+      <td>2714.624512</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>46411.835938</td>
-      <td>2775.894043</td>
+      <td>46087.734375</td>
+      <td>2672.088623</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>45523.105469</td>
-      <td>2718.338623</td>
+      <td>45168.753906</td>
+      <td>2638.216064</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>44695.179688</td>
-      <td>2665.837891</td>
+      <td>44272.394531</td>
+      <td>2599.582764</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>43889.386719</td>
-      <td>2620.711426</td>
+      <td>43459.550781</td>
+      <td>2554.848633</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>43172.925781</td>
-      <td>2578.302490</td>
+      <td>42737.179688</td>
+      <td>2534.876709</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>42462.105469</td>
-      <td>2546.109619</td>
+      <td>42084.875000</td>
+      <td>2506.125000</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>41808.546875</td>
-      <td>2531.506836</td>
+      <td>41402.406250</td>
+      <td>2495.478271</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>41145.105469</td>
-      <td>2500.822266</td>
+      <td>40740.917969</td>
+      <td>2480.338623</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>40531.421875</td>
-      <td>2474.446045</td>
+      <td>40121.421875</td>
+      <td>2453.372070</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>39944.015625</td>
-      <td>2460.997070</td>
+      <td>39534.671875</td>
+      <td>2429.850830</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>39366.878906</td>
-      <td>2441.050537</td>
+      <td>38980.851562</td>
+      <td>2396.584717</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>38851.894531</td>
-      <td>2412.079590</td>
+      <td>38453.386719</td>
+      <td>2385.521240</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>38311.910156</td>
-      <td>2389.854492</td>
+      <td>37928.664062</td>
+      <td>2359.294922</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>37782.078125</td>
-      <td>2378.904785</td>
+      <td>37393.589844</td>
+      <td>2343.525146</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>37306.898438</td>
-      <td>2359.305420</td>
+      <td>36913.187500</td>
+      <td>2330.001465</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>36859.179688</td>
-      <td>2363.714355</td>
+      <td>36477.042969</td>
+      <td>2330.323486</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>36422.175781</td>
-      <td>2334.659668</td>
+      <td>36046.910156</td>
+      <td>2336.260010</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>35975.605469</td>
-      <td>2329.589355</td>
+      <td>35605.933594</td>
+      <td>2319.610352</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>35543.914062</td>
-      <td>2310.309326</td>
+      <td>35210.902344</td>
+      <td>2310.568848</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>35138.675781</td>
-      <td>2306.996338</td>
+      <td>34811.542969</td>
+      <td>2292.775635</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>34745.710938</td>
-      <td>2309.657715</td>
+      <td>34428.621094</td>
+      <td>2287.418457</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>34346.203125</td>
-      <td>2279.960449</td>
+      <td>34081.406250</td>
+      <td>2299.733887</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>33992.230469</td>
-      <td>2271.461426</td>
+      <td>33781.867188</td>
+      <td>2310.059570</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>33655.195312</td>
-      <td>2264.298828</td>
+      <td>33442.523438</td>
+      <td>2304.094727</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>33340.695312</td>
-      <td>2295.632324</td>
+      <td>33159.320312</td>
+      <td>2293.368652</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>33024.457031</td>
-      <td>2262.850830</td>
+      <td>32890.335938</td>
+      <td>2326.310303</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>32728.296875</td>
-      <td>2237.259033</td>
+      <td>32627.328125</td>
+      <td>2307.792480</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>32419.371094</td>
-      <td>2254.767822</td>
+      <td>32371.203125</td>
+      <td>2328.913574</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>32126.902344</td>
-      <td>2237.164551</td>
+      <td>32108.412109</td>
+      <td>2305.000244</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>31820.699219</td>
-      <td>2242.680908</td>
+      <td>31896.982422</td>
+      <td>2273.237305</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>31630.966797</td>
-      <td>2242.374023</td>
+      <td>31659.300781</td>
+      <td>2277.188721</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>31366.785156</td>
-      <td>2242.714355</td>
+      <td>31440.384766</td>
+      <td>2248.932617</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>31132.939453</td>
-      <td>2318.360352</td>
+      <td>31212.583984</td>
+      <td>2253.768799</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>30966.759766</td>
-      <td>2257.553955</td>
+      <td>30985.404297</td>
+      <td>2251.048340</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>30759.593750</td>
-      <td>2333.373779</td>
+      <td>30766.566406</td>
+      <td>2261.453613</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>30566.023438</td>
-      <td>2349.039551</td>
+      <td>30525.978516</td>
+      <td>2256.275879</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>30378.667969</td>
-      <td>2255.199463</td>
+      <td>30310.701172</td>
+      <td>2210.037842</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>30211.017578</td>
-      <td>2281.827637</td>
+      <td>30129.728516</td>
+      <td>2272.562256</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>30055.382812</td>
-      <td>2253.759033</td>
+      <td>29916.400391</td>
+      <td>2284.423340</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>29869.306641</td>
-      <td>2243.903809</td>
+      <td>29763.058594</td>
+      <td>2237.566650</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>29747.328125</td>
-      <td>2235.917236</td>
+      <td>29617.521484</td>
+      <td>2257.795898</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>29596.195312</td>
-      <td>2234.913818</td>
+      <td>29465.814453</td>
+      <td>2284.387695</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>29466.363281</td>
-      <td>2227.647949</td>
+      <td>29353.220703</td>
+      <td>2254.176514</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>29354.572266</td>
-      <td>2254.235596</td>
+      <td>29222.460938</td>
+      <td>2331.791992</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>29221.744141</td>
-      <td>2265.808838</td>
+      <td>29096.875000</td>
+      <td>2299.888184</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>29079.613281</td>
-      <td>2261.565430</td>
+      <td>29003.000000</td>
+      <td>2273.460205</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>28989.691406</td>
-      <td>2232.624756</td>
+      <td>28877.755859</td>
+      <td>2264.726562</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>28832.011719</td>
-      <td>2219.979492</td>
+      <td>28793.646484</td>
+      <td>2232.447754</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>28734.847656</td>
-      <td>2210.204346</td>
+      <td>28687.398438</td>
+      <td>2260.979980</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>28594.720703</td>
-      <td>2249.852051</td>
+      <td>28598.851562</td>
+      <td>2255.930420</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>28468.265625</td>
-      <td>2205.265381</td>
+      <td>28474.986328</td>
+      <td>2242.205811</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>28360.962891</td>
-      <td>2211.335938</td>
+      <td>28396.439453</td>
+      <td>2237.419678</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>28280.949219</td>
-      <td>2216.698975</td>
+      <td>28303.925781</td>
+      <td>2215.665527</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>28124.123047</td>
-      <td>2233.588379</td>
+      <td>28227.669922</td>
+      <td>2248.314209</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>27991.845703</td>
-      <td>2198.116699</td>
+      <td>28118.035156</td>
+      <td>2238.367432</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>27896.488281</td>
-      <td>2180.074219</td>
+      <td>28038.556641</td>
+      <td>2214.890381</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>27802.623047</td>
-      <td>2234.138916</td>
+      <td>27933.308594</td>
+      <td>2206.516846</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>27712.843750</td>
-      <td>2202.853516</td>
+      <td>27883.226562</td>
+      <td>2236.203613</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>27655.392578</td>
-      <td>2198.934326</td>
+      <td>27763.388672</td>
+      <td>2204.399658</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>74</td>
-      <td>27543.195312</td>
-      <td>2190.427490</td>
+      <td>27724.263672</td>
+      <td>2190.603027</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>75</td>
-      <td>27452.412109</td>
-      <td>2176.467773</td>
+      <td>27676.015625</td>
+      <td>2195.532471</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>76</td>
-      <td>27350.695312</td>
-      <td>2210.606445</td>
+      <td>27615.556641</td>
+      <td>2211.078369</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>77</td>
-      <td>27302.244141</td>
-      <td>2214.215088</td>
+      <td>27492.373047</td>
+      <td>2178.226562</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>78</td>
-      <td>27249.941406</td>
-      <td>2166.763428</td>
+      <td>27402.468750</td>
+      <td>2192.276123</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>79</td>
-      <td>27155.757812</td>
-      <td>2218.840576</td>
+      <td>27346.658203</td>
+      <td>2201.071045</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>80</td>
-      <td>27118.443359</td>
-      <td>2201.082764</td>
+      <td>27277.146484</td>
+      <td>2204.266846</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>81</td>
-      <td>27116.849609</td>
-      <td>2211.436523</td>
+      <td>27214.080078</td>
+      <td>2205.979248</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>82</td>
-      <td>27098.398438</td>
-      <td>2214.603516</td>
+      <td>27149.578125</td>
+      <td>2172.826904</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>83</td>
-      <td>27017.029297</td>
-      <td>2185.652344</td>
+      <td>27069.970703</td>
+      <td>2237.104980</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>84</td>
-      <td>26929.509766</td>
-      <td>2218.635010</td>
+      <td>27002.751953</td>
+      <td>2213.730713</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>85</td>
-      <td>26835.078125</td>
-      <td>2216.201660</td>
+      <td>26946.906250</td>
+      <td>2209.598633</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>86</td>
-      <td>26751.810547</td>
-      <td>2180.612549</td>
+      <td>26951.349609</td>
+      <td>2201.404297</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>87</td>
-      <td>26691.564453</td>
-      <td>2173.373779</td>
+      <td>26872.626953</td>
+      <td>2200.296387</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>88</td>
-      <td>26629.279297</td>
-      <td>2204.413086</td>
+      <td>26807.404297</td>
+      <td>2210.269287</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>89</td>
-      <td>26579.363281</td>
-      <td>2171.345703</td>
+      <td>26805.283203</td>
+      <td>2188.901367</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>90</td>
-      <td>26509.431641</td>
-      <td>2208.547852</td>
+      <td>26769.515625</td>
+      <td>2220.043213</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>91</td>
-      <td>26460.136719</td>
-      <td>2193.716309</td>
+      <td>26728.537109</td>
+      <td>2222.482178</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>92</td>
-      <td>26412.609375</td>
-      <td>2242.815430</td>
+      <td>26657.750000</td>
+      <td>2200.440430</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>93</td>
-      <td>26380.646484</td>
-      <td>2177.046875</td>
+      <td>26618.656250</td>
+      <td>2170.609863</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>94</td>
-      <td>26331.773438</td>
-      <td>2168.743896</td>
+      <td>26563.257812</td>
+      <td>2199.261963</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>95</td>
-      <td>26285.669922</td>
-      <td>2177.433594</td>
+      <td>26517.300781</td>
+      <td>2228.707520</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>96</td>
-      <td>26254.105469</td>
-      <td>2234.416016</td>
+      <td>26445.089844</td>
+      <td>2183.197510</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>97</td>
-      <td>26230.501953</td>
-      <td>2199.356934</td>
+      <td>26455.810547</td>
+      <td>2189.132324</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>98</td>
-      <td>26200.568359</td>
-      <td>2208.581787</td>
+      <td>26446.423828</td>
+      <td>2212.847656</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>99</td>
-      <td>26124.103516</td>
-      <td>2288.620117</td>
+      <td>26396.533203</td>
+      <td>2190.619141</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>100</td>
-      <td>26093.535156</td>
-      <td>2195.497803</td>
+      <td>26348.478516</td>
+      <td>2253.924316</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>101</td>
-      <td>26054.089844</td>
-      <td>2178.667480</td>
+      <td>26318.388672</td>
+      <td>2210.080566</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>102</td>
-      <td>26041.103516</td>
-      <td>2183.413574</td>
+      <td>26297.753906</td>
+      <td>2201.387695</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>103</td>
-      <td>25984.537109</td>
-      <td>2195.525635</td>
+      <td>26248.376953</td>
+      <td>2208.211670</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>104</td>
+      <td>26224.281250</td>
+      <td>2225.309326</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td>26194.730469</td>
+      <td>2217.727539</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>106</td>
+      <td>26189.785156</td>
+      <td>2210.621338</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>107</td>
+      <td>26155.783203</td>
+      <td>2181.943848</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>108</td>
+      <td>26081.142578</td>
+      <td>2194.741943</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>109</td>
+      <td>26030.683594</td>
+      <td>2183.231689</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>110</td>
+      <td>25960.978516</td>
+      <td>2191.425049</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>111</td>
+      <td>25943.781250</td>
+      <td>2189.687256</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>112</td>
+      <td>25887.679688</td>
+      <td>2186.257080</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>113</td>
+      <td>25839.515625</td>
+      <td>2189.509277</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>114</td>
+      <td>25800.394531</td>
+      <td>2182.865234</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>115</td>
+      <td>25786.582031</td>
+      <td>2238.245117</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>116</td>
+      <td>25765.544922</td>
+      <td>2216.074951</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>117</td>
+      <td>25743.486328</td>
+      <td>2233.615234</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>118</td>
+      <td>25740.224609</td>
+      <td>2197.089844</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 78: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 93: early stopping
 </pre></div>
 </div>
 </div>
@@ -3230,7 +3320,7 @@ current version. Try again later</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>104
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>119
 </pre></div>
 </div>
 </div>
@@ -3254,10 +3344,10 @@ current version. Try again later</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/dae_training
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/dae_training
 </pre></div>
 </div>
-<img alt="_images/7295d1d8860dc900c034596e6d3bb5eef93e490e99f34de41d94c561b1df5776.png" src="_images/7295d1d8860dc900c034596e6d3bb5eef93e490e99f34de41d94c561b1df5776.png" />
+<img alt="_images/9cfdf5d8750f82adf2aa8777aea677cdb52fd241bf69fe1a5d93a3f05a2df0c2.png" src="_images/9cfdf5d8750f82adf2aa8777aea677cdb52fd241bf69fe1a5d93a3f05a2df0c2.png" />
 </div>
 </div>
 <p>Why is the validation loss better then the training loss?</p>
@@ -3308,17 +3398,17 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     16.026
-            A0A024R0T9;K7ER74;P02655                                                         16.469
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.852
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.765
-            A0A075B6H7                                                                       16.511
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.945
+            A0A024R0T9;K7ER74;P02655                                                         16.748
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.903
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.843
+            A0A075B6H7                                                                       16.079
                                                                                               ...  
-Sample_209  Q9Y6R7                                                                           19.148
-            Q9Y6X5                                                                           15.910
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.603
-            Q9Y6Y9                                                                           11.552
-            S4R3U6                                                                           11.632
+Sample_209  Q9Y6R7                                                                           19.321
+            Q9Y6X5                                                                           15.722
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.301
+            Q9Y6Y9                                                                           11.523
+            S4R3U6                                                                           11.271
 Length: 298410, dtype: float32
 </pre></div>
 </div>
@@ -3372,31 +3462,31 @@ Length: 298410, dtype: float32
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.598</td>
+      <td>15.706</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.883</td>
+      <td>16.801</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.211</td>
+      <td>14.677</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>18.861</td>
+      <td>19.115</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.253</td>
+      <td>15.131</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3408,31 +3498,31 @@ Length: 298410, dtype: float32
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>23.014</td>
+      <td>22.800</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>15.896</td>
+      <td>16.065</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.722</td>
+      <td>15.828</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.935</td>
+      <td>13.706</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.538</td>
+      <td>14.470</td>
     </tr>
   </tbody>
 </table>
@@ -3487,27 +3577,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>16.945</td>
+      <td>17.131</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.250</td>
+      <td>18.217</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.324</td>
+      <td>22.164</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.218</td>
+      <td>15.285</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.861</td>
+      <td>16.708</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3519,27 +3609,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.744</td>
+      <td>15.929</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.631</td>
+      <td>13.485</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.582</td>
+      <td>13.847</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.089</td>
+      <td>15.028</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.393</td>
+      <td>16.328</td>
     </tr>
   </tbody>
 </table>
@@ -3567,17 +3657,17 @@ Length: 298410, dtype: float32
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 14.985
-            A0A075B6Q5                 15.873
-            A0A075B6R2                 16.414
-            A0A075B6S5                 16.153
-            A0A087WSY4                 16.471
+Sample_000  A0A075B6J9                 15.373
+            A0A075B6Q5                 16.682
+            A0A075B6R2                 16.764
+            A0A075B6S5                 16.305
+            A0A087WSY4                 16.307
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.950
-            Q9UI40;Q9UI40-2            16.328
-            Q9UIW2                     16.938
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.732
-            Q9UP79                     16.051
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.125
+            Q9UI40;Q9UI40-2            15.500
+            Q9UIW2                     17.119
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.859
+            Q9UP79                     15.914
 Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
@@ -3597,9 +3687,9 @@ Name: intensity, Length: 46401, dtype: float32
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
-<span class="n">df_latent</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_latent_space</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">encoder</span><span class="p">,</span>
-                                        <span class="n">dl</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span>
-                                        <span class="n">dl_index</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">df_latent</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_latent_space</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">encoder</span><span class="p">,</span>
+                                              <span class="n">dl</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span>
+                                              <span class="n">dl_index</span><span class="o">=</span><span class="n">analysis</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">valid</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="n">df_latent</span>
 </pre></div>
 </div>
@@ -3652,68 +3742,68 @@ Name: intensity, Length: 46401, dtype: float32
   <tbody>
     <tr>
       <th>Sample_000</th>
-      <td>-4.196</td>
-      <td>3.536</td>
-      <td>-1.064</td>
-      <td>0.316</td>
-      <td>1.700</td>
-      <td>1.357</td>
-      <td>-5.466</td>
-      <td>-0.219</td>
-      <td>0.749</td>
-      <td>2.371</td>
+      <td>-1.395</td>
+      <td>5.703</td>
+      <td>4.169</td>
+      <td>0.372</td>
+      <td>-4.478</td>
+      <td>-2.150</td>
+      <td>0.001</td>
+      <td>-2.922</td>
+      <td>-3.679</td>
+      <td>-0.928</td>
     </tr>
     <tr>
       <th>Sample_001</th>
-      <td>-3.752</td>
-      <td>1.917</td>
-      <td>0.655</td>
-      <td>-0.780</td>
-      <td>0.154</td>
-      <td>0.195</td>
-      <td>-3.373</td>
-      <td>0.324</td>
-      <td>-1.337</td>
-      <td>1.888</td>
+      <td>-0.277</td>
+      <td>3.165</td>
+      <td>1.040</td>
+      <td>1.250</td>
+      <td>-4.895</td>
+      <td>-0.193</td>
+      <td>0.829</td>
+      <td>-1.851</td>
+      <td>-2.885</td>
+      <td>-2.005</td>
     </tr>
     <tr>
       <th>Sample_002</th>
-      <td>-1.355</td>
-      <td>-1.326</td>
-      <td>0.827</td>
-      <td>1.358</td>
-      <td>0.996</td>
-      <td>-3.067</td>
-      <td>-6.485</td>
-      <td>-1.200</td>
-      <td>-0.157</td>
-      <td>2.488</td>
+      <td>0.490</td>
+      <td>4.313</td>
+      <td>-0.202</td>
+      <td>-6.007</td>
+      <td>-3.474</td>
+      <td>-0.344</td>
+      <td>2.874</td>
+      <td>-3.286</td>
+      <td>-1.517</td>
+      <td>-1.228</td>
     </tr>
     <tr>
       <th>Sample_003</th>
-      <td>-3.299</td>
-      <td>3.503</td>
-      <td>0.505</td>
-      <td>1.728</td>
-      <td>2.272</td>
-      <td>0.388</td>
-      <td>-6.004</td>
-      <td>-1.149</td>
-      <td>-1.660</td>
-      <td>1.705</td>
+      <td>0.367</td>
+      <td>5.385</td>
+      <td>2.472</td>
+      <td>-1.819</td>
+      <td>-1.686</td>
+      <td>-1.489</td>
+      <td>0.043</td>
+      <td>-2.541</td>
+      <td>-3.263</td>
+      <td>-2.194</td>
     </tr>
     <tr>
       <th>Sample_004</th>
-      <td>-1.633</td>
-      <td>1.575</td>
-      <td>-0.501</td>
-      <td>-1.318</td>
-      <td>0.980</td>
-      <td>1.309</td>
-      <td>-6.458</td>
-      <td>-2.140</td>
-      <td>-0.633</td>
-      <td>0.514</td>
+      <td>-2.200</td>
+      <td>8.456</td>
+      <td>1.321</td>
+      <td>-0.496</td>
+      <td>-2.882</td>
+      <td>0.035</td>
+      <td>2.082</td>
+      <td>-1.078</td>
+      <td>-3.853</td>
+      <td>-0.250</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3730,68 +3820,68 @@ Name: intensity, Length: 46401, dtype: float32
     </tr>
     <tr>
       <th>Sample_205</th>
-      <td>0.759</td>
-      <td>-0.867</td>
-      <td>1.681</td>
-      <td>0.963</td>
-      <td>2.459</td>
-      <td>-0.002</td>
-      <td>-1.806</td>
-      <td>-2.652</td>
-      <td>4.164</td>
-      <td>2.027</td>
+      <td>2.494</td>
+      <td>4.215</td>
+      <td>3.128</td>
+      <td>-2.804</td>
+      <td>-3.363</td>
+      <td>-1.126</td>
+      <td>3.631</td>
+      <td>0.491</td>
+      <td>2.265</td>
+      <td>3.573</td>
     </tr>
     <tr>
       <th>Sample_206</th>
-      <td>-0.894</td>
-      <td>-1.373</td>
-      <td>-1.366</td>
-      <td>-0.602</td>
-      <td>-1.891</td>
-      <td>-0.658</td>
-      <td>2.353</td>
-      <td>-4.603</td>
-      <td>0.272</td>
-      <td>3.455</td>
+      <td>-1.148</td>
+      <td>-2.232</td>
+      <td>-0.000</td>
+      <td>-1.142</td>
+      <td>-1.633</td>
+      <td>-3.642</td>
+      <td>5.596</td>
+      <td>1.568</td>
+      <td>-0.674</td>
+      <td>0.548</td>
     </tr>
     <tr>
       <th>Sample_207</th>
-      <td>-2.809</td>
-      <td>1.607</td>
-      <td>-1.354</td>
-      <td>-3.167</td>
-      <td>0.538</td>
-      <td>-0.674</td>
-      <td>-1.068</td>
-      <td>-3.730</td>
-      <td>6.147</td>
-      <td>1.471</td>
+      <td>-0.881</td>
+      <td>4.380</td>
+      <td>-0.946</td>
+      <td>3.383</td>
+      <td>-4.179</td>
+      <td>-4.371</td>
+      <td>2.988</td>
+      <td>0.505</td>
+      <td>0.494</td>
+      <td>5.262</td>
     </tr>
     <tr>
       <th>Sample_208</th>
-      <td>-4.772</td>
-      <td>-1.363</td>
-      <td>0.566</td>
-      <td>-0.564</td>
-      <td>2.360</td>
-      <td>-1.214</td>
-      <td>1.702</td>
-      <td>-1.336</td>
-      <td>1.405</td>
-      <td>-0.254</td>
+      <td>2.036</td>
+      <td>0.622</td>
+      <td>1.603</td>
+      <td>3.078</td>
+      <td>-1.546</td>
+      <td>0.473</td>
+      <td>3.767</td>
+      <td>-1.114</td>
+      <td>-1.030</td>
+      <td>2.522</td>
     </tr>
     <tr>
       <th>Sample_209</th>
-      <td>-3.514</td>
-      <td>1.726</td>
-      <td>1.321</td>
-      <td>-0.931</td>
-      <td>1.667</td>
-      <td>-3.126</td>
-      <td>-0.087</td>
-      <td>-6.552</td>
-      <td>-1.285</td>
-      <td>-1.358</td>
+      <td>-0.984</td>
+      <td>2.743</td>
+      <td>-3.134</td>
+      <td>-0.251</td>
+      <td>0.313</td>
+      <td>0.986</td>
+      <td>6.497</td>
+      <td>-1.683</td>
+      <td>0.074</td>
+      <td>0.973</td>
     </tr>
   </tbody>
 </table>
@@ -3877,8 +3967,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.4571570825972798,
-  &#39;MAE&#39;: 0.43401300998973336,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.46113458000777047,
+  &#39;MAE&#39;: 0.4347058923232651,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -3905,8 +3995,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.48310433358297344,
-  &#39;MAE&#39;: 0.4403216660500212,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.4776721324039522,
+  &#39;MAE&#39;: 0.4374614206657241,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -3921,20 +4011,20 @@ reconstruction.</p>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_metrics</span> <span class="o">/</span>
-                  <span class="sa">f</span><span class="s1">&#39;metrics_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">dump_json</span><span class="p">(</span><span class="n">d_metrics</span><span class="o">.</span><span class="n">metrics</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_metrics</span> <span class="o">/</span>
+                        <span class="sa">f</span><span class="s1">&#39;metrics_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">model_key</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span>
 <span class="n">d_metrics</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.4403216660500212,
-                                  &#39;MSE&#39;: 0.48310433358297344,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.4374614206657241,
+                                  &#39;MSE&#39;: 0.4776721324039522,
                                   &#39;N&#39;: 12600,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.43401300998973336,
-                                   &#39;MSE&#39;: 0.4571570825972798,
+  &#39;valid_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.4347058923232651,
+                                   &#39;MSE&#39;: 0.46113458000777047,
                                    &#39;N&#39;: 12600,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
@@ -3989,13 +4079,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">DAE</th>
       <th>MSE</th>
-      <td>0.457</td>
-      <td>0.483</td>
+      <td>0.461</td>
+      <td>0.478</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.434</td>
-      <td>0.440</td>
+      <td>0.435</td>
+      <td>0.437</td>
     </tr>
     <tr>
       <th>N</th>
@@ -4069,7 +4159,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 104,
+ &#39;epoch_trained&#39;: 119,
  &#39;epochs_max&#39;: 300,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,

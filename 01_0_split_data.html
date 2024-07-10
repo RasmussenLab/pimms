@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Experiment 03 - Data &#8212; pimms_workflow 0.1.dev1+g9faac07 documentation</title>
+    <title>Experiment 03 - Data &#8212; pimms_workflow 0.1.dev1+gd9e211d documentation</title>
   
   
   
@@ -133,7 +133,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g9faac07 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gd9e211d documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -430,14 +430,14 @@ document.write(`
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="kn">import</span> <span class="nn">vaep</span>
-<span class="kn">import</span> <span class="nn">vaep.io.load</span>
-<span class="kn">from</span> <span class="nn">vaep.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
-<span class="kn">from</span> <span class="nn">vaep.io.datasplits</span> <span class="kn">import</span> <span class="n">DataSplits</span>
-<span class="kn">from</span> <span class="nn">vaep.sampling</span> <span class="kn">import</span> <span class="n">feature_frequency</span>
-<span class="kn">from</span> <span class="nn">vaep.sklearn</span> <span class="kn">import</span> <span class="n">get_PCA</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.io.load</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io.datasplits</span> <span class="kn">import</span> <span class="n">DataSplits</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.sampling</span> <span class="kn">import</span> <span class="n">feature_frequency</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.sklearn</span> <span class="kn">import</span> <span class="n">get_PCA</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">setup_nb_logger</span><span class="p">()</span>
 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Split data and make diagnostic plots&quot;</span><span class="p">)</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
 
@@ -456,7 +456,7 @@ document.write(`
 <span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">max_columns</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 
-<span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 
 <span class="n">figures</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># collection of ax or figures</span>
 <span class="n">dumps</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># collection of data dumps</span>
@@ -540,7 +540,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 <span class="n">args</span>
 </pre></div>
 </div>
@@ -600,7 +600,7 @@ root - INFO     Removed from global namespace: feat_name_display
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">nb</span><span class="o">.</span><span class="n">args_from_dict</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">args</span>
 </pre></div>
 </div>
@@ -703,7 +703,7 @@ root - INFO     File format (extension): csv  (!specifies data loading function!
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ! factor out file reading to a separate module, not class</span>
 <span class="c1"># AnalyzePeptides.from_csv</span>
-<span class="n">constructor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">,</span> <span class="n">FILE_FORMAT_TO_CONSTRUCTOR</span><span class="p">[</span><span class="n">FILE_EXT</span><span class="p">])</span>
+<span class="n">constructor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">,</span> <span class="n">FILE_FORMAT_TO_CONSTRUCTOR</span><span class="p">[</span><span class="n">FILE_EXT</span><span class="p">])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">constructor</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">FN_INTENSITIES</span><span class="p">,</span>
                  <span class="n">index_col</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">index_col</span><span class="p">,</span>
                  <span class="p">)</span>
@@ -728,7 +728,7 @@ root - INFO     File format (extension): csv  (!specifies data loading function!
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.load - WARNING  Passed unknown kwargs: {}
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.load - WARNING  Passed unknown kwargs: {}
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -3288,13 +3288,13 @@ dtype: float64
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;observations&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_hist_features_per_sample&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_hist_features_per_sample
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_hist_features_per_sample
 </pre></div>
 </div>
 <img alt="_images/247932b0a4b178371ef6f4cc5692c92df4929b41cb501a80d303ab83fa0bdc64.png" src="_images/247932b0a4b178371ef6f4cc5692c92df4929b41cb501a80d303ab83fa0bdc64.png" />
@@ -3315,13 +3315,13 @@ dtype: float64
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;observations&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_feature_prevalence&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_feature_prevalence
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_feature_prevalence
 </pre></div>
 </div>
 <img alt="_images/4e496c53bf17e1ce80ea579cb865344247d6b54ddc26241ea3740bead7eebbdf.png" src="_images/4e496c53bf17e1ce80ea579cb865344247d6b54ddc26241ea3740bead7eebbdf.png" />
@@ -3337,20 +3337,20 @@ dtype: float64
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_max</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min_max</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">())</span>
-<span class="n">ax</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_histogram_intensities</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_max</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min_max</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">())</span>
+<span class="n">ax</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_histogram_intensities</span><span class="p">(</span>
     <span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">(),</span> <span class="n">min_max</span><span class="o">=</span><span class="n">min_max</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Intensity binned&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_distribution_overall&#39;</span>
 
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_distribution_overall
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_distribution_overall
 </pre></div>
 </div>
 <img alt="_images/f351c2255ee56c8202573b51ab13f87b9f7285e778297da975d136ee26f7ac44.png" src="_images/f351c2255ee56c8202573b51ab13f87b9f7285e778297da975d136ee26f7ac44.png" />
@@ -3363,20 +3363,20 @@ dtype: float64
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_median_vs_prop_missing_scatter&#39;</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">feat_name_display</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1"> binned by their median intensity&#39;</span>
     <span class="sa">f</span><span class="s1">&#39; (N </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">feat_name_display</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_median_vs_prop_missing_scatter
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_median_vs_prop_missing_scatter
 </pre></div>
 </div>
 <img alt="_images/f88298e23c4f47a4caca2a44f060fec00fd978f9f7c3fe47fdec395345aa72e4.png" src="_images/f88298e23c4f47a4caca2a44f060fec00fd978f9f7c3fe47fdec395345aa72e4.png" />
@@ -3389,14 +3389,14 @@ dtype: float64
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">_data_feat_median_over_prop_missing</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">_data_feat_median_over_prop_missing</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;boxplot&#39;</span><span class="p">,</span> <span class="n">return_plot_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_median_vs_prop_missing_boxplot&#39;</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">feat_name_display</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1"> binned by their median intensity&#39;</span>
     <span class="sa">f</span><span class="s1">&#39; (N </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">feat_name_display</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 <span class="n">_data_feat_median_over_prop_missing</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">))</span>
 <span class="c1"># _data_feat_median_over_prop_missing.to_excel(fname.with_suffix(&#39;.xlsx&#39;))</span>
 <span class="k">del</span> <span class="n">_data_feat_median_over_prop_missing</span>
@@ -3405,7 +3405,7 @@ dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_median_vs_prop_missing_boxplot
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_intensity_median_vs_prop_missing_boxplot
 </pre></div>
 </div>
 <img alt="_images/87461c1e2daea3b4757176928782be97df0827be8cee5328f4fe202d468a381c.png" src="_images/87461c1e2daea3b4757176928782be97df0827be8cee5328f4fe202d468a381c.png" />
@@ -3987,13 +3987,13 @@ dtype: float64
     <span class="n">fname</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span>
              <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_pca_sample_by_</span><span class="si">{</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">meta_cat_col</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-    <span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_pca_sample_by__collection_site
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_pca_sample_by__collection_site
 </pre></div>
 </div>
 <img alt="_images/b7c83e8932edf59a075225e361c82c295c1f7b4489d4803696c51a798c267ba1.png" src="_images/b7c83e8932edf59a075225e361c82c295c1f7b4489d4803696c51a798c267ba1.png" />
@@ -4012,7 +4012,7 @@ dtype: float64
         <span class="n">df</span><span class="o">=</span><span class="n">pcs</span><span class="p">[</span><span class="n">pcs_name</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="n">pcs</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">meta_date_col</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;by </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">meta_date_col</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_pca_sample_by_date&#39;</span>
     <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-    <span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -4040,16 +4040,16 @@ dtype: float64
 <span class="n">fname</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out_figures</span>
          <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_pca_sample_by_</span><span class="si">{</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">col_identified_feat</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s1">.pdf&#39;</span><span class="p">)</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_pca_sample_by_identified_protein_groups.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_pca_sample_by_identified_protein_groups.pdf
 </pre></div>
 </div>
-<img alt="_images/f2aa574b454df703a2bd466d1b3488f3bcb85b9de1cac1457f0a99eafcae2341.png" src="_images/f2aa574b454df703a2bd466d1b3488f3bcb85b9de1cac1457f0a99eafcae2341.png" />
+<img alt="_images/b56efa09c512109e77ccece6337ab2322a7ef102b30ffb192413a63ca2b50959.png" src="_images/b56efa09c512109e77ccece6337ab2322a7ef102b30ffb192413a63ca2b50959.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4114,9 +4114,9 @@ dtype: float64
         });
         }
         </script>
-        </div><div class="output text_html"><div>                            <div id="090ed4ab-ae69-42dc-846c-c01bb60b0204" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("090ed4ab-ae69-42dc-846c-c01bb60b0204")) {                    Plotly.newPlot(                        "090ed4ab-ae69-42dc-846c-c01bb60b0204",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (11.62 %)=%{x}\u003cbr\u003eprincipal component 2 (10.17 %)=%{y}\u003cbr\u003eidentified protein groups=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Sample_000","Sample_001","Sample_002","Sample_003","Sample_004","Sample_005","Sample_006","Sample_007","Sample_008","Sample_009","Sample_010","Sample_011","Sample_012","Sample_013","Sample_014","Sample_015","Sample_016","Sample_017","Sample_018","Sample_019","Sample_020","Sample_021","Sample_022","Sample_023","Sample_024","Sample_025","Sample_026","Sample_027","Sample_028","Sample_029","Sample_030","Sample_031","Sample_032","Sample_033","Sample_034","Sample_035","Sample_036","Sample_037","Sample_038","Sample_039","Sample_040","Sample_041","Sample_042","Sample_043","Sample_044","Sample_045","Sample_046","Sample_047","Sample_048","Sample_049","Sample_050","Sample_051","Sample_052","Sample_053","Sample_054","Sample_055","Sample_056","Sample_057","Sample_058","Sample_059","Sample_060","Sample_061","Sample_062","Sample_063","Sample_064","Sample_065","Sample_066","Sample_067","Sample_068","Sample_069","Sample_070","Sample_071","Sample_072","Sample_073","Sample_074","Sample_075","Sample_076","Sample_077","Sample_078","Sample_079","Sample_080","Sample_081","Sample_082","Sample_083","Sample_084","Sample_085","Sample_086","Sample_087","Sample_088","Sample_089","Sample_090","Sample_091","Sample_092","Sample_093","Sample_094","Sample_095","Sample_096","Sample_097","Sample_098","Sample_099","Sample_100","Sample_101","Sample_102","Sample_103","Sample_104","Sample_105","Sample_106","Sample_107","Sample_108","Sample_109","Sample_110","Sample_111","Sample_112","Sample_113","Sample_114","Sample_115","Sample_116","Sample_117","Sample_118","Sample_119","Sample_120","Sample_121","Sample_122","Sample_123","Sample_124","Sample_125","Sample_126","Sample_127","Sample_128","Sample_129","Sample_130","Sample_131","Sample_132","Sample_133","Sample_134","Sample_135","Sample_136","Sample_137","Sample_138","Sample_139","Sample_140","Sample_141","Sample_142","Sample_143","Sample_144","Sample_145","Sample_146","Sample_147","Sample_148","Sample_149","Sample_150","Sample_151","Sample_152","Sample_153","Sample_154","Sample_155","Sample_156","Sample_157","Sample_158","Sample_159","Sample_160","Sample_161","Sample_162","Sample_163","Sample_164","Sample_165","Sample_166","Sample_167","Sample_168","Sample_169","Sample_170","Sample_171","Sample_172","Sample_173","Sample_174","Sample_175","Sample_176","Sample_177","Sample_178","Sample_179","Sample_180","Sample_181","Sample_182","Sample_183","Sample_184","Sample_185","Sample_186","Sample_187","Sample_188","Sample_189","Sample_190","Sample_191","Sample_192","Sample_193","Sample_194","Sample_195","Sample_196","Sample_197","Sample_198","Sample_199","Sample_200","Sample_201","Sample_202","Sample_203","Sample_204","Sample_205","Sample_206","Sample_207","Sample_208","Sample_209"],"legendgroup":"","marker":{"color":[1205,1219,1256,1225,1209,1264,1155,1003,1210,1187,1227,1254,1158,1079,993,971,1089,1093,1273,1129,1189,1183,1183,1171,1197,897,1077,1174,1153,1201,1191,1108,1072,800,981,1204,1067,987,993,1098,1004,1039,1105,1213,1094,1098,1104,957,1146,1077,956,1106,1136,1110,1150,1184,1165,1092,1237,1100,1211,1233,1307,1313,1242,1330,1336,1292,1182,1318,1254,1321,1342,1310,1277,1241,1291,1329,1289,1337,1301,1274,1216,1291,1192,1306,1339,1286,1208,1288,1308,1238,1303,1245,1316,1231,1301,1325,1328,1307,1252,1263,1309,1228,1190,1087,1236,1082,1113,1150,1092,1184,1260,1187,1266,1224,1300,1288,1263,1209,1245,1189,1152,1282,1235,1218,1254,1317,1202,1276,1298,1057,1301,1265,1301,1229,1210,1200,1125,1110,1177,1217,1222,1182,1234,1290,1270,1088,1099,1278,1164,1287,1157,1202,1279,1313,1166,1303,1224,1298,1288,1314,1050,1136,1317,1260,1317,1209,1252,1200,1271,1049,1330,1164,1307,1231,1221,1095,1221,1177,1264,954,1235,1242,1226,1094,1323,1299,1160,1125,1308,1089,1088,1251,1197,1254,1127,1227,1019,1175,877,1243,1321,1279,1164,1339,1258,1301,1259,1247],"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[16.681287518510178,12.801259642952154,13.783905333495039,16.439954730153435,15.128668229076185,12.54362462487813,12.045075733585431,12.739542444695076,15.999018973135845,12.952842435429782,17.294316901157135,16.402914832589975,12.450812480925501,13.535008937162308,14.009733602065584,12.65056704867808,13.828008000790373,13.068618086283427,13.337086615057975,14.40317945754288,15.03345602911261,12.377175147583314,12.421380480695412,16.54870558590937,17.55027265590536,9.752273232195494,12.627567047798633,16.34217214864304,16.193652952163607,15.100309450857967,13.409402309760194,10.594730384545828,11.806664888957027,6.421030432247369,10.811183563084233,14.35599238874652,15.062485143722602,11.23305354433411,10.493472823380825,12.731387797820878,11.985075129100096,13.230798294128746,10.473697780912978,15.547591596862901,10.782047285046259,11.144286412713132,13.309600244429692,9.620395067693885,13.626777721092449,12.77157016864627,13.043532460850255,15.739340008163476,15.540639924343441,14.992333507008558,12.488069196823304,13.9085597020809,15.557473048522171,16.285933464790855,17.44208275254305,12.365478381196299,14.492453582046073,-4.332035467596601,-6.33572774912401,-5.817032846727222,-6.1026165964634576,-5.082126120503785,-2.9139143784679176,-7.100072345047767,-5.892999446772826,-4.533957770152408,-3.5944539270778524,-4.026756325264701,-4.956499254368916,-3.8840845845056755,-6.3564854572087,-7.639953385654648,-7.280791833097153,-5.212535454672275,-7.064051872574863,-4.850413378527815,-5.032337630840923,-4.701119527855992,-8.601773915462704,-6.750340141915286,-8.07242905703361,-5.1826842944460445,-5.2434093934303405,-6.979635694903732,-6.196896055149746,-5.326693648139381,-3.7849848880817665,-5.641752699502123,-6.239535906710836,-5.531375000902026,-4.826569102157664,-3.588288355839353,-3.1501836340122558,-4.617381230671203,-3.847062494863992,-7.20748364023619,-8.277185370809438,-6.056527400120553,-6.28926564448351,6.601896692740655,-0.2233690024170505,-1.5820437486386258,-3.2065741735822213,-1.247638708624301,-4.152272166434241,-3.7954363935216593,-3.042780184794012,1.0413329981018549,1.2036754525267968,-1.7324143585852485,-2.7181988580973666,-2.334538111549759,-4.652484398525699,-0.0058700536538979385,-2.089379567560158,-3.37756213244322,-4.01064016755101,-7.875321981891492,-7.593638311458814,-6.383626095117348,-6.747230887239715,-8.429045351798377,-5.392237035402018,-4.360294923402631,-4.867275661029236,-8.445340778186091,-7.110458577106229,-6.1751174081306734,-4.332483414585307,-3.542149311815654,-6.16515422735026,-5.599767556869889,-2.2157649125308105,-3.9763625099157602,-6.6969806141644055,-7.561963259463399,-8.169247149839777,-9.010793899837648,-8.4943037095436,-7.192602455058282,-7.243130974294794,-6.661192195155951,-7.388920187770943,-5.221889135768036,-6.789113085860987,-8.065190635921548,-5.89880771990701,-4.6178735126570665,-8.003141209100164,-6.101575640313657,-6.621462040380296,-5.826958528927377,-2.3986078130806088,-7.041503137356224,-5.953458430980717,-4.575374416152712,-6.823913189145026,-6.536291542299447,-7.287290804868087,-7.839748114827678,-7.104833437728355,-8.19964717685489,-6.052020778329921,-7.200118324040342,-7.77797135773926,-4.02005867901066,-6.598033262802699,-3.8063372577331416,-5.376817210894965,-6.225433368462215,-3.893314663710487,-4.75780365935879,-7.9616207046850676,-6.133111095246222,-4.464017876258654,-8.735496372407805,-8.403444043379796,-5.385720467788124,-5.271643913367107,-4.34858971517189,-6.6349739116033435,-6.012636626856232,-2.187115268851783,-6.942430663831218,-6.6325659170469855,-9.125189723133808,-6.829685415412815,-7.003130637788219,-7.934465478365477,-7.124580063635083,-6.216152235428726,-5.792617102448608,-5.966827317834193,-7.944752664846504,-4.947700112538822,-4.293513505484747,-7.000002441176845,-6.055115856111751,-7.526467277048016,-7.438498986372422,-6.175698094117833,-6.682086410287028,-7.404761511548516,-7.329329149945143,-8.05824174142888,-3.656635736017794],"xaxis":"x","y":[-8.491956785715388,-5.118760330637048,-12.950951565735085,-10.111738780101435,-6.471296639256055,-4.450316532568749,-1.589438544270754,14.204187598795237,-6.415666286583857,-3.89357075365497,-8.791351954098253,-11.617479740602286,3.8263185034475655,5.075860165281201,4.500124895098986,2.546155864965344,1.6071791967367732,7.939763102467475,-18.160785016138213,1.9417791385741714,0.19722677305798159,-8.297223873028884,-8.64152512683474,-5.461166895255266,-6.016662419139654,12.635481396201003,3.096056120342565,-4.464634413773641,-5.088267555245328,-8.299080665459707,-8.738495709852566,2.666082289484975,7.844941862011974,23.358951247629808,12.081084682956577,-9.46681964141019,8.040804089580966,13.827657870034495,8.355876166181355,7.189116419813029,16.01513268014743,10.735581912220823,1.561706847974606,-9.225896138336436,6.062070943919087,8.957446706925202,3.091494608693567,11.28115701286256,1.7938609392315645,3.916074093761284,16.92302670273835,3.28415457949449,2.5865132946013496,2.416998443890764,-2.5343763643595065,-1.947611959441915,-4.053595858160345,1.638619753091411,-10.550736852158416,4.601000063013403,-7.746985655314135,9.39637112620158,-3.28107686587764,-2.5885043690540477,1.521892290714456,-9.844800162815616,-6.640292339422253,2.803188145000471,9.794651699205293,-7.881225779821799,7.329079968095252,-5.143244471870167,-16.988299576444028,2.7546753671701385,5.486496505761049,7.60726998252686,-8.578731475277468,-12.865951160291585,4.142994491445874,-5.282292352277727,-6.104106673463148,5.288145764014467,11.20978344316647,0.30924615969188907,11.706014119380672,-4.17413414898874,-9.675780742669385,-0.8503865147035231,7.167440108105458,3.1141340006676486,0.9169126285967503,9.458283118991098,-1.7019229910591258,10.196719549564802,-10.07619974187321,13.80860926628344,-2.3824611675794887,-5.361363485557544,-10.970446300709204,-4.537854499706165,1.8947822814577961,-1.5005669057139297,-3.3080683351656286,2.3070023447264676,10.247641367952326,11.151234997107434,-1.1336520124730216,10.725386715708757,13.317003030458013,12.742227589722717,18.728361019028807,9.822878383974048,5.905228058903307,11.82316451912762,4.253357833275675,7.025267233608894,-3.7005372076867333,-10.724443808496156,5.479176047564378,9.141980993264248,-3.9305992623699364,3.0647471065685687,6.5530494059384985,-7.871891229814893,2.763918220687376,1.4738646654200245,3.74885419375795,-14.077108203980169,1.2967578295272777,-5.156667670802875,-10.530677607358344,20.11189031411008,-10.478348847104131,-9.248613011353935,-13.192584664988122,5.179818563744479,-4.3522305924843,-2.2845308057550233,-4.87182695770562,13.793466791212897,5.164805806730712,7.062237088238519,0.470145779272666,3.3615956004758805,-0.7204942345422566,-2.6327100985587246,-2.689370985051692,1.0724654103569728,16.916502101412117,-9.710714404343324,3.6786142023470876,-18.95342867779234,5.191832715177194,5.184266264160151,-12.881805116691668,-6.781136804778099,-1.0842851812968406,-13.368168954394015,0.30147368820831355,-12.025656979323957,-2.171332952610406,-13.27478041352925,8.995270136188285,7.193279990321956,-8.655189824253611,-3.373602420383678,-11.665769671739227,1.9748587609805779,0.7352227560715792,-3.2738326855538893,-2.6292044191014514,-3.683107167751904,-9.895394538630553,-0.015180905084534955,-10.03056984052498,-9.694007250390289,0.3343007054748731,9.112701053348994,-6.371558471047514,5.2986021984409595,0.7224762044319574,11.09543837048951,-15.371664953130086,-8.336076342742375,-3.653001826667784,7.59992213601466,-15.323457071037854,-3.4567282365786407,2.7660926018208096,10.34700305931139,-10.790623711337625,7.923698272230324,14.146949637843429,-1.5332690029277494,1.8105809589983415,1.2684651071461615,2.5071155390572435,2.723937949861846,-0.9247069258931268,-0.6034458403952377,16.767538661452864,-2.737047963160199,-11.692926976689705,-2.539892379367187,13.87817207473246,-15.29664708829368,-6.125781682168255,-11.04116655186647,-5.50069008696699,-7.571775400812009],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (11.62 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (10.17 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified protein groups"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 1421 protein groups for 210 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
+        </div><div class="output text_html"><div>                            <div id="78f0c7ce-1877-400d-a177-752dd6eff0d7" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("78f0c7ce-1877-400d-a177-752dd6eff0d7")) {                    Plotly.newPlot(                        "78f0c7ce-1877-400d-a177-752dd6eff0d7",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (11.62 %)=%{x}\u003cbr\u003eprincipal component 2 (10.17 %)=%{y}\u003cbr\u003eidentified protein groups=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Sample_000","Sample_001","Sample_002","Sample_003","Sample_004","Sample_005","Sample_006","Sample_007","Sample_008","Sample_009","Sample_010","Sample_011","Sample_012","Sample_013","Sample_014","Sample_015","Sample_016","Sample_017","Sample_018","Sample_019","Sample_020","Sample_021","Sample_022","Sample_023","Sample_024","Sample_025","Sample_026","Sample_027","Sample_028","Sample_029","Sample_030","Sample_031","Sample_032","Sample_033","Sample_034","Sample_035","Sample_036","Sample_037","Sample_038","Sample_039","Sample_040","Sample_041","Sample_042","Sample_043","Sample_044","Sample_045","Sample_046","Sample_047","Sample_048","Sample_049","Sample_050","Sample_051","Sample_052","Sample_053","Sample_054","Sample_055","Sample_056","Sample_057","Sample_058","Sample_059","Sample_060","Sample_061","Sample_062","Sample_063","Sample_064","Sample_065","Sample_066","Sample_067","Sample_068","Sample_069","Sample_070","Sample_071","Sample_072","Sample_073","Sample_074","Sample_075","Sample_076","Sample_077","Sample_078","Sample_079","Sample_080","Sample_081","Sample_082","Sample_083","Sample_084","Sample_085","Sample_086","Sample_087","Sample_088","Sample_089","Sample_090","Sample_091","Sample_092","Sample_093","Sample_094","Sample_095","Sample_096","Sample_097","Sample_098","Sample_099","Sample_100","Sample_101","Sample_102","Sample_103","Sample_104","Sample_105","Sample_106","Sample_107","Sample_108","Sample_109","Sample_110","Sample_111","Sample_112","Sample_113","Sample_114","Sample_115","Sample_116","Sample_117","Sample_118","Sample_119","Sample_120","Sample_121","Sample_122","Sample_123","Sample_124","Sample_125","Sample_126","Sample_127","Sample_128","Sample_129","Sample_130","Sample_131","Sample_132","Sample_133","Sample_134","Sample_135","Sample_136","Sample_137","Sample_138","Sample_139","Sample_140","Sample_141","Sample_142","Sample_143","Sample_144","Sample_145","Sample_146","Sample_147","Sample_148","Sample_149","Sample_150","Sample_151","Sample_152","Sample_153","Sample_154","Sample_155","Sample_156","Sample_157","Sample_158","Sample_159","Sample_160","Sample_161","Sample_162","Sample_163","Sample_164","Sample_165","Sample_166","Sample_167","Sample_168","Sample_169","Sample_170","Sample_171","Sample_172","Sample_173","Sample_174","Sample_175","Sample_176","Sample_177","Sample_178","Sample_179","Sample_180","Sample_181","Sample_182","Sample_183","Sample_184","Sample_185","Sample_186","Sample_187","Sample_188","Sample_189","Sample_190","Sample_191","Sample_192","Sample_193","Sample_194","Sample_195","Sample_196","Sample_197","Sample_198","Sample_199","Sample_200","Sample_201","Sample_202","Sample_203","Sample_204","Sample_205","Sample_206","Sample_207","Sample_208","Sample_209"],"legendgroup":"","marker":{"color":[1205,1219,1256,1225,1209,1264,1155,1003,1210,1187,1227,1254,1158,1079,993,971,1089,1093,1273,1129,1189,1183,1183,1171,1197,897,1077,1174,1153,1201,1191,1108,1072,800,981,1204,1067,987,993,1098,1004,1039,1105,1213,1094,1098,1104,957,1146,1077,956,1106,1136,1110,1150,1184,1165,1092,1237,1100,1211,1233,1307,1313,1242,1330,1336,1292,1182,1318,1254,1321,1342,1310,1277,1241,1291,1329,1289,1337,1301,1274,1216,1291,1192,1306,1339,1286,1208,1288,1308,1238,1303,1245,1316,1231,1301,1325,1328,1307,1252,1263,1309,1228,1190,1087,1236,1082,1113,1150,1092,1184,1260,1187,1266,1224,1300,1288,1263,1209,1245,1189,1152,1282,1235,1218,1254,1317,1202,1276,1298,1057,1301,1265,1301,1229,1210,1200,1125,1110,1177,1217,1222,1182,1234,1290,1270,1088,1099,1278,1164,1287,1157,1202,1279,1313,1166,1303,1224,1298,1288,1314,1050,1136,1317,1260,1317,1209,1252,1200,1271,1049,1330,1164,1307,1231,1221,1095,1221,1177,1264,954,1235,1242,1226,1094,1323,1299,1160,1125,1308,1089,1088,1251,1197,1254,1127,1227,1019,1175,877,1243,1321,1279,1164,1339,1258,1301,1259,1247],"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":[16.68128766313943,12.801259746329201,13.783905219191107,16.439954804102264,15.12866832896863,12.543624467812974,12.045075811886495,12.739542472131834,15.999018789364566,12.952842628792277,17.294317009820755,16.402914945597622,12.450812367468473,13.535008651997396,14.00973361487656,12.650566949758645,13.828007996364496,13.068618126339226,13.337086558275578,14.403179388775223,15.03345603524693,12.377175077923123,12.421380454703407,16.548705446302176,17.55027252433115,9.752273315644326,12.627567164840487,16.3421722315334,16.19365272919118,15.100309411701714,13.409402408674897,10.594730254291889,11.806665134922937,6.421030428562255,10.811183618277598,14.355992471109934,15.062485037603343,11.233053624673964,10.493472907744778,12.731387800085514,11.985075109645567,13.230798385272626,10.473697964630224,15.54759145006425,10.782047197631268,11.14428655493353,13.309600244152605,9.62039511890434,13.626777776680909,12.771570026923007,13.043532465348479,15.739339877502527,15.540639759032045,14.992333505444277,12.488069386221706,13.908559755073123,15.557472997019751,16.285933350026877,17.442082693627125,12.36547852522335,14.492453463611298,-4.332035492368309,-6.335727658699094,-5.817032719969949,-6.102616502970261,-5.0821261124448265,-2.9139144002698756,-7.1000723644046255,-5.892999403785659,-4.533957778834172,-3.594453817468749,-4.0267563482932465,-4.9564993016062795,-3.8840846769059074,-6.3564855277575605,-7.639953396912726,-7.280791716323991,-5.2125354122689345,-7.064051985065956,-4.850413324463862,-5.032337373325493,-4.701119622860883,-8.601774056239734,-6.7503401293681415,-8.072428968968778,-5.182684328024342,-5.243409439821966,-6.979635608247245,-6.196896247053411,-5.32669358815461,-3.784984869951795,-5.6417528430853014,-6.239535982290257,-5.531375151351071,-4.826569123030479,-3.5882884890459237,-3.1501834965770388,-4.617381243429376,-3.8470623028199205,-7.207483685147125,-8.277185620108266,-6.056527396311863,-6.2892655960831805,6.601896772557459,-0.2233688804088482,-1.5820436905228785,-3.2065742480048,-1.2476386148903686,-4.1522720830364435,-3.7954365146597535,-3.0427804288344604,1.0413329410777834,1.2036754042005897,-1.7324142883810119,-2.71819884121647,-2.3345382780873596,-4.652484467054635,-0.005869886194505444,-2.089379381372899,-3.377562236139616,-4.01064019759453,-7.875322136174436,-7.593638514380094,-6.383626127172624,-6.7472307651976955,-8.429045232542249,-5.392236986836249,-4.360294978517158,-4.867275306089062,-8.44534076711555,-7.110458647967213,-6.1751174383613,-4.332483452626735,-3.542149364464184,-6.165154328160644,-5.59976771728528,-2.2157644679485387,-3.97636229888003,-6.696980599487159,-7.561963135027612,-8.169246996265395,-9.010793761947452,-8.494303798878676,-7.19260245028247,-7.243131019495055,-6.661192390285838,-7.38892021484852,-5.221889321719431,-6.789113074252329,-8.065190711583014,-5.898807779437538,-4.617873656736604,-8.003141177682927,-6.101575595141069,-6.621461853229178,-5.826958403346197,-2.398607582864258,-7.04150320387377,-5.9534583593658725,-4.575374472383344,-6.823913156504669,-6.536291493443009,-7.287290876877419,-7.839748087840312,-7.104833525472788,-8.199647260537386,-6.052020696956553,-7.200118498885042,-7.777971223691765,-4.020058697113283,-6.5980333307598835,-3.8063373418196402,-5.376817254013715,-6.225433425113814,-3.8933146055275167,-4.757803494719923,-7.9616207719745855,-6.13311103096861,-4.464017656121385,-8.735496267339617,-8.403444116190736,-5.385720406857906,-5.271644075130798,-4.348589552117734,-6.634973977976256,-6.012636581771363,-2.187115288893891,-6.9424307298846655,-6.6325659765238445,-9.125189690145106,-6.829685466247657,-7.003130495267455,-7.9344655309007885,-7.124580121305845,-6.216152173256365,-5.792617240293234,-5.966827148646502,-7.944752640457292,-4.94769998115792,-4.293513489341055,-7.000002399713866,-6.055115605201236,-7.526467259929243,-7.438499148981217,-6.175698313878353,-6.6820865737994515,-7.404761404943311,-7.32932936549804,-8.05824185335322,-3.656635813455327],"xaxis":"x","y":[-8.491956486456154,-5.118759671806483,-12.950951920783627,-10.11173903527855,-6.471296354354249,-4.450316567030256,-1.589438756057861,14.20418782422219,-6.41566623052596,-3.8935707935179864,-8.791351300867799,-11.61747978324775,3.8263182719685602,5.0758599618163815,4.500124806614052,2.5461554875264967,1.6071789691730065,7.9397631175647465,-18.160784728843083,1.9417784722008002,0.1972268371503785,-8.297223812528967,-8.641524890843788,-5.461166575466648,-6.0166622020134914,12.635481404938734,3.0960560400049064,-4.4646343385896605,-5.088267690355963,-8.299080866212401,-8.738496017937138,2.666082320991089,7.844942272674133,23.35895115750365,12.081084611864133,-9.466819811234256,8.040803954006714,13.82765727400897,8.355875866574957,7.189115921358807,16.01513254429935,10.73558230044139,1.5617072443995215,-9.225896759148057,6.062070693959152,8.95744700116951,3.091494317080668,11.28115657005309,1.7938613587861696,3.9160738946396467,16.923026545787263,3.284154854321439,2.5865132479973814,2.416998640505043,-2.53437574157426,-1.9476116882734773,-4.053596060179717,1.6386199830365824,-10.550737176265585,4.60100012731281,-7.7469856752960435,9.396371271153663,-3.281077136918423,-2.5885042965773737,1.5218922201830412,-9.844800038301562,-6.640292347442014,2.8031879867634375,9.794651421235146,-7.881225432173687,7.32907973829299,-5.143244060800796,-16.988299594361212,2.754675156385241,5.4864966493948115,7.607269897190661,-8.578731839969572,-12.865951407710627,4.14299434782818,-5.282292323826914,-6.104106801639071,5.2881457794175315,11.209783131505667,0.3092462995882667,11.706013939158444,-4.174133978114232,-9.675780764225717,-0.850386504176429,7.167439743122753,3.114134201140167,0.9169126665858822,9.458283086629212,-1.7019232792376937,10.19671996240235,-10.076199768285655,13.80860896928424,-2.3824610321495334,-5.361363626815892,-10.970446716470978,-4.537854477308356,1.8947820682190089,-1.5005667476679456,-3.3080685184067247,2.3070022961147765,10.247641514748802,11.151234992710835,-1.133651518072078,10.725387146103632,13.317002469025573,12.742227795819883,18.728361409074232,9.822878484237275,5.905228417812146,11.823164428934938,4.253358114113231,7.025267127688662,-3.700537472280858,-10.724443719358886,5.479176095513095,9.141981245376837,-3.93059912316587,3.064747216898042,6.553049474388315,-7.87189144735198,2.763918604095854,1.4738648080312664,3.7488545453326765,-14.077108036872778,1.296757718877263,-5.15666746961866,-10.530678075531174,20.111890303687673,-10.478348906250384,-9.248612709960376,-13.192585119553216,5.179818298351342,-4.35223038781647,-2.28453087205802,-4.871826972088101,13.793467026494968,5.164805938245812,7.062237011903796,0.4701457080615691,3.361595913318134,-0.7204943776013165,-2.6327101567167337,-2.6893709472236886,1.0724655156361962,16.916501884752005,-9.710714589113298,3.6786137609973792,-18.953428227010892,5.1918330726152035,5.184266294157925,-12.881805515508074,-6.781136708749921,-1.0842852318580103,-13.368169041973081,0.30147351239402825,-12.025656814109734,-2.171332955761525,-13.274780851509467,8.995270052366127,7.19327969488266,-8.655189811927526,-3.3736025110339765,-11.665769689298903,1.9748588426786675,0.7352228813342101,-3.2738322845926664,-2.6292047815636046,-3.683106992282765,-9.895394262524212,-0.015181218367319614,-10.030569861730427,-9.694007398989147,0.33430092123470134,9.112701066497156,-6.371558394984982,5.2986022704030775,0.7224762142477423,11.095438352025942,-15.371664898632098,-8.336076218452233,-3.6530017753996873,7.599922623142769,-15.323457175459808,-3.456728463037194,2.766092729112379,10.347003112899408,-10.790623770556218,7.923698509033796,14.146949607878241,-1.5332692659062714,1.8105811380449968,1.2684650261985075,2.5071156409130326,2.7239376367936163,-0.924706928762225,-0.6034455793090441,16.767538411795382,-2.737047402856299,-11.692927182373099,-2.5398926198068295,13.878172523668919,-15.296646900704223,-6.125781319824084,-11.041166443749331,-5.500689950608205,-7.571775854980732],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (11.62 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (10.17 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified protein groups"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 1421 protein groups for 210 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('090ed4ab-ae69-42dc-846c-c01bb60b0204');
+var gd = document.getElementById('78f0c7ce-1877-400d-a177-752dd6eff0d7');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -4920,19 +4920,19 @@ if (outputEl) {{
                         <span class="n">boxprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkblue&#39;</span><span class="p">),</span>
                         <span class="n">flierprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">markersize</span><span class="o">=</span><span class="mf">.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">),</span>
                         <span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">select_xticks</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">select_xticks</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_median_boxplot&#39;</span>
 <span class="n">df_w_date</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.pkl&#39;</span><span class="p">))</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">df_w_date</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_median_boxplot
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_median_boxplot
 </pre></div>
 </div>
 <img alt="_images/6bda8ff84297925820fbc4f8f90e20be88c19a0058262c756186519a14d3274e.png" src="_images/6bda8ff84297925820fbc4f8f90e20be88c19a0058262c756186519a14d3274e.png" />
@@ -5006,13 +5006,13 @@ dtype: float64
                                               <span class="c1">#   fontsize=6,</span>
                                               <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
                                               <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-                                              <span class="n">xticks</span><span class="o">=</span><span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">select_dates</span><span class="p">(</span>
+                                              <span class="n">xticks</span><span class="o">=</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">select_dates</span><span class="p">(</span>
                                                   <span class="n">median_sample_intensity</span><span class="p">[</span><span class="n">dates</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
                                               <span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_median_scatter&#39;</span>
     <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-    <span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -5146,7 +5146,7 @@ Simulated missing values are not used for validation and testing.</p>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_long</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">long_format</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_long</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">datasplits</span><span class="o">.</span><span class="n">long_format</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 <span class="n">df_long</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -5215,7 +5215,7 @@ Simulated missing values are not used for validation and testing.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">group</span> <span class="o">=</span> <span class="mi">2</span>
 
-<span class="n">splits</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">fake_na_mcar</span><span class="p">,</span> <span class="n">fake_na_mnar</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">sample_mnar_mcar</span><span class="p">(</span>
+<span class="n">splits</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">,</span> <span class="n">fake_na_mcar</span><span class="p">,</span> <span class="n">fake_na_mnar</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">sample_mnar_mcar</span><span class="p">(</span>
     <span class="n">df_long</span><span class="o">=</span><span class="n">df_long</span><span class="p">,</span>
     <span class="n">frac_non_train</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">frac_non_train</span><span class="p">,</span>
     <span class="n">frac_mnar</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">frac_mnar</span><span class="p">,</span>
@@ -5227,19 +5227,19 @@ Simulated missing values are not used for validation and testing.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/vaep/sampling.py:209: FutureWarning:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/pimmslearn/sampling.py:209: FutureWarning:
 
 Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
 
-/home/runner/work/pimms/pimms/vaep/sampling.py:210: FutureWarning:
+/home/runner/work/pimms/pimms/pimmslearn/sampling.py:210: FutureWarning:
 
 Calling float on a single element Series is deprecated and will raise a TypeError in the future. Use float(ser.iloc[0]) instead
 
-vaep.sampling - INFO     int(N * frac_non_train) = 25,200
-vaep.sampling - INFO     len(fake_na_mnar) = 6,300
-vaep.sampling - INFO     len(splits.train_X) = 245,709
-vaep.sampling - INFO     len(fake_na) = 25,200
-vaep.sampling - INFO     len(fake_na_mcar) = 18,900
+pimmslearn.sampling - INFO     int(N * frac_non_train) = 25,200
+pimmslearn.sampling - INFO     len(fake_na_mnar) = 6,300
+pimmslearn.sampling - INFO     len(splits.train_X) = 245,709
+pimmslearn.sampling - INFO     len(fake_na) = 25,200
+pimmslearn.sampling - INFO     len(fake_na_mcar) = 18,900
 root - INFO     splits.train_X.shape = (226809,) - splits.val_y.shape = (12600,) - splits.test_y.shape = (12600,)
 </pre></div>
 </div>
@@ -5258,7 +5258,7 @@ root - INFO     splits.train_X.shape = (226809,) - splits.val_y.shape = (12600,)
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">plot_histogram_intensities</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_histogram_intensities</span><span class="p">,</span>
+<span class="n">plot_histogram_intensities</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_histogram_intensities</span><span class="p">,</span>
                                      <span class="n">min_max</span><span class="o">=</span><span class="n">min_max</span><span class="p">,</span>
                                      <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="n">plot_histogram_intensities</span><span class="p">(</span>
@@ -5288,13 +5288,13 @@ root - INFO     splits.train_X.shape = (226809,) - splits.val_y.shape = (12600,)
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_mnar_mcar_histograms.pdf&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_2_mnar_mcar_histograms.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_2_mnar_mcar_histograms.pdf
 </pre></div>
 </div>
 <img alt="_images/d4be1066d6f88546f9b00ecd390307ee941770a05749bd03153a66e9cca41543.png" src="_images/d4be1066d6f88546f9b00ecd390307ee941770a05749bd03153a66e9cca41543.png" />
@@ -5307,7 +5307,7 @@ root - INFO     splits.train_X.shape = (226809,) - splits.val_y.shape = (12600,)
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_per_bin</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_per_bin</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span>
     <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
         <span class="p">[</span><span class="n">df_long</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;observed&#39;</span><span class="p">),</span>
          <span class="n">thresholds</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;threshold&#39;</span><span class="p">),</span>
@@ -5668,7 +5668,7 @@ Name: intensity, dtype: float64
 <span class="c1"># -&gt; or raise error as feature completness treshold is so low that less than 3 samples</span>
 <span class="c1"># per feature are allowd.</span>
 
-<span class="n">splits</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">check_split_integrity</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">sampling</span><span class="o">.</span><span class="n">check_split_integrity</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -5729,12 +5729,12 @@ If after this procedure the condition is still not met, a value error is raised.
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     &#39;test_y&#39; has shape: (12600,)
-vaep.io.datasplits - INFO     save &#39;test_y&#39; to file: runs/alzheimer_study/data/test_y.csv
-vaep.io.datasplits - INFO     &#39;train_X&#39; has shape: (226809,)
-vaep.io.datasplits - INFO     save &#39;train_X&#39; to file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     &#39;val_y&#39; has shape: (12600,)
-vaep.io.datasplits - INFO     save &#39;val_y&#39; to file: runs/alzheimer_study/data/val_y.csv
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     &#39;test_y&#39; has shape: (12600,)
+pimmslearn.io.datasplits - INFO     save &#39;test_y&#39; to file: runs/alzheimer_study/data/test_y.csv
+pimmslearn.io.datasplits - INFO     &#39;train_X&#39; has shape: (226809,)
+pimmslearn.io.datasplits - INFO     save &#39;train_X&#39; to file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     &#39;val_y&#39; has shape: (12600,)
+pimmslearn.io.datasplits - INFO     save &#39;val_y&#39; to file: runs/alzheimer_study/data/val_y.csv
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;test_y.csv&#39;: &#39;runs/alzheimer_study/data/test_y.csv&#39;,
@@ -5760,9 +5760,9 @@ vaep.io.datasplits - INFO     save &#39;val_y&#39; to file: runs/alzheimer_study
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
-vaep.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
-vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.io.datasplits - INFO     Loaded &#39;train_X&#39; from file: runs/alzheimer_study/data/train_X.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzheimer_study/data/val_y.csv
+pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
 </div>
@@ -5924,13 +5924,13 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Intensity bins&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_val_over_train_split.pdf&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_val_over_train_split.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_val_over_train_split.pdf
 </pre></div>
 </div>
 <img alt="_images/c7d4a4fbfecd39950b4faedde289acb18e5dfe511c86d8b6b4636c7e81417f7d.png" src="_images/c7d4a4fbfecd39950b4faedde289acb18e5dfe511c86d8b6b4636c7e81417f7d.png" />
@@ -5943,7 +5943,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_bin</span><span class="p">,</span> <span class="n">max_bin</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min_max</span><span class="p">(</span><span class="n">splits</span><span class="o">.</span><span class="n">val_y</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">min_bin</span><span class="p">,</span> <span class="n">max_bin</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min_max</span><span class="p">(</span><span class="n">splits</span><span class="o">.</span><span class="n">val_y</span><span class="p">)</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">min_bin</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_bin</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">splits_df</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
                          <span class="n">xticks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span>
@@ -5958,13 +5958,13 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{x:,.0f}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_splits_freq_stacked.pdf&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_splits_freq_stacked.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_splits_freq_stacked.pdf
 </pre></div>
 </div>
 <img alt="_images/748f710b3d2564f0902fd1e821f69e129aea7b07b6aca53139031a6466049911.png" src="_images/748f710b3d2564f0902fd1e821f69e129aea7b07b6aca53139031a6466049911.png" />
@@ -5977,7 +5977,7 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_per_bin</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">splits_df</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">counts_per_bin</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">pandas</span><span class="o">.</span><span class="n">get_counts_per_bin</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">splits_df</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
 <span class="n">counts_per_bin</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;.xlsx&#39;</span><span class="p">))</span>
 <span class="n">counts_per_bin</span>
 </pre></div>
@@ -6183,13 +6183,13 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{x:,.0f}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_val_test_split_freq_stacked_.pdf&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_val_test_split_freq_stacked_.pdf
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_val_test_split_freq_stacked_.pdf
 </pre></div>
 </div>
 <img alt="_images/1e8adfc6df102959aec1baa71bf1dbb51281dd096927994b2c71f84dfcd962c1.png" src="_images/1e8adfc6df102959aec1baa71bf1dbb51281dd096927994b2c71f84dfcd962c1.png" />
@@ -6216,17 +6216,17 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">splits</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;scatter&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_median_vs_prop_missing_scatter_train&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_scatter_train
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_scatter_train
 </pre></div>
 </div>
 <img alt="_images/d4774068877ee2e27233bf29e1b285b86fb5afe0466b2ac38ada09ba17a98fe0.png" src="_images/d4774068877ee2e27233bf29e1b285b86fb5afe0466b2ac38ada09ba17a98fe0.png" />
@@ -6239,17 +6239,17 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">vaep</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">plot_feat_median_over_prop_missing</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">splits</span><span class="o">.</span><span class="n">train_X</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;boxplot&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_median_vs_prop_missing_boxplot_train&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_boxplot_train
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_boxplot_train
 </pre></div>
 </div>
 <img alt="_images/a6fa3705a1fff860cf94d1c7994449b21b151b41fea3b7d108edc61682f4a266.png" src="_images/a6fa3705a1fff860cf94d1c7994449b21b151b41fea3b7d108edc61682f4a266.png" />
@@ -6290,17 +6290,17 @@ vaep.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_
     <span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
 <span class="n">fname</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out_figures</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;0_</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">_intensity_median_vs_prop_missing_boxplot_val_train&#39;</span>
 <span class="n">figures</span><span class="p">[</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
-<span class="n">vaep</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
+<span class="n">pimmslearn</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">(),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2966/1559910846.py:13: UserWarning:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_3060/657883200.py:13: UserWarning:
 
 To output multiple subplots, the figure containing the passed axes is being cleared.
 
-vaep.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_boxplot_val_train
+pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_boxplot_val_train
 </pre></div>
 </div>
 <img alt="_images/dc4606a2588582619d40fbea5a9566ba2ed45428a4cfd1dc1de66d065e517b94.png" src="_images/dc4606a2588582619d40fbea5a9566ba2ed45428a4cfd1dc1de66d065e517b94.png" />
