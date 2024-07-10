@@ -7,47 +7,47 @@ Inspect the notebooks associated with the imputation workflow.
     :maxdepth: 2
     :caption: Split creation and data handling
 
-    01_0_split_data.ipynb
     01_0_transform_data_to_wide_format.ipynb
+    01_0_split_data.ipynb
 
 
 .. toctree::
     :maxdepth: 2
     :caption: PIMMS models
 
-    KNN5 <01_1_train_KNN5.ipynb>
-    Median <01_1_train_Median.ipynb>
     DAE <01_1_train_DAE.ipynb>
-    VAE <01_1_train_VAE.ipynb>
-    KNN <01_1_train_KNN.ipynb>
     CF <01_1_train_CF.ipynb>
+    KNN5 <01_1_train_KNN5.ipynb>
+    VAE <01_1_train_VAE.ipynb>
+    Median <01_1_train_Median.ipynb>
+    KNN <01_1_train_KNN.ipynb>
 
 
 .. toctree::
     :maxdepth: 2
     :caption: R models
 
-    MINDET <01_1_train_NAGuideR_MINDET.ipynb>
-    MINPROB <01_1_train_NAGuideR_MINPROB.ipynb>
-    LLS <01_1_train_NAGuideR_LLS.ipynb>
-    PI <01_1_train_NAGuideR_PI.ipynb>
-    MNAR <01_1_train_NAGuideR_MSIMPUTE_MNAR.ipynb>
-    ZERO <01_1_train_NAGuideR_ZERO.ipynb>
-    IMPSEQROB <01_1_train_NAGuideR_IMPSEQROB.ipynb>
-    QRILC <01_1_train_NAGuideR_QRILC.ipynb>
-    SVDMETHOD <01_1_train_NAGuideR_SVDMETHOD.ipynb>
-    MLE <01_1_train_NAGuideR_MLE.ipynb>
-    COLMEDIAN <01_1_train_NAGuideR_COLMEDIAN.ipynb>
-    IRM <01_1_train_NAGuideR_IRM.ipynb>
-    IMPUTE <01_1_train_NAGuideR_KNN_IMPUTE.ipynb>
-    TRKNN <01_1_train_NAGuideR_TRKNN.ipynb>
-    IMPSEQ <01_1_train_NAGuideR_IMPSEQ.ipynb>
-    MINIMUM <01_1_train_NAGuideR_MINIMUM.ipynb>
-    transfer NAGuideR pred <01_1_transfer_NAGuideR_pred.ipynb>
-    MSIMPUTE <01_1_train_NAGuideR_MSIMPUTE.ipynb>
     ROWMEDIAN <01_1_train_NAGuideR_ROWMEDIAN.ipynb>
-    BPCA <01_1_train_NAGuideR_BPCA.ipynb>
+    MINIMUM <01_1_train_NAGuideR_MINIMUM.ipynb>
     RF <01_1_train_NAGuideR_RF.ipynb>
+    PI <01_1_train_NAGuideR_PI.ipynb>
+    COLMEDIAN <01_1_train_NAGuideR_COLMEDIAN.ipynb>
+    MNAR <01_1_train_NAGuideR_MSIMPUTE_MNAR.ipynb>
+    MINPROB <01_1_train_NAGuideR_MINPROB.ipynb>
+    QRILC <01_1_train_NAGuideR_QRILC.ipynb>
+    transfer NAGuideR pred <01_1_transfer_NAGuideR_pred.ipynb>
+    BPCA <01_1_train_NAGuideR_BPCA.ipynb>
+    ZERO <01_1_train_NAGuideR_ZERO.ipynb>
+    IMPSEQ <01_1_train_NAGuideR_IMPSEQ.ipynb>
+    MLE <01_1_train_NAGuideR_MLE.ipynb>
+    IRM <01_1_train_NAGuideR_IRM.ipynb>
+    LLS <01_1_train_NAGuideR_LLS.ipynb>
+    TRKNN <01_1_train_NAGuideR_TRKNN.ipynb>
+    IMPUTE <01_1_train_NAGuideR_KNN_IMPUTE.ipynb>
+    MSIMPUTE <01_1_train_NAGuideR_MSIMPUTE.ipynb>
+    MINDET <01_1_train_NAGuideR_MINDET.ipynb>
+    SVDMETHOD <01_1_train_NAGuideR_SVDMETHOD.ipynb>
+    IMPSEQROB <01_1_train_NAGuideR_IMPSEQROB.ipynb>
 
 
 .. toctree::
@@ -65,28 +65,28 @@ Inspect the notebooks associated with the differential analysis workflow.
     :maxdepth: 2
     :caption: Differential analysis (ANCOVA)
 
-    CF <diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.ipynb>
-    Median <diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.ipynb>
-    DAE <diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.ipynb>
-    RF <diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.ipynb>
-    QRILC <diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.ipynb>
-    PI <diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.ipynb>
-    VAE <diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.ipynb>
     None <diff_analysis/AD/scores/10_1_ald_diff_analysis_None.ipynb>
+    DAE <diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.ipynb>
+    PI <diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.ipynb>
     TRKNN <diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.ipynb>
+    Median <diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.ipynb>
+    CF <diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.ipynb>
+    VAE <diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.ipynb>
+    QRILC <diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.ipynb>
+    RF <diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.ipynb>
 
 
 .. toctree::
     :maxdepth: 2
     :caption: Compare ANCOVAs
 
-    PI vs RF <diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.ipynb>
-    PI vs Median <diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.ipynb>
     PI vs CF <diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.ipynb>
-    PI vs QRILC <diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.ipynb>
+    PI vs RF <diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.ipynb>
     PI vs DAE <diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.ipynb>
-    PI vs VAE <diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.ipynb>
+    PI vs Median <diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.ipynb>
     PI vs TRKNN <diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.ipynb>
+    PI vs QRILC <diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.ipynb>
+    PI vs VAE <diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.ipynb>
 
 
 .. toctree::
@@ -100,11 +100,11 @@ Inspect the notebooks associated with the differential analysis workflow.
     :maxdepth: 2
     :caption: Logistic regression models
 
-    PI vs RF <diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.ipynb>
-    PI vs Median <diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.ipynb>
     PI vs CF <diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.ipynb>
-    PI vs QRILC <diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.ipynb>
+    PI vs RF <diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.ipynb>
     PI vs DAE <diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.ipynb>
-    PI vs VAE <diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.ipynb>
+    PI vs Median <diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.ipynb>
     PI vs TRKNN <diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.ipynb>
+    PI vs QRILC <diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.ipynb>
+    PI vs VAE <diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.ipynb>
 
