@@ -25,7 +25,7 @@ cd $PBS_O_WORKDIR
 
 # start_conda
 . ~/setup_conda.sh
-conda activate vaep
+conda activate pimms
 
 # try to influence how many jobs are run in parallel in one job training a model
 export MKL_NUM_THREADS=5 

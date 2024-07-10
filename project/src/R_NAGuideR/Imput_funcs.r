@@ -1,9 +1,9 @@
+# from: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1547-6
 ##################################################################################
 #### MLE for the Truncated Normal
 #### Creating a Function that Returns the Log Likelihood, Gradient and
 #### Hessian Functions
 ##################################################################################
-
 ## data = numeric vector
 ## t    = truncation limits
 mklhood <- function(data, t, ...) {

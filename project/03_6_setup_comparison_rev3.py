@@ -1,20 +1,21 @@
-# %%  [markdown]
+# %% [markdown]
 # # Compare setup of different samling strategies of simulated data
 #
 # 1. sampling from all samples
 # 2. sampling from subset of samples
 
 # %%
+import logging
 from pathlib import Path
+
 import pandas as pd
 
-import vaep.plotting
-import vaep.pandas
-import vaep.nb
+import pimmslearn.nb
+import pimmslearn.pandas
+import pimmslearn.plotting
+from pimmslearn.logging import setup_logger
 
-import logging
-from vaep.logging import setup_logger
-logger = setup_logger(logger=logging.getLogger('vaep'), level=10)
+logger = setup_logger(logger=logging.getLogger('pimmslearn'), level=10)
 
 
 # %%
@@ -55,7 +56,7 @@ pred = list()
 for key, file_in in pred_in.items():
     _ = (pd.read_csv(file_in, index_col=[0, 1])
          ).dropna(axis=1, how='all')
-    _ = vaep.pandas.calc_errors.get_absolute_error(_)
+    _ = pimmslearn.pandas.calc_errors.get_absolute_error(_)
     _.columns = pd.MultiIndex.from_tuples((key, k) for k in _.columns)
     pred.append(_)
 pred = pd.concat(pred, axis=1)

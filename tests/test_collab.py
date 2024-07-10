@@ -2,9 +2,9 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 
-import vaep
-from vaep.io.datasplits import DataSplits
-from vaep.models import collab
+import pimmslearn
+from pimmslearn.io.datasplits import DataSplits
+from pimmslearn.models import collab
 
 N, M = 10, 4
 

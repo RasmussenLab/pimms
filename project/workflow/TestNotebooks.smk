@@ -18,6 +18,6 @@ rule execute:
     output:
         nb="test_nb/{file}",
     # conda:
-    #     vaep
+    #     pimms
     shell:
         "papermill {input.nb} {output.nb}"
