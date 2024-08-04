@@ -26,29 +26,28 @@ jobs:
         use-mamba: true
         channel-priority: disabled
         python-version: "3.8"
-        environment-file: environment.yml
-        activate-environment: pimms
+        environment-file: snakemake_env.yml
+        activate-environment: snakemake
         auto-activate-base: true
         # auto-update-conda: true
     - name: Dry-run workflow
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -n
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 --use-conda -n
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k --use-conda
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c4 -k --use-conda
     - name: Run demo workflow again (in case of installation issues) with one thread
-      continue-on-error: true
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -k
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c1 -k --use-conda
     - name: Run differential analysis workflow
       run: | 
         cd project

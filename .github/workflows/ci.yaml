@@ -34,8 +34,8 @@ jobs:
         use-mamba: true
         channel-priority: disabled
         python-version: ${{ matrix.python-version }}
-        environment-file: environment.yml
-        activate-environment: pimms
+        environment-file: snakemake_env.yml
+        activate-environment: snakemake
         auto-activate-base: true
         # auto-update-conda: true
     - name: inspect-conda-environment
@@ -45,50 +45,29 @@ jobs:
         conda env export --from-history --no-builds > environment.yml
         conda env export --no-builds
         conda env export --no-builds > environment_w_versions.yml
-    - name: test-r-kernel-imports
-      run: |
-        Rscript -e "library(stringi)"
-        Rscript -e "library(stringr)"
-        Rscript -e "library(reshape2)"
-    # # currently part of environment
-    # - name: Install package and install library
+    # - name: test-r-kernel-imports
     #   run: |
-    #     pip install pytest pytest-cov
-    - name: Run Unit tests on installed package
-      run: |
-        pytest . 
-    - name: View papermill help message for notebooks (as scripts)
-      run: |
-        cd project
-        papermill 01_0_split_data.ipynb --help-notebook
-        papermill 01_1_train_VAE.ipynb --help-notebook
-        papermill 01_1_train_DAE.ipynb --help-notebook
-        papermill 01_1_train_CF.ipynb --help-notebook
-    - name: Run tutorial notebooks
-      run: |
-        cd project
-        mkdir runs
-        papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models.ipynb
-        papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models_no_val.ipynb -p sample_splits False
+    #     Rscript -e "library(stringi)"
+    #     Rscript -e "library(stringr)"
+    #     Rscript -e "library(reshape2)"
     - name: Dry-Run demo workflow (integration test)
-      continue-on-error: true
       run: | 
        cd project
-       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml -n
+       snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
        cd project
-       snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
+       snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: | 
         cd project
-        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml
+        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Run demo workflow again (in case of installation issues) - one thread
       run: | 
         cd project
-        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml
+        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Archive results
     # https://github.com/actions/upload-artifact
       uses: actions/upload-artifact@v4
@@ -122,6 +101,23 @@ jobs:
       
       - name: Run pytest
         run: pytest .
+
+      - name: Install papermill
+        run: pip install papermill
+      
+      - name: View papermill help message for notebooks (as scripts)
+        run: |
+          cd project
+          papermill 01_0_split_data.ipynb --help-notebook
+          papermill 01_1_train_VAE.ipynb --help-notebook
+          papermill 01_1_train_DAE.ipynb --help-notebook
+          papermill 01_1_train_CF.ipynb --help-notebook
+      - name: Run tutorial notebooks
+        run: |
+          cd project
+          mkdir runs
+          papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models.ipynb
+          papermill 04_1_train_pimms_models.ipynb runs/04_1_train_pimms_models_no_val.ipynb -p sample_splits False
 
   publish:
     name: Publish package
