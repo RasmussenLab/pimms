@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Set up Miniconda
       # ! change action https://github.com/mamba-org/setup-micromamba
       uses: conda-incubator/setup-miniconda@v2
@@ -51,7 +51,7 @@ jobs:
     - name: Run differential analysis workflow
       run: | 
         cd project
-        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c4
+        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c4 --use-conda
     - name: Install website dependencies
       run: |
         pip install .[docs]
