@@ -214,8 +214,6 @@ rule train_models:
 rule dump_train_config:
     output:
         configfile=config["config_train"],
-    conda:
-         "envs/pimms.yaml"
     run:
         import yaml
 
@@ -256,8 +254,6 @@ rule create_splits:
 rule dump_split_config:
     output:
         configfile=config["config_split"],
-    conda:
-        "envs/pimms.yaml"
     run:
         import yaml
         # recreating dict, otherwise Null becomes string "Null" in yaml dump...
