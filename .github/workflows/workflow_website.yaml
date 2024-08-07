@@ -52,6 +52,12 @@ jobs:
       run: | 
         cd project
         snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c4 --use-conda
+    - name: clean-up environments and pkg cache
+      run: |
+        conda clean -a -y
+        cd project
+        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -c1 --conda-cleanup-envs
+        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -c1 --conda-cleanup-envs 
     - name: Install website dependencies
       run: |
         pip install .[docs]
