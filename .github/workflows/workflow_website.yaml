@@ -56,8 +56,7 @@ jobs:
       run: |
         conda clean -a -y
         cd project
-        snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -c1 --conda-cleanup-envs
-        snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -c1 --conda-cleanup-envs 
+        rm -r .snakemake
     - name: Install website dependencies
       run: |
         pip install .[docs]
