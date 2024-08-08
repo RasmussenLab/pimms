@@ -19,17 +19,14 @@ jobs:
       uses: actions/checkout@v4
     - name: Set up Miniconda
       # ! change action https://github.com/mamba-org/setup-micromamba
-      uses: conda-incubator/setup-miniconda@v2
+      uses: conda-incubator/setup-miniconda@v3
       with: 
-        miniforge-variant: Mambaforge
-        # miniforge-version: latest
         use-mamba: true
-        channel-priority: disabled
-        python-version: "3.8"
+        # channel-priority: true
+        python-version: "3.10"
         environment-file: snakemake_env.yml
         activate-environment: snakemake
         auto-activate-base: true
-        # auto-update-conda: true
     - name: Dry-run workflow
       run: | 
         cd project
@@ -57,6 +54,7 @@ jobs:
         conda clean -a -y
         cd project
         rm -r .snakemake
+        ls -la
     - name: Install website dependencies
       run: |
         pip install .[docs]
