@@ -1,56 +1,52 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+gc143d18 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+gac0252e documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/documentation_options.js?v=7a4a1d28"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'diff_analysis/AD/scores/10_1_ald_diff_analysis_PI';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_TRKNN.html" />
-    <link rel="prev" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_DAE.html" />
+    <link rel="next" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_RF.html" />
+    <link rel="prev" title="Compare models" href="../../../01_2_performance_plots.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -60,28 +56,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -103,12 +94,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -125,6 +124,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../../index.html">
   
@@ -133,10 +134,21 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gc143d18 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gac0252e documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -154,35 +166,35 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -191,25 +203,25 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_None.html">None</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_DAE.html">DAE</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_CF.html">CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -217,13 +229,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
 </ul>
 
     </div>
@@ -239,7 +251,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -248,14 +260,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -333,10 +345,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -344,14 +356,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -391,10 +403,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="differential-analysis-compare-model-imputation-with-standard-imputation">
-<h1>Differential Analysis - Compare model imputation with standard imputation<a class="headerlink" href="#differential-analysis-compare-model-imputation-with-standard-imputation" title="Permalink to this heading">#</a></h1>
+<h1>Differential Analysis - Compare model imputation with standard imputation<a class="headerlink" href="#differential-analysis-compare-model-imputation-with-standard-imputation" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>load missing values predictions (if specified)</p></li>
 <li><p>leave all other values as they were</p></li>
@@ -445,7 +457,7 @@ document.write(`
 </details>
 </div>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <p>Default and set parameters for the notebook.</p>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
@@ -605,9 +617,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </section>
 <section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
 <section id="ms-proteomics-or-specified-omics-data">
-<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Permalink to this heading">#</a></h3>
+<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Link to this heading">#</a></h3>
 <p>Aggregated from data splits of the imputation workflow run before.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -663,7 +675,7 @@ Name: intensity, Length: 252009, dtype: float64
 </div>
 </section>
 <section id="clinical-data">
-<h3>Clinical data<a class="headerlink" href="#clinical-data" title="Permalink to this heading">#</a></h3>
+<h3>Clinical data<a class="headerlink" href="#clinical-data" title="Link to this heading">#</a></h3>
 <p>Describe numerical data specified for use:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1144,13 +1156,13 @@ Name: count, dtype: int64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     runs/alzheimer_study/freq_features_observed.csv
 </pre></div>
 </div>
-<img alt="../../../_images/b65370c0d05010b6e1f04bd5ea214926964bee10f3de1eb1d18b2df2c3c1014d.png" src="../../../_images/b65370c0d05010b6e1f04bd5ea214926964bee10f3de1eb1d18b2df2c3c1014d.png" />
+<img alt="../../../_images/74886d050391c4517f977cb938b6979ad0ba36259509bd4e6be9643077b8a622.png" src="../../../_images/74886d050391c4517f977cb938b6979ad0ba36259509bd4e6be9643077b8a622.png" />
 </div>
 </div>
 </section>
 </section>
 <section id="ald-study-approach-using-all-measurements">
-<h2>ALD study approach using all measurements<a class="headerlink" href="#ald-study-approach-using-all-measurements" title="Permalink to this heading">#</a></h2>
+<h2>ALD study approach using all measurements<a class="headerlink" href="#ald-study-approach-using-all-measurements" title="Link to this heading">#</a></h2>
 <p>Use parameters as specified in <a class="reference external" href="https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study" rel="noopener noreferrer" target="_blank">ALD study</a>.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1895,12 +1907,12 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/tresholds_normal_imputation
 </pre></div>
 </div>
-<img alt="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" src="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" />
+<img alt="../../../_images/e014868343e773880c59c85918c91a6068f7c2cce55c7132cebf8d4e6439e41a.png" src="../../../_images/e014868343e773880c59c85918c91a6068f7c2cce55c7132cebf8d4e6439e41a.png" />
 </div>
 </div>
 </section>
 <section id="load-model-predictions-for-real-missing-data">
-<h2>Load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Permalink to this heading">#</a></h2>
+<h2>Load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Link to this heading">#</a></h2>
 <p>Load from:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1958,17 +1970,17 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 14.731
-            A0A075B6Q5                 13.197
-            A0A075B6R2                 13.814
-            A0A075B6S5                 12.113
-            A0A087WSY4                 13.348
+Sample_000  A0A075B6J9                 13.638
+            A0A075B6Q5                 13.244
+            A0A075B6R2                 13.455
+            A0A075B6S5                 13.544
+            A0A087WSY4                 13.682
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.407
-            Q9UI40;Q9UI40-2            12.955
-            Q9UIW2                     13.356
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.060
-            Q9UP79                     12.550
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.174
+            Q9UI40;Q9UI40-2            13.656
+            Q9UIW2                     10.554
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.968
+            Q9UP79                     13.244
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -2035,7 +2047,7 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/37e20c7b303e4f418678698cbadd1345709f167fd50ed9abfa9751bb156c5b97.png" src="../../../_images/37e20c7b303e4f418678698cbadd1345709f167fd50ed9abfa9751bb156c5b97.png" />
+<img alt="../../../_images/ea7b0ce8b2fa6e48c3ac8c8d3d7345ccd0f80a91a9ec8ece5d553891037f9a5e.png" src="../../../_images/ea7b0ce8b2fa6e48c3ac8c8d3d7345ccd0f80a91a9ec8ece5d553891037f9a5e.png" />
 </div>
 </div>
 <p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
@@ -2059,7 +2071,11 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.xlsx
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/9315d83d47168fa3da1739d7e683ad72_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
+/home/runner/work/pimms/pimms/project/.snakemake/conda/9315d83d47168fa3da1739d7e683ad72_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
+root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_PI.xlsx
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2108,42 +2124,42 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>(9, 10]</th>
       <td>136</td>
-      <td>19</td>
+      <td>15</td>
     </tr>
     <tr>
       <th>(10, 11]</th>
       <td>529</td>
-      <td>765</td>
+      <td>735</td>
     </tr>
     <tr>
       <th>(11, 12]</th>
       <td>1,731</td>
-      <td>7,982</td>
+      <td>8,040</td>
     </tr>
     <tr>
       <th>(12, 13]</th>
       <td>4,644</td>
-      <td>21,389</td>
+      <td>21,436</td>
     </tr>
     <tr>
       <th>(13, 14]</th>
       <td>12,161</td>
-      <td>13,920</td>
+      <td>13,948</td>
     </tr>
     <tr>
       <th>(14, 15]</th>
       <td>27,515</td>
-      <td>2,230</td>
+      <td>2,142</td>
     </tr>
     <tr>
       <th>(15, 16]</th>
       <td>44,723</td>
-      <td>94</td>
+      <td>84</td>
     </tr>
     <tr>
       <th>(16, 17]</th>
       <td>45,981</td>
-      <td>2</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>(17, 18]</th>
@@ -2216,7 +2232,7 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </section>
 <section id="mean-shift-by-model">
-<h2>Mean shift by model<a class="headerlink" href="#mean-shift-by-model" title="Permalink to this heading">#</a></h2>
+<h2>Mean shift by model<a class="headerlink" href="#mean-shift-by-model" title="Link to this heading">#</a></h2>
 <p>Compare how imputed values are shifted in comparsion to overall distribution.</p>
 <p>First by using all intensities without any grouping:</p>
 <div class="cell tag_hide-input docutils container">
@@ -2269,10 +2285,10 @@ Name: intensity, Length: 46401, dtype: float64
     </tr>
     <tr>
       <th>PI</th>
-      <td>12.695</td>
-      <td>0.795</td>
+      <td>12.694</td>
+      <td>0.787</td>
       <td>1.724</td>
-      <td>0.310</td>
+      <td>0.307</td>
     </tr>
   </tbody>
 </table>
@@ -2338,7 +2354,7 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>std</th>
       <td>2.564</td>
-      <td>0.765</td>
+      <td>0.756</td>
     </tr>
     <tr>
       <th>mean_shift</th>
@@ -2348,7 +2364,7 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>std shrinkage</th>
       <td>1.000</td>
-      <td>0.298</td>
+      <td>0.295</td>
     </tr>
   </tbody>
 </table>
@@ -2356,7 +2372,7 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </section>
 <section id="differential-analysis">
-<h2>Differential analysis<a class="headerlink" href="#differential-analysis" title="Permalink to this heading">#</a></h2>
+<h2>Differential analysis<a class="headerlink" href="#differential-analysis" title="Link to this heading">#</a></h2>
 <p>Combine observed and imputed data (if available) for differential analysis:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -2453,11 +2469,11 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>11.803</td>
+      <td>11.809</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>14.078</td>
+      <td>12.375</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -2472,12 +2488,12 @@ Name: intensity, Length: 46401, dtype: float64
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>13.009</td>
+      <td>12.410</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>12.828</td>
+      <td>12.965</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -2529,7 +2545,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>12.500</td>
+      <td>14.009</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -2588,10 +2604,10 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>13.129</td>
+      <td>13.066</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>11.709</td>
+      <td>12.743</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -2612,7 +2628,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>13.913</td>
+      <td>13.398</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -2621,14 +2637,14 @@ Name: intensity, Length: 46401, dtype: float64
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>13.515</td>
+      <td>13.869</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>12.977</td>
-      <td>11.041</td>
+      <td>12.792</td>
+      <td>12.676</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -2636,7 +2652,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>12.966</td>
+      <td>14.067</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -2660,23 +2676,23 @@ Name: intensity, Length: 46401, dtype: float64
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>12.616</td>
+      <td>11.828</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>11.870</td>
+      <td>13.156</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>13.133</td>
+      <td>12.580</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>13.191</td>
+      <td>13.641</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2684,7 +2700,7 @@ Name: intensity, Length: 46401, dtype: float64
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>13.082</td>
+      <td>13.033</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -2798,56 +2814,56 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.642</td>
+      <td>0.454</td>
       <td>1</td>
-      <td>1.136</td>
-      <td>0.288</td>
-      <td>0.006</td>
-      <td>0.541</td>
-      <td>0.451</td>
+      <td>0.748</td>
+      <td>0.388</td>
+      <td>0.004</td>
+      <td>0.411</td>
+      <td>0.549</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.060</td>
+      <td>0.008</td>
       <td>1</td>
-      <td>0.105</td>
-      <td>0.746</td>
-      <td>0.001</td>
-      <td>0.127</td>
-      <td>0.842</td>
+      <td>0.013</td>
+      <td>0.910</td>
+      <td>0.000</td>
+      <td>0.041</td>
+      <td>0.949</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>2.077</td>
+      <td>1.785</td>
       <td>1</td>
-      <td>3.679</td>
-      <td>0.057</td>
-      <td>0.019</td>
-      <td>1.247</td>
-      <td>0.134</td>
+      <td>2.942</td>
+      <td>0.088</td>
+      <td>0.015</td>
+      <td>1.056</td>
+      <td>0.188</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>4.964</td>
+      <td>5.442</td>
       <td>1</td>
-      <td>8.790</td>
+      <td>8.970</td>
       <td>0.003</td>
-      <td>0.044</td>
-      <td>2.467</td>
-      <td>0.014</td>
+      <td>0.045</td>
+      <td>2.508</td>
+      <td>0.013</td>
       <td>True</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>8.794</td>
+      <td>8.894</td>
       <td>1</td>
-      <td>15.574</td>
+      <td>14.659</td>
       <td>0.000</td>
-      <td>0.075</td>
-      <td>3.953</td>
+      <td>0.071</td>
+      <td>3.758</td>
       <td>0.001</td>
       <td>True</td>
     </tr>
@@ -2866,57 +2882,57 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>0.019</td>
+      <td>0.113</td>
       <td>1</td>
-      <td>0.019</td>
-      <td>0.889</td>
-      <td>0.000</td>
-      <td>0.051</td>
-      <td>0.940</td>
+      <td>0.121</td>
+      <td>0.729</td>
+      <td>0.001</td>
+      <td>0.137</td>
+      <td>0.827</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.241</td>
+      <td>0.749</td>
       <td>1</td>
-      <td>0.243</td>
-      <td>0.622</td>
-      <td>0.001</td>
-      <td>0.206</td>
-      <td>0.751</td>
+      <td>0.799</td>
+      <td>0.373</td>
+      <td>0.004</td>
+      <td>0.429</td>
+      <td>0.534</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.128</td>
+      <td>0.062</td>
       <td>1</td>
-      <td>0.129</td>
-      <td>0.720</td>
-      <td>0.001</td>
-      <td>0.143</td>
-      <td>0.822</td>
+      <td>0.066</td>
+      <td>0.797</td>
+      <td>0.000</td>
+      <td>0.099</td>
+      <td>0.876</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>1.931</td>
+      <td>2.923</td>
       <td>1</td>
-      <td>1.952</td>
-      <td>0.164</td>
-      <td>0.010</td>
-      <td>0.785</td>
-      <td>0.301</td>
+      <td>3.115</td>
+      <td>0.079</td>
+      <td>0.016</td>
+      <td>1.102</td>
+      <td>0.174</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>20.951</td>
+      <td>11.145</td>
       <td>1</td>
-      <td>21.183</td>
-      <td>0.000</td>
-      <td>0.100</td>
-      <td>5.119</td>
-      <td>0.000</td>
+      <td>11.879</td>
+      <td>0.001</td>
+      <td>0.059</td>
+      <td>3.156</td>
+      <td>0.004</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -2994,61 +3010,61 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.642</td>
+      <td>0.454</td>
       <td>1</td>
-      <td>1.136</td>
-      <td>0.288</td>
-      <td>0.006</td>
-      <td>0.541</td>
-      <td>0.451</td>
+      <td>0.748</td>
+      <td>0.388</td>
+      <td>0.004</td>
+      <td>0.411</td>
+      <td>0.549</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
-      <td>2.935</td>
+      <td>3.051</td>
       <td>1</td>
-      <td>3.477</td>
-      <td>0.064</td>
-      <td>0.018</td>
-      <td>1.196</td>
-      <td>0.147</td>
+      <td>3.900</td>
+      <td>0.050</td>
+      <td>0.020</td>
+      <td>1.303</td>
+      <td>0.121</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
-      <td>2.140</td>
+      <td>4.093</td>
       <td>1</td>
-      <td>2.137</td>
-      <td>0.145</td>
-      <td>0.011</td>
-      <td>0.837</td>
-      <td>0.277</td>
+      <td>4.100</td>
+      <td>0.044</td>
+      <td>0.021</td>
+      <td>1.354</td>
+      <td>0.111</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
-      <td>0.080</td>
+      <td>0.072</td>
       <td>1</td>
-      <td>0.385</td>
-      <td>0.536</td>
+      <td>0.328</td>
+      <td>0.567</td>
       <td>0.002</td>
-      <td>0.271</td>
-      <td>0.681</td>
+      <td>0.246</td>
+      <td>0.705</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
-      <td>8.540</td>
+      <td>7.656</td>
       <td>1</td>
-      <td>2.191</td>
-      <td>0.140</td>
-      <td>0.011</td>
-      <td>0.852</td>
-      <td>0.271</td>
+      <td>1.911</td>
+      <td>0.169</td>
+      <td>0.010</td>
+      <td>0.773</td>
+      <td>0.306</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3072,20 +3088,20 @@ Name: intensity, Length: 46401, dtype: float64
       <td>0.175</td>
       <td>0.010</td>
       <td>0.756</td>
-      <td>0.316</td>
+      <td>0.315</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
-      <td>5.952</td>
+      <td>3.942</td>
       <td>1</td>
-      <td>6.225</td>
-      <td>0.013</td>
-      <td>0.032</td>
-      <td>1.872</td>
-      <td>0.043</td>
-      <td>True</td>
+      <td>4.232</td>
+      <td>0.041</td>
+      <td>0.022</td>
+      <td>1.387</td>
+      <td>0.104</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
@@ -3102,25 +3118,25 @@ Name: intensity, Length: 46401, dtype: float64
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
-      <td>0.627</td>
+      <td>0.433</td>
       <td>1</td>
-      <td>0.822</td>
-      <td>0.366</td>
-      <td>0.004</td>
-      <td>0.437</td>
-      <td>0.529</td>
+      <td>0.590</td>
+      <td>0.443</td>
+      <td>0.003</td>
+      <td>0.353</td>
+      <td>0.601</td>
       <td>False</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
-      <td>0.019</td>
+      <td>0.113</td>
       <td>1</td>
-      <td>0.019</td>
-      <td>0.889</td>
-      <td>0.000</td>
-      <td>0.051</td>
-      <td>0.940</td>
+      <td>0.121</td>
+      <td>0.729</td>
+      <td>0.001</td>
+      <td>0.137</td>
+      <td>0.827</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -3184,20 +3200,20 @@ Name: intensity, Length: 46401, dtype: float64
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="10_1_ald_diff_analysis_DAE.html"
+       href="../../../01_2_performance_plots.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Differential Analysis - Compare model imputation with standard imputation</p>
+        <p class="prev-next-title">Compare models</p>
       </div>
     </a>
     <a class="right-next"
-       href="10_1_ald_diff_analysis_TRKNN.html"
+       href="10_1_ald_diff_analysis_RF.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -3213,6 +3229,7 @@ Name: intensity, Length: 46401, dtype: float64
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -3278,8 +3295,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -1,57 +1,53 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+gc143d18 documentation</title>
+    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+gac0252e documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/documentation_options.js?v=7a4a1d28"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_NAGuideR_QRILC';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Transfer predictions from NAGuideR" href="01_1_transfer_NAGuideR_pred.html" />
+    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_IMPSEQ.html" />
     <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_MINPROB.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -62,28 +58,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -105,12 +96,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -127,6 +126,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="index.html">
   
@@ -135,10 +136,21 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gc143d18 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gac0252e documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -156,35 +168,35 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -193,25 +205,25 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -219,13 +231,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
 </ul>
 
     </div>
@@ -241,7 +253,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -250,14 +262,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -335,10 +347,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -346,14 +358,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -385,10 +397,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="naguide-r-methods">
-<h1>NAGuide R methods<a class="headerlink" href="#naguide-r-methods" title="Permalink to this heading">#</a></h1>
+<h1>NAGuide R methods<a class="headerlink" href="#naguide-r-methods" title="Link to this heading">#</a></h1>
 <p>Setup basic methods and packages used for all methods</p>
 <ul class="simple">
 <li><p>BiocManager could be moved to methods who are installed from BioConductor</p></li>
@@ -759,7 +771,7 @@ Loading required package: tibble
 </details>
 </div>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <p>Choose one of the available methods.
 Some methods might fail for your dataset for unknown reasons
 (and the error won’t always be easy to understand)</p>
@@ -812,7 +824,7 @@ method = &#39;GSIMP&#39;
 </div>
 </section>
 <section id="dump-predictions">
-<h2>Dump predictions<a class="headerlink" href="#dump-predictions" title="Permalink to this heading">#</a></h2>
+<h2>Dump predictions<a class="headerlink" href="#dump-predictions" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="w"> </span><span class="o">&lt;-</span>
@@ -1043,13 +1055,6 @@ Loading required package: sandwich
 
 Loading required package: imputeLCMD
 
-Warning message in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, :
-“there is no package called ‘imputeLCMD’”
-Updating HTML index of packages in &#39;.Library&#39;
-
-Making &#39;packages.html&#39; ...
- done
-
 Loading required package: tmvtnorm
 
 Loading required package: mvtnorm
@@ -1073,67 +1078,67 @@ and has been superseded by the norm2 package.
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>A0A024QZX5;A0A087X1N8;P35237                                                  </td><td>15.91237</td><td>14.73670</td><td>16.11149</td><td>16.10697</td><td>15.60321</td><td>15.81161</td><td>15.49966</td><td>15.22075</td><td>15.98013</td><td>⋯</td><td>14.97547</td><td>15.86264</td><td>15.65594</td><td>15.40126</td><td>14.78429</td><td>15.682253</td><td>15.79804</td><td>15.73949</td><td>15.47682</td><td>14.48294</td></tr>
-	<tr><td>A0A024R0T9;K7ER74;P02655                                                      </td><td>16.85194</td><td>16.87369</td><td>15.97721</td><td>17.03151</td><td>15.33051</td><td>18.61407</td><td>17.40917</td><td>17.68391</td><td>16.38625</td><td>⋯</td><td>17.30955</td><td>16.61480</td><td>17.95339</td><td>18.19938</td><td>17.27911</td><td>16.886350</td><td>17.55400</td><td>15.92811</td><td>16.77948</td><td>17.26137</td></tr>
-	<tr><td>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</td><td>15.57047</td><td>15.51892</td><td>15.93532</td><td>15.80187</td><td>15.37522</td><td>15.62420</td><td>15.91185</td><td>15.38499</td><td>15.89447</td><td>⋯</td><td>14.55629</td><td>15.93179</td><td>14.85871</td><td>15.12451</td><td>14.65388</td><td>14.910061</td><td>15.59966</td><td>15.46896</td><td>14.99496</td><td>15.17487</td></tr>
-	<tr><td>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                       </td><td>16.48108</td><td>16.38694</td><td>16.41577</td><td>16.97862</td><td>16.67906</td><td>15.95764</td><td>16.23389</td><td>16.41793</td><td>16.27134</td><td>⋯</td><td>15.95402</td><td>16.02959</td><td>16.49753</td><td>16.51284</td><td>16.51269</td><td>16.482320</td><td>15.93782</td><td>16.89773</td><td>16.13246</td><td>16.23505</td></tr>
-	<tr><td>A0A075B6H7                                                                    </td><td>17.30138</td><td>12.03958</td><td>18.17480</td><td>15.96322</td><td>12.12431</td><td>18.31720</td><td>11.56173</td><td>17.21393</td><td>17.79403</td><td>⋯</td><td>13.57380</td><td>16.48262</td><td>14.83467</td><td>13.56893</td><td>14.48257</td><td>13.519595</td><td>14.06480</td><td>12.46531</td><td>14.02382</td><td>14.78894</td></tr>
-	<tr><td>A0A075B6H9                                                                    </td><td>20.24646</td><td>19.94110</td><td>19.25090</td><td>19.62797</td><td>20.44983</td><td>18.68569</td><td>20.34722</td><td>20.79604</td><td>18.99523</td><td>⋯</td><td>17.16338</td><td>17.02793</td><td>18.26986</td><td>19.80062</td><td>20.18315</td><td>17.704854</td><td>18.15450</td><td>18.63631</td><td>14.90754</td><td>17.89344</td></tr>
-	<tr><td>A0A075B6I0                                                                    </td><td>16.76446</td><td>18.78624</td><td>16.83217</td><td>17.85209</td><td>18.68185</td><td>17.86543</td><td>18.24995</td><td>20.30936</td><td>17.97843</td><td>⋯</td><td>18.00550</td><td>18.54142</td><td>17.80748</td><td>19.89865</td><td>19.67420</td><td>17.039452</td><td>18.15179</td><td>17.95040</td><td>16.33252</td><td>17.74443</td></tr>
-	<tr><td>A0A075B6I1                                                                    </td><td>17.58357</td><td>17.14388</td><td>15.67073</td><td>18.87749</td><td>17.08131</td><td>14.82369</td><td>18.51969</td><td>19.35640</td><td>18.56449</td><td>⋯</td><td>16.41402</td><td>17.50510</td><td>14.01911</td><td>17.50574</td><td>20.25111</td><td>14.675240</td><td>16.50267</td><td>16.32073</td><td>13.31626</td><td>16.37054</td></tr>
-	<tr><td>A0A075B6I6                                                                    </td><td>16.98778</td><td>14.73858</td><td>17.01183</td><td>14.18153</td><td>14.14021</td><td>17.04179</td><td>17.37560</td><td>16.99794</td><td>17.20311</td><td>⋯</td><td>15.72543</td><td>17.06758</td><td>16.45849</td><td>16.32778</td><td>16.33372</td><td>16.413036</td><td>16.86003</td><td>16.40071</td><td>16.11868</td><td>15.77958</td></tr>
-	<tr><td>A0A075B6I9                                                                    </td><td>20.05416</td><td>19.06733</td><td>18.56906</td><td>18.98506</td><td>19.68564</td><td>19.37580</td><td>19.39885</td><td>20.54359</td><td>18.84397</td><td>⋯</td><td>21.85263</td><td>20.14650</td><td>19.53459</td><td>19.86713</td><td>20.76626</td><td>19.102113</td><td>18.53796</td><td>18.84897</td><td>18.36776</td><td>18.80581</td></tr>
-	<tr><td>A0A075B6J9                                                                    </td><td>14.81435</td><td>16.18799</td><td>14.27364</td><td>13.43813</td><td>14.49484</td><td>15.90875</td><td>16.18436</td><td>14.99215</td><td>16.17019</td><td>⋯</td><td>15.33455</td><td>14.42050</td><td>16.63193</td><td>17.43574</td><td>19.77811</td><td>16.064228</td><td>14.88150</td><td>17.58044</td><td>14.93072</td><td>16.53239</td></tr>
-	<tr><td>A0A075B6K4                                                                    </td><td>16.14850</td><td>16.12727</td><td>15.38672</td><td>16.56502</td><td>16.41771</td><td>16.45498</td><td>14.77545</td><td>17.04677</td><td>16.03210</td><td>⋯</td><td>18.58162</td><td>18.51737</td><td>16.48354</td><td>16.06338</td><td>17.19123</td><td>15.350327</td><td>16.58173</td><td>14.89763</td><td>14.97466</td><td>16.33787</td></tr>
-	<tr><td>A0A075B6K5                                                                    </td><td>17.34261</td><td>17.41722</td><td>17.23633</td><td>16.26717</td><td>17.39020</td><td>18.33604</td><td>17.21765</td><td>18.32488</td><td>17.52458</td><td>⋯</td><td>19.51566</td><td>18.98906</td><td>17.80614</td><td>16.74819</td><td>18.41254</td><td>17.153839</td><td>17.90184</td><td>17.51899</td><td>17.50220</td><td>16.98874</td></tr>
-	<tr><td>A0A075B6P5;P01615                                                             </td><td>15.63230</td><td>17.07552</td><td>16.97322</td><td>16.98965</td><td>17.49330</td><td>18.26923</td><td>17.78989</td><td>18.15334</td><td>17.78703</td><td>⋯</td><td>19.92434</td><td>17.27994</td><td>17.14222</td><td>19.84136</td><td>19.26620</td><td>17.175275</td><td>19.57506</td><td>19.30588</td><td>18.97651</td><td>18.68810</td></tr>
-	<tr><td>A0A075B6Q5                                                                    </td><td>13.53839</td><td>15.06881</td><td>15.12836</td><td>14.51370</td><td>15.15208</td><td>14.71872</td><td>14.09491</td><td>16.73949</td><td>15.29719</td><td>⋯</td><td>12.54516</td><td>17.02598</td><td>16.10287</td><td>15.87972</td><td>15.01832</td><td>14.734029</td><td>15.33632</td><td>16.88355</td><td>14.01679</td><td>15.68019</td></tr>
-	<tr><td>A0A075B6R2                                                                    </td><td>14.55589</td><td>15.91890</td><td>16.27981</td><td>16.77744</td><td>17.49744</td><td>17.05396</td><td>16.91770</td><td>19.77222</td><td>16.73705</td><td>⋯</td><td>17.99822</td><td>18.12131</td><td>19.19184</td><td>15.55749</td><td>17.28589</td><td>16.597767</td><td>17.07044</td><td>16.06459</td><td>15.78744</td><td>16.03648</td></tr>
-	<tr><td>A0A075B6R9;A0A0C4DH68                                                         </td><td>19.51640</td><td>19.37284</td><td>17.98652</td><td>19.00923</td><td>19.54147</td><td>19.56719</td><td>20.18507</td><td>20.56454</td><td>19.52324</td><td>⋯</td><td>20.12749</td><td>20.37360</td><td>19.49983</td><td>18.97739</td><td>20.58832</td><td>18.073367</td><td>18.84673</td><td>19.62054</td><td>19.33926</td><td>20.39256</td></tr>
-	<tr><td>A0A075B6S2                                                                    </td><td>15.51124</td><td>16.20824</td><td>14.84570</td><td>15.23242</td><td>13.91297</td><td>16.28653</td><td>14.65632</td><td>14.03430</td><td>14.51212</td><td>⋯</td><td>15.07423</td><td>15.91304</td><td>16.65963</td><td>15.80117</td><td>17.45378</td><td>14.101533</td><td>16.61213</td><td>16.21984</td><td>15.69582</td><td>16.38320</td></tr>
-	<tr><td>A0A075B6S5                                                                    </td><td>15.32594</td><td>14.36466</td><td>15.11360</td><td>14.07307</td><td>14.87818</td><td>15.96016</td><td>16.15277</td><td>17.07842</td><td>16.84659</td><td>⋯</td><td>15.51315</td><td>16.14929</td><td>15.33618</td><td>15.35133</td><td>15.91161</td><td>15.651702</td><td>16.03424</td><td>14.90990</td><td>14.15448</td><td>14.80994</td></tr>
-	<tr><td>A0A075B6S9                                                                    </td><td>16.55765</td><td>17.51597</td><td>17.93999</td><td>16.95147</td><td>17.08795</td><td>17.36099</td><td>16.42103</td><td>19.79080</td><td>17.13399</td><td>⋯</td><td>17.25958</td><td>20.50218</td><td>19.26507</td><td>18.42468</td><td>18.19725</td><td>16.145628</td><td>19.50373</td><td>18.42501</td><td>17.75190</td><td>16.21995</td></tr>
-	<tr><td>A0A075B7B8                                                                    </td><td>14.91594</td><td>11.47573</td><td>14.65865</td><td>11.25636</td><td>15.34886</td><td>14.50111</td><td>15.12196</td><td>14.51142</td><td>15.31218</td><td>⋯</td><td>12.26136</td><td>13.85950</td><td>13.29423</td><td>11.90643</td><td>13.66495</td><td> 9.553979</td><td>11.89921</td><td>13.85786</td><td>12.03879</td><td>12.62841</td></tr>
-	<tr><td>A0A075B7D0                                                                    </td><td>18.35754</td><td>13.46630</td><td>18.23018</td><td>19.26103</td><td>19.78637</td><td>19.65551</td><td>18.51593</td><td>20.50008</td><td>19.50572</td><td>⋯</td><td>15.88385</td><td>19.23066</td><td>15.24381</td><td>18.07711</td><td>19.43528</td><td>19.044976</td><td>17.02163</td><td>18.08262</td><td>18.73767</td><td>17.31493</td></tr>
-	<tr><td>A0A087WSV8;V9HW75                                                             </td><td>15.67587</td><td>14.50492</td><td>13.89757</td><td>15.55301</td><td>15.52087</td><td>13.46669</td><td>15.21659</td><td>13.16851</td><td>13.85270</td><td>⋯</td><td>14.09308</td><td>15.52576</td><td>15.20934</td><td>15.53814</td><td>13.98360</td><td>15.149174</td><td>15.89044</td><td>13.82860</td><td>15.41872</td><td>14.79854</td></tr>
-	<tr><td>A0A087WSY4                                                                    </td><td>13.35950</td><td>17.14993</td><td>15.65052</td><td>13.24166</td><td>14.36345</td><td>14.01767</td><td>13.54113</td><td>13.94010</td><td>12.39030</td><td>⋯</td><td>15.85031</td><td>13.80717</td><td>16.20781</td><td>15.33813</td><td>14.83125</td><td>15.127494</td><td>14.36586</td><td>14.23140</td><td>14.31052</td><td>20.34338</td></tr>
-	<tr><td>A0A087WSY5;Q96IY4                                                             </td><td>17.86323</td><td>18.04130</td><td>17.77668</td><td>18.34178</td><td>18.42888</td><td>17.85131</td><td>17.68953</td><td>19.12984</td><td>18.01868</td><td>⋯</td><td>17.86117</td><td>17.12731</td><td>17.28784</td><td>18.35734</td><td>18.09213</td><td>17.114959</td><td>17.19541</td><td>17.94426</td><td>18.08478</td><td>17.34736</td></tr>
-	<tr><td>A0A087WSY6                                                                    </td><td>20.11686</td><td>20.27450</td><td>19.28080</td><td>19.78190</td><td>19.72658</td><td>20.79580</td><td>19.63239</td><td>20.59759</td><td>19.96610</td><td>⋯</td><td>21.28155</td><td>19.51359</td><td>19.24474</td><td>19.73663</td><td>19.37543</td><td>17.670446</td><td>19.79855</td><td>18.65092</td><td>18.43422</td><td>19.15982</td></tr>
-	<tr><td>A0A087WSZ0;A0A0G2JQJ0                                                         </td><td>16.68463</td><td>11.79565</td><td>12.38559</td><td>13.83204</td><td>13.35201</td><td>13.03775</td><td>13.80772</td><td>15.25869</td><td>15.59578</td><td>⋯</td><td>13.46476</td><td>15.97835</td><td>14.31120</td><td>13.29705</td><td>17.32747</td><td>14.889720</td><td>15.63658</td><td>13.74259</td><td>16.47652</td><td>13.66795</td></tr>
-	<tr><td>A0A087WTA1;A0A0A0MR20;E9PDN6;F5H107;Q9C0A0;Q9C0A0-2                           </td><td>17.59377</td><td>18.01240</td><td>17.82921</td><td>18.26850</td><td>17.55706</td><td>17.38051</td><td>17.31082</td><td>16.40859</td><td>17.37506</td><td>⋯</td><td>16.94249</td><td>17.74655</td><td>16.34803</td><td>17.69916</td><td>16.55807</td><td>18.079999</td><td>17.48057</td><td>17.81535</td><td>18.18624</td><td>17.91903</td></tr>
-	<tr><td>A0A087WTA8;P08123                                                             </td><td>17.61908</td><td>18.21685</td><td>17.54445</td><td>17.50225</td><td>17.80288</td><td>16.99184</td><td>17.97739</td><td>17.70994</td><td>17.53213</td><td>⋯</td><td>17.56219</td><td>16.57279</td><td>16.90066</td><td>15.96782</td><td>16.17493</td><td>16.934015</td><td>16.74856</td><td>16.30322</td><td>17.17757</td><td>17.26857</td></tr>
-	<tr><td>A0A087WTK0;A0A087WVC6;Q12913                                                  </td><td>15.50121</td><td>15.30696</td><td>15.81471</td><td>15.55156</td><td>15.32131</td><td>16.04415</td><td>16.18863</td><td>13.71280</td><td>15.56486</td><td>⋯</td><td>14.23272</td><td>15.76029</td><td>15.21911</td><td>14.35298</td><td>13.59027</td><td>13.427558</td><td>15.39396</td><td>15.24665</td><td>13.38381</td><td>14.23954</td></tr>
+	<tr><td>A0A024QZX5;A0A087X1N8;P35237                                                  </td><td>15.91237</td><td>14.78400</td><td>16.11149</td><td>16.10697</td><td>15.60321</td><td>15.81161</td><td>15.49966</td><td>15.22075</td><td>15.98013</td><td>⋯</td><td>14.79272</td><td>15.86264</td><td>15.65594</td><td>15.401258</td><td>14.71242</td><td>15.682253</td><td>15.79804</td><td>15.73949</td><td>15.47682</td><td>14.83807</td></tr>
+	<tr><td>A0A024R0T9;K7ER74;P02655                                                      </td><td>16.85194</td><td>16.87369</td><td>15.91996</td><td>17.03151</td><td>15.33051</td><td>18.61407</td><td>17.40917</td><td>17.68391</td><td>16.38625</td><td>⋯</td><td>17.30955</td><td>16.61480</td><td>17.95339</td><td>18.199379</td><td>17.27911</td><td>16.886350</td><td>17.55400</td><td>15.67782</td><td>16.77948</td><td>17.26137</td></tr>
+	<tr><td>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</td><td>15.57047</td><td>15.51892</td><td>15.93532</td><td>15.80187</td><td>15.37522</td><td>15.62420</td><td>15.91185</td><td>15.38499</td><td>15.89447</td><td>⋯</td><td>14.73146</td><td>15.93179</td><td>14.85871</td><td>15.124514</td><td>14.66165</td><td>14.910061</td><td>15.59966</td><td>15.46896</td><td>14.99496</td><td>15.17487</td></tr>
+	<tr><td>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                       </td><td>16.48108</td><td>16.38694</td><td>16.41577</td><td>16.97862</td><td>16.67906</td><td>15.95764</td><td>16.23389</td><td>16.41793</td><td>16.27134</td><td>⋯</td><td>15.95402</td><td>16.02959</td><td>16.49753</td><td>16.512835</td><td>16.51269</td><td>16.482320</td><td>15.93782</td><td>16.89773</td><td>16.13246</td><td>16.23505</td></tr>
+	<tr><td>A0A075B6H7                                                                    </td><td>17.30138</td><td>13.43723</td><td>18.17480</td><td>15.96322</td><td>10.42068</td><td>18.31720</td><td>13.45339</td><td>17.21393</td><td>17.79403</td><td>⋯</td><td>13.19289</td><td>16.48262</td><td>14.83467</td><td>13.568932</td><td>14.48257</td><td> 8.462037</td><td>14.65875</td><td>12.89629</td><td>10.84268</td><td>13.18269</td></tr>
+	<tr><td>A0A075B6H9                                                                    </td><td>20.24646</td><td>19.94110</td><td>19.25090</td><td>19.62797</td><td>20.44983</td><td>18.68569</td><td>20.34722</td><td>20.79604</td><td>18.99523</td><td>⋯</td><td>16.94254</td><td>16.25109</td><td>18.26986</td><td>19.800619</td><td>20.18315</td><td>17.704854</td><td>18.15450</td><td>18.63631</td><td>14.90754</td><td>17.89344</td></tr>
+	<tr><td>A0A075B6I0                                                                    </td><td>16.76446</td><td>18.78624</td><td>16.83217</td><td>17.85209</td><td>18.68185</td><td>17.86543</td><td>18.24995</td><td>20.30936</td><td>17.97843</td><td>⋯</td><td>18.00550</td><td>18.54142</td><td>17.80748</td><td>19.898655</td><td>19.67420</td><td>17.039452</td><td>18.15179</td><td>17.95040</td><td>16.54185</td><td>17.74443</td></tr>
+	<tr><td>A0A075B6I1                                                                    </td><td>17.58357</td><td>17.14388</td><td>15.67073</td><td>18.87749</td><td>17.08131</td><td>14.82369</td><td>18.51969</td><td>19.35640</td><td>18.56449</td><td>⋯</td><td>16.41402</td><td>17.50510</td><td>14.01911</td><td>17.505739</td><td>20.25111</td><td>14.532635</td><td>16.50267</td><td>16.32073</td><td>13.61328</td><td>16.37054</td></tr>
+	<tr><td>A0A075B6I6                                                                    </td><td>16.98778</td><td>13.28700</td><td>17.01183</td><td>14.18153</td><td>14.14021</td><td>17.04179</td><td>17.37560</td><td>16.99794</td><td>17.20311</td><td>⋯</td><td>15.72543</td><td>17.06758</td><td>16.45849</td><td>16.327777</td><td>16.33372</td><td>16.413036</td><td>16.86003</td><td>16.40071</td><td>16.11868</td><td>15.77958</td></tr>
+	<tr><td>A0A075B6I9                                                                    </td><td>20.05416</td><td>19.06733</td><td>18.56906</td><td>18.98506</td><td>19.68564</td><td>19.37580</td><td>19.39885</td><td>20.54359</td><td>18.84397</td><td>⋯</td><td>21.85263</td><td>20.14650</td><td>19.53459</td><td>19.867130</td><td>20.76626</td><td>19.102113</td><td>18.53796</td><td>18.84897</td><td>18.36776</td><td>18.80581</td></tr>
+	<tr><td>A0A075B6J9                                                                    </td><td>12.84093</td><td>16.18799</td><td>13.80112</td><td>13.43813</td><td>14.49484</td><td>15.90875</td><td>16.18436</td><td>15.32446</td><td>16.17019</td><td>⋯</td><td>14.64638</td><td>15.38888</td><td>16.63193</td><td>17.435736</td><td>19.77811</td><td>16.064228</td><td>14.58262</td><td>17.58044</td><td>14.33303</td><td>16.53239</td></tr>
+	<tr><td>A0A075B6K4                                                                    </td><td>16.14850</td><td>16.12727</td><td>15.38672</td><td>16.56502</td><td>16.41771</td><td>16.45498</td><td>15.12732</td><td>17.04677</td><td>16.03210</td><td>⋯</td><td>18.58162</td><td>18.51737</td><td>16.48354</td><td>16.063382</td><td>17.19123</td><td>15.350327</td><td>16.58173</td><td>15.14225</td><td>14.97675</td><td>16.33787</td></tr>
+	<tr><td>A0A075B6K5                                                                    </td><td>17.34261</td><td>17.41722</td><td>17.23633</td><td>16.26717</td><td>17.39020</td><td>18.33604</td><td>17.21765</td><td>18.32488</td><td>17.52458</td><td>⋯</td><td>19.51566</td><td>18.98906</td><td>17.80614</td><td>16.748194</td><td>18.41254</td><td>17.153839</td><td>17.90184</td><td>17.51899</td><td>17.50220</td><td>16.98874</td></tr>
+	<tr><td>A0A075B6P5;P01615                                                             </td><td>17.42403</td><td>16.27636</td><td>17.37329</td><td>16.98965</td><td>17.49330</td><td>18.26923</td><td>17.78989</td><td>18.15334</td><td>17.78703</td><td>⋯</td><td>19.92434</td><td>16.35268</td><td>17.01321</td><td>19.841361</td><td>19.26620</td><td>17.175275</td><td>19.57506</td><td>19.30588</td><td>18.97651</td><td>18.68810</td></tr>
+	<tr><td>A0A075B6Q5                                                                    </td><td>14.11682</td><td>14.99996</td><td>15.12836</td><td>13.21583</td><td>12.40173</td><td>15.45738</td><td>13.82758</td><td>16.73949</td><td>15.50354</td><td>⋯</td><td>15.25970</td><td>17.02598</td><td>16.10287</td><td>15.879723</td><td>15.28314</td><td>14.657312</td><td>13.25889</td><td>16.88355</td><td>12.99228</td><td>15.68019</td></tr>
+	<tr><td>A0A075B6R2                                                                    </td><td>14.82731</td><td>15.50183</td><td>16.27981</td><td>16.77744</td><td>17.49744</td><td>17.05396</td><td>16.91770</td><td>19.77222</td><td>16.73705</td><td>⋯</td><td>17.99822</td><td>18.12131</td><td>19.19184</td><td>15.867313</td><td>17.28589</td><td>16.597767</td><td>17.07044</td><td>16.06459</td><td>15.91016</td><td>16.03648</td></tr>
+	<tr><td>A0A075B6R9;A0A0C4DH68                                                         </td><td>19.51640</td><td>19.37284</td><td>16.90747</td><td>19.00923</td><td>19.54147</td><td>19.56719</td><td>20.18507</td><td>20.56454</td><td>19.52324</td><td>⋯</td><td>20.12749</td><td>20.37360</td><td>19.49983</td><td>18.977392</td><td>20.58832</td><td>18.073367</td><td>18.84673</td><td>19.62054</td><td>19.33926</td><td>20.39256</td></tr>
+	<tr><td>A0A075B6S2                                                                    </td><td>15.51124</td><td>16.20824</td><td>14.84570</td><td>15.23242</td><td>12.78066</td><td>16.28653</td><td>14.65632</td><td>14.17609</td><td>14.51212</td><td>⋯</td><td>15.07423</td><td>15.91304</td><td>16.65963</td><td>15.801174</td><td>17.45378</td><td>14.101533</td><td>16.61213</td><td>16.21984</td><td>15.69582</td><td>16.38320</td></tr>
+	<tr><td>A0A075B6S5                                                                    </td><td>14.90639</td><td>14.64501</td><td>15.20556</td><td>15.17959</td><td>14.18075</td><td>15.96016</td><td>16.15277</td><td>17.07842</td><td>16.84659</td><td>⋯</td><td>15.51315</td><td>16.14929</td><td>14.78424</td><td>15.351335</td><td>15.91161</td><td>15.651702</td><td>16.03424</td><td>11.98791</td><td>14.84253</td><td>14.07967</td></tr>
+	<tr><td>A0A075B6S9                                                                    </td><td>16.55765</td><td>17.51597</td><td>17.93999</td><td>16.95147</td><td>17.08795</td><td>17.36099</td><td>16.42103</td><td>19.79080</td><td>17.13399</td><td>⋯</td><td>17.25958</td><td>20.50218</td><td>19.26507</td><td>18.424680</td><td>18.19725</td><td>16.145628</td><td>19.50373</td><td>18.42501</td><td>17.75190</td><td>16.21995</td></tr>
+	<tr><td>A0A075B7B8                                                                    </td><td>14.91594</td><td>10.88947</td><td>14.65865</td><td>14.08033</td><td>15.34886</td><td>14.50111</td><td>15.12196</td><td>14.51142</td><td>15.31218</td><td>⋯</td><td>12.00750</td><td>13.42264</td><td>10.78131</td><td> 9.478368</td><td>13.14478</td><td>11.906034</td><td>14.25201</td><td>13.56757</td><td>10.25157</td><td>11.17841</td></tr>
+	<tr><td>A0A075B7D0                                                                    </td><td>18.35754</td><td>15.96208</td><td>18.23018</td><td>19.26103</td><td>19.78637</td><td>19.65551</td><td>18.51593</td><td>20.50008</td><td>19.50572</td><td>⋯</td><td>15.73808</td><td>19.23066</td><td>14.02837</td><td>18.077113</td><td>19.43528</td><td>19.044976</td><td>17.02163</td><td>18.08262</td><td>18.73767</td><td>17.31493</td></tr>
+	<tr><td>A0A087WSV8;V9HW75                                                             </td><td>15.67587</td><td>14.50492</td><td>13.65227</td><td>15.55301</td><td>15.52087</td><td>13.83851</td><td>15.21659</td><td>13.27917</td><td>13.85270</td><td>⋯</td><td>13.61242</td><td>15.52576</td><td>15.20934</td><td>15.538140</td><td>13.98360</td><td>15.149174</td><td>15.89044</td><td>13.44324</td><td>15.41872</td><td>14.79854</td></tr>
+	<tr><td>A0A087WSY4                                                                    </td><td>13.55971</td><td>17.14993</td><td>15.65052</td><td>13.15976</td><td>13.51853</td><td>14.03487</td><td>12.75151</td><td>14.51732</td><td>14.45361</td><td>⋯</td><td>15.85031</td><td>12.44139</td><td>16.20781</td><td>15.338130</td><td>14.00599</td><td>15.127494</td><td>14.62179</td><td>12.90413</td><td>14.29185</td><td>20.34338</td></tr>
+	<tr><td>A0A087WSY5;Q96IY4                                                             </td><td>17.86323</td><td>18.04130</td><td>17.77668</td><td>18.34178</td><td>18.42888</td><td>17.85131</td><td>17.68953</td><td>19.12984</td><td>18.01868</td><td>⋯</td><td>17.86117</td><td>17.12731</td><td>17.28784</td><td>18.357336</td><td>18.09213</td><td>17.114959</td><td>17.19541</td><td>17.94426</td><td>18.08478</td><td>17.34736</td></tr>
+	<tr><td>A0A087WSY6                                                                    </td><td>20.11686</td><td>20.27450</td><td>19.28080</td><td>19.78190</td><td>19.72658</td><td>20.79580</td><td>19.63239</td><td>20.59759</td><td>19.96610</td><td>⋯</td><td>21.28155</td><td>19.51359</td><td>19.24474</td><td>19.736626</td><td>19.37543</td><td>18.015076</td><td>19.79855</td><td>18.65092</td><td>18.43422</td><td>19.15982</td></tr>
+	<tr><td>A0A087WSZ0;A0A0G2JQJ0                                                         </td><td>16.68463</td><td>13.88628</td><td>11.38693</td><td>13.37881</td><td>13.68560</td><td>13.03775</td><td>13.69538</td><td>15.25869</td><td>15.59578</td><td>⋯</td><td>13.34552</td><td>15.97835</td><td>14.31120</td><td>13.859508</td><td>17.32747</td><td>14.889720</td><td>15.63658</td><td>13.74259</td><td>16.47652</td><td>13.66795</td></tr>
+	<tr><td>A0A087WTA1;A0A0A0MR20;E9PDN6;F5H107;Q9C0A0;Q9C0A0-2                           </td><td>17.59377</td><td>18.01240</td><td>17.82921</td><td>18.26850</td><td>17.55706</td><td>17.38051</td><td>17.31082</td><td>16.40859</td><td>17.37506</td><td>⋯</td><td>16.94249</td><td>17.74655</td><td>16.55560</td><td>17.699161</td><td>16.16754</td><td>18.079999</td><td>17.48057</td><td>17.81535</td><td>18.18624</td><td>17.91903</td></tr>
+	<tr><td>A0A087WTA8;P08123                                                             </td><td>17.61908</td><td>18.21685</td><td>17.54445</td><td>17.50225</td><td>17.80288</td><td>16.99184</td><td>17.97739</td><td>17.70994</td><td>17.53213</td><td>⋯</td><td>17.56219</td><td>16.57279</td><td>16.90066</td><td>16.340787</td><td>16.20250</td><td>16.934015</td><td>16.74856</td><td>16.40838</td><td>17.17757</td><td>17.26857</td></tr>
+	<tr><td>A0A087WTK0;A0A087WVC6;Q12913                                                  </td><td>15.50121</td><td>15.30696</td><td>15.81471</td><td>15.55156</td><td>15.32131</td><td>16.04415</td><td>16.18863</td><td>13.50352</td><td>15.56486</td><td>⋯</td><td>13.70910</td><td>15.76029</td><td>15.21911</td><td>12.638995</td><td>13.56061</td><td>14.501066</td><td>15.39396</td><td>15.24665</td><td>12.72820</td><td>13.89690</td></tr>
 	<tr><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋱</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td></tr>
-	<tr><td>Q9UN70;Q9UN70-2                                    </td><td>16.15734</td><td>15.72455</td><td>16.43182</td><td>16.23052</td><td>15.956393</td><td>14.922162</td><td>16.438433</td><td>15.63146</td><td>15.721263</td><td>⋯</td><td>14.310503</td><td>15.68391</td><td>15.499129</td><td>15.98585</td><td>15.02979</td><td>15.48571</td><td>15.527984</td><td>16.08012</td><td>15.631650</td><td>15.77433</td></tr>
-	<tr><td>Q9UNN8                                             </td><td>17.56056</td><td>17.30159</td><td>17.76464</td><td>15.51923</td><td>17.115915</td><td>18.190423</td><td>17.976816</td><td>17.00159</td><td>17.099726</td><td>⋯</td><td>16.771952</td><td>15.48940</td><td>17.779674</td><td>17.59030</td><td>17.37821</td><td>16.45713</td><td>16.450753</td><td>17.89332</td><td>17.636178</td><td>17.39555</td></tr>
-	<tr><td>Q9UNW1                                             </td><td>16.95997</td><td>16.51290</td><td>16.14734</td><td>15.39282</td><td>16.508181</td><td>15.647136</td><td>16.418141</td><td>16.48681</td><td>16.314377</td><td>⋯</td><td>14.989054</td><td>16.21768</td><td>15.379457</td><td>16.06726</td><td>15.57472</td><td>16.31734</td><td>16.210038</td><td>16.57037</td><td>16.178681</td><td>16.53072</td></tr>
-	<tr><td>Q9UP79                                             </td><td>15.15310</td><td>14.76273</td><td>16.03621</td><td>15.41609</td><td>15.502770</td><td>16.338332</td><td>15.898021</td><td>14.59940</td><td>14.382892</td><td>⋯</td><td>14.502383</td><td>14.63488</td><td>15.080149</td><td>14.46582</td><td>15.26104</td><td>15.73977</td><td>14.551461</td><td>14.31466</td><td>16.106640</td><td>14.90001</td></tr>
-	<tr><td>Q9UPU3                                             </td><td>18.32540</td><td>18.23025</td><td>16.79709</td><td>18.10040</td><td>18.177378</td><td>18.462883</td><td>17.900758</td><td>17.75121</td><td>18.743208</td><td>⋯</td><td>16.784484</td><td>18.47047</td><td>19.030050</td><td>18.64856</td><td>18.11089</td><td>18.42196</td><td>18.369369</td><td>17.64059</td><td>17.242103</td><td>18.27864</td></tr>
-	<tr><td>Q9UQ52                                             </td><td>15.34901</td><td>15.54989</td><td>15.71187</td><td>14.69930</td><td>15.628090</td><td>15.539016</td><td>15.400309</td><td>14.55045</td><td>15.087244</td><td>⋯</td><td>15.814371</td><td>15.64994</td><td>15.602459</td><td>14.30016</td><td>15.04666</td><td>15.71637</td><td>16.123303</td><td>15.68571</td><td>15.834854</td><td>16.18904</td></tr>
-	<tr><td>Q9UQM7                                             </td><td>16.77983</td><td>16.63557</td><td>16.92800</td><td>17.36468</td><td>17.261390</td><td>16.572919</td><td>16.341255</td><td>15.66110</td><td>17.185289</td><td>⋯</td><td>15.449377</td><td>17.13915</td><td>17.465978</td><td>15.95446</td><td>16.01651</td><td>17.90825</td><td>16.223256</td><td>17.08973</td><td>16.388449</td><td>17.38407</td></tr>
-	<tr><td>Q9Y240                                             </td><td>16.25700</td><td>16.27154</td><td>16.57780</td><td>17.13331</td><td>15.151331</td><td>16.761094</td><td>16.908104</td><td>16.87980</td><td>15.263930</td><td>⋯</td><td>16.748311</td><td>16.53842</td><td>16.905671</td><td>16.72346</td><td>16.61396</td><td>16.71442</td><td>16.255719</td><td>16.50802</td><td>17.286111</td><td>15.21904</td></tr>
-	<tr><td>Q9Y279;Q9Y279-2                                    </td><td>17.16794</td><td>17.44556</td><td>17.36345</td><td>17.29289</td><td>17.220472</td><td>16.987538</td><td>17.179980</td><td>14.52883</td><td>17.163038</td><td>⋯</td><td>15.028929</td><td>16.54589</td><td>16.584503</td><td>16.58755</td><td>17.65963</td><td>16.61656</td><td>16.706326</td><td>15.22602</td><td>15.377757</td><td>16.95138</td></tr>
-	<tr><td>Q9Y281;Q9Y281-3                                    </td><td>10.93162</td><td>11.49945</td><td>11.99442</td><td>11.06047</td><td>11.137567</td><td> 9.764602</td><td>11.347972</td><td>12.10370</td><td> 9.970548</td><td>⋯</td><td>11.679524</td><td>12.30069</td><td>10.961697</td><td>10.52363</td><td>12.18502</td><td>13.01033</td><td>13.076657</td><td>11.65193</td><td>11.398836</td><td>12.54090</td></tr>
-	<tr><td>Q9Y287                                             </td><td>17.66289</td><td>17.58819</td><td>15.63084</td><td>17.69614</td><td>17.735407</td><td>17.030942</td><td>16.950826</td><td>18.26680</td><td>15.587821</td><td>⋯</td><td>16.118672</td><td>14.99674</td><td>16.578656</td><td>17.97074</td><td>17.10728</td><td>18.27608</td><td>16.477157</td><td>16.54354</td><td>16.173777</td><td>17.82544</td></tr>
-	<tr><td>Q9Y2I2;Q9Y2I2-1;Q9Y2I2-2;Q9Y2I2-4;Q9Y2I2-5;Q9Y2I2-6</td><td>16.92776</td><td>17.22074</td><td>17.42595</td><td>17.29861</td><td>17.828156</td><td>16.741809</td><td>16.720691</td><td>15.90499</td><td>16.396113</td><td>⋯</td><td>16.220256</td><td>16.70635</td><td>17.893043</td><td>17.70659</td><td>17.09718</td><td>15.73179</td><td>16.957301</td><td>18.37587</td><td>17.573326</td><td>17.93369</td></tr>
-	<tr><td>Q9Y2T3;Q9Y2T3-3                                    </td><td>18.46767</td><td>17.72113</td><td>18.44012</td><td>18.86565</td><td>18.732257</td><td>18.638770</td><td>16.589443</td><td>17.11557</td><td>19.332031</td><td>⋯</td><td>16.527458</td><td>18.16354</td><td>17.650925</td><td>17.52026</td><td>17.41693</td><td>18.62477</td><td>18.261075</td><td>18.51419</td><td>18.006500</td><td>17.90217</td></tr>
-	<tr><td>Q9Y490                                             </td><td>11.79724</td><td>13.96193</td><td>12.19230</td><td>11.82546</td><td>13.626903</td><td>13.381209</td><td>13.741950</td><td>10.21028</td><td>10.327302</td><td>⋯</td><td> 9.507332</td><td>11.47517</td><td> 9.429934</td><td>10.79085</td><td>10.72213</td><td>12.93233</td><td>13.294424</td><td>11.93935</td><td>13.840863</td><td>13.52534</td></tr>
-	<tr><td>Q9Y4L1                                             </td><td>18.59795</td><td>18.47622</td><td>17.36539</td><td>18.55964</td><td>18.304651</td><td>18.523787</td><td>18.360212</td><td>17.87471</td><td>18.672576</td><td>⋯</td><td>17.186726</td><td>18.41406</td><td>18.267095</td><td>18.08557</td><td>17.59792</td><td>18.28991</td><td>17.977196</td><td>18.14875</td><td>17.880553</td><td>18.12515</td></tr>
-	<tr><td>Q9Y5F6;Q9Y5F6-2                                    </td><td>16.46929</td><td>15.78240</td><td>14.97898</td><td>16.52899</td><td>16.284800</td><td>16.863440</td><td>15.899533</td><td>16.10952</td><td>17.401321</td><td>⋯</td><td>15.459257</td><td>16.42884</td><td>16.159500</td><td>15.63156</td><td>14.73569</td><td>15.96821</td><td>16.884808</td><td>15.87772</td><td>15.554235</td><td>16.57524</td></tr>
-	<tr><td>Q9Y5I4;Q9Y5I4-2                                    </td><td>17.18701</td><td>17.44717</td><td>17.41043</td><td>17.54514</td><td>17.296665</td><td>17.397283</td><td>17.145318</td><td>16.40482</td><td>17.323081</td><td>⋯</td><td>15.897310</td><td>17.13489</td><td>15.797542</td><td>17.08588</td><td>15.87386</td><td>17.10354</td><td>17.109020</td><td>16.93840</td><td>17.155076</td><td>16.77629</td></tr>
-	<tr><td>Q9Y5Y7                                             </td><td>18.83957</td><td>19.19495</td><td>19.08820</td><td>18.71497</td><td>18.668245</td><td>19.051331</td><td>19.087113</td><td>18.80245</td><td>18.714393</td><td>⋯</td><td>17.134517</td><td>17.83727</td><td>18.785623</td><td>18.61367</td><td>18.73747</td><td>18.72639</td><td>18.460107</td><td>19.50151</td><td>17.224265</td><td>17.15858</td></tr>
-	<tr><td>Q9Y617                                             </td><td>16.85897</td><td>16.79927</td><td>16.28782</td><td>17.07490</td><td>14.351583</td><td>16.499523</td><td>16.702643</td><td>15.92398</td><td>16.637746</td><td>⋯</td><td>14.582628</td><td>14.93988</td><td>15.869699</td><td>15.71177</td><td>15.46507</td><td>15.80831</td><td>15.035290</td><td>16.28306</td><td>15.919601</td><td>15.71292</td></tr>
-	<tr><td>Q9Y646                                             </td><td>19.32196</td><td>19.19029</td><td>19.70194</td><td>19.76013</td><td>19.623690</td><td>19.286283</td><td>19.622194</td><td>19.01644</td><td>19.150121</td><td>⋯</td><td>19.861563</td><td>20.24484</td><td>19.207306</td><td>20.30281</td><td>19.43507</td><td>19.89388</td><td>20.014574</td><td>20.30614</td><td>20.203423</td><td>20.04164</td></tr>
-	<tr><td>Q9Y653;Q9Y653-2;Q9Y653-3                           </td><td>16.01243</td><td>15.52794</td><td>15.22871</td><td>15.49484</td><td>14.756682</td><td>15.085631</td><td>15.788897</td><td>14.23446</td><td>15.634082</td><td>⋯</td><td>13.836060</td><td>14.95201</td><td>15.533606</td><td>15.06014</td><td>15.66794</td><td>13.80449</td><td>15.422277</td><td>15.80796</td><td>15.157397</td><td>15.23671</td></tr>
-	<tr><td>Q9Y696                                             </td><td>15.17778</td><td>15.57553</td><td>14.72770</td><td>14.59034</td><td>13.909305</td><td>14.859949</td><td>16.136319</td><td>14.94928</td><td>15.265679</td><td>⋯</td><td>14.296670</td><td>15.84479</td><td>15.807836</td><td>16.16574</td><td>15.91448</td><td>15.68387</td><td>16.106326</td><td>16.09780</td><td>16.711761</td><td>15.65174</td></tr>
-	<tr><td>Q9Y6C2                                             </td><td>11.74857</td><td>11.75777</td><td>13.75658</td><td>14.68157</td><td>12.700576</td><td>12.552892</td><td>11.655696</td><td>14.31805</td><td>12.983100</td><td>⋯</td><td>12.962070</td><td>12.99170</td><td>11.830420</td><td>12.30835</td><td>14.20407</td><td>14.23561</td><td>13.172714</td><td>14.40272</td><td>11.404450</td><td>15.21141</td></tr>
-	<tr><td>Q9Y6N6                                             </td><td>15.05021</td><td>14.83290</td><td>15.11828</td><td>15.14018</td><td>15.255879</td><td>14.698128</td><td>13.910227</td><td>14.28347</td><td>15.292710</td><td>⋯</td><td>14.742822</td><td>15.12482</td><td>15.245682</td><td>15.28502</td><td>15.02461</td><td>15.41504</td><td>15.345359</td><td>15.71532</td><td>14.639834</td><td>14.20491</td></tr>
-	<tr><td>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4                           </td><td>16.84221</td><td>16.59739</td><td>17.43952</td><td>17.35608</td><td>17.074951</td><td>17.088025</td><td>16.717351</td><td>15.57207</td><td>17.453192</td><td>⋯</td><td>15.354729</td><td>17.03425</td><td>16.747786</td><td>16.39020</td><td>15.12598</td><td>17.55092</td><td>17.084469</td><td>14.73063</td><td>16.532757</td><td>16.74913</td></tr>
-	<tr><td>Q9Y6R7                                             </td><td>17.93941</td><td>20.29933</td><td>19.59785</td><td>19.42880</td><td>19.581976</td><td>19.130331</td><td>18.690297</td><td>18.99605</td><td>19.993178</td><td>⋯</td><td>19.233044</td><td>18.81636</td><td>18.902122</td><td>18.81282</td><td>18.03419</td><td>17.92185</td><td>18.708140</td><td>18.72478</td><td>19.411133</td><td>19.27470</td></tr>
-	<tr><td>Q9Y6X5                                             </td><td>13.54739</td><td>15.55558</td><td>15.73522</td><td>13.52372</td><td>15.328278</td><td>13.613044</td><td>13.738413</td><td>13.97624</td><td>13.602010</td><td>⋯</td><td>15.894694</td><td>15.56189</td><td>16.088774</td><td>15.66911</td><td>15.01193</td><td>16.34016</td><td>14.033443</td><td>16.13827</td><td>15.806898</td><td>15.73176</td></tr>
-	<tr><td>Q9Y6Y8;Q9Y6Y8-2                                    </td><td>19.56282</td><td>19.38575</td><td>20.44732</td><td>20.21596</td><td>17.839473</td><td>19.633192</td><td>20.056856</td><td>18.68044</td><td>20.023229</td><td>⋯</td><td>18.325103</td><td>19.80948</td><td>20.204357</td><td>19.41823</td><td>17.84743</td><td>19.92766</td><td>19.432601</td><td>19.59912</td><td>19.545001</td><td>19.57720</td></tr>
-	<tr><td>Q9Y6Y9                                             </td><td>10.63743</td><td>13.96997</td><td>12.63641</td><td>10.36662</td><td>13.144533</td><td> 9.831955</td><td>12.817411</td><td>12.89658</td><td> 9.142031</td><td>⋯</td><td> 9.109582</td><td>11.01681</td><td>12.707376</td><td>12.97812</td><td>12.28750</td><td>12.92941</td><td> 9.214370</td><td>13.63705</td><td>10.699757</td><td>11.04203</td></tr>
-	<tr><td>S4R3U6                                             </td><td>12.80521</td><td>12.44245</td><td>12.50466</td><td>12.44461</td><td> 8.852214</td><td> 6.837479</td><td> 9.476007</td><td> 8.15319</td><td>13.007934</td><td>⋯</td><td>10.022042</td><td>10.13265</td><td> 8.654116</td><td>10.49769</td><td>10.56335</td><td>10.15614</td><td> 8.123502</td><td>11.17371</td><td> 7.423272</td><td>11.79130</td></tr>
+	<tr><td>Q9UN70;Q9UN70-2                                    </td><td>16.15734</td><td>15.72455</td><td>16.431819</td><td>16.230518</td><td>15.956393</td><td>14.729827</td><td>16.438433</td><td>15.63146</td><td>15.721263</td><td>⋯</td><td>14.842653</td><td>15.683913</td><td>15.499129</td><td>15.98585</td><td>15.029786</td><td>15.48571</td><td>15.527984</td><td>16.08012</td><td>15.631650</td><td>15.77433</td></tr>
+	<tr><td>Q9UNN8                                             </td><td>17.56056</td><td>17.30159</td><td>17.764635</td><td>15.557176</td><td>17.115915</td><td>18.190423</td><td>17.976816</td><td>17.00159</td><td>17.099726</td><td>⋯</td><td>16.771952</td><td>15.397011</td><td>17.779674</td><td>17.59030</td><td>17.378209</td><td>16.45713</td><td>16.450753</td><td>17.89332</td><td>17.636178</td><td>17.39555</td></tr>
+	<tr><td>Q9UNW1                                             </td><td>16.95997</td><td>16.51290</td><td>16.147342</td><td>15.576754</td><td>16.508181</td><td>15.647136</td><td>16.418141</td><td>16.48681</td><td>16.314377</td><td>⋯</td><td>15.482720</td><td>16.217676</td><td>15.117779</td><td>16.06726</td><td>15.610078</td><td>16.31734</td><td>16.210038</td><td>16.57037</td><td>16.178681</td><td>16.53072</td></tr>
+	<tr><td>Q9UP79                                             </td><td>15.15310</td><td>14.54015</td><td>16.036212</td><td>15.416086</td><td>15.502770</td><td>16.338332</td><td>15.898021</td><td>14.59940</td><td>13.539264</td><td>⋯</td><td>14.827724</td><td>13.749612</td><td>15.080149</td><td>14.66759</td><td>15.261036</td><td>15.73977</td><td>14.138094</td><td>14.79460</td><td>16.106640</td><td>13.69249</td></tr>
+	<tr><td>Q9UPU3                                             </td><td>18.32540</td><td>18.23025</td><td>16.950156</td><td>18.100397</td><td>18.177378</td><td>18.462883</td><td>17.900758</td><td>17.75121</td><td>18.743208</td><td>⋯</td><td>16.784484</td><td>18.470471</td><td>19.030050</td><td>18.64856</td><td>18.110891</td><td>18.42196</td><td>18.369369</td><td>17.64059</td><td>17.242103</td><td>18.27864</td></tr>
+	<tr><td>Q9UQ52                                             </td><td>15.34901</td><td>15.54989</td><td>15.711866</td><td>14.448696</td><td>15.628090</td><td>15.539016</td><td>15.400309</td><td>14.55045</td><td>15.087244</td><td>⋯</td><td>15.814371</td><td>15.649940</td><td>15.602459</td><td>14.05504</td><td>15.046662</td><td>15.71637</td><td>16.123303</td><td>15.68571</td><td>15.834854</td><td>16.18904</td></tr>
+	<tr><td>Q9UQM7                                             </td><td>16.77983</td><td>16.63557</td><td>16.928004</td><td>17.364677</td><td>17.261390</td><td>16.572919</td><td>16.341255</td><td>15.17893</td><td>17.185289</td><td>⋯</td><td>15.449377</td><td>17.139153</td><td>17.465978</td><td>15.95446</td><td>16.016508</td><td>17.90825</td><td>16.223256</td><td>17.08973</td><td>16.388449</td><td>17.38407</td></tr>
+	<tr><td>Q9Y240                                             </td><td>16.25700</td><td>16.27154</td><td>16.577796</td><td>17.133311</td><td>15.536511</td><td>16.761094</td><td>16.908104</td><td>16.87980</td><td>15.263930</td><td>⋯</td><td>16.748311</td><td>16.538418</td><td>16.905671</td><td>16.72346</td><td>16.613955</td><td>16.71442</td><td>16.255719</td><td>16.50802</td><td>17.286111</td><td>15.61972</td></tr>
+	<tr><td>Q9Y279;Q9Y279-2                                    </td><td>17.16794</td><td>17.44556</td><td>17.363445</td><td>17.292895</td><td>17.220472</td><td>16.987538</td><td>17.179980</td><td>15.46271</td><td>17.163038</td><td>⋯</td><td>15.028929</td><td>16.545886</td><td>16.584503</td><td>16.58755</td><td>17.659627</td><td>16.61656</td><td>16.706326</td><td>15.05146</td><td>15.161012</td><td>16.95138</td></tr>
+	<tr><td>Q9Y281;Q9Y281-3                                    </td><td>10.63523</td><td>11.28843</td><td>11.293365</td><td>11.843925</td><td>11.986909</td><td> 9.937097</td><td>10.116822</td><td>12.11348</td><td>10.624760</td><td>⋯</td><td>11.822966</td><td>12.300691</td><td>11.930719</td><td>10.68982</td><td>11.979913</td><td>13.01033</td><td>13.076657</td><td>11.42755</td><td> 9.969098</td><td>12.54090</td></tr>
+	<tr><td>Q9Y287                                             </td><td>17.66289</td><td>17.58819</td><td>16.072694</td><td>17.696139</td><td>17.735407</td><td>17.030942</td><td>16.950826</td><td>18.26680</td><td>15.611295</td><td>⋯</td><td>15.414013</td><td>15.867029</td><td>16.578656</td><td>17.97074</td><td>17.107284</td><td>18.27608</td><td>16.477157</td><td>16.54354</td><td>16.173777</td><td>17.82544</td></tr>
+	<tr><td>Q9Y2I2;Q9Y2I2-1;Q9Y2I2-2;Q9Y2I2-4;Q9Y2I2-5;Q9Y2I2-6</td><td>16.92776</td><td>17.22074</td><td>17.425951</td><td>17.298607</td><td>17.828156</td><td>16.741809</td><td>16.720691</td><td>15.90499</td><td>16.396113</td><td>⋯</td><td>16.220256</td><td>16.706350</td><td>17.893043</td><td>17.70659</td><td>17.097184</td><td>15.80960</td><td>16.957301</td><td>18.37587</td><td>17.573326</td><td>17.93369</td></tr>
+	<tr><td>Q9Y2T3;Q9Y2T3-3                                    </td><td>18.46767</td><td>17.72113</td><td>18.440119</td><td>18.865649</td><td>18.732257</td><td>18.638770</td><td>16.550930</td><td>17.11557</td><td>19.332031</td><td>⋯</td><td>16.527458</td><td>18.163540</td><td>17.650925</td><td>17.52026</td><td>17.416928</td><td>18.62477</td><td>18.261075</td><td>18.51419</td><td>18.006500</td><td>17.90217</td></tr>
+	<tr><td>Q9Y490                                             </td><td>12.11427</td><td>13.96193</td><td> 7.716895</td><td>11.119415</td><td>13.626903</td><td>13.381209</td><td>13.741950</td><td>10.08045</td><td> 9.963377</td><td>⋯</td><td>10.481286</td><td>10.141165</td><td>10.297415</td><td>10.34937</td><td> 9.866364</td><td>12.93233</td><td>13.294424</td><td>10.57300</td><td>13.840863</td><td>13.52534</td></tr>
+	<tr><td>Q9Y4L1                                             </td><td>18.59795</td><td>18.47622</td><td>17.410831</td><td>18.559645</td><td>18.304651</td><td>18.523787</td><td>18.360212</td><td>17.87471</td><td>18.672576</td><td>⋯</td><td>17.186726</td><td>18.414059</td><td>18.267095</td><td>18.08557</td><td>17.597916</td><td>18.28991</td><td>17.977196</td><td>18.14875</td><td>17.880553</td><td>18.12515</td></tr>
+	<tr><td>Q9Y5F6;Q9Y5F6-2                                    </td><td>16.46929</td><td>15.78240</td><td>15.113269</td><td>16.528991</td><td>16.284800</td><td>16.863440</td><td>15.899533</td><td>16.10952</td><td>17.401321</td><td>⋯</td><td>15.459257</td><td>16.428844</td><td>16.159500</td><td>15.63156</td><td>14.735687</td><td>15.96821</td><td>16.884808</td><td>15.87772</td><td>15.554235</td><td>16.57524</td></tr>
+	<tr><td>Q9Y5I4;Q9Y5I4-2                                    </td><td>17.18701</td><td>17.44717</td><td>17.410428</td><td>17.545135</td><td>17.296665</td><td>17.397283</td><td>17.145318</td><td>16.40482</td><td>17.323081</td><td>⋯</td><td>15.897310</td><td>17.134885</td><td>15.921862</td><td>17.08588</td><td>15.873859</td><td>17.10354</td><td>17.109020</td><td>16.93840</td><td>17.155076</td><td>16.77629</td></tr>
+	<tr><td>Q9Y5Y7                                             </td><td>18.83957</td><td>19.19495</td><td>19.088198</td><td>18.714966</td><td>18.668245</td><td>19.051331</td><td>19.087113</td><td>18.80245</td><td>18.714393</td><td>⋯</td><td>17.134517</td><td>17.837270</td><td>18.785623</td><td>18.61367</td><td>18.737474</td><td>18.72639</td><td>18.460107</td><td>19.50151</td><td>16.833097</td><td>16.78899</td></tr>
+	<tr><td>Q9Y617                                             </td><td>16.85897</td><td>16.79927</td><td>16.287820</td><td>17.074899</td><td>14.609245</td><td>16.499523</td><td>16.702643</td><td>15.92398</td><td>16.637746</td><td>⋯</td><td>14.582628</td><td>14.939882</td><td>15.869699</td><td>15.71177</td><td>15.465069</td><td>15.80831</td><td>15.035290</td><td>16.28306</td><td>15.919601</td><td>15.71292</td></tr>
+	<tr><td>Q9Y646                                             </td><td>19.32196</td><td>19.19029</td><td>19.701944</td><td>19.760135</td><td>19.623690</td><td>19.286283</td><td>19.622194</td><td>19.01644</td><td>19.150121</td><td>⋯</td><td>19.861563</td><td>20.244844</td><td>19.207306</td><td>20.30281</td><td>19.435073</td><td>19.89388</td><td>20.014574</td><td>20.30614</td><td>20.203423</td><td>20.04164</td></tr>
+	<tr><td>Q9Y653;Q9Y653-2;Q9Y653-3                           </td><td>16.01243</td><td>15.52794</td><td>15.228706</td><td>15.494839</td><td>14.756682</td><td>15.085631</td><td>15.788897</td><td>14.29531</td><td>15.634082</td><td>⋯</td><td>13.948055</td><td>14.952007</td><td>15.533606</td><td>15.06014</td><td>15.667938</td><td>13.91793</td><td>15.422277</td><td>15.80796</td><td>15.157397</td><td>15.23671</td></tr>
+	<tr><td>Q9Y696                                             </td><td>15.17778</td><td>15.57553</td><td>14.727699</td><td>14.590342</td><td>14.538857</td><td>14.859949</td><td>16.136319</td><td>14.94928</td><td>15.265679</td><td>⋯</td><td>14.500499</td><td>15.844792</td><td>15.807836</td><td>16.16574</td><td>15.914482</td><td>15.68387</td><td>16.106326</td><td>16.09780</td><td>16.711761</td><td>15.65174</td></tr>
+	<tr><td>Q9Y6C2                                             </td><td>11.51078</td><td>12.02097</td><td>13.756585</td><td>14.681570</td><td>12.898562</td><td>12.902407</td><td>11.859032</td><td>14.31805</td><td>12.951561</td><td>⋯</td><td>12.316315</td><td>12.933339</td><td>12.261226</td><td>12.13906</td><td>14.204072</td><td>14.23561</td><td>10.619454</td><td>14.40272</td><td>12.785752</td><td>15.21141</td></tr>
+	<tr><td>Q9Y6N6                                             </td><td>15.05021</td><td>14.83290</td><td>15.118275</td><td>15.140177</td><td>15.255879</td><td>14.698128</td><td>14.028754</td><td>14.00320</td><td>15.292710</td><td>⋯</td><td>14.742822</td><td>15.124825</td><td>15.245682</td><td>15.28502</td><td>15.024611</td><td>15.41504</td><td>15.345359</td><td>15.71532</td><td>14.639834</td><td>14.20491</td></tr>
+	<tr><td>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4                           </td><td>16.84221</td><td>16.59739</td><td>17.439518</td><td>17.356085</td><td>17.074951</td><td>17.088025</td><td>16.717351</td><td>15.49646</td><td>17.453192</td><td>⋯</td><td>15.570259</td><td>17.034249</td><td>16.747786</td><td>16.39020</td><td>15.156784</td><td>17.55092</td><td>17.084469</td><td>14.17798</td><td>16.532757</td><td>16.74913</td></tr>
+	<tr><td>Q9Y6R7                                             </td><td>17.86792</td><td>20.29933</td><td>19.597852</td><td>19.428804</td><td>19.581976</td><td>19.130331</td><td>18.690297</td><td>18.99605</td><td>19.993178</td><td>⋯</td><td>19.233044</td><td>18.816365</td><td>18.902122</td><td>18.81282</td><td>17.857909</td><td>17.92185</td><td>18.708140</td><td>18.72478</td><td>19.411133</td><td>19.27470</td></tr>
+	<tr><td>Q9Y6X5                                             </td><td>13.93258</td><td>15.55558</td><td>15.735220</td><td>14.112147</td><td>15.328278</td><td>13.427240</td><td>13.526178</td><td>14.09183</td><td>14.007677</td><td>⋯</td><td>15.894694</td><td>15.561886</td><td>16.088774</td><td>15.66911</td><td>15.011927</td><td>16.34016</td><td>14.103683</td><td>16.13827</td><td>15.806898</td><td>15.73176</td></tr>
+	<tr><td>Q9Y6Y8;Q9Y6Y8-2                                    </td><td>19.56282</td><td>19.38575</td><td>20.447323</td><td>20.215964</td><td>18.352234</td><td>19.633192</td><td>20.056856</td><td>18.68044</td><td>20.023229</td><td>⋯</td><td>17.899812</td><td>19.809479</td><td>20.204357</td><td>19.41823</td><td>17.847433</td><td>19.92766</td><td>19.432601</td><td>19.59912</td><td>19.545001</td><td>19.57720</td></tr>
+	<tr><td>Q9Y6Y9                                             </td><td>10.08037</td><td>13.96997</td><td>12.636411</td><td> 9.240172</td><td>13.144533</td><td> 8.675980</td><td>12.817411</td><td>12.89658</td><td> 9.952896</td><td>⋯</td><td>10.703439</td><td> 9.700274</td><td>12.707376</td><td>12.97812</td><td>12.287495</td><td>12.92941</td><td> 9.699785</td><td>13.63705</td><td> 9.935158</td><td>11.04203</td></tr>
+	<tr><td>S4R3U6                                             </td><td>12.80521</td><td>12.44245</td><td>12.504659</td><td>12.444615</td><td> 9.652288</td><td> 6.314604</td><td> 8.085198</td><td>10.11857</td><td>13.007934</td><td>⋯</td><td> 9.327553</td><td>10.132652</td><td> 7.740061</td><td>10.49769</td><td>10.563347</td><td>10.13931</td><td> 8.258521</td><td>11.17371</td><td> 8.772655</td><td>11.79130</td></tr>
 </tbody>
 </table>
 </div></div>
@@ -1156,67 +1161,67 @@ and has been superseded by the norm2 package.
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;fct&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><th scope=row>11</th><td>A0A075B6J9                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.81435</td></tr>
-	<tr><th scope=row>14</th><td>A0A075B6P5;P01615                                                                                                                                                                                                                           </td><td>Sample_000</td><td>15.63230</td></tr>
-	<tr><th scope=row>15</th><td>A0A075B6Q5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.53839</td></tr>
-	<tr><th scope=row>16</th><td>A0A075B6R2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.55589</td></tr>
-	<tr><th scope=row>19</th><td>A0A075B6S5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>15.32594</td></tr>
-	<tr><th scope=row>24</th><td>A0A087WSY4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.35950</td></tr>
-	<tr><th scope=row>34</th><td>A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2                                                                                                                                                                                            </td><td>Sample_000</td><td>14.53344</td></tr>
-	<tr><th scope=row>39</th><td>A0A087WW87;A0A087X0Q4;P01614                                                                                                                                                                                                                </td><td>Sample_000</td><td>11.50067</td></tr>
-	<tr><th scope=row>40</th><td>A0A087WWA5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.54471</td></tr>
-	<tr><th scope=row>42</th><td>A0A087WWT2;Q9NPD7                                                                                                                                                                                                                           </td><td>Sample_000</td><td>16.21114</td></tr>
-	<tr><th scope=row>43</th><td>A0A087WX80;P24043                                                                                                                                                                                                                           </td><td>Sample_000</td><td>14.90793</td></tr>
-	<tr><th scope=row>45</th><td>A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.59224</td></tr>
-	<tr><th scope=row>48</th><td>A0A087WYK9;Q02985;Q02985-2;Q6NSD3                                                                                                                                                                                                           </td><td>Sample_000</td><td>14.58796</td></tr>
-	<tr><th scope=row>52</th><td>A0A087WZR4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.55836</td></tr>
-	<tr><th scope=row>53</th><td>A0A087X089;Q16627;Q16627-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.81832</td></tr>
-	<tr><th scope=row>56</th><td>A0A087X0M8                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.93839</td></tr>
-	<tr><th scope=row>59</th><td>A0A087X117;A0A0G2JN29;J3KN36;P69849;Q15155;Q5JPE7;Q5JPE7-2                                                                                                                                                                                  </td><td>Sample_000</td><td>13.06200</td></tr>
-	<tr><th scope=row>69</th><td>A0A0A0MQS9;A0A0A0MTC7;Q16363;Q16363-2                                                                                                                                                                                                       </td><td>Sample_000</td><td>13.04399</td></tr>
-	<tr><th scope=row>78</th><td>A0A0A0MS20;A0A0A0MSZ8;A0A0G2JM38;A0A0G2JM43;A0A0G2JM57;A0A0G2JM84;A0A0G2JMH7;A0A0G2JML1;A0A0G2JNE9;A0A0G2JNL1;A0A0G2JP25;A0A0G2JP84;A0A0G2JPA9;A0A0G2JPC7;A0A0G2JPU4;A0A0G2JPX5;A0A0G2JQ10;A0A0G2JQ20;A8MUE1;C9JST2;Q8NHJ6;Q8NHJ6-2;Q8NHJ6-3</td><td>Sample_000</td><td>11.55404</td></tr>
-	<tr><th scope=row>85</th><td>A0A0A0MT32;P38571;P38571-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.94193</td></tr>
-	<tr><th scope=row>87</th><td>A0A0A0MT66                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.92729</td></tr>
-	<tr><th scope=row>90</th><td>A0A0A0MTC8;Q9NQ36;Q9NQ36-2;Q9NQ36-3                                                                                                                                                                                                         </td><td>Sample_000</td><td>13.17649</td></tr>
-	<tr><th scope=row>96</th><td>A0A0A6YY99;O43508-2                                                                                                                                                                                                                         </td><td>Sample_000</td><td>11.79919</td></tr>
-	<tr><th scope=row>101</th><td>A0A0B4J1V2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>10.32991</td></tr>
-	<tr><th scope=row>102</th><td>A0A0B4J1V6                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.28569</td></tr>
-	<tr><th scope=row>105</th><td>A0A0B4J1Z1;C9JAB2;Q16629;Q16629-2;Q16629-3;Q16629-4                                                                                                                                                                                         </td><td>Sample_000</td><td>14.59493</td></tr>
-	<tr><th scope=row>108</th><td>A0A0B4J2B5;S4R460                                                                                                                                                                                                                           </td><td>Sample_000</td><td>20.69655</td></tr>
-	<tr><th scope=row>109</th><td>A0A0B4J2C3;P13693;Q5W0H4                                                                                                                                                                                                                    </td><td>Sample_000</td><td>10.46096</td></tr>
-	<tr><th scope=row>111</th><td>A0A0C4DFP6;Q9NQ79;Q9NQ79-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>19.40540</td></tr>
-	<tr><th scope=row>113</th><td>A0A0C4DG76;Q5JZ08;Q9BQS7;Q9BQS7-2;Q9BQS7-3;Q9BQS7-4                                                                                                                                                                                         </td><td>Sample_000</td><td>12.31713</td></tr>
+	<tr><th scope=row>11</th><td>A0A075B6J9                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.840926</td></tr>
+	<tr><th scope=row>14</th><td>A0A075B6P5;P01615                                                                                                                                                                                                                           </td><td>Sample_000</td><td>17.424026</td></tr>
+	<tr><th scope=row>15</th><td>A0A075B6Q5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.116820</td></tr>
+	<tr><th scope=row>16</th><td>A0A075B6R2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.827308</td></tr>
+	<tr><th scope=row>19</th><td>A0A075B6S5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.906393</td></tr>
+	<tr><th scope=row>24</th><td>A0A087WSY4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.559715</td></tr>
+	<tr><th scope=row>34</th><td>A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2                                                                                                                                                                                            </td><td>Sample_000</td><td>14.439109</td></tr>
+	<tr><th scope=row>39</th><td>A0A087WW87;A0A087X0Q4;P01614                                                                                                                                                                                                                </td><td>Sample_000</td><td> 9.862985</td></tr>
+	<tr><th scope=row>40</th><td>A0A087WWA5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.896875</td></tr>
+	<tr><th scope=row>42</th><td>A0A087WWT2;Q9NPD7                                                                                                                                                                                                                           </td><td>Sample_000</td><td>16.636490</td></tr>
+	<tr><th scope=row>43</th><td>A0A087WX80;P24043                                                                                                                                                                                                                           </td><td>Sample_000</td><td>15.079302</td></tr>
+	<tr><th scope=row>45</th><td>A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.853232</td></tr>
+	<tr><th scope=row>48</th><td>A0A087WYK9;Q02985;Q02985-2;Q6NSD3                                                                                                                                                                                                           </td><td>Sample_000</td><td>13.311767</td></tr>
+	<tr><th scope=row>52</th><td>A0A087WZR4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.451576</td></tr>
+	<tr><th scope=row>53</th><td>A0A087X089;Q16627;Q16627-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>15.169298</td></tr>
+	<tr><th scope=row>56</th><td>A0A087X0M8                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>15.112318</td></tr>
+	<tr><th scope=row>59</th><td>A0A087X117;A0A0G2JN29;J3KN36;P69849;Q15155;Q5JPE7;Q5JPE7-2                                                                                                                                                                                  </td><td>Sample_000</td><td>11.789909</td></tr>
+	<tr><th scope=row>69</th><td>A0A0A0MQS9;A0A0A0MTC7;Q16363;Q16363-2                                                                                                                                                                                                       </td><td>Sample_000</td><td>12.606420</td></tr>
+	<tr><th scope=row>78</th><td>A0A0A0MS20;A0A0A0MSZ8;A0A0G2JM38;A0A0G2JM43;A0A0G2JM57;A0A0G2JM84;A0A0G2JMH7;A0A0G2JML1;A0A0G2JNE9;A0A0G2JNL1;A0A0G2JP25;A0A0G2JP84;A0A0G2JPA9;A0A0G2JPC7;A0A0G2JPU4;A0A0G2JPX5;A0A0G2JQ10;A0A0G2JQ20;A8MUE1;C9JST2;Q8NHJ6;Q8NHJ6-2;Q8NHJ6-3</td><td>Sample_000</td><td>11.645315</td></tr>
+	<tr><th scope=row>85</th><td>A0A0A0MT32;P38571;P38571-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.700937</td></tr>
+	<tr><th scope=row>87</th><td>A0A0A0MT66                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.679475</td></tr>
+	<tr><th scope=row>90</th><td>A0A0A0MTC8;Q9NQ36;Q9NQ36-2;Q9NQ36-3                                                                                                                                                                                                         </td><td>Sample_000</td><td>11.537220</td></tr>
+	<tr><th scope=row>96</th><td>A0A0A6YY99;O43508-2                                                                                                                                                                                                                         </td><td>Sample_000</td><td>13.150321</td></tr>
+	<tr><th scope=row>101</th><td>A0A0B4J1V2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.312249</td></tr>
+	<tr><th scope=row>102</th><td>A0A0B4J1V6                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.581644</td></tr>
+	<tr><th scope=row>105</th><td>A0A0B4J1Z1;C9JAB2;Q16629;Q16629-2;Q16629-3;Q16629-4                                                                                                                                                                                         </td><td>Sample_000</td><td>14.570225</td></tr>
+	<tr><th scope=row>108</th><td>A0A0B4J2B5;S4R460                                                                                                                                                                                                                           </td><td>Sample_000</td><td>20.010747</td></tr>
+	<tr><th scope=row>109</th><td>A0A0B4J2C3;P13693;Q5W0H4                                                                                                                                                                                                                    </td><td>Sample_000</td><td>11.636466</td></tr>
+	<tr><th scope=row>111</th><td>A0A0C4DFP6;Q9NQ79;Q9NQ79-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>19.440918</td></tr>
+	<tr><th scope=row>113</th><td>A0A0C4DG76;Q5JZ08;Q9BQS7;Q9BQS7-2;Q9BQS7-3;Q9BQS7-4                                                                                                                                                                                         </td><td>Sample_000</td><td>12.782890</td></tr>
 	<tr><th scope=row>⋮</th><td>⋮</td><td>⋮</td><td>⋮</td></tr>
-	<tr><th scope=row>298242</th><td>Q96PQ0                  </td><td>Sample_209</td><td>16.556170</td></tr>
-	<tr><th scope=row>298244</th><td>Q96RW7;Q96RW7-2         </td><td>Sample_209</td><td>11.850104</td></tr>
-	<tr><th scope=row>298246</th><td>Q96SM3                  </td><td>Sample_209</td><td>10.621504</td></tr>
-	<tr><th scope=row>298249</th><td>Q99538                  </td><td>Sample_209</td><td>14.336340</td></tr>
-	<tr><th scope=row>298252</th><td>Q99650;Q99650-2         </td><td>Sample_209</td><td>12.856946</td></tr>
-	<tr><th scope=row>298261</th><td>Q9BQT9;Q9BQT9-2         </td><td>Sample_209</td><td>18.595964</td></tr>
-	<tr><th scope=row>298266</th><td>Q9BT88                  </td><td>Sample_209</td><td>13.699286</td></tr>
-	<tr><th scope=row>298273</th><td>Q9BX67                  </td><td>Sample_209</td><td>17.093797</td></tr>
-	<tr><th scope=row>298277</th><td>Q9BXP8                  </td><td>Sample_209</td><td> 7.605926</td></tr>
-	<tr><th scope=row>298287</th><td>Q9H3T2;Q9H3T2-3         </td><td>Sample_209</td><td>12.680445</td></tr>
-	<tr><th scope=row>298288</th><td>Q9H3T3;Q9H3T3-3         </td><td>Sample_209</td><td>14.364943</td></tr>
-	<tr><th scope=row>298289</th><td>Q9H492;Q9H492-2         </td><td>Sample_209</td><td>10.737390</td></tr>
-	<tr><th scope=row>298297</th><td>Q9H8L6                  </td><td>Sample_209</td><td>16.382435</td></tr>
-	<tr><th scope=row>298299</th><td>Q9HBR0                  </td><td>Sample_209</td><td>13.419525</td></tr>
-	<tr><th scope=row>298302</th><td>Q9HC38-2                </td><td>Sample_209</td><td>12.129175</td></tr>
-	<tr><th scope=row>298303</th><td>Q9HC57                  </td><td>Sample_209</td><td>12.797942</td></tr>
-	<tr><th scope=row>298310</th><td>Q9NPH3;Q9NPH3-2;Q9NPH3-5</td><td>Sample_209</td><td>14.299335</td></tr>
-	<tr><th scope=row>298314</th><td>Q9NRB3                  </td><td>Sample_209</td><td>11.878596</td></tr>
-	<tr><th scope=row>298316</th><td>Q9NS00;Q9NS00-2         </td><td>Sample_209</td><td>11.042177</td></tr>
-	<tr><th scope=row>298317</th><td>Q9NS84                  </td><td>Sample_209</td><td> 9.429291</td></tr>
-	<tr><th scope=row>298328</th><td>Q9NY97;Q9NY97-2         </td><td>Sample_209</td><td>15.876902</td></tr>
-	<tr><th scope=row>298341</th><td>Q9P1W8;Q9P1W8-2;Q9P1W8-4</td><td>Sample_209</td><td>14.974318</td></tr>
-	<tr><th scope=row>298349</th><td>Q9UGM5;Q9UGM5-2         </td><td>Sample_209</td><td>15.347554</td></tr>
-	<tr><th scope=row>298355</th><td>Q9UI40;Q9UI40-2         </td><td>Sample_209</td><td>14.680954</td></tr>
-	<tr><th scope=row>298357</th><td>Q9UIW2                  </td><td>Sample_209</td><td>13.675903</td></tr>
-	<tr><th scope=row>298358</th><td>Q9UJ14                  </td><td>Sample_209</td><td>12.755298</td></tr>
-	<tr><th scope=row>298377</th><td>Q9UMX0;Q9UMX0-2;Q9UMX0-4</td><td>Sample_209</td><td>12.235861</td></tr>
-	<tr><th scope=row>298384</th><td>Q9UP79                  </td><td>Sample_209</td><td>14.900014</td></tr>
-	<tr><th scope=row>298388</th><td>Q9Y240                  </td><td>Sample_209</td><td>15.219038</td></tr>
-	<tr><th scope=row>298398</th><td>Q9Y5Y7                  </td><td>Sample_209</td><td>17.158580</td></tr>
+	<tr><th scope=row>298242</th><td>Q96PQ0                  </td><td>Sample_209</td><td>16.216715</td></tr>
+	<tr><th scope=row>298244</th><td>Q96RW7;Q96RW7-2         </td><td>Sample_209</td><td> 8.761374</td></tr>
+	<tr><th scope=row>298246</th><td>Q96SM3                  </td><td>Sample_209</td><td>13.049284</td></tr>
+	<tr><th scope=row>298249</th><td>Q99538                  </td><td>Sample_209</td><td>14.033265</td></tr>
+	<tr><th scope=row>298252</th><td>Q99650;Q99650-2         </td><td>Sample_209</td><td>12.139016</td></tr>
+	<tr><th scope=row>298261</th><td>Q9BQT9;Q9BQT9-2         </td><td>Sample_209</td><td>18.411046</td></tr>
+	<tr><th scope=row>298266</th><td>Q9BT88                  </td><td>Sample_209</td><td>13.924855</td></tr>
+	<tr><th scope=row>298273</th><td>Q9BX67                  </td><td>Sample_209</td><td>17.141944</td></tr>
+	<tr><th scope=row>298277</th><td>Q9BXP8                  </td><td>Sample_209</td><td>11.627223</td></tr>
+	<tr><th scope=row>298287</th><td>Q9H3T2;Q9H3T2-3         </td><td>Sample_209</td><td>11.336867</td></tr>
+	<tr><th scope=row>298288</th><td>Q9H3T3;Q9H3T3-3         </td><td>Sample_209</td><td>14.381613</td></tr>
+	<tr><th scope=row>298289</th><td>Q9H492;Q9H492-2         </td><td>Sample_209</td><td>11.396126</td></tr>
+	<tr><th scope=row>298297</th><td>Q9H8L6                  </td><td>Sample_209</td><td>16.022837</td></tr>
+	<tr><th scope=row>298299</th><td>Q9HBR0                  </td><td>Sample_209</td><td>13.826157</td></tr>
+	<tr><th scope=row>298302</th><td>Q9HC38-2                </td><td>Sample_209</td><td>12.975779</td></tr>
+	<tr><th scope=row>298303</th><td>Q9HC57                  </td><td>Sample_209</td><td>11.027499</td></tr>
+	<tr><th scope=row>298310</th><td>Q9NPH3;Q9NPH3-2;Q9NPH3-5</td><td>Sample_209</td><td>13.685741</td></tr>
+	<tr><th scope=row>298314</th><td>Q9NRB3                  </td><td>Sample_209</td><td>11.340235</td></tr>
+	<tr><th scope=row>298316</th><td>Q9NS00;Q9NS00-2         </td><td>Sample_209</td><td>12.120288</td></tr>
+	<tr><th scope=row>298317</th><td>Q9NS84                  </td><td>Sample_209</td><td> 7.723650</td></tr>
+	<tr><th scope=row>298328</th><td>Q9NY97;Q9NY97-2         </td><td>Sample_209</td><td>15.635865</td></tr>
+	<tr><th scope=row>298341</th><td>Q9P1W8;Q9P1W8-2;Q9P1W8-4</td><td>Sample_209</td><td>12.979309</td></tr>
+	<tr><th scope=row>298349</th><td>Q9UGM5;Q9UGM5-2         </td><td>Sample_209</td><td>15.711872</td></tr>
+	<tr><th scope=row>298355</th><td>Q9UI40;Q9UI40-2         </td><td>Sample_209</td><td>14.073739</td></tr>
+	<tr><th scope=row>298357</th><td>Q9UIW2                  </td><td>Sample_209</td><td>12.389231</td></tr>
+	<tr><th scope=row>298358</th><td>Q9UJ14                  </td><td>Sample_209</td><td>12.760869</td></tr>
+	<tr><th scope=row>298377</th><td>Q9UMX0;Q9UMX0-2;Q9UMX0-4</td><td>Sample_209</td><td>10.964009</td></tr>
+	<tr><th scope=row>298384</th><td>Q9UP79                  </td><td>Sample_209</td><td>13.692491</td></tr>
+	<tr><th scope=row>298388</th><td>Q9Y240                  </td><td>Sample_209</td><td>15.619717</td></tr>
+	<tr><th scope=row>298398</th><td>Q9Y5Y7                  </td><td>Sample_209</td><td>16.788989</td></tr>
 </tbody>
 </table>
 </div></div>
@@ -1279,7 +1284,7 @@ and has been superseded by the norm2 package.
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -1292,11 +1297,11 @@ and has been superseded by the norm2 package.
       </div>
     </a>
     <a class="right-next"
-       href="01_1_transfer_NAGuideR_pred.html"
+       href="01_1_train_NAGuideR_IMPSEQ.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Transfer predictions from NAGuideR</p>
+        <p class="prev-next-title">NAGuide R methods</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1308,6 +1313,7 @@ and has been superseded by the norm2 package.
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -1365,8 +1371,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

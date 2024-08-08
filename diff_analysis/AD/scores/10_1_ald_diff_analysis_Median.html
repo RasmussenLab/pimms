@@ -1,56 +1,52 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+gc143d18 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+gac0252e documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/documentation_options.js?v=7a4a1d28"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'diff_analysis/AD/scores/10_1_ald_diff_analysis_Median';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_CF.html" />
-    <link rel="prev" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_TRKNN.html" />
+    <link rel="next" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_QRILC.html" />
+    <link rel="prev" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_VAE.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -60,28 +56,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -103,12 +94,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -125,6 +124,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../../index.html">
   
@@ -133,10 +134,21 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gc143d18 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gac0252e documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -154,35 +166,35 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -191,25 +203,25 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_None.html">None</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_DAE.html">DAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_CF.html">CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -217,13 +229,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
 </ul>
 
     </div>
@@ -239,7 +251,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -248,14 +260,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -333,10 +345,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -344,14 +356,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -391,10 +403,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="differential-analysis-compare-model-imputation-with-standard-imputation">
-<h1>Differential Analysis - Compare model imputation with standard imputation<a class="headerlink" href="#differential-analysis-compare-model-imputation-with-standard-imputation" title="Permalink to this heading">#</a></h1>
+<h1>Differential Analysis - Compare model imputation with standard imputation<a class="headerlink" href="#differential-analysis-compare-model-imputation-with-standard-imputation" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>load missing values predictions (if specified)</p></li>
 <li><p>leave all other values as they were</p></li>
@@ -445,7 +457,7 @@ document.write(`
 </details>
 </div>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <p>Default and set parameters for the notebook.</p>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
@@ -605,9 +617,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </section>
 <section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
+<h2>Data<a class="headerlink" href="#data" title="Link to this heading">#</a></h2>
 <section id="ms-proteomics-or-specified-omics-data">
-<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Permalink to this heading">#</a></h3>
+<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Link to this heading">#</a></h3>
 <p>Aggregated from data splits of the imputation workflow run before.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -663,7 +675,7 @@ Name: intensity, Length: 252009, dtype: float64
 </div>
 </section>
 <section id="clinical-data">
-<h3>Clinical data<a class="headerlink" href="#clinical-data" title="Permalink to this heading">#</a></h3>
+<h3>Clinical data<a class="headerlink" href="#clinical-data" title="Link to this heading">#</a></h3>
 <p>Describe numerical data specified for use:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1144,13 +1156,13 @@ Name: count, dtype: int64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     runs/alzheimer_study/freq_features_observed.csv
 </pre></div>
 </div>
-<img alt="../../../_images/b65370c0d05010b6e1f04bd5ea214926964bee10f3de1eb1d18b2df2c3c1014d.png" src="../../../_images/b65370c0d05010b6e1f04bd5ea214926964bee10f3de1eb1d18b2df2c3c1014d.png" />
+<img alt="../../../_images/74886d050391c4517f977cb938b6979ad0ba36259509bd4e6be9643077b8a622.png" src="../../../_images/74886d050391c4517f977cb938b6979ad0ba36259509bd4e6be9643077b8a622.png" />
 </div>
 </div>
 </section>
 </section>
 <section id="ald-study-approach-using-all-measurements">
-<h2>ALD study approach using all measurements<a class="headerlink" href="#ald-study-approach-using-all-measurements" title="Permalink to this heading">#</a></h2>
+<h2>ALD study approach using all measurements<a class="headerlink" href="#ald-study-approach-using-all-measurements" title="Link to this heading">#</a></h2>
 <p>Use parameters as specified in <a class="reference external" href="https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study" rel="noopener noreferrer" target="_blank">ALD study</a>.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1895,12 +1907,12 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/tresholds_normal_imputation
 </pre></div>
 </div>
-<img alt="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" src="../../../_images/8bd88397bfd769c3e18394939b68419dbd0f3258329a01fcb1c7e550244aa3eb.png" />
+<img alt="../../../_images/e014868343e773880c59c85918c91a6068f7c2cce55c7132cebf8d4e6439e41a.png" src="../../../_images/e014868343e773880c59c85918c91a6068f7c2cce55c7132cebf8d4e6439e41a.png" />
 </div>
 </div>
 </section>
 <section id="load-model-predictions-for-real-missing-data">
-<h2>Load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Permalink to this heading">#</a></h2>
+<h2>Load model predictions for (real) missing data<a class="headerlink" href="#load-model-predictions-for-real-missing-data" title="Link to this heading">#</a></h2>
 <p>Load from:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -2035,7 +2047,7 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_Median.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/9fd7e5b60111ef5b9c137fd72b21311a18fdc8cfc6fee516cd1d02633d6896a9.png" src="../../../_images/9fd7e5b60111ef5b9c137fd72b21311a18fdc8cfc6fee516cd1d02633d6896a9.png" />
+<img alt="../../../_images/d5018bf60d6d6a1e8e51b8c57361ff38ab3118c27e77e462ff41f7d3a114a814.png" src="../../../_images/d5018bf60d6d6a1e8e51b8c57361ff38ab3118c27e77e462ff41f7d3a114a814.png" />
 </div>
 </div>
 <p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
@@ -2059,7 +2071,11 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_Median.xlsx
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/9315d83d47168fa3da1739d7e683ad72_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
+/home/runner/work/pimms/pimms/project/.snakemake/conda/9315d83d47168fa3da1739d7e683ad72_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
+root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_Median.xlsx
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2216,7 +2232,7 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </section>
 <section id="mean-shift-by-model">
-<h2>Mean shift by model<a class="headerlink" href="#mean-shift-by-model" title="Permalink to this heading">#</a></h2>
+<h2>Mean shift by model<a class="headerlink" href="#mean-shift-by-model" title="Link to this heading">#</a></h2>
 <p>Compare how imputed values are shifted in comparsion to overall distribution.</p>
 <p>First by using all intensities without any grouping:</p>
 <div class="cell tag_hide-input docutils container">
@@ -2356,7 +2372,7 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </section>
 <section id="differential-analysis">
-<h2>Differential analysis<a class="headerlink" href="#differential-analysis" title="Permalink to this heading">#</a></h2>
+<h2>Differential analysis<a class="headerlink" href="#differential-analysis" title="Link to this heading">#</a></h2>
 <p>Combine observed and imputed data (if available) for differential analysis:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -3184,11 +3200,11 @@ Name: intensity, Length: 46401, dtype: float64
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="10_1_ald_diff_analysis_TRKNN.html"
+       href="10_1_ald_diff_analysis_VAE.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
@@ -3197,7 +3213,7 @@ Name: intensity, Length: 46401, dtype: float64
       </div>
     </a>
     <a class="right-next"
-       href="10_1_ald_diff_analysis_CF.html"
+       href="10_1_ald_diff_analysis_QRILC.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
@@ -3213,6 +3229,7 @@ Name: intensity, Length: 46401, dtype: float64
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -3278,8 +3295,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -1,56 +1,51 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+gc143d18 documentation</title>
+    <title>Fit logistic regression model &#8212; pimms_workflow 0.1.dev1+gac0252e documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/documentation_options.js?v=7a4a1d28"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Fit logistic regression model" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html" />
-    <link rel="prev" title="Fit logistic regression model" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html" />
+    <link rel="prev" title="Fit logistic regression model" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -60,28 +55,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -103,12 +93,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -125,6 +123,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../../index.html">
   
@@ -133,10 +133,21 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gc143d18 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gac0252e documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -154,35 +165,35 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -191,25 +202,25 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_None.html">None</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10_2_ald_compare_methods.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_2_ald_compare_methods.html">PI vs Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -217,13 +228,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">PI vs Median</a></li>
 </ul>
 
     </div>
@@ -239,7 +250,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -248,14 +259,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -333,10 +344,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -344,14 +355,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -406,10 +417,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="fit-logistic-regression-model">
-<h1>Fit logistic regression model<a class="headerlink" href="#fit-logistic-regression-model" title="Permalink to this heading">#</a></h1>
+<h1>Fit logistic regression model<a class="headerlink" href="#fit-logistic-regression-model" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>based on different imputation methods</p></li>
 <li><p>baseline: reference</p></li>
@@ -484,7 +495,7 @@ document.write(`
 </details>
 </div>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">#</a></h2>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <p>Default and set parameters for the notebook.</p>
 <div class="cell tag_parameters docutils container">
 <div class="cell_input docutils container">
@@ -581,9 +592,9 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </section>
 <section id="load-data">
-<h2>Load data<a class="headerlink" href="#load-data" title="Permalink to this heading">#</a></h2>
+<h2>Load data<a class="headerlink" href="#load-data" title="Link to this heading">#</a></h2>
 <section id="load-target">
-<h3>Load target<a class="headerlink" href="#load-target" title="Permalink to this heading">#</a></h3>
+<h3>Load target<a class="headerlink" href="#load-target" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fn_clinical_data</span><span class="p">,</span>
@@ -672,7 +683,7 @@ root - INFO     Already set attribute: out_folder has value diff_analysis
 </div>
 </section>
 <section id="ms-proteomics-or-specified-omics-data">
-<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Permalink to this heading">#</a></h3>
+<h3>MS proteomics or specified omics data<a class="headerlink" href="#ms-proteomics-or-specified-omics-data" title="Link to this heading">#</a></h3>
 <p>Aggregated from data splits of the imputation workflow run before.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -696,11 +707,11 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups 
-Sample_065  P25189;P25189-2   14.299
-Sample_192  P22692;P22692-2   15.693
-Sample_090  H0YAC1;P03952     17.546
-Sample_185  P05121            13.288
-Sample_165  O75493            15.749
+Sample_143  P13489            15.808
+Sample_151  O75084;Q14332     13.075
+Sample_158  P01817            11.120
+Sample_059  Q9BXJ1;Q9BXJ1-2   15.297
+Sample_147  Q86SF2            16.104
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -709,7 +720,7 @@ Name: intensity, dtype: float64
 <p>Get overlap between independent features and target</p>
 </section>
 <section id="select-by-ald-criteria">
-<h3>Select by ALD criteria<a class="headerlink" href="#select-by-ald-criteria" title="Permalink to this heading">#</a></h3>
+<h3>Select by ALD criteria<a class="headerlink" href="#select-by-ald-criteria" title="Link to this heading">#</a></h3>
 <p>Use parameters as specified in <a class="reference external" href="https://github.com/RasmussenLab/pimms/tree/main/project/data/ALD_study" rel="noopener noreferrer" target="_blank">ALD study</a>.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1114,7 +1125,7 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </div>
 </section>
 <section id="load-imputations-from-specified-model">
-<h3>Load imputations from specified model<a class="headerlink" href="#load-imputations-from-specified-model" title="Permalink to this heading">#</a></h3>
+<h3>Load imputations from specified model<a class="headerlink" href="#load-imputations-from-specified-model" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1135,10 +1146,10 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>missing values pred. by Median: runs/alzheimer_study/preds/pred_real_na_Median.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups      
-Sample_007  Q9H3T2;Q9H3T2-3        13.860
-Sample_171  A6NCE7;H3BTL1;Q9GZQ8   13.928
-Sample_009  P10644;P10644-2        14.059
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
+Sample_076  B7Z5R6;Q14596;Q14596-2     13.940
+Sample_064  P04430                     15.897
+Sample_154  Q96MU8;Q96MU8-2;Q96MU8-3   13.449
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -1146,7 +1157,7 @@ Name: intensity, dtype: float64
 </div>
 </section>
 <section id="load-imputations-from-baseline-model">
-<h3>Load imputations from baseline model<a class="headerlink" href="#load-imputations-from-baseline-model" title="Permalink to this heading">#</a></h3>
+<h3>Load imputations from baseline model<a class="headerlink" href="#load-imputations-from-baseline-model" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1163,17 +1174,17 @@ Name: intensity, dtype: float64
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 14.731
-            A0A075B6Q5                 13.197
-            A0A075B6R2                 13.814
-            A0A075B6S5                 12.113
-            A0A087WSY4                 13.348
+Sample_000  A0A075B6J9                 13.638
+            A0A075B6Q5                 13.244
+            A0A075B6R2                 13.455
+            A0A075B6S5                 13.544
+            A0A087WSY4                 13.682
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   13.407
-            Q9UI40;Q9UI40-2            12.955
-            Q9UIW2                     13.356
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.060
-            Q9UP79                     12.550
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.174
+            Q9UI40;Q9UI40-2            13.656
+            Q9UIW2                     10.554
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.968
+            Q9UP79                     13.244
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -1182,7 +1193,7 @@ Name: intensity, Length: 46401, dtype: float64
 </section>
 </section>
 <section id="modeling-setup">
-<h2>Modeling setup<a class="headerlink" href="#modeling-setup" title="Permalink to this heading">#</a></h2>
+<h2>Modeling setup<a class="headerlink" href="#modeling-setup" title="Link to this heading">#</a></h2>
 <p>General approach:</p>
 <ul class="simple">
 <li><p>use one train, test split of the data</p></li>
@@ -1549,7 +1560,7 @@ new approach</p></li>
 </div></div></div>
 </div>
 <section id="subset-of-data-by-ald-criteria">
-<h3>Subset of data by ALD criteria<a class="headerlink" href="#subset-of-data-by-ald-criteria" title="Permalink to this heading">#</a></h3>
+<h3>Subset of data by ALD criteria<a class="headerlink" href="#subset-of-data-by-ald-criteria" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1599,18 +1610,18 @@ new approach</p></li>
       <th>A0A075B6I1</th>
       <th>A0A075B6I6</th>
       <th>A0A075B6I9</th>
-      <th>A0A075B6J9</th>
+      <th>A0A075B6K4</th>
       <th>...</th>
-      <th>Q9Y653;Q9Y653-2;Q9Y653-3</th>
-      <th>Q9Y696</th>
-      <th>Q9Y6C2</th>
-      <th>Q9Y6N6</th>
-      <th>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4</th>
-      <th>Q9Y6R7</th>
-      <th>Q9Y6X5</th>
-      <th>Q9Y6Y8;Q9Y6Y8-2</th>
-      <th>Q9Y6Y9</th>
-      <th>S4R3U6</th>
+      <th>O14793</th>
+      <th>O95479;R4GMU1</th>
+      <th>P01282;P01282-2</th>
+      <th>P10619;P10619-2;X6R5C5;X6R8A1</th>
+      <th>P21810</th>
+      <th>Q14956;Q14956-2</th>
+      <th>Q6ZMP0;Q6ZMP0-2</th>
+      <th>Q9HBW1</th>
+      <th>Q9NY15</th>
+      <th>P17050</th>
     </tr>
     <tr>
       <th>Sample ID</th>
@@ -1649,18 +1660,18 @@ new approach</p></li>
       <td>17.584</td>
       <td>16.988</td>
       <td>20.054</td>
-      <td>14.731</td>
+      <td>16.148</td>
       <td>...</td>
-      <td>16.012</td>
-      <td>15.178</td>
-      <td>11.803</td>
-      <td>15.050</td>
-      <td>16.842</td>
-      <td>19.863</td>
-      <td>14.078</td>
-      <td>19.563</td>
-      <td>12.837</td>
-      <td>12.805</td>
+      <td>13.075</td>
+      <td>13.542</td>
+      <td>13.589</td>
+      <td>12.822</td>
+      <td>13.182</td>
+      <td>13.643</td>
+      <td>12.663</td>
+      <td>12.858</td>
+      <td>11.962</td>
+      <td>12.862</td>
     </tr>
     <tr>
       <th>Sample_001</th>
@@ -1671,20 +1682,20 @@ new approach</p></li>
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>13.009</td>
+      <td>12.410</td>
       <td>19.067</td>
-      <td>16.188</td>
+      <td>16.127</td>
       <td>...</td>
-      <td>15.528</td>
-      <td>15.576</td>
-      <td>12.828</td>
-      <td>14.833</td>
-      <td>16.597</td>
-      <td>20.299</td>
-      <td>15.556</td>
-      <td>19.386</td>
-      <td>13.970</td>
-      <td>12.442</td>
+      <td>13.529</td>
+      <td>12.715</td>
+      <td>13.332</td>
+      <td>13.403</td>
+      <td>12.863</td>
+      <td>12.217</td>
+      <td>12.616</td>
+      <td>13.193</td>
+      <td>13.524</td>
+      <td>12.575</td>
     </tr>
     <tr>
       <th>Sample_002</th>
@@ -1697,18 +1708,18 @@ new approach</p></li>
       <td>15.671</td>
       <td>17.012</td>
       <td>18.569</td>
-      <td>13.367</td>
+      <td>15.387</td>
       <td>...</td>
-      <td>15.229</td>
-      <td>14.728</td>
-      <td>13.757</td>
-      <td>15.118</td>
-      <td>17.440</td>
-      <td>19.598</td>
-      <td>15.735</td>
-      <td>20.447</td>
-      <td>12.636</td>
-      <td>12.505</td>
+      <td>11.925</td>
+      <td>14.151</td>
+      <td>12.234</td>
+      <td>12.210</td>
+      <td>13.506</td>
+      <td>12.656</td>
+      <td>13.672</td>
+      <td>14.588</td>
+      <td>13.601</td>
+      <td>14.048</td>
     </tr>
     <tr>
       <th>Sample_003</th>
@@ -1721,18 +1732,18 @@ new approach</p></li>
       <td>18.877</td>
       <td>14.182</td>
       <td>18.985</td>
-      <td>13.438</td>
+      <td>16.565</td>
       <td>...</td>
-      <td>15.495</td>
-      <td>14.590</td>
-      <td>14.682</td>
-      <td>15.140</td>
-      <td>17.356</td>
-      <td>19.429</td>
-      <td>12.500</td>
-      <td>20.216</td>
-      <td>12.627</td>
-      <td>12.445</td>
+      <td>14.064</td>
+      <td>13.235</td>
+      <td>12.403</td>
+      <td>12.399</td>
+      <td>11.397</td>
+      <td>13.076</td>
+      <td>12.419</td>
+      <td>13.334</td>
+      <td>13.563</td>
+      <td>14.387</td>
     </tr>
     <tr>
       <th>Sample_004</th>
@@ -1745,18 +1756,18 @@ new approach</p></li>
       <td>17.081</td>
       <td>14.140</td>
       <td>19.686</td>
-      <td>14.495</td>
+      <td>16.418</td>
       <td>...</td>
-      <td>14.757</td>
-      <td>15.094</td>
-      <td>14.048</td>
-      <td>15.256</td>
-      <td>17.075</td>
-      <td>19.582</td>
-      <td>15.328</td>
-      <td>19.867</td>
-      <td>13.145</td>
-      <td>12.235</td>
+      <td>12.678</td>
+      <td>13.511</td>
+      <td>12.819</td>
+      <td>13.406</td>
+      <td>14.168</td>
+      <td>12.528</td>
+      <td>12.520</td>
+      <td>13.229</td>
+      <td>12.351</td>
+      <td>12.889</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1790,21 +1801,21 @@ new approach</p></li>
       <td>16.482</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>11.709</td>
+      <td>12.743</td>
       <td>16.413</td>
       <td>19.102</td>
-      <td>16.064</td>
+      <td>15.350</td>
       <td>...</td>
-      <td>15.235</td>
-      <td>15.684</td>
-      <td>14.236</td>
-      <td>15.415</td>
-      <td>17.551</td>
-      <td>17.922</td>
-      <td>16.340</td>
-      <td>19.928</td>
-      <td>12.929</td>
-      <td>11.802</td>
+      <td>14.269</td>
+      <td>14.064</td>
+      <td>16.826</td>
+      <td>18.182</td>
+      <td>15.225</td>
+      <td>15.044</td>
+      <td>14.192</td>
+      <td>16.605</td>
+      <td>14.995</td>
+      <td>14.257</td>
     </tr>
     <tr>
       <th>Sample_206</th>
@@ -1817,18 +1828,18 @@ new approach</p></li>
       <td>16.503</td>
       <td>16.860</td>
       <td>18.538</td>
-      <td>15.288</td>
+      <td>16.582</td>
       <td>...</td>
-      <td>15.422</td>
-      <td>16.106</td>
-      <td>13.515</td>
-      <td>15.345</td>
-      <td>17.084</td>
-      <td>18.708</td>
-      <td>14.249</td>
-      <td>19.433</td>
-      <td>12.977</td>
-      <td>11.041</td>
+      <td>14.273</td>
+      <td>17.700</td>
+      <td>16.802</td>
+      <td>20.202</td>
+      <td>15.280</td>
+      <td>15.086</td>
+      <td>13.978</td>
+      <td>18.086</td>
+      <td>15.557</td>
+      <td>14.171</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -1841,18 +1852,18 @@ new approach</p></li>
       <td>16.321</td>
       <td>16.401</td>
       <td>18.849</td>
-      <td>17.580</td>
+      <td>15.768</td>
       <td>...</td>
-      <td>15.808</td>
-      <td>16.098</td>
-      <td>14.403</td>
-      <td>15.715</td>
-      <td>16.586</td>
-      <td>18.725</td>
-      <td>16.138</td>
-      <td>19.599</td>
-      <td>13.637</td>
-      <td>11.174</td>
+      <td>14.473</td>
+      <td>16.882</td>
+      <td>16.917</td>
+      <td>20.105</td>
+      <td>15.690</td>
+      <td>15.135</td>
+      <td>13.138</td>
+      <td>17.066</td>
+      <td>15.706</td>
+      <td>15.690</td>
     </tr>
     <tr>
       <th>Sample_208</th>
@@ -1862,21 +1873,21 @@ new approach</p></li>
       <td>16.132</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>11.870</td>
+      <td>13.156</td>
       <td>16.119</td>
       <td>18.368</td>
-      <td>15.202</td>
+      <td>17.560</td>
       <td>...</td>
-      <td>15.157</td>
-      <td>16.712</td>
-      <td>13.133</td>
-      <td>14.640</td>
-      <td>16.533</td>
-      <td>19.411</td>
-      <td>15.807</td>
-      <td>19.545</td>
-      <td>13.216</td>
-      <td>13.191</td>
+      <td>15.234</td>
+      <td>17.175</td>
+      <td>16.521</td>
+      <td>18.859</td>
+      <td>15.305</td>
+      <td>15.161</td>
+      <td>13.006</td>
+      <td>17.917</td>
+      <td>15.396</td>
+      <td>14.371</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -1889,18 +1900,18 @@ new approach</p></li>
       <td>16.371</td>
       <td>15.780</td>
       <td>18.806</td>
-      <td>16.532</td>
+      <td>16.338</td>
       <td>...</td>
-      <td>15.237</td>
-      <td>15.652</td>
-      <td>15.211</td>
-      <td>14.205</td>
-      <td>16.749</td>
-      <td>19.275</td>
-      <td>15.732</td>
-      <td>19.577</td>
-      <td>11.042</td>
-      <td>11.791</td>
+      <td>14.556</td>
+      <td>16.656</td>
+      <td>16.954</td>
+      <td>18.493</td>
+      <td>15.823</td>
+      <td>14.626</td>
+      <td>13.385</td>
+      <td>17.767</td>
+      <td>15.687</td>
+      <td>13.573</td>
     </tr>
   </tbody>
 </table>
@@ -1999,7 +2010,7 @@ new approach</p></li>
 </section>
 </section>
 <section id="determine-best-number-of-parameters-by-cross-validation-procedure">
-<h2>Determine best number of parameters by cross validation procedure<a class="headerlink" href="#determine-best-number-of-parameters-by-cross-validation-procedure" title="Permalink to this heading">#</a></h2>
+<h2>Determine best number of parameters by cross validation procedure<a class="headerlink" href="#determine-best-number-of-parameters-by-cross-validation-procedure" title="Link to this heading">#</a></h2>
 <p>using subset of data by ALD criteria:</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -2020,21 +2031,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 366.89it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  4.17it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  3.86it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  2.91it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  2.60it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  3.15it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  2.68it/s]
-100%|██████████| 8/8 [00:03&lt;00:00,  2.48it/s]
-100%|██████████| 9/9 [00:03&lt;00:00,  2.66it/s]
-100%|██████████| 10/10 [00:04&lt;00:00,  2.39it/s]
-100%|██████████| 11/11 [00:04&lt;00:00,  2.51it/s]
-100%|██████████| 12/12 [00:04&lt;00:00,  2.49it/s]
-100%|██████████| 13/13 [00:04&lt;00:00,  2.61it/s]
-100%|██████████| 14/14 [00:05&lt;00:00,  2.59it/s]
-100%|██████████| 15/15 [00:05&lt;00:00,  2.51it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 332.88it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  8.37it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  4.52it/s]
+100%|██████████| 4/4 [00:00&lt;00:00,  5.07it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  3.71it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  3.62it/s]
+100%|██████████| 7/7 [00:01&lt;00:00,  4.01it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  3.46it/s]
+100%|██████████| 9/9 [00:01&lt;00:00,  4.62it/s]
+100%|██████████| 10/10 [00:01&lt;00:00,  5.50it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  4.38it/s]
+100%|██████████| 12/12 [00:02&lt;00:00,  4.56it/s]
+100%|██████████| 13/13 [00:02&lt;00:00,  4.36it/s]
+100%|██████████| 14/14 [00:03&lt;00:00,  3.86it/s]
+100%|██████████| 15/15 [00:03&lt;00:00,  3.92it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2115,64 +2126,64 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.004</td>
-      <td>0.003</td>
-      <td>0.056</td>
-      <td>0.023</td>
-      <td>0.788</td>
-      <td>0.321</td>
-      <td>0.122</td>
-      <td>0.085</td>
-      <td>0.204</td>
-      <td>0.128</td>
-      <td>0.553</td>
-      <td>0.042</td>
-      <td>0.849</td>
-      <td>0.063</td>
-      <td>0.823</td>
-      <td>0.087</td>
-      <td>210.000</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.069</td>
-      <td>0.026</td>
-      <td>0.621</td>
-      <td>0.115</td>
-      <td>0.537</td>
-      <td>0.121</td>
-      <td>0.569</td>
-      <td>0.101</td>
-      <td>0.646</td>
-      <td>0.071</td>
-      <td>0.728</td>
-      <td>0.073</td>
-      <td>0.675</td>
+      <td>0.004</td>
+      <td>0.050</td>
+      <td>0.019</td>
+      <td>0.813</td>
+      <td>0.292</td>
+      <td>0.143</td>
+      <td>0.084</td>
+      <td>0.236</td>
+      <td>0.123</td>
+      <td>0.563</td>
+      <td>0.041</td>
+      <td>0.850</td>
+      <td>0.063</td>
+      <td>0.821</td>
       <td>0.088</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0.005</td>
+      <th>2</th>
       <td>0.004</td>
-      <td>0.069</td>
-      <td>0.030</td>
-      <td>0.774</td>
-      <td>0.094</td>
-      <td>0.710</td>
-      <td>0.105</td>
-      <td>0.734</td>
+      <td>0.002</td>
+      <td>0.048</td>
+      <td>0.019</td>
+      <td>0.762</td>
+      <td>0.092</td>
+      <td>0.717</td>
+      <td>0.102</td>
+      <td>0.733</td>
       <td>0.074</td>
-      <td>0.776</td>
-      <td>0.062</td>
-      <td>0.863</td>
-      <td>0.055</td>
-      <td>0.827</td>
+      <td>0.774</td>
+      <td>0.060</td>
+      <td>0.868</td>
+      <td>0.060</td>
+      <td>0.840</td>
+      <td>0.083</td>
+      <td>210.000</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>0.045</td>
+      <td>0.013</td>
+      <td>0.770</td>
+      <td>0.113</td>
+      <td>0.723</td>
+      <td>0.105</td>
+      <td>0.739</td>
+      <td>0.083</td>
+      <td>0.778</td>
       <td>0.070</td>
+      <td>0.869</td>
+      <td>0.066</td>
+      <td>0.845</td>
+      <td>0.083</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2180,20 +2191,20 @@ new approach</p></li>
       <th>4</th>
       <td>0.005</td>
       <td>0.004</td>
+      <td>0.051</td>
+      <td>0.021</td>
+      <td>0.800</td>
+      <td>0.093</td>
+      <td>0.716</td>
+      <td>0.114</td>
+      <td>0.749</td>
+      <td>0.079</td>
+      <td>0.790</td>
+      <td>0.063</td>
+      <td>0.873</td>
       <td>0.064</td>
-      <td>0.028</td>
-      <td>0.771</td>
-      <td>0.090</td>
-      <td>0.696</td>
-      <td>0.140</td>
-      <td>0.724</td>
-      <td>0.097</td>
-      <td>0.771</td>
-      <td>0.073</td>
-      <td>0.880</td>
-      <td>0.052</td>
-      <td>0.843</td>
-      <td>0.067</td>
+      <td>0.849</td>
+      <td>0.075</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2201,20 +2212,20 @@ new approach</p></li>
       <th>5</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.072</td>
-      <td>0.033</td>
-      <td>0.809</td>
-      <td>0.079</td>
-      <td>0.772</td>
-      <td>0.107</td>
-      <td>0.785</td>
-      <td>0.071</td>
-      <td>0.818</td>
-      <td>0.058</td>
-      <td>0.906</td>
-      <td>0.047</td>
-      <td>0.882</td>
-      <td>0.057</td>
+      <td>0.045</td>
+      <td>0.013</td>
+      <td>0.829</td>
+      <td>0.100</td>
+      <td>0.778</td>
+      <td>0.093</td>
+      <td>0.800</td>
+      <td>0.080</td>
+      <td>0.829</td>
+      <td>0.068</td>
+      <td>0.899</td>
+      <td>0.056</td>
+      <td>0.890</td>
+      <td>0.061</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2222,62 +2233,62 @@ new approach</p></li>
       <th>6</th>
       <td>0.004</td>
       <td>0.002</td>
-      <td>0.058</td>
-      <td>0.019</td>
-      <td>0.828</td>
-      <td>0.080</td>
-      <td>0.795</td>
-      <td>0.094</td>
-      <td>0.808</td>
-      <td>0.068</td>
-      <td>0.836</td>
-      <td>0.057</td>
-      <td>0.912</td>
-      <td>0.049</td>
-      <td>0.893</td>
-      <td>0.058</td>
+      <td>0.044</td>
+      <td>0.014</td>
+      <td>0.838</td>
+      <td>0.098</td>
+      <td>0.780</td>
+      <td>0.096</td>
+      <td>0.804</td>
+      <td>0.078</td>
+      <td>0.833</td>
+      <td>0.065</td>
+      <td>0.899</td>
+      <td>0.055</td>
+      <td>0.889</td>
+      <td>0.060</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.055</td>
-      <td>0.016</td>
-      <td>0.826</td>
-      <td>0.084</td>
-      <td>0.799</td>
-      <td>0.091</td>
-      <td>0.809</td>
-      <td>0.069</td>
-      <td>0.837</td>
-      <td>0.058</td>
-      <td>0.911</td>
-      <td>0.050</td>
-      <td>0.894</td>
-      <td>0.058</td>
+      <td>0.008</td>
+      <td>0.007</td>
+      <td>0.061</td>
+      <td>0.021</td>
+      <td>0.838</td>
+      <td>0.097</td>
+      <td>0.779</td>
+      <td>0.096</td>
+      <td>0.803</td>
+      <td>0.077</td>
+      <td>0.832</td>
+      <td>0.065</td>
+      <td>0.898</td>
+      <td>0.057</td>
+      <td>0.888</td>
+      <td>0.062</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
+      <td>0.007</td>
       <td>0.006</td>
-      <td>0.006</td>
-      <td>0.077</td>
-      <td>0.026</td>
-      <td>0.837</td>
-      <td>0.081</td>
+      <td>0.061</td>
+      <td>0.024</td>
+      <td>0.831</td>
+      <td>0.098</td>
+      <td>0.781</td>
+      <td>0.104</td>
       <td>0.801</td>
-      <td>0.092</td>
-      <td>0.815</td>
-      <td>0.066</td>
-      <td>0.842</td>
-      <td>0.056</td>
-      <td>0.913</td>
-      <td>0.048</td>
-      <td>0.900</td>
-      <td>0.054</td>
+      <td>0.083</td>
+      <td>0.831</td>
+      <td>0.069</td>
+      <td>0.896</td>
+      <td>0.057</td>
+      <td>0.887</td>
+      <td>0.062</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2285,146 +2296,146 @@ new approach</p></li>
       <th>9</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.066</td>
-      <td>0.019</td>
-      <td>0.831</td>
-      <td>0.076</td>
-      <td>0.799</td>
+      <td>0.055</td>
+      <td>0.022</td>
+      <td>0.821</td>
       <td>0.088</td>
       <td>0.811</td>
-      <td>0.062</td>
+      <td>0.100</td>
+      <td>0.812</td>
+      <td>0.073</td>
       <td>0.839</td>
-      <td>0.053</td>
-      <td>0.912</td>
-      <td>0.048</td>
-      <td>0.898</td>
-      <td>0.053</td>
+      <td>0.062</td>
+      <td>0.911</td>
+      <td>0.052</td>
+      <td>0.900</td>
+      <td>0.054</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.006</td>
-      <td>0.004</td>
-      <td>0.075</td>
-      <td>0.029</td>
-      <td>0.824</td>
-      <td>0.080</td>
-      <td>0.793</td>
-      <td>0.092</td>
-      <td>0.804</td>
-      <td>0.063</td>
-      <td>0.833</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.047</td>
+      <td>0.018</td>
+      <td>0.823</td>
+      <td>0.091</td>
+      <td>0.811</td>
+      <td>0.099</td>
+      <td>0.812</td>
+      <td>0.072</td>
+      <td>0.839</td>
+      <td>0.061</td>
+      <td>0.911</td>
       <td>0.053</td>
-      <td>0.910</td>
-      <td>0.048</td>
-      <td>0.897</td>
+      <td>0.901</td>
       <td>0.054</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.008</td>
       <td>0.006</td>
-      <td>0.087</td>
-      <td>0.029</td>
-      <td>0.824</td>
-      <td>0.074</td>
-      <td>0.828</td>
-      <td>0.087</td>
-      <td>0.822</td>
-      <td>0.060</td>
-      <td>0.848</td>
-      <td>0.052</td>
-      <td>0.920</td>
-      <td>0.046</td>
-      <td>0.909</td>
-      <td>0.047</td>
+      <td>0.005</td>
+      <td>0.049</td>
+      <td>0.018</td>
+      <td>0.816</td>
+      <td>0.094</td>
+      <td>0.799</td>
+      <td>0.108</td>
+      <td>0.803</td>
+      <td>0.079</td>
+      <td>0.832</td>
+      <td>0.066</td>
+      <td>0.908</td>
+      <td>0.055</td>
+      <td>0.896</td>
+      <td>0.058</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.006</td>
       <td>0.005</td>
-      <td>0.083</td>
-      <td>0.029</td>
-      <td>0.815</td>
-      <td>0.077</td>
-      <td>0.828</td>
-      <td>0.098</td>
-      <td>0.818</td>
-      <td>0.071</td>
-      <td>0.845</td>
-      <td>0.061</td>
-      <td>0.919</td>
-      <td>0.047</td>
+      <td>0.004</td>
+      <td>0.055</td>
+      <td>0.020</td>
+      <td>0.813</td>
+      <td>0.092</td>
+      <td>0.796</td>
+      <td>0.108</td>
+      <td>0.800</td>
+      <td>0.078</td>
+      <td>0.829</td>
+      <td>0.066</td>
       <td>0.908</td>
-      <td>0.050</td>
+      <td>0.055</td>
+      <td>0.896</td>
+      <td>0.057</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.008</td>
-      <td>0.006</td>
-      <td>0.088</td>
-      <td>0.025</td>
-      <td>0.812</td>
-      <td>0.075</td>
-      <td>0.832</td>
-      <td>0.099</td>
-      <td>0.819</td>
-      <td>0.071</td>
-      <td>0.845</td>
-      <td>0.062</td>
-      <td>0.916</td>
-      <td>0.049</td>
-      <td>0.906</td>
-      <td>0.051</td>
+      <td>0.004</td>
+      <td>0.001</td>
+      <td>0.037</td>
+      <td>0.015</td>
+      <td>0.811</td>
+      <td>0.092</td>
+      <td>0.796</td>
+      <td>0.107</td>
+      <td>0.799</td>
+      <td>0.079</td>
+      <td>0.828</td>
+      <td>0.067</td>
+      <td>0.905</td>
+      <td>0.055</td>
+      <td>0.894</td>
+      <td>0.056</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.008</td>
-      <td>0.008</td>
-      <td>0.087</td>
-      <td>0.037</td>
-      <td>0.818</td>
-      <td>0.079</td>
-      <td>0.814</td>
-      <td>0.095</td>
-      <td>0.813</td>
-      <td>0.071</td>
-      <td>0.840</td>
-      <td>0.060</td>
-      <td>0.919</td>
-      <td>0.046</td>
-      <td>0.909</td>
+      <td>0.005</td>
+      <td>0.003</td>
       <td>0.048</td>
+      <td>0.018</td>
+      <td>0.810</td>
+      <td>0.091</td>
+      <td>0.797</td>
+      <td>0.109</td>
+      <td>0.799</td>
+      <td>0.080</td>
+      <td>0.829</td>
+      <td>0.068</td>
+      <td>0.904</td>
+      <td>0.055</td>
+      <td>0.893</td>
+      <td>0.056</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
       <td>0.005</td>
-      <td>0.005</td>
-      <td>0.072</td>
-      <td>0.027</td>
-      <td>0.830</td>
-      <td>0.081</td>
-      <td>0.807</td>
-      <td>0.092</td>
-      <td>0.816</td>
-      <td>0.072</td>
-      <td>0.843</td>
-      <td>0.060</td>
-      <td>0.922</td>
+      <td>0.004</td>
       <td>0.045</td>
-      <td>0.910</td>
-      <td>0.047</td>
+      <td>0.016</td>
+      <td>0.807</td>
+      <td>0.094</td>
+      <td>0.796</td>
+      <td>0.107</td>
+      <td>0.797</td>
+      <td>0.079</td>
+      <td>0.826</td>
+      <td>0.067</td>
+      <td>0.902</td>
+      <td>0.055</td>
+      <td>0.891</td>
+      <td>0.055</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2449,21 +2460,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 139.73it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  5.17it/s]
-100%|██████████| 3/3 [00:01&lt;00:00,  2.64it/s]
-100%|██████████| 4/4 [00:01&lt;00:00,  2.74it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  3.04it/s]
-100%|██████████| 6/6 [00:02&lt;00:00,  2.51it/s]
-100%|██████████| 7/7 [00:03&lt;00:00,  2.22it/s]
-100%|██████████| 8/8 [00:02&lt;00:00,  2.79it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  3.00it/s]
-100%|██████████| 10/10 [00:03&lt;00:00,  2.73it/s]
-100%|██████████| 11/11 [00:03&lt;00:00,  2.84it/s]
-100%|██████████| 12/12 [00:04&lt;00:00,  2.80it/s]
-100%|██████████| 13/13 [00:04&lt;00:00,  2.75it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 318.60it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  6.76it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  5.73it/s]
+100%|██████████| 4/4 [00:00&lt;00:00,  4.16it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  4.94it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  4.09it/s]
+100%|██████████| 7/7 [00:01&lt;00:00,  4.01it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  3.98it/s]
+100%|██████████| 9/9 [00:02&lt;00:00,  3.74it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  3.80it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  3.70it/s]
+100%|██████████| 12/12 [00:03&lt;00:00,  3.88it/s]
+100%|██████████| 13/13 [00:04&lt;00:00,  3.06it/s]
 100%|██████████| 14/14 [00:05&lt;00:00,  2.69it/s]
-100%|██████████| 15/15 [00:06&lt;00:00,  2.48it/s]
+100%|██████████| 15/15 [00:04&lt;00:00,  3.65it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2544,10 +2555,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.091</td>
-      <td>0.028</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.042</td>
+      <td>0.014</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2565,10 +2576,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.078</td>
-      <td>0.028</td>
+      <td>0.002</td>
+      <td>0.041</td>
+      <td>0.013</td>
       <td>0.751</td>
       <td>0.123</td>
       <td>0.440</td>
@@ -2586,10 +2597,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.007</td>
-      <td>0.007</td>
-      <td>0.086</td>
-      <td>0.035</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>0.053</td>
+      <td>0.019</td>
       <td>0.713</td>
       <td>0.084</td>
       <td>0.671</td>
@@ -2607,10 +2618,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.008</td>
-      <td>0.007</td>
-      <td>0.097</td>
-      <td>0.037</td>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>0.039</td>
+      <td>0.009</td>
       <td>0.705</td>
       <td>0.087</td>
       <td>0.671</td>
@@ -2628,10 +2639,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.077</td>
-      <td>0.029</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.037</td>
+      <td>0.009</td>
       <td>0.739</td>
       <td>0.096</td>
       <td>0.678</td>
@@ -2649,10 +2660,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.006</td>
-      <td>0.005</td>
-      <td>0.080</td>
-      <td>0.028</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.038</td>
+      <td>0.004</td>
       <td>0.747</td>
       <td>0.106</td>
       <td>0.695</td>
@@ -2670,10 +2681,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.008</td>
-      <td>0.007</td>
-      <td>0.091</td>
-      <td>0.032</td>
+      <td>0.004</td>
+      <td>0.000</td>
+      <td>0.040</td>
+      <td>0.010</td>
       <td>0.741</td>
       <td>0.105</td>
       <td>0.703</td>
@@ -2691,10 +2702,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.005</td>
-      <td>0.003</td>
-      <td>0.064</td>
-      <td>0.026</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.039</td>
+      <td>0.011</td>
       <td>0.788</td>
       <td>0.095</td>
       <td>0.766</td>
@@ -2712,10 +2723,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.062</td>
-      <td>0.024</td>
+      <td>0.002</td>
+      <td>0.041</td>
+      <td>0.010</td>
       <td>0.785</td>
       <td>0.103</td>
       <td>0.769</td>
@@ -2733,10 +2744,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
+      <td>0.003</td>
+      <td>0.000</td>
+      <td>0.033</td>
       <td>0.005</td>
-      <td>0.004</td>
-      <td>0.066</td>
-      <td>0.024</td>
       <td>0.773</td>
       <td>0.100</td>
       <td>0.752</td>
@@ -2754,10 +2765,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.063</td>
-      <td>0.024</td>
+      <td>0.001</td>
+      <td>0.035</td>
+      <td>0.004</td>
       <td>0.816</td>
       <td>0.086</td>
       <td>0.816</td>
@@ -2777,8 +2788,8 @@ new approach</p></li>
       <th>12</th>
       <td>0.005</td>
       <td>0.004</td>
-      <td>0.068</td>
-      <td>0.030</td>
+      <td>0.047</td>
+      <td>0.017</td>
       <td>0.816</td>
       <td>0.087</td>
       <td>0.820</td>
@@ -2797,8 +2808,8 @@ new approach</p></li>
     <tr>
       <th>13</th>
       <td>0.005</td>
-      <td>0.003</td>
-      <td>0.066</td>
+      <td>0.005</td>
+      <td>0.058</td>
       <td>0.025</td>
       <td>0.840</td>
       <td>0.086</td>
@@ -2818,9 +2829,9 @@ new approach</p></li>
     <tr>
       <th>14</th>
       <td>0.006</td>
-      <td>0.006</td>
-      <td>0.066</td>
-      <td>0.028</td>
+      <td>0.004</td>
+      <td>0.047</td>
+      <td>0.018</td>
       <td>0.840</td>
       <td>0.089</td>
       <td>0.801</td>
@@ -2838,10 +2849,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.062</td>
-      <td>0.022</td>
+      <td>0.004</td>
+      <td>0.038</td>
+      <td>0.019</td>
       <td>0.840</td>
       <td>0.090</td>
       <td>0.797</td>
@@ -2879,21 +2890,21 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 898.33it/s]
-100%|██████████| 2/2 [00:00&lt;00:00, 23.74it/s]
-100%|██████████| 3/3 [00:00&lt;00:00, 12.49it/s]
-100%|██████████| 4/4 [00:00&lt;00:00, 17.24it/s]
-100%|██████████| 5/5 [00:00&lt;00:00, 12.80it/s]
-100%|██████████| 6/6 [00:00&lt;00:00, 19.78it/s]
-100%|██████████| 7/7 [00:00&lt;00:00, 18.25it/s]
-100%|██████████| 8/8 [00:00&lt;00:00, 14.30it/s]
-100%|██████████| 9/9 [00:00&lt;00:00, 14.52it/s]
-100%|██████████| 10/10 [00:00&lt;00:00, 11.74it/s]
-100%|██████████| 11/11 [00:00&lt;00:00, 13.39it/s]
-100%|██████████| 12/12 [00:00&lt;00:00, 14.21it/s]
-100%|██████████| 13/13 [00:01&lt;00:00, 12.82it/s]
-100%|██████████| 14/14 [00:01&lt;00:00, 12.58it/s]
-100%|██████████| 15/15 [00:01&lt;00:00,  9.92it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 1/1 [00:00&lt;00:00, 835.69it/s]
+100%|██████████| 2/2 [00:00&lt;00:00, 34.80it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 17.23it/s]
+100%|██████████| 4/4 [00:00&lt;00:00, 17.92it/s]
+100%|██████████| 5/5 [00:00&lt;00:00, 18.61it/s]
+100%|██████████| 6/6 [00:00&lt;00:00, 13.76it/s]
+100%|██████████| 7/7 [00:00&lt;00:00, 20.26it/s]
+100%|██████████| 8/8 [00:00&lt;00:00, 15.98it/s]
+100%|██████████| 9/9 [00:00&lt;00:00, 17.47it/s]
+100%|██████████| 10/10 [00:00&lt;00:00, 15.31it/s]
+100%|██████████| 11/11 [00:00&lt;00:00, 13.37it/s]
+100%|██████████| 12/12 [00:00&lt;00:00, 15.54it/s]
+100%|██████████| 13/13 [00:00&lt;00:00, 15.79it/s]
+100%|██████████| 14/14 [00:00&lt;00:00, 19.24it/s]
+100%|██████████| 15/15 [00:00&lt;00:00, 15.55it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2974,10 +2985,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.072</td>
-      <td>0.031</td>
+      <td>0.001</td>
+      <td>0.040</td>
+      <td>0.013</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2995,10 +3006,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.005</td>
-      <td>0.005</td>
-      <td>0.073</td>
-      <td>0.032</td>
+      <td>0.004</td>
+      <td>0.004</td>
+      <td>0.045</td>
+      <td>0.019</td>
       <td>0.759</td>
       <td>0.123</td>
       <td>0.409</td>
@@ -3016,10 +3027,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.007</td>
-      <td>0.006</td>
-      <td>0.070</td>
-      <td>0.025</td>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>0.040</td>
+      <td>0.012</td>
       <td>0.745</td>
       <td>0.122</td>
       <td>0.382</td>
@@ -3038,9 +3049,9 @@ new approach</p></li>
     <tr>
       <th>4</th>
       <td>0.005</td>
-      <td>0.004</td>
-      <td>0.055</td>
-      <td>0.018</td>
+      <td>0.003</td>
+      <td>0.054</td>
+      <td>0.019</td>
       <td>0.691</td>
       <td>0.094</td>
       <td>0.457</td>
@@ -3059,9 +3070,9 @@ new approach</p></li>
     <tr>
       <th>5</th>
       <td>0.004</td>
-      <td>0.000</td>
-      <td>0.048</td>
-      <td>0.014</td>
+      <td>0.003</td>
+      <td>0.042</td>
+      <td>0.013</td>
       <td>0.708</td>
       <td>0.106</td>
       <td>0.470</td>
@@ -3080,9 +3091,9 @@ new approach</p></li>
     <tr>
       <th>6</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.044</td>
-      <td>0.009</td>
+      <td>0.003</td>
+      <td>0.043</td>
+      <td>0.014</td>
       <td>0.698</td>
       <td>0.119</td>
       <td>0.488</td>
@@ -3100,10 +3111,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.043</td>
-      <td>0.008</td>
+      <td>0.005</td>
+      <td>0.003</td>
+      <td>0.046</td>
+      <td>0.018</td>
       <td>0.704</td>
       <td>0.109</td>
       <td>0.491</td>
@@ -3123,8 +3134,8 @@ new approach</p></li>
       <th>8</th>
       <td>0.004</td>
       <td>0.002</td>
-      <td>0.044</td>
-      <td>0.007</td>
+      <td>0.042</td>
+      <td>0.014</td>
       <td>0.690</td>
       <td>0.101</td>
       <td>0.548</td>
@@ -3142,9 +3153,9 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
+      <td>0.005</td>
       <td>0.004</td>
-      <td>0.004</td>
-      <td>0.049</td>
+      <td>0.056</td>
       <td>0.023</td>
       <td>0.738</td>
       <td>0.103</td>
@@ -3163,10 +3174,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.061</td>
-      <td>0.021</td>
+      <td>0.000</td>
+      <td>0.039</td>
+      <td>0.007</td>
       <td>0.754</td>
       <td>0.101</td>
       <td>0.613</td>
@@ -3184,10 +3195,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.004</td>
-      <td>0.001</td>
-      <td>0.059</td>
-      <td>0.022</td>
+      <td>0.006</td>
+      <td>0.005</td>
+      <td>0.051</td>
+      <td>0.019</td>
       <td>0.757</td>
       <td>0.098</td>
       <td>0.651</td>
@@ -3207,8 +3218,8 @@ new approach</p></li>
       <th>12</th>
       <td>0.004</td>
       <td>0.002</td>
-      <td>0.055</td>
-      <td>0.016</td>
+      <td>0.045</td>
+      <td>0.015</td>
       <td>0.771</td>
       <td>0.104</td>
       <td>0.653</td>
@@ -3228,8 +3239,8 @@ new approach</p></li>
       <th>13</th>
       <td>0.004</td>
       <td>0.002</td>
-      <td>0.060</td>
-      <td>0.021</td>
+      <td>0.037</td>
+      <td>0.015</td>
       <td>0.790</td>
       <td>0.092</td>
       <td>0.660</td>
@@ -3248,9 +3259,9 @@ new approach</p></li>
     <tr>
       <th>14</th>
       <td>0.005</td>
-      <td>0.003</td>
-      <td>0.054</td>
-      <td>0.017</td>
+      <td>0.004</td>
+      <td>0.050</td>
+      <td>0.020</td>
       <td>0.781</td>
       <td>0.091</td>
       <td>0.643</td>
@@ -3268,10 +3279,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.005</td>
       <td>0.004</td>
-      <td>0.064</td>
-      <td>0.021</td>
+      <td>0.005</td>
+      <td>0.038</td>
+      <td>0.014</td>
       <td>0.773</td>
       <td>0.095</td>
       <td>0.648</td>
@@ -3292,7 +3303,7 @@ new approach</p></li>
 </div></div></div>
 </div>
 <section id="best-number-of-features-by-subset-of-the-data">
-<h3>Best number of features by subset of the data:<a class="headerlink" href="#best-number-of-features-by-subset-of-the-data" title="Permalink to this heading">#</a></h3>
+<h3>Best number of features by subset of the data:<a class="headerlink" href="#best-number-of-features-by-subset-of-the-data" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3338,49 +3349,49 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>fit_time</th>
+      <td>7</td>
+      <td>14</td>
       <td>11</td>
-      <td>4</td>
-      <td>3</td>
     </tr>
     <tr>
       <th>score_time</th>
+      <td>7</td>
       <td>13</td>
-      <td>4</td>
-      <td>2</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>test_precision</th>
-      <td>8</td>
+      <td>7</td>
       <td>13</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_recall</th>
-      <td>13</td>
+      <td>9</td>
       <td>12</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_f1</th>
-      <td>11</td>
+      <td>10</td>
       <td>14</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_balanced_accuracy</th>
-      <td>11</td>
+      <td>10</td>
       <td>14</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_roc_auc</th>
-      <td>15</td>
+      <td>10</td>
       <td>13</td>
       <td>13</td>
     </tr>
     <tr>
       <th>test_average_precision</th>
-      <td>15</td>
+      <td>10</td>
       <td>13</td>
       <td>13</td>
     </tr>
@@ -3397,7 +3408,7 @@ new approach</p></li>
 </section>
 </section>
 <section id="train-test-split">
-<h2>Train, test split<a class="headerlink" href="#train-test-split" title="Permalink to this heading">#</a></h2>
+<h2>Train, test split<a class="headerlink" href="#train-test-split" title="Link to this heading">#</a></h2>
 <p>Show number of cases in train and test data</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -3465,7 +3476,7 @@ new approach</p></li>
 </div>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading">#</a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">run_model</span></code> returns dataclasses with the further needed results</p></li>
 <li><p>add mrmr selection of data (select best number of features to use instead of fixing it)</p></li>
@@ -3519,15 +3530,15 @@ new approach</p></li>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:05&lt;00:00,  2.22it/s]
-100%|██████████| 13/13 [00:01&lt;00:00, 10.81it/s]
-100%|██████████| 15/15 [00:04&lt;00:00,  3.07it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 13/13 [00:04&lt;00:00,  2.74it/s]
+100%|██████████| 13/13 [00:00&lt;00:00, 15.24it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  3.90it/s]
 </pre></div>
 </div>
 </div>
 </div>
 <section id="roc-auc-on-test-split">
-<h3>ROC-AUC on test split<a class="headerlink" href="#roc-auc-on-test-split" title="Permalink to this heading">#</a></h3>
+<h3>ROC-AUC on test split<a class="headerlink" href="#roc-auc-on-test-split" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3550,7 +3561,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/5e04454a442802a798d7a87d5bddb3032ca25ad037bde8da446f62f9dfed1ffc.png" src="../../../_images/5e04454a442802a798d7a87d5bddb3032ca25ad037bde8da446f62f9dfed1ffc.png" />
+<img alt="../../../_images/aff3f30551a16e57665c6ff6204fe8a317367dc48dab068e4e40423f0c5b2ee7.png" src="../../../_images/aff3f30551a16e57665c6ff6204fe8a317367dc48dab068e4e40423f0c5b2ee7.png" />
 </div>
 </div>
 <p>Data used to plot ROC:</p>
@@ -3615,8 +3626,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>1</th>
+      <td>0.042</td>
       <td>0.000</td>
-      <td>0.056</td>
       <td>0.000</td>
       <td>0.056</td>
       <td>0.042</td>
@@ -3624,177 +3635,132 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.000</td>
+      <td>0.042</td>
       <td>0.611</td>
       <td>0.000</td>
       <td>0.389</td>
-      <td>0.042</td>
-      <td>0.111</td>
+      <td>0.083</td>
+      <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.042</td>
+      <td>0.167</td>
       <td>0.611</td>
       <td>0.042</td>
       <td>0.389</td>
       <td>0.083</td>
-      <td>0.111</td>
+      <td>0.167</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.042</td>
+      <td>0.167</td>
       <td>0.667</td>
       <td>0.042</td>
       <td>0.500</td>
-      <td>0.083</td>
+      <td>0.167</td>
       <td>0.167</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.167</td>
+      <td>0.250</td>
       <td>0.667</td>
       <td>0.125</td>
       <td>0.500</td>
       <td>0.167</td>
-      <td>0.167</td>
+      <td>0.222</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.167</td>
-      <td>0.833</td>
+      <td>0.250</td>
+      <td>0.778</td>
       <td>0.125</td>
       <td>0.556</td>
-      <td>0.167</td>
+      <td>0.208</td>
       <td>0.222</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.333</td>
-      <td>0.833</td>
-      <td>0.208</td>
+      <td>0.292</td>
+      <td>0.778</td>
+      <td>0.250</td>
       <td>0.556</td>
       <td>0.208</td>
-      <td>0.222</td>
+      <td>0.500</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.333</td>
+      <td>0.292</td>
+      <td>0.833</td>
+      <td>0.250</td>
       <td>0.889</td>
-      <td>0.208</td>
-      <td>0.611</td>
-      <td>0.208</td>
-      <td>0.444</td>
+      <td>0.250</td>
+      <td>0.500</td>
     </tr>
     <tr>
       <th>9</th>
       <td>0.417</td>
+      <td>0.833</td>
+      <td>0.417</td>
       <td>0.889</td>
       <td>0.250</td>
       <td>0.611</td>
-      <td>0.250</td>
-      <td>0.444</td>
     </tr>
     <tr>
       <th>10</th>
       <td>0.417</td>
-      <td>1.000</td>
-      <td>0.250</td>
       <td>0.889</td>
-      <td>0.250</td>
-      <td>0.500</td>
+      <td>0.417</td>
+      <td>0.944</td>
+      <td>0.625</td>
+      <td>0.611</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>1.000</td>
-      <td>1.000</td>
-      <td>0.458</td>
+      <td>0.667</td>
       <td>0.889</td>
-      <td>0.292</td>
-      <td>0.500</td>
+      <td>0.625</td>
+      <td>0.944</td>
+      <td>0.625</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.458</td>
+      <td>0.667</td>
       <td>0.944</td>
-      <td>0.292</td>
-      <td>0.611</td>
+      <td>0.625</td>
+      <td>1.000</td>
+      <td>0.750</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.667</td>
+      <td>0.792</td>
       <td>0.944</td>
-      <td>0.583</td>
-      <td>0.611</td>
+      <td>1.000</td>
+      <td>1.000</td>
+      <td>0.750</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.667</td>
+      <td>0.792</td>
       <td>1.000</td>
-      <td>0.583</td>
-      <td>0.667</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.875</td>
+      <td>0.889</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>NaN</td>
-      <td>NaN</td>
       <td>1.000</td>
       <td>1.000</td>
-      <td>0.708</td>
-      <td>0.667</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.875</td>
+      <td>1.000</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.708</td>
-      <td>0.722</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.750</td>
-      <td>0.722</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.750</td>
-      <td>0.889</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.875</td>
-      <td>0.889</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.875</td>
-      <td>1.000</td>
-    </tr>
-    <tr>
-      <th>21</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
@@ -3808,7 +3774,7 @@ new approach</p></li>
 </div>
 </section>
 <section id="features-selected-for-final-models">
-<h3>Features selected for final models<a class="headerlink" href="#features-selected-for-final-models" title="Permalink to this heading">#</a></h3>
+<h3>Features selected for final models<a class="headerlink" href="#features-selected-for-final-models" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3873,37 +3839,37 @@ new approach</p></li>
     </tr>
     <tr>
       <th>1</th>
-      <td>Q8NBI6</td>
+      <td>Q15848</td>
       <td>B1AN99;P35030;P35030-2;P35030-3;P35030-4;P35030-5</td>
       <td>P51688</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>P60709;P63261</td>
+      <td>G3XAP6;P49747;P49747-2</td>
       <td>P10636-2;P10636-6</td>
       <td>Q8NFP4;Q8NFP4-2</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>P04075</td>
+      <td>P61981</td>
       <td>P10643</td>
       <td>A0A087WTT8;A0A0A0MQX5;O94779;O94779-2</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>P14174</td>
+      <td>Q99983</td>
       <td>P04075</td>
       <td>Q504Y2</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>P61981</td>
+      <td>P04075</td>
       <td>P14174</td>
       <td>Q96GD0</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>P00338;P00338-3</td>
+      <td>P14174</td>
       <td>P25189;P25189-2</td>
       <td>A0A075B7B8</td>
     </tr>
@@ -3915,45 +3881,33 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>P08294</td>
+      <td>P00338;P00338-3</td>
       <td>P00338;P00338-3</td>
       <td>A6PVN5;F6WIT2;Q15257;Q15257-2;Q15257-3</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>C9JF17;P05090</td>
+      <td>Q6EMK4</td>
       <td>P00492</td>
       <td>A0A0J9YW36;Q9NZ72;Q9NZ72-2</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>Q6EMK4</td>
+      <td>None</td>
       <td>P63104</td>
       <td>P31150</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>P14618</td>
+      <td>None</td>
       <td>P15151-2</td>
       <td>E5RK69;E7EMC6;P08133;P08133-2</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>P05413;S4R371</td>
+      <td>None</td>
       <td>Q6EMK4</td>
       <td>P31321</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>A0A0B4J1V0</td>
-      <td>None</td>
-      <td>None</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>P63104</td>
-      <td>None</td>
-      <td>None</td>
     </tr>
   </tbody>
 </table>
@@ -3961,7 +3915,7 @@ new approach</p></li>
 </div>
 </section>
 <section id="precision-recall-plot-on-test-data">
-<h3>Precision-Recall plot on test data<a class="headerlink" href="#precision-recall-plot-on-test-data" title="Permalink to this heading">#</a></h3>
+<h3>Precision-Recall plot on test data<a class="headerlink" href="#precision-recall-plot-on-test-data" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3985,7 +3939,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/8353949cac06a2e5dd43aafab41e072dbb46456a42981c392dfbbc463c068172.png" src="../../../_images/8353949cac06a2e5dd43aafab41e072dbb46456a42981c392dfbbc463c068172.png" />
+<img alt="../../../_images/735db40e4422df74caa19d70b8901eed37f3c91e70d9e3276865fe7c348c3e1a.png" src="../../../_images/735db40e4422df74caa19d70b8901eed37f3c91e70d9e3276865fe7c348c3e1a.png" />
 </div>
 </div>
 <p>Data used to plot PRC:</p>
@@ -4093,8 +4047,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.500</td>
-      <td>1.000</td>
+      <td>0.472</td>
+      <td>0.944</td>
       <td>0.500</td>
       <td>1.000</td>
       <td>0.444</td>
@@ -4102,8 +4056,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.514</td>
-      <td>1.000</td>
+      <td>0.486</td>
+      <td>0.944</td>
       <td>0.514</td>
       <td>1.000</td>
       <td>0.457</td>
@@ -4111,8 +4065,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.529</td>
-      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.944</td>
       <td>0.529</td>
       <td>1.000</td>
       <td>0.471</td>
@@ -4120,17 +4074,17 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.545</td>
-      <td>1.000</td>
       <td>0.515</td>
       <td>0.944</td>
+      <td>0.545</td>
+      <td>1.000</td>
       <td>0.455</td>
       <td>0.833</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.562</td>
-      <td>1.000</td>
+      <td>0.500</td>
+      <td>0.889</td>
       <td>0.531</td>
       <td>0.944</td>
       <td>0.438</td>
@@ -4138,8 +4092,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.581</td>
-      <td>1.000</td>
+      <td>0.516</td>
+      <td>0.889</td>
       <td>0.548</td>
       <td>0.944</td>
       <td>0.419</td>
@@ -4147,17 +4101,17 @@ new approach</p></li>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.600</td>
-      <td>1.000</td>
+      <td>0.533</td>
+      <td>0.889</td>
       <td>0.567</td>
       <td>0.944</td>
-      <td>0.433</td>
-      <td>0.722</td>
+      <td>0.400</td>
+      <td>0.667</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.621</td>
-      <td>1.000</td>
+      <td>0.552</td>
+      <td>0.889</td>
       <td>0.586</td>
       <td>0.944</td>
       <td>0.414</td>
@@ -4165,8 +4119,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.643</td>
-      <td>1.000</td>
+      <td>0.571</td>
+      <td>0.889</td>
       <td>0.607</td>
       <td>0.944</td>
       <td>0.429</td>
@@ -4174,10 +4128,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.630</td>
-      <td>0.944</td>
       <td>0.593</td>
       <td>0.889</td>
+      <td>0.630</td>
+      <td>0.944</td>
       <td>0.444</td>
       <td>0.667</td>
     </tr>
@@ -4187,13 +4141,13 @@ new approach</p></li>
       <td>0.889</td>
       <td>0.615</td>
       <td>0.889</td>
-      <td>0.462</td>
-      <td>0.667</td>
+      <td>0.423</td>
+      <td>0.611</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>0.640</td>
-      <td>0.889</td>
+      <td>0.600</td>
+      <td>0.833</td>
       <td>0.640</td>
       <td>0.889</td>
       <td>0.440</td>
@@ -4201,8 +4155,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>18</th>
-      <td>0.667</td>
-      <td>0.889</td>
+      <td>0.625</td>
+      <td>0.833</td>
       <td>0.667</td>
       <td>0.889</td>
       <td>0.458</td>
@@ -4228,8 +4182,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>21</th>
-      <td>0.714</td>
-      <td>0.833</td>
+      <td>0.667</td>
+      <td>0.778</td>
       <td>0.714</td>
       <td>0.833</td>
       <td>0.524</td>
@@ -4237,8 +4191,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>22</th>
-      <td>0.750</td>
-      <td>0.833</td>
+      <td>0.700</td>
+      <td>0.778</td>
       <td>0.700</td>
       <td>0.778</td>
       <td>0.550</td>
@@ -4246,8 +4200,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>23</th>
-      <td>0.789</td>
-      <td>0.833</td>
+      <td>0.684</td>
+      <td>0.722</td>
       <td>0.684</td>
       <td>0.722</td>
       <td>0.579</td>
@@ -4255,8 +4209,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>24</th>
-      <td>0.778</td>
-      <td>0.778</td>
+      <td>0.667</td>
+      <td>0.667</td>
       <td>0.667</td>
       <td>0.667</td>
       <td>0.611</td>
@@ -4264,26 +4218,26 @@ new approach</p></li>
     </tr>
     <tr>
       <th>25</th>
-      <td>0.765</td>
-      <td>0.722</td>
+      <td>0.706</td>
+      <td>0.667</td>
       <td>0.647</td>
       <td>0.611</td>
-      <td>0.588</td>
-      <td>0.556</td>
+      <td>0.647</td>
+      <td>0.611</td>
     </tr>
     <tr>
       <th>26</th>
       <td>0.750</td>
       <td>0.667</td>
-      <td>0.688</td>
-      <td>0.611</td>
-      <td>0.562</td>
-      <td>0.500</td>
+      <td>0.625</td>
+      <td>0.556</td>
+      <td>0.625</td>
+      <td>0.556</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>0.800</td>
-      <td>0.667</td>
+      <td>0.733</td>
+      <td>0.611</td>
       <td>0.667</td>
       <td>0.556</td>
       <td>0.600</td>
@@ -4291,17 +4245,17 @@ new approach</p></li>
     </tr>
     <tr>
       <th>28</th>
-      <td>0.857</td>
-      <td>0.667</td>
+      <td>0.786</td>
+      <td>0.611</td>
       <td>0.714</td>
       <td>0.556</td>
-      <td>0.571</td>
-      <td>0.444</td>
+      <td>0.643</td>
+      <td>0.500</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>0.923</td>
-      <td>0.667</td>
+      <td>0.846</td>
+      <td>0.611</td>
       <td>0.769</td>
       <td>0.556</td>
       <td>0.615</td>
@@ -4318,8 +4272,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>31</th>
-      <td>1.000</td>
-      <td>0.611</td>
+      <td>0.909</td>
+      <td>0.556</td>
       <td>0.818</td>
       <td>0.500</td>
       <td>0.545</td>
@@ -4327,8 +4281,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>32</th>
-      <td>1.000</td>
-      <td>0.556</td>
+      <td>0.900</td>
+      <td>0.500</td>
       <td>0.900</td>
       <td>0.500</td>
       <td>0.500</td>
@@ -4336,8 +4290,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>33</th>
-      <td>1.000</td>
-      <td>0.500</td>
+      <td>0.889</td>
+      <td>0.444</td>
       <td>0.889</td>
       <td>0.444</td>
       <td>0.444</td>
@@ -4345,8 +4299,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>34</th>
-      <td>1.000</td>
-      <td>0.444</td>
+      <td>0.875</td>
+      <td>0.389</td>
       <td>0.875</td>
       <td>0.389</td>
       <td>0.500</td>
@@ -4354,8 +4308,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>35</th>
-      <td>1.000</td>
-      <td>0.389</td>
+      <td>0.857</td>
+      <td>0.333</td>
       <td>1.000</td>
       <td>0.389</td>
       <td>0.429</td>
@@ -4363,8 +4317,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>36</th>
-      <td>1.000</td>
-      <td>0.333</td>
+      <td>0.833</td>
+      <td>0.278</td>
       <td>1.000</td>
       <td>0.333</td>
       <td>0.500</td>
@@ -4372,8 +4326,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>37</th>
-      <td>1.000</td>
-      <td>0.278</td>
+      <td>0.800</td>
+      <td>0.222</td>
       <td>1.000</td>
       <td>0.278</td>
       <td>0.600</td>
@@ -4381,8 +4335,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>38</th>
-      <td>1.000</td>
-      <td>0.222</td>
+      <td>0.750</td>
+      <td>0.167</td>
       <td>1.000</td>
       <td>0.222</td>
       <td>0.500</td>
@@ -4390,26 +4344,26 @@ new approach</p></li>
     </tr>
     <tr>
       <th>39</th>
-      <td>1.000</td>
-      <td>0.167</td>
-      <td>1.000</td>
-      <td>0.167</td>
       <td>0.667</td>
       <td>0.111</td>
+      <td>1.000</td>
+      <td>0.167</td>
+      <td>0.333</td>
+      <td>0.056</td>
     </tr>
     <tr>
       <th>40</th>
-      <td>1.000</td>
-      <td>0.111</td>
-      <td>1.000</td>
-      <td>0.111</td>
       <td>0.500</td>
       <td>0.056</td>
+      <td>1.000</td>
+      <td>0.111</td>
+      <td>0.000</td>
+      <td>0.000</td>
     </tr>
     <tr>
       <th>41</th>
-      <td>1.000</td>
-      <td>0.056</td>
+      <td>0.000</td>
+      <td>0.000</td>
       <td>1.000</td>
       <td>0.056</td>
       <td>0.000</td>
@@ -4431,7 +4385,7 @@ new approach</p></li>
 </section>
 </section>
 <section id="train-data-plots">
-<h2>Train data plots<a class="headerlink" href="#train-data-plots" title="Permalink to this heading">#</a></h2>
+<h2>Train data plots<a class="headerlink" href="#train-data-plots" title="Link to this heading">#</a></h2>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -4455,7 +4409,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/prec_recall_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/44d0560a3608d7eae61f037ed7088b5ba5eb17b1e5a390dde82325ea45d83756.png" src="../../../_images/44d0560a3608d7eae61f037ed7088b5ba5eb17b1e5a390dde82325ea45d83756.png" />
+<img alt="../../../_images/68d29d6087f8b85d04d05a0e96e2a94dde08f10398c74cfeea171dd4ce61b3d3.png" src="../../../_images/68d29d6087f8b85d04d05a0e96e2a94dde08f10398c74cfeea171dd4ce61b3d3.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4480,7 +4434,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_Median/auc_roc_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/163eb6cb3d859da785fea0ff4a440bbd2ecde39832e4f8732c1e04aa85c5505c.png" src="../../../_images/163eb6cb3d859da785fea0ff4a440bbd2ecde39832e4f8732c1e04aa85c5505c.png" />
+<img alt="../../../_images/2dafe4ce088e5c3c95d3793b436e59c0b242acefd3395f14fe9a7cb55534cf01.png" src="../../../_images/2dafe4ce088e5c3c95d3793b436e59c0b242acefd3395f14fe9a7cb55534cf01.png" />
 </div>
 </div>
 <p>Output files:</p>
@@ -4520,26 +4474,17 @@ new approach</p></li>
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../PI_vs_DAE/10_3_ald_ml_new_feat.html"
+       href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">Fit logistic regression model</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="../PI_vs_TRKNN/10_3_ald_ml_new_feat.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Fit logistic regression model</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -4549,6 +4494,7 @@ new approach</p></li>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -4629,8 +4575,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

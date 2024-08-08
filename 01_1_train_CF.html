@@ -1,56 +1,52 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+gc143d18 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+gac0252e documentation</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/documentation_options.js?v=7a4a1d28"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_CF';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN5.html" />
-    <link rel="prev" title="Denoising Autoencoder" href="01_1_train_DAE.html" />
+    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_RF.html" />
+    <link rel="prev" title="Variational Autoencoder" href="01_1_train_Median.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -60,28 +56,23 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -103,12 +94,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -125,6 +124,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="index.html">
   
@@ -133,10 +134,21 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+gc143d18 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gac0252e documentation</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -154,35 +166,35 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">CF</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -191,25 +203,25 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -217,13 +229,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
 </ul>
 
     </div>
@@ -239,7 +251,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -248,14 +260,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -333,10 +345,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -344,14 +356,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -397,10 +409,10 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="collaborative-filtering">
-<h1>Collaborative Filtering<a class="headerlink" href="#collaborative-filtering" title="Permalink to this heading">#</a></h1>
+<h1>Collaborative Filtering<a class="headerlink" href="#collaborative-filtering" title="Link to this heading">#</a></h1>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -596,7 +608,7 @@ document.write(`
 </details>
 </div>
 <section id="load-data-in-long-format">
-<h2>Load data in long format<a class="headerlink" href="#load-data-in-long-format" title="Permalink to this heading">#</a></h2>
+<h2>Load data in long format<a class="headerlink" href="#load-data-in-long-format" title="Link to this heading">#</a></h2>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -696,7 +708,7 @@ Name: intensity, Length: 226809, dtype: float64
 </div>
 </div>
 <section id="use-some-simulated-missing-for-evaluation">
-<h3>Use some simulated missing for evaluation<a class="headerlink" href="#use-some-simulated-missing-for-evaluation" title="Permalink to this heading">#</a></h3>
+<h3>Use some simulated missing for evaluation<a class="headerlink" href="#use-some-simulated-missing-for-evaluation" title="Link to this heading">#</a></h3>
 <p>The validation simulated NA is used to by all models to evaluate training performance.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -875,7 +887,7 @@ Name: intensity, Length: 226809, dtype: float64
 </section>
 </section>
 <section id="id1">
-<h2>Collaborative Filtering<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<h2>Collaborative Filtering<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>save custom collab batch size (increase AE batch size by a factor), could be setup separately.</p></li>
 <li><p>the test data is used to evaluate the performance after training</p></li>
@@ -953,7 +965,7 @@ Name: intensity, Length: 226809, dtype: float64
 </details>
 </div>
 <section id="training">
-<h3>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h3>
+<h3>Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h3>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1002,8 +1014,8 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00525
-No improvement since epoch 12: early stopping
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00251
+No improvement since epoch 18: early stopping
 pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
@@ -1035,96 +1047,132 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
   <tbody>
     <tr>
       <td>0</td>
-      <td>8.207205</td>
-      <td>12.006218</td>
+      <td>8.983349</td>
+      <td>13.352549</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>4.419517</td>
-      <td>5.849980</td>
+      <td>7.805464</td>
+      <td>11.465188</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1.252038</td>
-      <td>1.634393</td>
+      <td>5.143147</td>
+      <td>7.493474</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>0.642987</td>
-      <td>0.826474</td>
+      <td>2.241829</td>
+      <td>3.229744</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>0.569087</td>
-      <td>0.736370</td>
+      <td>0.939984</td>
+      <td>1.276258</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.532753</td>
-      <td>0.720397</td>
+      <td>0.629842</td>
+      <td>0.805251</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.501390</td>
-      <td>0.675217</td>
+      <td>0.554706</td>
+      <td>0.728522</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.425673</td>
-      <td>0.595646</td>
+      <td>0.546766</td>
+      <td>0.718365</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.385413</td>
-      <td>0.538895</td>
+      <td>0.509279</td>
+      <td>0.680699</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.355767</td>
-      <td>0.513890</td>
+      <td>0.464196</td>
+      <td>0.638579</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.323341</td>
-      <td>0.483968</td>
+      <td>0.415042</td>
+      <td>0.585522</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.284625</td>
-      <td>0.466936</td>
+      <td>0.387394</td>
+      <td>0.548786</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.252921</td>
-      <td>0.463767</td>
+      <td>0.369271</td>
+      <td>0.525026</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>0.230912</td>
-      <td>0.468961</td>
+      <td>0.326165</td>
+      <td>0.495303</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>0.312343</td>
+      <td>0.475041</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>0.283713</td>
+      <td>0.464876</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>0.253433</td>
+      <td>0.451416</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>0.226748</td>
+      <td>0.448471</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>0.210805</td>
+      <td>0.444223</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>0.194622</td>
+      <td>0.453896</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/ff1110e85d29657e6482f3d3140e237d98fded0d7fa1217d49da18f7491a4203.png" src="_images/ff1110e85d29657e6482f3d3140e237d98fded0d7fa1217d49da18f7491a4203.png" />
-<img alt="_images/126f1fb3c2c2179d2ef79f5eca3a480a855b1bf38ece7836d6640ee03378b884.png" src="_images/126f1fb3c2c2179d2ef79f5eca3a480a855b1bf38ece7836d6640ee03378b884.png" />
+</table></div><img alt="_images/1f6f94298da2e1323951a5c724f6b1683469ffdb9c572bd0b5ee6c14a6f639d8.png" src="_images/1f6f94298da2e1323951a5c724f6b1683469ffdb9c572bd0b5ee6c14a6f639d8.png" />
+<img alt="_images/f9b5ef643a1c0f5d9a99ab5df47f9b9835b7711cd1213860b8e4c88470c61974.png" src="_images/f9b5ef643a1c0f5d9a99ab5df47f9b9835b7711cd1213860b8e4c88470c61974.png" />
 </div>
 </div>
 </section>
 <section id="predictions">
-<h3>Predictions<a class="headerlink" href="#predictions" title="Permalink to this heading">#</a></h3>
+<h3>Predictions<a class="headerlink" href="#predictions" title="Link to this heading">#</a></h3>
 <p>Compare simulated_na data predictions to original values</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -1194,31 +1242,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.475</td>
+      <td>15.759</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.677</td>
+      <td>16.890</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.165</td>
+      <td>13.632</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.483</td>
+      <td>19.494</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.006</td>
+      <td>15.201</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1230,31 +1278,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.748</td>
+      <td>22.874</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.088</td>
+      <td>15.615</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.488</td>
+      <td>15.193</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.982</td>
+      <td>14.140</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.158</td>
+      <td>14.677</td>
     </tr>
   </tbody>
 </table>
@@ -1327,27 +1375,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.921</td>
+      <td>17.556</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.021</td>
+      <td>18.001</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.265</td>
+      <td>22.427</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.223</td>
+      <td>15.628</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.608</td>
+      <td>16.279</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1359,27 +1407,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.647</td>
+      <td>15.948</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>12.985</td>
+      <td>13.630</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>14.097</td>
+      <td>14.306</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.253</td>
+      <td>15.641</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.603</td>
+      <td>16.369</td>
     </tr>
   </tbody>
 </table>
@@ -1426,7 +1474,7 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
 </section>
 </section>
 <section id="data-in-wide-format">
-<h2>Data in wide format<a class="headerlink" href="#data-in-wide-format" title="Permalink to this heading">#</a></h2>
+<h2>Data in wide format<a class="headerlink" href="#data-in-wide-format" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Autoencoder need data in wide format</p></li>
 </ul>
@@ -1637,7 +1685,7 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
 </div></div></div>
 </div>
 <section id="validation-data">
-<h3>Validation data<a class="headerlink" href="#validation-data" title="Permalink to this heading">#</a></h3>
+<h3>Validation data<a class="headerlink" href="#validation-data" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>all measured (identified, observed) peptides in validation data</p></li>
 </ul>
@@ -1671,8 +1719,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.46896102073729157,
-  &#39;MAE&#39;: 0.4626612819343241,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4538963975483358,
+  &#39;MAE&#39;: 0.45072462573045097,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1681,7 +1729,7 @@ as the setup differs of training and validation data differs</p>
 </div>
 </section>
 <section id="test-datasplit">
-<h3>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Permalink to this heading">#</a></h3>
+<h3>Test Datasplit<a class="headerlink" href="#test-datasplit" title="Link to this heading">#</a></h3>
 <p>Simulated NAs : Artificially created NAs. Some data was sampled and set
 explicitly to misssing before it was fed to the model for
 reconstruction.</p>
@@ -1696,8 +1744,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4934045658327288,
-  &#39;MAE&#39;: 0.4687832791516826,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4815061451298986,
+  &#39;MAE&#39;: 0.4618051735957772,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1755,13 +1803,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.469</td>
-      <td>0.493</td>
+      <td>0.454</td>
+      <td>0.482</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.463</td>
-      <td>0.469</td>
+      <td>0.451</td>
+      <td>0.462</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1780,7 +1828,7 @@ reconstruction.</p>
 </section>
 </section>
 <section id="save-predictions">
-<h2>Save predictions<a class="headerlink" href="#save-predictions" title="Permalink to this heading">#</a></h2>
+<h2>Save predictions<a class="headerlink" href="#save-predictions" title="Link to this heading">#</a></h2>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1798,7 +1846,7 @@ reconstruction.</p>
 </div>
 </section>
 <section id="config">
-<h2>Config<a class="headerlink" href="#config" title="Permalink to this heading">#</a></h2>
+<h2>Config<a class="headerlink" href="#config" title="Link to this heading">#</a></h2>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1817,7 +1865,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 14,
+ &#39;epoch_trained&#39;: 20,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
@@ -1850,24 +1898,24 @@ reconstruction.</p>
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_DAE.html"
+       href="01_1_train_Median.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Denoising Autoencoder</p>
+        <p class="prev-next-title">Variational Autoencoder</p>
       </div>
     </a>
     <a class="right-next"
-       href="01_1_train_KNN5.html"
+       href="01_1_train_NAGuideR_RF.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">K- Nearest Neighbors (KNN)</p>
+        <p class="prev-next-title">NAGuide R methods</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1879,6 +1927,7 @@ reconstruction.</p>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -1950,8 +1999,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
