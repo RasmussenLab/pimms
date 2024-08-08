@@ -73,6 +73,8 @@ rule comparison:
         models=",".join(MODELS),
         err=f"{{folder_experiment}}/{nb_stem}.e",
         out=f"{{folder_experiment}}/{nb_stem}.o",
+    conda:
+         "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r fn_rawfile_metadata {params.meta_data:q}"
@@ -111,6 +113,8 @@ rule transform_NAGuideR_predictions:
         folder_experiment="{folder_experiment}",
         # https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#non-file-parameters-for-rules
         dumps_as_str=lambda wildcards, input: ",".join(input.dumps),
+    conda:
+         "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r folder_experiment {params.folder_experiment}"
@@ -138,7 +142,7 @@ rule train_NAGuideR_model:
         method="{method}",
         name="{method}",
     conda:
-        "pimms"
+        "envs/trainRmodels.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r train_split {input.train_split}"
@@ -161,6 +165,8 @@ rule transform_data_to_wide_format:
         folder_experiment="{folder_experiment}",
         err=f"{{folder_experiment}}/{nb_stem}.e",
         out=f"{{folder_experiment}}/{nb_stem}.o",
+    conda:
+         "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -r folder_experiment {params.folder_experiment}"
@@ -191,7 +197,7 @@ rule train_models:
         out="{folder_experiment}/01_1_train_{model}.o",
         name="{model}",
     conda:
-        "pimms"
+         "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"
@@ -231,6 +237,8 @@ rule create_splits:
         meta_data=config["fn_rawfile_metadata"],
         err=f"{{folder_experiment}}/{nb_stem}.e",
         out=f"{{folder_experiment}}/{nb_stem}.o",
+    conda:
+         "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         " -f {input.configfile}"

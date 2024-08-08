@@ -81,7 +81,9 @@ rule plot_intensities_for_diverging_results:
         baseline=config["baseline"],
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
         make_plots=config["make_plots"],
-        ref_method_score=config["ref_method_score"],  # None, 
+        ref_method_score=config["ref_method_score"],  # None,
+    conda:
+        "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -111,6 +113,8 @@ rule ml_comparison:
         nb=out_folder_two_methods_cp + nb,
     params:
         cutoff=lambda wildcards: config["cutoffs"][wildcards.target],
+    conda:
+        "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -142,6 +146,8 @@ rule compare_diff_analysis:
         annotaitons_gene_col=config["annotaitons_gene_col"],
     benchmark:
         out_folder_two_methods_cp + f"{nb_stem}.tsv"
+    conda:
+        "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -169,6 +175,8 @@ rule differential_analysis:
     params:
         covar=lambda wildcards: config["covar"][wildcards.target],
         f_annotations=config["f_annotations"],
+    conda:
+        "envs/pimms.yaml"
     shell:
         "papermill {input.nb} {output.nb}"
         f" -r folder_experiment {folder_experiment}"
@@ -190,10 +198,8 @@ rule copy_clinical_data:
         local_clincial_data = f"{folder_experiment}/data/clinical_data.csv",
     params:
         fn_clinical_data = config["fn_clinical_data"],
-    run:
-        import pandas as pd
-        # could be extended for several file-types
-        df = pd.read_csv(params.fn_clinical_data)
-        df.to_csv(output.local_clincial_data, index=False)
-        # , index_col=0)             
-        # usecols=[args.sample_id_col, args.target])
+    conda:
+        "envs/pimms.yaml"
+    script:
+        "scripts/copy_clinical_data.py"
+        
