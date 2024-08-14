@@ -14,7 +14,7 @@ dependencies:
   - pandas>=1
   - scipy>=1.6
   # plotting
-  - matplotlib>=3.4
+  - matplotlib>=3.4,<3.9
   - python-kaleido
   - plotly
   - seaborn<0.13
@@ -58,13 +58,13 @@ dependencies:
   - r-gdata
   - r-glmnet
   - r-e1071
-  - r-norm
+  # - r-norm
   - r-missforest
-  - r-vim
-  - r-mice
+  # - r-vim
+  # - r-mice
   - r-cluster
   - r-mvtnorm
-  - r-rrcov
+  # - r-rrcov
   - r-gmm
   - r-tmvtnorm
   - r-igraph
