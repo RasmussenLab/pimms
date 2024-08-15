@@ -137,6 +137,26 @@ def get_data_for_errors_by_median(errors: pd.DataFrame, feat_name, metric_name, 
     return plotted
 
 
+# def get_data_for_errors_by_median_v2(errors: pd.DataFrame, feat_name, metric_name):
+#     from seaborn._statistics import (
+#         EstimateAggregator,
+#         WeightedAggregator,
+#     )
+#     from seaborn.categorical import _CategoricalAggPlotter, WeightedAggregator, EstimateAggregator
+#     p = _CategoricalAggPlotter(
+#         data=data,
+#         variables=dict(x=x, y=y, hue=hue, units=units, weight=weights),
+#         order=order,
+#         orient=orient,
+#         color=color,
+#         legend=legend,
+#     )
+
+#     agg_cls = WeightedAggregator if "weight" in p.plot_data else EstimateAggregator
+#     aggregator = agg_cls(estimator, errorbar, n_boot=n_boot, seed=seed)
+#     err_kws = {} if err_kws is None else normalize_kwargs(err_kws, mpl.lines.Line2D)
+
+
 def plot_rolling_error(errors: pd.DataFrame, metric_name: str, window: int = 200,
                        min_freq=None, freq_col: str = 'freq', colors_to_use=None,
                        ax=None):
