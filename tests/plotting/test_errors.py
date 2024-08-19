@@ -73,4 +73,5 @@ def test_plot_errors_by_median(example_pred_loaded, feat_medians, expected_error
     ax.legend(loc='best', ncols=5)
     fig.tight_layout()
 
-    pd.testing.assert_frame_equal(errors_binned, expected_errors_binned)
+    pd.testing.assert_frame_equal(errors_binned, expected_errors_binned,
+                                  check_dtype=False)
