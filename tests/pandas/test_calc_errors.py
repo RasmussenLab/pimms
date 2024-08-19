@@ -4,7 +4,7 @@ from pytest import fixture
 from pimmslearn.pandas import calc_errors
 
 
-@fixture
+@fixture(scope='module')
 def example_data():
     """Example data with duplicated index values. Normally MulitIndex is used with
     unique combination of sample and feat values."""

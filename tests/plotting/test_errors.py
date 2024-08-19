@@ -16,23 +16,23 @@ TOP_N_COLOR_PALETTE = {'TRKNN': (0.20125317221201128, 0.6907920815379025, 0.4796
 file_dir = Path(__file__).resolve().parent
 
 
-@pytest.fixture
-def example_data():
+@pytest.fixture(scope='module')
+def example_pred_loaded():
     """
     Fixture to load example data from a csv file for testing.
     """
-    example_data_path = file_dir / 'pred_test.csv'
+    example_data_path = file_dir / 'pred_testing_example.csv'
     return pd.read_csv(example_data_path, index_col=[0, 1])
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def feat_medians():
     medians_path = file_dir / 'test_medians.csv'
     s = pd.read_csv(medians_path, index_col=0).squeeze()
     return s
 
 
-# @pytest.fixture
+@pytest.fixture(scope='module')
 def expected_errors_binned():
     errors_binned_path = file_dir / 'exp_errors_binned.csv'
     df = pd.read_csv(errors_binned_path, sep=',', index_col=0)
@@ -40,17 +40,16 @@ def expected_errors_binned():
     return df
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def expected_plotted():
     plotted_path = file_dir / 'expected_plotted.csv'
     df = pd.read_csv(plotted_path, sep=',', index_col=0)
     return df
 
 
-def test_get_data_for_errors_by_median(expected_plotted):
-    expected_errors_binned_ = expected_errors_binned()
+def test_get_data_for_errors_by_median(expected_plotted, expected_errors_binned):
     plotted = get_data_for_errors_by_median(
-        errors=expected_errors_binned_,
+        errors=expected_errors_binned,
         feat_name='Gene Names',
         metric_name='MAE',
         seed=42,
@@ -61,10 +60,10 @@ def test_get_data_for_errors_by_median(expected_plotted):
 
 # @image_comparison(baseline_images=['errors_by_median'], remove_text=True,
 #                   extensions=['png'], style='mpl20')
-def test_plot_errors_by_median(example_data, feat_medians):
+def test_plot_errors_by_median(example_pred_loaded, feat_medians, expected_errors_binned):
     fig, ax = plt.subplots(figsize=(8, 3))
     ax, errors_binned = plot_errors_by_median(
-        example_data,
+        example_pred_loaded,
         feat_medians=feat_medians,
         ax=ax,
         feat_name='Gene Names',
@@ -74,5 +73,4 @@ def test_plot_errors_by_median(example_data, feat_medians):
     ax.legend(loc='best', ncols=5)
     fig.tight_layout()
 
-    expected_errors_binned_ = expected_errors_binned()
-    pd.testing.assert_frame_equal(errors_binned, expected_errors_binned_)
+    pd.testing.assert_frame_equal(errors_binned, expected_errors_binned)

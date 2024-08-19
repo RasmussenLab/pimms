@@ -1,4 +1,3 @@
-import helpers
 import numpy as np
 import numpy.testing as npt
 import pandas as pd
@@ -18,6 +17,15 @@ assert (data != data_w_na).any()
 assert (~np.isnan(data_w_na) == mask).all()
 
 
+def create_DataFrame():
+    data = np.arange(100).reshape(-1, 5)
+    data = pd.DataFrame(data,
+                        index=(f'row_{i:02}' for i in range(data.shape[0])),
+                        columns=(f'feat_{i:02}' for i in range(data.shape[1]))
+                        )
+    return data
+
+
 def test_PeptideDatasetInMemory_wo_Mask():
     train_ds = datasets.PeptideDatasetInMemory(data_w_na, fill_na=0.0)
     mask_isna = np.isnan(data_w_na)
@@ -35,14 +43,14 @@ def test_DatasetWithMaskAndNoTarget():
     with pytest.raises(ValueError):
         DatasetWithMaskAndNoTarget(df=np.random.rand(10, 5))
 
-    data = helpers.create_DataFrame()
+    data = create_DataFrame()
     ds = DatasetWithMaskAndNoTarget(df=data)
     assert all(ds[-1][1] == torch.tensor([95, 96, 97, 98, 99], dtype=torch.int32))
     assert all(ds[-1][0] == torch.tensor([False, False, False, False, False]))
 
 
 def test_DatasetWithTarget():
-    data = helpers.create_DataFrame()
+    data = create_DataFrame()
     ds = DatasetWithTarget(df=data)
     assert all(ds[-1][1] == torch.tensor([95, 96, 97, 98, 99], dtype=torch.int32))
     assert all(ds[-1][1] == torch.tensor([95, 96, 97, 98, 99], dtype=torch.int32))
@@ -50,7 +58,7 @@ def test_DatasetWithTarget():
 
 
 def test_DatasetWithTargetSpecifyTarget():
-    data = helpers.create_DataFrame()
+    data = create_DataFrame()
     targets = pd.DataFrame(np.nan, index=data.index, columns=data.columns)
     N, M = targets.shape
     for i in range(N):
