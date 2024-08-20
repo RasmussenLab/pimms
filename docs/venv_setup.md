@@ -2,12 +2,12 @@
 
 ## 1. Installing conda
 
-### Mambaforge
+### Miniforge
 
 Mamba is conda, only implemented not in Python: Write `mamba` where it says `conda`, and 
 it should work exactly the same.
 
-Fresh install instruction [here](https://mamba.readthedocs.io/en/latest/installation.html#fresh-install)
+Fresh install instruction [here](https://github.com/conda-forge/miniforge)
 
 ### Miniconda
 

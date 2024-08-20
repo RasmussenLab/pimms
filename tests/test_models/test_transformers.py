@@ -6,23 +6,29 @@ import pytest
 from pimmslearn.sklearn.ae_transformer import AETransformer
 from pimmslearn.sklearn.cf_transformer import CollaborativeFilteringTransformer
 
-test_data = 'project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50_M227.csv'
-index_name = 'Sample ID'
-column_name = 'protein group'
-value_name = 'intensity'
 
-
-def test_CollaborativeFilteringTransformer():
-    model = CollaborativeFilteringTransformer(
-        target_column=value_name,
-        sample_column=index_name,
-        item_column=column_name,)
+@pytest.fixture(scope='module')
+def load_pkg_sample_data():
+    test_data = 'project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50_M227.csv'
+    index_name = 'Sample ID'
+    column_name = 'protein group'
     # read data, name index and columns
     df = pd.read_csv(test_data, index_col=0)
     df = np.log2(df + 1)
     df.index.name = index_name  # already set
     df.columns.name = column_name  # not set due to csv disk file format
-    series = df.stack()
+    return df
+
+
+def test_CollaborativeFilteringTransformer(load_pkg_sample_data):
+    index_name = 'Sample ID'
+    column_name = 'protein group'
+    value_name = 'intensity'
+    model = CollaborativeFilteringTransformer(
+        target_column=value_name,
+        sample_column=index_name,
+        item_column=column_name,)
+    series = load_pkg_sample_data.stack()
     series.name = value_name  # ! important
     # run for 2 epochs
     model.fit(series, cuda=False, epochs_max=2)
@@ -31,12 +37,8 @@ def test_CollaborativeFilteringTransformer():
 
 
 @pytest.mark.parametrize("model", ['DAE', 'VAE'])
-def test_AETransformer(model):
-    df = pd.read_csv(test_data, index_col=0)
-    df = np.log2(df + 1)
-
-    df.index.name = index_name  # already set
-    df.columns.name = column_name  # not set due to csv disk file format
+def test_AETransformer(model, load_pkg_sample_data):
+    df = load_pkg_sample_data
     model = AETransformer(
         model=model,
         hidden_layers=[512,],

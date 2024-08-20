@@ -18,7 +18,7 @@ classifiers = [
 dependencies = [
   "njab>=0.0.8",
   "numpy",
-  "matplotlib",
+  "matplotlib<3.9",
   "pandas",
   "plotly",
   "torch",
