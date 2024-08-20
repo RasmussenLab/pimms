@@ -46,7 +46,9 @@ def expected_errors_binned():
 @pytest.fixture(scope='module')
 def expected_plotted():
     plotted_path = file_dir / 'expected_plotted.csv'
+    # ! Windows reads in new line in string characters as '\r\n'
     df = pd.read_csv(plotted_path, sep=',', index_col=0)
+    df["bin"] = df["bin"].str.replace('\r\n', '\n')
     return df
 
 
