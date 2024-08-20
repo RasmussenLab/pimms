@@ -36,7 +36,10 @@ def feat_medians():
 def expected_errors_binned():
     errors_binned_path = file_dir / 'exp_errors_binned.csv'
     df = pd.read_csv(errors_binned_path, sep=',', index_col=0)
-    df = df.astype({'intensity binned by median of Gene Names': 'category'})
+    col_cat = 'intensity binned by median of Gene Names'
+    # ! Windows reads in new line in string characters as '\r\n'
+    df[col_cat] = df[col_cat].str.replace('\r\n', '\n')
+    df = df.astype({col_cat: 'category'})
     return df
 
 
