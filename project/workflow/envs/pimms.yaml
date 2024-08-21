@@ -47,6 +47,6 @@ dependencies:
   - jupyter-dash
   - papermill # execute ipynb's
   - pip:
-      - git+https://github.com/RasmussenLab/pimms.git@dev
+      - git+https://github.com/RasmussenLab/pimms.git
       - mrmr-selection
       - njab
