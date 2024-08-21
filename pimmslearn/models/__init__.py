@@ -76,7 +76,7 @@ def plot_training_losses(learner: learner.Learner,
                          name: str,
                          ax=None,
                          norm_factors=NORM_ONES,
-                         folder='figures',
+                         folder = None,
                          figsize=(15, 8)):
     if ax is None:
         fig, ax = plt.subplots(figsize=figsize)
@@ -89,10 +89,11 @@ def plot_training_losses(learner: learner.Learner,
         with_valid = False
     learner.recorder.plot_loss(skip_start=5, ax=ax, with_valid=with_valid,
                                norm_train=norm_train, norm_val=norm_val)
-    name = name.lower()
-    _ = RecorderDump(learner.recorder, name).save(folder)
-    pimmslearn.savefig(fig, name=f'{name}_training',
-                 folder=folder)
+    if not folder is None:
+        name = name.lower()
+        _ = RecorderDump(learner.recorder, name).save(folder)
+        pimmslearn.savefig(fig, name=f'{name}_training',
+                folder=folder)
     return fig
 
 

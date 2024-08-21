@@ -9,7 +9,6 @@ from fastai import learner
 from fastai.callback.tracker import EarlyStoppingCallback
 from fastai.collab import *
 from fastai.collab import EmbeddingDotBias, TabularCollab
-from fastai.data.block import TransformBlock
 from fastai.data.transforms import IndexSplitter
 from fastai.learner import Learner
 from fastai.losses import MSELossFlat
@@ -105,8 +104,6 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
             Return itself fitted to the training data.
         """
         self.model_kwargs = dict(
-
-
             n_factors=self.n_factors,
             y_range=(int(X.squeeze().min()),
                      int(X.squeeze().max()) + 1)
@@ -190,15 +187,18 @@ class CollaborativeFilteringTransformer(TransformerMixin, BaseEstimator):
         pred_na = pd.Series(pred_na, idx_na, name=self.target_column)
         return pd.concat([X, pred_na])
 
-    def plot_loss(self, y, figsize=(8, 4)):  # -> Axes:
+    def plot_loss(self, y, figsize=(8, 4), save: bool = False):  # -> Axes:
         """Plot the training and validation loss of the model."""
         fig, ax = plt.subplots(figsize=figsize)
         ax.set_title('CF loss: Reconstruction loss')
         self.learn.recorder.plot_loss(skip_start=5, ax=ax,
                                       with_valid=True if y is not None else False)
-        pimmslearn.savefig(fig, name='collab_training',
-                     folder=self.out_folder)
         self.model_kwargs['batch_size'] = self.batch_size
-        pimmslearn.io.dump_json(self.model_kwargs,
-                          self.out_folder / 'model_params_{}.json'.format('CF'))
+        if save:
+            fig.savefig(self.out_folder / 'loss.png')
+            pimmslearn.savefig(fig, name='collab_training',
+                         folder=self.out_folder)
+            
+            pimmslearn.io.dump_json(self.model_kwargs,
+                              self.out_folder / 'model_params_{}.json'.format('CF'))
         return ax
