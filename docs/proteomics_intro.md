@@ -3,7 +3,7 @@
 There is a recent tutorial by 
 [Steven Shuken (2023) on massspetrometry-based proteomics](https://pubs.acs.org/doi/10.1021/acs.jproteome.2c00838), I enjoyed reading.
 
-Lennart Martens has an introduction to Proteomics [lecture series on youtube](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl), which I used to get started.
+Lennart Martens has an introduction to Proteomics [lecture series on youtube](https://www.youtube.com/watch?v=Wy1SwrMzhYk&list=PLXxp6nsBenSX_W8DiOocKJ0laNauYNdYl) from 2016, which I watched to get started.
 
 An introduction I have seen live in 2020 was from the OpenMS team from Tübingen at the EuBICs developer
 meeting in Nyborg, where you can find the [recordings on youtube](https://www.youtube.com/watch?v=tnS-w8ggEAA&list=PL_6fafgzU1nHd13qqjm3uNvyHh62JpPcB&index=2&t=0s).
@@ -12,6 +12,7 @@ meeting in Nyborg, where you can find the [recordings on youtube](https://www.yo
 Graphical overview of the Data Dependent Analysis (DDA) pipeline.
 
 ![Proteomics Pipeline](Figures/fig_proteomics_pipeline.png)
+
 ### Orbitrap
 Schematic representation of an Orbitrap mass spectrometer.
 ![Schema Orbitrap](Figures/schema_orbitrap_instrument.jpg)
