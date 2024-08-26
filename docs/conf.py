@@ -98,8 +98,8 @@ html_favicon = "logos/logo_thumbnail.png"
 # html_title = u'Proteomics imputation modelling mass spectrometry (PIMMS)'
 
 html_theme_options = {
-    "github_url": "https://github.com/RasmussenLab/python_package",
-    "repository_url": "https://github.com/RasmussenLab/python_package",
+    "github_url": "https://github.com/RasmussenLab/pimms",
+    "repository_url": "https://github.com/RasmussenLab/pimms",
     "repository_branch": "main",
     "home_page_in_toc": True,
     "path_to_docs": "docs",
