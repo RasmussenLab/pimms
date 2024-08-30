@@ -24,7 +24,7 @@ dependencies = [
   "torch",
   "scikit-learn>=1.0",
   "scipy",
-  "seaborn<0.13",
+  "seaborn",
   "fastai",
   "omegaconf",
   "tqdm",

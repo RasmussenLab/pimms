@@ -17,7 +17,7 @@ dependencies:
   - matplotlib<3.9
   - python-kaleido
   - plotly
-  - seaborn<0.13
+  - seaborn
   - pip
   # ML
   - pytorch #=1.13.1=py3.8_cuda11.7_cudnn8_0
