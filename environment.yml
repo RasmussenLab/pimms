@@ -14,7 +14,7 @@ dependencies:
   - pandas>=1
   - scipy>=1.6
   # plotting
-  - matplotlib>=3.4,<3.9
+  - matplotlib>=3.4
   - python-kaleido
   - plotly
   - seaborn
