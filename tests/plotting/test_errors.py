@@ -48,7 +48,8 @@ def expected_plotted():
     plotted_path = file_dir / 'expected_plotted.csv'
     # ! Windows reads in new line in string characters as '\r\n'
     df = pd.read_csv(plotted_path, sep=',', index_col=0)
-    df["bin"] = df["bin"].str.replace('\r\n', '\n')
+    df["bin"] = df["bin"].str.replace('\r\n', '\n').astype('category')
+    df = df.sort_values(by=['bin', 'model']).reset_index(drop=True)
     return df
 
 
