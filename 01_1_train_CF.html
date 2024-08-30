@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+ge570fe9 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+gcb0fea6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=c665cfc5"></script>
+    <script src="_static/documentation_options.js?v=9934ef74"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -134,7 +134,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge570fe9 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gcb0fea6 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -1014,12 +1014,12 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00209
-No improvement since epoch 19: early stopping
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00525
+No improvement since epoch 12: early stopping
 pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/6715efd991e76280121d63e6ee52e56e_/lib/python3.12/site-packages/fastai/learner.py:53: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don&#39;t have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/6192e93206804e092b1c71b91535a817_/lib/python3.12/site-packages/fastai/learner.py:53: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don&#39;t have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
   state = torch.load(file, map_location=device, **torch_load_kwargs)
 </pre></div>
 </div>
@@ -1051,133 +1051,91 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
   <tbody>
     <tr>
       <td>0</td>
-      <td>9.070186</td>
-      <td>13.528751</td>
+      <td>8.234823</td>
+      <td>11.925777</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>8.258588</td>
-      <td>12.202270</td>
+      <td>4.257401</td>
+      <td>5.601789</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>6.250508</td>
-      <td>9.180874</td>
+      <td>1.210455</td>
+      <td>1.575637</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>3.307167</td>
-      <td>4.899921</td>
-      <td>00:02</td>
+      <td>0.644178</td>
+      <td>0.826242</td>
+      <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1.356317</td>
-      <td>1.947611</td>
+      <td>0.572670</td>
+      <td>0.733352</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.728057</td>
-      <td>0.962049</td>
+      <td>0.547301</td>
+      <td>0.729861</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.581293</td>
-      <td>0.763757</td>
+      <td>0.516647</td>
+      <td>0.697467</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.552630</td>
-      <td>0.731968</td>
+      <td>0.443259</td>
+      <td>0.604454</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.542047</td>
-      <td>0.729476</td>
+      <td>0.387811</td>
+      <td>0.551210</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.530271</td>
-      <td>0.701865</td>
+      <td>0.361998</td>
+      <td>0.524530</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.491103</td>
-      <td>0.644708</td>
+      <td>0.318466</td>
+      <td>0.492138</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.418959</td>
-      <td>0.588271</td>
+      <td>0.281340</td>
+      <td>0.471695</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.386406</td>
-      <td>0.548264</td>
+      <td>0.248267</td>
+      <td>0.458369</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>0.363571</td>
-      <td>0.525350</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>14</td>
-      <td>0.343856</td>
-      <td>0.498621</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>15</td>
-      <td>0.319028</td>
-      <td>0.480866</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>16</td>
-      <td>0.294801</td>
-      <td>0.464347</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>17</td>
-      <td>0.260201</td>
-      <td>0.452492</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>18</td>
-      <td>0.236120</td>
-      <td>0.446940</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>19</td>
-      <td>0.218952</td>
-      <td>0.446313</td>
-      <td>00:01</td>
-    </tr>
-    <tr>
-      <td>20</td>
-      <td>0.197781</td>
-      <td>0.452492</td>
+      <td>0.231005</td>
+      <td>0.470372</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/c635be1ab3d9493e581f23d3af79a57a9b023165409c7d6f28259e431ecf5751.png" src="_images/c635be1ab3d9493e581f23d3af79a57a9b023165409c7d6f28259e431ecf5751.png" />
-<img alt="_images/302f7ca3c260112c11092595a94c316b24f2a121515e1b1135f8566bc37e9433.png" src="_images/302f7ca3c260112c11092595a94c316b24f2a121515e1b1135f8566bc37e9433.png" />
+</table></div><img alt="_images/0b151bdcf106d9a063b3ed5bf35f3907bf7a9c32a20f61230e01b4ce6da176e4.png" src="_images/0b151bdcf106d9a063b3ed5bf35f3907bf7a9c32a20f61230e01b4ce6da176e4.png" />
+<img alt="_images/7d0a2d7cdf5a34611a3c60355050e3965987281bad6c190164da96fdb5bda308.png" src="_images/7d0a2d7cdf5a34611a3c60355050e3965987281bad6c190164da96fdb5bda308.png" />
 </div>
 </div>
 </section>
@@ -1252,31 +1210,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.579</td>
+      <td>15.387</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.192</td>
+      <td>16.378</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.148</td>
+      <td>14.200</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.347</td>
+      <td>19.187</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.751</td>
+      <td>15.176</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1288,31 +1246,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.859</td>
+      <td>23.287</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.054</td>
+      <td>16.226</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.663</td>
+      <td>16.224</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.800</td>
+      <td>14.661</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.181</td>
+      <td>14.471</td>
     </tr>
   </tbody>
 </table>
@@ -1385,27 +1343,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.826</td>
+      <td>17.969</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.159</td>
+      <td>18.315</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.753</td>
+      <td>22.327</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.328</td>
+      <td>15.455</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.765</td>
+      <td>16.386</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1417,27 +1375,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.765</td>
+      <td>15.624</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.330</td>
+      <td>13.493</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.697</td>
+      <td>13.764</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.096</td>
+      <td>15.139</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.207</td>
+      <td>16.154</td>
     </tr>
   </tbody>
 </table>
@@ -1729,8 +1687,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.45249198550513764,
-  &#39;MAE&#39;: 0.44854049435770227,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.47037229184839824,
+  &#39;MAE&#39;: 0.4671555601844471,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1754,8 +1712,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.47910672764896217,
-  &#39;MAE&#39;: 0.45831327961462326,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4909087057918974,
+  &#39;MAE&#39;: 0.46897467779595026,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1813,13 +1771,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.452</td>
-      <td>0.479</td>
+      <td>0.470</td>
+      <td>0.491</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.449</td>
-      <td>0.458</td>
+      <td>0.467</td>
+      <td>0.469</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1875,7 +1833,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 21,
+ &#39;epoch_trained&#39;: 14,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
