@@ -21,7 +21,7 @@ if IN_COLAB:
         print(f"Running in colab and pimms-learn ({_v}) is installed.")
     except metadata.PackageNotFoundError:
         print("Install PIMMS...")
-        # # !pip install git+https://github.com/RasmussenLab/pimms.git@dev
+        # # !pip install git+https://github.com/RasmussenLab/pimms.git
         # !pip install pimms-learn
 
 # %% [markdown]
@@ -167,7 +167,7 @@ else:
 # Inspect annotations of the scikit-learn like Transformer:
 
 # %%
-# # CollaborativeFilteringTransformer?
+# # # CollaborativeFilteringTransformer?
 
 # %% [markdown]
 # Let's set up collaborative filtering without a validation or test set, using
