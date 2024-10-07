@@ -25,26 +25,34 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Set up Miniconda
-      # ! change action https://github.com/mamba-org/setup-micromamba
-      uses: conda-incubator/setup-miniconda@v3
-      with: 
-        miniforge-variant: Mambaforge
-        # miniforge-version: latest
-        use-mamba: true
-        channel-priority: disabled
-        python-version: ${{ matrix.python-version }}
+    # - name: Set up Miniconda
+    #   # ! change action https://github.com/mamba-org/setup-micromamba
+    #   uses: conda-incubator/setup-miniconda@v3
+    #   with: 
+    #     miniforge-variant: Mambaforge
+    #     # miniforge-version: latest
+    #     use-mamba: true
+    #     channel-priority: disabled
+    #     python-version: ${{ matrix.python-version }}
+    #     environment-file: snakemake_env.yml
+    #     activate-environment: snakemake
+    #     auto-activate-base: true
+    #     # auto-update-conda: true
+    - uses: mamba-org/setup-micromamba@v1
+      with:
+        micromamba-version: 'latest' # any version from https://github.com/mamba-org/micromamba-releases
         environment-file: snakemake_env.yml
-        activate-environment: snakemake
-        auto-activate-base: true
-        # auto-update-conda: true
-    - name: inspect-conda-environment
-      run: |
-        conda info
-        conda list
-        conda env export --from-history --no-builds > environment.yml
-        conda env export --no-builds
-        conda env export --no-builds > environment_w_versions.yml
+        init-shell: >-
+          bash
+        cache-environment: true
+        post-cleanup: 'all'
+    # - name: inspect-conda-environment
+    #   run: |
+    #     conda info
+    #     conda list
+    #     conda env export --from-history --no-builds > environment.yml
+    #     conda env export --no-builds
+    #     conda env export --no-builds > environment_w_versions.yml
     # - name: test-r-kernel-imports
     #   run: |
     #     Rscript -e "library(stringi)"
@@ -54,6 +62,8 @@ jobs:
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n
+    - name: Show current files in conda snakemake folder
+      run: ls -l /Users/runner/work/pimms/pimms/project/.snakemake/conda/
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
