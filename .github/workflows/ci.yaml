@@ -50,7 +50,7 @@ jobs:
           python=${{ matrix.python-version }} 
         init-shell: >-
           bash
-        cache-environment: true
+        cache-environment: false
         post-cleanup: 'none'
     # - name: inspect-conda-environment
     #   run: |
