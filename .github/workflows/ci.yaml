@@ -110,16 +110,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: install pimms
-        run: python -m pip install .
+        run: pip install .
       
       - name: Install pytest
-        run: python -m pip install pytest pytest-cov
+        run: pip install pytest pytest-cov
       
       - name: Run pytest
         run: pytest .
 
       - name: Install papermill
-        run: python -m pip install papermill ipykernel
+        run: pip install papermill ipykernel
       
       - name: View papermill help message for notebooks (as scripts)
         run: |
