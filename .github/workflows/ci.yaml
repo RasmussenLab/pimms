@@ -25,33 +25,32 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    # - name: Set up Miniconda
-    #   # ! change action https://github.com/mamba-org/setup-micromamba
-    #   uses: conda-incubator/setup-miniconda@v3
-    #   with: 
-    #     # miniforge-variant: Mambaforge
-    #     # miniforge-version: latest
-    #     # conda-solver: libmamba
-    #     use-mamba: true
-    #     channels: conda-forge,defaults
-    #     python-version: ${{ matrix.python-version }}
-    #     mamba-version: "*" 
-    #     channels: conda-forge,defaults
-    #     channel-priority: true
-    #     environment-file: snakemake_env.yml
-    #     activate-environment: snakemake
-    #     auto-activate-base: true
-    #     # auto-update-conda: true
-    - uses: mamba-org/setup-micromamba@v1
-      with:
-        micromamba-version: 'latest' # any version from https://github.com/mamba-org/micromamba-releases
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with: 
+        # miniforge-variant: Mambaforge
+        # miniforge-version: latest
+        # conda-solver: libmamba
+        # use-mamba: true
+        # channels: conda-forge,defaults
+        python-version: ${{ matrix.python-version }}
+        # mamba-version: "*" 
+        # channels: conda-forge,defaults
+        channel-priority: true
         environment-file: snakemake_env.yml
-        create-args: >-
-          python=${{ matrix.python-version }} 
-        init-shell: >-
-          bash
-        cache-environment: false
-        post-cleanup: 'none'
+        activate-environment: snakemake
+        auto-activate-base: true
+        # auto-update-conda: true
+    # - uses: mamba-org/setup-micromamba@v1
+    #   with:
+    #     micromamba-version: 'latest' # any version from https://github.com/mamba-org/micromamba-releases
+    #     environment-file: snakemake_env.yml
+    #     create-args: >-
+    #       python=${{ matrix.python-version }} 
+    #     init-shell: >-
+    #       bash
+    #     cache-environment: false
+    #     post-cleanup: 'none'
     # - name: inspect-conda-environment
     #   run: |
     #     conda info
@@ -108,11 +107,12 @@ jobs:
       # - uses: actions/setup-python@v5
       #   with:
       #     python-version: ${{ matrix.python-version }}
-      
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
+          auto-activate-base: true
 
       - name: install pimms
         run: pip install .
