@@ -29,11 +29,15 @@ jobs:
     #   # ! change action https://github.com/mamba-org/setup-micromamba
     #   uses: conda-incubator/setup-miniconda@v3
     #   with: 
-    #     miniforge-variant: Mambaforge
+    #     # miniforge-variant: Mambaforge
     #     # miniforge-version: latest
+    #     # conda-solver: libmamba
     #     use-mamba: true
-    #     channel-priority: disabled
+    #     channels: conda-forge,defaults
     #     python-version: ${{ matrix.python-version }}
+    #     mamba-version: "*" 
+    #     channels: conda-forge,defaults
+    #     channel-priority: true
     #     environment-file: snakemake_env.yml
     #     activate-environment: snakemake
     #     auto-activate-base: true
@@ -47,7 +51,7 @@ jobs:
         init-shell: >-
           bash
         cache-environment: true
-        post-cleanup: 'all'
+        post-cleanup: 'none'
     # - name: inspect-conda-environment
     #   run: |
     #     conda info
@@ -70,7 +74,7 @@ jobs:
        cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Show current files in conda snakemake folder
-      run: ls -l /Users/runner/work/pimms/pimms/project/.snakemake/conda/
+      run: ls -l project/.snakemake/conda/
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: | 
