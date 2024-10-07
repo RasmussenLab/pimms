@@ -42,6 +42,8 @@ jobs:
       with:
         micromamba-version: 'latest' # any version from https://github.com/mamba-org/micromamba-releases
         environment-file: snakemake_env.yml
+        create-args: >-
+          python=${{ matrix.python-version }} 
         init-shell: >-
           bash
         cache-environment: true
@@ -62,13 +64,13 @@ jobs:
       run: | 
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n
-    - name: Show current files in conda snakemake folder
-      run: ls -l /Users/runner/work/pimms/pimms/project/.snakemake/conda/
     - name: Run demo workflow (integration test)
       continue-on-error: true
       run: | 
        cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
+    - name: Show current files in conda snakemake folder
+      run: ls -l /Users/runner/work/pimms/pimms/project/.snakemake/conda/
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: | 
