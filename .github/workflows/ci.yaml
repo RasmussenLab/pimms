@@ -30,7 +30,7 @@ jobs:
       with: 
         # miniforge-variant: Mambaforge
         # miniforge-version: latest
-        conda-solver: classic #libmamba
+        # conda-solver: libmamba
         # use-mamba: true
         # channels: conda-forge,defaults
         python-version: ${{ matrix.python-version }}
@@ -111,9 +111,8 @@ jobs:
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-          auto-activate-base: true
+
       
       - name: Install build dependencies explicitly
         run: |
