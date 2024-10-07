@@ -4,5 +4,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - snakemake #-minimal
-  - mamba
+  - snakemake-minimal
+  - mamba<2.0
