@@ -16,7 +16,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-  "njab>=0.0.8",
+  # "njab>=0.0.8",
   "numpy",
   "matplotlib",
   "pandas",
