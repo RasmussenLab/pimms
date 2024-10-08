@@ -21,7 +21,6 @@ dependencies = [
   "torch",
   "scikit-learn>=1.0",
   "njab>=0.0.8",
-  "scipy",
   "fastai",
   "matplotlib",
   "plotly",
@@ -31,6 +30,7 @@ dependencies = [
   "mrmr-selection",
   "pingouin",
   "umap-learn",
+  "scipy>=1.7,<1.14",
 ]
 
 [project.scripts]
