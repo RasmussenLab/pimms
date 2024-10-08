@@ -96,6 +96,9 @@ jobs:
   run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
     name: test-pip-installation
+    defaults:
+      run:
+        shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
