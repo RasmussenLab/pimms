@@ -112,11 +112,14 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
+          auto-activate-base: true
+          auto-update-conda: true
 
       
       - name: Install build dependencies explicitly
         run: |
           pip install setuptools_scm
+          conda list
 
 
       - name: install pimms
