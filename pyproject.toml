@@ -16,20 +16,21 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-  "fastai",
-  "torch",
   "numpy",
-  "matplotlib",
   "pandas",
-  "scipy",
-  "plotly",
+  "torch",
   "scikit-learn>=1.0",
+  "njab>=0.0.8",
+  "scipy",
+  "fastai",
+  "matplotlib",
+  "plotly",
   "seaborn",
   "omegaconf",
   "tqdm",
   "mrmr-selection",
   "pingouin",
-  "njab>=0.0.8",
+  "umap-learn",
 ]
 
 [project.scripts]
