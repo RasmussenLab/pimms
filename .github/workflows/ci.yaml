@@ -114,17 +114,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
           auto-update-conda: true
           activate-environment: test
+          auto-activate-base: true
 
       - name: check conda
         run: |
           conda info
           conda list
           conda info -e
+          which python
+          conda activate test
           which pip
       
       - name: Install build dependencies explicitly
         run: |
-          pip install setuptools_scm
+          python -m pip install setuptools_scm
           conda list
 
       - name: install pimms
