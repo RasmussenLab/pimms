@@ -28,41 +28,19 @@ jobs:
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with: 
-        # miniforge-variant: Mambaforge
-        # miniforge-version: latest
-        # conda-solver: libmamba
-        # use-mamba: true
-        # channels: conda-forge,defaults
         python-version: ${{ matrix.python-version }}
-        # mamba-version: "*" 
-        # channels: conda-forge,defaults
         channel-priority: strict
         environment-file: snakemake_env.yml
         activate-environment: snakemake
         auto-activate-base: true
         auto-update-conda: true
-    # - uses: mamba-org/setup-micromamba@v1
-    #   with:
-    #     micromamba-version: 'latest' # any version from https://github.com/mamba-org/micromamba-releases
-    #     environment-file: snakemake_env.yml
-    #     create-args: >-
-    #       python=${{ matrix.python-version }} 
-    #     init-shell: >-
-    #       bash
-    #     cache-environment: false
-    #     post-cleanup: 'none'
-    # - name: inspect-conda-environment
-    #   run: |
-    #     conda info
-    #     conda list
-    #     conda env export --from-history --no-builds > environment.yml
-    #     conda env export --no-builds
-    #     conda env export --no-builds > environment_w_versions.yml
-    # - name: test-r-kernel-imports
-    #   run: |
-    #     Rscript -e "library(stringi)"
-    #     Rscript -e "library(stringr)"
-    #     Rscript -e "library(reshape2)"
+    - name: inspect-conda-environment
+      run: |
+        conda info
+        conda list
+        conda env export --from-history --no-builds > environment.yml
+        conda env export --no-builds
+        conda env export --no-builds > environment_w_versions.yml
     - name: Dry-Run demo workflow (integration test)
       run: | 
        cd project
@@ -90,8 +68,8 @@ jobs:
         name: ${{ matrix.os }}-${{ matrix.python-version }}-example-workflow-results
         path: |
           project/runs/example/
-          environment.yml
-          environment_w_versions.yml
+          snakemake_env
+          project/.snakemake/conda/
 
   run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
@@ -126,10 +104,6 @@ jobs:
         run: |
           conda info
           conda list
-          conda info -e
-          which python
-          conda activate test
-          which pip
       
       - name: Install build dependencies explicitly
         run: |
