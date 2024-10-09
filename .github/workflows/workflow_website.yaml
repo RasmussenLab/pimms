@@ -1,7 +1,7 @@
 name: Build workflow website on public Alzheimer dataset (for protein groups)
 on:
-  pull_request:
-    branches: [main, dev]
+  # pull_request:
+  #   branches: [main, dev]
   release:
       types: [published]
   schedule:
