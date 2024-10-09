@@ -18,11 +18,11 @@ classifiers = [
 dependencies = [
   "pandas",
   "njab>=0.0.8",
-  "numpy>=1.14,<2.0",
+  "numpy>=1.0,<2.0",
   "torch",
   "fastai",
   "scikit-learn>=1.0",
-  "scipy>=1.7,<1.14",
+  "scipy>=1.5,<1.14",
   "seaborn",
   "matplotlib",
   "plotly",
@@ -30,7 +30,7 @@ dependencies = [
   "tqdm",
   "mrmr-selection",
   "pingouin",
-  # "umap-learn",
+  "umap-learn",
 ]
 
 [project.scripts]
