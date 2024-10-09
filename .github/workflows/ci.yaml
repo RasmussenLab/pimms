@@ -137,7 +137,7 @@ jobs:
         run: pip install .
 
       - name: install njab
-        run: pip install njab --no-deps
+        run: pip install njab
       
       - name: Install pytest
         run: pip install pytest pytest-cov
