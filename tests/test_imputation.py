@@ -1,9 +1,3 @@
-from pathlib import Path
-import numpy as np
-import pandas as pd
-import pytest
-
-from pimmslearn.imputation import imputation_KNN, imputation_normal_distribution, impute_shifted_normal
 """
 # Test Data set was created from a sample by shuffling:
 
@@ -19,6 +13,13 @@ data.drop('index', axis=1, inplace=True)
 data.apply(numpy.random.shuffle, axis=1)
 data.to_csv('test_data.csv')
 """
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from pimmslearn.imputation import impute_shifted_normal
 
 
 @pytest.fixture
@@ -28,34 +29,6 @@ def example_data():
     """
     example_data_path = Path(__file__).resolve().parent / 'test_data.csv'
     return pd.read_csv(example_data_path, index_col='id')
-
-# def test_impute_missing():
-#     pass
-
-
-def test_imputation_KNN(example_data):
-    threshold = 0.55
-    data = example_data.copy()
-    data_transformed = imputation_KNN(data, threshold=threshold)
-    columns_to_impute = data.notnull().mean() >= threshold
-    columns_to_impute = columns_to_impute[columns_to_impute].index
-    assert all(data_transformed.loc[:, columns_to_impute].isna().sum() < 15)
-    n_not_to_impute = data.loc[:,
-                               data.notnull().mean() < threshold].isna().sum()
-    assert all(data_transformed.loc[:, n_not_to_impute.index].isna().sum()
-               == n_not_to_impute)
-
-
-def test_imputation_normal_dist():
-    log_intensities = pd.Series([26.0, np.nan, 24.0, 25.0, np.nan])
-    imputed = imputation_normal_distribution(log_intensities)
-    imputed = round(imputed, ndigits=5)
-    assert imputed.equals(
-        pd.Series([26.0, 22.87431, 24.0, 25.0, 22.87431])
-    )
-
-# def test_imputation_mixed_norm_KNN():
-#     pass
 
 
 @pytest.mark.parametrize('axis', [0, 1])

@@ -7,7 +7,8 @@ import numpy as np
 import omegaconf
 import pandas as pd
 
-from pimmslearn.pandas.calc_errors import calc_errors_per_feat, get_absolute_error
+from pimmslearn.pandas.calc_errors import (calc_errors_per_feat,
+                                           get_absolute_error)
 
 __all__ = [
     'calc_errors_per_feat',
