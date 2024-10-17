@@ -27,6 +27,7 @@ dependencies = [
   "plotly", # not used in library, but workflow
   "omegaconf",
   "pingouin",
+  "njab>=0.1"
 ]
 
 [project.scripts]

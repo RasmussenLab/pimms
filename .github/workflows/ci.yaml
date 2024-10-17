@@ -50,8 +50,6 @@ jobs:
       run: | 
        cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
-    - name: Show current files in conda snakemake folder
-      run: ls -l project/.snakemake/conda/
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: | 
@@ -74,9 +72,9 @@ jobs:
   run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
     name: test-pip-installation
-    defaults:
-      run:
-        shell: bash -el {0}
+    # defaults:
+    #   run:
+    #     shell: bash -el {0}
     strategy:
       fail-fast: false
       matrix:
@@ -89,32 +87,32 @@ jobs:
           fetch-tags: true
           fetch-depth: 0
 
-      # - uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          auto-update-conda: true
-          activate-environment: test
-          auto-activate-base: true
 
-      - name: check conda
-        run: |
-          conda info
-          conda list
+      # - uses: conda-incubator/setup-miniconda@v3
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     auto-update-conda: true
+      #     activate-environment: test
+      #     auto-activate-base: true
+
+      # - name: check conda
+      #   run: |
+      #     conda info
+      #     conda list
       
-      - name: Install build dependencies explicitly
-        run: |
-          pip install setuptools_scm
-          conda list
+      # - name: Install build dependencies explicitly
+      #   run: |
+      #     pip install setuptools_scm
+      #     conda list
 
       - name: install pimms
         run: pip install .
 
-      - name: install njab
-        run: pip install njab
+      # - name: install njab
+      #   run: pip install njab
       
       - name: Install pytest
         run: pip install pytest pytest-cov
