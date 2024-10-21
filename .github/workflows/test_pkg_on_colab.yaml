@@ -3,8 +3,8 @@ name: Test that tutorial runs on latest colab image
 on:
     # push:
     #     branches: [main]
-    # pull_request:
-    #     branches: [main]
+    pull_request:
+        branches: [main]
     schedule:
         - cron: '0 2 3 * *'
 
@@ -20,7 +20,7 @@ jobs:
         - name: Install pimms-learn (from branch) and papermill
           if: github.event_name == 'pull_request'
           run: | 
-            python3 -m pip install pimms-learn papermill
+            python3 -m pip install . papermill
         - name: Install pimms-learn (from PyPI) and papermill
           if: github.event_name == 'schedule'
           run: | 
