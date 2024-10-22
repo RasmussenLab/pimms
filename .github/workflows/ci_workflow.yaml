@@ -1,4 +1,4 @@
-name: run workflow with conda envs
+name: run workflow (v1) with conda envs
 on:
   push:
     branches: [main, dev]
@@ -31,13 +31,12 @@ jobs:
         # ! change action https://github.com/mamba-org/setup-micromamba
         uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
-          use-mamba: true
-          channel-priority: disabled
+          channel-priority: strict
           python-version: ${{ matrix.python-version }}
           environment-file: snakemake_env.yml
           activate-environment: snakemake
           auto-activate-base: true
+          auto-update-conda: true
       - name: inspect-conda-environment
         run: |
           conda info

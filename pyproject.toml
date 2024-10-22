@@ -6,7 +6,7 @@ name = "pimms-learn"
 # See the section below: [tools.setuptools.dynamic]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 # These are keywords
 classifiers = [
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -16,20 +16,17 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-  "njab>=0.0.8",
-  "numpy",
-  "matplotlib",
   "pandas",
-  "plotly",
+  "numpy",
   "torch",
-  "scikit-learn>=1.0",
-  "scipy",
-  "seaborn",
   "fastai",
+  "scikit-learn>=1.0",
+  "seaborn",
+  "matplotlib",
+  "plotly", # not used in library, but workflow
   "omegaconf",
-  "tqdm",
-  "mrmr-selection",
   "pingouin",
+  "njab>=0.1"
 ]
 
 [project.scripts]
