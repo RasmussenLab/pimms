@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+ge256cb3 documentation</title>
+    <title>Differential Analysis - Compare model imputation with standard imputation &#8212; pimms_workflow 0.1.dev1+gab6b1b2 documentation</title>
   
   
   
@@ -16,28 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="../../../_static/documentation_options.js?v=cab2dbb7"></script>
+    <script src="../../../_static/documentation_options.js?v=f001110e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -49,6 +52,7 @@
     <link rel="prev" title="Differential Analysis - Compare model imputation with standard imputation" href="10_1_ald_diff_analysis_QRILC.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+gab6b1b2" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../../search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -134,20 +127,16 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge256cb3 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gab6b1b2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -343,24 +332,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -1970,17 +1951,17 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.826
-            A0A075B6Q5                 16.115
-            A0A075B6R2                 17.086
-            A0A075B6S5                 16.459
-            A0A087WSY4                 16.298
+Sample_000  A0A075B6J9                 15.799
+            A0A075B6Q5                 16.357
+            A0A075B6R2                 16.871
+            A0A075B6S5                 16.292
+            A0A087WSY4                 16.523
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.913
-            Q9UI40;Q9UI40-2            16.754
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.106
+            Q9UI40;Q9UI40-2            16.838
             Q9UIW2                     16.475
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.351
-            Q9UP79                     15.835
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.108
+            Q9UP79                     15.606
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -2047,7 +2028,7 @@ Name: intensity, Length: 46401, dtype: float64
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_RF.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/5f03892847673edd7cd329240b5f8070b4c7a1733148434b1108b72083dd9a26.png" src="../../../_images/5f03892847673edd7cd329240b5f8070b4c7a1733148434b1108b72083dd9a26.png" />
+<img alt="../../../_images/344aa1a995f68d9e368f6b3b76b21c8fbc76e010eb270ad7e0e47b1d86e5be7c.png" src="../../../_images/344aa1a995f68d9e368f6b3b76b21c8fbc76e010eb270ad7e0e47b1d86e5be7c.png" />
 </div>
 </div>
 <p>Dump frequency of histograms to file for reporting (if imputed values are used)</p>
@@ -2071,9 +2052,9 @@ Name: intensity, Length: 46401, dtype: float64
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/3fa5fb1d5dd2a817778dc1597a6471cf_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/3fa5fb1d5dd2a817778dc1597a6471cf_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:320: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
   _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
-/home/runner/work/pimms/pimms/project/.snakemake/conda/3fa5fb1d5dd2a817778dc1597a6471cf_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:319: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+/home/runner/work/pimms/pimms/project/.snakemake/conda/3fa5fb1d5dd2a817778dc1597a6471cf_/lib/python3.12/site-packages/pimmslearn/pandas/__init__.py:320: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
   _series = (pd.cut(df[col], bins=bins).to_frame().groupby(col).size())
 root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/dist_plots/real_na_obs_vs_RF.xlsx
 </pre></div>
@@ -2129,72 +2110,72 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     <tr>
       <th>(10, 11]</th>
       <td>529</td>
-      <td>164</td>
+      <td>156</td>
     </tr>
     <tr>
       <th>(11, 12]</th>
       <td>1,731</td>
-      <td>1,383</td>
+      <td>1,364</td>
     </tr>
     <tr>
       <th>(12, 13]</th>
       <td>4,644</td>
-      <td>3,822</td>
+      <td>3,800</td>
     </tr>
     <tr>
       <th>(13, 14]</th>
       <td>12,161</td>
-      <td>7,653</td>
+      <td>7,575</td>
     </tr>
     <tr>
       <th>(14, 15]</th>
       <td>27,515</td>
-      <td>11,933</td>
+      <td>11,983</td>
     </tr>
     <tr>
       <th>(15, 16]</th>
       <td>44,723</td>
-      <td>12,321</td>
+      <td>12,500</td>
     </tr>
     <tr>
       <th>(16, 17]</th>
       <td>45,981</td>
-      <td>5,991</td>
+      <td>5,880</td>
     </tr>
     <tr>
       <th>(17, 18]</th>
       <td>36,274</td>
-      <td>1,814</td>
+      <td>1,809</td>
     </tr>
     <tr>
       <th>(18, 19]</th>
       <td>25,049</td>
-      <td>591</td>
+      <td>621</td>
     </tr>
     <tr>
       <th>(19, 20]</th>
       <td>20,386</td>
-      <td>343</td>
+      <td>331</td>
     </tr>
     <tr>
       <th>(20, 21]</th>
       <td>13,495</td>
-      <td>249</td>
+      <td>253</td>
     </tr>
     <tr>
       <th>(21, 22]</th>
       <td>8,234</td>
-      <td>103</td>
+      <td>88</td>
     </tr>
     <tr>
       <th>(22, 23]</th>
       <td>4,885</td>
-      <td>27</td>
+      <td>36</td>
     </tr>
     <tr>
       <th>(23, 24]</th>
       <td>2,459</td>
-      <td>5</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>(24, 25]</th>
@@ -2285,10 +2266,10 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     </tr>
     <tr>
       <th>RF</th>
-      <td>14.846</td>
-      <td>1.567</td>
-      <td>0.886</td>
-      <td>0.610</td>
+      <td>14.849</td>
+      <td>1.564</td>
+      <td>0.884</td>
+      <td>0.609</td>
     </tr>
   </tbody>
 </table>
@@ -2349,22 +2330,22 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     <tr>
       <th>mean</th>
       <td>17.133</td>
-      <td>14.816</td>
+      <td>14.820</td>
     </tr>
     <tr>
       <th>std</th>
       <td>2.564</td>
-      <td>1.543</td>
+      <td>1.540</td>
     </tr>
     <tr>
       <th>mean_shift</th>
       <td>0.000</td>
-      <td>0.904</td>
+      <td>0.902</td>
     </tr>
     <tr>
       <th>std shrinkage</th>
       <td>1.000</td>
-      <td>0.602</td>
+      <td>0.601</td>
     </tr>
   </tbody>
 </table>
@@ -2469,11 +2450,11 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>...</td>
       <td>16.012</td>
       <td>15.178</td>
-      <td>13.582</td>
+      <td>14.227</td>
       <td>15.050</td>
       <td>16.842</td>
       <td>19.863</td>
-      <td>15.676</td>
+      <td>15.647</td>
       <td>19.563</td>
       <td>12.837</td>
       <td>12.805</td>
@@ -2488,12 +2469,12 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>16.839</td>
+      <td>16.638</td>
       <td>19.067</td>
       <td>...</td>
       <td>15.528</td>
       <td>15.576</td>
-      <td>14.226</td>
+      <td>14.233</td>
       <td>14.833</td>
       <td>16.597</td>
       <td>20.299</td>
@@ -2545,7 +2526,7 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>15.140</td>
       <td>17.356</td>
       <td>19.429</td>
-      <td>15.856</td>
+      <td>15.516</td>
       <td>20.216</td>
       <td>12.627</td>
       <td>12.445</td>
@@ -2604,10 +2585,10 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>16.886</td>
       <td>14.910</td>
       <td>16.482</td>
-      <td>15.383</td>
+      <td>15.552</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>16.422</td>
+      <td>15.887</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>...</td>
@@ -2628,7 +2609,7 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>17.554</td>
       <td>15.600</td>
       <td>15.938</td>
-      <td>15.340</td>
+      <td>15.736</td>
       <td>18.154</td>
       <td>18.152</td>
       <td>16.503</td>
@@ -2637,14 +2618,14 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>...</td>
       <td>15.422</td>
       <td>16.106</td>
-      <td>14.211</td>
+      <td>14.601</td>
       <td>15.345</td>
       <td>17.084</td>
       <td>18.708</td>
       <td>14.249</td>
       <td>19.433</td>
-      <td>12.413</td>
-      <td>11.185</td>
+      <td>11.852</td>
+      <td>11.333</td>
     </tr>
     <tr>
       <th>Sample_207</th>
@@ -2652,7 +2633,7 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>16.877</td>
       <td>15.469</td>
       <td>16.898</td>
-      <td>15.305</td>
+      <td>15.427</td>
       <td>18.636</td>
       <td>17.950</td>
       <td>16.321</td>
@@ -2676,23 +2657,23 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>16.779</td>
       <td>14.995</td>
       <td>16.132</td>
-      <td>14.364</td>
+      <td>15.258</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>16.449</td>
+      <td>16.594</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>...</td>
       <td>15.157</td>
       <td>16.712</td>
-      <td>14.608</td>
+      <td>14.282</td>
       <td>14.640</td>
       <td>16.533</td>
       <td>19.411</td>
       <td>15.807</td>
       <td>19.545</td>
       <td>13.216</td>
-      <td>11.345</td>
+      <td>11.069</td>
     </tr>
     <tr>
       <th>Sample_209</th>
@@ -2700,7 +2681,7 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>17.261</td>
       <td>15.175</td>
       <td>16.235</td>
-      <td>14.680</td>
+      <td>15.466</td>
       <td>17.893</td>
       <td>17.744</td>
       <td>16.371</td>
@@ -2814,56 +2795,56 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     <tr>
       <th rowspan="5" valign="top">A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.985</td>
+      <td>0.964</td>
       <td>1</td>
-      <td>7.321</td>
-      <td>0.007</td>
+      <td>7.248</td>
+      <td>0.008</td>
       <td>0.037</td>
-      <td>2.129</td>
-      <td>0.022</td>
+      <td>2.112</td>
+      <td>0.023</td>
       <td>True</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.004</td>
+      <td>0.002</td>
       <td>1</td>
-      <td>0.028</td>
-      <td>0.868</td>
+      <td>0.015</td>
+      <td>0.902</td>
       <td>0.000</td>
-      <td>0.062</td>
-      <td>0.916</td>
+      <td>0.045</td>
+      <td>0.938</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>0.235</td>
+      <td>0.209</td>
       <td>1</td>
-      <td>1.750</td>
-      <td>0.187</td>
-      <td>0.009</td>
-      <td>0.727</td>
-      <td>0.307</td>
+      <td>1.568</td>
+      <td>0.212</td>
+      <td>0.008</td>
+      <td>0.673</td>
+      <td>0.338</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>0.443</td>
+      <td>0.414</td>
       <td>1</td>
-      <td>3.296</td>
-      <td>0.071</td>
-      <td>0.017</td>
-      <td>1.149</td>
-      <td>0.142</td>
+      <td>3.109</td>
+      <td>0.079</td>
+      <td>0.016</td>
+      <td>1.100</td>
+      <td>0.155</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>1.618</td>
+      <td>1.569</td>
       <td>1</td>
-      <td>12.035</td>
+      <td>11.795</td>
       <td>0.001</td>
-      <td>0.059</td>
-      <td>3.190</td>
+      <td>0.058</td>
+      <td>3.138</td>
       <td>0.003</td>
       <td>True</td>
     </tr>
@@ -2882,56 +2863,56 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     <tr>
       <th rowspan="5" valign="top">S4R3U6</th>
       <th>AD</th>
-      <td>0.882</td>
+      <td>0.749</td>
       <td>1</td>
-      <td>1.966</td>
-      <td>0.162</td>
-      <td>0.010</td>
-      <td>0.789</td>
-      <td>0.275</td>
+      <td>1.629</td>
+      <td>0.203</td>
+      <td>0.008</td>
+      <td>0.692</td>
+      <td>0.328</td>
       <td>False</td>
     </tr>
     <tr>
       <th>age</th>
-      <td>0.774</td>
+      <td>0.744</td>
       <td>1</td>
-      <td>1.725</td>
-      <td>0.191</td>
-      <td>0.009</td>
-      <td>0.720</td>
-      <td>0.311</td>
+      <td>1.618</td>
+      <td>0.205</td>
+      <td>0.008</td>
+      <td>0.688</td>
+      <td>0.330</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Kiel</th>
-      <td>1.521</td>
+      <td>1.817</td>
       <td>1</td>
-      <td>3.392</td>
-      <td>0.067</td>
-      <td>0.017</td>
-      <td>1.173</td>
-      <td>0.136</td>
+      <td>3.949</td>
+      <td>0.048</td>
+      <td>0.020</td>
+      <td>1.316</td>
+      <td>0.104</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Magdeburg</th>
-      <td>1.194</td>
+      <td>1.886</td>
       <td>1</td>
-      <td>2.663</td>
-      <td>0.104</td>
-      <td>0.014</td>
-      <td>0.981</td>
-      <td>0.195</td>
+      <td>4.099</td>
+      <td>0.044</td>
+      <td>0.021</td>
+      <td>1.354</td>
+      <td>0.097</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Sweden</th>
-      <td>11.068</td>
+      <td>14.186</td>
       <td>1</td>
-      <td>24.678</td>
+      <td>30.843</td>
       <td>0.000</td>
-      <td>0.114</td>
-      <td>5.824</td>
+      <td>0.139</td>
+      <td>7.032</td>
       <td>0.000</td>
       <td>True</td>
     </tr>
@@ -3010,61 +2991,61 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
       <th>AD</th>
-      <td>0.985</td>
+      <td>0.964</td>
       <td>1</td>
-      <td>7.321</td>
-      <td>0.007</td>
+      <td>7.248</td>
+      <td>0.008</td>
       <td>0.037</td>
-      <td>2.129</td>
-      <td>0.022</td>
+      <td>2.112</td>
+      <td>0.023</td>
       <td>True</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
       <th>AD</th>
-      <td>2.970</td>
+      <td>2.993</td>
       <td>1</td>
-      <td>4.819</td>
+      <td>4.846</td>
       <td>0.029</td>
       <td>0.025</td>
-      <td>1.532</td>
-      <td>0.069</td>
+      <td>1.539</td>
+      <td>0.068</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
       <th>AD</th>
-      <td>0.096</td>
+      <td>0.060</td>
       <td>1</td>
-      <td>0.791</td>
-      <td>0.375</td>
-      <td>0.004</td>
-      <td>0.426</td>
-      <td>0.512</td>
+      <td>0.497</td>
+      <td>0.482</td>
+      <td>0.003</td>
+      <td>0.317</td>
+      <td>0.613</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
       <th>AD</th>
-      <td>0.180</td>
+      <td>0.184</td>
       <td>1</td>
-      <td>1.301</td>
-      <td>0.256</td>
+      <td>1.327</td>
+      <td>0.251</td>
       <td>0.007</td>
-      <td>0.593</td>
-      <td>0.389</td>
+      <td>0.601</td>
+      <td>0.384</td>
       <td>False</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
       <th>AD</th>
-      <td>5.614</td>
+      <td>5.664</td>
       <td>1</td>
-      <td>8.101</td>
-      <td>0.005</td>
-      <td>0.041</td>
-      <td>2.309</td>
-      <td>0.015</td>
+      <td>8.483</td>
+      <td>0.004</td>
+      <td>0.043</td>
+      <td>2.397</td>
+      <td>0.013</td>
       <td>True</td>
     </tr>
     <tr>
@@ -3088,19 +3069,19 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>0.175</td>
       <td>0.010</td>
       <td>0.756</td>
-      <td>0.292</td>
+      <td>0.293</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
       <th>AD</th>
-      <td>0.572</td>
+      <td>0.567</td>
       <td>1</td>
-      <td>1.786</td>
-      <td>0.183</td>
+      <td>1.777</td>
+      <td>0.184</td>
       <td>0.009</td>
-      <td>0.738</td>
-      <td>0.301</td>
+      <td>0.735</td>
+      <td>0.304</td>
       <td>False</td>
     </tr>
     <tr>
@@ -3112,31 +3093,31 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
       <td>0.083</td>
       <td>0.016</td>
       <td>1.079</td>
-      <td>0.162</td>
+      <td>0.161</td>
       <td>False</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
       <th>AD</th>
-      <td>0.538</td>
+      <td>0.813</td>
       <td>1</td>
-      <td>0.901</td>
-      <td>0.344</td>
-      <td>0.005</td>
-      <td>0.464</td>
-      <td>0.483</td>
+      <td>1.418</td>
+      <td>0.235</td>
+      <td>0.007</td>
+      <td>0.628</td>
+      <td>0.366</td>
       <td>False</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
       <th>AD</th>
-      <td>0.882</td>
+      <td>0.749</td>
       <td>1</td>
-      <td>1.966</td>
-      <td>0.162</td>
-      <td>0.010</td>
-      <td>0.789</td>
-      <td>0.275</td>
+      <td>1.629</td>
+      <td>0.203</td>
+      <td>0.008</td>
+      <td>0.692</td>
+      <td>0.328</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -3228,7 +3209,8 @@ root - INFO     Counts per bin saved to runs/alzheimer_study/diff_analysis/AD/di
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -3295,8 +3277,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

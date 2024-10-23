@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+ge256cb3 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+gab6b1b2 documentation</title>
   
   
   
@@ -16,28 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="_static/documentation_options.js?v=cab2dbb7"></script>
+    <script src="_static/documentation_options.js?v=f001110e"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -49,6 +52,7 @@
     <link rel="prev" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+gab6b1b2" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -134,20 +127,16 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge256cb3 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gab6b1b2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -343,24 +332,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -1014,8 +995,8 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00759
-No improvement since epoch 11: early stopping
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00525
+No improvement since epoch 12: early stopping
 pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
@@ -1051,85 +1032,91 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
   <tbody>
     <tr>
       <td>0</td>
-      <td>7.285000</td>
-      <td>10.081937</td>
+      <td>8.257547</td>
+      <td>11.904173</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>2.071492</td>
-      <td>2.475013</td>
+      <td>4.174598</td>
+      <td>5.588789</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>0.705883</td>
-      <td>0.875647</td>
+      <td>1.226727</td>
+      <td>1.584782</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>0.571869</td>
-      <td>0.742083</td>
+      <td>0.643592</td>
+      <td>0.818162</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>0.540814</td>
-      <td>0.720453</td>
+      <td>0.559073</td>
+      <td>0.738511</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.486421</td>
-      <td>0.643226</td>
+      <td>0.548573</td>
+      <td>0.721786</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.416068</td>
-      <td>0.575745</td>
+      <td>0.505065</td>
+      <td>0.667109</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.378811</td>
-      <td>0.534396</td>
+      <td>0.430037</td>
+      <td>0.589586</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.345058</td>
-      <td>0.503129</td>
+      <td>0.384793</td>
+      <td>0.540829</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.308142</td>
-      <td>0.483488</td>
+      <td>0.358451</td>
+      <td>0.517491</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.269533</td>
-      <td>0.475177</td>
+      <td>0.324597</td>
+      <td>0.491056</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.238526</td>
-      <td>0.474764</td>
+      <td>0.284698</td>
+      <td>0.480374</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>0.218686</td>
-      <td>0.494246</td>
+      <td>0.255366</td>
+      <td>0.464111</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>0.231677</td>
+      <td>0.476437</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/e583128cccc2bbbc048db5208f6eb5d1eed9facdbf431dd85a7599ccfec7dc52.png" src="_images/e583128cccc2bbbc048db5208f6eb5d1eed9facdbf431dd85a7599ccfec7dc52.png" />
-<img alt="_images/c50facd95aa26170c83495e03b30e05873c9fc1645c0049ca94331a21fd40567.png" src="_images/c50facd95aa26170c83495e03b30e05873c9fc1645c0049ca94331a21fd40567.png" />
+</table></div><img alt="_images/81358131081d44a6f34cdb8d03d47a13b602ad2ddd5085d3b9f4a0277b1fa983.png" src="_images/81358131081d44a6f34cdb8d03d47a13b602ad2ddd5085d3b9f4a0277b1fa983.png" />
+<img alt="_images/5f05ca0f0161f942e6a0f810ed3585f3608b48703d06da1ce69616e04ea8f8d8.png" src="_images/5f05ca0f0161f942e6a0f810ed3585f3608b48703d06da1ce69616e04ea8f8d8.png" />
 </div>
 </div>
 </section>
@@ -1204,31 +1191,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.121</td>
+      <td>15.709</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.698</td>
+      <td>16.223</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.958</td>
+      <td>14.427</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.829</td>
+      <td>19.256</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>14.608</td>
+      <td>14.897</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1240,31 +1227,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.939</td>
+      <td>23.064</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.291</td>
+      <td>15.203</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.754</td>
+      <td>15.939</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>14.002</td>
+      <td>14.209</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.670</td>
+      <td>14.403</td>
     </tr>
   </tbody>
 </table>
@@ -1337,27 +1324,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.490</td>
+      <td>17.254</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>17.915</td>
+      <td>17.865</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.508</td>
+      <td>22.495</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.054</td>
+      <td>15.145</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>17.103</td>
+      <td>16.567</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1369,27 +1356,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>16.112</td>
+      <td>15.519</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>12.668</td>
+      <td>13.052</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.533</td>
+      <td>13.450</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>14.963</td>
+      <td>14.802</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.466</td>
+      <td>16.153</td>
     </tr>
   </tbody>
 </table>
@@ -1681,8 +1668,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4942459354038792,
-  &#39;MAE&#39;: 0.48027192299907867,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4764368558222827,
+  &#39;MAE&#39;: 0.46816244998283013,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1706,8 +1693,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.5217625504044089,
-  &#39;MAE&#39;: 0.4907642227427439,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.49444353922849976,
+  &#39;MAE&#39;: 0.47206334568261227,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1765,13 +1752,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
+      <td>0.476</td>
       <td>0.494</td>
-      <td>0.522</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.480</td>
-      <td>0.491</td>
+      <td>0.468</td>
+      <td>0.472</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1827,7 +1814,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 13,
+ &#39;epoch_trained&#39;: 14,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
@@ -1888,7 +1875,8 @@ reconstruction.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1961,8 +1949,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

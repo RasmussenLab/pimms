@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+ge256cb3 documentation</title>
+    <title>NAGuide R methods &#8212; pimms_workflow 0.1.dev1+gab6b1b2 documentation</title>
   
   
   
@@ -16,28 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="_static/documentation_options.js?v=cab2dbb7"></script>
+    <script src="_static/documentation_options.js?v=f001110e"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -51,6 +54,7 @@
     <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_ROWMEDIAN.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+gab6b1b2" />
   </head>
   
   
@@ -66,19 +70,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -86,7 +79,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -94,8 +86,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -111,7 +103,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -136,20 +129,16 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge256cb3 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gab6b1b2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -345,24 +334,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -1000,67 +981,67 @@ Save the header row for later use.</p></li>
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>⋯</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><td>A0A024QZX5;A0A087X1N8;P35237                                                  </td><td>15.91237</td><td>12.27836</td><td>16.11149</td><td>16.10697</td><td>15.60321</td><td>15.81161</td><td>15.49966</td><td>15.22075</td><td>15.98013</td><td>⋯</td><td>13.29559</td><td>15.86264</td><td>15.65594</td><td>15.40126</td><td>13.37085</td><td>15.68225</td><td>15.79804</td><td>15.73949</td><td>15.47682</td><td>13.92209</td></tr>
-	<tr><td>A0A024R0T9;K7ER74;P02655                                                      </td><td>16.85194</td><td>16.87369</td><td>12.01129</td><td>17.03151</td><td>15.33051</td><td>18.61407</td><td>17.40917</td><td>17.68391</td><td>16.38625</td><td>⋯</td><td>17.30955</td><td>16.61480</td><td>17.95339</td><td>18.19938</td><td>17.27911</td><td>16.88635</td><td>17.55400</td><td>13.53202</td><td>16.77948</td><td>17.26137</td></tr>
-	<tr><td>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</td><td>15.57047</td><td>15.51892</td><td>15.93532</td><td>15.80187</td><td>15.37522</td><td>15.62420</td><td>15.91185</td><td>15.38499</td><td>15.89447</td><td>⋯</td><td>13.25725</td><td>15.93179</td><td>14.85871</td><td>15.12451</td><td>13.67214</td><td>14.91006</td><td>15.59966</td><td>15.46896</td><td>14.99496</td><td>15.17487</td></tr>
+	<tr><td>A0A024QZX5;A0A087X1N8;P35237                                                  </td><td>15.91237</td><td>12.60601</td><td>16.11149</td><td>16.10697</td><td>15.60321</td><td>15.81161</td><td>15.49966</td><td>15.22075</td><td>15.98013</td><td>⋯</td><td>11.76369</td><td>15.86264</td><td>15.65594</td><td>15.40126</td><td>11.51290</td><td>15.68225</td><td>15.79804</td><td>15.73949</td><td>15.47682</td><td>11.93855</td></tr>
+	<tr><td>A0A024R0T9;K7ER74;P02655                                                      </td><td>16.85194</td><td>16.87369</td><td>12.26758</td><td>17.03151</td><td>15.33051</td><td>18.61407</td><td>17.40917</td><td>17.68391</td><td>16.38625</td><td>⋯</td><td>17.30955</td><td>16.61480</td><td>17.95339</td><td>18.19938</td><td>17.27911</td><td>16.88635</td><td>17.55400</td><td>12.16909</td><td>16.77948</td><td>17.26137</td></tr>
+	<tr><td>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</td><td>15.57047</td><td>15.51892</td><td>15.93532</td><td>15.80187</td><td>15.37522</td><td>15.62420</td><td>15.91185</td><td>15.38499</td><td>15.89447</td><td>⋯</td><td>12.46928</td><td>15.93179</td><td>14.85871</td><td>15.12451</td><td>12.79854</td><td>14.91006</td><td>15.59966</td><td>15.46896</td><td>14.99496</td><td>15.17487</td></tr>
 	<tr><td>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                       </td><td>16.48108</td><td>16.38694</td><td>16.41577</td><td>16.97862</td><td>16.67906</td><td>15.95764</td><td>16.23389</td><td>16.41793</td><td>16.27134</td><td>⋯</td><td>15.95402</td><td>16.02959</td><td>16.49753</td><td>16.51284</td><td>16.51269</td><td>16.48232</td><td>15.93782</td><td>16.89773</td><td>16.13246</td><td>16.23505</td></tr>
-	<tr><td>A0A075B6H7                                                                    </td><td>17.30138</td><td>13.69802</td><td>18.17480</td><td>15.96322</td><td>11.68668</td><td>18.31720</td><td>14.26709</td><td>17.21393</td><td>17.79403</td><td>⋯</td><td>13.08899</td><td>16.48262</td><td>14.83467</td><td>13.56893</td><td>14.48257</td><td>13.24248</td><td>12.65617</td><td>12.60525</td><td>13.35631</td><td>12.78393</td></tr>
-	<tr><td>A0A075B6H9                                                                    </td><td>20.24646</td><td>19.94110</td><td>19.25090</td><td>19.62797</td><td>20.44983</td><td>18.68569</td><td>20.34722</td><td>20.79604</td><td>18.99523</td><td>⋯</td><td>13.72973</td><td>12.46752</td><td>18.26986</td><td>19.80062</td><td>20.18315</td><td>17.70485</td><td>18.15450</td><td>18.63631</td><td>14.90754</td><td>17.89344</td></tr>
-	<tr><td>A0A075B6I0                                                                    </td><td>16.76446</td><td>18.78624</td><td>16.83217</td><td>17.85209</td><td>18.68185</td><td>17.86543</td><td>18.24995</td><td>20.30936</td><td>17.97843</td><td>⋯</td><td>18.00550</td><td>18.54142</td><td>17.80748</td><td>19.89865</td><td>19.67420</td><td>17.03945</td><td>18.15179</td><td>17.95040</td><td>13.18897</td><td>17.74443</td></tr>
-	<tr><td>A0A075B6I1                                                                    </td><td>17.58357</td><td>17.14388</td><td>15.67073</td><td>18.87749</td><td>17.08131</td><td>14.82369</td><td>18.51969</td><td>19.35640</td><td>18.56449</td><td>⋯</td><td>16.41402</td><td>17.50510</td><td>14.01911</td><td>17.50574</td><td>20.25111</td><td>12.18316</td><td>16.50267</td><td>16.32073</td><td>11.71872</td><td>16.37054</td></tr>
-	<tr><td>A0A075B6I6                                                                    </td><td>16.98778</td><td>11.90755</td><td>17.01183</td><td>14.18153</td><td>14.14021</td><td>17.04179</td><td>17.37560</td><td>16.99794</td><td>17.20311</td><td>⋯</td><td>15.72543</td><td>17.06758</td><td>16.45849</td><td>16.32778</td><td>16.33372</td><td>16.41304</td><td>16.86003</td><td>16.40071</td><td>16.11868</td><td>15.77958</td></tr>
+	<tr><td>A0A075B6H7                                                                    </td><td>17.30138</td><td>11.14002</td><td>18.17480</td><td>15.96322</td><td>11.83095</td><td>18.31720</td><td>12.06371</td><td>17.21393</td><td>17.79403</td><td>⋯</td><td>12.24156</td><td>16.48262</td><td>14.83467</td><td>13.56893</td><td>14.48257</td><td>12.19550</td><td>12.59706</td><td>12.85109</td><td>11.74071</td><td>11.03136</td></tr>
+	<tr><td>A0A075B6H9                                                                    </td><td>20.24646</td><td>19.94110</td><td>19.25090</td><td>19.62797</td><td>20.44983</td><td>18.68569</td><td>20.34722</td><td>20.79604</td><td>18.99523</td><td>⋯</td><td>11.94791</td><td>12.73981</td><td>18.26986</td><td>19.80062</td><td>20.18315</td><td>17.70485</td><td>18.15450</td><td>18.63631</td><td>14.90754</td><td>17.89344</td></tr>
+	<tr><td>A0A075B6I0                                                                    </td><td>16.76446</td><td>18.78624</td><td>16.83217</td><td>17.85209</td><td>18.68185</td><td>17.86543</td><td>18.24995</td><td>20.30936</td><td>17.97843</td><td>⋯</td><td>18.00550</td><td>18.54142</td><td>17.80748</td><td>19.89865</td><td>19.67420</td><td>17.03945</td><td>18.15179</td><td>17.95040</td><td>12.55184</td><td>17.74443</td></tr>
+	<tr><td>A0A075B6I1                                                                    </td><td>17.58357</td><td>17.14388</td><td>15.67073</td><td>18.87749</td><td>17.08131</td><td>14.82369</td><td>18.51969</td><td>19.35640</td><td>18.56449</td><td>⋯</td><td>16.41402</td><td>17.50510</td><td>14.01911</td><td>17.50574</td><td>20.25111</td><td>13.30121</td><td>16.50267</td><td>16.32073</td><td>13.03004</td><td>16.37054</td></tr>
+	<tr><td>A0A075B6I6                                                                    </td><td>16.98778</td><td>11.80002</td><td>17.01183</td><td>14.18153</td><td>14.14021</td><td>17.04179</td><td>17.37560</td><td>16.99794</td><td>17.20311</td><td>⋯</td><td>15.72543</td><td>17.06758</td><td>16.45849</td><td>16.32778</td><td>16.33372</td><td>16.41304</td><td>16.86003</td><td>16.40071</td><td>16.11868</td><td>15.77958</td></tr>
 	<tr><td>A0A075B6I9                                                                    </td><td>20.05416</td><td>19.06733</td><td>18.56906</td><td>18.98506</td><td>19.68564</td><td>19.37580</td><td>19.39885</td><td>20.54359</td><td>18.84397</td><td>⋯</td><td>21.85263</td><td>20.14650</td><td>19.53459</td><td>19.86713</td><td>20.76626</td><td>19.10211</td><td>18.53796</td><td>18.84897</td><td>18.36776</td><td>18.80581</td></tr>
-	<tr><td>A0A075B6J9                                                                    </td><td>12.54630</td><td>16.18799</td><td>13.44139</td><td>13.43813</td><td>14.49484</td><td>15.90875</td><td>16.18436</td><td>13.93187</td><td>16.17019</td><td>⋯</td><td>12.18969</td><td>11.75506</td><td>16.63193</td><td>17.43574</td><td>19.77811</td><td>16.06423</td><td>12.73857</td><td>17.58044</td><td>11.80812</td><td>16.53239</td></tr>
-	<tr><td>A0A075B6K4                                                                    </td><td>16.14850</td><td>16.12727</td><td>15.38672</td><td>16.56502</td><td>16.41771</td><td>16.45498</td><td>12.34502</td><td>17.04677</td><td>16.03210</td><td>⋯</td><td>18.58162</td><td>18.51737</td><td>16.48354</td><td>16.06338</td><td>17.19123</td><td>15.35033</td><td>16.58173</td><td>10.78719</td><td>12.53602</td><td>16.33787</td></tr>
+	<tr><td>A0A075B6J9                                                                    </td><td>12.19667</td><td>16.18799</td><td>14.24551</td><td>13.43813</td><td>14.49484</td><td>15.90875</td><td>16.18436</td><td>14.48541</td><td>16.17019</td><td>⋯</td><td>12.06724</td><td>12.68071</td><td>16.63193</td><td>17.43574</td><td>19.77811</td><td>16.06423</td><td>13.59143</td><td>17.58044</td><td>11.88155</td><td>16.53239</td></tr>
+	<tr><td>A0A075B6K4                                                                    </td><td>16.14850</td><td>16.12727</td><td>15.38672</td><td>16.56502</td><td>16.41771</td><td>16.45498</td><td>12.24260</td><td>17.04677</td><td>16.03210</td><td>⋯</td><td>18.58162</td><td>18.51737</td><td>16.48354</td><td>16.06338</td><td>17.19123</td><td>15.35033</td><td>16.58173</td><td>12.01727</td><td>12.19352</td><td>16.33787</td></tr>
 	<tr><td>A0A075B6K5                                                                    </td><td>17.34261</td><td>17.41722</td><td>17.23633</td><td>16.26717</td><td>17.39020</td><td>18.33604</td><td>17.21765</td><td>18.32488</td><td>17.52458</td><td>⋯</td><td>19.51566</td><td>18.98906</td><td>17.80614</td><td>16.74819</td><td>18.41254</td><td>17.15384</td><td>17.90184</td><td>17.51899</td><td>17.50220</td><td>16.98874</td></tr>
-	<tr><td>A0A075B6P5;P01615                                                             </td><td>13.39669</td><td>12.26628</td><td>12.87562</td><td>16.98965</td><td>17.49330</td><td>18.26923</td><td>17.78989</td><td>18.15334</td><td>17.78703</td><td>⋯</td><td>19.92434</td><td>12.56802</td><td>13.71366</td><td>19.84136</td><td>19.26620</td><td>17.17528</td><td>19.57506</td><td>19.30588</td><td>18.97651</td><td>18.68810</td></tr>
-	<tr><td>A0A075B6Q5                                                                    </td><td>11.52301</td><td>12.50645</td><td>15.12836</td><td>12.28142</td><td>12.04983</td><td>12.44121</td><td>12.23382</td><td>16.73949</td><td>12.04262</td><td>⋯</td><td>12.11302</td><td>17.02598</td><td>16.10287</td><td>15.87972</td><td>11.73373</td><td>11.92965</td><td>13.06178</td><td>16.88355</td><td>13.83921</td><td>15.68019</td></tr>
-	<tr><td>A0A075B6R2                                                                    </td><td>12.72241</td><td>12.52024</td><td>16.27981</td><td>16.77744</td><td>17.49744</td><td>17.05396</td><td>16.91770</td><td>19.77222</td><td>16.73705</td><td>⋯</td><td>17.99822</td><td>18.12131</td><td>19.19184</td><td>12.91107</td><td>17.28589</td><td>16.59777</td><td>17.07044</td><td>16.06459</td><td>12.79807</td><td>16.03648</td></tr>
-	<tr><td>A0A075B6R9;A0A0C4DH68                                                         </td><td>19.51640</td><td>19.37284</td><td>13.00808</td><td>19.00923</td><td>19.54147</td><td>19.56719</td><td>20.18507</td><td>20.56454</td><td>19.52324</td><td>⋯</td><td>20.12749</td><td>20.37360</td><td>19.49983</td><td>18.97739</td><td>20.58832</td><td>18.07337</td><td>18.84673</td><td>19.62054</td><td>19.33926</td><td>20.39256</td></tr>
-	<tr><td>A0A075B6S2                                                                    </td><td>15.51124</td><td>16.20824</td><td>14.84570</td><td>15.23242</td><td>13.67162</td><td>16.28653</td><td>14.65632</td><td>13.11313</td><td>14.51212</td><td>⋯</td><td>15.07423</td><td>15.91304</td><td>16.65963</td><td>15.80117</td><td>17.45378</td><td>14.10153</td><td>16.61213</td><td>16.21984</td><td>15.69582</td><td>16.38320</td></tr>
-	<tr><td>A0A075B6S5                                                                    </td><td>12.76197</td><td>12.67286</td><td>13.83445</td><td>12.46978</td><td>12.36325</td><td>15.96016</td><td>16.15277</td><td>17.07842</td><td>16.84659</td><td>⋯</td><td>15.51315</td><td>16.14929</td><td>11.51889</td><td>15.35133</td><td>15.91161</td><td>15.65170</td><td>16.03424</td><td>12.08803</td><td>12.50995</td><td>12.68128</td></tr>
+	<tr><td>A0A075B6P5;P01615                                                             </td><td>12.01487</td><td>12.81515</td><td>14.00178</td><td>16.98965</td><td>17.49330</td><td>18.26923</td><td>17.78989</td><td>18.15334</td><td>17.78703</td><td>⋯</td><td>19.92434</td><td>13.51406</td><td>12.27283</td><td>19.84136</td><td>19.26620</td><td>17.17528</td><td>19.57506</td><td>19.30588</td><td>18.97651</td><td>18.68810</td></tr>
+	<tr><td>A0A075B6Q5                                                                    </td><td>14.40319</td><td>13.36345</td><td>15.12836</td><td>13.02356</td><td>13.96450</td><td>12.71746</td><td>12.88627</td><td>16.73949</td><td>14.27095</td><td>⋯</td><td>12.89033</td><td>17.02598</td><td>16.10287</td><td>15.87972</td><td>13.42946</td><td>13.83002</td><td>12.37285</td><td>16.88355</td><td>12.98059</td><td>15.68019</td></tr>
+	<tr><td>A0A075B6R2                                                                    </td><td>13.40829</td><td>12.98182</td><td>16.27981</td><td>16.77744</td><td>17.49744</td><td>17.05396</td><td>16.91770</td><td>19.77222</td><td>16.73705</td><td>⋯</td><td>17.99822</td><td>18.12131</td><td>19.19184</td><td>12.87576</td><td>17.28589</td><td>16.59777</td><td>17.07044</td><td>16.06459</td><td>12.05690</td><td>16.03648</td></tr>
+	<tr><td>A0A075B6R9;A0A0C4DH68                                                         </td><td>19.51640</td><td>19.37284</td><td>13.28513</td><td>19.00923</td><td>19.54147</td><td>19.56719</td><td>20.18507</td><td>20.56454</td><td>19.52324</td><td>⋯</td><td>20.12749</td><td>20.37360</td><td>19.49983</td><td>18.97739</td><td>20.58832</td><td>18.07337</td><td>18.84673</td><td>19.62054</td><td>19.33926</td><td>20.39256</td></tr>
+	<tr><td>A0A075B6S2                                                                    </td><td>15.51124</td><td>16.20824</td><td>14.84570</td><td>15.23242</td><td>13.18839</td><td>16.28653</td><td>14.65632</td><td>13.91309</td><td>14.51212</td><td>⋯</td><td>15.07423</td><td>15.91304</td><td>16.65963</td><td>15.80117</td><td>17.45378</td><td>14.10153</td><td>16.61213</td><td>16.21984</td><td>15.69582</td><td>16.38320</td></tr>
+	<tr><td>A0A075B6S5                                                                    </td><td>13.35268</td><td>11.60428</td><td>13.51464</td><td>13.81194</td><td>12.77597</td><td>15.96016</td><td>16.15277</td><td>17.07842</td><td>16.84659</td><td>⋯</td><td>15.51315</td><td>16.14929</td><td>12.88664</td><td>15.35133</td><td>15.91161</td><td>15.65170</td><td>16.03424</td><td>12.69372</td><td>12.44168</td><td>12.16001</td></tr>
 	<tr><td>A0A075B6S9                                                                    </td><td>16.55765</td><td>17.51597</td><td>17.93999</td><td>16.95147</td><td>17.08795</td><td>17.36099</td><td>16.42103</td><td>19.79080</td><td>17.13399</td><td>⋯</td><td>17.25958</td><td>20.50218</td><td>19.26507</td><td>18.42468</td><td>18.19725</td><td>16.14563</td><td>19.50373</td><td>18.42501</td><td>17.75190</td><td>16.21995</td></tr>
-	<tr><td>A0A075B7B8                                                                    </td><td>14.91594</td><td>13.06692</td><td>14.65865</td><td>12.63631</td><td>15.34886</td><td>14.50111</td><td>15.12196</td><td>14.51142</td><td>15.31218</td><td>⋯</td><td>13.32633</td><td>12.45759</td><td>12.86953</td><td>12.76050</td><td>12.78261</td><td>11.96305</td><td>12.40833</td><td>12.74252</td><td>12.93846</td><td>12.57815</td></tr>
-	<tr><td>A0A075B7D0                                                                    </td><td>18.35754</td><td>12.71124</td><td>18.23018</td><td>19.26103</td><td>19.78637</td><td>19.65551</td><td>18.51593</td><td>20.50008</td><td>19.50572</td><td>⋯</td><td>12.35264</td><td>19.23066</td><td>13.37065</td><td>18.07711</td><td>19.43528</td><td>19.04498</td><td>17.02163</td><td>18.08262</td><td>18.73767</td><td>17.31493</td></tr>
-	<tr><td>A0A087WSV8;V9HW75                                                             </td><td>15.67587</td><td>14.50492</td><td>11.92745</td><td>15.55301</td><td>15.52087</td><td>12.19211</td><td>15.21659</td><td>12.45620</td><td>13.85270</td><td>⋯</td><td>11.90470</td><td>15.52576</td><td>15.20934</td><td>15.53814</td><td>13.98360</td><td>15.14917</td><td>15.89044</td><td>12.37718</td><td>15.41872</td><td>14.79854</td></tr>
-	<tr><td>A0A087WSY4                                                                    </td><td>13.04998</td><td>17.14993</td><td>15.65052</td><td>12.55963</td><td>12.67088</td><td>14.26844</td><td>14.21355</td><td>13.72097</td><td>12.15540</td><td>⋯</td><td>15.85031</td><td>11.57268</td><td>16.20781</td><td>15.33813</td><td>12.86607</td><td>15.12749</td><td>12.43655</td><td>12.87475</td><td>12.32892</td><td>20.34338</td></tr>
+	<tr><td>A0A075B7B8                                                                    </td><td>14.91594</td><td>10.86585</td><td>14.65865</td><td>12.61428</td><td>15.34886</td><td>14.50111</td><td>15.12196</td><td>14.51142</td><td>15.31218</td><td>⋯</td><td>12.62475</td><td>13.25583</td><td>11.49648</td><td>11.82984</td><td>12.71289</td><td>12.60805</td><td>11.18473</td><td>12.04244</td><td>10.98044</td><td>12.54966</td></tr>
+	<tr><td>A0A075B7D0                                                                    </td><td>18.35754</td><td>12.04881</td><td>18.23018</td><td>19.26103</td><td>19.78637</td><td>19.65551</td><td>18.51593</td><td>20.50008</td><td>19.50572</td><td>⋯</td><td>12.31183</td><td>19.23066</td><td>12.33943</td><td>18.07711</td><td>19.43528</td><td>19.04498</td><td>17.02163</td><td>18.08262</td><td>18.73767</td><td>17.31493</td></tr>
+	<tr><td>A0A087WSV8;V9HW75                                                             </td><td>15.67587</td><td>14.50492</td><td>12.41955</td><td>15.55301</td><td>15.52087</td><td>14.11093</td><td>15.21659</td><td>11.92383</td><td>13.85270</td><td>⋯</td><td>12.26959</td><td>15.52576</td><td>15.20934</td><td>15.53814</td><td>13.98360</td><td>15.14917</td><td>15.89044</td><td>12.70187</td><td>15.41872</td><td>14.79854</td></tr>
+	<tr><td>A0A087WSY4                                                                    </td><td>13.02191</td><td>17.14993</td><td>15.65052</td><td>12.45718</td><td>12.94113</td><td>12.89614</td><td>14.51364</td><td>12.01754</td><td>12.27222</td><td>⋯</td><td>15.85031</td><td>11.25877</td><td>16.20781</td><td>15.33813</td><td>12.36409</td><td>15.12749</td><td>12.55179</td><td>13.92839</td><td>12.73766</td><td>20.34338</td></tr>
 	<tr><td>A0A087WSY5;Q96IY4                                                             </td><td>17.86323</td><td>18.04130</td><td>17.77668</td><td>18.34178</td><td>18.42888</td><td>17.85131</td><td>17.68953</td><td>19.12984</td><td>18.01868</td><td>⋯</td><td>17.86117</td><td>17.12731</td><td>17.28784</td><td>18.35734</td><td>18.09213</td><td>17.11496</td><td>17.19541</td><td>17.94426</td><td>18.08478</td><td>17.34736</td></tr>
-	<tr><td>A0A087WSY6                                                                    </td><td>20.11686</td><td>20.27450</td><td>19.28080</td><td>19.78190</td><td>19.72658</td><td>20.79580</td><td>19.63239</td><td>20.59759</td><td>19.96610</td><td>⋯</td><td>21.28155</td><td>19.51359</td><td>19.24474</td><td>19.73663</td><td>19.37543</td><td>11.05156</td><td>19.79855</td><td>18.65092</td><td>18.43422</td><td>19.15982</td></tr>
-	<tr><td>A0A087WSZ0;A0A0G2JQJ0                                                         </td><td>16.68463</td><td>12.34270</td><td>12.28046</td><td>12.31794</td><td>12.17129</td><td>13.03775</td><td>11.76636</td><td>15.25869</td><td>15.59578</td><td>⋯</td><td>12.47826</td><td>15.97835</td><td>14.31120</td><td>11.54282</td><td>17.32747</td><td>14.88972</td><td>15.63658</td><td>13.74259</td><td>16.47652</td><td>13.66795</td></tr>
-	<tr><td>A0A087WTA1;A0A0A0MR20;E9PDN6;F5H107;Q9C0A0;Q9C0A0-2                           </td><td>17.59377</td><td>18.01240</td><td>17.82921</td><td>18.26850</td><td>17.55706</td><td>17.38051</td><td>17.31082</td><td>16.40859</td><td>17.37506</td><td>⋯</td><td>16.94249</td><td>17.74655</td><td>12.58007</td><td>17.69916</td><td>11.82281</td><td>18.08000</td><td>17.48057</td><td>17.81535</td><td>18.18624</td><td>17.91903</td></tr>
-	<tr><td>A0A087WTA8;P08123                                                             </td><td>17.61908</td><td>18.21685</td><td>17.54445</td><td>17.50225</td><td>17.80288</td><td>16.99184</td><td>17.97739</td><td>17.70994</td><td>17.53213</td><td>⋯</td><td>17.56219</td><td>16.57279</td><td>16.90066</td><td>11.45022</td><td>11.36329</td><td>16.93402</td><td>16.74856</td><td>13.43135</td><td>17.17757</td><td>17.26857</td></tr>
-	<tr><td>A0A087WTK0;A0A087WVC6;Q12913                                                  </td><td>15.50121</td><td>15.30696</td><td>15.81471</td><td>15.55156</td><td>15.32131</td><td>16.04415</td><td>16.18863</td><td>13.21960</td><td>15.56486</td><td>⋯</td><td>12.40122</td><td>15.76029</td><td>15.21911</td><td>12.66516</td><td>11.51528</td><td>12.74559</td><td>15.39396</td><td>15.24665</td><td>13.01747</td><td>13.49366</td></tr>
+	<tr><td>A0A087WSY6                                                                    </td><td>20.11686</td><td>20.27450</td><td>19.28080</td><td>19.78190</td><td>19.72658</td><td>20.79580</td><td>19.63239</td><td>20.59759</td><td>19.96610</td><td>⋯</td><td>21.28155</td><td>19.51359</td><td>19.24474</td><td>19.73663</td><td>19.37543</td><td>12.57062</td><td>19.79855</td><td>18.65092</td><td>18.43422</td><td>19.15982</td></tr>
+	<tr><td>A0A087WSZ0;A0A0G2JQJ0                                                         </td><td>16.68463</td><td>12.31637</td><td>12.23370</td><td>12.05224</td><td>12.49300</td><td>13.03775</td><td>13.67198</td><td>15.25869</td><td>15.59578</td><td>⋯</td><td>11.97655</td><td>15.97835</td><td>14.31120</td><td>13.93087</td><td>17.32747</td><td>14.88972</td><td>15.63658</td><td>13.74259</td><td>16.47652</td><td>13.66795</td></tr>
+	<tr><td>A0A087WTA1;A0A0A0MR20;E9PDN6;F5H107;Q9C0A0;Q9C0A0-2                           </td><td>17.59377</td><td>18.01240</td><td>17.82921</td><td>18.26850</td><td>17.55706</td><td>17.38051</td><td>17.31082</td><td>16.40859</td><td>17.37506</td><td>⋯</td><td>16.94249</td><td>17.74655</td><td>13.57402</td><td>17.69916</td><td>11.77880</td><td>18.08000</td><td>17.48057</td><td>17.81535</td><td>18.18624</td><td>17.91903</td></tr>
+	<tr><td>A0A087WTA8;P08123                                                             </td><td>17.61908</td><td>18.21685</td><td>17.54445</td><td>17.50225</td><td>17.80288</td><td>16.99184</td><td>17.97739</td><td>17.70994</td><td>17.53213</td><td>⋯</td><td>17.56219</td><td>16.57279</td><td>16.90066</td><td>12.48014</td><td>12.16007</td><td>16.93402</td><td>16.74856</td><td>13.06887</td><td>17.17757</td><td>17.26857</td></tr>
+	<tr><td>A0A087WTK0;A0A087WVC6;Q12913                                                  </td><td>15.50121</td><td>15.30696</td><td>15.81471</td><td>15.55156</td><td>15.32131</td><td>16.04415</td><td>16.18863</td><td>12.93924</td><td>15.56486</td><td>⋯</td><td>12.22990</td><td>15.76029</td><td>15.21911</td><td>13.26062</td><td>12.77016</td><td>12.11482</td><td>15.39396</td><td>15.24665</td><td>12.52019</td><td>12.50537</td></tr>
 	<tr><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋱</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td><td>⋮</td></tr>
-	<tr><td>Q9UN70;Q9UN70-2                                    </td><td>16.15734</td><td>15.72455</td><td>16.43182</td><td>16.23052</td><td>15.95639</td><td>12.95124</td><td>16.43843</td><td>15.63146</td><td>15.72126</td><td>⋯</td><td>13.68327</td><td>15.68391</td><td>15.49913</td><td>15.98585</td><td>15.02979</td><td>15.48571</td><td>15.52798</td><td>16.08012</td><td>15.63165</td><td>15.77433</td></tr>
-	<tr><td>Q9UNN8                                             </td><td>17.56056</td><td>17.30159</td><td>17.76464</td><td>13.43627</td><td>17.11591</td><td>18.19042</td><td>17.97682</td><td>17.00159</td><td>17.09973</td><td>⋯</td><td>16.77195</td><td>12.50616</td><td>17.77967</td><td>17.59030</td><td>17.37821</td><td>16.45713</td><td>16.45075</td><td>17.89332</td><td>17.63618</td><td>17.39555</td></tr>
-	<tr><td>Q9UNW1                                             </td><td>16.95997</td><td>16.51290</td><td>16.14734</td><td>13.26806</td><td>16.50818</td><td>15.64714</td><td>16.41814</td><td>16.48681</td><td>16.31438</td><td>⋯</td><td>14.20654</td><td>16.21768</td><td>12.33638</td><td>16.06726</td><td>11.42915</td><td>16.31734</td><td>16.21004</td><td>16.57037</td><td>16.17868</td><td>16.53072</td></tr>
-	<tr><td>Q9UP79                                             </td><td>15.15310</td><td>11.74205</td><td>16.03621</td><td>15.41609</td><td>15.50277</td><td>16.33833</td><td>15.89802</td><td>14.59940</td><td>12.34278</td><td>⋯</td><td>12.72727</td><td>12.40746</td><td>15.08015</td><td>12.04366</td><td>15.26104</td><td>15.73977</td><td>12.32080</td><td>12.76647</td><td>16.10664</td><td>12.50863</td></tr>
-	<tr><td>Q9UPU3                                             </td><td>18.32540</td><td>18.23025</td><td>12.32308</td><td>18.10040</td><td>18.17738</td><td>18.46288</td><td>17.90076</td><td>17.75121</td><td>18.74321</td><td>⋯</td><td>16.78448</td><td>18.47047</td><td>19.03005</td><td>18.64856</td><td>18.11089</td><td>18.42196</td><td>18.36937</td><td>17.64059</td><td>17.24210</td><td>18.27864</td></tr>
-	<tr><td>Q9UQ52                                             </td><td>15.34901</td><td>15.54989</td><td>15.71187</td><td>13.90582</td><td>15.62809</td><td>15.53902</td><td>15.40031</td><td>14.55045</td><td>15.08724</td><td>⋯</td><td>15.81437</td><td>15.64994</td><td>15.60246</td><td>12.90733</td><td>15.04666</td><td>15.71637</td><td>16.12330</td><td>15.68571</td><td>15.83485</td><td>16.18904</td></tr>
-	<tr><td>Q9UQM7                                             </td><td>16.77983</td><td>16.63557</td><td>16.92800</td><td>17.36468</td><td>17.26139</td><td>16.57292</td><td>16.34126</td><td>11.96578</td><td>17.18529</td><td>⋯</td><td>15.44938</td><td>17.13915</td><td>17.46598</td><td>15.95446</td><td>16.01651</td><td>17.90825</td><td>16.22326</td><td>17.08973</td><td>16.38845</td><td>17.38407</td></tr>
-	<tr><td>Q9Y240                                             </td><td>16.25700</td><td>16.27154</td><td>16.57780</td><td>17.13331</td><td>12.03169</td><td>16.76109</td><td>16.90810</td><td>16.87980</td><td>15.26393</td><td>⋯</td><td>16.74831</td><td>16.53842</td><td>16.90567</td><td>16.72346</td><td>16.61396</td><td>16.71442</td><td>16.25572</td><td>16.50802</td><td>17.28611</td><td>13.21240</td></tr>
-	<tr><td>Q9Y279;Q9Y279-2                                    </td><td>17.16794</td><td>17.44556</td><td>17.36345</td><td>17.29289</td><td>17.22047</td><td>16.98754</td><td>17.17998</td><td>13.14222</td><td>17.16304</td><td>⋯</td><td>15.02893</td><td>16.54589</td><td>16.58450</td><td>16.58755</td><td>17.65963</td><td>16.61656</td><td>16.70633</td><td>11.83968</td><td>12.34337</td><td>16.95138</td></tr>
-	<tr><td>Q9Y281;Q9Y281-3                                    </td><td>13.57660</td><td>12.68643</td><td>13.22000</td><td>13.87322</td><td>13.93667</td><td>12.49866</td><td>12.62552</td><td>12.66735</td><td>12.05748</td><td>⋯</td><td>13.67294</td><td>12.30069</td><td>13.09460</td><td>11.44814</td><td>13.41064</td><td>13.01033</td><td>13.07666</td><td>14.37476</td><td>12.32786</td><td>12.54090</td></tr>
-	<tr><td>Q9Y287                                             </td><td>17.66289</td><td>17.58819</td><td>13.19510</td><td>17.69614</td><td>17.73541</td><td>17.03094</td><td>16.95083</td><td>18.26680</td><td>12.53827</td><td>⋯</td><td>12.93241</td><td>13.35847</td><td>16.57866</td><td>17.97074</td><td>17.10728</td><td>18.27608</td><td>16.47716</td><td>16.54354</td><td>16.17378</td><td>17.82544</td></tr>
-	<tr><td>Q9Y2I2;Q9Y2I2-1;Q9Y2I2-2;Q9Y2I2-4;Q9Y2I2-5;Q9Y2I2-6</td><td>16.92776</td><td>17.22074</td><td>17.42595</td><td>17.29861</td><td>17.82816</td><td>16.74181</td><td>16.72069</td><td>15.90499</td><td>16.39611</td><td>⋯</td><td>16.22026</td><td>16.70635</td><td>17.89304</td><td>17.70659</td><td>17.09718</td><td>13.88208</td><td>16.95730</td><td>18.37587</td><td>17.57333</td><td>17.93369</td></tr>
-	<tr><td>Q9Y2T3;Q9Y2T3-3                                    </td><td>18.46767</td><td>17.72113</td><td>18.44012</td><td>18.86565</td><td>18.73226</td><td>18.63877</td><td>13.98994</td><td>17.11557</td><td>19.33203</td><td>⋯</td><td>16.52746</td><td>18.16354</td><td>17.65092</td><td>17.52026</td><td>17.41693</td><td>18.62477</td><td>18.26107</td><td>18.51419</td><td>18.00650</td><td>17.90217</td></tr>
-	<tr><td>Q9Y490                                             </td><td>13.39403</td><td>13.96193</td><td>12.20275</td><td>13.40215</td><td>13.62690</td><td>13.38121</td><td>13.74195</td><td>12.46908</td><td>13.23840</td><td>⋯</td><td>13.50123</td><td>12.76793</td><td>13.25956</td><td>12.07360</td><td>12.43190</td><td>12.93233</td><td>13.29442</td><td>12.32371</td><td>13.84086</td><td>13.52534</td></tr>
-	<tr><td>Q9Y4L1                                             </td><td>18.59795</td><td>18.47622</td><td>11.72991</td><td>18.55964</td><td>18.30465</td><td>18.52379</td><td>18.36021</td><td>17.87471</td><td>18.67258</td><td>⋯</td><td>17.18673</td><td>18.41406</td><td>18.26710</td><td>18.08557</td><td>17.59792</td><td>18.28991</td><td>17.97720</td><td>18.14875</td><td>17.88055</td><td>18.12515</td></tr>
-	<tr><td>Q9Y5F6;Q9Y5F6-2                                    </td><td>16.46929</td><td>15.78240</td><td>14.06765</td><td>16.52899</td><td>16.28480</td><td>16.86344</td><td>15.89953</td><td>16.10952</td><td>17.40132</td><td>⋯</td><td>15.45926</td><td>16.42884</td><td>16.15950</td><td>15.63156</td><td>14.73569</td><td>15.96821</td><td>16.88481</td><td>15.87772</td><td>15.55424</td><td>16.57524</td></tr>
-	<tr><td>Q9Y5I4;Q9Y5I4-2                                    </td><td>17.18701</td><td>17.44717</td><td>17.41043</td><td>17.54514</td><td>17.29667</td><td>17.39728</td><td>17.14532</td><td>16.40482</td><td>17.32308</td><td>⋯</td><td>15.89731</td><td>17.13489</td><td>12.14487</td><td>17.08588</td><td>15.87386</td><td>17.10354</td><td>17.10902</td><td>16.93840</td><td>17.15508</td><td>16.77629</td></tr>
-	<tr><td>Q9Y5Y7                                             </td><td>18.83957</td><td>19.19495</td><td>19.08820</td><td>18.71497</td><td>18.66824</td><td>19.05133</td><td>19.08711</td><td>18.80245</td><td>18.71439</td><td>⋯</td><td>17.13452</td><td>17.83727</td><td>18.78562</td><td>18.61367</td><td>18.73747</td><td>18.72639</td><td>18.46011</td><td>19.50151</td><td>11.75291</td><td>12.50509</td></tr>
-	<tr><td>Q9Y617                                             </td><td>16.85897</td><td>16.79927</td><td>16.28782</td><td>17.07490</td><td>13.32892</td><td>16.49952</td><td>16.70264</td><td>15.92398</td><td>16.63775</td><td>⋯</td><td>14.58263</td><td>14.93988</td><td>15.86970</td><td>15.71177</td><td>15.46507</td><td>15.80831</td><td>15.03529</td><td>16.28306</td><td>15.91960</td><td>15.71292</td></tr>
+	<tr><td>Q9UN70;Q9UN70-2                                    </td><td>16.15734</td><td>15.72455</td><td>16.43182</td><td>16.23052</td><td>15.95639</td><td>11.74252</td><td>16.43843</td><td>15.63146</td><td>15.72126</td><td>⋯</td><td>12.91338</td><td>15.68391</td><td>15.49913</td><td>15.98585</td><td>15.02979</td><td>15.48571</td><td>15.52798</td><td>16.08012</td><td>15.63165</td><td>15.77433</td></tr>
+	<tr><td>Q9UNN8                                             </td><td>17.56056</td><td>17.30159</td><td>17.76464</td><td>13.88955</td><td>17.11591</td><td>18.19042</td><td>17.97682</td><td>17.00159</td><td>17.09973</td><td>⋯</td><td>16.77195</td><td>12.26415</td><td>17.77967</td><td>17.59030</td><td>17.37821</td><td>16.45713</td><td>16.45075</td><td>17.89332</td><td>17.63618</td><td>17.39555</td></tr>
+	<tr><td>Q9UNW1                                             </td><td>16.95997</td><td>16.51290</td><td>16.14734</td><td>12.48078</td><td>16.50818</td><td>15.64714</td><td>16.41814</td><td>16.48681</td><td>16.31438</td><td>⋯</td><td>13.48109</td><td>16.21768</td><td>13.64297</td><td>16.06726</td><td>12.08251</td><td>16.31734</td><td>16.21004</td><td>16.57037</td><td>16.17868</td><td>16.53072</td></tr>
+	<tr><td>Q9UP79                                             </td><td>15.15310</td><td>12.69838</td><td>16.03621</td><td>15.41609</td><td>15.50277</td><td>16.33833</td><td>15.89802</td><td>14.59940</td><td>13.26980</td><td>⋯</td><td>13.13503</td><td>12.74601</td><td>15.08015</td><td>12.46951</td><td>15.26104</td><td>15.73977</td><td>12.52479</td><td>13.74316</td><td>16.10664</td><td>13.27429</td></tr>
+	<tr><td>Q9UPU3                                             </td><td>18.32540</td><td>18.23025</td><td>13.11760</td><td>18.10040</td><td>18.17738</td><td>18.46288</td><td>17.90076</td><td>17.75121</td><td>18.74321</td><td>⋯</td><td>16.78448</td><td>18.47047</td><td>19.03005</td><td>18.64856</td><td>18.11089</td><td>18.42196</td><td>18.36937</td><td>17.64059</td><td>17.24210</td><td>18.27864</td></tr>
+	<tr><td>Q9UQ52                                             </td><td>15.34901</td><td>15.54989</td><td>15.71187</td><td>11.72145</td><td>15.62809</td><td>15.53902</td><td>15.40031</td><td>14.55045</td><td>15.08724</td><td>⋯</td><td>15.81437</td><td>15.64994</td><td>15.60246</td><td>11.90969</td><td>15.04666</td><td>15.71637</td><td>16.12330</td><td>15.68571</td><td>15.83485</td><td>16.18904</td></tr>
+	<tr><td>Q9UQM7                                             </td><td>16.77983</td><td>16.63557</td><td>16.92800</td><td>17.36468</td><td>17.26139</td><td>16.57292</td><td>16.34126</td><td>11.80102</td><td>17.18529</td><td>⋯</td><td>15.44938</td><td>17.13915</td><td>17.46598</td><td>15.95446</td><td>16.01651</td><td>17.90825</td><td>16.22326</td><td>17.08973</td><td>16.38845</td><td>17.38407</td></tr>
+	<tr><td>Q9Y240                                             </td><td>16.25700</td><td>16.27154</td><td>16.57780</td><td>17.13331</td><td>14.26527</td><td>16.76109</td><td>16.90810</td><td>16.87980</td><td>15.26393</td><td>⋯</td><td>16.74831</td><td>16.53842</td><td>16.90567</td><td>16.72346</td><td>16.61396</td><td>16.71442</td><td>16.25572</td><td>16.50802</td><td>17.28611</td><td>11.73726</td></tr>
+	<tr><td>Q9Y279;Q9Y279-2                                    </td><td>17.16794</td><td>17.44556</td><td>17.36345</td><td>17.29289</td><td>17.22047</td><td>16.98754</td><td>17.17998</td><td>13.77117</td><td>17.16304</td><td>⋯</td><td>15.02893</td><td>16.54589</td><td>16.58450</td><td>16.58755</td><td>17.65963</td><td>16.61656</td><td>16.70633</td><td>12.68869</td><td>12.12499</td><td>16.95138</td></tr>
+	<tr><td>Q9Y281;Q9Y281-3                                    </td><td>12.80393</td><td>12.91559</td><td>13.70155</td><td>13.54470</td><td>12.51025</td><td>12.22496</td><td>11.97917</td><td>13.05155</td><td>12.37846</td><td>⋯</td><td>13.13747</td><td>12.30069</td><td>12.17366</td><td>13.66101</td><td>12.49169</td><td>13.01033</td><td>13.07666</td><td>11.98853</td><td>12.86570</td><td>12.54090</td></tr>
+	<tr><td>Q9Y287                                             </td><td>17.66289</td><td>17.58819</td><td>13.18994</td><td>17.69614</td><td>17.73541</td><td>17.03094</td><td>16.95083</td><td>18.26680</td><td>12.80052</td><td>⋯</td><td>13.33089</td><td>13.20572</td><td>16.57866</td><td>17.97074</td><td>17.10728</td><td>18.27608</td><td>16.47716</td><td>16.54354</td><td>16.17378</td><td>17.82544</td></tr>
+	<tr><td>Q9Y2I2;Q9Y2I2-1;Q9Y2I2-2;Q9Y2I2-4;Q9Y2I2-5;Q9Y2I2-6</td><td>16.92776</td><td>17.22074</td><td>17.42595</td><td>17.29861</td><td>17.82816</td><td>16.74181</td><td>16.72069</td><td>15.90499</td><td>16.39611</td><td>⋯</td><td>16.22026</td><td>16.70635</td><td>17.89304</td><td>17.70659</td><td>17.09718</td><td>13.40065</td><td>16.95730</td><td>18.37587</td><td>17.57333</td><td>17.93369</td></tr>
+	<tr><td>Q9Y2T3;Q9Y2T3-3                                    </td><td>18.46767</td><td>17.72113</td><td>18.44012</td><td>18.86565</td><td>18.73226</td><td>18.63877</td><td>13.84346</td><td>17.11557</td><td>19.33203</td><td>⋯</td><td>16.52746</td><td>18.16354</td><td>17.65092</td><td>17.52026</td><td>17.41693</td><td>18.62477</td><td>18.26107</td><td>18.51419</td><td>18.00650</td><td>17.90217</td></tr>
+	<tr><td>Q9Y490                                             </td><td>12.80126</td><td>13.96193</td><td>12.03858</td><td>11.90747</td><td>13.62690</td><td>13.38121</td><td>13.74195</td><td>12.38031</td><td>13.29364</td><td>⋯</td><td>12.74086</td><td>12.04813</td><td>11.39138</td><td>12.95818</td><td>11.92202</td><td>12.93233</td><td>13.29442</td><td>12.32602</td><td>13.84086</td><td>13.52534</td></tr>
+	<tr><td>Q9Y4L1                                             </td><td>18.59795</td><td>18.47622</td><td>12.83449</td><td>18.55964</td><td>18.30465</td><td>18.52379</td><td>18.36021</td><td>17.87471</td><td>18.67258</td><td>⋯</td><td>17.18673</td><td>18.41406</td><td>18.26710</td><td>18.08557</td><td>17.59792</td><td>18.28991</td><td>17.97720</td><td>18.14875</td><td>17.88055</td><td>18.12515</td></tr>
+	<tr><td>Q9Y5F6;Q9Y5F6-2                                    </td><td>16.46929</td><td>15.78240</td><td>12.25610</td><td>16.52899</td><td>16.28480</td><td>16.86344</td><td>15.89953</td><td>16.10952</td><td>17.40132</td><td>⋯</td><td>15.45926</td><td>16.42884</td><td>16.15950</td><td>15.63156</td><td>14.73569</td><td>15.96821</td><td>16.88481</td><td>15.87772</td><td>15.55424</td><td>16.57524</td></tr>
+	<tr><td>Q9Y5I4;Q9Y5I4-2                                    </td><td>17.18701</td><td>17.44717</td><td>17.41043</td><td>17.54514</td><td>17.29667</td><td>17.39728</td><td>17.14532</td><td>16.40482</td><td>17.32308</td><td>⋯</td><td>15.89731</td><td>17.13489</td><td>11.67762</td><td>17.08588</td><td>15.87386</td><td>17.10354</td><td>17.10902</td><td>16.93840</td><td>17.15508</td><td>16.77629</td></tr>
+	<tr><td>Q9Y5Y7                                             </td><td>18.83957</td><td>19.19495</td><td>19.08820</td><td>18.71497</td><td>18.66824</td><td>19.05133</td><td>19.08711</td><td>18.80245</td><td>18.71439</td><td>⋯</td><td>17.13452</td><td>17.83727</td><td>18.78562</td><td>18.61367</td><td>18.73747</td><td>18.72639</td><td>18.46011</td><td>19.50151</td><td>12.43038</td><td>11.83995</td></tr>
+	<tr><td>Q9Y617                                             </td><td>16.85897</td><td>16.79927</td><td>16.28782</td><td>17.07490</td><td>13.06958</td><td>16.49952</td><td>16.70264</td><td>15.92398</td><td>16.63775</td><td>⋯</td><td>14.58263</td><td>14.93988</td><td>15.86970</td><td>15.71177</td><td>15.46507</td><td>15.80831</td><td>15.03529</td><td>16.28306</td><td>15.91960</td><td>15.71292</td></tr>
 	<tr><td>Q9Y646                                             </td><td>19.32196</td><td>19.19029</td><td>19.70194</td><td>19.76013</td><td>19.62369</td><td>19.28628</td><td>19.62219</td><td>19.01644</td><td>19.15012</td><td>⋯</td><td>19.86156</td><td>20.24484</td><td>19.20731</td><td>20.30281</td><td>19.43507</td><td>19.89388</td><td>20.01457</td><td>20.30614</td><td>20.20342</td><td>20.04164</td></tr>
-	<tr><td>Q9Y653;Q9Y653-2;Q9Y653-3                           </td><td>16.01243</td><td>15.52794</td><td>15.22871</td><td>15.49484</td><td>14.75668</td><td>15.08563</td><td>15.78890</td><td>13.21492</td><td>15.63408</td><td>⋯</td><td>11.46216</td><td>14.95201</td><td>15.53361</td><td>15.06014</td><td>15.66794</td><td>13.47604</td><td>15.42228</td><td>15.80796</td><td>15.15740</td><td>15.23671</td></tr>
-	<tr><td>Q9Y696                                             </td><td>15.17778</td><td>15.57553</td><td>14.72770</td><td>14.59034</td><td>13.43097</td><td>14.85995</td><td>16.13632</td><td>14.94928</td><td>15.26568</td><td>⋯</td><td>13.46063</td><td>15.84479</td><td>15.80784</td><td>16.16574</td><td>15.91448</td><td>15.68387</td><td>16.10633</td><td>16.09780</td><td>16.71176</td><td>15.65174</td></tr>
-	<tr><td>Q9Y6C2                                             </td><td>12.98091</td><td>13.45396</td><td>13.75658</td><td>14.68157</td><td>12.71568</td><td>12.34137</td><td>13.90116</td><td>14.31805</td><td>13.41701</td><td>⋯</td><td>12.37669</td><td>12.08328</td><td>13.51664</td><td>13.11121</td><td>14.20407</td><td>14.23561</td><td>13.22229</td><td>14.40272</td><td>13.10426</td><td>15.21141</td></tr>
-	<tr><td>Q9Y6N6                                             </td><td>15.05021</td><td>14.83290</td><td>15.11828</td><td>15.14018</td><td>15.25588</td><td>14.69813</td><td>12.88342</td><td>11.85462</td><td>15.29271</td><td>⋯</td><td>14.74282</td><td>15.12482</td><td>15.24568</td><td>15.28502</td><td>15.02461</td><td>15.41504</td><td>15.34536</td><td>15.71532</td><td>14.63983</td><td>14.20491</td></tr>
-	<tr><td>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4                           </td><td>16.84221</td><td>16.59739</td><td>17.43952</td><td>17.35608</td><td>17.07495</td><td>17.08803</td><td>16.71735</td><td>11.55987</td><td>17.45319</td><td>⋯</td><td>13.00268</td><td>17.03425</td><td>16.74779</td><td>16.39020</td><td>11.57984</td><td>17.55092</td><td>17.08447</td><td>11.93851</td><td>16.53276</td><td>16.74913</td></tr>
-	<tr><td>Q9Y6R7                                             </td><td>12.86670</td><td>20.29933</td><td>19.59785</td><td>19.42880</td><td>19.58198</td><td>19.13033</td><td>18.69030</td><td>18.99605</td><td>19.99318</td><td>⋯</td><td>19.23304</td><td>18.81636</td><td>18.90212</td><td>18.81282</td><td>12.39563</td><td>17.92185</td><td>18.70814</td><td>18.72478</td><td>19.41113</td><td>19.27470</td></tr>
-	<tr><td>Q9Y6X5                                             </td><td>13.06208</td><td>15.55558</td><td>15.73522</td><td>13.64983</td><td>15.32828</td><td>13.64196</td><td>13.52786</td><td>13.67169</td><td>12.36740</td><td>⋯</td><td>15.89469</td><td>15.56189</td><td>16.08877</td><td>15.66911</td><td>15.01193</td><td>16.34016</td><td>11.66467</td><td>16.13827</td><td>15.80690</td><td>15.73176</td></tr>
-	<tr><td>Q9Y6Y8;Q9Y6Y8-2                                    </td><td>19.56282</td><td>19.38575</td><td>20.44732</td><td>20.21596</td><td>13.53644</td><td>19.63319</td><td>20.05686</td><td>18.68044</td><td>20.02323</td><td>⋯</td><td>12.93753</td><td>19.80948</td><td>20.20436</td><td>19.41823</td><td>17.84743</td><td>19.92766</td><td>19.43260</td><td>19.59912</td><td>19.54500</td><td>19.57720</td></tr>
-	<tr><td>Q9Y6Y9                                             </td><td>14.91818</td><td>13.96997</td><td>12.63641</td><td>12.45221</td><td>13.14453</td><td>12.26785</td><td>12.81741</td><td>12.89658</td><td>13.35682</td><td>⋯</td><td>12.43357</td><td>11.76670</td><td>12.70738</td><td>12.97812</td><td>12.28750</td><td>12.92941</td><td>11.24067</td><td>13.63705</td><td>12.39732</td><td>11.04203</td></tr>
-	<tr><td>S4R3U6                                             </td><td>12.80521</td><td>12.44245</td><td>12.50466</td><td>12.44461</td><td>12.55267</td><td>11.74890</td><td>13.15165</td><td>12.94870</td><td>13.00793</td><td>⋯</td><td>11.84737</td><td>10.13265</td><td>13.19023</td><td>10.49769</td><td>10.56335</td><td>12.76797</td><td>12.38297</td><td>11.17371</td><td>13.36634</td><td>11.79130</td></tr>
+	<tr><td>Q9Y653;Q9Y653-2;Q9Y653-3                           </td><td>16.01243</td><td>15.52794</td><td>15.22871</td><td>15.49484</td><td>14.75668</td><td>15.08563</td><td>15.78890</td><td>12.14475</td><td>15.63408</td><td>⋯</td><td>12.44932</td><td>14.95201</td><td>15.53361</td><td>15.06014</td><td>15.66794</td><td>12.79556</td><td>15.42228</td><td>15.80796</td><td>15.15740</td><td>15.23671</td></tr>
+	<tr><td>Q9Y696                                             </td><td>15.17778</td><td>15.57553</td><td>14.72770</td><td>14.59034</td><td>13.45387</td><td>14.85995</td><td>16.13632</td><td>14.94928</td><td>15.26568</td><td>⋯</td><td>11.21600</td><td>15.84479</td><td>15.80784</td><td>16.16574</td><td>15.91448</td><td>15.68387</td><td>16.10633</td><td>16.09780</td><td>16.71176</td><td>15.65174</td></tr>
+	<tr><td>Q9Y6C2                                             </td><td>12.63175</td><td>13.42171</td><td>13.75658</td><td>14.68157</td><td>13.33484</td><td>11.93008</td><td>12.54808</td><td>14.31805</td><td>14.14803</td><td>⋯</td><td>13.03914</td><td>13.31491</td><td>12.26260</td><td>12.51294</td><td>14.20407</td><td>14.23561</td><td>13.34109</td><td>14.40272</td><td>12.41409</td><td>15.21141</td></tr>
+	<tr><td>Q9Y6N6                                             </td><td>15.05021</td><td>14.83290</td><td>15.11828</td><td>15.14018</td><td>15.25588</td><td>14.69813</td><td>13.11592</td><td>13.46708</td><td>15.29271</td><td>⋯</td><td>14.74282</td><td>15.12482</td><td>15.24568</td><td>15.28502</td><td>15.02461</td><td>15.41504</td><td>15.34536</td><td>15.71532</td><td>14.63983</td><td>14.20491</td></tr>
+	<tr><td>Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4                           </td><td>16.84221</td><td>16.59739</td><td>17.43952</td><td>17.35608</td><td>17.07495</td><td>17.08803</td><td>16.71735</td><td>12.65129</td><td>17.45319</td><td>⋯</td><td>12.81225</td><td>17.03425</td><td>16.74779</td><td>16.39020</td><td>12.03242</td><td>17.55092</td><td>17.08447</td><td>12.57265</td><td>16.53276</td><td>16.74913</td></tr>
+	<tr><td>Q9Y6R7                                             </td><td>13.12298</td><td>20.29933</td><td>19.59785</td><td>19.42880</td><td>19.58198</td><td>19.13033</td><td>18.69030</td><td>18.99605</td><td>19.99318</td><td>⋯</td><td>19.23304</td><td>18.81636</td><td>18.90212</td><td>18.81282</td><td>14.08322</td><td>17.92185</td><td>18.70814</td><td>18.72478</td><td>19.41113</td><td>19.27470</td></tr>
+	<tr><td>Q9Y6X5                                             </td><td>12.76870</td><td>15.55558</td><td>15.73522</td><td>12.98976</td><td>15.32828</td><td>13.18743</td><td>13.70973</td><td>13.95858</td><td>11.78206</td><td>⋯</td><td>15.89469</td><td>15.56189</td><td>16.08877</td><td>15.66911</td><td>15.01193</td><td>16.34016</td><td>10.60033</td><td>16.13827</td><td>15.80690</td><td>15.73176</td></tr>
+	<tr><td>Q9Y6Y8;Q9Y6Y8-2                                    </td><td>19.56282</td><td>19.38575</td><td>20.44732</td><td>20.21596</td><td>13.37451</td><td>19.63319</td><td>20.05686</td><td>18.68044</td><td>20.02323</td><td>⋯</td><td>12.40816</td><td>19.80948</td><td>20.20436</td><td>19.41823</td><td>17.84743</td><td>19.92766</td><td>19.43260</td><td>19.59912</td><td>19.54500</td><td>19.57720</td></tr>
+	<tr><td>Q9Y6Y9                                             </td><td>14.01390</td><td>13.96997</td><td>12.63641</td><td>13.00417</td><td>13.14453</td><td>13.08620</td><td>12.81741</td><td>12.89658</td><td>13.23056</td><td>⋯</td><td>12.69731</td><td>12.78786</td><td>12.70738</td><td>12.97812</td><td>12.28750</td><td>12.92941</td><td>13.32697</td><td>13.63705</td><td>12.37977</td><td>11.04203</td></tr>
+	<tr><td>S4R3U6                                             </td><td>12.80521</td><td>12.44245</td><td>12.50466</td><td>12.44461</td><td>13.09983</td><td>11.39994</td><td>13.44390</td><td>13.48409</td><td>13.00793</td><td>⋯</td><td>11.38982</td><td>10.13265</td><td>13.48495</td><td>10.49769</td><td>10.56335</td><td>12.03982</td><td>12.94610</td><td>11.17371</td><td>12.45841</td><td>11.79130</td></tr>
 </tbody>
 </table>
 </div></div>
@@ -1083,67 +1064,67 @@ Save the header row for later use.</p></li>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;fct&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><th scope=row>11</th><td>A0A075B6J9                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.54630</td></tr>
-	<tr><th scope=row>14</th><td>A0A075B6P5;P01615                                                                                                                                                                                                                           </td><td>Sample_000</td><td>13.39669</td></tr>
-	<tr><th scope=row>15</th><td>A0A075B6Q5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.52301</td></tr>
-	<tr><th scope=row>16</th><td>A0A075B6R2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.72241</td></tr>
-	<tr><th scope=row>19</th><td>A0A075B6S5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.76197</td></tr>
-	<tr><th scope=row>24</th><td>A0A087WSY4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.04998</td></tr>
-	<tr><th scope=row>34</th><td>A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2                                                                                                                                                                                            </td><td>Sample_000</td><td>12.32233</td></tr>
-	<tr><th scope=row>39</th><td>A0A087WW87;A0A087X0Q4;P01614                                                                                                                                                                                                                </td><td>Sample_000</td><td>13.02249</td></tr>
-	<tr><th scope=row>40</th><td>A0A087WWA5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.55032</td></tr>
-	<tr><th scope=row>42</th><td>A0A087WWT2;Q9NPD7                                                                                                                                                                                                                           </td><td>Sample_000</td><td>11.56858</td></tr>
-	<tr><th scope=row>43</th><td>A0A087WX80;P24043                                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.68143</td></tr>
-	<tr><th scope=row>45</th><td>A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.20112</td></tr>
-	<tr><th scope=row>48</th><td>A0A087WYK9;Q02985;Q02985-2;Q6NSD3                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.71736</td></tr>
-	<tr><th scope=row>52</th><td>A0A087WZR4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.62302</td></tr>
-	<tr><th scope=row>53</th><td>A0A087X089;Q16627;Q16627-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.17803</td></tr>
-	<tr><th scope=row>56</th><td>A0A087X0M8                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.18012</td></tr>
-	<tr><th scope=row>59</th><td>A0A087X117;A0A0G2JN29;J3KN36;P69849;Q15155;Q5JPE7;Q5JPE7-2                                                                                                                                                                                  </td><td>Sample_000</td><td>13.46503</td></tr>
-	<tr><th scope=row>69</th><td>A0A0A0MQS9;A0A0A0MTC7;Q16363;Q16363-2                                                                                                                                                                                                       </td><td>Sample_000</td><td>12.73712</td></tr>
-	<tr><th scope=row>78</th><td>A0A0A0MS20;A0A0A0MSZ8;A0A0G2JM38;A0A0G2JM43;A0A0G2JM57;A0A0G2JM84;A0A0G2JMH7;A0A0G2JML1;A0A0G2JNE9;A0A0G2JNL1;A0A0G2JP25;A0A0G2JP84;A0A0G2JPA9;A0A0G2JPC7;A0A0G2JPU4;A0A0G2JPX5;A0A0G2JQ10;A0A0G2JQ20;A8MUE1;C9JST2;Q8NHJ6;Q8NHJ6-2;Q8NHJ6-3</td><td>Sample_000</td><td>13.66599</td></tr>
-	<tr><th scope=row>85</th><td>A0A0A0MT32;P38571;P38571-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.52839</td></tr>
-	<tr><th scope=row>87</th><td>A0A0A0MT66                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.54869</td></tr>
-	<tr><th scope=row>90</th><td>A0A0A0MTC8;Q9NQ36;Q9NQ36-2;Q9NQ36-3                                                                                                                                                                                                         </td><td>Sample_000</td><td>12.24166</td></tr>
-	<tr><th scope=row>96</th><td>A0A0A6YY99;O43508-2                                                                                                                                                                                                                         </td><td>Sample_000</td><td>12.72795</td></tr>
-	<tr><th scope=row>101</th><td>A0A0B4J1V2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.60226</td></tr>
-	<tr><th scope=row>102</th><td>A0A0B4J1V6                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.05972</td></tr>
-	<tr><th scope=row>105</th><td>A0A0B4J1Z1;C9JAB2;Q16629;Q16629-2;Q16629-3;Q16629-4                                                                                                                                                                                         </td><td>Sample_000</td><td>12.31260</td></tr>
-	<tr><th scope=row>108</th><td>A0A0B4J2B5;S4R460                                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.51618</td></tr>
-	<tr><th scope=row>109</th><td>A0A0B4J2C3;P13693;Q5W0H4                                                                                                                                                                                                                    </td><td>Sample_000</td><td>13.00448</td></tr>
-	<tr><th scope=row>111</th><td>A0A0C4DFP6;Q9NQ79;Q9NQ79-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.28811</td></tr>
-	<tr><th scope=row>113</th><td>A0A0C4DG76;Q5JZ08;Q9BQS7;Q9BQS7-2;Q9BQS7-3;Q9BQS7-4                                                                                                                                                                                         </td><td>Sample_000</td><td>12.65219</td></tr>
+	<tr><th scope=row>11</th><td>A0A075B6J9                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.19667</td></tr>
+	<tr><th scope=row>14</th><td>A0A075B6P5;P01615                                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.01487</td></tr>
+	<tr><th scope=row>15</th><td>A0A075B6Q5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.40319</td></tr>
+	<tr><th scope=row>16</th><td>A0A075B6R2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.40829</td></tr>
+	<tr><th scope=row>19</th><td>A0A075B6S5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.35268</td></tr>
+	<tr><th scope=row>24</th><td>A0A087WSY4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.02191</td></tr>
+	<tr><th scope=row>34</th><td>A0A087WU43;A0A087WX17;A0A087WXI5;P12830;P12830-2                                                                                                                                                                                            </td><td>Sample_000</td><td>14.32537</td></tr>
+	<tr><th scope=row>39</th><td>A0A087WW87;A0A087X0Q4;P01614                                                                                                                                                                                                                </td><td>Sample_000</td><td>12.67211</td></tr>
+	<tr><th scope=row>40</th><td>A0A087WWA5                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.40544</td></tr>
+	<tr><th scope=row>42</th><td>A0A087WWT2;Q9NPD7                                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.46392</td></tr>
+	<tr><th scope=row>43</th><td>A0A087WX80;P24043                                                                                                                                                                                                                           </td><td>Sample_000</td><td>12.94887</td></tr>
+	<tr><th scope=row>45</th><td>A0A087WXE9;E9PQ70;Q6UXH9;Q6UXH9-2;Q6UXH9-3                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.83577</td></tr>
+	<tr><th scope=row>48</th><td>A0A087WYK9;Q02985;Q02985-2;Q6NSD3                                                                                                                                                                                                           </td><td>Sample_000</td><td>13.80350</td></tr>
+	<tr><th scope=row>52</th><td>A0A087WZR4                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>11.20697</td></tr>
+	<tr><th scope=row>53</th><td>A0A087X089;Q16627;Q16627-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.35385</td></tr>
+	<tr><th scope=row>56</th><td>A0A087X0M8                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.88255</td></tr>
+	<tr><th scope=row>59</th><td>A0A087X117;A0A0G2JN29;J3KN36;P69849;Q15155;Q5JPE7;Q5JPE7-2                                                                                                                                                                                  </td><td>Sample_000</td><td>12.25780</td></tr>
+	<tr><th scope=row>69</th><td>A0A0A0MQS9;A0A0A0MTC7;Q16363;Q16363-2                                                                                                                                                                                                       </td><td>Sample_000</td><td>12.32345</td></tr>
+	<tr><th scope=row>78</th><td>A0A0A0MS20;A0A0A0MSZ8;A0A0G2JM38;A0A0G2JM43;A0A0G2JM57;A0A0G2JM84;A0A0G2JMH7;A0A0G2JML1;A0A0G2JNE9;A0A0G2JNL1;A0A0G2JP25;A0A0G2JP84;A0A0G2JPA9;A0A0G2JPC7;A0A0G2JPU4;A0A0G2JPX5;A0A0G2JQ10;A0A0G2JQ20;A8MUE1;C9JST2;Q8NHJ6;Q8NHJ6-2;Q8NHJ6-3</td><td>Sample_000</td><td>12.07570</td></tr>
+	<tr><th scope=row>85</th><td>A0A0A0MT32;P38571;P38571-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.55690</td></tr>
+	<tr><th scope=row>87</th><td>A0A0A0MT66                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>12.89226</td></tr>
+	<tr><th scope=row>90</th><td>A0A0A0MTC8;Q9NQ36;Q9NQ36-2;Q9NQ36-3                                                                                                                                                                                                         </td><td>Sample_000</td><td>13.57721</td></tr>
+	<tr><th scope=row>96</th><td>A0A0A6YY99;O43508-2                                                                                                                                                                                                                         </td><td>Sample_000</td><td>12.25224</td></tr>
+	<tr><th scope=row>101</th><td>A0A0B4J1V2                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.18358</td></tr>
+	<tr><th scope=row>102</th><td>A0A0B4J1V6                                                                                                                                                                                                                                  </td><td>Sample_000</td><td>13.90892</td></tr>
+	<tr><th scope=row>105</th><td>A0A0B4J1Z1;C9JAB2;Q16629;Q16629-2;Q16629-3;Q16629-4                                                                                                                                                                                         </td><td>Sample_000</td><td>11.89752</td></tr>
+	<tr><th scope=row>108</th><td>A0A0B4J2B5;S4R460                                                                                                                                                                                                                           </td><td>Sample_000</td><td>14.06565</td></tr>
+	<tr><th scope=row>109</th><td>A0A0B4J2C3;P13693;Q5W0H4                                                                                                                                                                                                                    </td><td>Sample_000</td><td>11.62552</td></tr>
+	<tr><th scope=row>111</th><td>A0A0C4DFP6;Q9NQ79;Q9NQ79-2                                                                                                                                                                                                                  </td><td>Sample_000</td><td>14.14002</td></tr>
+	<tr><th scope=row>113</th><td>A0A0C4DG76;Q5JZ08;Q9BQS7;Q9BQS7-2;Q9BQS7-3;Q9BQS7-4                                                                                                                                                                                         </td><td>Sample_000</td><td>11.67728</td></tr>
 	<tr><th scope=row>⋮</th><td>⋮</td><td>⋮</td><td>⋮</td></tr>
-	<tr><th scope=row>298242</th><td>Q96PQ0                  </td><td>Sample_209</td><td>12.76407</td></tr>
-	<tr><th scope=row>298244</th><td>Q96RW7;Q96RW7-2         </td><td>Sample_209</td><td>11.69269</td></tr>
-	<tr><th scope=row>298246</th><td>Q96SM3                  </td><td>Sample_209</td><td>12.71432</td></tr>
-	<tr><th scope=row>298249</th><td>Q99538                  </td><td>Sample_209</td><td>13.27059</td></tr>
-	<tr><th scope=row>298252</th><td>Q99650;Q99650-2         </td><td>Sample_209</td><td>12.86851</td></tr>
-	<tr><th scope=row>298261</th><td>Q9BQT9;Q9BQT9-2         </td><td>Sample_209</td><td>11.57565</td></tr>
-	<tr><th scope=row>298266</th><td>Q9BT88                  </td><td>Sample_209</td><td>12.45602</td></tr>
-	<tr><th scope=row>298273</th><td>Q9BX67                  </td><td>Sample_209</td><td>11.69954</td></tr>
-	<tr><th scope=row>298277</th><td>Q9BXP8                  </td><td>Sample_209</td><td>12.39083</td></tr>
-	<tr><th scope=row>298287</th><td>Q9H3T2;Q9H3T2-3         </td><td>Sample_209</td><td>13.00884</td></tr>
-	<tr><th scope=row>298288</th><td>Q9H3T3;Q9H3T3-3         </td><td>Sample_209</td><td>12.74403</td></tr>
-	<tr><th scope=row>298289</th><td>Q9H492;Q9H492-2         </td><td>Sample_209</td><td>13.42974</td></tr>
-	<tr><th scope=row>298297</th><td>Q9H8L6                  </td><td>Sample_209</td><td>12.26231</td></tr>
-	<tr><th scope=row>298299</th><td>Q9HBR0                  </td><td>Sample_209</td><td>12.91108</td></tr>
-	<tr><th scope=row>298302</th><td>Q9HC38-2                </td><td>Sample_209</td><td>13.94990</td></tr>
-	<tr><th scope=row>298303</th><td>Q9HC57                  </td><td>Sample_209</td><td>11.97785</td></tr>
-	<tr><th scope=row>298310</th><td>Q9NPH3;Q9NPH3-2;Q9NPH3-5</td><td>Sample_209</td><td>11.71944</td></tr>
-	<tr><th scope=row>298314</th><td>Q9NRB3                  </td><td>Sample_209</td><td>12.94220</td></tr>
-	<tr><th scope=row>298316</th><td>Q9NS00;Q9NS00-2         </td><td>Sample_209</td><td>11.14029</td></tr>
-	<tr><th scope=row>298317</th><td>Q9NS84                  </td><td>Sample_209</td><td>13.36065</td></tr>
-	<tr><th scope=row>298328</th><td>Q9NY97;Q9NY97-2         </td><td>Sample_209</td><td>10.89117</td></tr>
-	<tr><th scope=row>298341</th><td>Q9P1W8;Q9P1W8-2;Q9P1W8-4</td><td>Sample_209</td><td>12.56807</td></tr>
-	<tr><th scope=row>298349</th><td>Q9UGM5;Q9UGM5-2         </td><td>Sample_209</td><td>13.00093</td></tr>
-	<tr><th scope=row>298355</th><td>Q9UI40;Q9UI40-2         </td><td>Sample_209</td><td>12.23512</td></tr>
-	<tr><th scope=row>298357</th><td>Q9UIW2                  </td><td>Sample_209</td><td>12.99418</td></tr>
-	<tr><th scope=row>298358</th><td>Q9UJ14                  </td><td>Sample_209</td><td>11.17635</td></tr>
-	<tr><th scope=row>298377</th><td>Q9UMX0;Q9UMX0-2;Q9UMX0-4</td><td>Sample_209</td><td>12.48294</td></tr>
-	<tr><th scope=row>298384</th><td>Q9UP79                  </td><td>Sample_209</td><td>12.50863</td></tr>
-	<tr><th scope=row>298388</th><td>Q9Y240                  </td><td>Sample_209</td><td>13.21240</td></tr>
-	<tr><th scope=row>298398</th><td>Q9Y5Y7                  </td><td>Sample_209</td><td>12.50509</td></tr>
+	<tr><th scope=row>298242</th><td>Q96PQ0                  </td><td>Sample_209</td><td>11.33648</td></tr>
+	<tr><th scope=row>298244</th><td>Q96RW7;Q96RW7-2         </td><td>Sample_209</td><td>13.15338</td></tr>
+	<tr><th scope=row>298246</th><td>Q96SM3                  </td><td>Sample_209</td><td>10.85380</td></tr>
+	<tr><th scope=row>298249</th><td>Q99538                  </td><td>Sample_209</td><td>13.86132</td></tr>
+	<tr><th scope=row>298252</th><td>Q99650;Q99650-2         </td><td>Sample_209</td><td>13.52851</td></tr>
+	<tr><th scope=row>298261</th><td>Q9BQT9;Q9BQT9-2         </td><td>Sample_209</td><td>11.64428</td></tr>
+	<tr><th scope=row>298266</th><td>Q9BT88                  </td><td>Sample_209</td><td>12.19520</td></tr>
+	<tr><th scope=row>298273</th><td>Q9BX67                  </td><td>Sample_209</td><td>12.26105</td></tr>
+	<tr><th scope=row>298277</th><td>Q9BXP8                  </td><td>Sample_209</td><td>11.18706</td></tr>
+	<tr><th scope=row>298287</th><td>Q9H3T2;Q9H3T2-3         </td><td>Sample_209</td><td>11.88846</td></tr>
+	<tr><th scope=row>298288</th><td>Q9H3T3;Q9H3T3-3         </td><td>Sample_209</td><td>11.13064</td></tr>
+	<tr><th scope=row>298289</th><td>Q9H492;Q9H492-2         </td><td>Sample_209</td><td>12.01494</td></tr>
+	<tr><th scope=row>298297</th><td>Q9H8L6                  </td><td>Sample_209</td><td>12.19574</td></tr>
+	<tr><th scope=row>298299</th><td>Q9HBR0                  </td><td>Sample_209</td><td>13.36790</td></tr>
+	<tr><th scope=row>298302</th><td>Q9HC38-2                </td><td>Sample_209</td><td>12.18887</td></tr>
+	<tr><th scope=row>298303</th><td>Q9HC57                  </td><td>Sample_209</td><td>12.70192</td></tr>
+	<tr><th scope=row>298310</th><td>Q9NPH3;Q9NPH3-2;Q9NPH3-5</td><td>Sample_209</td><td>12.23132</td></tr>
+	<tr><th scope=row>298314</th><td>Q9NRB3                  </td><td>Sample_209</td><td>11.12751</td></tr>
+	<tr><th scope=row>298316</th><td>Q9NS00;Q9NS00-2         </td><td>Sample_209</td><td>13.91542</td></tr>
+	<tr><th scope=row>298317</th><td>Q9NS84                  </td><td>Sample_209</td><td>12.10603</td></tr>
+	<tr><th scope=row>298328</th><td>Q9NY97;Q9NY97-2         </td><td>Sample_209</td><td>11.57448</td></tr>
+	<tr><th scope=row>298341</th><td>Q9P1W8;Q9P1W8-2;Q9P1W8-4</td><td>Sample_209</td><td>12.89406</td></tr>
+	<tr><th scope=row>298349</th><td>Q9UGM5;Q9UGM5-2         </td><td>Sample_209</td><td>13.15179</td></tr>
+	<tr><th scope=row>298355</th><td>Q9UI40;Q9UI40-2         </td><td>Sample_209</td><td>12.54331</td></tr>
+	<tr><th scope=row>298357</th><td>Q9UIW2                  </td><td>Sample_209</td><td>14.84201</td></tr>
+	<tr><th scope=row>298358</th><td>Q9UJ14                  </td><td>Sample_209</td><td>13.43442</td></tr>
+	<tr><th scope=row>298377</th><td>Q9UMX0;Q9UMX0-2;Q9UMX0-4</td><td>Sample_209</td><td>13.46188</td></tr>
+	<tr><th scope=row>298384</th><td>Q9UP79                  </td><td>Sample_209</td><td>13.27429</td></tr>
+	<tr><th scope=row>298388</th><td>Q9Y240                  </td><td>Sample_209</td><td>11.73726</td></tr>
+	<tr><th scope=row>298398</th><td>Q9Y5Y7                  </td><td>Sample_209</td><td>11.83995</td></tr>
 </tbody>
 </table>
 </div></div>
@@ -1234,7 +1215,8 @@ Save the header row for later use.</p></li>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1293,8 +1275,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>

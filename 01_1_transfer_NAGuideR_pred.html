@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+ge256cb3 documentation</title>
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+gab6b1b2 documentation</title>
   
   
   
@@ -16,28 +16,31 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="_static/documentation_options.js?v=cab2dbb7"></script>
+    <script src="_static/documentation_options.js?v=f001110e"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -49,6 +52,7 @@
     <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_SVDMETHOD.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+gab6b1b2" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -134,20 +127,16 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ge256cb3 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gab6b1b2 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -343,24 +332,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -983,11 +964,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,513.638</td>
-      <td>6.851</td>
-      <td>8.755</td>
-      <td>14.629</td>
-      <td>14.776</td>
-      <td>15.703</td>
+      <td>7.247</td>
+      <td>8.369</td>
+      <td>12.100</td>
+      <td>14.876</td>
+      <td>15.724</td>
       <td>15.752</td>
       <td>17.206</td>
       <td>15.700</td>
@@ -1008,11 +989,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>19.829</td>
-      <td>7.022</td>
-      <td>8.350</td>
-      <td>12.266</td>
-      <td>16.066</td>
-      <td>17.009</td>
+      <td>7.437</td>
+      <td>8.482</td>
+      <td>13.790</td>
+      <td>16.119</td>
+      <td>16.853</td>
       <td>17.221</td>
       <td>17.807</td>
       <td>16.738</td>
@@ -1033,11 +1014,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,582.130</td>
-      <td>6.050</td>
-      <td>7.698</td>
-      <td>12.473</td>
-      <td>13.200</td>
-      <td>14.354</td>
+      <td>6.413</td>
+      <td>7.481</td>
+      <td>14.200</td>
+      <td>13.078</td>
+      <td>14.235</td>
       <td>14.846</td>
       <td>17.434</td>
       <td>13.776</td>
@@ -1058,11 +1039,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,483.120</td>
-      <td>8.465</td>
-      <td>9.447</td>
-      <td>13.356</td>
-      <td>17.229</td>
-      <td>18.970</td>
+      <td>8.939</td>
+      <td>9.476</td>
+      <td>13.456</td>
+      <td>17.086</td>
+      <td>18.878</td>
       <td>18.973</td>
       <td>17.111</td>
       <td>19.015</td>
@@ -1083,11 +1064,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,569.564</td>
-      <td>6.207</td>
-      <td>7.721</td>
-      <td>10.740</td>
-      <td>12.247</td>
-      <td>14.764</td>
+      <td>6.573</td>
+      <td>7.657</td>
+      <td>12.175</td>
+      <td>13.113</td>
+      <td>14.868</td>
       <td>14.726</td>
       <td>17.031</td>
       <td>14.699</td>
@@ -1133,11 +1114,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,634.108</td>
-      <td>10.296</td>
-      <td>10.866</td>
-      <td>12.482</td>
-      <td>22.238</td>
-      <td>22.886</td>
+      <td>10.875</td>
+      <td>10.906</td>
+      <td>13.543</td>
+      <td>21.666</td>
+      <td>22.761</td>
       <td>22.918</td>
       <td>17.330</td>
       <td>22.872</td>
@@ -1158,11 +1139,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,448.503</td>
-      <td>6.328</td>
-      <td>7.619</td>
-      <td>12.752</td>
-      <td>13.887</td>
-      <td>15.881</td>
+      <td>6.720</td>
+      <td>7.848</td>
+      <td>11.461</td>
+      <td>13.490</td>
+      <td>16.010</td>
       <td>15.877</td>
       <td>16.879</td>
       <td>15.671</td>
@@ -1183,11 +1164,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,487.550</td>
-      <td>6.223</td>
-      <td>7.989</td>
-      <td>12.766</td>
-      <td>13.825</td>
-      <td>15.816</td>
+      <td>6.609</td>
+      <td>8.155</td>
+      <td>12.201</td>
+      <td>13.534</td>
+      <td>15.607</td>
       <td>16.278</td>
       <td>17.215</td>
       <td>15.574</td>
@@ -1208,11 +1189,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,426.191</td>
-      <td>4.408</td>
-      <td>6.264</td>
-      <td>12.716</td>
-      <td>10.930</td>
-      <td>13.710</td>
+      <td>4.716</td>
+      <td>6.287</td>
+      <td>12.882</td>
+      <td>10.991</td>
+      <td>13.732</td>
       <td>13.995</td>
       <td>17.125</td>
       <td>14.518</td>
@@ -1233,11 +1214,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>7.068</td>
       <td>...</td>
       <td>2,461.806</td>
-      <td>6.223</td>
-      <td>8.154</td>
-      <td>12.954</td>
-      <td>13.485</td>
-      <td>14.660</td>
+      <td>6.594</td>
+      <td>7.664</td>
+      <td>13.334</td>
+      <td>13.944</td>
+      <td>14.735</td>
       <td>14.849</td>
       <td>16.981</td>
       <td>14.485</td>
@@ -1330,13 +1311,13 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>108.639</td>
       <td>25.619</td>
       <td>97.284</td>
-      <td>26.008</td>
+      <td>26.042</td>
       <td>5,393,471.689</td>
-      <td>98.479</td>
-      <td>71.561</td>
-      <td>23.083</td>
-      <td>4.151</td>
-      <td>0.456</td>
+      <td>90.679</td>
+      <td>74.316</td>
+      <td>23.173</td>
+      <td>4.251</td>
+      <td>0.449</td>
       <td>0.695</td>
       <td>8.040</td>
       <td>0.426</td>
@@ -1352,13 +1333,13 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.695</td>
       <td>4.267</td>
       <td>9.468</td>
-      <td>4.288</td>
+      <td>4.297</td>
       <td>2,132.119</td>
-      <td>9.818</td>
-      <td>8.310</td>
-      <td>3.976</td>
-      <td>1.614</td>
-      <td>0.446</td>
+      <td>9.418</td>
+      <td>8.471</td>
+      <td>3.967</td>
+      <td>1.624</td>
+      <td>0.444</td>
       <td>0.580</td>
       <td>2.283</td>
       <td>0.436</td>
@@ -1481,13 +1462,13 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.688</td>
       <td>24.975</td>
       <td>95.562</td>
-      <td>25.366</td>
+      <td>25.387</td>
       <td>5,505,296.129</td>
-      <td>97.721</td>
-      <td>70.800</td>
-      <td>22.411</td>
-      <td>4.260</td>
-      <td>0.562</td>
+      <td>89.999</td>
+      <td>73.576</td>
+      <td>22.587</td>
+      <td>4.341</td>
+      <td>0.579</td>
       <td>0.843</td>
       <td>8.370</td>
       <td>0.562</td>
@@ -1503,13 +1484,13 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.524</td>
       <td>4.190</td>
       <td>9.369</td>
-      <td>4.211</td>
+      <td>4.205</td>
       <td>2,175.538</td>
-      <td>9.772</td>
-      <td>8.255</td>
-      <td>3.881</td>
-      <td>1.619</td>
-      <td>0.482</td>
+      <td>9.374</td>
+      <td>8.417</td>
+      <td>3.895</td>
+      <td>1.639</td>
+      <td>0.484</td>
       <td>0.624</td>
       <td>2.314</td>
       <td>0.470</td>
@@ -1691,20 +1672,20 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
 BPCA           MAE               0.406
 TRKNN          MAE               0.436
-RF             MAE               0.446
+RF             MAE               0.444
 KNN_IMPUTE     MAE               0.535
 IRM            MAE               0.575
 ROWMEDIAN      MAE               0.580
 LLS            MAE               0.695
-QRILC          MAE               1.614
+QRILC          MAE               1.624
 COLMEDIAN      MAE               2.204
 SVDMETHOD      MAE               2.283
-PI             MAE               3.976
+PI             MAE               3.967
 MINDET         MAE               4.267
-MINPROB        MAE               4.288
-MSIMPUTE_MNAR  MAE               8.310
+MINPROB        MAE               4.297
+MSIMPUTE_MNAR  MAE               8.471
+MSIMPUTE       MAE               9.418
 MINIMUM        MAE               9.468
-MSIMPUTE       MAE               9.818
 ZERO           MAE              16.536
 MLE            MAE           2,132.119
 IMPSEQROB      MAE           2,433.435
@@ -1762,7 +1743,7 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
   ax = sns.barplot(data=errors_binned, ax=ax,
 </pre></div>
 </div>
-<img alt="_images/6613c6933028a1fc183408ec75ff9fa423772989511486cb432f07faa753b8aa.png" src="_images/6613c6933028a1fc183408ec75ff9fa423772989511486cb432f07faa753b8aa.png" />
+<img alt="_images/c188fddd99e33330d2a53dc74c9392ef97e8bc5bf5976b96beeea0a4dc14fb91.png" src="_images/c188fddd99e33330d2a53dc74c9392ef97e8bc5bf5976b96beeea0a4dc14fb91.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1882,7 +1863,8 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1940,8 +1922,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
   </footer>
