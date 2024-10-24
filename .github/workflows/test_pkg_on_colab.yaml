@@ -15,6 +15,9 @@ jobs:
         # https://console.cloud.google.com/artifacts/docker/colab-images/europe/public/runtime
         container:
             image: europe-docker.pkg.dev/colab-images/public/runtime:latest
+        defaults:
+          run:
+            shell: bash -el {0}
         steps:
         - uses: actions/checkout@v4
         - name: Install pimms-learn (from branch) and papermill
