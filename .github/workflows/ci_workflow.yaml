@@ -2,8 +2,8 @@ name: run workflow (v1) with conda envs
 on:
   push:
     branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
+  # pull_request:
+  #   branches: [main, dev]
   release:
     types: [published]
   schedule:

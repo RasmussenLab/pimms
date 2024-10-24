@@ -23,8 +23,10 @@ jobs:
         - name: Install pimms-learn (from branch) and papermill
           if: github.event_name == 'pull_request'
           run: | 
-            pip install .
-            pip install papermill 
+            pip install --user .
+            pip install papermill
+            python3 -c "import pandas"
+            python3 -c "import pimmslearn"
         - name: Install pimms-learn (from PyPI) and papermill
           if: github.event_name == 'schedule'
           run: | 
@@ -32,6 +34,7 @@ jobs:
         - name: Run tutorial
           run: |
             cd project
+            which papermill
             papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
             papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_no_val.ipynb -p sample_splits False
 
