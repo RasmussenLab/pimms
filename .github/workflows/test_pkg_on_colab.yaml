@@ -26,10 +26,10 @@ jobs:
             pip install --user .
             pip install papermill
             which papermill
+            cd project
             python3 -c "import pimmslearn; print(pimmslearn.__version__)"
             python3 -c "import pimmslearn; pimmslearn.io"
             python3 -c "import pimmslearn.io"
-            cd project
             python -m papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
             papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
         - name: Install pimms-learn (from PyPI) and papermill
