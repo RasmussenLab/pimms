@@ -27,8 +27,11 @@ jobs:
             pip install papermill
             which papermill
             cd project
+            echo python3 -c "import pimmslearn; print(pimmslearn.__version__)"
             python3 -c "import pimmslearn; print(pimmslearn.__version__)"
+            echo python3 -c "import pimmslearn; pimmslearn.io
             python3 -c "import pimmslearn; pimmslearn.io"
+            echo python3 -c "import pimmslearn.io"
             python3 -c "import pimmslearn.io"
             python -m papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
             papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
