@@ -2,8 +2,8 @@ name: Run unit tests, integration tests, and publish package if tagged
 on:
   push:
     branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
+  # pull_request:
+  #   branches: [main, dev]
   release:
     types: [published]
   schedule:
@@ -27,7 +27,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v3
-      with: 
+      with:
         python-version: ${{ matrix.python-version }}
         channel-priority: strict
         environment-file: snakemake_env.yml
@@ -42,21 +42,21 @@ jobs:
         conda env export --no-builds
         conda env export --no-builds > environment_w_versions.yml
     - name: Dry-Run demo workflow (integration test)
-      run: | 
+      run: |
        cd project
        snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda -n
     - name: Run demo workflow (integration test)
       continue-on-error: true
-      run: | 
+      run: |
        cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
-      run: | 
+      run: |
         cd project
         snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Run demo workflow again (in case of installation issues) - one thread
-      run: | 
+      run: |
         cd project
         snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda
     - name: Archive results
@@ -92,13 +92,13 @@ jobs:
 
       - name: Install pytest
         run: pip install pytest pytest-cov
-      
+
       - name: Run pytest
         run: pytest .
 
       - name: Install papermill
         run: pip install papermill ipykernel
-      
+
       - name: View papermill help message for notebooks (as scripts)
         run: |
           cd project
@@ -123,7 +123,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-  
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.8"
