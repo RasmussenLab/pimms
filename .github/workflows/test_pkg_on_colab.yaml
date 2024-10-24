@@ -25,8 +25,11 @@ jobs:
           run: | 
             pip install --user .
             pip install papermill
-            python3 -c "import pandas"
-            python3 -c "import pimmslearn"
+            which papermill
+            python3 -c "import pimmslearn; print(pimmslearn.__version__)"
+            cd project
+            python -m papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
+            papermill 04_1_train_pimms_models.ipynb 04_1_train_pimms_models_output.ipynb
         - name: Install pimms-learn (from PyPI) and papermill
           if: github.event_name == 'schedule'
           run: | 
