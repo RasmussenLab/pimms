@@ -17,7 +17,7 @@ jobs:
             image: europe-docker.pkg.dev/colab-images/public/runtime:latest
         defaults:
           run:
-            shell: bash -el {0}
+            shell: bash
         steps:
         - uses: actions/checkout@v4
         - name: Install pimms-learn (from branch) and papermill
@@ -26,6 +26,9 @@ jobs:
             pip install --user .
             pip install papermill
             which papermill
+            which python
+            which pip
+            echo PWD: $(pwd)
             cd project
             echo python3 -c "import pimmslearn; print(pimmslearn.__version__)"
             python3 -c "import pimmslearn; print(pimmslearn.__version__)"
