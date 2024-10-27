@@ -23,7 +23,7 @@ jobs:
           with:
             fetch-tags: true
             fetch-depth: 0
-            path: /
+            path: /pimms
         - name: Install pimms-learn (from branch) and papermill
           if: github.event_name == 'pull_request'
           run: |
