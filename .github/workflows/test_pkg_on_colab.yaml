@@ -20,6 +20,9 @@ jobs:
             shell: bash
         steps:
         - uses: actions/checkout@v4
+          with:
+            fetch-tags: true
+            fetch-depth: 0
         - name: Install pimms-learn (from branch) and papermill
           if: github.event_name == 'pull_request'
           run: |
