@@ -24,7 +24,7 @@ jobs:
           if: github.event_name == 'pull_request'
           run: |
             echo PWD: $(pwd)
-            pip -m build .
+            python -m build .
             pip install dist/pimms_learn-*.whl
             pip install papermill
             which papermill
