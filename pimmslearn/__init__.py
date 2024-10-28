@@ -17,6 +17,7 @@ from importlib import metadata
 
 import njab
 
+import pimmslearn.io
 import pimmslearn.logging
 import pimmslearn.nb
 import pimmslearn.pandas
