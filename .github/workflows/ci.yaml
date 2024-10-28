@@ -2,8 +2,8 @@ name: Run unit tests, integration tests, and publish package if tagged
 on:
   push:
     branches: [main, dev]
-  # pull_request:
-  #   branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
   release:
     types: [published]
   schedule:
