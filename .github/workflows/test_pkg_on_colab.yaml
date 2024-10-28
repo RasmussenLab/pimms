@@ -32,7 +32,7 @@ jobs:
             cd project
             echo python3 -c "import pimmslearn; print(pimmslearn.__version__)"
             python3 -c "import pimmslearn; print(pimmslearn.__version__)"
-            echo python3 -c "import pimmslearn; pimmslearn.io
+            echo python3 -c "import pimmslearn; pimmslearn.io"
             python3 -c "import pimmslearn; pimmslearn.io"
             echo python3 -c "import pimmslearn.io"
             python3 -c "import pimmslearn.io"
