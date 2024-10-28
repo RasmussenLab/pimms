@@ -19,14 +19,22 @@ jobs:
           run:
             shell: bash
         steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-tags: true
-            fetch-depth: 0
-            path: /pimms
+        # - uses: actions/checkout@v4
+        #   with:
+        #     fetch-tags: true
+        #     fetch-depth: 0
+        #     path: /pimms
+        - name: Check out the repository
+          run: |
+            git clone https://github.com/RasmussenLab/pimms.git
+            cd pimms
+            echo $GITHUB_REF
+            git checkout $GITHUB_REF
+            git merge main
         - name: Install pimms-learn (from branch) and papermill
           if: github.event_name == 'pull_request'
           run: |
+            cd pimms
             echo PWD: $(pwd)
             python -m build .
             pip install dist/pimms_learn-*.whl
