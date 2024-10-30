@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+g3810eb9 documentation</title>
+    <title>Variational Autoencoder &#8212; pimms_workflow 0.1.dev1+g6986e38 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
-    <script src="_static/documentation_options.js?v=acfa9e01"></script>
+    <script src="_static/documentation_options.js?v=6e42c05d"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -52,7 +52,7 @@
     <link rel="prev" title="Collaborative Filtering" href="01_1_train_CF.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g3810eb9" />
+  <meta name="docsearch:version" content="0.1.dev1+g6986e38" />
   </head>
   
   
@@ -127,7 +127,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g3810eb9 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+g6986e38 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -655,12 +655,12 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups      
-Sample_105  H3BP20;H3BS10;P06865   18.263
-Sample_018  P61769                 24.962
-Sample_023  Q9UBG0                 15.972
-Sample_041  P01023                 23.416
-Sample_204  C9J2H1                 17.608
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
+Sample_182  A0A0B4J1Y9       18.305
+Sample_125  I3L0N3;P46459    15.756
+Sample_121  P02765           24.218
+Sample_140  Q9UBX1           15.931
+Sample_078  P42785           17.992
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -2599,10 +2599,10 @@ current version. Try again later</p>
   state = torch.load(file, map_location=device, **torch_load_kwargs)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.004365158267319202)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.0030199517495930195)
 </pre></div>
 </div>
-<img alt="_images/5a6ba1f159eebb1ae055d1432f4f5d08efcefdc874187dc9fb5aaf316006699c.png" src="_images/5a6ba1f159eebb1ae055d1432f4f5d08efcefdc874187dc9fb5aaf316006699c.png" />
+<img alt="_images/224dbf4f77e01af74d81513792939ac82d10fff9b23fcb08b670e5672e924b40.png" src="_images/224dbf4f77e01af74d81513792939ac82d10fff9b23fcb08b670e5672e924b40.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2685,834 +2685,846 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>1688.068237</td>
-      <td>93.022339</td>
+      <td>1696.007935</td>
+      <td>93.330132</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>1681.143677</td>
-      <td>93.647797</td>
+      <td>1688.107056</td>
+      <td>93.978050</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1678.410278</td>
-      <td>94.215935</td>
+      <td>1683.921875</td>
+      <td>94.277603</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>1677.611938</td>
-      <td>94.679344</td>
+      <td>1684.616699</td>
+      <td>94.873688</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1672.815796</td>
-      <td>95.309601</td>
+      <td>1681.400757</td>
+      <td>95.105263</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>1668.303223</td>
-      <td>95.659439</td>
+      <td>1678.572754</td>
+      <td>95.404922</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>1663.517334</td>
-      <td>94.975899</td>
+      <td>1675.460449</td>
+      <td>95.113335</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>1659.552368</td>
-      <td>95.595749</td>
+      <td>1671.405396</td>
+      <td>95.675476</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>1655.512329</td>
-      <td>95.208305</td>
+      <td>1669.399048</td>
+      <td>95.243935</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>1652.013184</td>
-      <td>94.872597</td>
+      <td>1666.483276</td>
+      <td>95.381042</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>1647.062378</td>
-      <td>95.736160</td>
+      <td>1663.599609</td>
+      <td>95.231102</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>1642.428101</td>
-      <td>94.954185</td>
+      <td>1660.427612</td>
+      <td>94.541145</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>1636.840332</td>
-      <td>94.838478</td>
+      <td>1657.486572</td>
+      <td>94.471909</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>1631.806152</td>
-      <td>94.655472</td>
+      <td>1652.657104</td>
+      <td>94.919075</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>1625.650146</td>
-      <td>94.152039</td>
+      <td>1648.671143</td>
+      <td>94.894104</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>1619.923584</td>
-      <td>94.179306</td>
+      <td>1644.131836</td>
+      <td>94.661659</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>1613.307129</td>
-      <td>93.853432</td>
+      <td>1640.351685</td>
+      <td>95.005905</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>1606.441040</td>
-      <td>93.353355</td>
+      <td>1635.221313</td>
+      <td>94.565720</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>1599.911743</td>
-      <td>93.517776</td>
+      <td>1629.755127</td>
+      <td>94.596611</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>1593.092285</td>
-      <td>93.228813</td>
+      <td>1624.625244</td>
+      <td>94.117950</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>1585.455688</td>
-      <td>92.827477</td>
+      <td>1619.707764</td>
+      <td>94.585838</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>1576.492188</td>
-      <td>92.749619</td>
+      <td>1613.657227</td>
+      <td>94.102661</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>1567.397949</td>
-      <td>92.972137</td>
+      <td>1607.405762</td>
+      <td>94.121307</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>1557.217773</td>
-      <td>92.577080</td>
+      <td>1599.542236</td>
+      <td>94.019287</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>1546.621826</td>
-      <td>92.377716</td>
+      <td>1591.772705</td>
+      <td>94.039497</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>1535.141724</td>
-      <td>92.260361</td>
+      <td>1583.646973</td>
+      <td>93.823120</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>1523.914062</td>
-      <td>92.054436</td>
+      <td>1575.525146</td>
+      <td>93.830391</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>1513.005249</td>
-      <td>92.774040</td>
+      <td>1566.463135</td>
+      <td>93.537628</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>1501.171509</td>
-      <td>92.789902</td>
+      <td>1557.568115</td>
+      <td>93.102669</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>1488.542358</td>
-      <td>92.716629</td>
+      <td>1548.188110</td>
+      <td>93.283928</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>1476.790039</td>
-      <td>92.951729</td>
+      <td>1538.017456</td>
+      <td>92.924667</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>1464.358765</td>
-      <td>93.175629</td>
+      <td>1528.044312</td>
+      <td>92.536980</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>1452.626709</td>
-      <td>93.206139</td>
+      <td>1517.614258</td>
+      <td>92.780823</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>1439.820312</td>
-      <td>94.259140</td>
+      <td>1505.596436</td>
+      <td>92.139465</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>1427.668701</td>
-      <td>94.546326</td>
+      <td>1493.734497</td>
+      <td>92.258202</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>1415.730591</td>
-      <td>94.681969</td>
+      <td>1481.617432</td>
+      <td>91.875244</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>1405.467163</td>
-      <td>95.272202</td>
+      <td>1469.501709</td>
+      <td>92.022278</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>1395.239868</td>
-      <td>94.852249</td>
+      <td>1458.507324</td>
+      <td>92.716843</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>1384.069946</td>
-      <td>94.776138</td>
+      <td>1446.038330</td>
+      <td>92.927856</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>1373.449219</td>
-      <td>94.872078</td>
+      <td>1434.896606</td>
+      <td>93.734154</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>1363.541382</td>
-      <td>94.785683</td>
+      <td>1423.245728</td>
+      <td>93.977333</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>1354.673218</td>
-      <td>94.225616</td>
+      <td>1413.201904</td>
+      <td>94.852737</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>1346.306763</td>
-      <td>93.980133</td>
+      <td>1402.933716</td>
+      <td>93.571007</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>1337.744873</td>
-      <td>94.037712</td>
+      <td>1391.667358</td>
+      <td>93.686089</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>1328.660400</td>
-      <td>93.498093</td>
+      <td>1380.797974</td>
+      <td>93.862785</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>1319.954224</td>
-      <td>93.783463</td>
+      <td>1370.888184</td>
+      <td>94.363510</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>1311.219482</td>
-      <td>94.111481</td>
+      <td>1359.808594</td>
+      <td>94.121170</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>1303.160645</td>
-      <td>93.605774</td>
+      <td>1349.521973</td>
+      <td>93.182434</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>1295.631470</td>
-      <td>93.597824</td>
+      <td>1340.366821</td>
+      <td>93.544083</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>1287.197266</td>
-      <td>92.565781</td>
+      <td>1330.400024</td>
+      <td>93.914871</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>1280.274414</td>
-      <td>92.106819</td>
+      <td>1321.004761</td>
+      <td>94.082550</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>1273.114258</td>
-      <td>92.228813</td>
+      <td>1312.346069</td>
+      <td>94.062485</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>1266.484131</td>
-      <td>92.330559</td>
+      <td>1304.490601</td>
+      <td>93.631355</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>1261.284912</td>
-      <td>92.316711</td>
+      <td>1297.651245</td>
+      <td>93.507774</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>1254.965088</td>
-      <td>91.866226</td>
+      <td>1288.807739</td>
+      <td>92.959808</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>1249.769287</td>
-      <td>91.949387</td>
+      <td>1281.638672</td>
+      <td>92.478951</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>1244.783569</td>
-      <td>91.943031</td>
+      <td>1274.120605</td>
+      <td>92.504883</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>1237.025024</td>
-      <td>92.135750</td>
+      <td>1268.686768</td>
+      <td>93.080093</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>1231.279663</td>
-      <td>92.224106</td>
+      <td>1261.867310</td>
+      <td>93.160675</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>1226.295410</td>
-      <td>92.299377</td>
+      <td>1255.683960</td>
+      <td>92.810127</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>1220.434326</td>
-      <td>91.607422</td>
+      <td>1251.838623</td>
+      <td>92.810196</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>1215.156128</td>
-      <td>92.380821</td>
+      <td>1246.344238</td>
+      <td>92.397446</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>1208.564697</td>
-      <td>92.336006</td>
+      <td>1239.797241</td>
+      <td>92.125961</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>1203.567749</td>
-      <td>92.387665</td>
+      <td>1235.832886</td>
+      <td>92.118744</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>1199.953247</td>
-      <td>92.225433</td>
+      <td>1231.047974</td>
+      <td>92.150345</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>1194.374023</td>
-      <td>92.189964</td>
+      <td>1226.335083</td>
+      <td>91.977577</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>1190.973755</td>
-      <td>92.316162</td>
+      <td>1222.973633</td>
+      <td>92.302025</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>1185.363525</td>
-      <td>92.289131</td>
+      <td>1219.406006</td>
+      <td>92.211548</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>1182.184692</td>
-      <td>92.098381</td>
+      <td>1213.377930</td>
+      <td>92.261711</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>1177.976318</td>
-      <td>91.966545</td>
+      <td>1209.003784</td>
+      <td>92.468117</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>1173.613770</td>
-      <td>91.726433</td>
+      <td>1203.517456</td>
+      <td>91.882095</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>1168.812378</td>
-      <td>92.625511</td>
+      <td>1199.227539</td>
+      <td>91.753098</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>1164.676880</td>
-      <td>91.601379</td>
+      <td>1194.396729</td>
+      <td>91.481575</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>1161.090210</td>
-      <td>91.531067</td>
+      <td>1190.231445</td>
+      <td>91.710419</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>74</td>
-      <td>1155.729248</td>
-      <td>91.877777</td>
+      <td>1184.992188</td>
+      <td>91.068398</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>75</td>
-      <td>1152.990723</td>
-      <td>92.097649</td>
+      <td>1180.630249</td>
+      <td>91.310455</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>76</td>
-      <td>1149.513550</td>
-      <td>91.985313</td>
+      <td>1175.404053</td>
+      <td>91.392662</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>77</td>
-      <td>1145.305054</td>
-      <td>91.590279</td>
+      <td>1172.033203</td>
+      <td>91.504974</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>78</td>
-      <td>1141.744019</td>
-      <td>91.847008</td>
+      <td>1169.864990</td>
+      <td>91.098465</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>79</td>
-      <td>1139.137695</td>
-      <td>91.859360</td>
+      <td>1166.767212</td>
+      <td>91.254433</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>80</td>
-      <td>1136.438232</td>
-      <td>92.083191</td>
+      <td>1162.655029</td>
+      <td>91.761597</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>81</td>
-      <td>1133.943726</td>
-      <td>92.855080</td>
+      <td>1159.433716</td>
+      <td>91.889816</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>82</td>
-      <td>1131.779663</td>
-      <td>93.341843</td>
+      <td>1155.091797</td>
+      <td>91.782730</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>83</td>
-      <td>1127.408813</td>
-      <td>93.084679</td>
+      <td>1151.086548</td>
+      <td>91.611832</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>84</td>
-      <td>1124.146240</td>
-      <td>92.050766</td>
+      <td>1148.072510</td>
+      <td>92.206512</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>85</td>
-      <td>1119.628540</td>
-      <td>91.803719</td>
+      <td>1143.537598</td>
+      <td>91.749527</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>86</td>
-      <td>1116.797241</td>
-      <td>91.808594</td>
+      <td>1141.075073</td>
+      <td>92.126747</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>87</td>
-      <td>1112.712036</td>
-      <td>90.760590</td>
+      <td>1137.148438</td>
+      <td>91.861038</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>88</td>
-      <td>1109.616943</td>
-      <td>90.790115</td>
+      <td>1133.321167</td>
+      <td>91.588524</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>89</td>
-      <td>1106.886719</td>
-      <td>91.501198</td>
+      <td>1130.807983</td>
+      <td>90.992706</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>90</td>
-      <td>1103.920532</td>
-      <td>92.116516</td>
+      <td>1127.398682</td>
+      <td>91.111702</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>91</td>
-      <td>1100.910156</td>
-      <td>92.240646</td>
+      <td>1125.080933</td>
+      <td>91.605469</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>92</td>
-      <td>1101.418823</td>
-      <td>91.989006</td>
+      <td>1122.322266</td>
+      <td>91.909378</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>93</td>
-      <td>1099.477661</td>
-      <td>92.609825</td>
+      <td>1120.443604</td>
+      <td>92.047813</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>94</td>
-      <td>1098.869507</td>
-      <td>92.613541</td>
+      <td>1118.807251</td>
+      <td>91.524406</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>95</td>
-      <td>1097.045654</td>
-      <td>92.523384</td>
+      <td>1117.607056</td>
+      <td>91.664856</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>96</td>
-      <td>1094.786011</td>
-      <td>92.206848</td>
+      <td>1115.843140</td>
+      <td>91.875244</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>97</td>
-      <td>1092.900513</td>
-      <td>92.493721</td>
+      <td>1113.365601</td>
+      <td>92.031708</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>98</td>
-      <td>1090.634399</td>
-      <td>92.776978</td>
+      <td>1110.074219</td>
+      <td>91.808876</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>99</td>
-      <td>1088.636353</td>
-      <td>92.590027</td>
+      <td>1107.719360</td>
+      <td>91.045883</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>100</td>
-      <td>1086.643433</td>
-      <td>92.869621</td>
+      <td>1105.183960</td>
+      <td>91.277351</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>101</td>
-      <td>1086.058350</td>
-      <td>93.042442</td>
+      <td>1103.727905</td>
+      <td>91.376396</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>102</td>
-      <td>1084.072510</td>
-      <td>93.326805</td>
+      <td>1102.254517</td>
+      <td>91.369965</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>103</td>
-      <td>1082.377197</td>
-      <td>93.812798</td>
+      <td>1100.615112</td>
+      <td>91.714462</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>104</td>
-      <td>1080.853760</td>
-      <td>93.270218</td>
+      <td>1098.931519</td>
+      <td>92.078918</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>105</td>
-      <td>1079.779785</td>
-      <td>93.016525</td>
+      <td>1097.171631</td>
+      <td>91.859558</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>106</td>
-      <td>1077.757202</td>
-      <td>92.939240</td>
+      <td>1095.682007</td>
+      <td>91.537735</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>107</td>
-      <td>1076.376221</td>
-      <td>92.861488</td>
+      <td>1092.383301</td>
+      <td>92.381607</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>108</td>
-      <td>1075.387085</td>
-      <td>92.792961</td>
+      <td>1092.511719</td>
+      <td>92.677742</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>109</td>
-      <td>1072.885864</td>
-      <td>92.197853</td>
+      <td>1089.491455</td>
+      <td>93.150612</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>110</td>
-      <td>1070.615356</td>
-      <td>92.724472</td>
+      <td>1087.349609</td>
+      <td>92.469688</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>111</td>
-      <td>1072.248779</td>
-      <td>92.908592</td>
+      <td>1086.382812</td>
+      <td>92.152313</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>112</td>
-      <td>1071.884766</td>
-      <td>93.387749</td>
+      <td>1083.676270</td>
+      <td>92.329994</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>113</td>
-      <td>1070.418945</td>
-      <td>92.955795</td>
+      <td>1081.349731</td>
+      <td>92.127045</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>114</td>
-      <td>1069.768433</td>
-      <td>93.437386</td>
+      <td>1079.934814</td>
+      <td>91.829994</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>115</td>
-      <td>1069.067749</td>
-      <td>93.818138</td>
+      <td>1079.473633</td>
+      <td>92.261765</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>116</td>
-      <td>1067.756958</td>
-      <td>93.275208</td>
+      <td>1078.555054</td>
+      <td>92.095497</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>117</td>
-      <td>1065.274170</td>
-      <td>92.661446</td>
+      <td>1076.961670</td>
+      <td>92.639519</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>118</td>
-      <td>1062.379395</td>
-      <td>92.335541</td>
+      <td>1075.468506</td>
+      <td>91.941910</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>119</td>
-      <td>1062.591675</td>
-      <td>92.817673</td>
+      <td>1073.217529</td>
+      <td>91.457199</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>120</td>
-      <td>1061.274536</td>
-      <td>93.272072</td>
+      <td>1071.945190</td>
+      <td>91.868668</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>121</td>
-      <td>1059.284424</td>
-      <td>92.324944</td>
+      <td>1071.137085</td>
+      <td>91.788719</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>122</td>
-      <td>1058.001221</td>
-      <td>91.831352</td>
+      <td>1070.844604</td>
+      <td>91.580421</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>123</td>
-      <td>1057.202026</td>
-      <td>92.734589</td>
+      <td>1069.190308</td>
+      <td>91.504539</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>124</td>
-      <td>1055.206543</td>
-      <td>93.149071</td>
+      <td>1069.637451</td>
+      <td>91.321800</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>125</td>
-      <td>1054.622803</td>
-      <td>93.476601</td>
+      <td>1066.939087</td>
+      <td>91.597015</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>126</td>
-      <td>1052.556030</td>
-      <td>93.088730</td>
+      <td>1065.623413</td>
+      <td>91.969574</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>127</td>
-      <td>1051.501099</td>
-      <td>93.132729</td>
+      <td>1064.335815</td>
+      <td>92.409805</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>128</td>
-      <td>1050.919312</td>
-      <td>93.639908</td>
+      <td>1065.558472</td>
+      <td>92.652214</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>129</td>
-      <td>1050.171021</td>
-      <td>93.146736</td>
+      <td>1063.877930</td>
+      <td>92.814873</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>130</td>
-      <td>1052.171387</td>
-      <td>93.608910</td>
+      <td>1061.764404</td>
+      <td>92.892593</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>131</td>
-      <td>1050.507812</td>
-      <td>93.694504</td>
+      <td>1061.205811</td>
+      <td>92.966537</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>132</td>
-      <td>1049.433838</td>
-      <td>93.830513</td>
+      <td>1061.357300</td>
+      <td>93.175964</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>133</td>
-      <td>1048.054688</td>
-      <td>93.812927</td>
+      <td>1059.347168</td>
+      <td>93.109383</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>134</td>
-      <td>1045.782837</td>
-      <td>93.948830</td>
+      <td>1059.663452</td>
+      <td>93.091347</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>135</td>
-      <td>1046.271973</td>
-      <td>93.621544</td>
+      <td>1058.028809</td>
+      <td>92.912560</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>136</td>
-      <td>1044.731079</td>
-      <td>93.868919</td>
+      <td>1057.502563</td>
+      <td>92.961311</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>137</td>
-      <td>1043.858765</td>
-      <td>93.976593</td>
+      <td>1057.301392</td>
+      <td>92.197449</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>138</td>
+      <td>1056.097656</td>
+      <td>91.665642</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>139</td>
+      <td>1053.950806</td>
+      <td>91.746811</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 87: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 89: early stopping
 </pre></div>
 </div>
 </div>
@@ -3532,7 +3544,7 @@ current version. Try again later</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>138
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>140
 </pre></div>
 </div>
 </div>
@@ -3559,7 +3571,7 @@ current version. Try again later</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/vae_training
 </pre></div>
 </div>
-<img alt="_images/e5f34d560475dea4edcd499ba46a8868e9414a2b50e6931d6275cc5fb5f87ec3.png" src="_images/e5f34d560475dea4edcd499ba46a8868e9414a2b50e6931d6275cc5fb5f87ec3.png" />
+<img alt="_images/d3af164f6ba04e4f20bfd79150a9acbf6bd9392dc8b2d0a3398ed2ef24187c51.png" src="_images/d3af164f6ba04e4f20bfd79150a9acbf6bd9392dc8b2d0a3398ed2ef24187c51.png" />
 </div>
 </div>
 </section>
@@ -3602,17 +3614,17 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.886
-            A0A024R0T9;K7ER74;P02655                                                         16.776
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.862
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.646
-            A0A075B6H7                                                                       17.397
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.956
+            A0A024R0T9;K7ER74;P02655                                                         16.712
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.860
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.778
+            A0A075B6H7                                                                       17.080
                                                                                               ...  
-Sample_209  Q9Y6R7                                                                           19.037
-            Q9Y6X5                                                                           15.851
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.312
-            Q9Y6Y9                                                                           12.033
-            S4R3U6                                                                           11.352
+Sample_209  Q9Y6R7                                                                           19.224
+            Q9Y6X5                                                                           15.852
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.290
+            Q9Y6Y9                                                                           11.878
+            S4R3U6                                                                           11.264
 Length: 298410, dtype: float32
 </pre></div>
 </div>
@@ -3666,31 +3678,31 @@ Length: 298410, dtype: float32
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.724</td>
+      <td>15.676</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.657</td>
+      <td>16.731</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.207</td>
+      <td>14.779</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>18.959</td>
+      <td>19.088</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.193</td>
+      <td>15.039</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3702,31 +3714,31 @@ Length: 298410, dtype: float32
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.966</td>
+      <td>22.880</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.004</td>
+      <td>15.888</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.912</td>
+      <td>15.617</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>12.639</td>
+      <td>13.295</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.484</td>
+      <td>14.539</td>
     </tr>
   </tbody>
 </table>
@@ -3781,27 +3793,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.282</td>
+      <td>17.264</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>17.930</td>
+      <td>17.842</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.380</td>
+      <td>22.270</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.276</td>
+      <td>15.141</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.638</td>
+      <td>16.679</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3813,27 +3825,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>16.030</td>
+      <td>16.020</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.275</td>
+      <td>13.552</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>14.348</td>
+      <td>14.128</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.135</td>
+      <td>15.086</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.530</td>
+      <td>16.564</td>
     </tr>
   </tbody>
 </table>
@@ -3861,17 +3873,17 @@ Length: 298410, dtype: float32
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.579
-            A0A075B6Q5                 15.902
-            A0A075B6R2                 16.793
-            A0A075B6S5                 16.313
-            A0A087WSY4                 16.346
+Sample_000  A0A075B6J9                 15.527
+            A0A075B6Q5                 15.758
+            A0A075B6R2                 16.579
+            A0A075B6S5                 16.195
+            A0A087WSY4                 16.247
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.900
-            Q9UI40;Q9UI40-2            15.893
-            Q9UIW2                     16.693
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.831
-            Q9UP79                     16.140
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.009
+            Q9UI40;Q9UI40-2            16.089
+            Q9UIW2                     16.620
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.615
+            Q9UP79                     15.992
 Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
@@ -3954,68 +3966,68 @@ Name: intensity, Length: 46401, dtype: float32
   <tbody>
     <tr>
       <th>Sample_000</th>
-      <td>0.235</td>
-      <td>0.265</td>
-      <td>3.066</td>
-      <td>-1.396</td>
-      <td>0.352</td>
-      <td>-1.256</td>
-      <td>0.224</td>
-      <td>-1.158</td>
-      <td>1.378</td>
-      <td>-0.382</td>
+      <td>-1.273</td>
+      <td>0.433</td>
+      <td>-1.799</td>
+      <td>1.535</td>
+      <td>-1.295</td>
+      <td>-0.694</td>
+      <td>-1.658</td>
+      <td>0.578</td>
+      <td>0.258</td>
+      <td>-1.627</td>
     </tr>
     <tr>
       <th>Sample_001</th>
-      <td>-0.183</td>
-      <td>-0.072</td>
-      <td>2.485</td>
-      <td>-1.764</td>
-      <td>0.130</td>
-      <td>-1.159</td>
-      <td>-0.865</td>
-      <td>0.345</td>
-      <td>1.453</td>
-      <td>-0.108</td>
+      <td>-1.515</td>
+      <td>0.488</td>
+      <td>-0.279</td>
+      <td>1.618</td>
+      <td>-0.686</td>
+      <td>0.072</td>
+      <td>-1.324</td>
+      <td>0.991</td>
+      <td>1.083</td>
+      <td>-0.210</td>
     </tr>
     <tr>
       <th>Sample_002</th>
-      <td>-0.253</td>
-      <td>0.352</td>
-      <td>1.528</td>
-      <td>-1.292</td>
-      <td>2.280</td>
-      <td>-1.744</td>
-      <td>1.859</td>
-      <td>0.352</td>
-      <td>1.498</td>
-      <td>0.165</td>
+      <td>-1.833</td>
+      <td>-0.493</td>
+      <td>-1.729</td>
+      <td>0.189</td>
+      <td>-2.452</td>
+      <td>0.758</td>
+      <td>-1.752</td>
+      <td>-0.788</td>
+      <td>-0.017</td>
+      <td>0.338</td>
     </tr>
     <tr>
       <th>Sample_003</th>
-      <td>0.586</td>
-      <td>0.099</td>
-      <td>2.975</td>
-      <td>-0.328</td>
-      <td>1.342</td>
-      <td>-1.948</td>
-      <td>0.933</td>
-      <td>-0.155</td>
-      <td>0.875</td>
-      <td>-0.516</td>
+      <td>-1.229</td>
+      <td>0.304</td>
+      <td>-1.884</td>
+      <td>1.041</td>
+      <td>-1.998</td>
+      <td>-0.061</td>
+      <td>-1.826</td>
+      <td>0.441</td>
+      <td>-0.644</td>
+      <td>-0.397</td>
     </tr>
     <tr>
       <th>Sample_004</th>
-      <td>0.477</td>
-      <td>0.055</td>
-      <td>2.660</td>
-      <td>-1.179</td>
-      <td>0.956</td>
-      <td>-1.678</td>
-      <td>0.251</td>
-      <td>-0.173</td>
-      <td>0.102</td>
-      <td>-0.025</td>
+      <td>-1.405</td>
+      <td>0.291</td>
+      <td>-0.629</td>
+      <td>1.250</td>
+      <td>-1.458</td>
+      <td>-0.261</td>
+      <td>-1.398</td>
+      <td>0.887</td>
+      <td>-0.858</td>
+      <td>-0.705</td>
     </tr>
     <tr>
       <th>...</th>
@@ -4032,68 +4044,68 @@ Name: intensity, Length: 46401, dtype: float32
     </tr>
     <tr>
       <th>Sample_205</th>
-      <td>0.209</td>
-      <td>-1.920</td>
-      <td>1.894</td>
-      <td>-0.067</td>
-      <td>1.279</td>
-      <td>0.698</td>
-      <td>1.951</td>
-      <td>0.548</td>
-      <td>-0.128</td>
-      <td>1.135</td>
+      <td>0.375</td>
+      <td>1.449</td>
+      <td>-0.585</td>
+      <td>-0.934</td>
+      <td>-1.313</td>
+      <td>1.614</td>
+      <td>-0.974</td>
+      <td>0.623</td>
+      <td>-0.522</td>
+      <td>-1.193</td>
     </tr>
     <tr>
       <th>Sample_206</th>
-      <td>-0.352</td>
-      <td>1.403</td>
-      <td>0.400</td>
-      <td>-0.728</td>
-      <td>1.070</td>
-      <td>2.219</td>
-      <td>-0.438</td>
-      <td>-0.534</td>
-      <td>0.724</td>
-      <td>1.517</td>
+      <td>-1.335</td>
+      <td>-0.004</td>
+      <td>-0.618</td>
+      <td>-1.355</td>
+      <td>0.372</td>
+      <td>0.822</td>
+      <td>1.260</td>
+      <td>-1.091</td>
+      <td>1.566</td>
+      <td>-0.556</td>
     </tr>
     <tr>
       <th>Sample_207</th>
-      <td>1.816</td>
-      <td>-0.058</td>
-      <td>2.055</td>
-      <td>-2.065</td>
-      <td>-1.512</td>
-      <td>0.541</td>
-      <td>0.777</td>
-      <td>0.061</td>
-      <td>-0.165</td>
-      <td>2.144</td>
+      <td>-1.347</td>
+      <td>1.539</td>
+      <td>0.450</td>
+      <td>-0.480</td>
+      <td>-0.099</td>
+      <td>-0.323</td>
+      <td>1.282</td>
+      <td>1.542</td>
+      <td>-0.541</td>
+      <td>-2.545</td>
     </tr>
     <tr>
       <th>Sample_208</th>
-      <td>0.766</td>
-      <td>-0.614</td>
-      <td>-0.037</td>
-      <td>-0.985</td>
-      <td>0.187</td>
-      <td>0.196</td>
-      <td>-0.763</td>
-      <td>0.571</td>
-      <td>0.275</td>
-      <td>2.557</td>
+      <td>-1.248</td>
+      <td>1.246</td>
+      <td>1.885</td>
+      <td>0.026</td>
+      <td>-0.755</td>
+      <td>0.696</td>
+      <td>1.089</td>
+      <td>-0.724</td>
+      <td>0.194</td>
+      <td>-0.710</td>
     </tr>
     <tr>
       <th>Sample_209</th>
-      <td>1.193</td>
-      <td>0.644</td>
-      <td>0.108</td>
-      <td>-0.517</td>
-      <td>0.774</td>
-      <td>-0.379</td>
-      <td>0.752</td>
-      <td>1.498</td>
-      <td>-0.674</td>
-      <td>2.164</td>
+      <td>-2.015</td>
+      <td>0.364</td>
+      <td>0.727</td>
+      <td>-0.167</td>
+      <td>-1.165</td>
+      <td>0.793</td>
+      <td>1.287</td>
+      <td>-0.054</td>
+      <td>-1.513</td>
+      <td>0.638</td>
     </tr>
   </tbody>
 </table>
@@ -4199,7 +4211,7 @@ Name: count, dtype: int64
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/75f52134effed21f78bb76adaca9118c34dcc1a6a80878cf8195c7080428686e.png" src="_images/75f52134effed21f78bb76adaca9118c34dcc1a6a80878cf8195c7080428686e.png" />
+<img alt="_images/23137de42d4c2d221813a438f3dafb1120536d6ef28cad5d259301ce987320c4.png" src="_images/23137de42d4c2d221813a438f3dafb1120536d6ef28cad5d259301ce987320c4.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4255,27 +4267,27 @@ Name: count, dtype: int64
   <tbody>
     <tr>
       <th>A0A024QZX5;A0A087X1N8;P35237</th>
-      <td>0.193</td>
+      <td>0.169</td>
       <td>7</td>
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
-      <td>1.292</td>
+      <td>1.209</td>
       <td>4</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
-      <td>0.276</td>
+      <td>0.232</td>
       <td>9</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
-      <td>0.323</td>
+      <td>0.231</td>
       <td>6</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
-      <td>0.655</td>
+      <td>0.653</td>
       <td>6</td>
     </tr>
     <tr>
@@ -4285,27 +4297,27 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>Q9Y6R7</th>
-      <td>0.372</td>
+      <td>0.392</td>
       <td>10</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
-      <td>0.329</td>
+      <td>0.298</td>
       <td>7</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
-      <td>0.327</td>
+      <td>0.363</td>
       <td>9</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
-      <td>0.411</td>
+      <td>0.427</td>
       <td>15</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
-      <td>0.476</td>
+      <td>0.473</td>
       <td>24</td>
     </tr>
   </tbody>
@@ -4357,27 +4369,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
-      <td>1.094</td>
+      <td>1.046</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
-      <td>0.902</td>
+      <td>0.976</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
-      <td>-0.823</td>
+      <td>-0.250</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
-      <td>-0.417</td>
+      <td>-0.288</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
-      <td>-0.116</td>
+      <td>-0.270</td>
     </tr>
     <tr>
       <th>...</th>
@@ -4387,27 +4399,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
-      <td>0.144</td>
+      <td>0.058</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
-      <td>-2.161</td>
+      <td>-2.277</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
-      <td>0.387</td>
+      <td>0.092</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
-      <td>-1.739</td>
+      <td>-1.083</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
-      <td>-0.020</td>
+      <td>0.035</td>
     </tr>
   </tbody>
 </table>
@@ -4459,8 +4471,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4573366982275106,
-  &#39;MAE&#39;: 0.43091882343243165,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.45606754841610336,
+  &#39;MAE&#39;: 0.43157373940096366,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4487,8 +4499,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.48602207901870165,
-  &#39;MAE&#39;: 0.4386431101921921,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.48066589457540576,
+  &#39;MAE&#39;: 0.43584125484345265,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4511,12 +4523,12 @@ reconstruction.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4386431101921921,
-                                  &#39;MSE&#39;: 0.48602207901870165,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.43584125484345265,
+                                  &#39;MSE&#39;: 0.48066589457540576,
                                   &#39;N&#39;: 12600,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.43091882343243165,
-                                   &#39;MSE&#39;: 0.4573366982275106,
+  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.43157373940096366,
+                                   &#39;MSE&#39;: 0.45606754841610336,
                                    &#39;N&#39;: 12600,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
@@ -4571,13 +4583,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">VAE</th>
       <th>MSE</th>
-      <td>0.457</td>
-      <td>0.486</td>
+      <td>0.456</td>
+      <td>0.481</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.431</td>
-      <td>0.439</td>
+      <td>0.432</td>
+      <td>0.436</td>
     </tr>
     <tr>
       <th>N</th>
@@ -4651,7 +4663,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 138,
+ &#39;epoch_trained&#39;: 140,
  &#39;epochs_max&#39;: 300,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
