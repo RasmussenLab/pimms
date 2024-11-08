@@ -30,12 +30,11 @@ if IN_COLAB:
 # Specify example data:
 
 # %%
-import os
+from pathlib import Path
 
-IN_COLAB = 'COLAB_GPU' in os.environ
-
-fn_intensities = 'data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv'
-if IN_COLAB:
+fn_intensities = Path('data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv')
+if not fn_intensities.exists():
+    print("Use example data from GitHub.")
     fn_intensities = ('https://raw.githubusercontent.com/RasmussenLab/pimms/main/'
                       'project/data/dev_datasets/HeLa_6070/protein_groups_wide_N50.csv')
 
@@ -308,6 +307,7 @@ if splits.val_y is not None:
         ax=ax,
         metric_name='MAE',
         palette=color_model_mapping)
+    ax.set_ylabel('Mean aboslute error (MAE)')
 
 # %% [markdown]
 # replace predicted values with validation data values
@@ -349,3 +349,4 @@ ax, _ = pimmslearn.plotting.data.plot_histogram_intensities(
     color=color_model_mapping[model_selected],
     alpha=1)
 _ = ax.legend()
+ax.set_xlabel('log2 intensity bin')
