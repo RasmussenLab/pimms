@@ -3,7 +3,6 @@ name: trainRmodels
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - papermill # execute ipynb's
   - jupyter
