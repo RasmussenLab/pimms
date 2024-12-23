@@ -23,5 +23,5 @@ NAGuideR_methods:
   - MLE # norm
   - IRM # VIM - ~9mins
   - TRKNN
-  - MSIMPUTE # MSIMPUTE_MNAR is slower
+  # - MSIMPUTE # MSIMPUTE_MNAR is slower
   # - GSIMP # slow even on data with fewer features (~44mins)
