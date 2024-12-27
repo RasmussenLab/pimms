@@ -34,11 +34,9 @@ Inspect the notebooks associated with the imputation workflow.
     MINDET <01_1_train_NAGuideR_MINDET.ipynb>
     IMPSEQROB <01_1_train_NAGuideR_IMPSEQROB.ipynb>
     RF <01_1_train_NAGuideR_RF.ipynb>
-    MSIMPUTE <01_1_train_NAGuideR_MSIMPUTE.ipynb>
     IMPUTE <01_1_train_NAGuideR_KNN_IMPUTE.ipynb>
     MINPROB <01_1_train_NAGuideR_MINPROB.ipynb>
     MLE <01_1_train_NAGuideR_MLE.ipynb>
-    MNAR <01_1_train_NAGuideR_MSIMPUTE_MNAR.ipynb>
     TRKNN <01_1_train_NAGuideR_TRKNN.ipynb>
     COLMEDIAN <01_1_train_NAGuideR_COLMEDIAN.ipynb>
     BPCA <01_1_train_NAGuideR_BPCA.ipynb>

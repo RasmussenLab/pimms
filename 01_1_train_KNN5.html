@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>K- Nearest Neighbors (KNN) &#8212; pimms_workflow 0.1.dev1+g6986e38 documentation</title>
+    <title>K- Nearest Neighbors (KNN) &#8212; pimms_workflow 0.1.dev1+gdfd9651 documentation</title>
   
   
   
@@ -16,8 +16,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -27,20 +27,20 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=6e42c05d"></script>
+    <script src="_static/documentation_options.js?v=af658cfd"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -52,7 +52,7 @@
     <link rel="prev" title="Transfer data for NAGuideR format" href="01_0_transform_data_to_wide_format.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g6986e38" />
+  <meta name="docsearch:version" content="0.1.dev1+gdfd9651" />
   </head>
   
   
@@ -127,7 +127,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g6986e38 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gdfd9651 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,11 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
@@ -233,9 +231,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -579,12 +582,12 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                     
-Sample_199  A0A0B4J1Z1;C9JAB2;Q16629;Q16629-2;Q16629-3;Q16629-4   16.379
-Sample_070  Q9ULB4                                                11.975
-Sample_123  Q04760;Q04760-2                                       16.034
-Sample_050  O14773                                                16.406
-Sample_147  P78324;P78324-2                                       19.562
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups 
+Sample_206  Q16706            16.088
+Sample_090  P19961            14.509
+Sample_068  O14791;O14791-2   16.759
+Sample_183  A0A0C4DH67        17.601
+Sample_125  A0A075B6S5        16.642
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -1927,8 +1930,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

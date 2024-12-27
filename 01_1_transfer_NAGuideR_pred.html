@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+g6986e38 documentation</title>
+    <title>Transfer predictions from NAGuideR &#8212; pimms_workflow 0.1.dev1+gdfd9651 documentation</title>
   
   
   
@@ -16,8 +16,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -27,20 +27,20 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
   <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=6e42c05d"></script>
+    <script src="_static/documentation_options.js?v=af658cfd"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -52,7 +52,7 @@
     <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_SVDMETHOD.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g6986e38" />
+  <meta name="docsearch:version" content="0.1.dev1+gdfd9651" />
   </head>
   
   
@@ -127,7 +127,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+g6986e38 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.1.dev1+gdfd9651 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -170,11 +170,9 @@
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE.html">MSIMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MSIMPUTE_MNAR.html">MNAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
@@ -233,9 +231,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -437,7 +440,7 @@
 <div class="cell tag_injected-parameters docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
-<span class="n">dumps</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&quot;</span>
+<span class="n">dumps</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&quot;</span>
 <span class="n">folder_experiment</span> <span class="o">=</span> <span class="s2">&quot;runs/alzheimer_study&quot;</span>
 </pre></div>
 </div>
@@ -460,7 +463,7 @@
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;dumps&#39;: &#39;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv,runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;,
+ &#39;dumps&#39;: &#39;runs/alzheimer_study/preds/pred_all_BPCA.csv,runs/alzheimer_study/preds/pred_all_COLMEDIAN.csv,runs/alzheimer_study/preds/pred_all_IMPSEQ.csv,runs/alzheimer_study/preds/pred_all_IMPSEQROB.csv,runs/alzheimer_study/preds/pred_all_IRM.csv,runs/alzheimer_study/preds/pred_all_KNN_IMPUTE.csv,runs/alzheimer_study/preds/pred_all_LLS.csv,runs/alzheimer_study/preds/pred_all_MINDET.csv,runs/alzheimer_study/preds/pred_all_MINIMUM.csv,runs/alzheimer_study/preds/pred_all_MINPROB.csv,runs/alzheimer_study/preds/pred_all_MLE.csv,runs/alzheimer_study/preds/pred_all_PI.csv,runs/alzheimer_study/preds/pred_all_QRILC.csv,runs/alzheimer_study/preds/pred_all_RF.csv,runs/alzheimer_study/preds/pred_all_ROWMEDIAN.csv,runs/alzheimer_study/preds/pred_all_SVDMETHOD.csv,runs/alzheimer_study/preds/pred_all_TRKNN.csv,runs/alzheimer_study/preds/pred_all_ZERO.csv&#39;,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;folder_data&#39;: &#39;&#39;,
  &#39;folder_experiment&#39;: Path(&#39;runs/alzheimer_study&#39;),
@@ -726,8 +729,6 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
  Path(&#39;runs/alzheimer_study/preds/pred_all_MINIMUM.csv&#39;),
  Path(&#39;runs/alzheimer_study/preds/pred_all_MINPROB.csv&#39;),
  Path(&#39;runs/alzheimer_study/preds/pred_all_MLE.csv&#39;),
- Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;),
- Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;),
  Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;),
  Path(&#39;runs/alzheimer_study/preds/pred_all_QRILC.csv&#39;),
  Path(&#39;runs/alzheimer_study/preds/pred_all_RF.csv&#39;),
@@ -828,14 +829,6 @@ pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all
 pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;)
 pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;)
 pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;)
-pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;)
-pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_MSIMPUTE_MNAR.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;)
-pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;)
 pimmslearn - INFO     Load fpath = Path(&#39;runs/alzheimer_study/preds/pred_all_PI.csv&#39;)
 pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;)
 pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;)
@@ -910,10 +903,8 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <th>LLS</th>
       <th>MINDET</th>
       <th>MINIMUM</th>
-      <th>...</th>
+      <th>MINPROB</th>
       <th>MLE</th>
-      <th>MSIMPUTE</th>
-      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
@@ -925,8 +916,6 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
     <tr>
       <th>Sample ID</th>
       <th>protein groups</th>
-      <th></th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -962,13 +951,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.858</td>
       <td>11.916</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>11.647</td>
       <td>2,513.638</td>
-      <td>7.043</td>
-      <td>8.755</td>
-      <td>13.069</td>
-      <td>14.859</td>
-      <td>15.696</td>
+      <td>12.906</td>
+      <td>14.911</td>
+      <td>15.788</td>
       <td>15.752</td>
       <td>17.206</td>
       <td>15.700</td>
@@ -987,13 +974,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>17.058</td>
       <td>12.900</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.673</td>
       <td>19.829</td>
-      <td>7.222</td>
-      <td>8.350</td>
-      <td>13.426</td>
-      <td>15.719</td>
-      <td>17.097</td>
+      <td>12.660</td>
+      <td>16.003</td>
+      <td>16.940</td>
       <td>17.221</td>
       <td>17.807</td>
       <td>16.738</td>
@@ -1012,13 +997,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>14.397</td>
       <td>12.313</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>11.899</td>
       <td>2,582.130</td>
-      <td>6.225</td>
-      <td>7.698</td>
-      <td>12.217</td>
-      <td>12.742</td>
-      <td>14.365</td>
+      <td>12.776</td>
+      <td>12.728</td>
+      <td>14.125</td>
       <td>14.846</td>
       <td>17.434</td>
       <td>13.776</td>
@@ -1037,13 +1020,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>19.005</td>
       <td>12.285</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>11.857</td>
       <td>2,483.120</td>
-      <td>8.694</td>
-      <td>9.447</td>
-      <td>12.987</td>
-      <td>17.620</td>
-      <td>19.128</td>
+      <td>12.582</td>
+      <td>17.392</td>
+      <td>18.852</td>
       <td>18.973</td>
       <td>17.111</td>
       <td>19.015</td>
@@ -1062,13 +1043,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.104</td>
       <td>11.827</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.758</td>
       <td>2,569.564</td>
-      <td>6.384</td>
-      <td>7.721</td>
-      <td>12.946</td>
-      <td>13.005</td>
-      <td>14.628</td>
+      <td>11.280</td>
+      <td>13.547</td>
+      <td>14.866</td>
       <td>14.726</td>
       <td>17.031</td>
       <td>14.699</td>
@@ -1077,8 +1056,6 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
     <tr>
       <th>...</th>
       <th>...</th>
-      <td>...</td>
-      <td>...</td>
       <td>...</td>
       <td>...</td>
       <td>...</td>
@@ -1112,13 +1089,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>22.836</td>
       <td>12.161</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.000</td>
       <td>2,634.108</td>
-      <td>10.576</td>
-      <td>10.866</td>
-      <td>12.982</td>
-      <td>22.228</td>
-      <td>22.887</td>
+      <td>12.453</td>
+      <td>21.888</td>
+      <td>22.902</td>
       <td>22.918</td>
       <td>17.330</td>
       <td>22.872</td>
@@ -1137,13 +1112,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.579</td>
       <td>12.586</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>11.998</td>
       <td>2,448.503</td>
-      <td>6.517</td>
-      <td>7.619</td>
-      <td>12.322</td>
-      <td>11.414</td>
-      <td>15.856</td>
+      <td>11.162</td>
+      <td>13.108</td>
+      <td>15.669</td>
       <td>15.877</td>
       <td>16.879</td>
       <td>15.671</td>
@@ -1162,13 +1135,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.903</td>
       <td>12.352</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.228</td>
       <td>2,487.550</td>
-      <td>6.409</td>
-      <td>7.989</td>
-      <td>13.594</td>
-      <td>14.363</td>
-      <td>15.759</td>
+      <td>14.241</td>
+      <td>13.964</td>
+      <td>15.877</td>
       <td>16.278</td>
       <td>17.215</td>
       <td>15.574</td>
@@ -1187,13 +1158,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>13.456</td>
       <td>12.504</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.600</td>
       <td>2,426.191</td>
-      <td>4.557</td>
-      <td>6.264</td>
-      <td>12.569</td>
-      <td>9.911</td>
-      <td>14.047</td>
+      <td>11.746</td>
+      <td>10.673</td>
+      <td>13.616</td>
       <td>13.995</td>
       <td>17.125</td>
       <td>14.518</td>
@@ -1212,13 +1181,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>14.931</td>
       <td>12.689</td>
       <td>7.068</td>
-      <td>...</td>
+      <td>12.445</td>
       <td>2,461.806</td>
-      <td>6.402</td>
-      <td>8.154</td>
-      <td>11.881</td>
-      <td>14.019</td>
-      <td>14.690</td>
+      <td>11.983</td>
+      <td>13.983</td>
+      <td>14.545</td>
       <td>14.849</td>
       <td>16.981</td>
       <td>14.485</td>
@@ -1226,7 +1193,7 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
     </tr>
   </tbody>
 </table>
-<p>12600 rows × 21 columns</p>
+<p>12600 rows × 19 columns</p>
 </div></div></div>
 </div>
 <p>Metrics for simulated missing values (NA)</p>
@@ -1289,8 +1256,6 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <th>MINIMUM</th>
       <th>MINPROB</th>
       <th>MLE</th>
-      <th>MSIMPUTE</th>
-      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
@@ -1311,12 +1276,10 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>108.639</td>
       <td>25.619</td>
       <td>97.284</td>
-      <td>25.951</td>
+      <td>25.744</td>
       <td>5,393,471.689</td>
-      <td>94.670</td>
-      <td>71.561</td>
-      <td>23.408</td>
-      <td>4.010</td>
+      <td>23.168</td>
+      <td>4.418</td>
       <td>0.452</td>
       <td>0.695</td>
       <td>8.040</td>
@@ -1333,13 +1296,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.695</td>
       <td>4.267</td>
       <td>9.468</td>
-      <td>4.279</td>
+      <td>4.261</td>
       <td>2,132.119</td>
-      <td>9.625</td>
-      <td>8.310</td>
-      <td>3.990</td>
-      <td>1.594</td>
-      <td>0.448</td>
+      <td>3.970</td>
+      <td>1.628</td>
+      <td>0.445</td>
       <td>0.580</td>
       <td>2.283</td>
       <td>0.436</td>
@@ -1364,13 +1325,9 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>2,892.000</td>
       <td>2,892.000</td>
       <td>2,892.000</td>
-      <td>2,892.000</td>
-      <td>2,892.000</td>
     </tr>
     <tr>
       <th>prop</th>
-      <td>1.000</td>
-      <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
@@ -1440,8 +1397,6 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <th>MINIMUM</th>
       <th>MINPROB</th>
       <th>MLE</th>
-      <th>MSIMPUTE</th>
-      <th>MSIMPUTE_MNAR</th>
       <th>PI</th>
       <th>QRILC</th>
       <th>RF</th>
@@ -1462,13 +1417,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.688</td>
       <td>24.975</td>
       <td>95.562</td>
-      <td>25.365</td>
+      <td>25.411</td>
       <td>5,505,296.129</td>
-      <td>93.951</td>
-      <td>70.800</td>
-      <td>22.712</td>
-      <td>4.407</td>
-      <td>0.569</td>
+      <td>22.742</td>
+      <td>4.314</td>
+      <td>0.568</td>
       <td>0.843</td>
       <td>8.370</td>
       <td>0.562</td>
@@ -1484,13 +1437,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.524</td>
       <td>4.190</td>
       <td>9.369</td>
-      <td>4.214</td>
+      <td>4.216</td>
       <td>2,175.538</td>
-      <td>9.580</td>
-      <td>8.255</td>
-      <td>3.903</td>
-      <td>1.646</td>
-      <td>0.478</td>
+      <td>3.901</td>
+      <td>1.644</td>
+      <td>0.479</td>
       <td>0.624</td>
       <td>2.314</td>
       <td>0.470</td>
@@ -1515,13 +1466,9 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>2,976.000</td>
       <td>2,976.000</td>
       <td>2,976.000</td>
-      <td>2,976.000</td>
-      <td>2,976.000</td>
     </tr>
     <tr>
       <th>prop</th>
-      <td>1.000</td>
-      <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
       <td>1.000</td>
@@ -1651,7 +1598,7 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
     </tr>
   </tbody>
 </table>
-<p>76 rows × 2 columns</p>
+<p>68 rows × 2 columns</p>
 </div></div></div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1669,26 +1616,24 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model          metric_name
-BPCA           MAE               0.406
-TRKNN          MAE               0.436
-RF             MAE               0.448
-KNN_IMPUTE     MAE               0.535
-IRM            MAE               0.575
-ROWMEDIAN      MAE               0.580
-LLS            MAE               0.695
-QRILC          MAE               1.594
-COLMEDIAN      MAE               2.204
-SVDMETHOD      MAE               2.283
-PI             MAE               3.990
-MINDET         MAE               4.267
-MINPROB        MAE               4.279
-MSIMPUTE_MNAR  MAE               8.310
-MINIMUM        MAE               9.468
-MSIMPUTE       MAE               9.625
-ZERO           MAE              16.536
-MLE            MAE           2,132.119
-IMPSEQROB      MAE           2,433.435
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model       metric_name
+BPCA        MAE               0.406
+TRKNN       MAE               0.436
+RF          MAE               0.445
+KNN_IMPUTE  MAE               0.535
+IRM         MAE               0.575
+ROWMEDIAN   MAE               0.580
+LLS         MAE               0.695
+QRILC       MAE               1.628
+COLMEDIAN   MAE               2.204
+SVDMETHOD   MAE               2.283
+PI          MAE               3.970
+MINPROB     MAE               4.261
+MINDET      MAE               4.267
+MINIMUM     MAE               9.468
+ZERO        MAE              16.536
+MLE         MAE           2,132.119
+IMPSEQROB   MAE           2,433.435
 Name: valid_fake_na, dtype: float64
 </pre></div>
 </div>
@@ -1736,14 +1681,14 @@ Name: valid_fake_na, dtype: float64
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/NAGuideR_errors_per_bin_val.png
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/3fa5fb1d5dd2a817778dc1597a6471cf_/lib/python3.12/site-packages/pimmslearn/plotting/errors.py:45: FutureWarning: 
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/pimms/pimms/project/.snakemake/conda/924ec7e362d761ecf0807b9074d79999_/lib/python3.12/site-packages/pimmslearn/plotting/errors.py:45: FutureWarning: 
 
 The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `err_kws={&#39;linewidth&#39;: 1.2}` instead.
 
   ax = sns.barplot(data=errors_binned, ax=ax,
 </pre></div>
 </div>
-<img alt="_images/b9abcd0b248a9fe05170e13bf2ba77d9efa3d5b234e2ef6418e94b46087f7f21.png" src="_images/b9abcd0b248a9fe05170e13bf2ba77d9efa3d5b234e2ef6418e94b46087f7f21.png" />
+<img alt="_images/d23e689cc9523123d21e7d354fa4a5b9b826e3915b53e4d4b436203133d4c230.png" src="_images/d23e689cc9523123d21e7d354fa4a5b9b826e3915b53e4d4b436203133d4c230.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1792,12 +1737,6 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
  &#39;pred_val_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MLE.csv&#39;,
  &#39;pred_test_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MLE.csv&#39;,
  &#39;pred_real_na_MLE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MLE.csv&#39;,
- &#39;pred_val_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE.csv&#39;,
- &#39;pred_test_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE.csv&#39;,
- &#39;pred_real_na_MSIMPUTE.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE.csv&#39;,
- &#39;pred_val_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_MSIMPUTE_MNAR.csv&#39;,
- &#39;pred_test_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_MSIMPUTE_MNAR.csv&#39;,
- &#39;pred_real_na_MSIMPUTE_MNAR.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_MSIMPUTE_MNAR.csv&#39;,
  &#39;pred_val_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_val_PI.csv&#39;,
  &#39;pred_test_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_test_PI.csv&#39;,
  &#39;pred_real_na_PI.csv&#39;: &#39;runs/alzheimer_study/preds/pred_real_na_PI.csv&#39;,
@@ -1922,8 +1861,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
