@@ -166,6 +166,12 @@ for (package in packages_base_R) {
   install_rpackage(pkg = package)
 }
 
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(version = "3.20")
+
+
 
 # + vscode={"languageId": "r"}
 methods = unlist(strsplit(methods, split = ","))
