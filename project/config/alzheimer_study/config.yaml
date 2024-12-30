@@ -67,8 +67,8 @@ NAGuideR_methods:
     - MINIMUM
     - MINPROB
     - MLE
-    - MSIMPUTE
-    - MSIMPUTE_MNAR
+    # - MSIMPUTE # currently does not work on Ubuntu
+    # - MSIMPUTE_MNAR
     - PI
     - QRILC
     - RF
