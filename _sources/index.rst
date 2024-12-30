@@ -7,6 +7,7 @@ Inspect the notebooks associated with the imputation workflow.
     :maxdepth: 2
     :caption: Split creation and data handling
 
+    01_0_install_R_packages.ipynb
     01_0_split_data.ipynb
     01_0_transform_data_to_wide_format.ipynb
 
