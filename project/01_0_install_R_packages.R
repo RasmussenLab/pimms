@@ -6,7 +6,7 @@
 #       extension: .R
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.14.5
+#       jupytext_version: 1.16.4
 #   kernelspec:
 #     display_name: R
 #     language: R
@@ -168,9 +168,6 @@ for (package in packages_base_R) {
 
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-
-BiocManager::install(version = "3.20")
-
 
 
 # + vscode={"languageId": "r"}
