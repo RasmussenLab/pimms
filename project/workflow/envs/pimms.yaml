@@ -7,7 +7,6 @@ channels:
   - fastai # fastchan
   - bioconda
   - plotly
-  # - defaults
 dependencies:
   - python>=3.9,<=3.12
   - numpy

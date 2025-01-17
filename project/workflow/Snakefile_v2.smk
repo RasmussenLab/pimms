@@ -121,11 +121,26 @@ rule transform_NAGuideR_predictions:
         " -p dumps {params.dumps_as_str}"
         " && jupyter nbconvert --to html {output.nb}"
 
-
+rule install_R_package:
+    input:
+        nb="01_0_install_R_packages.ipynb",
+        # methods=','.join(config["NAGuideR_methods"]),
+    output:
+        nb="{folder_experiment}/01_0_install_R_packages.ipynb",
+    conda:
+        "envs/trainRmodels.yaml"
+    params:
+        methods=','.join(config["NAGuideR_methods"]),
+    shell:
+        "papermill {input.nb} {output.nb}"
+        " -r methods {params.methods}"
+    
+      
 rule train_NAGuideR_model:
     input:
         nb="01_1_train_NAGuideR_methods.ipynb",
         train_split="{folder_experiment}/data/data_wide_sample_cols.csv",
+        nb_setup="{folder_experiment}/01_0_install_R_packages.ipynb"
     output:
         nb="{folder_experiment}/01_1_train_NAGuideR_{method}.ipynb",
         dump="{folder_experiment}/preds/pred_all_{method}.csv",
