@@ -65,7 +65,7 @@ jobs:
         cd project/runs/alzheimer_study/
         sphinx-build -n --keep-going -b html ./ ./_build/
     - name: Archive results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: alzheimer-study
         path: project/runs/alzheimer_study/
