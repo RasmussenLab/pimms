@@ -16,29 +16,26 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=439d2d59"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
@@ -52,7 +49,6 @@
     <link rel="prev" title="Transfer data for NAGuideR format" href="01_0_transform_data_to_wide_format.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.1.dev1+g327a431" />
   </head>
   
   
@@ -68,8 +64,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -77,6 +84,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -84,8 +92,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -101,8 +109,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -132,11 +139,15 @@
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -231,14 +242,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -335,16 +341,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -3994,7 +4008,7 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_1_pca_sample_by__collection_site
 </pre></div>
 </div>
-<img alt="_images/d2d74505e5cc99911489d211702d07a3a01d3b49143e233f6a2327bbbfb31421.png" src="_images/d2d74505e5cc99911489d211702d07a3a01d3b49143e233f6a2327bbbfb31421.png" />
+<img alt="_images/7f4a5e94aa8e0c5c231f218980c12425172d1e19b06454e30c8d4f309816adf6.png" src="_images/7f4a5e94aa8e0c5c231f218980c12425172d1e19b06454e30c8d4f309816adf6.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -11854,9 +11868,9 @@ maplibre-gl/dist/maplibre-gl.js:
 
 window.Plotly = Plotly;
 return Plotly;
-}));</script>                <div id="c4acc0f7-4e46-4c28-be2c-07d9555277b8" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("c4acc0f7-4e46-4c28-be2c-07d9555277b8")) {                    Plotly.newPlot(                        "c4acc0f7-4e46-4c28-be2c-07d9555277b8",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (11.62 %)=%{x}\u003cbr\u003eprincipal component 2 (10.17 %)=%{y}\u003cbr\u003eidentified protein groups=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Sample_000","Sample_001","Sample_002","Sample_003","Sample_004","Sample_005","Sample_006","Sample_007","Sample_008","Sample_009","Sample_010","Sample_011","Sample_012","Sample_013","Sample_014","Sample_015","Sample_016","Sample_017","Sample_018","Sample_019","Sample_020","Sample_021","Sample_022","Sample_023","Sample_024","Sample_025","Sample_026","Sample_027","Sample_028","Sample_029","Sample_030","Sample_031","Sample_032","Sample_033","Sample_034","Sample_035","Sample_036","Sample_037","Sample_038","Sample_039","Sample_040","Sample_041","Sample_042","Sample_043","Sample_044","Sample_045","Sample_046","Sample_047","Sample_048","Sample_049","Sample_050","Sample_051","Sample_052","Sample_053","Sample_054","Sample_055","Sample_056","Sample_057","Sample_058","Sample_059","Sample_060","Sample_061","Sample_062","Sample_063","Sample_064","Sample_065","Sample_066","Sample_067","Sample_068","Sample_069","Sample_070","Sample_071","Sample_072","Sample_073","Sample_074","Sample_075","Sample_076","Sample_077","Sample_078","Sample_079","Sample_080","Sample_081","Sample_082","Sample_083","Sample_084","Sample_085","Sample_086","Sample_087","Sample_088","Sample_089","Sample_090","Sample_091","Sample_092","Sample_093","Sample_094","Sample_095","Sample_096","Sample_097","Sample_098","Sample_099","Sample_100","Sample_101","Sample_102","Sample_103","Sample_104","Sample_105","Sample_106","Sample_107","Sample_108","Sample_109","Sample_110","Sample_111","Sample_112","Sample_113","Sample_114","Sample_115","Sample_116","Sample_117","Sample_118","Sample_119","Sample_120","Sample_121","Sample_122","Sample_123","Sample_124","Sample_125","Sample_126","Sample_127","Sample_128","Sample_129","Sample_130","Sample_131","Sample_132","Sample_133","Sample_134","Sample_135","Sample_136","Sample_137","Sample_138","Sample_139","Sample_140","Sample_141","Sample_142","Sample_143","Sample_144","Sample_145","Sample_146","Sample_147","Sample_148","Sample_149","Sample_150","Sample_151","Sample_152","Sample_153","Sample_154","Sample_155","Sample_156","Sample_157","Sample_158","Sample_159","Sample_160","Sample_161","Sample_162","Sample_163","Sample_164","Sample_165","Sample_166","Sample_167","Sample_168","Sample_169","Sample_170","Sample_171","Sample_172","Sample_173","Sample_174","Sample_175","Sample_176","Sample_177","Sample_178","Sample_179","Sample_180","Sample_181","Sample_182","Sample_183","Sample_184","Sample_185","Sample_186","Sample_187","Sample_188","Sample_189","Sample_190","Sample_191","Sample_192","Sample_193","Sample_194","Sample_195","Sample_196","Sample_197","Sample_198","Sample_199","Sample_200","Sample_201","Sample_202","Sample_203","Sample_204","Sample_205","Sample_206","Sample_207","Sample_208","Sample_209"],"legendgroup":"","marker":{"color":{"dtype":"i2","bdata":"tQTDBOgEyQS5BPAEgwTrA7oEowTLBOYEhgQ3BOEDywNBBEUE+QRpBKUEnwSfBJMErQSBAzUElgSBBLEEpwRUBDAEIAPVA7QEKwTbA+EDSgTsAw8EUQS9BEYESgRQBL0DegQ1BLwDUgRwBFYEfgSgBI0ERATVBEwEuwTRBBsFIQXaBDIFOAUMBZ4EJgXmBCkFPgUeBf0E2QQLBTEFCQU5BRUF+gTABAsFqAQaBTsFBgW4BAgFHAXWBBcF3QQkBc8EFQUtBTAFGwXkBO8EHQXMBKYEPwTUBDoEWQR+BEQEoATsBKME8gTIBBQFCAXvBLkE3QSlBIAEAgXTBMIE5gQlBbIE\u002fAQSBSEEFQXxBBUFzQS6BLAEZQRWBJkEwQTGBJ4E0gQKBfYEQARLBP4EjAQHBYUEsgT\u002fBCEFjgQXBcgEEgUIBSIFGgRwBCUF7AQlBbkE5ASwBPcEGQQyBYwEGwXPBMUERwTFBJkE8AS6A9ME2gTKBEYEKwUTBYgEZQQcBUEEQATjBK0E5gRnBMsE+wOXBG0D2wQpBf8EjAQ7BeoEFQXrBN8E"},"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":{"dtype":"f8","bdata":"ga7t3miuMMAHlx67PpopwCeM8QVckSvA2sQg4aBwMMDi22TU4EEuwA91K\u002fNVFinA4sl+KxQXKMCOtWROpXopwFT\u002fpWV\u002f\u002fy\u002fAF3KL\u002ftrnKcBlHXNeWEsxwHu9rm8lZzDAzSwB4NDmKMAxbeWl7BErwNWzvsz7BCzALfIGGhdNKcCIm8uo8KcrwFb8Z+ohIyrAJ79In5asKsADVO6Dbc4swBaAxiYhES7ATsWyGB3BKMAcyl8wv9cowKiC5\u002fZ3jDDAnWgrqt6MMcAegzX2KYEjwGaz7npQQSnACFpImphXMMDtywo6kzEwwLki2MFbMy7AtawwMp3RKsBjAyt8gDAlwDX+azYDnSfAnQB5kyKvGcB6IKtxU58lwJxQIKREtizAr\u002fkwCP4fLsBV45rKUncmwAd34Hio\u002fCTAjf4xc3h2KcChcsDBW\u002fgnwPtRZTUrdirAkvA4i4jyJMCZ1RLnXRgvwAWgg3tokCXAL7uW7d9JJsC7I+Lqg54qwNuD22mkPSPAlUXFBelAK8Ba31k3C4spwB5iTuBJFirAsxIgwop6L8DWbiO7zhQvwIJy+yIT\u002fC3ArYepPeT5KMDVlW3ALtErwN229hhtHS\u002fAKv7L7TJJMMCAwvhULHExwMlbvP8fuyjA67KE3SL8LMAR4PUbAVQRQPBLlQDJVxlA\u002fFFXN6REF0AFsa1RFGkYQExFreEYVBRABfyyX7JPB0C00XZheWYcQOZf7HRukhdA8rgu08UiEkD2iA0LccEMQNZ6YgRmGxBA7QosknTTE0CC4hUHmxIPQCDksIgKbRlALT7l6k+PHkD8zvvmhx8dQCfeB+ii2RRAuRMK05ZBHEAjKffA0mYTQNh+kA8dIRRAy0ytTvLNEkDpkKW5GzQhQEPtsyhZABtAPqcKaRUlIEDyJzqaEbsUQKAm\u002f1RA+RRA2ckOmCXrG0DxC0knn8kYQDMMZ8eIThVAhM4ZJaZHDkCT\u002f+GoJ5EWQIjMve1I9RhAcyHjySAgFkC6rIUoaE4TQFQCI47QtAxAW4lEa5MzCUBD40PLMngSQF0J+qPIxg5ARJ5AmXbUHEAohwdG640gQMlullTiORhA3pp7QzUoGUB6DAqgV2gawAhD+HpZl8w\u002fVKxX\u002fwxQ+T9SbRllEKcJQOeGddBT9vM\u002f590hN+2bEEAMcSPSDV0OQIBMc0CdVwhAjoKO10yp8L+OVEorQULzv1QnnQr4t\u002fs\u002fQVIWAN++BUCkp8NfIq0CQMTYN+QknBJAK4PIbB0LeD8xM72QDLcAQKnJQEI\u002fBQtAXywRQeUKEEAjMlxvVIAfQADF3MniXx5A+5HZS9WIGUDvIm8PKv0aQFCmh8+r2yBAvjFDkKaRFUDntdsp8XARQPNO0wQXeBNAaxfDsgPkIEDIGkcVHHEcQMVKX\u002ftRsxhAd579i3ZUEUBQyzdlUlYMQJzDgDseqRhAey9DfylmFkA++ci54rkBQCeoAgWXzw9A5nm6S7XJGkCxQblDcz8eQNpvr4mnViBASZAxwIYFIkBw6GdiFf0gQB9\u002fl4k5xRxAydtKVvf4HEBoYn2bD6UaQIR4HBpBjh1AACcj9zbjFECj2IBCDSgbQLLI6a1gISBAYyD4FGGYF0AYmLHYs3gSQHT88rabASBA4+uKawNoGEDFjUV\u002fYHwaQLiDWjDOThdAvNyKKlkwA0B29jfUfyocQPjHqGFX0BdAnqCR+C5NEkCkTI7jr0sbQMAIl5wpJRpAYFe1mC8mHUDvmtTr5lsfQAWLuXxZaxxAA51gKzhmIEBQ1l7rRDUYQHeuKt7rzBxAthWAeaQcH0CACRQ+ihQQQHa6UdtiZBpAsWeQ\u002fmBzDkDkKZNf3IEVQMw3YQfY5hhAVXZMJYIlD0AQk3ik\u002fQcTQGkIrSCz2B9A6YSCQk6IGEA+MJtzJ9sRQO+2C\u002fWSeCFAp\u002fwEOJDOIEAleSFN+ooVQN0lNN0pFhVA66Gwp\u002fRkEUBRySmgNooaQLH+RpbwDBhA7GL4UTZ\u002fAUD9PfaQDMUbQAxeCl6\u002fhxpA8gtt3RhAIkD1qQoQmVEbQAaiKqE0AxxAKH5pi+S8H0D0T2fwkX8cQFiml\u002fxW3RhAh7Xx2qMrF0DeLu3sB94XQAikdzltxx9ATjmX4XHKE0DEg6\u002fKjiwRQCvrkaUAABxAfDz9M3A4GEDXe0I\u002fGhseQBk0g+wFwR1Ai6tyNuqzGEBKwfzndLoaQBu8dsJ5nh1AD2pZuTtRHUCSQWDf0R0gQMy2QkTKQA1A"},"xaxis":"x","y":{"dtype":"f8","bdata":"tAF6v+H7IMDqn5pSnHkUwEWxkxjj5inAEyl20zU5JMAmFMalm+IZwNC6wq4fzRHAP8WVC1du+b+hzepEi2gsQFieKXSkqRnA1lenRwgmD8Az6rIVLJUhwP2MUlMmPCfAtHu38UycDkC66i8hrk0UQPvnjqsgABJA2udHkYZeBEAoRWQyAbf5P0+ro0VRwh9ATSy0MCkpMsDA50zDhhH\u002fP9q7byK8Psk\u002fGrknuC2YIMAjF68EdkghwO4XPE082BXA\u002fZfZDRARGMA6ERzGXUUpQP9VKg65xAhAkCNrLsnbEcBqEcn7YloUwKuzCR8hmSDAvFMEDBx6IcDQvRb+IlQFQIaXSHc4YR9AJkcXOuRbN0B6Cib6gykoQPD8tvYC7yLAtQZ5RuQUIED+Dl\u002fFwqcrQAVZS2A1tiBA6TuB3qfBHEDUnCO+3wMwQHhajzCeeCVA3WmNg8D8+D9aOVuWqHMiwI1OapaPPxhAFlbXfjbqIUCBhVKyYbsIQGAn5drzjyZAbUGDOaez\u002fD9RRq7EHlQPQA58aXlL7DBAYdaY9PJFCkAQ1bW9LbEEQPTBVHQDVgNAySZr+WZGBMBUKfmyain\u002fvyrSdNHhNhDA8UdZF8k3+j\u002fDhHk0+hklwCGDnJ9sZxJAwNLuzun8HsAzagQ18coiQBC1ERelPwrAFNj1VkG1BMDfV8Kvq1n4P\u002fJQrZuJsCPARsufwaiPGsA1kZXl7WwGQEgSwo\u002fcliNAiWGC4V+GH8BF+zxI+lAdQAa6yb6ukhTA+TauMAH9MMAVvYY+kwkGQKV7oR4s8hVAVP+pIdhtHkCOFpx6TyghwCT4eO9duynABLufE22SEECnHsteESEVwOtUXP2aahjAULoVzQ8nFUB53oO3aGsmQJVuMI2vytM\u002fkuCJwnppJ0BbMrhMULIQwEROjuX\u002fWSPAMkD6al4267+EioFbdascQEOM7hO\u002f6QhAo8acRVhX7T9Sqe4fpOoiQF2rJnwTO\u002fu\u002f9wuaeLhkJECSPnKeAyckwAQmnv0BnitASONR9kcPA8CVjF89CXIVwOch01Xe8CXAJyE3O8MmEsAHvqXZBlH+P+OQwb1SAvi\u002fkd7PmOx2CsDPjZODvXQCQN+r4tHKfiRA517Gq25NJkCwG9vWcCPyv1I1q9xlcyVAfx3YQ06iKkBJKmpHBXwpQCjKqOB1ujJAOb0LT1ClI0D3+itH9J4XQF0nGMd1pSdAPiBrVnADEUCZ8gG33xkcQD3KOCizmg3AGM8VT+pyJcDF3wwdreoVQMdtTbOxSCJA0j9Ost1xD8BNJVYPmoQIQKZ2765SNhpADvfCB9F8H8C4zR4sgRwGQLCgCvfylPc\u002fCn1QKaf9DUCvApTCeicswPCGauSEv\u002fQ\u002fTrmIoW2gFMCcJ8D1tA8lwPUlv9+kHDRA4cGGIer0JMDTQ00qSn8iwLN9Fm6aYirAco57SSK4FED0lw5Cr2gRwDbZYi64RgLAmrfUQsB8E8AX46xIQZYrQNIkYs3CqBRAsTng\u002fbo\u002fHEBIOxk13hbeP\u002fZS+PqL5ApAqrFMdUkO57\u002fp6SZSyg8FwDiu\u002fejUgwXAbJkfydEo8T8KakTkn+owQMfSib\u002fiayPA0wHTVc1tDUBWsOPnE\u002fQywJoUsb9vxBRAhrVBUrC8FEAHkB\u002f8e8MpwBOrRk\u002fiHxvAq6wpfztZ8b8cUpCegLwqwNdTRUZYS9M\u002f6eDk2SINKMDrqejO414BwDgaAQywjCrAID+rFpT9IUCA16ww68UcQD17Ig11TyHAtVSzQCP9CsDO8KTM31QnwFBi+vQFmf8\u002fhdY+KPGG5z\u002f19UZEzzAKwFY0V4qcCAXAwvmcvgB3DcD\u002fDv0uccojwE8BrPI6F4+\u002fjZ+50KYPJMB3O2zqVGMjwEFpbq0vZdU\u002fobj2\u002fbM5IkAyf93ReXwZwKH7QLTEMRVAEzhigYYe5z\u002faUh5K3TAmQB\u002fAZ9xKvi7Aed9HLhKsIMCDe\u002fDXWDkNwDTpEe1RZh5AAjZtJ5ylLsB3h9NAYacLwEiT4SL1IAZAjj5SZqqxJEBg7S6dzJQlwAQ+UOHdsR9A4ONl\u002fzxLLECI4o\u002fPRIj4vyss46Mj+Pw\u002fDvK78qFL9D9kV+ltkg4EQEOmLOKfygVAPfs8FjOX7b8LdN5kbk\u002fjvyJl0mh9xDBAXfHQb3nlBcDunbxVx2InwMWCBw2zUQTANZuJwJ\u002fBK0CogeAx4pcuwEpbaOfMgBjAr6gkvBMVJsCGfTXktAAWwIC5WH1\u002fSR7A"},"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (11.62 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (10.17 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified protein groups"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 1421 protein groups for 210 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
+}));</script>                <div id="dd5c15af-7ccf-4bb6-8519-50475fed7c16" class="plotly-graph-div" style="height:600px; width:1200px;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("dd5c15af-7ccf-4bb6-8519-50475fed7c16")) {                    Plotly.newPlot(                        "dd5c15af-7ccf-4bb6-8519-50475fed7c16",                        [{"hovertemplate":"\u003cb\u003e%{hovertext}\u003c\u002fb\u003e\u003cbr\u003e\u003cbr\u003eprincipal component 1 (11.62 %)=%{x}\u003cbr\u003eprincipal component 2 (10.17 %)=%{y}\u003cbr\u003eidentified protein groups=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","hovertext":["Sample_000","Sample_001","Sample_002","Sample_003","Sample_004","Sample_005","Sample_006","Sample_007","Sample_008","Sample_009","Sample_010","Sample_011","Sample_012","Sample_013","Sample_014","Sample_015","Sample_016","Sample_017","Sample_018","Sample_019","Sample_020","Sample_021","Sample_022","Sample_023","Sample_024","Sample_025","Sample_026","Sample_027","Sample_028","Sample_029","Sample_030","Sample_031","Sample_032","Sample_033","Sample_034","Sample_035","Sample_036","Sample_037","Sample_038","Sample_039","Sample_040","Sample_041","Sample_042","Sample_043","Sample_044","Sample_045","Sample_046","Sample_047","Sample_048","Sample_049","Sample_050","Sample_051","Sample_052","Sample_053","Sample_054","Sample_055","Sample_056","Sample_057","Sample_058","Sample_059","Sample_060","Sample_061","Sample_062","Sample_063","Sample_064","Sample_065","Sample_066","Sample_067","Sample_068","Sample_069","Sample_070","Sample_071","Sample_072","Sample_073","Sample_074","Sample_075","Sample_076","Sample_077","Sample_078","Sample_079","Sample_080","Sample_081","Sample_082","Sample_083","Sample_084","Sample_085","Sample_086","Sample_087","Sample_088","Sample_089","Sample_090","Sample_091","Sample_092","Sample_093","Sample_094","Sample_095","Sample_096","Sample_097","Sample_098","Sample_099","Sample_100","Sample_101","Sample_102","Sample_103","Sample_104","Sample_105","Sample_106","Sample_107","Sample_108","Sample_109","Sample_110","Sample_111","Sample_112","Sample_113","Sample_114","Sample_115","Sample_116","Sample_117","Sample_118","Sample_119","Sample_120","Sample_121","Sample_122","Sample_123","Sample_124","Sample_125","Sample_126","Sample_127","Sample_128","Sample_129","Sample_130","Sample_131","Sample_132","Sample_133","Sample_134","Sample_135","Sample_136","Sample_137","Sample_138","Sample_139","Sample_140","Sample_141","Sample_142","Sample_143","Sample_144","Sample_145","Sample_146","Sample_147","Sample_148","Sample_149","Sample_150","Sample_151","Sample_152","Sample_153","Sample_154","Sample_155","Sample_156","Sample_157","Sample_158","Sample_159","Sample_160","Sample_161","Sample_162","Sample_163","Sample_164","Sample_165","Sample_166","Sample_167","Sample_168","Sample_169","Sample_170","Sample_171","Sample_172","Sample_173","Sample_174","Sample_175","Sample_176","Sample_177","Sample_178","Sample_179","Sample_180","Sample_181","Sample_182","Sample_183","Sample_184","Sample_185","Sample_186","Sample_187","Sample_188","Sample_189","Sample_190","Sample_191","Sample_192","Sample_193","Sample_194","Sample_195","Sample_196","Sample_197","Sample_198","Sample_199","Sample_200","Sample_201","Sample_202","Sample_203","Sample_204","Sample_205","Sample_206","Sample_207","Sample_208","Sample_209"],"legendgroup":"","marker":{"color":{"dtype":"i2","bdata":"tQTDBOgEyQS5BPAEgwTrA7oEowTLBOYEhgQ3BOEDywNBBEUE+QRpBKUEnwSfBJMErQSBAzUElgSBBLEEpwRUBDAEIAPVA7QEKwTbA+EDSgTsAw8EUQS9BEYESgRQBL0DegQ1BLwDUgRwBFYEfgSgBI0ERATVBEwEuwTRBBsFIQXaBDIFOAUMBZ4EJgXmBCkFPgUeBf0E2QQLBTEFCQU5BRUF+gTABAsFqAQaBTsFBgW4BAgFHAXWBBcF3QQkBc8EFQUtBTAFGwXkBO8EHQXMBKYEPwTUBDoEWQR+BEQEoATsBKME8gTIBBQFCAXvBLkE3QSlBIAEAgXTBMIE5gQlBbIE\u002fAQSBSEEFQXxBBUFzQS6BLAEZQRWBJkEwQTGBJ4E0gQKBfYEQARLBP4EjAQHBYUEsgT\u002fBCEFjgQXBcgEEgUIBSIFGgRwBCUF7AQlBbkE5ASwBPcEGQQyBYwEGwXPBMUERwTFBJkE8AS6A9ME2gTKBEYEKwUTBYgEZQQcBUEEQATjBK0E5gRnBMsE+wOXBG0D2wQpBf8EjAQ7BeoEFQXrBN8E"},"coloraxis":"coloraxis","symbol":"circle"},"mode":"markers","name":"","orientation":"v","showlegend":false,"x":{"dtype":"f8","bdata":"8zqP4GiuMMCTuZq3PpopwBgYMgRckSvAx4wL46BwMMCvwK3R4EEuwO6MLPBVFinAnab4KxQXKMBjEgBTpXopwEXXl15\u002f\u002fy\u002fAb+YICdvnKcCg80dbWEsxwCJD3HIlZzDA3q9S3dDmKMAk\u002fvio7BErwPisWMz7BCzAxPGsHRdNKcD4hjGq8KcrwOK1ieIhIyrAWuuzk5asKsC0TIuNbc4swN3EyyQhES7AjQhaEx3BKMB1YjEsv9cowB4amPF3jDDAo197pd6MMcBohgkBKoEjwLERFXxQQSnALQrNmphXMMAiVx85kzEwwJPYd8BbMy7AqcScOZ3RKsB\u002fnQV6gDAlwNwV0D4DnSfAEBeypiKvGcA00LV9U58lwBvH7qxEtizABlTYC\u002f4fLsC\u002fflfVUncmwPOzdYKo\u002fCTA6De8d3h2KcBTMtvDW\u002fgnwDWGGjArdirAwyQwkojyJMC40cflXRgvwHRB7HtokCXAEkX\u002f8N9JJsBJorfng54qwOrt326kPSPAlb4IBulAK8D6OI03C4spwD6XLuNJFirADaUJuYp6L8CSLya7zhQvwKnQEyMT\u002fC3AY2u1POT5KMBdl367LtErwHtYTiBtHS\u002fAzTBR6DJJMMD\u002f4t1VLHExwEjwVQAguyjATezy2iL8LMCW5kInAVQRQLvcAe\u002fIVxlAw2n5OqREF0DIHJY7FGkYQMPr2dsYVBRANyz5YbJPB0CZ0h9UeWYcQNPh7WpukhdAo7Ue68UiEkDHFFnOcMEMQB5B6RxmGxBAPAqwlHTTE0Ct1ijkmhIPQLQV0YUKbRlAUldb90+PHkANn32+hx8dQO1E\u002fNui2RRAtjA\u002fz5ZBHEAI3yKu0mYTQLSggfYcIRRAHiATVvLNEkCCNHy9GzQhQCBG2CNZABtAyh7xYBUlIEClCjSYEbsUQCA+nWJA+RRAAZdWgiXrG0DztjYxn8kYQEdj5sOIThVAMTh4FKZHDkAW4LC3J5EWQDIWlOpI9RhASA\u002fB7SAgFkAIU6QuaE4TQMiXoqDQtAxAqboGQpMzCUBFIITbMngSQJ0zrWnIxg5AGLUspnbUHECvWWNG640gQC\u002f95FTiORhAF6abKzUoGUCiDTCcV2gawDrJjx9bl8w\u002fgQXWQA1Q+T8C12uLEKcJQDo60C5U9vM\u002fGRJvHu2bEEDpu97qDV0OQIpapmydVwhAbBfvY0yp8L\u002fO4v0OQULzv4fjnQ74t\u002fs\u002fGKcaHt++BUDfyvOhIq0CQMfNI\u002fAknBJAuO\u002fiDssKeD+cSnpiDLcAQIglTJM\u002fBQtAdda3WeUKEEDOIKB\u002fVIAfQILzRsbiXx5A6yY6StWIGUC\u002fPwcCKv0aQPZ\u002f\u002fcqr2yBAbANJjKaRFUDPNFUw8XARQEp77vkWeBNAfTxOugPkIECkVnARHHEcQAlYCAlSsxhAnvu9g3ZUEUDCwQqZUlYMQGXSPjweqRhAEm1VgClmFkBcWPaf4rkBQMmWuu6Wzw9A3hGWObXJGkDSFQY6cz8eQCLiO4KnViBA0FogvYYFIkC2L8pjFf0gQIfg4JY5xRxAcg2fTPf4HEBGQqGsD6UaQGMJUx9Bjh1AEHVb\u002fjbjFEButls6DSgbQMAt5KVgISBAkJPZ\u002f2CYF0D8FB\u002f\u002fs3gSQOEEMrubASBA77T5dANoGEDCmPFsYHwaQE6TEhTOThdAAhNQEVkwA0AIyhrjfyocQBZoQF1X0BdAncDDBy9NEkDTt7zNr0sbQHejAoYpJRpA3z2klC8mHUANkUvi5lsfQPaqxIVZaxxAki\u002fyLDhmIEDov3zYRDUYQEI6Ed\u002frzBxASL7bZqQcH0BdBSJpihQQQEEQRMViZBpA1CuX82BzDkBicrtc3IEVQDw3sxbY5hhApnnp+IElD0C1rUyg\u002fQcTQNQrsSiz2B9AUruiT06IGEAFqmhwJ9sRQBF0F\u002fCSeCFA362sP5DOIEAFz8FU+ooVQGNXM\u002fopFhVAg3TQrfRkEUCN3ICiNooaQDweDKLwDBhAbno8UjZ\u002fAUAStyR6DMUbQBgUinW\u002fhxpAK3Be1xhAIkDikW0SmVEbQMX4AZ40AxxAc3Onj+S8H0DljyrlkX8cQOnpRPtW3RhAdzHG26MrF0ArSSX2B94XQEcXCTxtxx9A2VU20XHKE0Dx3bnhjiwRQEM0Y5UAABxA5TcoLnA4GEAhKeUjGhseQBIKI+4FwR1Ac7ehW+qzGEA1h3nldLoaQLQaGNV5nh1Acfq5zTtRHUDc2oDk0R0gQGBJmnDKQA1A"},"xaxis":"x","y":{"dtype":"f8","bdata":"eJDquuH7IMBl8odvnHkUwGzktx\u002fj5inA99IHyTU5JMCd3Zuom+IZwCwLPtofzRHAbYCoY1du+b+IRKdYi2gsQHGN7oOkqRnAdn7G0AcmD8BvX7wqLJUhwJBSGzgmPCfAN2aAwEycDkDKSLdork0UQBHRLq8gABJAAMaZNIdeBEB77nSNAbf5PxRCmQFRwh9AYmTrSCkpMsCl6awdiBH\u002fPyh\u002fgO23Psk\u002f7S+Qzi2YIMCZZnMQdkghwFFdNXE82BXAdfhaLRARGMD4lxv5XUUpQIZyIQ+5xAhAZ2ZzFcnbEcCEw3PNYloUwAzwKyAhmSDAJg6kBBx6IcAHFS\u002fnIlQFQDwzvK04YR9AsNZ9UORbN0BSm1MehCkoQPUQ9tgC7yLAQ6oiYuQUIEBWrXXmwqcrQFZJBoU1tiBAfgQ92qfBHEACw1fA3wMwQJRFHxSeeCVAXuv0bsH8+D8E2P+uqHMiwFASPouPPxhAvc4FfTbqIUC86wIvYbsIQBFfkNrzjyZAYBUzp6ez\u002fD\u002fds9LUHlQPQCVUZ35L7DBAQCf0aPJFCkDhN64BLrEEQEL5YEwDVgNAycDnPWdGBMC2RizXayn\u002fv0lLipThNhDAnepp5sc3+j8D5wMh+hklwGo3C4FsZxJAzEFOyOn8HsDSnMwW8coiQB+8msGkPwrApAuTr0G1BMAq2VgErVn4P69mkJWJsCPAB\u002foKu6iPGsDL0zFO7mwGQJSWMKLcliNAbFhKYmCGH8CsbuvJ+lAdQDIGwyivkhTAq+9oMwH9MMAnuX75kwkGQMvQcj0s8hVA5aeB59dtHkCBVgY0TyghwL9Pk+pduynAwQJ\u002fQ22SEECHJ3T8ECEVwDOEG7SaahjA9+ktmw8nFUAG3IqpaGsmQP+FEZixytM\u002fuZlq1HppJ0AX5b4vULIQwKAL\u002fwkAWiPAMBBzhVs267\u002f4wrxCdascQIF6vRK\u002f6QhAiI0J5VlX7T+YktT\u002fo+oiQJQ402gTO\u002fu\u002f4MMhLrhkJEAFC5K5AyckwAtlTvABnitAQRphREcPA8CAw9mhCXIVwLp8wS3e8CXAUR3mksMmEsBRB2puB1H+P8c7ArpSAvi\u002f4EVE9Ot2CsBiLCJEvXQCQLE9kbrKfiRAPZr0g25NJkCH6OJvcSPyvzlssrBlcyVAAYbYWU6iKkDne4guBXwpQB2z9tB1ujJAC+yLGFClI0DA9JIF9J4XQAHRksV1pSdATq7lJXADEUA5JTVJ3xkcQBwja4Gzmg3ADPi1LepyJcDo8hdkreoVQHfgFXqxSCJAOMHr1t5xD8C8Vz2dmYQIQAR8Fr5SNhpAtiOGDdF8H8AH2OOhgRwGQC7JWKbzlPc\u002fD\u002f1hhKf9DUBVNji2eicswGvxcw+Fv\u002fQ\u002fMTp+zm2gFMCusGTwtA8lwNT\u002fCMukHDRAR+itEOr0JMB4MlFrSn8iwJb7P3maYirAOLsuWyK4FECeSUQhr2gRwKMxF7u3RgLAv84Kur98E8D8vhxfQZYrQKTMt\u002fjCqBRAl+vzGrs\u002fHEBcl66S3hbeP95ky7iL5ApAGSb6z0gO579E5\u002fDoyg8FwHd9nDXVgwXAjS5Ge9Eo8T8TdQ\u002frn+owQOlEjpriayPAwswdMc5tDUCSaWUKFPQywFy\u002fqqVvxBRALEADI7C8FEDd9InZe8MpwP5x7c3hHxvAOXR6DTtZ8b81D0jGgLwqwNwtZ+5XS9M\u002f6rztBCMNKMDurs8P414BwLjeXdWvjCrAehYBHJT9IUA0nvpN68UcQCNtYhV1TyHAkwPadiP9CsADnrOW31QnwHDONMoFmf8\u002fRp9BzfOG5z\u002fQNNKM0DAKwFfeZZqbCAXA6B2\u002fiAB3DcC6J6YMccojwOTZ1XHRF4+\u002fG2sSpaYPJMDEVyDqVGMjwAzf2+YsZdU\u002fChME27M5IkDbT4rheXwZwOFx5dzEMRVA4nE+ZIQe5z+KARpA3TAmQPKmlRVLvi7AVi4xRBKsIMB1Xi\u002fQWDkNwGxQe95RZh5AHob\u002fJ5ylLsDrvJBTYKcLwASSC2b0IAZAVWgQhaqxJEC9OjyqzJQlwOvNbQzesR9A11sa8TxLLEDE++FURIj4v96varIj+Pw\u002foXHLIKJL9D9wuFYPkg4EQDBSeM+fygVABGGA6DCX7b9w8+QScU\u002fjv6Id0Hx9xDBAXayeOXnlBcDakm8Tx2InwPyO6DizUQTA83qFkJ\u002fBK0D5zWwM4pcuwI3pakvNgBjA1FQL4xMVJsCSU9UKtQAWwHD\u002fae9\u002fSR7A"},"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"scatter":[{"type":"scatter"}]}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"principal component 1 (11.62 %)"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"principal component 2 (10.17 %)"}},"coloraxis":{"colorbar":{"title":{"text":"identified protein groups"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"First two Principal Components of 1421 protein groups for 210 samples"},"height":600,"width":1200},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('c4acc0f7-4e46-4c28-be2c-07d9555277b8');
+var gd = document.getElementById('dd5c15af-7ccf-4bb6-8519-50475fed7c16');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -13547,7 +13561,7 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2878/3486782611.py:6: FutureWarning:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2813/3486782611.py:6: FutureWarning:
 
 Starting with pandas version 3.0 all arguments of to_excel except for the argument &#39;excel_writer&#39; will be keyword-only.
 </pre></div>
@@ -14074,7 +14088,7 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2878/657883200.py:16: UserWarning:
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2813/657883200.py:16: UserWarning:
 
 To output multiple subplots, the figure containing the passed axes is being cleared.
 pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3_intensity_median_vs_prop_missing_boxplot_val_train
@@ -14447,8 +14461,7 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/0_3
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -14530,8 +14543,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
