@@ -51,6 +51,15 @@ jobs:
       run: |
        cd project
        snakemake -p -c4 -k --configfile config/single_dev_dataset/example/config.yaml --use-conda
+    - name: Archive results (also for failed runs to debug)
+    # https://github.com/actions/upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.os }}-${{ matrix.python-version }}-example-workflow-results
+        path: |
+          project/runs/example/
+          snakemake_env
+          project/.snakemake/conda/
     - name: Run demo workflow again (in case of installation issues)
       continue-on-error: true
       run: |
@@ -60,19 +69,11 @@ jobs:
       run: |
         cd project
         snakemake -p -c1 --configfile config/single_dev_dataset/example/config.yaml --use-conda
-    - name: Archive results
-    # https://github.com/actions/upload-artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.os }}-${{ matrix.python-version }}-example-workflow-results
-        path: |
-          project/runs/example/
-          snakemake_env
-          project/.snakemake/conda/
+
 
   run-unit-local-pip-installation:
     runs-on: ${{ matrix.os }}
-    name: test-pip-installation
+    name: ${{ matrix.os }}-${{ matrix.python-version }}-test-pip-install
     strategy:
       fail-fast: false
       matrix:
