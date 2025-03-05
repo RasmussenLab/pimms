@@ -228,4 +228,4 @@ rule dump_env_pimms:
         "envs/pimms.yaml"
     shell:
         "conda env export --from-history --no-builds > {output.env_dump:q}"
-        " && conda env export --from-history > {output.env_dump_w_version:q}"
+        " && conda env export --no-builds > {output.env_dump_w_version:q}"
