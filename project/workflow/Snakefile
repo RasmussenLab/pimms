@@ -201,6 +201,7 @@ rule create_splits:
     input:
         nb=f"{nb_stem}.ipynb",
         configfile=config["config_split"],
+        env_dump="{folder_experiment}/env_pimms.yaml"
     output:
         train_split="{folder_experiment}/data/train_X.csv",
         nb="{folder_experiment}" f"/{nb_stem}.ipynb",
@@ -217,3 +218,14 @@ rule create_splits:
         " -r folder_experiment {params.folder_experiment:q}"
         " -p fn_rawfile_metadata {params.meta_data:q}"
         " && jupyter nbconvert --to html {output.nb:q}"
+
+
+rule dump_env_pimms:
+    output:
+        env_dump="{folder_experiment}/env_pimms.yaml",
+        env_dump_w_version="{folder_experiment}/env_pimms_w_version.yaml",
+    conda:
+        "envs/pimms.yaml"
+    shell:
+        "conda env export --from-history --no-builds > {output.env_dump:q}"
+        " && conda env export --from-history > {output.env_dump_w_version:q}"
