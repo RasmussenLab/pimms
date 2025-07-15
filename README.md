@@ -123,7 +123,7 @@ see the tutorial: [![open in Colab](https://colab.research.google.com/assets/col
 
 The PIMMS comparison workflow is a snakemake workflow that runs the all selected PIMMS models and R-models on 
 a user-provided dataset and compares the results. An example for a publickly available Alzheimer dataset on the 
-protein groups level is re-built regularly and available at: [rasmussenlab.org/pimms](https://www.rasmussenlab.org/pimms/)
+protein groups level is re-built regularly and available at: [rasmussenlab.github.io/pimms](https://rasmussenlab.github.io/pimms/)
 
 It is built on top of
   - the [Snakefile_v2.smk](https://github.com/RasmussenLab/pimms/blob/HEAD/project/workflow/Snakefile_v2.smk) (v2 of imputation workflow), specified in on configuration
@@ -157,7 +157,7 @@ snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/confi
 snakemake -s workflow/Snakefile_v2.smk --configfile config/alzheimer_study/config.yaml -p -c2 # two cores/process, execute
 # after imputation workflow, execute the comparison workflow
 snakemake -s workflow/Snakefile_ald_comparison.smk --configfile config/alzheimer_study/comparison.yaml -p -c1
-# If you want to build the website locally: https://www.rasmussenlab.org/pimms/
+# If you want to build the website locally: https://rasmussenlab.github.io/pimms/
 pip install .[docs]
 pimms-setup-imputation-comparison -f project/runs/alzheimer_study/
 pimms-add-diff-comp -f project/runs/alzheimer_study/ -sf_cp project/runs/alzheimer_study/diff_analysis/AD
