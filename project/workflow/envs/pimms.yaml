@@ -23,6 +23,7 @@ dependencies:
   # - pytorch-cuda
   - scikit-learn
   - fastai
+  - fastprogress<1.1.0
   - torchvision
   # - cudatoolkit #=11.7
   # - tensorboard
