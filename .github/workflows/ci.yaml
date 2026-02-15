@@ -146,6 +146,8 @@ jobs:
       - run-unit-and-integration-tests-with-conda-install
       - run-unit-tests-local-pip-installation
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
