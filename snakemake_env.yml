@@ -3,5 +3,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - snakemake-minimal
+  - snakemake-minimal<9.0
   - mamba<2.0
