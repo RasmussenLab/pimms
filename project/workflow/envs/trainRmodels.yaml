@@ -19,7 +19,7 @@ dependencies:
   - r-e1071
   - r-norm
   - r-missforest
-  - r-vim
+  # - r-vim
   - r-mice
   - r-cluster
   - r-mvtnorm
