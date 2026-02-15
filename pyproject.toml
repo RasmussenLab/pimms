@@ -20,13 +20,14 @@ dependencies = [
   "numpy",
   "torch",
   "fastai",
+  "ipython",           #https://github.com/AnswerDotAI/fastprogress/issues/117
   "scikit-learn>=1.0",
   "seaborn",
   "matplotlib",
-  "plotly", # not used in library, but workflow
+  "plotly",            # not used in library, but workflow
   "omegaconf",
   "pingouin",
-  "njab>=0.1"
+  "njab>=0.1",
 ]
 
 [project.scripts]
