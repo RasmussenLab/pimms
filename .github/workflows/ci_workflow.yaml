@@ -7,7 +7,7 @@ on:
   release:
     types: [published]
   schedule:
-    - cron: '0 3 * * 3,6'
+    - cron: "0 3 * * 3,6"
 jobs:
   run-integration-tests-with-conda-install:
     name: ${{ matrix.os }} - Workflow with snakemake conda envs
@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [
             "ubuntu-latest",
-            "macos-13",
+            "macos-latest",
             # "windows-latest" # rrcovNA cannot be build from source on windows-server
           ]
         python-version: ["3.10"]
