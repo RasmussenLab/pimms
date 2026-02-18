@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Collaborative Filtering &#8212; pimms_workflow 0.1.dev1+ga50842495 documentation</title>
+    <title>Collaborative Filtering &#8212; pimms_workflow 0.5.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=13943e14"></script>
+    <script src="_static/documentation_options.js?v=5f152624"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
@@ -134,7 +134,7 @@
   
   
   
-    <p class="title logo__title">pimms_workflow 0.1.dev1+ga50842495 documentation</p>
+    <p class="title logo__title">pimms_workflow 0.5.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -1012,8 +1012,8 @@ Name: intensity, Length: 226809, dtype: float64
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00759
-No improvement since epoch 10: early stopping
+</div><div class="output text_html"></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>suggested_lr.valley = 0.00209
+No improvement since epoch 20: early stopping
 pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/collab_training
 </pre></div>
 </div>
@@ -1045,79 +1045,139 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
   <tbody>
     <tr>
       <td>0</td>
-      <td>7.328259</td>
-      <td>10.041287</td>
+      <td>9.079257</td>
+      <td>13.560335</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>2.047049</td>
-      <td>2.378039</td>
+      <td>8.221826</td>
+      <td>12.261718</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>0.695842</td>
-      <td>0.873202</td>
+      <td>6.321913</td>
+      <td>9.273331</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>0.566186</td>
-      <td>0.730912</td>
+      <td>3.384226</td>
+      <td>4.936255</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>0.545051</td>
-      <td>0.717743</td>
+      <td>1.344025</td>
+      <td>1.964371</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>0.504514</td>
-      <td>0.658970</td>
+      <td>0.727626</td>
+      <td>0.970828</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>0.421017</td>
-      <td>0.584665</td>
+      <td>0.579720</td>
+      <td>0.764174</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>0.387413</td>
-      <td>0.536336</td>
+      <td>0.557049</td>
+      <td>0.732750</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>0.348107</td>
-      <td>0.508159</td>
+      <td>0.536691</td>
+      <td>0.726864</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>0.306787</td>
-      <td>0.492637</td>
+      <td>0.528790</td>
+      <td>0.704440</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>0.264328</td>
-      <td>0.477532</td>
+      <td>0.475267</td>
+      <td>0.641604</td>
       <td>00:01</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>0.239851</td>
-      <td>0.482531</td>
+      <td>0.427206</td>
+      <td>0.578010</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>0.386779</td>
+      <td>0.545148</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>0.368081</td>
+      <td>0.515033</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>0.336829</td>
+      <td>0.495509</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>0.316380</td>
+      <td>0.473332</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>0.285280</td>
+      <td>0.463285</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>0.259465</td>
+      <td>0.451294</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>0.237297</td>
+      <td>0.447436</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>0.219827</td>
+      <td>0.447320</td>
+      <td>00:01</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>0.202497</td>
+      <td>0.446218</td>
+      <td>00:02</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>0.188434</td>
+      <td>0.452297</td>
       <td>00:01</td>
     </tr>
   </tbody>
-</table></div><img alt="_images/b668bfc51f7ec16d15b9fffc9c9cdda54dff731113b5a216641ba3e4f62f8080.png" src="_images/b668bfc51f7ec16d15b9fffc9c9cdda54dff731113b5a216641ba3e4f62f8080.png" />
-<img alt="_images/6bbf7d193ae16cfc81c6c8c24161db4369628cfcf0f10fb9e4793424cc66a0dc.png" src="_images/6bbf7d193ae16cfc81c6c8c24161db4369628cfcf0f10fb9e4793424cc66a0dc.png" />
+</table></div><img alt="_images/ea2894723d19a5d4f0f0ee84a91fb61c3c8d69ec14a2a294d9e174c659a1d89c.png" src="_images/ea2894723d19a5d4f0f0ee84a91fb61c3c8d69ec14a2a294d9e174c659a1d89c.png" />
+<img alt="_images/311582dd494941a4172cfd7aa2fdd0e1b44a57acaf17a6ccbb853343ab13c719.png" src="_images/311582dd494941a4172cfd7aa2fdd0e1b44a57acaf17a6ccbb853343ab13c719.png" />
 </div>
 </div>
 </section>
@@ -1192,31 +1252,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.659</td>
+      <td>15.740</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.793</td>
+      <td>16.400</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.314</td>
+      <td>13.567</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.277</td>
+      <td>19.643</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.218</td>
+      <td>14.770</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1228,31 +1288,31 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.950</td>
+      <td>22.948</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>16.147</td>
+      <td>15.905</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.142</td>
+      <td>15.336</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>14.136</td>
+      <td>13.539</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.534</td>
+      <td>14.474</td>
     </tr>
   </tbody>
 </table>
@@ -1325,27 +1385,27 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.457</td>
+      <td>17.503</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.076</td>
+      <td>18.077</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.250</td>
+      <td>22.701</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.351</td>
+      <td>15.197</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>17.046</td>
+      <td>16.782</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1362,22 +1422,22 @@ pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/col
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.768</td>
+      <td>13.439</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>13.918</td>
+      <td>13.914</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.609</td>
+      <td>15.416</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.147</td>
+      <td>16.455</td>
     </tr>
   </tbody>
 </table>
@@ -1669,8 +1729,8 @@ as the setup differs of training and validation data differs</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.48253051320744766,
-  &#39;MAE&#39;: 0.4751384771751614,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.4522971730397157,
+  &#39;MAE&#39;: 0.4532377138135476,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1694,8 +1754,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.505394328665437,
-  &#39;MAE&#39;: 0.4798354104839998,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CF&#39;: {&#39;MSE&#39;: 0.48085417096338506,
+  &#39;MAE&#39;: 0.46172992299658333,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -1753,13 +1813,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">CF</th>
       <th>MSE</th>
-      <td>0.483</td>
-      <td>0.505</td>
+      <td>0.452</td>
+      <td>0.481</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.475</td>
-      <td>0.480</td>
+      <td>0.453</td>
+      <td>0.462</td>
     </tr>
     <tr>
       <th>N</th>
@@ -1815,7 +1875,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 1024,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 12,
+ &#39;epoch_trained&#39;: 22,
  &#39;epochs_max&#39;: 100,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
