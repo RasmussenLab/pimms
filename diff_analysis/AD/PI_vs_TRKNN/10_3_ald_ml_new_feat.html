@@ -16,39 +16,42 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=e6e8d3cb"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Fit logistic regression model" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html" />
-    <link rel="prev" title="Compare predictions between model and RSN" href="../10_4_ald_compare_single_pg.html" />
+    <link rel="prev" title="Fit logistic regression model" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g740692b3d" />
   </head>
   
   
@@ -64,19 +67,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../../search.html"
       method="get">
@@ -84,7 +76,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +83,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +100,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,15 +131,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -160,39 +148,39 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_KNN5.html">KNN5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_Median.html">Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_PI.html">PI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_IRM.html">IRM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -202,24 +190,24 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_None.html">None</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -227,13 +215,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">PI vs TRKNN</a></li>
 </ul>
 
     </div>
@@ -242,9 +230,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -327,7 +320,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -341,25 +334,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -432,20 +417,20 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">njab.sklearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">njab.plotting.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_split_auc</span><span class="p">,</span> <span class="n">plot_split_prc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">njab.sklearn.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Splits</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">njab.sklearn</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">njab.plotting.metrics</span> <span class="kn">import</span> <span class="n">plot_split_auc</span><span class="p">,</span> <span class="n">plot_split_prc</span>
+<span class="kn">from</span> <span class="nn">njab.sklearn.types</span> <span class="kn">import</span> <span class="n">Splits</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.analyzers</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.io.datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.analyzers</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.io.datasplits</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;lines.linewidth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -459,7 +444,7 @@ document.write(`
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;fontTools&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_roc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">parse_roc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">_r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
         <span class="n">_roc</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_r</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">roc</span><span class="p">,</span>
@@ -472,7 +457,7 @@ document.write(`
     <span class="k">return</span> <span class="n">ret</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_prc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">parse_prc</span><span class="p">(</span><span class="o">*</span><span class="n">res</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">njab</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Results</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">_r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
         <span class="n">_prc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_r</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">prc</span><span class="p">,</span>
@@ -705,12 +690,12 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;val_y&#39; from file: runs/alzhe
 pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzheimer_study/data/test_y.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                   
-Sample_102  Q92520                                              19.998
-Sample_202  O00451                                              15.276
-Sample_042  O95158                                              18.643
-Sample_197  Q14152;Q14152-2;Q96T17;Q96T17-2;Q96T17-4;Q96T17-5   16.337
-Sample_102  Q92485                                              15.347
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
+Sample_160  P14209           19.317
+Sample_101  P20933           14.972
+Sample_009  P11021           16.906
+Sample_030  P02538           15.665
+Sample_185  G3V0E5;P02786    13.695
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -1145,10 +1130,10 @@ root - INFO     Finally: N samples: 210, M feat: 1213
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>missing values pred. by TRKNN: runs/alzheimer_study/preds/pred_real_na_TRKNN.csv
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups
-Sample_025  Q6YHK3           15.142
-Sample_151  P01742           16.942
-Sample_182  O95881           13.415
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                        
+Sample_047  E5RJY1;E7ESM1;Q92597;Q92597-2;Q92597-3   13.884
+Sample_109  O75781;O75781-2                          16.047
+Sample_121  Q9Y6N7;Q9Y6N7-2;Q9Y6N7-4                 15.999
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -1173,17 +1158,17 @@ Name: intensity, dtype: float64
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 13.511
-            A0A075B6Q5                 13.599
-            A0A075B6R2                 13.895
-            A0A075B6S5                 13.186
-            A0A087WSY4                 13.516
+Sample_000  A0A075B6J9                 13.246
+            A0A075B6Q5                 13.144
+            A0A075B6R2                 12.421
+            A0A075B6S5                 12.322
+            A0A087WSY4                 13.497
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   11.648
-            Q9UI40;Q9UI40-2            10.717
-            Q9UIW2                     12.346
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   15.369
-            Q9UP79                     12.019
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   12.192
+            Q9UI40;Q9UI40-2            12.793
+            Q9UIW2                     13.293
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   12.976
+            Q9UP79                     12.998
 Name: intensity, Length: 46401, dtype: float64
 </pre></div>
 </div>
@@ -1661,16 +1646,16 @@ new approach</p></li>
       <td>20.054</td>
       <td>16.148</td>
       <td>...</td>
-      <td>12.391</td>
-      <td>13.298</td>
-      <td>13.937</td>
-      <td>12.884</td>
-      <td>13.505</td>
-      <td>13.645</td>
-      <td>13.392</td>
-      <td>12.733</td>
-      <td>14.229</td>
-      <td>12.687</td>
+      <td>11.349</td>
+      <td>14.166</td>
+      <td>13.033</td>
+      <td>13.851</td>
+      <td>13.710</td>
+      <td>13.445</td>
+      <td>13.730</td>
+      <td>13.231</td>
+      <td>12.459</td>
+      <td>12.324</td>
     </tr>
     <tr>
       <th>Sample_001</th>
@@ -1681,20 +1666,20 @@ new approach</p></li>
       <td>19.941</td>
       <td>18.786</td>
       <td>17.144</td>
-      <td>12.641</td>
+      <td>13.097</td>
       <td>19.067</td>
       <td>16.127</td>
       <td>...</td>
-      <td>13.254</td>
-      <td>11.176</td>
-      <td>12.654</td>
-      <td>13.986</td>
-      <td>14.557</td>
-      <td>12.827</td>
-      <td>12.413</td>
-      <td>12.027</td>
-      <td>12.681</td>
-      <td>11.620</td>
+      <td>11.866</td>
+      <td>13.036</td>
+      <td>12.802</td>
+      <td>13.219</td>
+      <td>13.564</td>
+      <td>11.760</td>
+      <td>13.503</td>
+      <td>13.160</td>
+      <td>12.966</td>
+      <td>12.695</td>
     </tr>
     <tr>
       <th>Sample_002</th>
@@ -1709,16 +1694,16 @@ new approach</p></li>
       <td>18.569</td>
       <td>15.387</td>
       <td>...</td>
-      <td>13.448</td>
-      <td>12.383</td>
-      <td>11.686</td>
-      <td>13.084</td>
-      <td>12.212</td>
-      <td>12.692</td>
-      <td>13.422</td>
-      <td>13.441</td>
-      <td>12.683</td>
-      <td>12.700</td>
+      <td>12.904</td>
+      <td>12.524</td>
+      <td>12.736</td>
+      <td>12.900</td>
+      <td>11.953</td>
+      <td>12.474</td>
+      <td>12.526</td>
+      <td>13.585</td>
+      <td>12.132</td>
+      <td>12.426</td>
     </tr>
     <tr>
       <th>Sample_003</th>
@@ -1733,16 +1718,16 @@ new approach</p></li>
       <td>18.985</td>
       <td>16.565</td>
       <td>...</td>
-      <td>13.262</td>
-      <td>13.529</td>
-      <td>11.582</td>
-      <td>12.896</td>
-      <td>13.797</td>
-      <td>13.535</td>
-      <td>14.023</td>
-      <td>12.958</td>
-      <td>12.468</td>
-      <td>13.204</td>
+      <td>11.805</td>
+      <td>13.328</td>
+      <td>13.932</td>
+      <td>12.437</td>
+      <td>13.124</td>
+      <td>12.768</td>
+      <td>14.069</td>
+      <td>12.321</td>
+      <td>12.768</td>
+      <td>12.962</td>
     </tr>
     <tr>
       <th>Sample_004</th>
@@ -1757,16 +1742,16 @@ new approach</p></li>
       <td>19.686</td>
       <td>16.418</td>
       <td>...</td>
-      <td>13.986</td>
-      <td>12.821</td>
-      <td>13.153</td>
-      <td>11.606</td>
-      <td>13.181</td>
-      <td>14.243</td>
-      <td>13.222</td>
-      <td>11.343</td>
+      <td>11.767</td>
+      <td>12.316</td>
+      <td>12.750</td>
+      <td>13.168</td>
+      <td>13.408</td>
       <td>12.442</td>
-      <td>13.264</td>
+      <td>13.053</td>
+      <td>13.701</td>
+      <td>12.134</td>
+      <td>13.348</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1800,7 +1785,7 @@ new approach</p></li>
       <td>16.482</td>
       <td>17.705</td>
       <td>17.039</td>
-      <td>13.599</td>
+      <td>13.128</td>
       <td>16.413</td>
       <td>19.102</td>
       <td>15.350</td>
@@ -1872,7 +1857,7 @@ new approach</p></li>
       <td>16.132</td>
       <td>14.908</td>
       <td>17.530</td>
-      <td>12.981</td>
+      <td>13.744</td>
       <td>16.119</td>
       <td>18.368</td>
       <td>17.560</td>
@@ -2031,140 +2016,140 @@ new approach</p></li>
 </details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/1 [00:00&lt;?, ?it/s]
-100%|██████████| 1/1 [00:00&lt;00:00, 162.07it/s]
+100%|██████████| 1/1 [00:00&lt;00:00, 161.95it/s]
   0%|          | 0/2 [00:00&lt;?, ?it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  7.29it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  7.28it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  6.99it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  6.97it/s]
   0%|          | 0/3 [00:00&lt;?, ?it/s]
- 67%|██████▋   | 2/3 [00:00&lt;00:00,  7.77it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  4.57it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  4.97it/s]
+ 67%|██████▋   | 2/3 [00:00&lt;00:00,  8.57it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  5.53it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  5.94it/s]
   0%|          | 0/4 [00:00&lt;?, ?it/s]
- 50%|█████     | 2/4 [00:00&lt;00:00,  8.51it/s]
- 75%|███████▌  | 3/4 [00:00&lt;00:00,  6.13it/s]
-100%|██████████| 4/4 [00:00&lt;00:00,  5.16it/s]
-100%|██████████| 4/4 [00:00&lt;00:00,  5.64it/s]
+ 50%|█████     | 2/4 [00:00&lt;00:00,  5.15it/s]
+ 75%|███████▌  | 3/4 [00:00&lt;00:00,  3.15it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  2.80it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.06it/s]
   0%|          | 0/5 [00:00&lt;?, ?it/s]
- 40%|████      | 2/5 [00:00&lt;00:00,  7.08it/s]
- 60%|██████    | 3/5 [00:00&lt;00:00,  4.86it/s]
- 80%|████████  | 4/5 [00:00&lt;00:00,  4.46it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  4.46it/s]
-100%|██████████| 5/5 [00:01&lt;00:00,  4.72it/s]
+ 40%|████      | 2/5 [00:00&lt;00:00,  8.46it/s]
+ 60%|██████    | 3/5 [00:00&lt;00:00,  5.79it/s]
+ 80%|████████  | 4/5 [00:00&lt;00:00,  4.75it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  4.18it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  4.74it/s]
   0%|          | 0/6 [00:00&lt;?, ?it/s]
- 33%|███▎      | 2/6 [00:00&lt;00:00,  7.73it/s]
- 50%|█████     | 3/6 [00:00&lt;00:00,  5.61it/s]
- 67%|██████▋   | 4/6 [00:00&lt;00:00,  4.74it/s]
- 83%|████████▎ | 5/6 [00:01&lt;00:00,  4.36it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  4.20it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  4.64it/s]
+ 33%|███▎      | 2/6 [00:00&lt;00:00,  4.87it/s]
+ 50%|█████     | 3/6 [00:00&lt;00:00,  3.89it/s]
+ 67%|██████▋   | 4/6 [00:01&lt;00:00,  3.01it/s]
+ 83%|████████▎ | 5/6 [00:01&lt;00:00,  2.68it/s]
+100%|██████████| 6/6 [00:02&lt;00:00,  2.47it/s]
+100%|██████████| 6/6 [00:02&lt;00:00,  2.83it/s]
   0%|          | 0/7 [00:00&lt;?, ?it/s]
- 29%|██▊       | 2/7 [00:00&lt;00:00,  5.22it/s]
- 43%|████▎     | 3/7 [00:00&lt;00:01,  3.73it/s]
- 57%|█████▋    | 4/7 [00:01&lt;00:00,  3.15it/s]
- 71%|███████▏  | 5/7 [00:01&lt;00:00,  2.96it/s]
- 86%|████████▌ | 6/7 [00:01&lt;00:00,  2.99it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  3.04it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  3.21it/s]
+ 29%|██▊       | 2/7 [00:00&lt;00:01,  4.65it/s]
+ 43%|████▎     | 3/7 [00:00&lt;00:01,  3.25it/s]
+ 57%|█████▋    | 4/7 [00:01&lt;00:01,  2.71it/s]
+ 71%|███████▏  | 5/7 [00:01&lt;00:00,  2.56it/s]
+ 86%|████████▌ | 6/7 [00:02&lt;00:00,  2.54it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  2.58it/s]
+100%|██████████| 7/7 [00:02&lt;00:00,  2.75it/s]
   0%|          | 0/8 [00:00&lt;?, ?it/s]
- 25%|██▌       | 2/8 [00:00&lt;00:00,  8.45it/s]
- 38%|███▊      | 3/8 [00:00&lt;00:00,  6.14it/s]
- 50%|█████     | 4/8 [00:00&lt;00:00,  5.02it/s]
- 62%|██████▎   | 5/8 [00:00&lt;00:00,  4.64it/s]
- 75%|███████▌  | 6/8 [00:01&lt;00:00,  3.64it/s]
- 88%|████████▊ | 7/8 [00:01&lt;00:00,  3.31it/s]
-100%|██████████| 8/8 [00:02&lt;00:00,  3.06it/s]
-100%|██████████| 8/8 [00:02&lt;00:00,  3.80it/s]
+ 25%|██▌       | 2/8 [00:00&lt;00:00,  7.82it/s]
+ 38%|███▊      | 3/8 [00:00&lt;00:00,  5.48it/s]
+ 50%|█████     | 4/8 [00:00&lt;00:00,  4.66it/s]
+ 62%|██████▎   | 5/8 [00:01&lt;00:00,  4.30it/s]
+ 75%|███████▌  | 6/8 [00:01&lt;00:00,  3.81it/s]
+ 88%|████████▊ | 7/8 [00:01&lt;00:00,  3.79it/s]
+100%|██████████| 8/8 [00:01&lt;00:00,  3.80it/s]
+100%|██████████| 8/8 [00:01&lt;00:00,  4.21it/s]
   0%|          | 0/9 [00:00&lt;?, ?it/s]
- 22%|██▏       | 2/9 [00:00&lt;00:00,  7.02it/s]
- 33%|███▎      | 3/9 [00:00&lt;00:01,  5.46it/s]
- 44%|████▍     | 4/9 [00:00&lt;00:01,  4.87it/s]
- 56%|█████▌    | 5/9 [00:01&lt;00:00,  4.60it/s]
- 67%|██████▋   | 6/9 [00:01&lt;00:00,  4.11it/s]
- 78%|███████▊  | 7/9 [00:01&lt;00:00,  3.53it/s]
- 89%|████████▉ | 8/9 [00:02&lt;00:00,  3.16it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  2.99it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  3.69it/s]
+ 22%|██▏       | 2/9 [00:00&lt;00:00,  8.15it/s]
+ 33%|███▎      | 3/9 [00:00&lt;00:00,  6.48it/s]
+ 44%|████▍     | 4/9 [00:00&lt;00:00,  5.50it/s]
+ 56%|█████▌    | 5/9 [00:00&lt;00:00,  5.30it/s]
+ 67%|██████▋   | 6/9 [00:01&lt;00:00,  5.03it/s]
+ 78%|███████▊  | 7/9 [00:01&lt;00:00,  4.84it/s]
+ 89%|████████▉ | 8/9 [00:01&lt;00:00,  4.59it/s]
+100%|██████████| 9/9 [00:01&lt;00:00,  4.54it/s]
+100%|██████████| 9/9 [00:01&lt;00:00,  5.04it/s]
   0%|          | 0/10 [00:00&lt;?, ?it/s]
- 20%|██        | 2/10 [00:00&lt;00:01,  5.79it/s]
- 30%|███       | 3/10 [00:00&lt;00:01,  4.09it/s]
- 40%|████      | 4/10 [00:01&lt;00:01,  3.40it/s]
- 50%|█████     | 5/10 [00:01&lt;00:01,  3.73it/s]
- 60%|██████    | 6/10 [00:01&lt;00:00,  4.05it/s]
- 70%|███████   | 7/10 [00:01&lt;00:00,  4.04it/s]
- 80%|████████  | 8/10 [00:01&lt;00:00,  4.12it/s]
- 90%|█████████ | 9/10 [00:02&lt;00:00,  3.97it/s]
-100%|██████████| 10/10 [00:02&lt;00:00,  3.84it/s]
-100%|██████████| 10/10 [00:02&lt;00:00,  3.96it/s]
+ 20%|██        | 2/10 [00:00&lt;00:00,  8.22it/s]
+ 30%|███       | 3/10 [00:00&lt;00:01,  6.26it/s]
+ 40%|████      | 4/10 [00:00&lt;00:01,  5.52it/s]
+ 50%|█████     | 5/10 [00:00&lt;00:01,  4.98it/s]
+ 60%|██████    | 6/10 [00:01&lt;00:00,  4.59it/s]
+ 70%|███████   | 7/10 [00:01&lt;00:00,  4.47it/s]
+ 80%|████████  | 8/10 [00:01&lt;00:00,  4.42it/s]
+ 90%|█████████ | 9/10 [00:01&lt;00:00,  4.54it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  4.50it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  4.84it/s]
   0%|          | 0/11 [00:00&lt;?, ?it/s]
- 18%|█▊        | 2/11 [00:00&lt;00:01,  5.23it/s]
- 27%|██▋       | 3/11 [00:00&lt;00:02,  3.73it/s]
- 36%|███▋      | 4/11 [00:01&lt;00:02,  3.36it/s]
- 45%|████▌     | 5/11 [00:01&lt;00:01,  3.39it/s]
- 55%|█████▍    | 6/11 [00:01&lt;00:01,  3.44it/s]
- 64%|██████▎   | 7/11 [00:01&lt;00:01,  3.44it/s]
- 73%|███████▎  | 8/11 [00:02&lt;00:00,  3.56it/s]
- 82%|████████▏ | 9/11 [00:02&lt;00:00,  3.63it/s]
- 91%|█████████ | 10/11 [00:02&lt;00:00,  3.63it/s]
-100%|██████████| 11/11 [00:03&lt;00:00,  3.61it/s]
-100%|██████████| 11/11 [00:03&lt;00:00,  3.61it/s]
+ 18%|█▊        | 2/11 [00:00&lt;00:01,  8.79it/s]
+ 27%|██▋       | 3/11 [00:00&lt;00:01,  6.18it/s]
+ 36%|███▋      | 4/11 [00:00&lt;00:01,  5.06it/s]
+ 45%|████▌     | 5/11 [00:00&lt;00:01,  4.53it/s]
+ 55%|█████▍    | 6/11 [00:01&lt;00:01,  4.46it/s]
+ 64%|██████▎   | 7/11 [00:01&lt;00:00,  4.47it/s]
+ 73%|███████▎  | 8/11 [00:01&lt;00:00,  4.29it/s]
+ 82%|████████▏ | 9/11 [00:01&lt;00:00,  4.27it/s]
+ 91%|█████████ | 10/11 [00:02&lt;00:00,  4.27it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  3.60it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  4.33it/s]
   0%|          | 0/12 [00:00&lt;?, ?it/s]
- 17%|█▋        | 2/12 [00:00&lt;00:01,  6.91it/s]
- 25%|██▌       | 3/12 [00:00&lt;00:01,  4.99it/s]
- 33%|███▎      | 4/12 [00:00&lt;00:01,  4.56it/s]
- 42%|████▏     | 5/12 [00:01&lt;00:01,  4.18it/s]
- 50%|█████     | 6/12 [00:01&lt;00:01,  4.06it/s]
- 58%|█████▊    | 7/12 [00:01&lt;00:01,  3.90it/s]
- 67%|██████▋   | 8/12 [00:01&lt;00:01,  3.73it/s]
- 75%|███████▌  | 9/12 [00:02&lt;00:00,  3.57it/s]
- 83%|████████▎ | 10/12 [00:02&lt;00:00,  3.52it/s]
- 92%|█████████▏| 11/12 [00:02&lt;00:00,  3.41it/s]
-100%|██████████| 12/12 [00:03&lt;00:00,  3.61it/s]
-100%|██████████| 12/12 [00:03&lt;00:00,  3.89it/s]
+ 17%|█▋        | 2/12 [00:00&lt;00:01,  9.17it/s]
+ 25%|██▌       | 3/12 [00:00&lt;00:01,  5.84it/s]
+ 33%|███▎      | 4/12 [00:00&lt;00:01,  5.18it/s]
+ 42%|████▏     | 5/12 [00:00&lt;00:01,  4.79it/s]
+ 50%|█████     | 6/12 [00:01&lt;00:01,  4.49it/s]
+ 58%|█████▊    | 7/12 [00:01&lt;00:01,  4.21it/s]
+ 67%|██████▋   | 8/12 [00:01&lt;00:01,  3.69it/s]
+ 75%|███████▌  | 9/12 [00:02&lt;00:00,  3.22it/s]
+ 83%|████████▎ | 10/12 [00:02&lt;00:00,  2.95it/s]
+ 92%|█████████▏| 11/12 [00:02&lt;00:00,  2.86it/s]
+100%|██████████| 12/12 [00:03&lt;00:00,  3.05it/s]
+100%|██████████| 12/12 [00:03&lt;00:00,  3.68it/s]
   0%|          | 0/13 [00:00&lt;?, ?it/s]
- 15%|█▌        | 2/13 [00:00&lt;00:01,  7.22it/s]
- 23%|██▎       | 3/13 [00:00&lt;00:01,  5.22it/s]
- 31%|███       | 4/13 [00:00&lt;00:02,  4.39it/s]
- 38%|███▊      | 5/13 [00:01&lt;00:02,  3.87it/s]
- 46%|████▌     | 6/13 [00:01&lt;00:01,  3.75it/s]
- 54%|█████▍    | 7/13 [00:01&lt;00:01,  3.76it/s]
- 62%|██████▏   | 8/13 [00:01&lt;00:01,  3.67it/s]
- 69%|██████▉   | 9/13 [00:02&lt;00:01,  3.69it/s]
- 77%|███████▋  | 10/13 [00:02&lt;00:00,  3.90it/s]
- 85%|████████▍ | 11/13 [00:02&lt;00:00,  3.64it/s]
- 92%|█████████▏| 12/13 [00:03&lt;00:00,  3.53it/s]
-100%|██████████| 13/13 [00:03&lt;00:00,  3.69it/s]
-100%|██████████| 13/13 [00:03&lt;00:00,  3.90it/s]
+ 15%|█▌        | 2/13 [00:00&lt;00:01,  9.34it/s]
+ 23%|██▎       | 3/13 [00:00&lt;00:01,  6.77it/s]
+ 31%|███       | 4/13 [00:00&lt;00:01,  4.61it/s]
+ 38%|███▊      | 5/13 [00:01&lt;00:02,  3.62it/s]
+ 46%|████▌     | 6/13 [00:01&lt;00:02,  3.30it/s]
+ 54%|█████▍    | 7/13 [00:01&lt;00:01,  3.09it/s]
+ 62%|██████▏   | 8/13 [00:02&lt;00:01,  3.43it/s]
+ 69%|██████▉   | 9/13 [00:02&lt;00:01,  3.76it/s]
+ 77%|███████▋  | 10/13 [00:02&lt;00:00,  3.88it/s]
+ 85%|████████▍ | 11/13 [00:02&lt;00:00,  3.91it/s]
+ 92%|█████████▏| 12/13 [00:03&lt;00:00,  3.92it/s]
+100%|██████████| 13/13 [00:03&lt;00:00,  3.85it/s]
+100%|██████████| 13/13 [00:03&lt;00:00,  3.93it/s]
   0%|          | 0/14 [00:00&lt;?, ?it/s]
- 14%|█▍        | 2/14 [00:00&lt;00:01,  6.89it/s]
- 21%|██▏       | 3/14 [00:00&lt;00:02,  4.67it/s]
- 29%|██▊       | 4/14 [00:00&lt;00:02,  4.25it/s]
- 36%|███▌      | 5/14 [00:01&lt;00:02,  3.84it/s]
- 43%|████▎     | 6/14 [00:01&lt;00:02,  3.96it/s]
- 50%|█████     | 7/14 [00:01&lt;00:01,  4.12it/s]
- 57%|█████▋    | 8/14 [00:01&lt;00:01,  4.21it/s]
- 64%|██████▍   | 9/14 [00:02&lt;00:01,  3.97it/s]
- 71%|███████▏  | 10/14 [00:02&lt;00:01,  3.90it/s]
- 79%|███████▊  | 11/14 [00:02&lt;00:00,  3.92it/s]
- 86%|████████▌ | 12/14 [00:02&lt;00:00,  4.05it/s]
- 93%|█████████▎| 13/14 [00:03&lt;00:00,  4.19it/s]
-100%|██████████| 14/14 [00:03&lt;00:00,  3.86it/s]
-100%|██████████| 14/14 [00:03&lt;00:00,  4.09it/s]
+ 14%|█▍        | 2/14 [00:00&lt;00:02,  5.19it/s]
+ 21%|██▏       | 3/14 [00:00&lt;00:03,  3.64it/s]
+ 29%|██▊       | 4/14 [00:01&lt;00:03,  3.18it/s]
+ 36%|███▌      | 5/14 [00:01&lt;00:02,  3.23it/s]
+ 43%|████▎     | 6/14 [00:01&lt;00:02,  3.32it/s]
+ 50%|█████     | 7/14 [00:02&lt;00:02,  3.39it/s]
+ 57%|█████▋    | 8/14 [00:02&lt;00:01,  3.46it/s]
+ 64%|██████▍   | 9/14 [00:02&lt;00:01,  3.51it/s]
+ 71%|███████▏  | 10/14 [00:02&lt;00:01,  3.48it/s]
+ 79%|███████▊  | 11/14 [00:03&lt;00:00,  3.56it/s]
+ 86%|████████▌ | 12/14 [00:03&lt;00:00,  3.66it/s]
+ 93%|█████████▎| 13/14 [00:03&lt;00:00,  3.55it/s]
+100%|██████████| 14/14 [00:03&lt;00:00,  3.67it/s]
+100%|██████████| 14/14 [00:03&lt;00:00,  3.55it/s]
   0%|          | 0/15 [00:00&lt;?, ?it/s]
- 13%|█▎        | 2/15 [00:00&lt;00:01,  7.46it/s]
- 20%|██        | 3/15 [00:00&lt;00:02,  5.74it/s]
- 27%|██▋       | 4/15 [00:00&lt;00:02,  5.09it/s]
- 33%|███▎      | 5/15 [00:00&lt;00:02,  4.58it/s]
- 40%|████      | 6/15 [00:01&lt;00:02,  4.37it/s]
- 47%|████▋     | 7/15 [00:01&lt;00:01,  4.32it/s]
- 53%|█████▎    | 8/15 [00:01&lt;00:01,  4.28it/s]
- 60%|██████    | 9/15 [00:01&lt;00:01,  4.05it/s]
- 67%|██████▋   | 10/15 [00:02&lt;00:01,  4.33it/s]
- 73%|███████▎  | 11/15 [00:02&lt;00:00,  4.47it/s]
- 80%|████████  | 12/15 [00:02&lt;00:00,  5.03it/s]
- 87%|████████▋ | 13/15 [00:02&lt;00:00,  5.37it/s]
- 93%|█████████▎| 14/15 [00:02&lt;00:00,  4.77it/s]
-100%|██████████| 15/15 [00:03&lt;00:00,  4.25it/s]
-100%|██████████| 15/15 [00:03&lt;00:00,  4.61it/s]
+ 13%|█▎        | 2/15 [00:00&lt;00:02,  5.88it/s]
+ 20%|██        | 3/15 [00:00&lt;00:02,  4.11it/s]
+ 27%|██▋       | 4/15 [00:00&lt;00:02,  3.94it/s]
+ 33%|███▎      | 5/15 [00:01&lt;00:02,  4.03it/s]
+ 40%|████      | 6/15 [00:01&lt;00:02,  4.07it/s]
+ 47%|████▋     | 7/15 [00:01&lt;00:01,  4.14it/s]
+ 53%|█████▎    | 8/15 [00:01&lt;00:01,  4.22it/s]
+ 60%|██████    | 9/15 [00:02&lt;00:01,  4.17it/s]
+ 67%|██████▋   | 10/15 [00:02&lt;00:01,  4.23it/s]
+ 73%|███████▎  | 11/15 [00:02&lt;00:00,  4.20it/s]
+ 80%|████████  | 12/15 [00:02&lt;00:00,  4.01it/s]
+ 87%|████████▋ | 13/15 [00:03&lt;00:00,  4.07it/s]
+ 93%|█████████▎| 14/15 [00:03&lt;00:00,  4.19it/s]
+100%|██████████| 15/15 [00:03&lt;00:00,  4.09it/s]
+100%|██████████| 15/15 [00:03&lt;00:00,  4.16it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2245,253 +2230,253 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.003</td>
-      <td>0.001</td>
-      <td>0.039</td>
-      <td>0.042</td>
-      <td>0.716</td>
-      <td>0.394</td>
-      <td>0.110</td>
-      <td>0.086</td>
-      <td>0.184</td>
-      <td>0.132</td>
-      <td>0.547</td>
-      <td>0.042</td>
-      <td>0.847</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.043</td>
+      <td>0.020</td>
+      <td>0.591</td>
+      <td>0.439</td>
+      <td>0.078</td>
+      <td>0.076</td>
+      <td>0.133</td>
+      <td>0.120</td>
+      <td>0.532</td>
+      <td>0.036</td>
+      <td>0.853</td>
       <td>0.063</td>
-      <td>0.821</td>
+      <td>0.824</td>
       <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.003</td>
-      <td>0.000</td>
-      <td>0.036</td>
       <td>0.004</td>
-      <td>0.712</td>
-      <td>0.090</td>
-      <td>0.600</td>
-      <td>0.102</td>
-      <td>0.645</td>
-      <td>0.079</td>
-      <td>0.709</td>
-      <td>0.058</td>
-      <td>0.779</td>
-      <td>0.066</td>
-      <td>0.758</td>
+      <td>0.001</td>
+      <td>0.041</td>
+      <td>0.010</td>
+      <td>0.705</td>
+      <td>0.101</td>
+      <td>0.619</td>
+      <td>0.113</td>
+      <td>0.651</td>
       <td>0.084</td>
+      <td>0.711</td>
+      <td>0.061</td>
+      <td>0.791</td>
+      <td>0.069</td>
+      <td>0.755</td>
+      <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.006</td>
       <td>0.003</td>
-      <td>0.072</td>
-      <td>0.025</td>
-      <td>0.713</td>
-      <td>0.083</td>
-      <td>0.642</td>
-      <td>0.112</td>
-      <td>0.669</td>
-      <td>0.078</td>
-      <td>0.724</td>
-      <td>0.057</td>
-      <td>0.796</td>
-      <td>0.065</td>
-      <td>0.764</td>
-      <td>0.085</td>
+      <td>0.001</td>
+      <td>0.037</td>
+      <td>0.008</td>
+      <td>0.692</td>
+      <td>0.104</td>
+      <td>0.615</td>
+      <td>0.117</td>
+      <td>0.644</td>
+      <td>0.089</td>
+      <td>0.704</td>
+      <td>0.066</td>
+      <td>0.789</td>
+      <td>0.073</td>
+      <td>0.750</td>
+      <td>0.093</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.004</td>
-      <td>0.001</td>
-      <td>0.040</td>
-      <td>0.008</td>
-      <td>0.715</td>
-      <td>0.089</td>
-      <td>0.667</td>
-      <td>0.117</td>
+      <td>0.005</td>
+      <td>0.002</td>
+      <td>0.060</td>
+      <td>0.023</td>
       <td>0.683</td>
-      <td>0.082</td>
-      <td>0.734</td>
-      <td>0.061</td>
-      <td>0.793</td>
-      <td>0.065</td>
-      <td>0.759</td>
+      <td>0.097</td>
+      <td>0.650</td>
+      <td>0.113</td>
+      <td>0.660</td>
       <td>0.085</td>
+      <td>0.713</td>
+      <td>0.065</td>
+      <td>0.793</td>
+      <td>0.071</td>
+      <td>0.746</td>
+      <td>0.091</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>5</th>
       <td>0.005</td>
-      <td>0.002</td>
-      <td>0.055</td>
-      <td>0.020</td>
-      <td>0.701</td>
-      <td>0.092</td>
-      <td>0.643</td>
-      <td>0.108</td>
-      <td>0.664</td>
-      <td>0.079</td>
-      <td>0.719</td>
-      <td>0.059</td>
-      <td>0.785</td>
-      <td>0.065</td>
-      <td>0.755</td>
-      <td>0.085</td>
+      <td>0.003</td>
+      <td>0.050</td>
+      <td>0.022</td>
+      <td>0.716</td>
+      <td>0.094</td>
+      <td>0.689</td>
+      <td>0.113</td>
+      <td>0.695</td>
+      <td>0.077</td>
+      <td>0.742</td>
+      <td>0.061</td>
+      <td>0.808</td>
+      <td>0.068</td>
+      <td>0.777</td>
+      <td>0.087</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.004</td>
+      <td>0.005</td>
       <td>0.002</td>
-      <td>0.044</td>
-      <td>0.016</td>
-      <td>0.735</td>
-      <td>0.093</td>
-      <td>0.669</td>
-      <td>0.118</td>
-      <td>0.694</td>
-      <td>0.082</td>
-      <td>0.744</td>
-      <td>0.062</td>
-      <td>0.796</td>
-      <td>0.064</td>
-      <td>0.775</td>
-      <td>0.084</td>
+      <td>0.049</td>
+      <td>0.021</td>
+      <td>0.784</td>
+      <td>0.078</td>
+      <td>0.783</td>
+      <td>0.120</td>
+      <td>0.779</td>
+      <td>0.080</td>
+      <td>0.812</td>
+      <td>0.067</td>
+      <td>0.887</td>
+      <td>0.054</td>
+      <td>0.859</td>
+      <td>0.065</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.005</td>
+      <td>0.004</td>
       <td>0.002</td>
+      <td>0.042</td>
+      <td>0.015</td>
+      <td>0.819</td>
+      <td>0.089</td>
+      <td>0.811</td>
+      <td>0.104</td>
+      <td>0.810</td>
+      <td>0.075</td>
+      <td>0.838</td>
+      <td>0.063</td>
+      <td>0.910</td>
       <td>0.052</td>
-      <td>0.018</td>
-      <td>0.730</td>
-      <td>0.095</td>
-      <td>0.661</td>
-      <td>0.114</td>
-      <td>0.687</td>
-      <td>0.079</td>
-      <td>0.738</td>
+      <td>0.897</td>
       <td>0.059</td>
-      <td>0.795</td>
-      <td>0.066</td>
-      <td>0.771</td>
-      <td>0.088</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.006</td>
-      <td>0.003</td>
-      <td>0.062</td>
-      <td>0.029</td>
-      <td>0.768</td>
-      <td>0.091</td>
-      <td>0.799</td>
-      <td>0.116</td>
-      <td>0.778</td>
-      <td>0.081</td>
-      <td>0.809</td>
-      <td>0.069</td>
-      <td>0.884</td>
-      <td>0.056</td>
-      <td>0.858</td>
+      <td>0.004</td>
+      <td>0.001</td>
+      <td>0.040</td>
+      <td>0.016</td>
+      <td>0.815</td>
+      <td>0.092</td>
+      <td>0.808</td>
+      <td>0.103</td>
+      <td>0.807</td>
+      <td>0.076</td>
+      <td>0.836</td>
       <td>0.064</td>
+      <td>0.909</td>
+      <td>0.053</td>
+      <td>0.896</td>
+      <td>0.059</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>9</th>
       <td>0.005</td>
-      <td>0.002</td>
-      <td>0.045</td>
-      <td>0.017</td>
-      <td>0.773</td>
-      <td>0.100</td>
-      <td>0.790</td>
-      <td>0.121</td>
-      <td>0.776</td>
-      <td>0.088</td>
-      <td>0.808</td>
+      <td>0.003</td>
+      <td>0.046</td>
+      <td>0.022</td>
+      <td>0.814</td>
+      <td>0.086</td>
+      <td>0.816</td>
+      <td>0.103</td>
+      <td>0.812</td>
       <td>0.075</td>
-      <td>0.883</td>
-      <td>0.057</td>
-      <td>0.860</td>
-      <td>0.064</td>
+      <td>0.839</td>
+      <td>0.063</td>
+      <td>0.908</td>
+      <td>0.053</td>
+      <td>0.895</td>
+      <td>0.060</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.004</td>
+      <td>0.005</td>
       <td>0.002</td>
-      <td>0.043</td>
-      <td>0.012</td>
-      <td>0.775</td>
-      <td>0.094</td>
-      <td>0.778</td>
-      <td>0.118</td>
-      <td>0.771</td>
-      <td>0.085</td>
-      <td>0.805</td>
-      <td>0.072</td>
-      <td>0.884</td>
-      <td>0.056</td>
-      <td>0.859</td>
-      <td>0.063</td>
+      <td>0.048</td>
+      <td>0.019</td>
+      <td>0.816</td>
+      <td>0.086</td>
+      <td>0.814</td>
+      <td>0.104</td>
+      <td>0.811</td>
+      <td>0.073</td>
+      <td>0.838</td>
+      <td>0.062</td>
+      <td>0.907</td>
+      <td>0.054</td>
+      <td>0.893</td>
+      <td>0.061</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.004</td>
-      <td>0.000</td>
-      <td>0.038</td>
-      <td>0.003</td>
-      <td>0.779</td>
-      <td>0.093</td>
-      <td>0.784</td>
-      <td>0.107</td>
-      <td>0.777</td>
-      <td>0.079</td>
-      <td>0.809</td>
-      <td>0.067</td>
-      <td>0.885</td>
-      <td>0.056</td>
-      <td>0.865</td>
-      <td>0.062</td>
+      <td>0.005</td>
+      <td>0.002</td>
+      <td>0.055</td>
+      <td>0.021</td>
+      <td>0.840</td>
+      <td>0.087</td>
+      <td>0.806</td>
+      <td>0.109</td>
+      <td>0.818</td>
+      <td>0.077</td>
+      <td>0.846</td>
+      <td>0.064</td>
+      <td>0.913</td>
+      <td>0.051</td>
+      <td>0.897</td>
+      <td>0.059</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>12</th>
       <td>0.004</td>
-      <td>0.001</td>
+      <td>0.003</td>
       <td>0.045</td>
-      <td>0.017</td>
-      <td>0.789</td>
-      <td>0.083</td>
-      <td>0.799</td>
-      <td>0.108</td>
-      <td>0.790</td>
+      <td>0.016</td>
+      <td>0.819</td>
       <td>0.078</td>
-      <td>0.821</td>
-      <td>0.066</td>
-      <td>0.892</td>
+      <td>0.799</td>
+      <td>0.097</td>
+      <td>0.805</td>
+      <td>0.068</td>
+      <td>0.834</td>
       <td>0.056</td>
-      <td>0.878</td>
-      <td>0.058</td>
+      <td>0.916</td>
+      <td>0.050</td>
+      <td>0.906</td>
+      <td>0.051</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2499,62 +2484,62 @@ new approach</p></li>
       <th>13</th>
       <td>0.005</td>
       <td>0.002</td>
-      <td>0.048</td>
-      <td>0.018</td>
-      <td>0.790</td>
-      <td>0.088</td>
-      <td>0.816</td>
-      <td>0.099</td>
-      <td>0.800</td>
+      <td>0.044</td>
+      <td>0.014</td>
+      <td>0.817</td>
       <td>0.079</td>
-      <td>0.828</td>
-      <td>0.068</td>
-      <td>0.895</td>
-      <td>0.056</td>
-      <td>0.885</td>
-      <td>0.055</td>
+      <td>0.800</td>
+      <td>0.098</td>
+      <td>0.805</td>
+      <td>0.069</td>
+      <td>0.834</td>
+      <td>0.058</td>
+      <td>0.914</td>
+      <td>0.051</td>
+      <td>0.904</td>
+      <td>0.052</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.006</td>
-      <td>0.003</td>
-      <td>0.056</td>
-      <td>0.021</td>
+      <td>0.004</td>
+      <td>0.001</td>
+      <td>0.040</td>
+      <td>0.008</td>
+      <td>0.816</td>
+      <td>0.082</td>
+      <td>0.801</td>
+      <td>0.104</td>
       <td>0.804</td>
-      <td>0.096</td>
-      <td>0.797</td>
-      <td>0.095</td>
-      <td>0.796</td>
-      <td>0.074</td>
-      <td>0.825</td>
-      <td>0.063</td>
-      <td>0.898</td>
-      <td>0.055</td>
-      <td>0.890</td>
-      <td>0.051</td>
+      <td>0.073</td>
+      <td>0.833</td>
+      <td>0.060</td>
+      <td>0.913</td>
+      <td>0.052</td>
+      <td>0.903</td>
+      <td>0.053</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.004</td>
+      <td>0.005</td>
       <td>0.002</td>
-      <td>0.045</td>
-      <td>0.017</td>
-      <td>0.793</td>
-      <td>0.094</td>
-      <td>0.778</td>
-      <td>0.091</td>
-      <td>0.781</td>
-      <td>0.069</td>
-      <td>0.812</td>
-      <td>0.059</td>
-      <td>0.897</td>
+      <td>0.046</td>
+      <td>0.015</td>
+      <td>0.811</td>
+      <td>0.085</td>
+      <td>0.797</td>
+      <td>0.102</td>
+      <td>0.800</td>
+      <td>0.074</td>
+      <td>0.829</td>
+      <td>0.061</td>
+      <td>0.910</td>
+      <td>0.053</td>
+      <td>0.900</td>
       <td>0.054</td>
-      <td>0.891</td>
-      <td>0.050</td>
       <td>210.000</td>
       <td>0.000</td>
     </tr>
@@ -2580,136 +2565,138 @@ new approach</p></li>
 </details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/1 [00:00&lt;?, ?it/s]
-100%|██████████| 1/1 [00:00&lt;00:00, 281.59it/s]
+100%|██████████| 1/1 [00:00&lt;00:00, 213.23it/s]
   0%|          | 0/2 [00:00&lt;?, ?it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  7.69it/s]
-100%|██████████| 2/2 [00:00&lt;00:00,  7.66it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  8.29it/s]
+100%|██████████| 2/2 [00:00&lt;00:00,  8.27it/s]
   0%|          | 0/3 [00:00&lt;?, ?it/s]
- 67%|██████▋   | 2/3 [00:00&lt;00:00,  9.52it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  6.75it/s]
-100%|██████████| 3/3 [00:00&lt;00:00,  7.16it/s]
+ 67%|██████▋   | 2/3 [00:00&lt;00:00,  8.56it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  5.99it/s]
+100%|██████████| 3/3 [00:00&lt;00:00,  6.37it/s]
   0%|          | 0/4 [00:00&lt;?, ?it/s]
- 50%|█████     | 2/4 [00:00&lt;00:00,  8.80it/s]
- 75%|███████▌  | 3/4 [00:00&lt;00:00,  6.49it/s]
-100%|██████████| 4/4 [00:00&lt;00:00,  5.76it/s]
-100%|██████████| 4/4 [00:00&lt;00:00,  6.20it/s]
+ 50%|█████     | 2/4 [00:00&lt;00:00,  8.93it/s]
+ 75%|███████▌  | 3/4 [00:00&lt;00:00,  4.42it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.28it/s]
+100%|██████████| 4/4 [00:01&lt;00:00,  3.82it/s]
   0%|          | 0/5 [00:00&lt;?, ?it/s]
- 40%|████      | 2/5 [00:00&lt;00:00,  8.65it/s]
- 60%|██████    | 3/5 [00:00&lt;00:00,  5.97it/s]
- 80%|████████  | 4/5 [00:00&lt;00:00,  5.01it/s]
-100%|██████████| 5/5 [00:00&lt;00:00,  4.60it/s]
-100%|██████████| 5/5 [00:00&lt;00:00,  5.12it/s]
+ 40%|████      | 2/5 [00:00&lt;00:00,  4.23it/s]
+ 60%|██████    | 3/5 [00:00&lt;00:00,  3.20it/s]
+ 80%|████████  | 4/5 [00:01&lt;00:00,  2.68it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  2.83it/s]
+100%|██████████| 5/5 [00:01&lt;00:00,  2.97it/s]
   0%|          | 0/6 [00:00&lt;?, ?it/s]
- 33%|███▎      | 2/6 [00:00&lt;00:00,  6.90it/s]
- 50%|█████     | 3/6 [00:00&lt;00:00,  4.84it/s]
- 67%|██████▋   | 4/6 [00:00&lt;00:00,  3.63it/s]
- 83%|████████▎ | 5/6 [00:01&lt;00:00,  3.04it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  2.58it/s]
-100%|██████████| 6/6 [00:01&lt;00:00,  3.13it/s]
+ 33%|███▎      | 2/6 [00:00&lt;00:00,  4.91it/s]
+ 50%|█████     | 3/6 [00:00&lt;00:00,  4.19it/s]
+ 67%|██████▋   | 4/6 [00:01&lt;00:00,  3.57it/s]
+ 83%|████████▎ | 5/6 [00:01&lt;00:00,  3.54it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  3.69it/s]
+100%|██████████| 6/6 [00:01&lt;00:00,  3.79it/s]
   0%|          | 0/7 [00:00&lt;?, ?it/s]
- 29%|██▊       | 2/7 [00:00&lt;00:01,  3.87it/s]
- 43%|████▎     | 3/7 [00:01&lt;00:01,  2.82it/s]
- 57%|█████▋    | 4/7 [00:01&lt;00:01,  2.75it/s]
- 71%|███████▏  | 5/7 [00:01&lt;00:00,  2.90it/s]
- 86%|████████▌ | 6/7 [00:02&lt;00:00,  2.96it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  2.97it/s]
-100%|██████████| 7/7 [00:02&lt;00:00,  2.97it/s]
+ 29%|██▊       | 2/7 [00:00&lt;00:00,  6.56it/s]
+ 43%|████▎     | 3/7 [00:00&lt;00:00,  4.03it/s]
+ 57%|█████▋    | 4/7 [00:00&lt;00:00,  3.87it/s]
+ 71%|███████▏  | 5/7 [00:01&lt;00:00,  3.70it/s]
+ 86%|████████▌ | 6/7 [00:01&lt;00:00,  3.89it/s]
+100%|██████████| 7/7 [00:01&lt;00:00,  3.97it/s]
+100%|██████████| 7/7 [00:01&lt;00:00,  4.05it/s]
   0%|          | 0/8 [00:00&lt;?, ?it/s]
- 25%|██▌       | 2/8 [00:00&lt;00:00,  9.00it/s]
- 38%|███▊      | 3/8 [00:00&lt;00:00,  6.29it/s]
- 50%|█████     | 4/8 [00:00&lt;00:00,  5.19it/s]
- 62%|██████▎   | 5/8 [00:00&lt;00:00,  4.56it/s]
- 75%|███████▌  | 6/8 [00:01&lt;00:00,  4.23it/s]
- 88%|████████▊ | 7/8 [00:01&lt;00:00,  4.01it/s]
-100%|██████████| 8/8 [00:01&lt;00:00,  4.05it/s]
-100%|██████████| 8/8 [00:01&lt;00:00,  4.56it/s]
+ 25%|██▌       | 2/8 [00:00&lt;00:00,  8.90it/s]
+ 38%|███▊      | 3/8 [00:00&lt;00:00,  6.09it/s]
+ 50%|█████     | 4/8 [00:00&lt;00:00,  4.99it/s]
+ 62%|██████▎   | 5/8 [00:01&lt;00:00,  4.04it/s]
+ 75%|███████▌  | 6/8 [00:01&lt;00:00,  3.96it/s]
+ 88%|████████▊ | 7/8 [00:01&lt;00:00,  3.24it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  2.92it/s]
+100%|██████████| 8/8 [00:02&lt;00:00,  3.69it/s]
   0%|          | 0/9 [00:00&lt;?, ?it/s]
- 22%|██▏       | 2/9 [00:00&lt;00:01,  5.93it/s]
- 33%|███▎      | 3/9 [00:00&lt;00:01,  4.68it/s]
- 44%|████▍     | 4/9 [00:00&lt;00:01,  4.00it/s]
- 56%|█████▌    | 5/9 [00:01&lt;00:01,  3.80it/s]
- 67%|██████▋   | 6/9 [00:01&lt;00:00,  3.77it/s]
- 78%|███████▊  | 7/9 [00:01&lt;00:00,  3.66it/s]
- 89%|████████▉ | 8/9 [00:02&lt;00:00,  3.71it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  3.78it/s]
-100%|██████████| 9/9 [00:02&lt;00:00,  3.93it/s]
+ 22%|██▏       | 2/9 [00:00&lt;00:00,  8.54it/s]
+ 33%|███▎      | 3/9 [00:00&lt;00:01,  5.93it/s]
+ 44%|████▍     | 4/9 [00:00&lt;00:00,  5.02it/s]
+ 56%|█████▌    | 5/9 [00:01&lt;00:01,  3.88it/s]
+ 67%|██████▋   | 6/9 [00:01&lt;00:00,  3.29it/s]
+ 78%|███████▊  | 7/9 [00:01&lt;00:00,  2.93it/s]
+ 89%|████████▉ | 8/9 [00:02&lt;00:00,  2.95it/s]
+100%|██████████| 9/9 [00:02&lt;00:00,  3.22it/s]
+100%|██████████| 9/9 [00:02&lt;00:00,  3.61it/s]
   0%|          | 0/10 [00:00&lt;?, ?it/s]
- 20%|██        | 2/10 [00:00&lt;00:00,  9.17it/s]
- 30%|███       | 3/10 [00:00&lt;00:01,  6.42it/s]
- 40%|████      | 4/10 [00:00&lt;00:01,  5.71it/s]
- 50%|█████     | 5/10 [00:00&lt;00:00,  5.80it/s]
- 60%|██████    | 6/10 [00:00&lt;00:00,  5.87it/s]
- 70%|███████   | 7/10 [00:01&lt;00:00,  5.98it/s]
- 80%|████████  | 8/10 [00:01&lt;00:00,  5.99it/s]
- 90%|█████████ | 9/10 [00:01&lt;00:00,  6.00it/s]
-100%|██████████| 10/10 [00:01&lt;00:00,  6.01it/s]
-100%|██████████| 10/10 [00:01&lt;00:00,  6.10it/s]
+ 20%|██        | 2/10 [00:00&lt;00:00, 10.86it/s]
+ 40%|████      | 4/10 [00:00&lt;00:01,  3.69it/s]
+ 50%|█████     | 5/10 [00:01&lt;00:01,  3.46it/s]
+ 60%|██████    | 6/10 [00:01&lt;00:01,  3.66it/s]
+ 70%|███████   | 7/10 [00:01&lt;00:00,  3.93it/s]
+ 80%|████████  | 8/10 [00:01&lt;00:00,  4.12it/s]
+ 90%|█████████ | 9/10 [00:02&lt;00:00,  4.25it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  4.43it/s]
+100%|██████████| 10/10 [00:02&lt;00:00,  4.18it/s]
   0%|          | 0/11 [00:00&lt;?, ?it/s]
- 18%|█▊        | 2/11 [00:00&lt;00:00, 10.69it/s]
- 36%|███▋      | 4/11 [00:00&lt;00:00,  7.03it/s]
- 45%|████▌     | 5/11 [00:00&lt;00:00,  6.76it/s]
- 55%|█████▍    | 6/11 [00:00&lt;00:00,  6.43it/s]
- 64%|██████▎   | 7/11 [00:01&lt;00:00,  6.29it/s]
- 73%|███████▎  | 8/11 [00:01&lt;00:00,  6.11it/s]
- 82%|████████▏ | 9/11 [00:01&lt;00:00,  6.08it/s]
- 91%|█████████ | 10/11 [00:01&lt;00:00,  5.91it/s]
-100%|██████████| 11/11 [00:01&lt;00:00,  5.80it/s]
-100%|██████████| 11/11 [00:01&lt;00:00,  6.31it/s]
+ 18%|█▊        | 2/11 [00:00&lt;00:01,  5.00it/s]
+ 27%|██▋       | 3/11 [00:00&lt;00:01,  4.12it/s]
+ 36%|███▋      | 4/11 [00:00&lt;00:01,  4.01it/s]
+ 45%|████▌     | 5/11 [00:01&lt;00:01,  4.27it/s]
+ 55%|█████▍    | 6/11 [00:01&lt;00:01,  4.23it/s]
+ 64%|██████▎   | 7/11 [00:01&lt;00:00,  4.26it/s]
+ 73%|███████▎  | 8/11 [00:01&lt;00:00,  4.58it/s]
+ 82%|████████▏ | 9/11 [00:02&lt;00:00,  4.73it/s]
+ 91%|█████████ | 10/11 [00:02&lt;00:00,  4.66it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  4.85it/s]
+100%|██████████| 11/11 [00:02&lt;00:00,  4.53it/s]
   0%|          | 0/12 [00:00&lt;?, ?it/s]
- 17%|█▋        | 2/12 [00:00&lt;00:01,  8.13it/s]
- 25%|██▌       | 3/12 [00:00&lt;00:01,  7.08it/s]
- 33%|███▎      | 4/12 [00:00&lt;00:01,  6.66it/s]
- 42%|████▏     | 5/12 [00:00&lt;00:01,  6.38it/s]
- 50%|█████     | 6/12 [00:00&lt;00:00,  6.24it/s]
- 58%|█████▊    | 7/12 [00:01&lt;00:00,  6.18it/s]
- 67%|██████▋   | 8/12 [00:01&lt;00:00,  6.08it/s]
- 75%|███████▌  | 9/12 [00:01&lt;00:00,  6.07it/s]
- 83%|████████▎ | 10/12 [00:01&lt;00:00,  6.09it/s]
- 92%|█████████▏| 11/12 [00:01&lt;00:00,  6.05it/s]
-100%|██████████| 12/12 [00:01&lt;00:00,  6.05it/s]
-100%|██████████| 12/12 [00:01&lt;00:00,  6.27it/s]
+ 17%|█▋        | 2/12 [00:00&lt;00:00, 12.40it/s]
+ 33%|███▎      | 4/12 [00:00&lt;00:01,  6.29it/s]
+ 42%|████▏     | 5/12 [00:00&lt;00:01,  5.79it/s]
+ 50%|█████     | 6/12 [00:01&lt;00:01,  5.36it/s]
+ 58%|█████▊    | 7/12 [00:01&lt;00:00,  5.16it/s]
+ 67%|██████▋   | 8/12 [00:01&lt;00:00,  4.91it/s]
+ 75%|███████▌  | 9/12 [00:01&lt;00:00,  4.90it/s]
+ 83%|████████▎ | 10/12 [00:01&lt;00:00,  4.83it/s]
+ 92%|█████████▏| 11/12 [00:02&lt;00:00,  4.87it/s]
+100%|██████████| 12/12 [00:02&lt;00:00,  5.17it/s]
+100%|██████████| 12/12 [00:02&lt;00:00,  5.36it/s]
   0%|          | 0/13 [00:00&lt;?, ?it/s]
- 15%|█▌        | 2/13 [00:00&lt;00:00, 11.80it/s]
- 31%|███       | 4/13 [00:00&lt;00:01,  7.58it/s]
- 38%|███▊      | 5/13 [00:00&lt;00:01,  6.98it/s]
- 46%|████▌     | 6/13 [00:00&lt;00:01,  6.63it/s]
- 54%|█████▍    | 7/13 [00:01&lt;00:00,  6.45it/s]
- 62%|██████▏   | 8/13 [00:01&lt;00:00,  6.25it/s]
- 69%|██████▉   | 9/13 [00:01&lt;00:00,  6.23it/s]
- 77%|███████▋  | 10/13 [00:01&lt;00:00,  6.09it/s]
- 85%|████████▍ | 11/13 [00:01&lt;00:00,  4.98it/s]
- 92%|█████████▏| 12/13 [00:02&lt;00:00,  4.02it/s]
-100%|██████████| 13/13 [00:02&lt;00:00,  3.43it/s]
-100%|██████████| 13/13 [00:02&lt;00:00,  5.09it/s]
+ 15%|█▌        | 2/13 [00:00&lt;00:01,  9.23it/s]
+ 23%|██▎       | 3/13 [00:00&lt;00:01,  6.76it/s]
+ 31%|███       | 4/13 [00:00&lt;00:01,  5.92it/s]
+ 38%|███▊      | 5/13 [00:00&lt;00:01,  5.49it/s]
+ 46%|████▌     | 6/13 [00:01&lt;00:01,  5.30it/s]
+ 54%|█████▍    | 7/13 [00:01&lt;00:01,  5.15it/s]
+ 62%|██████▏   | 8/13 [00:01&lt;00:01,  4.95it/s]
+ 69%|██████▉   | 9/13 [00:01&lt;00:00,  4.93it/s]
+ 77%|███████▋  | 10/13 [00:01&lt;00:00,  4.92it/s]
+ 85%|████████▍ | 11/13 [00:02&lt;00:00,  5.24it/s]
+ 92%|█████████▏| 12/13 [00:02&lt;00:00,  5.43it/s]
+100%|██████████| 13/13 [00:02&lt;00:00,  5.67it/s]
+100%|██████████| 13/13 [00:02&lt;00:00,  5.52it/s]
   0%|          | 0/14 [00:00&lt;?, ?it/s]
- 14%|█▍        | 2/14 [00:00&lt;00:01, 10.60it/s]
- 29%|██▊       | 4/14 [00:00&lt;00:01,  7.25it/s]
- 36%|███▌      | 5/14 [00:00&lt;00:01,  6.86it/s]
- 43%|████▎     | 6/14 [00:00&lt;00:01,  6.61it/s]
- 50%|█████     | 7/14 [00:01&lt;00:01,  6.52it/s]
- 57%|█████▋    | 8/14 [00:01&lt;00:00,  6.37it/s]
- 64%|██████▍   | 9/14 [00:01&lt;00:01,  4.74it/s]
- 71%|███████▏  | 10/14 [00:01&lt;00:01,  3.72it/s]
- 79%|███████▊  | 11/14 [00:02&lt;00:00,  3.26it/s]
- 86%|████████▌ | 12/14 [00:02&lt;00:00,  3.50it/s]
- 93%|█████████▎| 13/14 [00:02&lt;00:00,  3.74it/s]
-100%|██████████| 14/14 [00:02&lt;00:00,  4.01it/s]
-100%|██████████| 14/14 [00:02&lt;00:00,  4.69it/s]
+ 14%|█▍        | 2/14 [00:00&lt;00:01,  9.55it/s]
+ 21%|██▏       | 3/14 [00:00&lt;00:01,  6.82it/s]
+ 29%|██▊       | 4/14 [00:00&lt;00:01,  5.60it/s]
+ 36%|███▌      | 5/14 [00:00&lt;00:01,  5.20it/s]
+ 43%|████▎     | 6/14 [00:01&lt;00:01,  5.10it/s]
+ 50%|█████     | 7/14 [00:01&lt;00:01,  5.04it/s]
+ 57%|█████▋    | 8/14 [00:01&lt;00:01,  4.94it/s]
+ 64%|██████▍   | 9/14 [00:01&lt;00:01,  4.81it/s]
+ 71%|███████▏  | 10/14 [00:01&lt;00:00,  5.14it/s]
+ 79%|███████▊  | 11/14 [00:02&lt;00:00,  5.38it/s]
+ 86%|████████▌ | 12/14 [00:02&lt;00:00,  5.54it/s]
+ 93%|█████████▎| 13/14 [00:02&lt;00:00,  5.67it/s]
+100%|██████████| 14/14 [00:02&lt;00:00,  5.82it/s]
+100%|██████████| 14/14 [00:02&lt;00:00,  5.53it/s]
   0%|          | 0/15 [00:00&lt;?, ?it/s]
- 13%|█▎        | 2/15 [00:00&lt;00:01, 11.97it/s]
- 27%|██▋       | 4/15 [00:00&lt;00:01,  7.81it/s]
- 33%|███▎      | 5/15 [00:00&lt;00:01,  7.22it/s]
- 40%|████      | 6/15 [00:00&lt;00:01,  6.82it/s]
- 47%|████▋     | 7/15 [00:01&lt;00:01,  5.50it/s]
- 53%|█████▎    | 8/15 [00:01&lt;00:01,  4.33it/s]
- 60%|██████    | 9/15 [00:01&lt;00:01,  3.56it/s]
- 67%|██████▋   | 10/15 [00:02&lt;00:01,  3.43it/s]
- 73%|███████▎  | 11/15 [00:02&lt;00:01,  3.92it/s]
- 80%|████████  | 12/15 [00:02&lt;00:00,  4.11it/s]
- 87%|████████▋ | 13/15 [00:02&lt;00:00,  4.34it/s]
- 93%|█████████▎| 14/15 [00:02&lt;00:00,  4.51it/s]
-100%|██████████| 15/15 [00:03&lt;00:00,  4.69it/s]
-100%|██████████| 15/15 [00:03&lt;00:00,  4.81it/s]
+ 13%|█▎        | 2/15 [00:00&lt;00:01,  9.09it/s]
+ 20%|██        | 3/15 [00:00&lt;00:01,  6.45it/s]
+ 27%|██▋       | 4/15 [00:00&lt;00:01,  5.75it/s]
+ 33%|███▎      | 5/15 [00:00&lt;00:01,  5.34it/s]
+ 40%|████      | 6/15 [00:01&lt;00:01,  5.15it/s]
+ 47%|████▋     | 7/15 [00:01&lt;00:01,  5.01it/s]
+ 53%|█████▎    | 8/15 [00:01&lt;00:01,  4.98it/s]
+ 60%|██████    | 9/15 [00:01&lt;00:01,  4.97it/s]
+ 67%|██████▋   | 10/15 [00:01&lt;00:01,  4.95it/s]
+ 73%|███████▎  | 11/15 [00:02&lt;00:00,  5.39it/s]
+ 80%|████████  | 12/15 [00:02&lt;00:00,  5.52it/s]
+ 87%|████████▋ | 13/15 [00:02&lt;00:00,  5.66it/s]
+ 93%|█████████▎| 14/15 [00:02&lt;00:00,  5.76it/s]
+100%|██████████| 15/15 [00:02&lt;00:00,  5.94it/s]
+100%|██████████| 15/15 [00:02&lt;00:00,  5.57it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -2790,10 +2777,10 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.043</td>
-      <td>0.014</td>
+      <td>0.003</td>
+      <td>0.001</td>
+      <td>0.034</td>
+      <td>0.009</td>
       <td>0.000</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -2811,10 +2798,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.003</td>
-      <td>0.001</td>
-      <td>0.032</td>
-      <td>0.012</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.043</td>
+      <td>0.015</td>
       <td>0.615</td>
       <td>0.124</td>
       <td>0.431</td>
@@ -2833,9 +2820,9 @@ new approach</p></li>
     <tr>
       <th>3</th>
       <td>0.002</td>
-      <td>0.001</td>
-      <td>0.025</td>
-      <td>0.007</td>
+      <td>0.000</td>
+      <td>0.022</td>
+      <td>0.004</td>
       <td>0.815</td>
       <td>0.084</td>
       <td>0.748</td>
@@ -2854,9 +2841,9 @@ new approach</p></li>
     <tr>
       <th>4</th>
       <td>0.004</td>
-      <td>0.002</td>
-      <td>0.046</td>
-      <td>0.020</td>
+      <td>0.001</td>
+      <td>0.037</td>
+      <td>0.011</td>
       <td>0.806</td>
       <td>0.090</td>
       <td>0.733</td>
@@ -2874,10 +2861,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.004</td>
-      <td>0.002</td>
-      <td>0.045</td>
-      <td>0.015</td>
+      <td>0.003</td>
+      <td>0.001</td>
+      <td>0.033</td>
+      <td>0.008</td>
       <td>0.788</td>
       <td>0.091</td>
       <td>0.734</td>
@@ -2895,10 +2882,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.004</td>
+      <td>0.003</td>
       <td>0.001</td>
-      <td>0.039</td>
-      <td>0.013</td>
+      <td>0.035</td>
+      <td>0.003</td>
       <td>0.783</td>
       <td>0.091</td>
       <td>0.726</td>
@@ -2916,10 +2903,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>7</th>
-      <td>0.003</td>
-      <td>0.001</td>
-      <td>0.035</td>
-      <td>0.003</td>
+      <td>0.004</td>
+      <td>0.002</td>
+      <td>0.045</td>
+      <td>0.019</td>
       <td>0.781</td>
       <td>0.088</td>
       <td>0.731</td>
@@ -2937,10 +2924,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>8</th>
-      <td>0.004</td>
+      <td>0.005</td>
       <td>0.002</td>
-      <td>0.037</td>
-      <td>0.017</td>
+      <td>0.049</td>
+      <td>0.019</td>
       <td>0.797</td>
       <td>0.082</td>
       <td>0.735</td>
@@ -2958,10 +2945,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.005</td>
-      <td>0.002</td>
-      <td>0.048</td>
-      <td>0.020</td>
+      <td>0.003</td>
+      <td>0.001</td>
+      <td>0.027</td>
+      <td>0.008</td>
       <td>0.807</td>
       <td>0.091</td>
       <td>0.772</td>
@@ -2979,10 +2966,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.003</td>
       <td>0.002</td>
-      <td>0.033</td>
-      <td>0.014</td>
+      <td>0.001</td>
+      <td>0.023</td>
+      <td>0.005</td>
       <td>0.809</td>
       <td>0.086</td>
       <td>0.789</td>
@@ -3000,10 +2987,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>0.004</td>
       <td>0.002</td>
-      <td>0.037</td>
-      <td>0.018</td>
+      <td>0.000</td>
+      <td>0.021</td>
+      <td>0.003</td>
       <td>0.809</td>
       <td>0.084</td>
       <td>0.784</td>
@@ -3021,10 +3008,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.004</td>
       <td>0.002</td>
-      <td>0.041</td>
-      <td>0.020</td>
+      <td>0.001</td>
+      <td>0.024</td>
+      <td>0.012</td>
       <td>0.846</td>
       <td>0.084</td>
       <td>0.803</td>
@@ -3043,9 +3030,9 @@ new approach</p></li>
     <tr>
       <th>13</th>
       <td>0.003</td>
-      <td>0.001</td>
-      <td>0.031</td>
-      <td>0.010</td>
+      <td>0.002</td>
+      <td>0.030</td>
+      <td>0.018</td>
       <td>0.855</td>
       <td>0.080</td>
       <td>0.809</td>
@@ -3065,8 +3052,8 @@ new approach</p></li>
       <th>14</th>
       <td>0.003</td>
       <td>0.001</td>
-      <td>0.030</td>
-      <td>0.007</td>
+      <td>0.029</td>
+      <td>0.008</td>
       <td>0.846</td>
       <td>0.074</td>
       <td>0.817</td>
@@ -3085,9 +3072,9 @@ new approach</p></li>
     <tr>
       <th>15</th>
       <td>0.003</td>
-      <td>0.001</td>
-      <td>0.030</td>
-      <td>0.007</td>
+      <td>0.002</td>
+      <td>0.033</td>
+      <td>0.017</td>
       <td>0.845</td>
       <td>0.076</td>
       <td>0.811</td>
@@ -3126,63 +3113,60 @@ new approach</p></li>
 </details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/1 [00:00&lt;?, ?it/s]
-100%|██████████| 1/1 [00:00&lt;00:00, 1011.89it/s]
+100%|██████████| 1/1 [00:00&lt;00:00, 1084.08it/s]
   0%|          | 0/2 [00:00&lt;?, ?it/s]
-100%|██████████| 2/2 [00:00&lt;00:00, 29.82it/s]
+100%|██████████| 2/2 [00:00&lt;00:00, 47.70it/s]
   0%|          | 0/3 [00:00&lt;?, ?it/s]
-100%|██████████| 3/3 [00:00&lt;00:00, 25.66it/s]
-100%|██████████| 3/3 [00:00&lt;00:00, 25.55it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 20.57it/s]
+100%|██████████| 3/3 [00:00&lt;00:00, 20.20it/s]
   0%|          | 0/4 [00:00&lt;?, ?it/s]
-100%|██████████| 4/4 [00:00&lt;00:00, 37.55it/s]
-100%|██████████| 4/4 [00:00&lt;00:00, 37.32it/s]
+ 75%|███████▌  | 3/4 [00:00&lt;00:00, 27.17it/s]
+100%|██████████| 4/4 [00:00&lt;00:00, 27.25it/s]
   0%|          | 0/5 [00:00&lt;?, ?it/s]
- 80%|████████  | 4/5 [00:00&lt;00:00, 31.36it/s]
-100%|██████████| 5/5 [00:00&lt;00:00, 31.35it/s]
+ 80%|████████  | 4/5 [00:00&lt;00:00, 33.47it/s]
+100%|██████████| 5/5 [00:00&lt;00:00, 32.57it/s]
   0%|          | 0/6 [00:00&lt;?, ?it/s]
- 83%|████████▎ | 5/6 [00:00&lt;00:00, 42.04it/s]
-100%|██████████| 6/6 [00:00&lt;00:00, 37.86it/s]
+ 67%|██████▋   | 4/6 [00:00&lt;00:00, 33.85it/s]
+100%|██████████| 6/6 [00:00&lt;00:00, 32.05it/s]
   0%|          | 0/7 [00:00&lt;?, ?it/s]
- 57%|█████▋    | 4/7 [00:00&lt;00:00, 33.91it/s]
-100%|██████████| 7/7 [00:00&lt;00:00, 30.42it/s]
+ 57%|█████▋    | 4/7 [00:00&lt;00:00, 35.83it/s]
+100%|██████████| 7/7 [00:00&lt;00:00, 33.65it/s]
   0%|          | 0/8 [00:00&lt;?, ?it/s]
- 50%|█████     | 4/8 [00:00&lt;00:00, 31.09it/s]
-100%|██████████| 8/8 [00:00&lt;00:00, 21.40it/s]
-100%|██████████| 8/8 [00:00&lt;00:00, 22.41it/s]
+ 62%|██████▎   | 5/8 [00:00&lt;00:00, 41.38it/s]
+100%|██████████| 8/8 [00:00&lt;00:00, 27.27it/s]
   0%|          | 0/9 [00:00&lt;?, ?it/s]
- 33%|███▎      | 3/9 [00:00&lt;00:00, 19.89it/s]
- 67%|██████▋   | 6/9 [00:00&lt;00:00, 21.03it/s]
-100%|██████████| 9/9 [00:00&lt;00:00, 21.99it/s]
-100%|██████████| 9/9 [00:00&lt;00:00, 21.56it/s]
+ 44%|████▍     | 4/9 [00:00&lt;00:00, 38.40it/s]
+ 89%|████████▉ | 8/9 [00:00&lt;00:00, 22.93it/s]
+100%|██████████| 9/9 [00:00&lt;00:00, 24.42it/s]
   0%|          | 0/10 [00:00&lt;?, ?it/s]
- 40%|████      | 4/10 [00:00&lt;00:00, 32.03it/s]
- 80%|████████  | 8/10 [00:00&lt;00:00, 28.17it/s]
-100%|██████████| 10/10 [00:00&lt;00:00, 28.78it/s]
+ 30%|███       | 3/10 [00:00&lt;00:00, 20.69it/s]
+ 60%|██████    | 6/10 [00:00&lt;00:00, 22.00it/s]
+ 90%|█████████ | 9/10 [00:00&lt;00:00, 24.99it/s]
+100%|██████████| 10/10 [00:00&lt;00:00, 24.64it/s]
   0%|          | 0/11 [00:00&lt;?, ?it/s]
- 36%|███▋      | 4/11 [00:00&lt;00:00, 33.90it/s]
- 73%|███████▎  | 8/11 [00:00&lt;00:00, 29.37it/s]
-100%|██████████| 11/11 [00:00&lt;00:00, 30.37it/s]
+ 36%|███▋      | 4/11 [00:00&lt;00:00, 33.66it/s]
+ 73%|███████▎  | 8/11 [00:00&lt;00:00, 32.56it/s]
+100%|██████████| 11/11 [00:00&lt;00:00, 31.19it/s]
   0%|          | 0/12 [00:00&lt;?, ?it/s]
- 33%|███▎      | 4/12 [00:00&lt;00:00, 33.46it/s]
- 67%|██████▋   | 8/12 [00:00&lt;00:00, 28.26it/s]
-100%|██████████| 12/12 [00:00&lt;00:00, 29.04it/s]
-100%|██████████| 12/12 [00:00&lt;00:00, 29.24it/s]
+ 33%|███▎      | 4/12 [00:00&lt;00:00, 29.86it/s]
+ 67%|██████▋   | 8/12 [00:00&lt;00:00, 29.57it/s]
+ 92%|█████████▏| 11/12 [00:00&lt;00:00, 28.83it/s]
+100%|██████████| 12/12 [00:00&lt;00:00, 29.49it/s]
   0%|          | 0/13 [00:00&lt;?, ?it/s]
- 31%|███       | 4/13 [00:00&lt;00:00, 30.66it/s]
- 62%|██████▏   | 8/13 [00:00&lt;00:00, 27.53it/s]
- 85%|████████▍ | 11/13 [00:00&lt;00:00, 26.59it/s]
-100%|██████████| 13/13 [00:00&lt;00:00, 27.17it/s]
+ 31%|███       | 4/13 [00:00&lt;00:00, 36.35it/s]
+ 62%|██████▏   | 8/13 [00:00&lt;00:00, 32.17it/s]
+ 92%|█████████▏| 12/13 [00:00&lt;00:00, 31.08it/s]
+100%|██████████| 13/13 [00:00&lt;00:00, 31.17it/s]
   0%|          | 0/14 [00:00&lt;?, ?it/s]
- 29%|██▊       | 4/14 [00:00&lt;00:00, 34.63it/s]
- 57%|█████▋    | 8/14 [00:00&lt;00:00, 26.42it/s]
- 79%|███████▊  | 11/14 [00:00&lt;00:00, 27.02it/s]
-100%|██████████| 14/14 [00:00&lt;00:00, 26.68it/s]
-100%|██████████| 14/14 [00:00&lt;00:00, 27.20it/s]
+ 29%|██▊       | 4/14 [00:00&lt;00:00, 33.45it/s]
+ 57%|█████▋    | 8/14 [00:00&lt;00:00, 31.27it/s]
+ 86%|████████▌ | 12/14 [00:00&lt;00:00, 30.22it/s]
+100%|██████████| 14/14 [00:00&lt;00:00, 30.83it/s]
   0%|          | 0/15 [00:00&lt;?, ?it/s]
- 27%|██▋       | 4/15 [00:00&lt;00:00, 36.71it/s]
- 53%|█████▎    | 8/15 [00:00&lt;00:00, 27.70it/s]
- 73%|███████▎  | 11/15 [00:00&lt;00:00, 25.55it/s]
- 93%|█████████▎| 14/15 [00:00&lt;00:00, 26.42it/s]
-100%|██████████| 15/15 [00:00&lt;00:00, 26.99it/s]
+ 27%|██▋       | 4/15 [00:00&lt;00:00, 34.93it/s]
+ 53%|█████▎    | 8/15 [00:00&lt;00:00, 32.35it/s]
+ 80%|████████  | 12/15 [00:00&lt;00:00, 33.48it/s]
+100%|██████████| 15/15 [00:00&lt;00:00, 33.78it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -3263,9 +3247,9 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>1</th>
-      <td>0.002</td>
+      <td>0.003</td>
       <td>0.001</td>
-      <td>0.026</td>
+      <td>0.033</td>
       <td>0.008</td>
       <td>0.000</td>
       <td>0.000</td>
@@ -3284,10 +3268,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.003</td>
+      <td>0.002</td>
       <td>0.001</td>
-      <td>0.030</td>
-      <td>0.008</td>
+      <td>0.023</td>
+      <td>0.009</td>
       <td>0.565</td>
       <td>0.121</td>
       <td>0.422</td>
@@ -3305,10 +3289,10 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
+      <td>0.003</td>
       <td>0.002</td>
-      <td>0.001</td>
-      <td>0.025</td>
-      <td>0.007</td>
+      <td>0.034</td>
+      <td>0.013</td>
       <td>0.560</td>
       <td>0.118</td>
       <td>0.412</td>
@@ -3327,9 +3311,9 @@ new approach</p></li>
     <tr>
       <th>4</th>
       <td>0.002</td>
-      <td>0.000</td>
-      <td>0.022</td>
-      <td>0.005</td>
+      <td>0.001</td>
+      <td>0.025</td>
+      <td>0.007</td>
       <td>0.613</td>
       <td>0.118</td>
       <td>0.451</td>
@@ -3350,7 +3334,7 @@ new approach</p></li>
       <td>0.002</td>
       <td>0.000</td>
       <td>0.022</td>
-      <td>0.005</td>
+      <td>0.004</td>
       <td>0.630</td>
       <td>0.114</td>
       <td>0.460</td>
@@ -3370,8 +3354,8 @@ new approach</p></li>
       <th>6</th>
       <td>0.002</td>
       <td>0.000</td>
-      <td>0.023</td>
-      <td>0.005</td>
+      <td>0.022</td>
+      <td>0.004</td>
       <td>0.615</td>
       <td>0.098</td>
       <td>0.463</td>
@@ -3390,9 +3374,9 @@ new approach</p></li>
     <tr>
       <th>7</th>
       <td>0.002</td>
-      <td>0.001</td>
+      <td>0.000</td>
       <td>0.023</td>
-      <td>0.009</td>
+      <td>0.005</td>
       <td>0.625</td>
       <td>0.101</td>
       <td>0.499</td>
@@ -3411,8 +3395,8 @@ new approach</p></li>
     <tr>
       <th>8</th>
       <td>0.002</td>
-      <td>0.000</td>
-      <td>0.022</td>
+      <td>0.001</td>
+      <td>0.021</td>
       <td>0.003</td>
       <td>0.623</td>
       <td>0.102</td>
@@ -3434,7 +3418,7 @@ new approach</p></li>
       <td>0.002</td>
       <td>0.000</td>
       <td>0.021</td>
-      <td>0.002</td>
+      <td>0.003</td>
       <td>0.615</td>
       <td>0.105</td>
       <td>0.492</td>
@@ -3454,8 +3438,8 @@ new approach</p></li>
       <th>10</th>
       <td>0.002</td>
       <td>0.000</td>
-      <td>0.022</td>
-      <td>0.004</td>
+      <td>0.021</td>
+      <td>0.003</td>
       <td>0.613</td>
       <td>0.103</td>
       <td>0.480</td>
@@ -3474,9 +3458,9 @@ new approach</p></li>
     <tr>
       <th>11</th>
       <td>0.002</td>
-      <td>0.000</td>
-      <td>0.021</td>
-      <td>0.004</td>
+      <td>0.001</td>
+      <td>0.023</td>
+      <td>0.008</td>
       <td>0.648</td>
       <td>0.108</td>
       <td>0.508</td>
@@ -3495,8 +3479,8 @@ new approach</p></li>
     <tr>
       <th>12</th>
       <td>0.002</td>
-      <td>0.000</td>
-      <td>0.022</td>
+      <td>0.001</td>
+      <td>0.023</td>
       <td>0.005</td>
       <td>0.669</td>
       <td>0.105</td>
@@ -3517,8 +3501,8 @@ new approach</p></li>
       <th>13</th>
       <td>0.002</td>
       <td>0.000</td>
-      <td>0.023</td>
-      <td>0.005</td>
+      <td>0.022</td>
+      <td>0.004</td>
       <td>0.655</td>
       <td>0.106</td>
       <td>0.522</td>
@@ -3537,9 +3521,9 @@ new approach</p></li>
     <tr>
       <th>14</th>
       <td>0.002</td>
-      <td>0.001</td>
-      <td>0.023</td>
-      <td>0.005</td>
+      <td>0.000</td>
+      <td>0.022</td>
+      <td>0.004</td>
       <td>0.648</td>
       <td>0.108</td>
       <td>0.510</td>
@@ -3627,49 +3611,49 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>fit_time</th>
+      <td>4</td>
+      <td>8</td>
       <td>3</td>
-      <td>9</td>
-      <td>2</td>
     </tr>
     <tr>
       <th>score_time</th>
+      <td>4</td>
+      <td>8</td>
       <td>3</td>
-      <td>9</td>
-      <td>2</td>
     </tr>
     <tr>
       <th>test_precision</th>
-      <td>14</td>
+      <td>11</td>
       <td>13</td>
       <td>12</td>
     </tr>
     <tr>
       <th>test_recall</th>
-      <td>13</td>
+      <td>9</td>
       <td>14</td>
       <td>15</td>
     </tr>
     <tr>
       <th>test_f1</th>
-      <td>13</td>
+      <td>11</td>
       <td>14</td>
       <td>15</td>
     </tr>
     <tr>
       <th>test_balanced_accuracy</th>
-      <td>13</td>
+      <td>11</td>
       <td>13</td>
       <td>12</td>
     </tr>
     <tr>
       <th>test_roc_auc</th>
-      <td>14</td>
+      <td>12</td>
       <td>15</td>
       <td>15</td>
     </tr>
     <tr>
       <th>test_average_precision</th>
-      <td>15</td>
+      <td>12</td>
       <td>15</td>
       <td>15</td>
     </tr>
@@ -3809,39 +3793,37 @@ new approach</p></li>
 </details>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/15 [00:00&lt;?, ?it/s]
- 13%|█▎        | 2/15 [00:00&lt;00:01, 11.47it/s]
- 27%|██▋       | 4/15 [00:00&lt;00:01,  7.39it/s]
- 33%|███▎      | 5/15 [00:00&lt;00:01,  6.85it/s]
- 40%|████      | 6/15 [00:00&lt;00:01,  6.53it/s]
- 47%|████▋     | 7/15 [00:01&lt;00:01,  5.38it/s]
- 53%|█████▎    | 8/15 [00:01&lt;00:01,  5.31it/s]
- 60%|██████    | 9/15 [00:01&lt;00:01,  5.42it/s]
- 67%|██████▋   | 10/15 [00:01&lt;00:00,  5.65it/s]
- 73%|███████▎  | 11/15 [00:01&lt;00:00,  5.72it/s]
- 80%|████████  | 12/15 [00:01&lt;00:00,  5.88it/s]
- 87%|████████▋ | 13/15 [00:02&lt;00:00,  5.93it/s]
- 93%|█████████▎| 14/15 [00:02&lt;00:00,  6.01it/s]
-100%|██████████| 15/15 [00:02&lt;00:00,  6.13it/s]
-100%|██████████| 15/15 [00:02&lt;00:00,  6.10it/s]
+ 13%|█▎        | 2/15 [00:00&lt;00:01, 12.59it/s]
+ 27%|██▋       | 4/15 [00:00&lt;00:01,  8.00it/s]
+ 33%|███▎      | 5/15 [00:00&lt;00:01,  7.27it/s]
+ 40%|████      | 6/15 [00:00&lt;00:01,  5.46it/s]
+ 47%|████▋     | 7/15 [00:01&lt;00:01,  5.45it/s]
+ 53%|█████▎    | 8/15 [00:01&lt;00:01,  5.37it/s]
+ 60%|██████    | 9/15 [00:01&lt;00:01,  5.46it/s]
+ 67%|██████▋   | 10/15 [00:01&lt;00:00,  5.77it/s]
+ 73%|███████▎  | 11/15 [00:01&lt;00:00,  5.95it/s]
+ 80%|████████  | 12/15 [00:01&lt;00:00,  6.08it/s]
+ 87%|████████▋ | 13/15 [00:02&lt;00:00,  6.26it/s]
+ 93%|█████████▎| 14/15 [00:02&lt;00:00,  6.31it/s]
+100%|██████████| 15/15 [00:02&lt;00:00,  6.34it/s]
+100%|██████████| 15/15 [00:02&lt;00:00,  6.23it/s]
   0%|          | 0/15 [00:00&lt;?, ?it/s]
- 27%|██▋       | 4/15 [00:00&lt;00:00, 36.36it/s]
- 53%|█████▎    | 8/15 [00:00&lt;00:00, 30.43it/s]
- 80%|████████  | 12/15 [00:00&lt;00:00, 28.24it/s]
-100%|██████████| 15/15 [00:00&lt;00:00, 29.61it/s]
-  0%|          | 0/14 [00:00&lt;?, ?it/s]
- 14%|█▍        | 2/14 [00:00&lt;00:01, 11.38it/s]
- 29%|██▊       | 4/14 [00:00&lt;00:01,  8.53it/s]
- 36%|███▌      | 5/14 [00:00&lt;00:01,  7.96it/s]
- 43%|████▎     | 6/14 [00:00&lt;00:01,  7.61it/s]
- 50%|█████     | 7/14 [00:00&lt;00:00,  7.50it/s]
- 57%|█████▋    | 8/14 [00:01&lt;00:00,  7.34it/s]
- 64%|██████▍   | 9/14 [00:01&lt;00:00,  7.02it/s]
- 71%|███████▏  | 10/14 [00:01&lt;00:00,  7.04it/s]
- 79%|███████▊  | 11/14 [00:01&lt;00:00,  7.07it/s]
- 86%|████████▌ | 12/14 [00:01&lt;00:00,  7.08it/s]
- 93%|█████████▎| 13/14 [00:01&lt;00:00,  7.18it/s]
-100%|██████████| 14/14 [00:01&lt;00:00,  7.16it/s]
-100%|██████████| 14/14 [00:01&lt;00:00,  7.46it/s]
+ 33%|███▎      | 5/15 [00:00&lt;00:00, 36.38it/s]
+ 60%|██████    | 9/15 [00:00&lt;00:00, 33.99it/s]
+ 87%|████████▋ | 13/15 [00:00&lt;00:00, 32.04it/s]
+100%|██████████| 15/15 [00:00&lt;00:00, 32.34it/s]
+  0%|          | 0/12 [00:00&lt;?, ?it/s]
+ 17%|█▋        | 2/12 [00:00&lt;00:00, 14.69it/s]
+ 33%|███▎      | 4/12 [00:00&lt;00:00,  8.29it/s]
+ 42%|████▏     | 5/12 [00:00&lt;00:00,  7.94it/s]
+ 50%|█████     | 6/12 [00:00&lt;00:00,  7.56it/s]
+ 58%|█████▊    | 7/12 [00:00&lt;00:00,  7.31it/s]
+ 67%|██████▋   | 8/12 [00:01&lt;00:00,  7.24it/s]
+ 75%|███████▌  | 9/12 [00:01&lt;00:00,  7.35it/s]
+ 83%|████████▎ | 10/12 [00:01&lt;00:00,  7.16it/s]
+ 92%|█████████▏| 11/12 [00:01&lt;00:00,  7.14it/s]
+100%|██████████| 12/12 [00:01&lt;00:00,  7.12it/s]
+100%|██████████| 12/12 [00:01&lt;00:00,  7.56it/s]
 </pre></div>
 </div>
 </div>
@@ -3870,7 +3852,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_TRKNN/auc_roc_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/a5f17bbca73884adfd645ba0725e4f99a7d28519fe890f45d6ee0d7651ac2ba6.png" src="../../../_images/a5f17bbca73884adfd645ba0725e4f99a7d28519fe890f45d6ee0d7651ac2ba6.png" />
+<img alt="../../../_images/12f07af0f4a1d84369328f8dece6d7588944af069eacd5cfcbe080e174366337.png" src="../../../_images/12f07af0f4a1d84369328f8dece6d7588944af069eacd5cfcbe080e174366337.png" />
 </div>
 </div>
 <p>Data used to plot ROC:</p>
@@ -3935,8 +3917,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.042</td>
       <td>0.000</td>
+      <td>0.056</td>
       <td>0.000</td>
       <td>0.056</td>
       <td>0.042</td>
@@ -3944,8 +3926,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.042</td>
-      <td>0.444</td>
+      <td>0.000</td>
+      <td>0.778</td>
       <td>0.000</td>
       <td>0.222</td>
       <td>0.042</td>
@@ -3953,8 +3935,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.125</td>
-      <td>0.444</td>
+      <td>0.292</td>
+      <td>0.778</td>
       <td>0.042</td>
       <td>0.222</td>
       <td>0.125</td>
@@ -3962,8 +3944,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.125</td>
-      <td>0.667</td>
+      <td>0.292</td>
+      <td>0.833</td>
       <td>0.042</td>
       <td>0.389</td>
       <td>0.125</td>
@@ -3971,8 +3953,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.208</td>
-      <td>0.667</td>
+      <td>0.417</td>
+      <td>0.833</td>
       <td>0.125</td>
       <td>0.389</td>
       <td>0.167</td>
@@ -3980,8 +3962,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>6</th>
-      <td>0.208</td>
-      <td>0.833</td>
+      <td>0.417</td>
+      <td>0.944</td>
       <td>0.125</td>
       <td>0.556</td>
       <td>0.167</td>
@@ -3990,7 +3972,7 @@ new approach</p></li>
     <tr>
       <th>7</th>
       <td>0.458</td>
-      <td>0.833</td>
+      <td>0.944</td>
       <td>0.292</td>
       <td>0.556</td>
       <td>0.250</td>
@@ -3999,7 +3981,7 @@ new approach</p></li>
     <tr>
       <th>8</th>
       <td>0.458</td>
-      <td>0.889</td>
+      <td>1.000</td>
       <td>0.292</td>
       <td>0.611</td>
       <td>0.250</td>
@@ -4007,8 +3989,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>9</th>
-      <td>0.542</td>
-      <td>0.889</td>
+      <td>1.000</td>
+      <td>1.000</td>
       <td>0.333</td>
       <td>0.611</td>
       <td>0.292</td>
@@ -4016,8 +3998,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>10</th>
-      <td>0.542</td>
-      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>0.333</td>
       <td>0.778</td>
       <td>0.292</td>
@@ -4025,8 +4007,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>11</th>
-      <td>1.000</td>
-      <td>1.000</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>0.417</td>
       <td>0.778</td>
       <td>0.333</td>
@@ -4187,85 +4169,85 @@ new approach</p></li>
   <tbody>
     <tr>
       <th>0</th>
-      <td>P04075</td>
+      <td>P10636-2;P10636-6</td>
       <td>P10636-2;P10636-6</td>
       <td>P31321</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Q9NRN5</td>
+      <td>Q9NX62</td>
       <td>P08670</td>
       <td>P61088</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>P09486</td>
+      <td>A0A1B0GV23;A0A1B0GVD5;A0A1B0GWE8;P07339</td>
       <td>P01011</td>
       <td>Q14894</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>K7ERG9;P00746</td>
+      <td>Q8NCC3</td>
       <td>Q9Y2T3;Q9Y2T3-3</td>
       <td>F8WBF9;Q5TH30;Q9UGV2;Q9UGV2-2;Q9UGV2-3</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>P14174</td>
+      <td>P61981</td>
       <td>P10909-3</td>
       <td>Q9NUQ9</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>P10636-2;P10636-6</td>
+      <td>P04075</td>
       <td>P61981</td>
       <td>Q9GZT8;Q9GZT8-2</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>P61981</td>
+      <td>P14174</td>
       <td>P15151-2</td>
       <td>J3KSJ8;Q9UD71;Q9UD71-2</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Q9Y2T3;Q9Y2T3-3</td>
+      <td>P00338;P00338-3</td>
       <td>P04075</td>
       <td>A0A0C4DGV4;E9PLX3;O43504;R4GMU8</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Q6EMK4</td>
+      <td>Q9Y2T3;Q9Y2T3-3</td>
       <td>P25189;P25189-2</td>
       <td>Q96GD0</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>Q99983</td>
+      <td>P63104</td>
       <td>P14174</td>
       <td>A0A0J9YW36;Q9NZ72;Q9NZ72-2</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>P14618</td>
+      <td>C9JF17;P05090</td>
       <td>P63104</td>
       <td>Q9H741</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>P00338;P00338-3</td>
+      <td>Q6EMK4</td>
       <td>P00492</td>
       <td>P51688</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>P18428</td>
+      <td>None</td>
       <td>P00338;P00338-3</td>
       <td>P01743</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>P62937</td>
+      <td>None</td>
       <td>Q6EMK4</td>
       <td>A0A1W2PQ94;B4DS77;B4DS77-2;B4DS77-3</td>
     </tr>
@@ -4305,7 +4287,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_TRKNN/prec_recall_curve.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/b018c3615f14a4db5a0e00134d1fec43fce644b282b23e50976d8db082faaec1.png" src="../../../_images/b018c3615f14a4db5a0e00134d1fec43fce644b282b23e50976d8db082faaec1.png" />
+<img alt="../../../_images/fd7634ae519e162a1389774dd8e373b998c652ece0e22aca27250be89e93cc07.png" src="../../../_images/fd7634ae519e162a1389774dd8e373b998c652ece0e22aca27250be89e93cc07.png" />
 </div>
 </div>
 <p>Data used to plot PRC:</p>
@@ -4467,8 +4449,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>12</th>
-      <td>0.567</td>
-      <td>0.944</td>
+      <td>0.600</td>
+      <td>1.000</td>
       <td>0.600</td>
       <td>1.000</td>
       <td>0.533</td>
@@ -4476,8 +4458,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>13</th>
-      <td>0.552</td>
-      <td>0.889</td>
+      <td>0.621</td>
+      <td>1.000</td>
       <td>0.586</td>
       <td>0.944</td>
       <td>0.517</td>
@@ -4485,8 +4467,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>14</th>
-      <td>0.571</td>
-      <td>0.889</td>
+      <td>0.607</td>
+      <td>0.944</td>
       <td>0.607</td>
       <td>0.944</td>
       <td>0.500</td>
@@ -4494,8 +4476,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>15</th>
-      <td>0.593</td>
-      <td>0.889</td>
+      <td>0.630</td>
+      <td>0.944</td>
       <td>0.593</td>
       <td>0.889</td>
       <td>0.519</td>
@@ -4503,8 +4485,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>16</th>
-      <td>0.577</td>
-      <td>0.833</td>
+      <td>0.615</td>
+      <td>0.889</td>
       <td>0.577</td>
       <td>0.833</td>
       <td>0.538</td>
@@ -4548,8 +4530,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>21</th>
-      <td>0.714</td>
-      <td>0.833</td>
+      <td>0.667</td>
+      <td>0.778</td>
       <td>0.619</td>
       <td>0.722</td>
       <td>0.571</td>
@@ -4557,8 +4539,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>22</th>
-      <td>0.750</td>
-      <td>0.833</td>
+      <td>0.700</td>
+      <td>0.778</td>
       <td>0.600</td>
       <td>0.667</td>
       <td>0.600</td>
@@ -4575,8 +4557,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>24</th>
-      <td>0.722</td>
-      <td>0.722</td>
+      <td>0.778</td>
+      <td>0.778</td>
       <td>0.611</td>
       <td>0.611</td>
       <td>0.611</td>
@@ -4584,8 +4566,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>25</th>
-      <td>0.706</td>
-      <td>0.667</td>
+      <td>0.824</td>
+      <td>0.778</td>
       <td>0.588</td>
       <td>0.556</td>
       <td>0.588</td>
@@ -4593,8 +4575,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>26</th>
-      <td>0.750</td>
-      <td>0.667</td>
+      <td>0.875</td>
+      <td>0.778</td>
       <td>0.625</td>
       <td>0.556</td>
       <td>0.625</td>
@@ -4602,8 +4584,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>27</th>
-      <td>0.800</td>
-      <td>0.667</td>
+      <td>0.933</td>
+      <td>0.778</td>
       <td>0.667</td>
       <td>0.556</td>
       <td>0.600</td>
@@ -4611,8 +4593,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>28</th>
-      <td>0.786</td>
-      <td>0.611</td>
+      <td>1.000</td>
+      <td>0.778</td>
       <td>0.714</td>
       <td>0.556</td>
       <td>0.643</td>
@@ -4620,8 +4602,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>29</th>
-      <td>0.769</td>
-      <td>0.556</td>
+      <td>1.000</td>
+      <td>0.722</td>
       <td>0.769</td>
       <td>0.556</td>
       <td>0.692</td>
@@ -4629,8 +4611,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>30</th>
-      <td>0.750</td>
-      <td>0.500</td>
+      <td>1.000</td>
+      <td>0.667</td>
       <td>0.750</td>
       <td>0.500</td>
       <td>0.667</td>
@@ -4638,8 +4620,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>31</th>
-      <td>0.727</td>
-      <td>0.444</td>
+      <td>1.000</td>
+      <td>0.611</td>
       <td>0.727</td>
       <td>0.444</td>
       <td>0.636</td>
@@ -4647,8 +4629,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>32</th>
-      <td>0.800</td>
-      <td>0.444</td>
+      <td>1.000</td>
+      <td>0.556</td>
       <td>0.700</td>
       <td>0.389</td>
       <td>0.600</td>
@@ -4656,8 +4638,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>33</th>
-      <td>0.889</td>
-      <td>0.444</td>
+      <td>1.000</td>
+      <td>0.500</td>
       <td>0.778</td>
       <td>0.389</td>
       <td>0.667</td>
@@ -4665,8 +4647,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>34</th>
-      <td>0.875</td>
-      <td>0.389</td>
+      <td>1.000</td>
+      <td>0.444</td>
       <td>0.875</td>
       <td>0.389</td>
       <td>0.625</td>
@@ -4674,8 +4656,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>35</th>
-      <td>0.857</td>
-      <td>0.333</td>
+      <td>1.000</td>
+      <td>0.389</td>
       <td>0.857</td>
       <td>0.333</td>
       <td>0.571</td>
@@ -4683,8 +4665,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>36</th>
-      <td>0.833</td>
-      <td>0.278</td>
+      <td>1.000</td>
+      <td>0.333</td>
       <td>0.833</td>
       <td>0.278</td>
       <td>0.667</td>
@@ -4692,8 +4674,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>37</th>
-      <td>0.800</td>
-      <td>0.222</td>
+      <td>1.000</td>
+      <td>0.278</td>
       <td>0.800</td>
       <td>0.222</td>
       <td>0.800</td>
@@ -4701,8 +4683,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>38</th>
-      <td>0.750</td>
-      <td>0.167</td>
+      <td>1.000</td>
+      <td>0.222</td>
       <td>1.000</td>
       <td>0.222</td>
       <td>0.750</td>
@@ -4710,8 +4692,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>39</th>
-      <td>0.667</td>
-      <td>0.111</td>
+      <td>1.000</td>
+      <td>0.167</td>
       <td>1.000</td>
       <td>0.167</td>
       <td>0.667</td>
@@ -4719,8 +4701,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>40</th>
-      <td>0.500</td>
-      <td>0.056</td>
+      <td>1.000</td>
+      <td>0.111</td>
       <td>1.000</td>
       <td>0.111</td>
       <td>0.500</td>
@@ -4728,8 +4710,8 @@ new approach</p></li>
     </tr>
     <tr>
       <th>41</th>
-      <td>0.000</td>
-      <td>0.000</td>
+      <td>1.000</td>
+      <td>0.056</td>
       <td>1.000</td>
       <td>0.056</td>
       <td>0.000</td>
@@ -4775,7 +4757,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_TRKNN/prec_recall_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/9cb177e88e1a151a590450393f34ca55eb872b1293660255e59d362800c8c695.png" src="../../../_images/9cb177e88e1a151a590450393f34ca55eb872b1293660255e59d362800c8c695.png" />
+<img alt="../../../_images/38e21b4c06b7b8b28c35b9b6c71aff7ad1cf6a826ffa686f829542f993ebfd71.png" src="../../../_images/38e21b4c06b7b8b28c35b9b6c71aff7ad1cf6a826ffa686f829542f993ebfd71.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4800,7 +4782,7 @@ new approach</p></li>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/diff_analysis/AD/PI_vs_TRKNN/auc_roc_curve_train.pdf
 </pre></div>
 </div>
-<img alt="../../../_images/74a26ab52ee035c6b6e1d6597a91f6e53bb2a944d68b31127b403abdb27d2aca.png" src="../../../_images/74a26ab52ee035c6b6e1d6597a91f6e53bb2a944d68b31127b403abdb27d2aca.png" />
+<img alt="../../../_images/d451159150b568130957fdfefb1fcbb5d72dc2715c458ddfe9934ec0d32bc91b.png" src="../../../_images/d451159150b568130957fdfefb1fcbb5d72dc2715c458ddfe9934ec0d32bc91b.png" />
 </div>
 </div>
 <p>Output files:</p>
@@ -4844,22 +4826,13 @@ new approach</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../10_4_ald_compare_single_pg.html"
+       href="../PI_vs_VAE/10_3_ald_ml_new_feat.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Compare predictions between model and RSN</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../PI_vs_QRILC/10_3_ald_ml_new_feat.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Fit logistic regression model</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -4868,14 +4841,16 @@ new approach</p></li>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data">Load data</a><ul class="nav section-nav flex-column">
@@ -4950,8 +4925,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -16,39 +16,43 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=e6e8d3cb"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_VAE';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Collaborative Filtering" href="01_1_train_CF.html" />
-    <link rel="prev" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN5.html" />
+    <link rel="next" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN5.html" />
+    <link rel="prev" title="K- Nearest Neighbors (KNN)" href="01_1_train_KNN.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g740692b3d" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,15 +132,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -160,39 +149,39 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -202,24 +191,24 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -227,13 +216,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 </ul>
 
     </div>
@@ -242,9 +231,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -327,7 +321,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -341,25 +335,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -430,31 +416,31 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai</span><span class="w"> </span><span class="kn">import</span> <span class="n">learner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.basics</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.callback.all</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.callback.all</span><span class="w"> </span><span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.learner</span><span class="w"> </span><span class="kn">import</span> <span class="n">Learner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.torch_basics</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleImputer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sigmoid</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
+<span class="kn">from</span> <span class="nn">fastai.basics</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.callback.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.callback.all</span> <span class="kn">import</span> <span class="n">EarlyStoppingCallback</span>
+<span class="kn">from</span> <span class="nn">fastai.learner</span> <span class="kn">import</span> <span class="n">Learner</span>
+<span class="kn">from</span> <span class="nn">fastai.torch_basics</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Sigmoid</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.model</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.nb</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.analyzers</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyzers</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.model</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.nb</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="c1"># overwriting Recorder callback with custom plot_loss</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.models</span> <span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
 
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 
@@ -672,12 +658,12 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups      
-Sample_090  Q53EL9;Q53EL9-3        17.222
-Sample_127  P24593                 17.742
-Sample_075  E7ETH0;G3XAM2;P05156   20.027
-Sample_086  P07225                 20.822
-Sample_100  P00568;Q5T9B7          15.048
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                                                                                                                             
+Sample_077  H0Y5E4;H0YCV9;H0YD13;H0YDW7;P16070;P16070-10;P16070-11;P16070-12;P16070-13;P16070-14;P16070-15;P16070-16;P16070-17;P16070-18;P16070-3;P16070-4;P16070-5;P16070-6;P16070-7;P16070-8;P16070-9   19.957
+Sample_055  K4DIA0;O75144;O75144-2                                                                                                                                                                        19.587
+Sample_188  P13647                                                                                                                                                                                        15.343
+Sample_182  F6S8M0;H7C3P4;P15586;P15586-2                                                                                                                                                                 18.153
+Sample_139  Q15904                                                                                                                                                                                        20.459
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -2612,10 +2598,10 @@ current version. Try again later</p>
         background: #F44336;
     }
 </style>
-</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.0063095735386013985)
+</div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.00363078061491251)
 </pre></div>
 </div>
-<img alt="_images/1ccae80842c79659faa98abc644db9abc64def4ffc37078ce4bbf0cafeb89c71.png" src="_images/1ccae80842c79659faa98abc644db9abc64def4ffc37078ce4bbf0cafeb89c71.png" />
+<img alt="_images/d43f9d8d3becf61370ca2955321f16eee97230a1768419a0693b55cf2a8eaec0.png" src="_images/d43f9d8d3becf61370ca2955321f16eee97230a1768419a0693b55cf2a8eaec0.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -2698,714 +2684,804 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>1680.682495</td>
-      <td>92.809364</td>
+      <td>1691.338989</td>
+      <td>93.284309</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>1677.863037</td>
-      <td>93.137627</td>
+      <td>1694.935181</td>
+      <td>94.120239</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>1675.079834</td>
-      <td>93.255295</td>
+      <td>1693.476318</td>
+      <td>94.277519</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>1672.066528</td>
-      <td>93.880600</td>
+      <td>1688.675781</td>
+      <td>95.055717</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>1669.307129</td>
-      <td>94.487785</td>
+      <td>1684.217407</td>
+      <td>95.565231</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>1663.301880</td>
-      <td>95.203590</td>
+      <td>1680.749390</td>
+      <td>95.311554</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>1656.908569</td>
-      <td>94.678749</td>
+      <td>1677.090332</td>
+      <td>95.518379</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>1649.785767</td>
-      <td>95.432884</td>
+      <td>1673.341675</td>
+      <td>95.470009</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>1644.516724</td>
-      <td>95.331055</td>
+      <td>1668.986572</td>
+      <td>95.417801</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>1638.353638</td>
-      <td>94.928535</td>
+      <td>1664.889771</td>
+      <td>95.675201</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>1630.374390</td>
-      <td>95.190933</td>
+      <td>1660.648926</td>
+      <td>95.398727</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>1624.400635</td>
-      <td>95.213570</td>
+      <td>1656.121826</td>
+      <td>95.217812</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>1616.535889</td>
-      <td>95.242271</td>
+      <td>1649.528320</td>
+      <td>95.617752</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>1608.358398</td>
-      <td>94.821114</td>
+      <td>1644.100342</td>
+      <td>95.221695</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>1601.354980</td>
-      <td>94.413834</td>
+      <td>1637.495972</td>
+      <td>95.012856</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>1593.325073</td>
-      <td>94.066658</td>
+      <td>1631.111450</td>
+      <td>94.997734</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>1584.392944</td>
-      <td>93.500816</td>
+      <td>1624.852173</td>
+      <td>94.812172</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>1574.133057</td>
-      <td>93.589020</td>
+      <td>1618.800171</td>
+      <td>94.772263</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>1563.607544</td>
-      <td>93.584480</td>
+      <td>1611.479004</td>
+      <td>94.412094</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>1552.562622</td>
-      <td>94.006035</td>
+      <td>1604.384033</td>
+      <td>94.142944</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>1542.800903</td>
-      <td>94.137428</td>
+      <td>1596.532471</td>
+      <td>93.848213</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>1530.590088</td>
-      <td>93.751518</td>
+      <td>1588.197510</td>
+      <td>93.751190</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>1519.210693</td>
-      <td>93.766953</td>
+      <td>1579.560181</td>
+      <td>93.716026</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>1507.216553</td>
-      <td>93.861099</td>
+      <td>1571.019043</td>
+      <td>93.867477</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>1495.089355</td>
-      <td>93.645264</td>
+      <td>1560.528442</td>
+      <td>93.767868</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>1483.682739</td>
-      <td>93.235382</td>
+      <td>1550.707642</td>
+      <td>94.265694</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>1474.065674</td>
-      <td>93.731102</td>
+      <td>1539.965210</td>
+      <td>94.003326</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>1461.790527</td>
-      <td>94.382050</td>
+      <td>1529.785400</td>
+      <td>93.902000</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>1449.949097</td>
-      <td>94.490067</td>
+      <td>1518.473755</td>
+      <td>93.995125</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>1438.380493</td>
-      <td>95.357323</td>
+      <td>1507.985718</td>
+      <td>93.816628</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>1426.501587</td>
-      <td>95.645767</td>
+      <td>1498.336914</td>
+      <td>94.122383</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>1415.334717</td>
-      <td>96.436470</td>
+      <td>1488.383911</td>
+      <td>93.963303</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>1403.794556</td>
-      <td>96.225739</td>
+      <td>1478.874390</td>
+      <td>93.731239</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>1391.790161</td>
-      <td>96.502197</td>
+      <td>1469.001343</td>
+      <td>93.704369</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>1380.934082</td>
-      <td>95.872444</td>
+      <td>1459.065308</td>
+      <td>93.720451</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>1369.785889</td>
-      <td>95.239754</td>
+      <td>1450.823730</td>
+      <td>94.081017</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>1360.741211</td>
-      <td>95.114845</td>
+      <td>1440.387695</td>
+      <td>93.447823</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>1352.141357</td>
-      <td>94.869225</td>
+      <td>1430.411011</td>
+      <td>93.479485</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>1341.063110</td>
-      <td>94.399643</td>
+      <td>1418.962524</td>
+      <td>93.631592</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>1331.803589</td>
-      <td>94.089493</td>
+      <td>1409.030396</td>
+      <td>94.117783</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>1322.212891</td>
-      <td>93.609451</td>
+      <td>1398.834839</td>
+      <td>94.655060</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>1312.960815</td>
-      <td>93.742279</td>
+      <td>1390.005615</td>
+      <td>94.385880</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>1303.969849</td>
-      <td>93.978760</td>
+      <td>1381.869873</td>
+      <td>94.101784</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>1296.038452</td>
-      <td>94.141655</td>
+      <td>1372.833130</td>
+      <td>94.055634</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>1289.128052</td>
-      <td>93.360176</td>
+      <td>1363.454224</td>
+      <td>93.885567</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>1280.209473</td>
-      <td>93.478500</td>
+      <td>1354.408081</td>
+      <td>93.405739</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>1274.562988</td>
-      <td>93.240189</td>
+      <td>1347.405396</td>
+      <td>93.642700</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>1267.198853</td>
-      <td>92.790031</td>
+      <td>1338.519653</td>
+      <td>93.214005</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>1260.251099</td>
-      <td>93.240082</td>
+      <td>1330.838501</td>
+      <td>93.012627</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>1253.289429</td>
-      <td>93.032211</td>
+      <td>1322.382935</td>
+      <td>93.288712</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>1246.360229</td>
-      <td>93.287674</td>
+      <td>1314.060425</td>
+      <td>93.422943</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>1240.077271</td>
-      <td>92.887321</td>
+      <td>1305.143311</td>
+      <td>93.119026</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>1232.853760</td>
-      <td>92.616684</td>
+      <td>1299.443604</td>
+      <td>93.389877</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>1229.394165</td>
-      <td>92.932663</td>
+      <td>1290.731934</td>
+      <td>93.431343</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>1223.007446</td>
-      <td>93.403069</td>
+      <td>1283.108154</td>
+      <td>93.465004</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>1217.252808</td>
-      <td>93.171265</td>
+      <td>1275.228760</td>
+      <td>93.199203</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>1211.560059</td>
-      <td>92.835342</td>
+      <td>1267.513428</td>
+      <td>92.972969</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>1205.306274</td>
-      <td>92.601532</td>
+      <td>1260.235352</td>
+      <td>93.345963</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>1201.466797</td>
-      <td>93.115623</td>
+      <td>1252.195801</td>
+      <td>93.130249</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>1196.407104</td>
-      <td>93.088181</td>
+      <td>1246.656372</td>
+      <td>92.795082</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>1191.902466</td>
-      <td>93.281456</td>
+      <td>1240.382080</td>
+      <td>92.270836</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>1186.340698</td>
-      <td>93.713623</td>
+      <td>1233.432617</td>
+      <td>91.869362</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>1183.180664</td>
-      <td>94.232468</td>
+      <td>1227.860229</td>
+      <td>92.474640</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>1179.588013</td>
-      <td>93.171829</td>
+      <td>1222.535645</td>
+      <td>92.998909</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>1175.528564</td>
-      <td>92.336349</td>
+      <td>1215.958496</td>
+      <td>93.114639</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>1170.223511</td>
-      <td>92.521454</td>
+      <td>1209.939697</td>
+      <td>92.617493</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>1164.807861</td>
-      <td>91.765404</td>
+      <td>1203.956909</td>
+      <td>92.694855</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>1159.176636</td>
-      <td>91.625977</td>
+      <td>1198.135254</td>
+      <td>92.403366</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>1154.255737</td>
-      <td>91.897194</td>
+      <td>1192.092896</td>
+      <td>92.108070</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>1149.235962</td>
-      <td>93.079895</td>
+      <td>1186.154663</td>
+      <td>91.914215</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>1147.742310</td>
-      <td>93.502899</td>
+      <td>1184.010498</td>
+      <td>92.253746</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>1144.847168</td>
-      <td>93.800140</td>
+      <td>1178.386475</td>
+      <td>92.085678</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>1142.382446</td>
-      <td>94.580589</td>
+      <td>1173.211670</td>
+      <td>92.683044</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>1140.189575</td>
-      <td>93.605179</td>
+      <td>1167.922241</td>
+      <td>92.330666</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>74</td>
-      <td>1136.280273</td>
-      <td>93.659943</td>
+      <td>1165.605957</td>
+      <td>92.387360</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>75</td>
-      <td>1133.447021</td>
-      <td>93.684792</td>
+      <td>1162.750000</td>
+      <td>92.716881</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>76</td>
-      <td>1130.611084</td>
-      <td>93.294281</td>
+      <td>1158.671509</td>
+      <td>92.794868</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>77</td>
-      <td>1127.402588</td>
-      <td>92.959297</td>
+      <td>1154.106445</td>
+      <td>92.275421</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>78</td>
-      <td>1124.507080</td>
-      <td>92.371620</td>
+      <td>1151.134766</td>
+      <td>91.854477</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>79</td>
-      <td>1121.514282</td>
-      <td>92.466400</td>
+      <td>1145.763672</td>
+      <td>91.599403</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>80</td>
-      <td>1119.688843</td>
-      <td>91.970306</td>
+      <td>1142.354126</td>
+      <td>91.712036</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>81</td>
-      <td>1118.152466</td>
-      <td>93.236458</td>
+      <td>1138.700562</td>
+      <td>91.678146</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>82</td>
-      <td>1114.989502</td>
-      <td>93.410278</td>
+      <td>1134.806519</td>
+      <td>91.520737</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>83</td>
-      <td>1111.624634</td>
-      <td>93.202545</td>
+      <td>1131.652100</td>
+      <td>92.280769</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>84</td>
-      <td>1107.961914</td>
-      <td>93.611992</td>
+      <td>1128.975830</td>
+      <td>92.716644</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>85</td>
-      <td>1106.289429</td>
-      <td>93.463066</td>
+      <td>1125.903931</td>
+      <td>93.336700</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>86</td>
-      <td>1102.936401</td>
-      <td>93.971260</td>
+      <td>1123.163818</td>
+      <td>93.770470</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>87</td>
-      <td>1101.664795</td>
-      <td>94.562347</td>
+      <td>1120.887451</td>
+      <td>92.911217</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>88</td>
-      <td>1099.178711</td>
-      <td>94.426506</td>
+      <td>1117.699707</td>
+      <td>92.042419</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>89</td>
-      <td>1096.017212</td>
-      <td>94.587524</td>
+      <td>1114.647217</td>
+      <td>92.267746</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>90</td>
-      <td>1095.301270</td>
-      <td>92.697716</td>
+      <td>1113.437256</td>
+      <td>92.588501</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>91</td>
-      <td>1092.246094</td>
-      <td>92.724442</td>
+      <td>1108.868408</td>
+      <td>92.275002</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>92</td>
-      <td>1091.485718</td>
-      <td>93.145638</td>
+      <td>1106.293457</td>
+      <td>92.538887</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>93</td>
-      <td>1089.802856</td>
-      <td>93.253227</td>
+      <td>1105.466309</td>
+      <td>92.887177</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>94</td>
-      <td>1087.024048</td>
-      <td>93.629662</td>
+      <td>1103.627319</td>
+      <td>92.795021</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>95</td>
-      <td>1084.974976</td>
-      <td>94.566452</td>
+      <td>1100.872070</td>
+      <td>92.818230</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>96</td>
-      <td>1082.610718</td>
-      <td>94.723106</td>
+      <td>1100.651855</td>
+      <td>92.978165</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>97</td>
-      <td>1079.715698</td>
-      <td>95.085442</td>
+      <td>1098.971313</td>
+      <td>92.894585</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>98</td>
-      <td>1079.639526</td>
-      <td>94.382469</td>
+      <td>1096.512451</td>
+      <td>92.770973</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>99</td>
-      <td>1076.724609</td>
-      <td>94.391273</td>
+      <td>1093.480835</td>
+      <td>92.673164</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>100</td>
-      <td>1074.746948</td>
-      <td>93.683502</td>
+      <td>1093.447144</td>
+      <td>92.371826</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>101</td>
-      <td>1071.605591</td>
-      <td>93.054489</td>
+      <td>1092.712036</td>
+      <td>92.463867</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>102</td>
-      <td>1068.894165</td>
-      <td>93.583313</td>
+      <td>1092.046143</td>
+      <td>92.402382</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>103</td>
-      <td>1066.597168</td>
-      <td>93.644135</td>
+      <td>1089.619873</td>
+      <td>92.375587</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>104</td>
-      <td>1065.592407</td>
-      <td>93.727959</td>
+      <td>1091.259888</td>
+      <td>92.883286</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>105</td>
-      <td>1065.536499</td>
-      <td>94.441223</td>
+      <td>1089.208496</td>
+      <td>93.026413</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>106</td>
-      <td>1064.354736</td>
-      <td>95.558342</td>
+      <td>1087.265869</td>
+      <td>93.306175</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>107</td>
-      <td>1063.248535</td>
-      <td>95.472916</td>
+      <td>1084.742676</td>
+      <td>93.119804</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>108</td>
-      <td>1062.536987</td>
-      <td>94.463539</td>
+      <td>1082.698730</td>
+      <td>93.029793</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>109</td>
-      <td>1060.127686</td>
-      <td>93.136208</td>
+      <td>1078.781250</td>
+      <td>92.693672</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>110</td>
-      <td>1059.504272</td>
-      <td>93.089928</td>
+      <td>1078.068604</td>
+      <td>92.761566</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>111</td>
-      <td>1058.718994</td>
-      <td>92.913551</td>
+      <td>1076.166748</td>
+      <td>93.500595</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>112</td>
-      <td>1058.196045</td>
-      <td>93.713707</td>
+      <td>1075.657104</td>
+      <td>93.282394</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>113</td>
-      <td>1055.381470</td>
-      <td>94.114273</td>
+      <td>1073.934326</td>
+      <td>93.790260</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>114</td>
-      <td>1055.962524</td>
-      <td>93.375130</td>
+      <td>1071.749512</td>
+      <td>93.351761</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>115</td>
-      <td>1055.117554</td>
-      <td>93.752457</td>
+      <td>1069.419434</td>
+      <td>93.710083</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>116</td>
-      <td>1054.807495</td>
-      <td>94.451805</td>
+      <td>1069.230591</td>
+      <td>93.129936</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>117</td>
-      <td>1054.346924</td>
-      <td>93.730057</td>
+      <td>1069.390137</td>
+      <td>93.802406</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>118</td>
+      <td>1067.713013</td>
+      <td>93.215652</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td>1066.970947</td>
+      <td>93.573296</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>120</td>
+      <td>1064.930176</td>
+      <td>93.706917</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>121</td>
+      <td>1063.211914</td>
+      <td>93.777565</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>122</td>
+      <td>1062.055908</td>
+      <td>93.071968</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>123</td>
+      <td>1060.126831</td>
+      <td>92.679176</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>124</td>
+      <td>1059.712402</td>
+      <td>92.877518</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>125</td>
+      <td>1058.874756</td>
+      <td>92.967842</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>126</td>
+      <td>1059.032959</td>
+      <td>93.019684</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>127</td>
+      <td>1059.105225</td>
+      <td>92.983780</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>128</td>
+      <td>1057.219360</td>
+      <td>93.261261</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>129</td>
+      <td>1055.956421</td>
+      <td>94.654556</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>130</td>
+      <td>1054.487427</td>
+      <td>94.312889</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>131</td>
+      <td>1053.736084</td>
+      <td>93.269669</td>
+      <td>00:00</td>
+    </tr>
+    <tr>
+      <td>132</td>
+      <td>1053.795410</td>
+      <td>92.921295</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 67: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 82: early stopping
 </pre></div>
 </div>
 </div>
@@ -3425,7 +3501,7 @@ current version. Try again later</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>118
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>133
 </pre></div>
 </div>
 </div>
@@ -3452,7 +3528,7 @@ current version. Try again later</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/vae_training
 </pre></div>
 </div>
-<img alt="_images/0026cdfabbe1961097f0d772811ccf1aa6ad607e7f1078bd64ff5303d080f3ab.png" src="_images/0026cdfabbe1961097f0d772811ccf1aa6ad607e7f1078bd64ff5303d080f3ab.png" />
+<img alt="_images/b84ce4caeec1c7308e2edd82f84946bdfcbe4a20101e334b760d354805858c16.png" src="_images/b84ce4caeec1c7308e2edd82f84946bdfcbe4a20101e334b760d354805858c16.png" />
 </div>
 </div>
 </section>
@@ -3495,17 +3571,17 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.907
-            A0A024R0T9;K7ER74;P02655                                                         16.595
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.848
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.842
-            A0A075B6H7                                                                       16.854
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.952
+            A0A024R0T9;K7ER74;P02655                                                         16.852
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.828
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.721
+            A0A075B6H7                                                                       16.963
                                                                                               ...  
-Sample_209  Q9Y6R7                                                                           19.141
-            Q9Y6X5                                                                           15.935
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.630
-            Q9Y6Y9                                                                           11.859
-            S4R3U6                                                                           11.662
+Sample_209  Q9Y6R7                                                                           19.120
+            Q9Y6X5                                                                           15.494
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.302
+            Q9Y6Y9                                                                           11.906
+            S4R3U6                                                                           11.408
 Length: 298410, dtype: float32
 </pre></div>
 </div>
@@ -3559,31 +3635,31 @@ Length: 298410, dtype: float32
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.707</td>
+      <td>15.809</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.637</td>
+      <td>16.745</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.533</td>
+      <td>14.855</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>19.069</td>
+      <td>18.962</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>15.128</td>
+      <td>14.887</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3595,31 +3671,31 @@ Length: 298410, dtype: float32
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.914</td>
+      <td>22.788</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>15.968</td>
+      <td>15.909</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.695</td>
+      <td>15.770</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>12.994</td>
+      <td>13.472</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.643</td>
+      <td>14.590</td>
     </tr>
   </tbody>
 </table>
@@ -3674,27 +3750,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.196</td>
+      <td>17.000</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>18.008</td>
+      <td>18.048</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.349</td>
+      <td>22.254</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.198</td>
+      <td>15.171</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.775</td>
+      <td>16.614</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3706,27 +3782,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>15.948</td>
+      <td>15.919</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.621</td>
+      <td>13.252</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>14.014</td>
+      <td>14.405</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>14.996</td>
+      <td>15.150</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.328</td>
+      <td>16.542</td>
     </tr>
   </tbody>
 </table>
@@ -3754,17 +3830,17 @@ Length: 298410, dtype: float32
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.300
-            A0A075B6Q5                 15.962
-            A0A075B6R2                 16.408
-            A0A075B6S5                 16.245
-            A0A087WSY4                 16.241
+Sample_000  A0A075B6J9                 15.543
+            A0A075B6Q5                 16.004
+            A0A075B6R2                 16.716
+            A0A075B6S5                 16.218
+            A0A087WSY4                 16.244
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.055
-            Q9UI40;Q9UI40-2            16.031
-            Q9UIW2                     16.824
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.866
-            Q9UP79                     15.920
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   15.949
+            Q9UI40;Q9UI40-2            16.280
+            Q9UIW2                     16.678
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.118
+            Q9UP79                     15.973
 Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
@@ -3847,68 +3923,68 @@ Name: intensity, Length: 46401, dtype: float32
   <tbody>
     <tr>
       <th>Sample_000</th>
-      <td>-2.977</td>
-      <td>0.172</td>
-      <td>-1.392</td>
-      <td>0.256</td>
-      <td>2.051</td>
-      <td>-0.594</td>
-      <td>-1.603</td>
-      <td>0.144</td>
-      <td>-1.929</td>
-      <td>0.396</td>
+      <td>-1.068</td>
+      <td>1.363</td>
+      <td>2.057</td>
+      <td>-0.254</td>
+      <td>-2.342</td>
+      <td>-2.372</td>
+      <td>0.390</td>
+      <td>-0.662</td>
+      <td>-0.785</td>
+      <td>0.868</td>
     </tr>
     <tr>
       <th>Sample_001</th>
-      <td>-2.758</td>
-      <td>-0.340</td>
-      <td>0.505</td>
-      <td>-0.142</td>
-      <td>1.419</td>
-      <td>-0.860</td>
-      <td>-0.720</td>
-      <td>-0.843</td>
-      <td>-0.863</td>
-      <td>0.334</td>
+      <td>-1.739</td>
+      <td>1.447</td>
+      <td>1.584</td>
+      <td>-0.321</td>
+      <td>-1.814</td>
+      <td>-1.610</td>
+      <td>0.843</td>
+      <td>-0.053</td>
+      <td>0.729</td>
+      <td>0.407</td>
     </tr>
     <tr>
       <th>Sample_002</th>
-      <td>-1.847</td>
-      <td>0.500</td>
-      <td>-0.272</td>
-      <td>-1.238</td>
-      <td>1.175</td>
-      <td>-1.117</td>
-      <td>0.729</td>
-      <td>1.970</td>
-      <td>-1.930</td>
+      <td>-0.373</td>
+      <td>0.380</td>
+      <td>1.815</td>
       <td>-0.923</td>
+      <td>-1.882</td>
+      <td>0.149</td>
+      <td>1.880</td>
+      <td>0.388</td>
+      <td>-1.020</td>
+      <td>0.494</td>
     </tr>
     <tr>
       <th>Sample_003</th>
-      <td>-2.558</td>
-      <td>0.237</td>
-      <td>-0.304</td>
-      <td>-0.914</td>
-      <td>1.833</td>
-      <td>-0.068</td>
-      <td>-1.801</td>
-      <td>1.449</td>
-      <td>-2.339</td>
-      <td>0.651</td>
+      <td>-0.410</td>
+      <td>0.307</td>
+      <td>2.244</td>
+      <td>0.027</td>
+      <td>-2.552</td>
+      <td>-1.832</td>
+      <td>1.174</td>
+      <td>0.559</td>
+      <td>-1.329</td>
+      <td>0.203</td>
     </tr>
     <tr>
       <th>Sample_004</th>
-      <td>-1.953</td>
-      <td>-0.288</td>
-      <td>-0.560</td>
-      <td>-1.159</td>
-      <td>1.074</td>
-      <td>-0.232</td>
-      <td>-1.755</td>
-      <td>0.421</td>
-      <td>-1.846</td>
-      <td>0.008</td>
+      <td>-1.623</td>
+      <td>0.033</td>
+      <td>1.979</td>
+      <td>-0.100</td>
+      <td>-1.309</td>
+      <td>-1.533</td>
+      <td>0.506</td>
+      <td>0.700</td>
+      <td>-0.859</td>
+      <td>0.119</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3925,68 +4001,68 @@ Name: intensity, Length: 46401, dtype: float32
     </tr>
     <tr>
       <th>Sample_205</th>
-      <td>-0.257</td>
-      <td>2.795</td>
-      <td>0.404</td>
-      <td>-0.079</td>
-      <td>0.810</td>
-      <td>0.267</td>
-      <td>-0.106</td>
-      <td>0.193</td>
-      <td>-1.937</td>
-      <td>-1.074</td>
+      <td>0.942</td>
+      <td>0.793</td>
+      <td>1.981</td>
+      <td>1.784</td>
+      <td>-1.460</td>
+      <td>0.416</td>
+      <td>0.406</td>
+      <td>0.706</td>
+      <td>-0.226</td>
+      <td>1.156</td>
     </tr>
     <tr>
       <th>Sample_206</th>
-      <td>1.128</td>
-      <td>1.650</td>
-      <td>0.286</td>
-      <td>1.288</td>
-      <td>0.101</td>
-      <td>-3.201</td>
-      <td>0.133</td>
-      <td>-0.208</td>
-      <td>-0.361</td>
-      <td>0.543</td>
+      <td>0.423</td>
+      <td>1.795</td>
+      <td>0.604</td>
+      <td>-1.130</td>
+      <td>0.998</td>
+      <td>1.664</td>
+      <td>-0.039</td>
+      <td>-1.380</td>
+      <td>0.737</td>
+      <td>1.692</td>
     </tr>
     <tr>
       <th>Sample_207</th>
-      <td>0.590</td>
-      <td>0.720</td>
-      <td>-1.291</td>
-      <td>0.616</td>
-      <td>-0.059</td>
-      <td>-0.255</td>
-      <td>-2.539</td>
-      <td>-1.674</td>
-      <td>-2.289</td>
-      <td>-0.358</td>
+      <td>-1.058</td>
+      <td>1.586</td>
+      <td>0.372</td>
+      <td>0.462</td>
+      <td>-0.120</td>
+      <td>0.123</td>
+      <td>-0.939</td>
+      <td>0.585</td>
+      <td>-1.428</td>
+      <td>1.364</td>
     </tr>
     <tr>
       <th>Sample_208</th>
-      <td>0.260</td>
-      <td>1.718</td>
-      <td>0.919</td>
-      <td>-1.493</td>
-      <td>1.392</td>
-      <td>-1.827</td>
-      <td>-1.251</td>
-      <td>-1.827</td>
-      <td>0.373</td>
-      <td>0.230</td>
+      <td>-1.588</td>
+      <td>2.046</td>
+      <td>1.773</td>
+      <td>0.548</td>
+      <td>0.203</td>
+      <td>1.090</td>
+      <td>-1.343</td>
+      <td>-0.256</td>
+      <td>0.977</td>
+      <td>0.258</td>
     </tr>
     <tr>
       <th>Sample_209</th>
-      <td>1.229</td>
-      <td>0.311</td>
-      <td>0.963</td>
-      <td>-1.777</td>
-      <td>0.668</td>
-      <td>-1.359</td>
-      <td>-1.309</td>
-      <td>0.032</td>
-      <td>-1.209</td>
-      <td>-0.354</td>
+      <td>-0.785</td>
+      <td>1.289</td>
+      <td>1.066</td>
+      <td>-0.520</td>
+      <td>0.827</td>
+      <td>1.674</td>
+      <td>-0.230</td>
+      <td>1.592</td>
+      <td>-1.349</td>
+      <td>-0.689</td>
     </tr>
   </tbody>
 </table>
@@ -4092,7 +4168,7 @@ Name: count, dtype: int64
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="_images/5e31a46f5883b18ef169d9e18326861d84089006335b70e20b8a0b5f39ec1685.png" src="_images/5e31a46f5883b18ef169d9e18326861d84089006335b70e20b8a0b5f39ec1685.png" />
+<img alt="_images/60f302f413af30950ce35b4f0cb5774add01cc9defd69fcf1c9570459f1e04f7.png" src="_images/60f302f413af30950ce35b4f0cb5774add01cc9defd69fcf1c9570459f1e04f7.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -4153,22 +4229,22 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>A0A024R0T9;K7ER74;P02655</th>
-      <td>1.317</td>
+      <td>1.268</td>
       <td>4</td>
     </tr>
     <tr>
       <th>A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8</th>
-      <td>0.299</td>
+      <td>0.279</td>
       <td>9</td>
     </tr>
     <tr>
       <th>A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503</th>
-      <td>0.313</td>
+      <td>0.301</td>
       <td>6</td>
     </tr>
     <tr>
       <th>A0A075B6H7</th>
-      <td>0.447</td>
+      <td>0.503</td>
       <td>6</td>
     </tr>
     <tr>
@@ -4178,27 +4254,27 @@ Name: count, dtype: int64
     </tr>
     <tr>
       <th>Q9Y6R7</th>
-      <td>0.414</td>
+      <td>0.380</td>
       <td>10</td>
     </tr>
     <tr>
       <th>Q9Y6X5</th>
-      <td>0.343</td>
+      <td>0.331</td>
       <td>7</td>
     </tr>
     <tr>
       <th>Q9Y6Y8;Q9Y6Y8-2</th>
-      <td>0.315</td>
+      <td>0.326</td>
       <td>9</td>
     </tr>
     <tr>
       <th>Q9Y6Y9</th>
-      <td>0.360</td>
+      <td>0.452</td>
       <td>15</td>
     </tr>
     <tr>
       <th>S4R3U6</th>
-      <td>0.553</td>
+      <td>0.511</td>
       <td>24</td>
     </tr>
   </tbody>
@@ -4250,27 +4326,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
-      <td>1.077</td>
+      <td>1.178</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
-      <td>0.882</td>
+      <td>0.990</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
-      <td>-0.496</td>
+      <td>-0.175</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
-      <td>-0.307</td>
+      <td>-0.414</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
-      <td>-0.180</td>
+      <td>-0.422</td>
     </tr>
     <tr>
       <th>...</th>
@@ -4280,27 +4356,27 @@ Name: count, dtype: int64
     <tr>
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
-      <td>0.092</td>
+      <td>-0.034</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
-      <td>-2.197</td>
+      <td>-2.256</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
-      <td>0.170</td>
+      <td>0.245</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
-      <td>-1.385</td>
+      <td>-0.907</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
-      <td>0.139</td>
+      <td>0.085</td>
     </tr>
   </tbody>
 </table>
@@ -4352,8 +4428,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.45850681387114534,
-  &#39;MAE&#39;: 0.43243907945568877,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4574701866904295,
+  &#39;MAE&#39;: 0.4312313042749696,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4380,8 +4456,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.4796483216997601,
-  &#39;MAE&#39;: 0.4353687388966381,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;VAE&#39;: {&#39;MSE&#39;: 0.48066541670815066,
+  &#39;MAE&#39;: 0.4364533778446176,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4404,12 +4480,12 @@ reconstruction.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4353687388966381,
-                                  &#39;MSE&#39;: 0.4796483216997601,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4364533778446176,
+                                  &#39;MSE&#39;: 0.48066541670815066,
                                   &#39;N&#39;: 12600,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.43243907945568877,
-                                   &#39;MSE&#39;: 0.45850681387114534,
+  &#39;valid_simulated_na&#39;: { &#39;VAE&#39;: { &#39;MAE&#39;: 0.4312313042749696,
+                                   &#39;MSE&#39;: 0.4574701866904295,
                                    &#39;N&#39;: 12600,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
@@ -4464,13 +4540,13 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">VAE</th>
       <th>MSE</th>
-      <td>0.459</td>
-      <td>0.480</td>
+      <td>0.457</td>
+      <td>0.481</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.432</td>
-      <td>0.435</td>
+      <td>0.431</td>
+      <td>0.436</td>
     </tr>
     <tr>
       <th>N</th>
@@ -4544,7 +4620,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 118,
+ &#39;epoch_trained&#39;: 133,
  &#39;epochs_max&#39;: 300,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
@@ -4584,7 +4660,7 @@ reconstruction.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_KNN5.html"
+       href="01_1_train_KNN.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
@@ -4593,11 +4669,11 @@ reconstruction.</p>
       </div>
     </a>
     <a class="right-next"
-       href="01_1_train_CF.html"
+       href="01_1_train_KNN5.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Collaborative Filtering</p>
+        <p class="prev-next-title">K- Nearest Neighbors (KNN)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -4608,14 +4684,16 @@ reconstruction.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-in-long-format">Load data in long format</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#initialize-comparison">Initialize Comparison</a><ul class="nav section-nav flex-column">
@@ -4693,8 +4771,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

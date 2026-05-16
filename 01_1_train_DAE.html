@@ -16,39 +16,43 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=e6e8d3cb"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_train_DAE';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_ROWMEDIAN.html" />
-    <link rel="prev" title="Collaborative Filtering" href="01_1_train_CF.html" />
+    <link rel="next" title="Collaborative Filtering" href="01_1_train_CF.html" />
+    <link rel="prev" title="Transfer data for NAGuideR format" href="01_0_transform_data_to_wide_format.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g740692b3d" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,15 +132,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -160,39 +149,39 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_transfer_NAGuideR_pred.html">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -202,24 +191,24 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -227,13 +216,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 </ul>
 
     </div>
@@ -242,9 +231,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -327,7 +321,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -341,25 +335,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -427,24 +413,24 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai</span><span class="w"> </span><span class="kn">import</span> <span class="n">learner</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.basics</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.callback.all</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">fastai.torch_basics</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.impute</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleImputer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">fastai</span> <span class="kn">import</span> <span class="n">learner</span>
+<span class="kn">from</span> <span class="nn">fastai.basics</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.callback.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.torch_basics</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.model</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.analyzers</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyzers</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.model</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.analyzers</span> <span class="kn">import</span> <span class="n">analyzers</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 <span class="c1"># overwriting Recorder callback with custom plot_loss</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.models</span> <span class="kn">import</span> <span class="n">ae</span><span class="p">,</span> <span class="n">plot_loss</span>
 
 <span class="n">learner</span><span class="o">.</span><span class="n">Recorder</span><span class="o">.</span><span class="n">plot_loss</span> <span class="o">=</span> <span class="n">plot_loss</span>
 
@@ -663,12 +649,12 @@ pimmslearn.io.datasplits - INFO     Loaded &#39;test_y&#39; from file: runs/alzh
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_027  A0A0C4DGY8;D6RA00;Q9UHY7   13.446
-Sample_121  Q8IZP7                     16.404
-Sample_108  A0A087WZR4                 14.541
-Sample_193  Q9Y696                     16.010
-Sample_202  A0A075B6K5                 17.806
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                       
+Sample_004  O60279                                  18.472
+Sample_012  Q9Y279;Q9Y279-2                         16.822
+Sample_105  Q9NY15                                  16.085
+Sample_153  A0A1B0GVB9;A0A1C7CYW4;O75787;O75787-2   18.701
+Sample_130  P26572                                  17.324
 Name: intensity, dtype: float64
 </pre></div>
 </div>
@@ -2537,7 +2523,7 @@ current version. Try again later</p>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SuggestedLRs(valley=0.019054606556892395)
 </pre></div>
 </div>
-<img alt="_images/5fe49579d4f581489d1093e1cc50e8770631d8cad4a96c0048ee18658c6d766a.png" src="_images/5fe49579d4f581489d1093e1cc50e8770631d8cad4a96c0048ee18658c6d766a.png" />
+<img alt="_images/2c3fe386a854837253b75d6adbf2051ecb0d204cdfe48992f909c165d3709713.png" src="_images/2c3fe386a854837253b75d6adbf2051ecb0d204cdfe48992f909c165d3709713.png" />
 </div>
 </div>
 <p>dump model config</p>
@@ -2597,744 +2583,474 @@ current version. Try again later</p>
   <tbody>
     <tr>
       <td>0</td>
-      <td>65078.394531</td>
-      <td>4042.760010</td>
+      <td>65421.988281</td>
+      <td>4084.004883</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>63590.046875</td>
-      <td>4033.225342</td>
+      <td>63818.140625</td>
+      <td>4085.867676</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>62173.281250</td>
-      <td>3992.871338</td>
+      <td>62464.582031</td>
+      <td>4047.527100</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>60827.890625</td>
-      <td>3908.411133</td>
+      <td>61154.707031</td>
+      <td>3959.391602</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>59457.476562</td>
-      <td>3783.369385</td>
+      <td>59835.042969</td>
+      <td>3839.641602</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>5</td>
-      <td>58140.281250</td>
-      <td>3642.135986</td>
+      <td>58523.066406</td>
+      <td>3698.016113</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>6</td>
-      <td>56824.613281</td>
-      <td>3497.259766</td>
+      <td>57213.156250</td>
+      <td>3559.187012</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>7</td>
-      <td>55460.074219</td>
-      <td>3365.474365</td>
+      <td>55939.421875</td>
+      <td>3430.649170</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>8</td>
-      <td>54133.734375</td>
-      <td>3253.042480</td>
+      <td>54708.878906</td>
+      <td>3322.787109</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>9</td>
-      <td>52858.722656</td>
-      <td>3177.761230</td>
+      <td>53480.734375</td>
+      <td>3232.010742</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>10</td>
-      <td>51599.859375</td>
-      <td>3104.084473</td>
+      <td>52283.765625</td>
+      <td>3149.336914</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>11</td>
-      <td>50430.257812</td>
-      <td>3042.312988</td>
+      <td>51138.562500</td>
+      <td>3080.233154</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>12</td>
-      <td>49304.214844</td>
-      <td>2964.225342</td>
+      <td>50021.410156</td>
+      <td>3023.130127</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>13</td>
-      <td>48268.910156</td>
-      <td>2879.944336</td>
+      <td>48987.605469</td>
+      <td>2963.635498</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>14</td>
-      <td>47271.906250</td>
-      <td>2800.911865</td>
+      <td>47997.105469</td>
+      <td>2884.520264</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>15</td>
-      <td>46330.652344</td>
-      <td>2743.171143</td>
+      <td>47063.308594</td>
+      <td>2795.945557</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>16</td>
-      <td>45433.410156</td>
-      <td>2704.165283</td>
+      <td>46134.773438</td>
+      <td>2718.859863</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>17</td>
-      <td>44592.007812</td>
-      <td>2662.236572</td>
+      <td>45275.929688</td>
+      <td>2673.689209</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>18</td>
-      <td>43824.539062</td>
-      <td>2616.515869</td>
+      <td>44465.863281</td>
+      <td>2637.421631</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>19</td>
-      <td>43103.613281</td>
-      <td>2592.105469</td>
+      <td>43726.578125</td>
+      <td>2595.788330</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>20</td>
-      <td>42375.910156</td>
-      <td>2567.421387</td>
+      <td>42974.789062</td>
+      <td>2554.034180</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>21</td>
-      <td>41709.847656</td>
-      <td>2550.113037</td>
+      <td>42267.625000</td>
+      <td>2522.792969</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>22</td>
-      <td>41065.660156</td>
-      <td>2527.848877</td>
+      <td>41589.359375</td>
+      <td>2491.516113</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>23</td>
-      <td>40448.468750</td>
-      <td>2497.003174</td>
+      <td>40891.171875</td>
+      <td>2459.127686</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>24</td>
-      <td>39869.742188</td>
-      <td>2458.400391</td>
+      <td>40266.996094</td>
+      <td>2445.865479</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>25</td>
-      <td>39348.308594</td>
-      <td>2438.002686</td>
+      <td>39661.500000</td>
+      <td>2421.149170</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>26</td>
-      <td>38767.492188</td>
-      <td>2423.212158</td>
+      <td>39060.355469</td>
+      <td>2409.549072</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>27</td>
-      <td>38200.898438</td>
-      <td>2396.959473</td>
+      <td>38488.144531</td>
+      <td>2384.733398</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>28</td>
-      <td>37679.500000</td>
-      <td>2373.104736</td>
+      <td>37977.960938</td>
+      <td>2361.665039</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>29</td>
-      <td>37153.144531</td>
-      <td>2345.338135</td>
+      <td>37485.042969</td>
+      <td>2356.338135</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>30</td>
-      <td>36642.105469</td>
-      <td>2334.144287</td>
+      <td>37016.011719</td>
+      <td>2334.299316</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>31</td>
-      <td>36176.070312</td>
-      <td>2318.186523</td>
+      <td>36522.644531</td>
+      <td>2317.604492</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>32</td>
-      <td>35721.031250</td>
-      <td>2317.209229</td>
+      <td>36034.894531</td>
+      <td>2304.509277</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>33</td>
-      <td>35304.832031</td>
-      <td>2313.338379</td>
+      <td>35565.667969</td>
+      <td>2295.675781</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>34</td>
-      <td>34915.699219</td>
-      <td>2317.772461</td>
+      <td>35179.171875</td>
+      <td>2311.285645</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>35</td>
-      <td>34516.867188</td>
-      <td>2316.422363</td>
+      <td>34769.796875</td>
+      <td>2291.909668</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>36</td>
-      <td>34137.285156</td>
-      <td>2305.230957</td>
+      <td>34380.238281</td>
+      <td>2276.851807</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>37</td>
-      <td>33785.535156</td>
-      <td>2261.991455</td>
+      <td>34038.742188</td>
+      <td>2288.376709</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>38</td>
-      <td>33424.179688</td>
-      <td>2267.432373</td>
+      <td>33629.527344</td>
+      <td>2248.846924</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>39</td>
-      <td>33131.843750</td>
-      <td>2307.112305</td>
+      <td>33298.425781</td>
+      <td>2231.951904</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>40</td>
-      <td>32805.320312</td>
-      <td>2280.778076</td>
+      <td>32922.789062</td>
+      <td>2247.028076</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>41</td>
-      <td>32512.894531</td>
-      <td>2284.393555</td>
+      <td>32569.193359</td>
+      <td>2233.238525</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>42</td>
-      <td>32274.128906</td>
-      <td>2253.221680</td>
+      <td>32263.031250</td>
+      <td>2242.594971</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>43</td>
-      <td>31954.939453</td>
-      <td>2240.126465</td>
+      <td>31950.861328</td>
+      <td>2237.665771</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>44</td>
-      <td>31721.544922</td>
-      <td>2270.508301</td>
+      <td>31702.222656</td>
+      <td>2224.034912</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>45</td>
-      <td>31480.757812</td>
-      <td>2263.688721</td>
+      <td>31409.310547</td>
+      <td>2244.667969</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>46</td>
-      <td>31240.234375</td>
-      <td>2307.727051</td>
+      <td>31187.919922</td>
+      <td>2221.500488</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>47</td>
-      <td>31066.376953</td>
-      <td>2309.439209</td>
+      <td>30999.255859</td>
+      <td>2231.090088</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>48</td>
-      <td>30848.609375</td>
-      <td>2284.575928</td>
+      <td>30790.195312</td>
+      <td>2210.052246</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>49</td>
-      <td>30698.732422</td>
-      <td>2278.509033</td>
+      <td>30570.246094</td>
+      <td>2233.743896</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>50</td>
-      <td>30491.962891</td>
-      <td>2261.111816</td>
+      <td>30371.298828</td>
+      <td>2241.040527</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>51</td>
-      <td>30292.505859</td>
-      <td>2264.363281</td>
+      <td>30156.585938</td>
+      <td>2224.928711</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>52</td>
-      <td>30065.691406</td>
-      <td>2240.348877</td>
+      <td>29946.757812</td>
+      <td>2195.060547</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>53</td>
-      <td>29856.263672</td>
-      <td>2289.755371</td>
+      <td>29781.380859</td>
+      <td>2212.551758</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>54</td>
-      <td>29710.904297</td>
-      <td>2262.129639</td>
+      <td>29633.927734</td>
+      <td>2225.436279</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>55</td>
-      <td>29573.257812</td>
-      <td>2249.333252</td>
+      <td>29476.900391</td>
+      <td>2260.423584</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>56</td>
-      <td>29389.947266</td>
-      <td>2261.571045</td>
+      <td>29375.552734</td>
+      <td>2252.812988</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>57</td>
-      <td>29243.769531</td>
-      <td>2288.018799</td>
+      <td>29269.521484</td>
+      <td>2250.977051</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>58</td>
-      <td>29120.242188</td>
-      <td>2209.447510</td>
+      <td>29173.689453</td>
+      <td>2246.173584</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>59</td>
-      <td>28976.589844</td>
-      <td>2225.900879</td>
+      <td>29055.085938</td>
+      <td>2298.910156</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>60</td>
-      <td>28850.849609</td>
-      <td>2246.566895</td>
+      <td>28946.507812</td>
+      <td>2286.254395</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>61</td>
-      <td>28705.359375</td>
-      <td>2270.345459</td>
+      <td>28897.400391</td>
+      <td>2305.281006</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>62</td>
-      <td>28548.726562</td>
-      <td>2270.212158</td>
+      <td>28850.726562</td>
+      <td>2273.139648</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>63</td>
-      <td>28448.814453</td>
-      <td>2234.324219</td>
+      <td>28763.185547</td>
+      <td>2286.024902</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>64</td>
-      <td>28381.900391</td>
-      <td>2253.501709</td>
+      <td>28690.425781</td>
+      <td>2227.016602</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>65</td>
-      <td>28272.097656</td>
-      <td>2238.330322</td>
+      <td>28565.396484</td>
+      <td>2283.581299</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>66</td>
-      <td>28167.025391</td>
-      <td>2251.218506</td>
+      <td>28465.058594</td>
+      <td>2229.015625</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>67</td>
-      <td>28060.669922</td>
-      <td>2250.365723</td>
+      <td>28339.099609</td>
+      <td>2241.744873</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>68</td>
-      <td>27986.710938</td>
-      <td>2243.374023</td>
+      <td>28230.410156</td>
+      <td>2220.960205</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>69</td>
-      <td>27914.322266</td>
-      <td>2268.122314</td>
+      <td>28161.056641</td>
+      <td>2304.402588</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>70</td>
-      <td>27840.757812</td>
-      <td>2256.605469</td>
+      <td>28069.998047</td>
+      <td>2210.191406</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>71</td>
-      <td>27764.062500</td>
-      <td>2254.318115</td>
+      <td>28014.843750</td>
+      <td>2223.531006</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>72</td>
-      <td>27656.673828</td>
-      <td>2305.803711</td>
+      <td>27952.525391</td>
+      <td>2215.776123</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>73</td>
-      <td>27570.134766</td>
-      <td>2206.249512</td>
+      <td>27862.570312</td>
+      <td>2244.852783</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>74</td>
-      <td>27505.111328</td>
-      <td>2263.794189</td>
+      <td>27769.716797</td>
+      <td>2240.280029</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>75</td>
-      <td>27455.837891</td>
-      <td>2238.579346</td>
+      <td>27659.826172</td>
+      <td>2222.663574</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>76</td>
-      <td>27356.654297</td>
-      <td>2222.913086</td>
+      <td>27611.308594</td>
+      <td>2207.023193</td>
       <td>00:00</td>
     </tr>
     <tr>
       <td>77</td>
-      <td>27314.876953</td>
-      <td>2242.505371</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>78</td>
-      <td>27240.759766</td>
-      <td>2213.185791</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>79</td>
-      <td>27155.125000</td>
-      <td>2219.323242</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>80</td>
-      <td>27093.796875</td>
-      <td>2236.358154</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>81</td>
-      <td>27060.330078</td>
-      <td>2266.247559</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>82</td>
-      <td>27005.945312</td>
-      <td>2255.359619</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>83</td>
-      <td>26981.089844</td>
-      <td>2270.255859</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>84</td>
-      <td>26944.849609</td>
-      <td>2228.962402</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>85</td>
-      <td>26911.037109</td>
-      <td>2224.832520</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>86</td>
-      <td>26802.732422</td>
-      <td>2229.808350</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>87</td>
-      <td>26725.673828</td>
-      <td>2200.761963</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>88</td>
-      <td>26689.345703</td>
-      <td>2204.199219</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>89</td>
-      <td>26644.367188</td>
-      <td>2244.330322</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>90</td>
-      <td>26607.503906</td>
-      <td>2221.770752</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>91</td>
-      <td>26580.781250</td>
-      <td>2210.822754</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>92</td>
-      <td>26496.466797</td>
-      <td>2229.778809</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>93</td>
-      <td>26497.087891</td>
-      <td>2221.801025</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>94</td>
-      <td>26426.035156</td>
-      <td>2267.486572</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>95</td>
-      <td>26391.236328</td>
-      <td>2249.679932</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>96</td>
-      <td>26362.490234</td>
-      <td>2207.249756</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>97</td>
-      <td>26343.123047</td>
-      <td>2181.848145</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>98</td>
-      <td>26270.798828</td>
-      <td>2205.998535</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>99</td>
-      <td>26209.837891</td>
-      <td>2225.569824</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>100</td>
-      <td>26160.642578</td>
-      <td>2207.009766</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>101</td>
-      <td>26100.429688</td>
-      <td>2199.905273</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>102</td>
-      <td>26058.496094</td>
-      <td>2212.455078</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>103</td>
-      <td>26001.863281</td>
-      <td>2204.435791</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>104</td>
-      <td>25945.105469</td>
-      <td>2194.226318</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>105</td>
-      <td>25921.978516</td>
-      <td>2184.354248</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>106</td>
-      <td>25944.802734</td>
-      <td>2206.474121</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>107</td>
-      <td>25916.527344</td>
-      <td>2201.284912</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>108</td>
-      <td>25897.009766</td>
-      <td>2209.324463</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>109</td>
-      <td>25928.412109</td>
-      <td>2244.409180</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>110</td>
-      <td>25912.943359</td>
-      <td>2196.145752</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>111</td>
-      <td>25906.324219</td>
-      <td>2192.755127</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>112</td>
-      <td>25892.310547</td>
-      <td>2194.328125</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>113</td>
-      <td>25933.285156</td>
-      <td>2219.448242</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>114</td>
-      <td>25903.783203</td>
-      <td>2200.952148</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>115</td>
-      <td>25898.958984</td>
-      <td>2194.306641</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>116</td>
-      <td>25849.033203</td>
-      <td>2192.698242</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>117</td>
-      <td>25816.486328</td>
-      <td>2236.579346</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>118</td>
-      <td>25779.134766</td>
-      <td>2208.007812</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>119</td>
-      <td>25782.884766</td>
-      <td>2218.646484</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>120</td>
-      <td>25741.597656</td>
-      <td>2212.623779</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>121</td>
-      <td>25722.320312</td>
-      <td>2214.511963</td>
-      <td>00:00</td>
-    </tr>
-    <tr>
-      <td>122</td>
-      <td>25699.167969</td>
-      <td>2241.144531</td>
+      <td>27565.005859</td>
+      <td>2218.444824</td>
       <td>00:00</td>
     </tr>
   </tbody>
-</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 97: early stopping
+</table></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No improvement since epoch 52: early stopping
 </pre></div>
 </div>
 </div>
@@ -3354,7 +3070,7 @@ current version. Try again later</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>123
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>78
 </pre></div>
 </div>
 </div>
@@ -3381,7 +3097,7 @@ current version. Try again later</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pimmslearn.plotting - INFO     Saved Figures to runs/alzheimer_study/figures/dae_training
 </pre></div>
 </div>
-<img alt="_images/9fe9db7039452ff5ec6332317f83889e803522a3797ae1e8416dcd2b85387954.png" src="_images/9fe9db7039452ff5ec6332317f83889e803522a3797ae1e8416dcd2b85387954.png" />
+<img alt="_images/4fde3a179162df764a8f872954fadc803863cce7e4c84f7fe41d6ed7c9e4bc96.png" src="_images/4fde3a179162df764a8f872954fadc803863cce7e4c84f7fe41d6ed7c9e4bc96.png" />
 </div>
 </div>
 <p>Why is the validation loss better then the training loss?</p>
@@ -3432,17 +3148,17 @@ current version. Try again later</p>
     }
 </style>
 </div><div class="output text_html"></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups                                                                
-Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     16.045
-            A0A024R0T9;K7ER74;P02655                                                         16.459
-            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.946
-            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.953
-            A0A075B6H7                                                                       17.068
+Sample_000  A0A024QZX5;A0A087X1N8;P35237                                                     15.909
+            A0A024R0T9;K7ER74;P02655                                                         16.668
+            A0A024R3W6;A0A024R412;O60462;O60462-2;O60462-3;O60462-4;O60462-5;Q7LBX6;X5D2Q8   15.652
+            A0A024R644;A0A0A0MRU5;A0A1B0GWI2;O75503                                          16.605
+            A0A075B6H7                                                                       16.802
                                                                                               ...  
-Sample_209  Q9Y6R7                                                                           19.307
-            Q9Y6X5                                                                           15.561
-            Q9Y6Y8;Q9Y6Y8-2                                                                  19.197
-            Q9Y6Y9                                                                           11.407
-            S4R3U6                                                                           11.076
+Sample_209  Q9Y6R7                                                                           19.209
+            Q9Y6X5                                                                           15.838
+            Q9Y6Y8;Q9Y6Y8-2                                                                  19.531
+            Q9Y6Y9                                                                           11.648
+            S4R3U6                                                                           11.451
 Length: 298410, dtype: float32
 </pre></div>
 </div>
@@ -3496,31 +3212,31 @@ Length: 298410, dtype: float32
       <th>Sample_158</th>
       <th>Q9UN70;Q9UN70-2</th>
       <td>14.630</td>
-      <td>15.820</td>
+      <td>15.730</td>
     </tr>
     <tr>
       <th>Sample_050</th>
       <th>Q9Y287</th>
       <td>15.755</td>
-      <td>16.792</td>
+      <td>16.781</td>
     </tr>
     <tr>
       <th>Sample_107</th>
       <th>Q8N475;Q8N475-2</th>
       <td>15.029</td>
-      <td>14.653</td>
+      <td>14.507</td>
     </tr>
     <tr>
       <th>Sample_199</th>
       <th>P06307</th>
       <td>19.376</td>
-      <td>18.866</td>
+      <td>19.164</td>
     </tr>
     <tr>
       <th>Sample_067</th>
       <th>Q5VUB5</th>
       <td>15.309</td>
-      <td>14.985</td>
+      <td>15.268</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3532,31 +3248,31 @@ Length: 298410, dtype: float32
       <th>Sample_111</th>
       <th>F6SYF8;Q9UBP4</th>
       <td>22.822</td>
-      <td>22.868</td>
+      <td>23.005</td>
     </tr>
     <tr>
       <th>Sample_002</th>
       <th>A0A0A0MT36</th>
       <td>18.165</td>
-      <td>15.942</td>
+      <td>15.694</td>
     </tr>
     <tr>
       <th>Sample_049</th>
       <th>Q8WY21;Q8WY21-2;Q8WY21-3;Q8WY21-4</th>
       <td>15.525</td>
-      <td>15.342</td>
+      <td>15.847</td>
     </tr>
     <tr>
       <th>Sample_182</th>
       <th>Q8NFT8</th>
       <td>14.379</td>
-      <td>13.257</td>
+      <td>13.751</td>
     </tr>
     <tr>
       <th>Sample_123</th>
       <th>Q16853;Q16853-2</th>
       <td>14.504</td>
-      <td>14.444</td>
+      <td>14.545</td>
     </tr>
   </tbody>
 </table>
@@ -3611,27 +3327,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_000</th>
       <th>A0A075B6P5;P01615</th>
       <td>17.016</td>
-      <td>17.000</td>
+      <td>17.225</td>
     </tr>
     <tr>
       <th>A0A087X089;Q16627;Q16627-2</th>
       <td>18.280</td>
-      <td>17.887</td>
+      <td>18.062</td>
     </tr>
     <tr>
       <th>A0A0B4J2B5;S4R460</th>
       <td>21.735</td>
-      <td>22.480</td>
+      <td>22.220</td>
     </tr>
     <tr>
       <th>A0A140T971;O95865;Q5SRR8;Q5SSV3</th>
       <td>14.603</td>
-      <td>15.239</td>
+      <td>15.214</td>
     </tr>
     <tr>
       <th>A0A140TA33;A0A140TA41;A0A140TA52;P22105;P22105-3;P22105-4</th>
       <td>16.143</td>
-      <td>16.582</td>
+      <td>16.600</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3643,27 +3359,27 @@ Length: 298410, dtype: float32
       <th rowspan="5" valign="top">Sample_209</th>
       <th>Q96ID5</th>
       <td>16.074</td>
-      <td>16.052</td>
+      <td>16.125</td>
     </tr>
     <tr>
       <th>Q9H492;Q9H492-2</th>
       <td>13.173</td>
-      <td>13.422</td>
+      <td>13.851</td>
     </tr>
     <tr>
       <th>Q9HC57</th>
       <td>14.207</td>
-      <td>14.172</td>
+      <td>13.592</td>
     </tr>
     <tr>
       <th>Q9NPH3;Q9NPH3-2;Q9NPH3-5</th>
       <td>14.962</td>
-      <td>15.061</td>
+      <td>14.903</td>
     </tr>
     <tr>
       <th>Q9UGM5;Q9UGM5-2</th>
       <td>16.871</td>
-      <td>16.450</td>
+      <td>16.285</td>
     </tr>
   </tbody>
 </table>
@@ -3691,17 +3407,17 @@ Length: 298410, dtype: float32
 </details>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sample ID   protein groups          
-Sample_000  A0A075B6J9                 15.132
-            A0A075B6Q5                 16.293
-            A0A075B6R2                 16.622
-            A0A075B6S5                 16.316
-            A0A087WSY4                 16.891
+Sample_000  A0A075B6J9                 15.721
+            A0A075B6Q5                 16.140
+            A0A075B6R2                 16.703
+            A0A075B6S5                 16.089
+            A0A087WSY4                 16.425
                                         ...  
-Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.195
-            Q9UI40;Q9UI40-2            17.380
-            Q9UIW2                     17.093
-            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.660
-            Q9UP79                     15.931
+Sample_209  Q9P1W8;Q9P1W8-2;Q9P1W8-4   16.234
+            Q9UI40;Q9UI40-2            16.992
+            Q9UIW2                     16.621
+            Q9UMX0;Q9UMX0-2;Q9UMX0-4   13.276
+            Q9UP79                     16.033
 Name: intensity, Length: 46401, dtype: float32
 </pre></div>
 </div>
@@ -3776,68 +3492,68 @@ Name: intensity, Length: 46401, dtype: float32
   <tbody>
     <tr>
       <th>Sample_000</th>
-      <td>3.781</td>
-      <td>2.172</td>
-      <td>-1.713</td>
-      <td>0.652</td>
-      <td>-2.394</td>
-      <td>2.167</td>
-      <td>-1.575</td>
-      <td>6.384</td>
-      <td>1.636</td>
-      <td>2.801</td>
+      <td>3.965</td>
+      <td>3.468</td>
+      <td>-4.044</td>
+      <td>0.115</td>
+      <td>0.660</td>
+      <td>1.377</td>
+      <td>-0.961</td>
+      <td>3.105</td>
+      <td>-0.242</td>
+      <td>4.677</td>
     </tr>
     <tr>
       <th>Sample_001</th>
-      <td>1.927</td>
-      <td>0.507</td>
-      <td>0.021</td>
-      <td>-0.093</td>
-      <td>-0.993</td>
-      <td>1.121</td>
-      <td>-1.039</td>
-      <td>8.031</td>
-      <td>-0.214</td>
-      <td>2.683</td>
+      <td>4.301</td>
+      <td>3.294</td>
+      <td>0.411</td>
+      <td>-0.899</td>
+      <td>2.480</td>
+      <td>1.391</td>
+      <td>0.398</td>
+      <td>3.022</td>
+      <td>-0.435</td>
+      <td>3.656</td>
     </tr>
     <tr>
       <th>Sample_002</th>
-      <td>-0.256</td>
-      <td>0.197</td>
-      <td>-0.802</td>
-      <td>0.731</td>
-      <td>-2.095</td>
-      <td>-0.419</td>
-      <td>-2.749</td>
-      <td>3.775</td>
-      <td>0.165</td>
-      <td>-1.771</td>
+      <td>2.485</td>
+      <td>1.704</td>
+      <td>0.613</td>
+      <td>2.425</td>
+      <td>-0.807</td>
+      <td>2.020</td>
+      <td>0.456</td>
+      <td>-0.371</td>
+      <td>-3.182</td>
+      <td>3.931</td>
     </tr>
     <tr>
       <th>Sample_003</th>
-      <td>1.566</td>
-      <td>0.192</td>
-      <td>-1.786</td>
-      <td>0.554</td>
-      <td>-3.950</td>
-      <td>2.412</td>
-      <td>-2.234</td>
-      <td>5.216</td>
-      <td>2.829</td>
-      <td>1.297</td>
+      <td>3.986</td>
+      <td>3.970</td>
+      <td>-2.145</td>
+      <td>2.288</td>
+      <td>0.197</td>
+      <td>3.826</td>
+      <td>-0.745</td>
+      <td>1.476</td>
+      <td>0.084</td>
+      <td>4.275</td>
     </tr>
     <tr>
       <th>Sample_004</th>
-      <td>2.075</td>
-      <td>1.410</td>
-      <td>-1.439</td>
-      <td>-2.307</td>
-      <td>-1.817</td>
-      <td>2.154</td>
-      <td>-0.814</td>
-      <td>6.462</td>
-      <td>3.171</td>
-      <td>-0.685</td>
+      <td>2.223</td>
+      <td>3.149</td>
+      <td>-2.837</td>
+      <td>1.287</td>
+      <td>1.094</td>
+      <td>4.832</td>
+      <td>-0.301</td>
+      <td>3.258</td>
+      <td>-1.418</td>
+      <td>5.491</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3854,68 +3570,68 @@ Name: intensity, Length: 46401, dtype: float32
     </tr>
     <tr>
       <th>Sample_205</th>
-      <td>-3.534</td>
-      <td>1.586</td>
-      <td>-1.791</td>
-      <td>-2.865</td>
-      <td>0.429</td>
-      <td>1.784</td>
-      <td>-1.677</td>
-      <td>0.288</td>
-      <td>1.317</td>
-      <td>1.176</td>
+      <td>-1.097</td>
+      <td>2.661</td>
+      <td>-2.748</td>
+      <td>1.566</td>
+      <td>1.133</td>
+      <td>2.589</td>
+      <td>-0.327</td>
+      <td>-2.102</td>
+      <td>-1.259</td>
+      <td>0.290</td>
     </tr>
     <tr>
       <th>Sample_206</th>
-      <td>-1.403</td>
-      <td>2.994</td>
-      <td>2.678</td>
-      <td>0.642</td>
-      <td>2.773</td>
-      <td>2.324</td>
-      <td>-4.974</td>
-      <td>-0.441</td>
-      <td>-3.310</td>
-      <td>0.662</td>
+      <td>0.431</td>
+      <td>-1.241</td>
+      <td>-1.478</td>
+      <td>-0.713</td>
+      <td>5.988</td>
+      <td>-1.937</td>
+      <td>0.162</td>
+      <td>-2.205</td>
+      <td>-0.734</td>
+      <td>2.751</td>
     </tr>
     <tr>
       <th>Sample_207</th>
-      <td>-1.085</td>
-      <td>2.337</td>
-      <td>-0.806</td>
-      <td>-0.152</td>
-      <td>6.167</td>
-      <td>4.716</td>
-      <td>-2.783</td>
-      <td>1.591</td>
-      <td>2.486</td>
-      <td>0.237</td>
+      <td>-2.658</td>
+      <td>2.005</td>
+      <td>-3.657</td>
+      <td>-1.308</td>
+      <td>3.769</td>
+      <td>1.120</td>
+      <td>-2.161</td>
+      <td>1.411</td>
+      <td>-4.271</td>
+      <td>2.244</td>
     </tr>
     <tr>
       <th>Sample_208</th>
-      <td>-5.404</td>
-      <td>2.129</td>
-      <td>3.675</td>
-      <td>0.724</td>
-      <td>3.607</td>
-      <td>2.084</td>
-      <td>-0.729</td>
-      <td>5.502</td>
-      <td>0.737</td>
-      <td>3.028</td>
+      <td>-2.361</td>
+      <td>4.211</td>
+      <td>0.037</td>
+      <td>-1.316</td>
+      <td>4.756</td>
+      <td>-0.205</td>
+      <td>2.150</td>
+      <td>0.409</td>
+      <td>-0.262</td>
+      <td>1.387</td>
     </tr>
     <tr>
       <th>Sample_209</th>
-      <td>-4.977</td>
-      <td>1.588</td>
-      <td>2.311</td>
-      <td>2.060</td>
-      <td>1.737</td>
-      <td>0.684</td>
-      <td>-1.384</td>
-      <td>3.667</td>
-      <td>0.083</td>
-      <td>-1.483</td>
+      <td>-1.113</td>
+      <td>3.304</td>
+      <td>1.776</td>
+      <td>2.669</td>
+      <td>5.220</td>
+      <td>1.567</td>
+      <td>-0.353</td>
+      <td>-1.150</td>
+      <td>-1.761</td>
+      <td>2.513</td>
     </tr>
   </tbody>
 </table>
@@ -4001,8 +3717,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.4762687079300507,
-  &#39;MAE&#39;: 0.4404876434540321,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.4638920185918591,
+  &#39;MAE&#39;: 0.43776961966215294,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4029,8 +3745,8 @@ reconstruction.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selected as truth to compare to: observed
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.4883670084678656,
-  &#39;MAE&#39;: 0.4424120346125589,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;DAE&#39;: {&#39;MSE&#39;: 0.48049603475877306,
+  &#39;MAE&#39;: 0.44229773641715575,
   &#39;N&#39;: 12600,
   &#39;prop&#39;: 1.0}}
 </pre></div>
@@ -4053,12 +3769,12 @@ reconstruction.</p>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.4424120346125589,
-                                  &#39;MSE&#39;: 0.4883670084678656,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{ &#39;test_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.44229773641715575,
+                                  &#39;MSE&#39;: 0.48049603475877306,
                                   &#39;N&#39;: 12600,
                                   &#39;prop&#39;: 1.0}},
-  &#39;valid_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.4404876434540321,
-                                   &#39;MSE&#39;: 0.4762687079300507,
+  &#39;valid_simulated_na&#39;: { &#39;DAE&#39;: { &#39;MAE&#39;: 0.43776961966215294,
+                                   &#39;MSE&#39;: 0.4638920185918591,
                                    &#39;N&#39;: 12600,
                                    &#39;prop&#39;: 1.0}}}
 </pre></div>
@@ -4113,12 +3829,12 @@ reconstruction.</p>
     <tr>
       <th rowspan="4" valign="top">DAE</th>
       <th>MSE</th>
-      <td>0.476</td>
-      <td>0.488</td>
+      <td>0.464</td>
+      <td>0.480</td>
     </tr>
     <tr>
       <th>MAE</th>
-      <td>0.440</td>
+      <td>0.438</td>
       <td>0.442</td>
     </tr>
     <tr>
@@ -4193,7 +3909,7 @@ reconstruction.</p>
  &#39;batch_size&#39;: 64,
  &#39;cuda&#39;: False,
  &#39;data&#39;: Path(&#39;runs/alzheimer_study/data&#39;),
- &#39;epoch_trained&#39;: 123,
+ &#39;epoch_trained&#39;: 78,
  &#39;epochs_max&#39;: 300,
  &#39;file_format&#39;: &#39;csv&#39;,
  &#39;fn_rawfile_metadata&#39;: &#39;https://raw.githubusercontent.com/RasmussenLab/njab/HEAD/docs/tutorial/data/alzheimer/meta.csv&#39;,
@@ -4233,20 +3949,20 @@ reconstruction.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_CF.html"
+       href="01_0_transform_data_to_wide_format.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Collaborative Filtering</p>
+        <p class="prev-next-title">Transfer data for NAGuideR format</p>
       </div>
     </a>
     <a class="right-next"
-       href="01_1_train_NAGuideR_ROWMEDIAN.html"
+       href="01_1_train_CF.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">NAGuide R methods</p>
+        <p class="prev-next-title">Collaborative Filtering</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -4257,14 +3973,16 @@ reconstruction.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-data-in-long-format">Load data in long format</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#produce-some-addional-simulated-samples">Produce some addional simulated samples</a></li>
@@ -4339,8 +4057,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

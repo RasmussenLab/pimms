@@ -16,39 +16,43 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=e6e8d3cb"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '01_1_transfer_NAGuideR_pred';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="NAGuide R methods" href="01_1_train_NAGuideR_QRILC.html" />
-    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_LLS.html" />
+    <link rel="prev" title="NAGuide R methods" href="01_1_train_NAGuideR_COLMEDIAN.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.1.dev1+g740692b3d" />
   </head>
   
   
@@ -64,19 +68,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -84,7 +77,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -92,8 +84,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,7 +101,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,15 +132,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -160,39 +149,39 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Split creation and data handling</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_0_split_data.html">Experiment 03 - Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_0_transform_data_to_wide_format.html">Transfer data for NAGuideR format</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PIMMS models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_DAE.html">DAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN.html">KNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_VAE.html">VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_KNN5.html">KNN5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_Median.html">Median</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">R models</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQROB.html">IMPSEQROB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_LLS.html">LLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_BPCA.html">BPCA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINIMUM.html">MINIMUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_PI.html">PI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IMPSEQ.html">IMPSEQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ZERO.html">ZERO</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINDET.html">MINDET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MINPROB.html">MINPROB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_IRM.html">IRM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_KNN_IMPUTE.html">IMPUTE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_SVDMETHOD.html">SVDMETHOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_MLE.html">MLE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_COLMEDIAN.html">COLMEDIAN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">transfer NAGuideR pred</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_QRILC.html">QRILC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01_1_train_NAGuideR_ROWMEDIAN.html">ROWMEDIAN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Imputation model comparison</span></p>
 <ul class="nav bd-sidenav">
@@ -202,24 +191,24 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Differential analysis (ANCOVA)</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_PI.html">PI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_Median.html">Median</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_VAE.html">VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_DAE.html">DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_None.html">None</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_RF.html">RF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_CF.html">CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_TRKNN.html">TRKNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/scores/10_1_ald_diff_analysis_QRILC.html">QRILC</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare ANCOVAs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_2_ald_compare_methods.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_2_ald_compare_methods.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_2_ald_compare_methods.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_2_ald_compare_methods.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_2_ald_compare_methods.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_2_ald_compare_methods.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_2_ald_compare_methods.html">PI vs TRKNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Compare single differential analysis</span></p>
 <ul class="nav bd-sidenav">
@@ -227,13 +216,13 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Logistic regression models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_QRILC/10_3_ald_ml_new_feat.html">PI vs QRILC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_Median/10_3_ald_ml_new_feat.html">PI vs Median</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_RF/10_3_ald_ml_new_feat.html">PI vs RF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_DAE/10_3_ald_ml_new_feat.html">PI vs DAE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_CF/10_3_ald_ml_new_feat.html">PI vs CF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_VAE/10_3_ald_ml_new_feat.html">PI vs VAE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_analysis/AD/PI_vs_TRKNN/10_3_ald_ml_new_feat.html">PI vs TRKNN</a></li>
 </ul>
 
     </div>
@@ -242,9 +231,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -327,7 +321,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -341,25 +335,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -403,16 +389,16 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.models</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pimmslearn.pandas</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pimmslearn.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">datasplits</span>
+<span class="kn">import</span> <span class="nn">pimmslearn</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.models</span>
+<span class="kn">import</span> <span class="nn">pimmslearn.pandas</span>
+<span class="kn">from</span> <span class="nn">pimmslearn.io</span> <span class="kn">import</span> <span class="n">datasplits</span>
 
 <span class="n">pimmslearn</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">make_large_descriptors</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 
@@ -965,11 +951,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.858</td>
       <td>11.916</td>
       <td>7.068</td>
-      <td>11.585</td>
+      <td>11.317</td>
       <td>2,513.638</td>
-      <td>12.134</td>
-      <td>14.820</td>
-      <td>15.623</td>
+      <td>13.354</td>
+      <td>15.062</td>
+      <td>15.476</td>
       <td>15.752</td>
       <td>17.206</td>
       <td>15.700</td>
@@ -988,11 +974,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>17.058</td>
       <td>12.900</td>
       <td>7.068</td>
-      <td>13.272</td>
+      <td>13.053</td>
       <td>19.829</td>
-      <td>11.862</td>
-      <td>16.125</td>
-      <td>16.978</td>
+      <td>14.536</td>
+      <td>14.579</td>
+      <td>16.870</td>
       <td>17.221</td>
       <td>17.807</td>
       <td>16.738</td>
@@ -1011,11 +997,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>14.397</td>
       <td>12.313</td>
       <td>7.068</td>
-      <td>13.143</td>
+      <td>11.832</td>
       <td>2,582.130</td>
-      <td>13.404</td>
-      <td>12.239</td>
-      <td>14.664</td>
+      <td>12.372</td>
+      <td>13.287</td>
+      <td>14.672</td>
       <td>14.846</td>
       <td>17.434</td>
       <td>13.776</td>
@@ -1034,11 +1020,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>19.005</td>
       <td>12.285</td>
       <td>7.068</td>
-      <td>11.872</td>
+      <td>12.766</td>
       <td>2,483.120</td>
-      <td>14.609</td>
-      <td>17.067</td>
-      <td>19.400</td>
+      <td>12.309</td>
+      <td>17.477</td>
+      <td>19.103</td>
       <td>18.973</td>
       <td>17.111</td>
       <td>19.015</td>
@@ -1057,11 +1043,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.104</td>
       <td>11.827</td>
       <td>7.068</td>
-      <td>11.563</td>
+      <td>11.715</td>
       <td>2,569.564</td>
-      <td>13.464</td>
-      <td>12.813</td>
-      <td>14.732</td>
+      <td>11.997</td>
+      <td>12.216</td>
+      <td>14.779</td>
       <td>14.726</td>
       <td>17.031</td>
       <td>14.699</td>
@@ -1103,11 +1089,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>22.836</td>
       <td>12.161</td>
       <td>7.068</td>
-      <td>12.733</td>
+      <td>11.273</td>
       <td>2,634.108</td>
-      <td>12.204</td>
-      <td>22.097</td>
-      <td>22.852</td>
+      <td>14.133</td>
+      <td>22.276</td>
+      <td>22.788</td>
       <td>22.918</td>
       <td>17.330</td>
       <td>22.872</td>
@@ -1126,11 +1112,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.579</td>
       <td>12.586</td>
       <td>7.068</td>
-      <td>13.116</td>
+      <td>13.566</td>
       <td>2,448.503</td>
-      <td>13.587</td>
-      <td>13.375</td>
-      <td>15.872</td>
+      <td>12.647</td>
+      <td>13.552</td>
+      <td>16.020</td>
       <td>15.877</td>
       <td>16.879</td>
       <td>15.671</td>
@@ -1149,11 +1135,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>15.903</td>
       <td>12.352</td>
       <td>7.068</td>
-      <td>13.031</td>
+      <td>12.344</td>
       <td>2,487.550</td>
-      <td>12.904</td>
-      <td>15.004</td>
-      <td>15.978</td>
+      <td>11.850</td>
+      <td>14.976</td>
+      <td>15.538</td>
       <td>16.278</td>
       <td>17.215</td>
       <td>15.574</td>
@@ -1172,11 +1158,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>13.456</td>
       <td>12.504</td>
       <td>7.068</td>
-      <td>12.430</td>
+      <td>13.018</td>
       <td>2,426.191</td>
-      <td>12.222</td>
-      <td>9.682</td>
-      <td>13.961</td>
+      <td>11.593</td>
+      <td>12.188</td>
+      <td>13.446</td>
       <td>13.995</td>
       <td>17.125</td>
       <td>14.518</td>
@@ -1195,11 +1181,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>14.931</td>
       <td>12.689</td>
       <td>7.068</td>
-      <td>12.129</td>
+      <td>14.303</td>
       <td>2,461.806</td>
-      <td>13.238</td>
-      <td>13.984</td>
-      <td>14.565</td>
+      <td>13.110</td>
+      <td>13.865</td>
+      <td>14.638</td>
       <td>14.849</td>
       <td>16.981</td>
       <td>14.485</td>
@@ -1290,11 +1276,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>3,023.655</td>
       <td>23.897</td>
       <td>93.346</td>
-      <td>24.203</td>
+      <td>24.262</td>
       <td>5,469,016.990</td>
-      <td>21.409</td>
-      <td>4.399</td>
-      <td>0.492</td>
+      <td>21.581</td>
+      <td>4.417</td>
+      <td>0.494</td>
       <td>0.766</td>
       <td>8.005</td>
       <td>0.469</td>
@@ -1310,11 +1296,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>1.329</td>
       <td>4.108</td>
       <td>9.272</td>
-      <td>4.122</td>
+      <td>4.127</td>
       <td>2,172.384</td>
-      <td>3.804</td>
-      <td>1.648</td>
-      <td>0.461</td>
+      <td>3.817</td>
+      <td>1.651</td>
+      <td>0.460</td>
       <td>0.598</td>
       <td>2.309</td>
       <td>0.450</td>
@@ -1431,11 +1417,11 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>838.462</td>
       <td>23.999</td>
       <td>93.458</td>
-      <td>24.302</td>
+      <td>24.297</td>
       <td>5,509,003.848</td>
-      <td>21.654</td>
-      <td>4.260</td>
-      <td>0.513</td>
+      <td>21.647</td>
+      <td>4.245</td>
+      <td>0.516</td>
       <td>0.776</td>
       <td>8.159</td>
       <td>0.500</td>
@@ -1451,10 +1437,10 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
       <td>0.874</td>
       <td>4.109</td>
       <td>9.271</td>
-      <td>4.120</td>
+      <td>4.124</td>
       <td>2,186.302</td>
-      <td>3.813</td>
-      <td>1.634</td>
+      <td>3.815</td>
+      <td>1.633</td>
       <td>0.465</td>
       <td>0.602</td>
       <td>2.330</td>
@@ -1633,17 +1619,17 @@ pimmslearn - INFO     Save fname = Path(&#39;runs/alzheimer_study/preds/pred_rea
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>model       metric_name
 BPCA        MAE               0.422
 TRKNN       MAE               0.450
-RF          MAE               0.461
+RF          MAE               0.460
 KNN_IMPUTE  MAE               0.554
 IRM         MAE               0.588
 ROWMEDIAN   MAE               0.598
 LLS         MAE               1.329
-QRILC       MAE               1.648
+QRILC       MAE               1.651
 COLMEDIAN   MAE               2.210
 SVDMETHOD   MAE               2.309
-PI          MAE               3.804
+PI          MAE               3.817
 MINDET      MAE               4.108
-MINPROB     MAE               4.122
+MINPROB     MAE               4.127
 MINIMUM     MAE               9.272
 ZERO        MAE              16.340
 IMPSEQROB   MAE             333.478
@@ -1702,7 +1688,7 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
   ax = sns.barplot(
 </pre></div>
 </div>
-<img alt="_images/2de4b65ae5ef100587c5762efa831e6d416be4d3400fc99e8cc77966f67a17c7.png" src="_images/2de4b65ae5ef100587c5762efa831e6d416be4d3400fc99e8cc77966f67a17c7.png" />
+<img alt="_images/5eb25dcf06cee72f47633df173cf40e1c3e7bba33160f1ae0af3065bf9e81505.png" src="_images/5eb25dcf06cee72f47633df173cf40e1c3e7bba33160f1ae0af3065bf9e81505.png" />
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
@@ -1792,7 +1778,7 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="01_1_train_NAGuideR_LLS.html"
+       href="01_1_train_NAGuideR_COLMEDIAN.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
@@ -1816,14 +1802,16 @@ The `errwidth` parameter is deprecated. And will be removed in v0.15.0. Pass `er
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-datasplit">Test Datasplit</a></li>
 </ul>
@@ -1874,8 +1862,8 @@ By PIMMS
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
